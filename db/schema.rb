@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_02_19_220838) do
+ActiveRecord::Schema[7.2].define(version: 2026_02_20_213701) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "vector"
@@ -424,10 +424,6 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_19_220838) do
     t.index ["menuitem_id"], name: "index_menu_item_product_links_on_menuitem_id"
     t.index ["product_id"], name: "index_menu_item_product_links_on_product_id"
   end
-
-# Could not dump table "menu_item_search_documents" because of following StandardError
-#   Unknown type 'vector(1024)' for column 'embedding'
-
 
   create_table "menu_items", force: :cascade do |t|
     t.string "name"
@@ -1465,6 +1461,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_19_220838) do
     t.string "source_url"
     t.boolean "ordering_enabled", default: false, null: false
     t.boolean "payments_enabled", default: false, null: false
+    t.boolean "whiskey_ambassador_enabled", default: false, null: false
+    t.integer "max_whiskey_flights", default: 5, null: false
     t.index ["archived_by_id"], name: "index_restaurants_on_archived_by_id"
     t.index ["city", "country", "preview_enabled"], name: "idx_restaurants_geo_preview"
     t.index ["claim_status"], name: "index_restaurants_on_claim_status"
@@ -1700,6 +1698,24 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_19_220838) do
     t.index ["status"], name: "index_voice_commands_on_status"
   end
 
+  create_table "whiskey_flights", force: :cascade do |t|
+    t.bigint "menu_id", null: false
+    t.string "theme_key", null: false
+    t.string "title", null: false
+    t.text "narrative"
+    t.jsonb "items", default: [], null: false
+    t.string "source", default: "ai", null: false
+    t.string "status", default: "draft", null: false
+    t.float "total_price"
+    t.float "custom_price"
+    t.datetime "generated_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["menu_id", "theme_key"], name: "index_whiskey_flights_on_menu_id_and_theme_key", unique: true
+    t.index ["menu_id"], name: "index_whiskey_flights_on_menu_id"
+    t.index ["status"], name: "index_whiskey_flights_on_status"
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "alcohol_order_events", "menuitems"
@@ -1832,4 +1848,5 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_19_220838) do
   add_foreign_key "userplans", "plans"
   add_foreign_key "userplans", "users"
   add_foreign_key "voice_commands", "smartmenus"
+  add_foreign_key "whiskey_flights", "menus"
 end

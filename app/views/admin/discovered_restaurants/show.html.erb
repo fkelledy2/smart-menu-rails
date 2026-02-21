@@ -33,6 +33,7 @@ end %>
   label, cls = case src
     when 'ai_generated'          then ['AI', 'text-info']
     when 'google_places'         then ['Google', 'text-primary']
+    when 'google_places_address_resolve' then ['Google (addr)', 'text-primary']
     when /google_places\+/       then ['Google + Web', 'text-primary']
     when 'website'               then ['Website', 'text-warning']
     when 'inferred'              then ['Inferred', 'text-secondary']

@@ -1,0 +1,173 @@
+<%# Whiskey Ambassador — Guest-facing whiskey exploration
+    Rendered inside the customer smartmenu view when the restaurant has whiskey_ambassador_enabled.
+    Uses the whiskey_ambassador Stimulus controller for the interactive flow.
+%>
+<% recommend_url = sommelier_recommend_whiskey_smartmenu_path(smartmenu) %>
+<% explore_url = sommelier_explore_whiskeys_smartmenu_path(smartmenu) %>
+<% flights_url = sommelier_whiskey_flights_smartmenu_path(smartmenu) %>
+
+<div data-controller="whiskey-ambassador"
+     data-whiskey-ambassador-recommend-url-value="<%= recommend_url %>"
+     data-whiskey-ambassador-explore-url-value="<%= explore_url %>"
+     data-whiskey-ambassador-flights-url-value="<%= flights_url %>">
+
+  <%# Floating action button %>
+  <button class="wa-fab"
+          data-action="click->whiskey-ambassador#open"
+          aria-label="Whiskey Ambassador"
+          title="Whiskey Ambassador">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M17 8h1a4 4 0 0 1 0 8h-1"/>
+      <path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z"/>
+      <line x1="6" y1="2" x2="6" y2="4"/>
+      <line x1="10" y1="2" x2="10" y2="4"/>
+      <line x1="14" y1="2" x2="14" y2="4"/>
+    </svg>
+    <span class="wa-fab-label">Whiskey Guide</span>
+    <span class="wa-fab-badge d-none" data-whiskey-ambassador-target="badge">0</span>
+  </button>
+
+  <%# Quick links %>
+  <div class="wa-quick-links">
+    <button class="wa-quick-link" data-action="click->whiskey-ambassador#showMyPicks">
+      My Picks <span class="wa-fab-badge d-none" data-whiskey-ambassador-target="badge">0</span>
+    </button>
+    <button class="wa-quick-link" data-action="click->whiskey-ambassador#openExplore">Explore</button>
+    <button class="wa-quick-link" data-action="click->whiskey-ambassador#showFlights">Flights</button>
+  </div>
+
+  <%# Panel overlay %>
+  <div class="wa-panel d-none" data-whiskey-ambassador-target="panel">
+    <div class="wa-panel-inner">
+
+      <%# Header %>
+      <div class="wa-header">
+        <h2 class="wa-title">Whiskey Ambassador</h2>
+        <p class="wa-subtitle">Let me guide you to your perfect dram</p>
+        <button class="wa-close" data-action="click->whiskey-ambassador#close" aria-label="Close">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <%# Step 0: Experience level %>
+      <div class="wa-step" data-whiskey-ambassador-target="step">
+        <div class="wa-step-question">
+          <h3>How would you describe your whiskey experience?</h3>
+        </div>
+        <div class="wa-step-options">
+          <button class="wa-option-btn" data-action="click->whiskey-ambassador#setExperience" data-value="newcomer">
+            <span class="wa-option-icon">🌱</span>
+            <span class="wa-option-text">I'm new to whiskey</span>
+          </button>
+          <button class="wa-option-btn" data-action="click->whiskey-ambassador#setExperience" data-value="casual">
+            <span class="wa-option-icon">🥃</span>
+            <span class="wa-option-text">Casual enjoyer</span>
+          </button>
+          <button class="wa-option-btn" data-action="click->whiskey-ambassador#setExperience" data-value="enthusiast">
+            <span class="wa-option-icon">🏆</span>
+            <span class="wa-option-text">Whiskey enthusiast</span>
+          </button>
+        </div>
+      </div>
+
+      <%# Step 1: Region preference %>
+      <div class="wa-step d-none" data-whiskey-ambassador-target="step">
+        <div class="wa-step-question">
+          <h3>Which world of whiskey appeals to you?</h3>
+        </div>
+        <div class="wa-step-options">
+          <button class="wa-option-btn" data-action="click->whiskey-ambassador#setRegion" data-value="scotch">
+            <span class="wa-option-icon">🏴󠁧󠁢󠁳󠁣󠁴󠁿</span>
+            <span class="wa-option-text">Scottish</span>
+          </button>
+          <button class="wa-option-btn" data-action="click->whiskey-ambassador#setRegion" data-value="bourbon_rye">
+            <span class="wa-option-icon">🇺🇸</span>
+            <span class="wa-option-text">American</span>
+          </button>
+          <button class="wa-option-btn" data-action="click->whiskey-ambassador#setRegion" data-value="irish">
+            <span class="wa-option-icon">🇮🇪</span>
+            <span class="wa-option-text">Irish</span>
+          </button>
+          <button class="wa-option-btn" data-action="click->whiskey-ambassador#setRegion" data-value="japanese">
+            <span class="wa-option-icon">🇯🇵</span>
+            <span class="wa-option-text">Japanese</span>
+          </button>
+          <button class="wa-option-btn" data-action="click->whiskey-ambassador#setRegion" data-value="surprise_me">
+            <span class="wa-option-icon">🎲</span>
+            <span class="wa-option-text">Surprise me</span>
+          </button>
+        </div>
+      </div>
+
+      <%# Step 2: Flavor preference %>
+      <div class="wa-step d-none" data-whiskey-ambassador-target="step">
+        <div class="wa-step-question">
+          <h3>What flavor profile speaks to you?</h3>
+        </div>
+        <div class="wa-step-options wa-step-options-grid">
+          <button class="wa-option-btn" data-action="click->whiskey-ambassador#setFlavor" data-value="light_delicate">
+            <span class="wa-option-icon">🌿</span>
+            <span class="wa-option-text">Light & Delicate</span>
+          </button>
+          <button class="wa-option-btn" data-action="click->whiskey-ambassador#setFlavor" data-value="fruity_sweet">
+            <span class="wa-option-icon">🍯</span>
+            <span class="wa-option-text">Fruity & Sweet</span>
+          </button>
+          <button class="wa-option-btn" data-action="click->whiskey-ambassador#setFlavor" data-value="rich_sherried">
+            <span class="wa-option-icon">🍇</span>
+            <span class="wa-option-text">Rich & Sherried</span>
+          </button>
+          <button class="wa-option-btn" data-action="click->whiskey-ambassador#setFlavor" data-value="spicy_dry">
+            <span class="wa-option-icon">🌶️</span>
+            <span class="wa-option-text">Spicy & Dry</span>
+          </button>
+          <button class="wa-option-btn" data-action="click->whiskey-ambassador#setFlavor" data-value="smoky_coastal">
+            <span class="wa-option-icon">🌊</span>
+            <span class="wa-option-text">Smoky & Coastal</span>
+          </button>
+          <button class="wa-option-btn" data-action="click->whiskey-ambassador#setFlavor" data-value="heavily_peated">
+            <span class="wa-option-icon">🔥</span>
+            <span class="wa-option-text">Heavily Peated</span>
+          </button>
+        </div>
+      </div>
+
+      <%# Step 3: Budget %>
+      <div class="wa-step d-none" data-whiskey-ambassador-target="step">
+        <div class="wa-step-question">
+          <h3>What's your budget per dram?</h3>
+        </div>
+        <div class="wa-step-options">
+          <button class="wa-option-btn" data-action="click->whiskey-ambassador#setBudget" data-value="1">
+            <span class="wa-option-icon">💰</span>
+            <span class="wa-option-text">Value picks</span>
+          </button>
+          <button class="wa-option-btn" data-action="click->whiskey-ambassador#setBudget" data-value="2">
+            <span class="wa-option-icon">💎</span>
+            <span class="wa-option-text">Mid-range</span>
+          </button>
+          <button class="wa-option-btn" data-action="click->whiskey-ambassador#setBudget" data-value="3">
+            <span class="wa-option-icon">👑</span>
+            <span class="wa-option-text">Premium</span>
+          </button>
+        </div>
+      </div>
+
+      <%# Loading spinner %>
+      <div class="wa-loading d-none" data-whiskey-ambassador-target="loading">
+        <div class="wa-spinner"></div>
+        <p>Finding your perfect dram&hellip;</p>
+      </div>
+
+      <%# Results container — populated by JS %>
+      <div class="wa-results d-none" data-whiskey-ambassador-target="results"></div>
+
+      <%# Explore container — populated by JS %>
+      <div class="wa-explore d-none" data-whiskey-ambassador-target="explore"></div>
+
+      <%# Flights container — populated by JS %>
+      <div class="wa-flights-container d-none" data-whiskey-ambassador-target="flightsContainer"></div>
+
+    </div>
+  </div>
+</div>

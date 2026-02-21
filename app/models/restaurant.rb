@@ -111,6 +111,21 @@ class Restaurant < ApplicationRecord
     preview_enabled? && preview_published_at.present?
   end
 
+  def whiskey_bar?
+    Array(establishment_types).include?('whiskey_bar')
+  end
+
+  def whiskey_ambassador_ready?
+    return false unless whiskey_ambassador_enabled?
+
+    menus.any? do |menu|
+      menu.menuitems
+          .where(sommelier_category: 'whiskey', status: 'active')
+          .where("sommelier_parsed_fields->>'whiskey_region' IS NOT NULL OR sommelier_parsed_fields->>'staff_flavor_cluster' IS NOT NULL")
+          .count >= 10
+    end
+  end
+
   def gen_image_theme
     genimage&.id
   end

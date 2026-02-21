@@ -19,6 +19,7 @@ class Menu < ApplicationRecord
   has_many :menulocales
   has_one :genimage, dependent: :destroy
   has_many :smartmenus, dependent: :destroy
+  has_many :whiskey_flights, dependent: :destroy
   has_one_attached :pdf_menu_scan
 
   # Validations

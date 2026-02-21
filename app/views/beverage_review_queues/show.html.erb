@@ -53,17 +53,73 @@
         <td><%= mi.sommelier_parse_confidence %></td>
         <td><%= mi.sommelier_parsed_fields.to_json %></td>
         <td>
-          <%= button_to 'Mark reviewed',
-                        beverage_review_queue_review_restaurant_path(@restaurant, menuitem_id: mi.id),
-                        method: :patch,
-                        form: { data: { turbo: false } },
-                        class: 'btn btn-sm btn-outline-primary' %>
+          <% if mi.sommelier_category == 'whiskey' %>
+            <% parsed = mi.sommelier_parsed_fields.is_a?(Hash) ? mi.sommelier_parsed_fields : {} %>
+            <%= form_with url: beverage_review_queue_review_restaurant_path(@restaurant, menuitem_id: mi.id),
+                          method: :patch, local: true, class: 'whiskey-tag-form' do |f| %>
+              <div class="mb-1">
+                <select name="whiskey_region" class="form-select form-select-sm">
+                  <option value="">Region…</option>
+                  <% BeverageIntelligence::WhiskeyParser::WHISKEY_REGIONS.each do |key, label| %>
+                    <option value="<%= key %>" <%= 'selected' if parsed['whiskey_region'] == key %>><%= label %></option>
+                  <% end %>
+                </select>
+              </div>
+              <div class="mb-1">
+                <select name="whiskey_type" class="form-select form-select-sm">
+                  <option value="">Type…</option>
+                  <% BeverageIntelligence::WhiskeyParser::WHISKEY_TYPES.each do |t| %>
+                    <option value="<%= t %>" <%= 'selected' if parsed['whiskey_type'] == t %>><%= t.titleize %></option>
+                  <% end %>
+                </select>
+              </div>
+              <div class="mb-1">
+                <input name="distillery" type="text" placeholder="Distillery" value="<%= parsed['distillery'] %>" class="form-control form-control-sm">
+              </div>
+              <div class="mb-1">
+                <select name="cask_type" class="form-select form-select-sm">
+                  <option value="">Cask…</option>
+                  <% BeverageIntelligence::WhiskeyParser::CASK_TYPES.each do |c| %>
+                    <option value="<%= c %>" <%= 'selected' if parsed['cask_type'] == c %>><%= c.titleize %></option>
+                  <% end %>
+                </select>
+              </div>
+              <div class="mb-1">
+                <select name="staff_flavor_cluster" class="form-select form-select-sm">
+                  <option value="">Flavor cluster…</option>
+                  <% BeverageIntelligence::WhiskeyParser::FLAVOR_CLUSTERS.each do |key, cfg| %>
+                    <option value="<%= key %>" <%= 'selected' if parsed['staff_flavor_cluster'] == key %>><%= cfg[:label] %></option>
+                  <% end %>
+                </select>
+              </div>
+              <div class="mb-1">
+                <input name="staff_tasting_note" type="text" placeholder="Tasting note (max 200 chars)" maxlength="200"
+                       value="<%= parsed['staff_tasting_note'] %>" class="form-control form-control-sm">
+              </div>
+              <div class="mb-1">
+                <label class="form-check-label">
+                  <input name="staff_pick" type="checkbox" value="true" class="form-check-input"
+                         <%= 'checked' if parsed['staff_pick'] %>> Staff Pick
+                </label>
+              </div>
+              <div class="d-flex gap-1">
+                <%= f.submit 'Save & Review', class: 'btn btn-sm btn-outline-primary' %>
+                <%= f.submit 'Save & Lock', name: 'lock', value: 'true', class: 'btn btn-sm btn-outline-secondary' %>
+              </div>
+            <% end %>
+          <% else %>
+            <%= button_to 'Mark reviewed',
+                          beverage_review_queue_review_restaurant_path(@restaurant, menuitem_id: mi.id),
+                          method: :patch,
+                          form: { data: { turbo: false } },
+                          class: 'btn btn-sm btn-outline-primary' %>
 
-          <%= button_to 'Mark + lock',
-                        beverage_review_queue_review_restaurant_path(@restaurant, menuitem_id: mi.id, lock: true),
-                        method: :patch,
-                        form: { data: { turbo: false } },
-                        class: 'btn btn-sm btn-outline-secondary mt-1' %>
+            <%= button_to 'Mark + lock',
+                          beverage_review_queue_review_restaurant_path(@restaurant, menuitem_id: mi.id, lock: true),
+                          method: :patch,
+                          form: { data: { turbo: false } },
+                          class: 'btn btn-sm btn-outline-secondary mt-1' %>
+          <% end %>
         </td>
       </tr>
     <% end %>

@@ -1,0 +1,570 @@
+// ============================================================================
+// Whiskey Ambassador — Guest UI
+// ============================================================================
+
+// ── FAB ────────────────────────────────────────────────────────
+.wa-fab {
+  position: fixed;
+  bottom: 90px;
+  right: 20px;
+  z-index: 1050;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 50px;
+  background: linear-gradient(135deg, #8B4513, #D2691E);
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(139, 69, 19, 0.4);
+  transition: transform 0.2s, box-shadow 0.2s;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(139, 69, 19, 0.5);
+  }
+
+  svg { flex-shrink: 0; }
+}
+
+.wa-fab-label {
+  white-space: nowrap;
+  @media (max-width: 480px) { display: none; }
+}
+
+.wa-fab-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: 10px;
+  background: #dc3545;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+// ── Quick Links ────────────────────────────────────────────────
+.wa-quick-links {
+  position: fixed;
+  bottom: 90px;
+  left: 20px;
+  z-index: 1049;
+  display: flex;
+  gap: 6px;
+
+  @media (min-width: 481px) { display: none; }
+}
+
+.wa-quick-link {
+  padding: 6px 12px;
+  border: 1px solid rgba(139, 69, 19, 0.3);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  color: #8B4513;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+
+  &:hover { background: #8B4513; color: #fff; }
+}
+
+// ── Panel ──────────────────────────────────────────────────────
+.wa-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 1060;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+
+  @media (min-width: 768px) { align-items: center; }
+}
+
+.wa-panel-inner {
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: #1a1a1a;
+  color: #f0e6d6;
+  border-radius: 20px 20px 0 0;
+  padding: 24px;
+  box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.5);
+
+  @media (min-width: 768px) {
+    border-radius: 20px;
+    max-height: 80vh;
+  }
+}
+
+// ── Header ─────────────────────────────────────────────────────
+.wa-header {
+  position: relative;
+  text-align: center;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(210, 105, 30, 0.3);
+}
+
+.wa-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #D2691E;
+  margin: 0;
+}
+
+.wa-subtitle {
+  font-size: 0.9rem;
+  color: #b3a08a;
+  margin: 4px 0 0;
+}
+
+.wa-close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: none;
+  border: none;
+  color: #b3a08a;
+  cursor: pointer;
+  padding: 4px;
+
+  &:hover { color: #f0e6d6; }
+}
+
+// ── Steps ──────────────────────────────────────────────────────
+.wa-step-question {
+  text-align: center;
+  margin-bottom: 16px;
+
+  h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #f0e6d6;
+    margin: 0 0 4px;
+  }
+
+  p {
+    font-size: 0.85rem;
+    color: #b3a08a;
+    margin: 0;
+  }
+}
+
+.wa-step-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.wa-step-options-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.wa-option-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid rgba(210, 105, 30, 0.3);
+  border-radius: 12px;
+  background: rgba(210, 105, 30, 0.08);
+  color: #f0e6d6;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+  text-align: left;
+
+  &:hover {
+    background: rgba(210, 105, 30, 0.2);
+    border-color: #D2691E;
+    transform: translateY(-1px);
+  }
+
+  &:active { transform: scale(0.98); }
+}
+
+.wa-option-icon { font-size: 1.4rem; flex-shrink: 0; }
+.wa-option-text { font-size: 0.95rem; font-weight: 500; }
+
+// ── Loading ────────────────────────────────────────────────────
+.wa-loading {
+  text-align: center;
+  padding: 40px 0;
+
+  p { color: #b3a08a; margin-top: 12px; }
+}
+
+.wa-spinner {
+  width: 40px;
+  height: 40px;
+  margin: 0 auto;
+  border: 3px solid rgba(210, 105, 30, 0.2);
+  border-top-color: #D2691E;
+  border-radius: 50%;
+  animation: wa-spin 0.8s linear infinite;
+}
+
+@keyframes wa-spin {
+  to { transform: rotate(360deg); }
+}
+
+// ── Results ────────────────────────────────────────────────────
+.wa-results-header {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.wa-results-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #D2691E;
+  margin: 0;
+}
+
+.wa-results-subtitle {
+  font-size: 0.85rem;
+  color: #b3a08a;
+  margin: 4px 0 0;
+}
+
+// ── Cards ──────────────────────────────────────────────────────
+.wa-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.wa-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(210, 105, 30, 0.2);
+  border-radius: 14px;
+  padding: 16px;
+  transition: border-color 0.2s;
+
+  &:hover { border-color: #D2691E; }
+}
+
+.wa-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.wa-medal { font-size: 1.3rem; }
+
+.wa-card-title-wrap { flex: 1; }
+
+.wa-card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #f0e6d6;
+  margin: 0;
+}
+
+.wa-meta {
+  font-size: 0.8rem;
+  color: #b3a08a;
+  font-style: italic;
+  margin-top: 2px;
+}
+
+.wa-card-price {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #D2691E;
+  white-space: nowrap;
+}
+
+// ── Tags & Badges ──────────────────────────────────────────────
+.wa-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 6px 0;
+}
+
+.wa-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: rgba(210, 105, 30, 0.15);
+  color: #D2691E;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.wa-badges {
+  display: flex;
+  gap: 6px;
+  margin: 4px 0;
+}
+
+.wa-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.wa-badge-pick { background: #28a745; color: #fff; }
+.wa-badge-new { background: #007bff; color: #fff; }
+.wa-badge-rare { background: #6f42c1; color: #fff; }
+
+// ── Tasting Note & Why Text ────────────────────────────────────
+.wa-tasting-note {
+  font-style: italic;
+  font-size: 0.85rem;
+  color: #b3a08a;
+  margin: 6px 0;
+  padding-left: 12px;
+  border-left: 2px solid rgba(210, 105, 30, 0.3);
+}
+
+.wa-why-text {
+  font-size: 0.82rem;
+  color: #998a7a;
+  margin: 4px 0;
+}
+
+// ── Card Footer ────────────────────────────────────────────────
+.wa-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(210, 105, 30, 0.15);
+}
+
+.wa-match-score {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #D2691E;
+}
+
+// ── Buttons ────────────────────────────────────────────────────
+.wa-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  border: none;
+  background: #D2691E;
+  color: #fff;
+
+  &:hover { background: #b8581a; }
+  &:disabled { opacity: 0.5; cursor: default; }
+}
+
+.wa-btn-outline {
+  background: transparent;
+  border: 1px solid rgba(210, 105, 30, 0.4);
+  color: #D2691E;
+
+  &:hover { background: rgba(210, 105, 30, 0.1); }
+}
+
+.wa-btn-sm {
+  padding: 5px 12px;
+  font-size: 0.8rem;
+}
+
+// ── Actions ────────────────────────────────────────────────────
+.wa-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+// ── Empty ──────────────────────────────────────────────────────
+.wa-empty {
+  text-align: center;
+  padding: 24px 0;
+
+  p { color: #b3a08a; margin-bottom: 12px; }
+}
+
+// ── My Picks ───────────────────────────────────────────────────
+.wa-picks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.wa-pick-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(210, 105, 30, 0.15);
+  border-radius: 10px;
+}
+
+.wa-pick-name { font-weight: 500; }
+.wa-pick-price { color: #D2691E; font-weight: 600; }
+
+// ── Explore ────────────────────────────────────────────────────
+.wa-explore-header {
+  text-align: center;
+  margin-bottom: 16px;
+
+  h3 { color: #D2691E; font-size: 1.2rem; margin: 0; }
+  p { color: #b3a08a; font-size: 0.85rem; margin: 4px 0 0; }
+}
+
+.wa-quadrants {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.wa-quadrant {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 8px;
+  border: 1px solid rgba(210, 105, 30, 0.25);
+  border-radius: 10px;
+  background: rgba(210, 105, 30, 0.06);
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+
+  &:hover {
+    background: rgba(210, 105, 30, 0.15);
+    border-color: #D2691E;
+  }
+}
+
+.wa-quadrant-empty {
+  opacity: 0.4;
+  cursor: default;
+  &:hover { background: rgba(210, 105, 30, 0.06); border-color: rgba(210, 105, 30, 0.25); }
+}
+
+.wa-quadrant-label { font-size: 0.82rem; font-weight: 600; }
+.wa-quadrant-count { font-size: 0.75rem; color: #b3a08a; }
+
+.wa-explore-items {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.wa-explore-item {
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(210, 105, 30, 0.15);
+  border-radius: 10px;
+}
+
+.wa-explore-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  h5 { margin: 0; font-size: 0.95rem; color: #f0e6d6; }
+}
+
+.wa-explore-meta {
+  font-size: 0.8rem;
+  color: #b3a08a;
+  margin-top: 2px;
+
+  span + span::before { content: " · "; }
+}
+
+// ── Flights ────────────────────────────────────────────────────
+.wa-flights-header {
+  text-align: center;
+  margin-bottom: 16px;
+
+  h3 { color: #D2691E; font-size: 1.2rem; margin: 0; }
+  p { color: #b3a08a; font-size: 0.85rem; margin: 4px 0 0; }
+}
+
+.wa-flights-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.wa-flight-card {
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(210, 105, 30, 0.2);
+  border-radius: 14px;
+}
+
+.wa-flight-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #D2691E;
+  margin: 0 0 6px;
+}
+
+.wa-flight-narrative {
+  font-size: 0.85rem;
+  color: #b3a08a;
+  margin: 0 0 10px;
+}
+
+.wa-flight-meta {
+  display: flex;
+  gap: 12px;
+  font-size: 0.82rem;
+  margin-bottom: 10px;
+}
+
+.wa-flight-price { font-weight: 700; color: #D2691E; }
+.wa-flight-savings { color: #28a745; font-weight: 600; }
+.wa-flight-per-dram { color: #b3a08a; }
+
+.wa-flight-items {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.wa-flight-item {
+  display: flex;
+  gap: 8px;
+  font-size: 0.85rem;
+  padding: 4px 0;
+}
+
+.wa-flight-item-pos {
+  color: #D2691E;
+  font-weight: 600;
+  min-width: 20px;
+}
+
+.wa-flight-item-note { color: #b3a08a; }
+
+// ── Body lock ──────────────────────────────────────────────────
+body.wa-active {
+  overflow: hidden;
+}

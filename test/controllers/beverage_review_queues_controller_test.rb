@@ -55,4 +55,39 @@ class BeverageReviewQueuesControllerTest < ActionDispatch::IntegrationTest
   ensure
     ActionController::Base.allow_forgery_protection = old
   end
+
+  test 'review action merges whiskey staff fields into parsed_fields' do
+    old = ActionController::Base.allow_forgery_protection
+    ActionController::Base.allow_forgery_protection = false
+
+    patch beverage_review_queue_review_restaurant_path(@restaurant,
+      menuitem_id: @menuitem.id,
+      whiskey_region: 'islay',
+      whiskey_type: 'single_malt',
+      distillery: 'Test Distillery',
+      cask_type: 'sherry_cask',
+      staff_flavor_cluster: 'heavily_peated',
+      staff_tasting_note: 'Peaty and medicinal',
+      staff_pick: 'true',
+    )
+    assert_response :redirect
+
+    @menuitem.reload
+    assert_equal false, @menuitem.sommelier_needs_review
+
+    parsed = @menuitem.sommelier_parsed_fields
+    assert_equal 'islay', parsed['whiskey_region']
+    assert_equal 'single_malt', parsed['whiskey_type']
+    assert_equal 'Test Distillery', parsed['distillery']
+    assert_equal 'sherry_cask', parsed['cask_type']
+    assert_equal 'heavily_peated', parsed['staff_flavor_cluster']
+    assert_equal 'Peaty and medicinal', parsed['staff_tasting_note']
+    assert_equal true, parsed['staff_pick']
+    assert parsed['staff_tagged_at'].present?
+    assert_equal @user.id, parsed['staff_tagged_by']
+    # Pre-existing fields preserved
+    assert_equal 12, parsed['age_years']
+  ensure
+    ActionController::Base.allow_forgery_protection = old
+  end
 end

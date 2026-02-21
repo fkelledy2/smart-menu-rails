@@ -105,6 +105,14 @@ class Menu::ExtractCandidatesJob
       confidence = [confidence, wine_conf].max
     end
 
+    # Whiskey-specific deep parsing
+    if category == 'whiskey'
+      whiskey_fields, whiskey_conf = whiskey_parser.parse(menuitem)
+      parsed.merge!(whiskey_fields) if whiskey_fields.is_a?(Hash)
+      parse_conf = [parse_conf, whiskey_conf].max
+      confidence = [confidence, whiskey_conf].max
+    end
+
     if category.blank? && llm_client_available?
       llm = llm_classify_fallback(section_name: section_name, item_name: item_name, item_description: item_description)
       if llm.is_a?(Hash) && llm['category'].present?
@@ -154,6 +162,10 @@ class Menu::ExtractCandidatesJob
 
   def wine_parser
     @wine_parser ||= BeverageIntelligence::WineParser.new
+  end
+
+  def whiskey_parser
+    @whiskey_parser ||= BeverageIntelligence::WhiskeyParser.new
   end
 
   def llm_client_available?

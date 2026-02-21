@@ -72,7 +72,9 @@ module Admin
       @discovered_restaurants = scope.offset((page - 1) * per_page).limit(per_page)
     end
 
-    def show; end
+    def show
+      auto_enrich_if_needed
+    end
 
     def update
       @discovered_restaurant.assign_attributes(discovered_restaurant_params)
@@ -400,6 +402,65 @@ module Admin
 
     def set_discovered_restaurant
       @discovered_restaurant = DiscoveredRestaurant.find(params[:id])
+    end
+
+    # Auto-trigger enrichment jobs on first view if they have never been run
+    def auto_enrich_if_needed
+      meta = @discovered_restaurant.metadata.is_a?(Hash) ? @discovered_restaurant.metadata : {}
+      place_details = meta['place_details'].is_a?(Hash) ? meta['place_details'] : {}
+      deep_dive     = meta['website_deep_dive'].is_a?(Hash) ? meta['website_deep_dive'] : {}
+      web_scrape    = meta['web_menu_scrape'].is_a?(Hash) ? meta['web_menu_scrape'] : {}
+
+      queued_any = false
+
+      # 1. Google Places lookup — never fetched and has a real google_place_id
+      gpi = @discovered_restaurant.google_place_id.to_s.strip
+      if place_details['fetched_at'].blank? && gpi.present? && !gpi.start_with?('manual_')
+        DiscoveredRestaurantRefreshPlaceDetailsJob.perform_later(
+          discovered_restaurant_id: @discovered_restaurant.id,
+          triggered_by_user_id: current_user&.id,
+        )
+        queued_any = true
+      end
+
+      # 2. Website deep dive — never run and has a website URL
+      if deep_dive['status'].blank? && @discovered_restaurant.website_url.present?
+        deep_dive_meta = deep_dive.merge(
+          'status' => 'queued',
+          'queued_at' => Time.current.iso8601,
+          'auto_triggered' => true,
+        )
+        meta['website_deep_dive'] = deep_dive_meta
+
+        DiscoveredRestaurantWebsiteDeepDiveJob.perform_later(
+          discovered_restaurant_id: @discovered_restaurant.id,
+          triggered_by_user_id: current_user&.id,
+        )
+        queued_any = true
+      end
+
+      # 3. Web menu scrape — never run and has a website URL
+      if web_scrape['status'].blank? && @discovered_restaurant.website_url.present?
+        web_scrape_meta = web_scrape.merge(
+          'status' => 'queued',
+          'queued_at' => Time.current.iso8601,
+          'auto_triggered' => true,
+        )
+        meta['web_menu_scrape'] = web_scrape_meta
+
+        DiscoveredRestaurantWebMenuScrapeJob.perform_later(
+          discovered_restaurant_id: @discovered_restaurant.id,
+          triggered_by_user_id: current_user&.id,
+        )
+        queued_any = true
+      end
+
+      if queued_any
+        @discovered_restaurant.update!(metadata: meta)
+        @discovered_restaurant.reload
+      end
+    rescue StandardError => e
+      Rails.logger.warn "[AutoEnrich] Failed for DR##{@discovered_restaurant&.id}: #{e.message}"
     end
 
     def discovered_restaurant_params

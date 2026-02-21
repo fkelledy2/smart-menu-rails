@@ -228,6 +228,19 @@ Rails.application.routes.draw do
       get 'beverage_review_queue', to: 'beverage_review_queues#show'
       patch 'beverage_review_queue/menuitems/:menuitem_id/review', to: 'beverage_review_queues#review', as: :beverage_review_queue_review
 
+      get  'whiskey_imports/new', to: 'whiskey_imports#new',    as: :new_whiskey_import
+      post 'whiskey_imports',     to: 'whiskey_imports#create', as: :whiskey_imports
+
+      get  'admin/whiskey_flights',                        to: 'admin/whiskey_flights#index',      as: :admin_whiskey_flights
+      get  'admin/whiskey_flights/new',                    to: 'admin/whiskey_flights#new',        as: :new_admin_whiskey_flight
+      post 'admin/whiskey_flights',                        to: 'admin/whiskey_flights#create',     as: :create_admin_whiskey_flight
+      get  'admin/whiskey_flights/:flight_id/edit',        to: 'admin/whiskey_flights#edit',       as: :edit_admin_whiskey_flight
+      patch 'admin/whiskey_flights/:flight_id',            to: 'admin/whiskey_flights#update',     as: :admin_whiskey_flight
+      delete 'admin/whiskey_flights/:flight_id',           to: 'admin/whiskey_flights#destroy'
+      post 'admin/whiskey_flights/:flight_id/publish',     to: 'admin/whiskey_flights#publish',    as: :publish_admin_whiskey_flight
+      post 'admin/whiskey_flights/:flight_id/archive',     to: 'admin/whiskey_flights#archive',    as: :archive_admin_whiskey_flight
+      post 'admin/whiskey_flights/:flight_id/regenerate',  to: 'admin/whiskey_flights#regenerate', as: :regenerate_admin_whiskey_flight
+
       # Analytics for Ordering dashboard (JSON)
       get 'analytics/kpis',               to: 'restaurant_analytics#kpis'
       get 'analytics/timeseries',         to: 'restaurant_analytics#timeseries'
@@ -476,6 +489,9 @@ Rails.application.routes.draw do
     post 'sommelier/recommend', to: 'sommelier#recommend', as: :sommelier_recommend
     post 'sommelier/recommend_wine', to: 'sommelier#recommend_wine', as: :sommelier_recommend_wine
     get 'sommelier/pairings/:menuitem_id', to: 'sommelier#pairings', as: :sommelier_pairings
+    post 'sommelier/recommend_whiskey', to: 'sommelier#recommend_whiskey', as: :sommelier_recommend_whiskey
+    get  'sommelier/explore_whiskeys', to: 'sommelier#explore_whiskeys', as: :sommelier_explore_whiskeys
+    get  'sommelier/whiskey_flights', to: 'sommelier#whiskey_flights', as: :sommelier_whiskey_flights
   end
   patch 'smartmenus/:smartmenu_id/locale', to: 'smartmenus_locale#update', as: :smartmenu_locale
   

@@ -82,6 +82,58 @@ class SommelierController < ApplicationController
     render json: { error: 'Item not found' }, status: :not_found
   end
 
+  # POST /smartmenus/:smartmenu_id/sommelier/recommend_whiskey
+  def recommend_whiskey
+    preferences = {
+      experience_level: params[:experience_level].to_s.presence || 'casual',
+      region_pref: params[:region_pref].to_s.presence || 'surprise_me',
+      flavor_pref: params[:flavor_pref].to_s.presence,
+      budget: params[:budget].to_i.clamp(1, 3),
+    }
+    exclude_ids = Array(params[:exclude_ids]).map(&:to_i)
+
+    recommender = BeverageIntelligence::WhiskeyRecommender.new
+    results = recommender.recommend_for_guest(
+      menu: @menu,
+      preferences: preferences,
+      limit: 3,
+      exclude_ids: exclude_ids,
+    )
+
+    render json: {
+      recommendations: results.map { |r| format_whiskey_recommendation(r) },
+      preferences: preferences,
+    }
+  end
+
+  # GET /smartmenus/:smartmenu_id/sommelier/explore_whiskeys
+  def explore_whiskeys
+    recommender = BeverageIntelligence::WhiskeyRecommender.new
+    result = recommender.explore(
+      menu: @menu,
+      cluster: params[:cluster].to_s.presence,
+      region: params[:region].to_s.presence,
+      age_range: params[:age_range].to_s.presence,
+      price_range: params[:price_range].to_s.presence,
+      new_only: ActiveModel::Type::Boolean.new.cast(params[:new_only]),
+      rare_only: ActiveModel::Type::Boolean.new.cast(params[:rare_only]),
+    )
+
+    render json: {
+      quadrants: result[:quadrants],
+      items: result[:items].map { |i| format_explore_item(i) },
+    }
+  end
+
+  # GET /smartmenus/:smartmenu_id/sommelier/whiskey_flights
+  def whiskey_flights
+    flights = @menu.whiskey_flights.visible.order(:created_at)
+
+    render json: {
+      flights: flights.map { |f| format_flight(f) },
+    }
+  end
+
   private
 
   def set_smartmenu
@@ -166,6 +218,67 @@ class SommelierController < ApplicationController
       menuitem_id: on_menu_item&.id,
       menuitem_name: on_menu_item&.name,
       menuitem_price: on_menu_item&.price,
+    }
+  end
+
+  def format_whiskey_recommendation(rec)
+    item = rec[:menuitem]
+    parsed = rec[:parsed_fields] || {}
+
+    {
+      menuitem_id: item.id,
+      name: item.name,
+      price: item.price,
+      whiskey_type: parsed['whiskey_type'],
+      region: parsed['whiskey_region'],
+      distillery: parsed['distillery'],
+      cask_type: parsed['cask_type'],
+      age_years: parsed['age_years'],
+      abv: parsed['bottling_strength_abv'],
+      flavor_cluster: parsed['staff_flavor_cluster'],
+      tags: rec[:tags],
+      staff_tasting_note: parsed['staff_tasting_note'],
+      staff_pick: parsed['staff_pick'] == true,
+      why_text: rec[:why_text],
+      score: rec[:score],
+      new_arrival: rec[:new_arrival],
+      rare: rec[:rare],
+    }
+  end
+
+  def format_explore_item(item_hash)
+    item = item_hash[:menuitem]
+    parsed = item_hash[:parsed_fields] || {}
+
+    {
+      menuitem_id: item.id,
+      name: item.name,
+      price: item.price,
+      whiskey_type: parsed['whiskey_type'],
+      region: parsed['whiskey_region'],
+      distillery: parsed['distillery'],
+      age_years: parsed['age_years'],
+      flavor_cluster: item_hash[:cluster],
+      tags: item_hash[:tags],
+      staff_tasting_note: parsed['staff_tasting_note'],
+      staff_pick: parsed['staff_pick'] == true,
+      new_arrival: item_hash[:new_arrival],
+      rare: item_hash[:rare],
+    }
+  end
+
+  def format_flight(flight)
+    {
+      id: flight.id,
+      theme_key: flight.theme_key,
+      title: flight.title,
+      narrative: flight.narrative,
+      source: flight.source,
+      total_price: flight.total_price,
+      display_price: flight.display_price,
+      per_dram_price: flight.per_dram_price,
+      savings: flight.savings,
+      items: flight.items,
     }
   end
 end

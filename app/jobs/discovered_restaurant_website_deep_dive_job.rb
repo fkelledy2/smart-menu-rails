@@ -105,6 +105,42 @@ class DiscoveredRestaurantWebsiteDeepDiveJob < ApplicationJob
       end
     end
 
+    # Fallback: if we have an address but still missing postcode/country,
+    # resolve through Google Places Find Place → PlaceDetails
+    if (dr.postcode.blank? || dr.country_code.blank?) && dr.address1.present?
+      resolved = resolve_address_via_google(dr.address1, dr.name)
+      if resolved.present?
+        fields = GooglePlaces::AddressResolver.extract_fields(resolved['address_components'])
+
+        if dr.postcode.blank? && fields[:postcode].present?
+          dr.postcode = fields[:postcode]
+          fs['postcode'] = { 'source' => 'google_places_address_resolve', 'updated_at' => now }
+        end
+        if dr.country_code.blank? && fields[:country_code].present?
+          dr.country_code = fields[:country_code]
+          fs['country_code'] = { 'source' => 'google_places_address_resolve', 'updated_at' => now }
+        end
+        if dr.city.blank? && fields[:city].present?
+          dr.city = fields[:city]
+          fs['city'] = { 'source' => 'google_places_address_resolve', 'updated_at' => now }
+        end
+        if dr.state.blank? && fields[:state].present?
+          dr.state = fields[:state]
+          fs['state'] = { 'source' => 'google_places_address_resolve', 'updated_at' => now }
+        end
+        if dr.address1.blank? && fields[:address1].present?
+          dr.address1 = fields[:address1]
+          fs['address1'] = { 'source' => 'google_places_address_resolve', 'updated_at' => now }
+        end
+
+        updated['address_resolution'] = {
+          'resolved_place_id' => resolved['place_id'],
+          'formatted_address' => resolved['formatted_address'],
+          'resolved_at' => resolved['resolved_at'],
+        }.compact
+      end
+    end
+
     if dr.currency.blank? && dr.country_code.present?
       inferred_currency = CountryCurrencyInference.new.infer(dr.country_code)
       if inferred_currency.present?
@@ -199,13 +235,7 @@ class DiscoveredRestaurantWebsiteDeepDiveJob < ApplicationJob
     place_id = dr.google_place_id.to_s.strip
     return nil if place_id.blank?
 
-    key = ENV.fetch('GOOGLE_MAPS_API_KEY', nil) || ENV.fetch('GOOGLE_MAPS_BROWSER_API_KEY', nil)
-    key ||= begin
-      Rails.application.credentials.google_maps_api_key
-    rescue StandardError
-      nil
-    end
-
+    key = google_api_key
     return nil if key.blank?
 
     details = GooglePlaces::PlaceDetails.new(api_key: key).fetch!(place_id)
@@ -222,5 +252,26 @@ class DiscoveredRestaurantWebsiteDeepDiveJob < ApplicationJob
     }.compact
   rescue StandardError
     nil
+  end
+
+  def resolve_address_via_google(address_text, restaurant_name = nil)
+    key = google_api_key
+    return nil if key.blank?
+
+    resolver = GooglePlaces::AddressResolver.new(api_key: key)
+    resolver.resolve(address_text: address_text, restaurant_name: restaurant_name)
+  rescue StandardError => e
+    Rails.logger.warn "[DeepDiveJob] Address resolution failed: #{e.message}"
+    nil
+  end
+
+  def google_api_key
+    key = ENV.fetch('GOOGLE_MAPS_API_KEY', nil) || ENV.fetch('GOOGLE_MAPS_BROWSER_API_KEY', nil)
+    key ||= begin
+      Rails.application.credentials.google_maps_api_key
+    rescue StandardError
+      nil
+    end
+    key
   end
 end

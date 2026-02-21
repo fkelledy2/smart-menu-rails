@@ -265,41 +265,23 @@ class OcrMenuImportsController < ApplicationController
       return
     end
 
-    # Scrape the HTML page(s)
-    scraper = MenuDiscovery::WebMenuScraper.new
-    scrape_result = scraper.scrape([{ url: menu_source.source_url, html: nil }])
-
-    if scrape_result[:menu_text].blank?
-      redirect_to edit_restaurant_path(@restaurant, section: 'import'),
-                  alert: 'Could not extract menu text from the web page', status: :see_other
-      return
-    end
-
     import = @restaurant.ocr_menu_imports.create!(
       name: "Web menu – #{menu_source.display_name}",
       status: 'pending',
       metadata: {
         'source' => 'web_scrape',
         'menu_source_id' => menu_source.id,
-        'source_urls' => scrape_result[:source_urls],
+        'phase' => 'queued',
       },
     )
 
-    begin
-      import.process!
-      processor = WebMenuProcessor.new(import)
-      processor.process(
-        menu_text: scrape_result[:menu_text],
-        source_urls: scrape_result[:source_urls],
-      )
-      import.complete!
-      redirect_to restaurant_ocr_menu_import_path(@restaurant, import),
-                  notice: 'Web menu imported and processed successfully'
-    rescue StandardError => e
-      import.fail!(e.message) rescue nil
-      redirect_to restaurant_ocr_menu_import_path(@restaurant, import),
-                  alert: "Import created but processing failed: #{e.message}", status: :see_other
-    end
+    WebMenuSourceImportJob.perform_later(
+      ocr_menu_import_id: import.id,
+      menu_source_id: menu_source.id,
+    )
+
+    redirect_to restaurant_ocr_menu_import_path(@restaurant, import),
+                notice: 'Web menu import queued — processing will begin shortly'
   rescue ActiveRecord::RecordNotFound
     redirect_to edit_restaurant_path(@restaurant, section: 'import'),
                 alert: 'Menu source not found', status: :see_other

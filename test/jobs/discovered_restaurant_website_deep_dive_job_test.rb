@@ -193,6 +193,106 @@ class DiscoveredRestaurantWebsiteDeepDiveJobTest < ActiveJob::TestCase
     end
   end
 
+  # =============================================================
+  # Address resolution fallback tests
+  # =============================================================
+
+  test 'resolves postcode and country via Google Places when address is scraped but components missing' do
+    fake_resolved = {
+      'place_id' => 'ChIJresolved1',
+      'formatted_address' => '42 Grafton Street, Dublin, D02 XY45, Ireland',
+      'address_components' => [
+        { 'types' => ['street_number'], 'long_name' => '42' },
+        { 'types' => ['route'], 'long_name' => 'Grafton Street' },
+        { 'types' => ['locality'], 'long_name' => 'Dublin' },
+        { 'types' => ['administrative_area_level_1'], 'short_name' => 'L' },
+        { 'types' => ['postal_code'], 'long_name' => 'D02 XY45' },
+        { 'types' => ['country'], 'short_name' => 'IE' },
+      ],
+      'resolved_at' => Time.current.iso8601,
+    }
+
+    ext = fake_extractor(base_website_result('address_candidates' => ['42 Grafton Street, Dublin']))
+    gen = fake_generator(nil)
+
+    ext_new = ->(*_args, **_kw) { ext }
+    gen_new = ->(*_args, **_kw) { gen }
+
+    MenuDiscovery::WebsiteContactExtractor.stub(:new, ext_new) do
+      MenuDiscovery::RestaurantDescriptionGenerator.stub(:new, gen_new) do
+        DiscoveredRestaurantWebsiteDeepDiveJob.define_method(:fetch_place_details) { |_dr| nil }
+        DiscoveredRestaurantWebsiteDeepDiveJob.define_method(:resolve_address_via_google) { |_addr, _name| fake_resolved }
+        begin
+          DiscoveredRestaurantWebsiteDeepDiveJob.perform_now(discovered_restaurant_id: @dr.id)
+        ensure
+          DiscoveredRestaurantWebsiteDeepDiveJob.remove_method(:fetch_place_details)
+          DiscoveredRestaurantWebsiteDeepDiveJob.remove_method(:resolve_address_via_google)
+        end
+      end
+    end
+
+    @dr.reload
+    assert_equal '42 Grafton Street, Dublin', @dr.address1
+    assert_equal 'D02 XY45', @dr.postcode
+    assert_equal 'IE', @dr.country_code
+    assert_equal 'Dublin', @dr.city
+    assert_equal 'L', @dr.state
+
+    assert_equal 'website', @dr.metadata.dig('field_sources', 'address1', 'source')
+    assert_equal 'google_places_address_resolve', @dr.metadata.dig('field_sources', 'postcode', 'source')
+    assert_equal 'google_places_address_resolve', @dr.metadata.dig('field_sources', 'country_code', 'source')
+
+    assert_equal 'ChIJresolved1', @dr.metadata.dig('address_resolution', 'resolved_place_id')
+  end
+
+  test 'skips address resolution when postcode and country already present from google_places' do
+    run_job(
+      website_result: base_website_result('address_candidates' => ['42 Grafton Street']),
+      place_details: {
+        'types' => [],
+        'address_components' => [
+          { 'types' => ['postal_code'], 'long_name' => 'D02' },
+          { 'types' => ['country'], 'short_name' => 'IE' },
+        ],
+        'location' => {},
+      },
+      ai_description: nil,
+    )
+
+    assert_equal 'D02', @dr.postcode
+    assert_equal 'IE', @dr.country_code
+    assert_equal 'google_places', @dr.metadata.dig('field_sources', 'postcode', 'source')
+    assert_equal 'google_places', @dr.metadata.dig('field_sources', 'country_code', 'source')
+    assert_nil @dr.metadata['address_resolution'], 'Should not resolve if already filled by place_details'
+  end
+
+  test 'address resolution handles nil gracefully' do
+    ext = fake_extractor(base_website_result('address_candidates' => ['Some address']))
+    gen = fake_generator(nil)
+
+    ext_new = ->(*_args, **_kw) { ext }
+    gen_new = ->(*_args, **_kw) { gen }
+
+    MenuDiscovery::WebsiteContactExtractor.stub(:new, ext_new) do
+      MenuDiscovery::RestaurantDescriptionGenerator.stub(:new, gen_new) do
+        DiscoveredRestaurantWebsiteDeepDiveJob.define_method(:fetch_place_details) { |_dr| nil }
+        DiscoveredRestaurantWebsiteDeepDiveJob.define_method(:resolve_address_via_google) { |_addr, _name| nil }
+        begin
+          DiscoveredRestaurantWebsiteDeepDiveJob.perform_now(discovered_restaurant_id: @dr.id)
+        ensure
+          DiscoveredRestaurantWebsiteDeepDiveJob.remove_method(:fetch_place_details)
+          DiscoveredRestaurantWebsiteDeepDiveJob.remove_method(:resolve_address_via_google)
+        end
+      end
+    end
+
+    @dr.reload
+    assert_equal 'Some address', @dr.address1
+    assert_nil @dr.postcode
+    assert_nil @dr.country_code
+    assert_nil @dr.metadata['address_resolution']
+  end
+
   test 'deep dive status is completed after successful run' do
     run_job(
       website_result: base_website_result,

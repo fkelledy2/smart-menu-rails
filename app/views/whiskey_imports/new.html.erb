@@ -1,0 +1,32 @@
+<h1>Whiskey CSV Import</h1>
+<p>Import whiskey tagging data for <strong><%= @restaurant.name %></strong></p>
+
+<div class="card mb-3">
+  <div class="card-body">
+    <h5>CSV Format</h5>
+    <p>Your CSV must include a <code>menu_item_name</code> column. Optional columns:</p>
+    <code>menu_item_name,whiskey_type,whiskey_region,distillery,cask_type,age,abv,staff_flavor_cluster,staff_tasting_note,staff_pick</code>
+    <hr>
+    <p><strong>Example:</strong></p>
+    <pre>"Lagavulin 16yo",single_malt,islay,Lagavulin,sherry_cask,16,43.0,heavily_peated,"Rich medicinal peat with dried fruit",true</pre>
+  </div>
+</div>
+
+<%= form_with url: whiskey_imports_restaurant_path(@restaurant), method: :post, local: true, multipart: true do |f| %>
+  <div class="mb-3">
+    <label for="menu_id" class="form-label">Menu</label>
+    <select name="menu_id" id="menu_id" class="form-select" required>
+      <% @menus.each do |menu| %>
+        <option value="<%= menu.id %>"><%= menu.name %></option>
+      <% end %>
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <label for="csv_file" class="form-label">CSV File</label>
+    <input type="file" name="csv_file" id="csv_file" accept=".csv" class="form-control" required>
+  </div>
+
+  <%= f.submit 'Import', class: 'btn btn-primary' %>
+  <%= link_to 'Back to Review Queue', beverage_review_queue_restaurant_path(@restaurant), class: 'btn btn-outline-secondary ms-2' %>
+<% end %>
