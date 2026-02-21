@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_02_20_213701) do
+ActiveRecord::Schema[7.2].define(version: 2026_02_21_210752) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "vector"
@@ -424,6 +424,10 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_20_213701) do
     t.index ["menuitem_id"], name: "index_menu_item_product_links_on_menuitem_id"
     t.index ["product_id"], name: "index_menu_item_product_links_on_product_id"
   end
+
+# Could not dump table "menu_item_search_documents" because of following StandardError
+#   Unknown type 'vector(384)' for column 'embedding'
+
 
   create_table "menu_items", force: :cascade do |t|
     t.string "name"
