@@ -111,7 +111,7 @@ class MenuItemSearchIndexJob
         vec = vectors[idx]
         next unless vec.is_a?(Array) && vec.any?
 
-        attrs[:embedding] = Pgvector::Vector.new(vec)
+        attrs[:embedding] = "[#{vec.join(',')}]"
       else
         attrs[:embedding] = nil
       end
