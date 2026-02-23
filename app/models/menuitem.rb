@@ -112,6 +112,24 @@ class Menuitem < ApplicationRecord
     spirits: 3,
   }
 
+  # Size-based pricing helpers (unified for all item types: coffee, wine, etc.)
+  def active_size_mappings
+    menuitem_size_mappings.joins(:size).where(sizes: { status: 'active' }).includes(:size)
+  end
+
+  def has_size_options?
+    menuitem_size_mappings.joins(:size).where(sizes: { status: 'active' }).exists?
+  end
+
+  # Wine-specific convenience wrappers (kept for backward compatibility)
+  def wine_size_mappings
+    menuitem_size_mappings.joins(:size).where(sizes: { category: 'wine' }).includes(:size)
+  end
+
+  def has_wine_sizes?
+    wine? && has_size_options?
+  end
+
   def genImageId
     if genimage
       genimage.id

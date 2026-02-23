@@ -1,0 +1,61 @@
+<%# Size pill/chip selector — unified for all item types with multiple serving sizes (wine, coffee, etc.) %>
+<% size_mappings = mi.active_size_mappings.sort_by { |m| m.price } %>
+<div class="card-footer text-muted" style="padding: 12px; padding-right: 0px; min-height: 56px;">
+  <div class="d-flex justify-content-between align-items-center">
+    <div class="allergen-badges <%= 'has-many' if mi.allergyns.size >= 5 %>">
+      <div class="d-flex gap-1 align-items-center" role="group" aria-label="<%= t('.allergyns', default: 'Allergens') %>">
+        <% if mi.alcoholic? %>
+          <span class="badge bg-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<%= [t('smartmenus.alcoholic_tooltip', default: 'Contains alcohol'), mi.alcohol_classification.presence, (mi.abv.present? ? "#{mi.abv}%" : nil)].compact.join(' · ') %>">
+            <%= t('smartmenus.alcoholic', default: 'Alcoholic') %>
+          </span>
+        <% end %>
+        <% mi.allergyns.each do |allergyn| %>
+          <% display_name = Allergyn::STANDARD_ALLERGENS[allergyn.symbol] || allergyn.name %>
+          <span class="badge bg-warning text-dark" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<%= display_name %>">
+            <%= allergyn.symbol %>
+          </span>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <% if !order || (order.status != 'billrequested' && order.status != 'closed') %>
+    <div class="size-selector d-flex flex-wrap gap-1 mt-2" data-menuitem-id="<%= mi.id %>">
+      <% size_mappings.each_with_index do |mapping, idx| %>
+        <%
+          short_name = mapping.size.name.sub(/\s*\(.*\)/, '')
+          is_default = (idx == 0)
+        %>
+        <button type="button"
+                class="btn btn-sm size-pill <%= is_default ? 'btn-dark' : 'btn-outline-dark' %>"
+                style="border-radius: 20px; font-size: 0.8rem; padding: 4px 12px; min-height: 36px;"
+                data-size-name="<%= mapping.size.name %>"
+                data-size-price="<%= mapping.price %>"
+                data-size-menuitem-id="<%= mi.id %>"
+                <%= 'disabled' if tablesetting.nil? %>
+                >
+          <span class="size-label"><%= short_name %></span>
+          <span class="size-price fw-bold"><%= number_to_currency(mapping.price, unit: restaurantCurrency.symbol.presence || "") %></span>
+        </button>
+      <% end %>
+
+      <button type="button"
+              class="addItemToOrder btn-touch-primary size-add-btn"
+              style="position:relative; border-radius: 8px; min-width: 44px; min-height: 36px;"
+              data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
+              <%= 'disabled' if tablesetting.nil? %>
+              data-bs-menusection_from_offset="<%= mi.menusection.fromOffset %>"
+              data-bs-menusection_to_offset="<%= mi.menusection.toOffset %>"
+              data-bs-ordr_id="<%= order&.id %>"
+              data-bs-menuitem_id="<%= mi.id %>"
+              data-bs-menuitem_name="<%= mi.name %>"
+              data-bs-menuitem_description="<%= mi.description %>"
+              data-bs-menuitem_price="<%= size_mappings.first&.price || mi.price %>"
+              data-bs-menuitem_image="<%= mi.optimised_modal_url %>"
+              data-bs-menuitem_size_name="<%= size_mappings.first&.size&.name %>"
+              data-testid="add-item-btn-<%= mi.id %>">
+        <i class="bi bi-plus"></i>
+      </button>
+    </div>
+  <% end %>
+</div>

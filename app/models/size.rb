@@ -21,6 +21,10 @@ class Size < ApplicationRecord
     archived: 2,
   }
 
+  # Category distinguishes general sizes (xs/sm/md/lg/xl) from wine-specific sizes
+  scope :wine, -> { where(category: 'wine') }
+  scope :general, -> { where(category: 'general') }
+
   # IdentityCache configuration
   cache_index :id
   cache_index :restaurant_id

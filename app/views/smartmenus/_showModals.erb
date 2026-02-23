@@ -77,6 +77,7 @@
             <% end %>
             <span style="display:none" id="a2o_ordr_id"></span>
             <span style="display:none" id="a2o_menuitem_id"></span>
+            <span style="display:none" id="a2o_size_name"></span>
             <div style="padding-left:15px;padding-right:15px;" class="row">
                 <div class="col-12">
                     <span class="h4" id="a2o_menuitem_name"></span>
@@ -196,6 +197,9 @@
                                                     <%= ordraction.ordritem.menuitem.name %>
                                                 <% end %>
                                             <% end %>
+                                            <% if ordraction.ordritem.size_name.present? %>
+                                              <span class="text-muted" style="font-size: 0.8em;">(<%= ordraction.ordritem.size_name.sub(/\s*\(.*\)/, '') %>)</span>
+                                            <% end %>
                                         </p>
                                     </div>
                                 </div>
@@ -241,6 +245,9 @@
                                                 <% else %>
                                                     <%= ordraction.ordritem.menuitem.name %>
                                                 <% end %>
+                                            <% end %>
+                                            <% if ordraction.ordritem.size_name.present? %>
+                                              <span class="text-muted" style="font-size: 0.8em;">(<%= ordraction.ordritem.size_name.sub(/\s*\(.*\)/, '') %>)</span>
                                             <% end %>
                                         </p>
                                     </div>

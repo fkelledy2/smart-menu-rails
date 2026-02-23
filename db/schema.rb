@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_02_21_210752) do
+ActiveRecord::Schema[7.2].define(version: 2026_02_22_100000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "vector"
@@ -941,6 +941,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_21_210752) do
     t.integer "status", default: 0
     t.bigint "ordr_station_ticket_id"
     t.string "line_key", null: false
+    t.string "size_name"
     t.index ["created_at"], name: "index_ordritems_on_created_at"
     t.index ["menuitem_id", "status"], name: "index_ordritems_on_menuitem_status"
     t.index ["menuitem_id"], name: "index_ordritems_on_menuitem_id"
@@ -1515,6 +1516,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_21_210752) do
     t.integer "status", default: 0
     t.integer "sequence"
     t.bigint "restaurant_id"
+    t.string "category", default: "general", null: false
+    t.index ["restaurant_id", "category"], name: "index_sizes_on_restaurant_id_and_category"
     t.index ["restaurant_id", "status"], name: "index_sizes_on_restaurant_status_active", where: "(archived = false)"
     t.index ["restaurant_id"], name: "index_sizes_on_restaurant_id"
   end

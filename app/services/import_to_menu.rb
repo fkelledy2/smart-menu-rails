@@ -137,6 +137,8 @@ class ImportToMenu
           rescue StandardError => e
             Rails.logger.warn("[ImportToMenu.upsert] allergen map warning for menuitem ##{menuitem.id}: #{e.class}: #{e.message}")
           end
+          # Create wine size mappings from OCR metadata
+          create_wine_size_mappings!(menuitem, item)
           # Link back to OCR item via modern association
           item.update_column(:menuitem_id, menuitem.id) if item.respond_to?(:menuitem_id)
         end
@@ -295,13 +297,14 @@ class ImportToMenu
             price: safe_price(item.price),
             sequence: item.sequence,
             status: 'active',
-            itemtype: 'food',
+            itemtype: infer_default_itemtype(section_name: section.name, item_name: item.name),
             preptime: 0,
             calories: 0,
-            # Dietary flags are not stored on Menuitem in current schema; omit mapping
           )
           apply_alcohol_detection!(menuitem, section_name: section.name, item_name: item.name, item_description: item.description)
           menuitem.save! if menuitem.changed?
+          # Create wine size mappings from OCR metadata
+          create_wine_size_mappings!(menuitem, item)
           # Link allergyns for this item based on OCR allergens
           begin
             map_item_allergyns!(menuitem, Array(item.allergens), @restaurant)
@@ -397,6 +400,39 @@ class ImportToMenu
     return 'beverage' if types.include?('bar') || types.include?('whiskey_bar')
 
     'food'
+  end
+
+  # Create wine Size records and MenuitemSizeMapping for wine items with size_prices metadata.
+  def create_wine_size_mappings!(menuitem, ocr_item)
+    return unless menuitem.wine?
+
+    size_prices = ocr_item.respond_to?(:metadata) && ocr_item.metadata.is_a?(Hash) ? ocr_item.metadata['size_prices'] : nil
+    return if size_prices.blank? || !size_prices.is_a?(Hash)
+
+    # Ensure canonical wine sizes exist for this restaurant
+    WineSizeSeeder.seed!(@restaurant)
+
+    size_prices.each do |size_key, price_value|
+      next if price_value.blank? || price_value.to_f <= 0
+
+      wine_size_name = WineSizeSeeder.size_name_for_key(size_key)
+      next unless wine_size_name
+
+      wine_size = @restaurant.sizes.wine.find_by(name: wine_size_name)
+      next unless wine_size
+
+      menuitem.menuitem_size_mappings.find_or_create_by!(size: wine_size) do |mapping|
+        mapping.price = price_value.to_f
+      end
+    end
+
+    # Set the default price to bottle price if available
+    bottle_price = size_prices['bottle']&.to_f
+    if bottle_price && bottle_price > 0 && menuitem.price.to_f.zero?
+      menuitem.update!(price: bottle_price)
+    end
+  rescue StandardError => e
+    Rails.logger.warn("[ImportToMenu] wine size mapping failed for menuitem ##{menuitem.id}: #{e.class}: #{e.message}")
   end
 
   # Collect a unique, normalized set of allergen names from confirmed sections/items

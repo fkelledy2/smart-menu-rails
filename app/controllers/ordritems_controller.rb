@@ -118,6 +118,7 @@ class OrdritemsController < ApplicationController
               line_key: line_key,
               menuitem_id: ordritem_params[:menuitem_id],
               ordritemprice: ordritem_params[:ordritemprice],
+              size_name: ordritem_params[:size_name],
               qty: 1,
             },
           )
@@ -373,6 +374,6 @@ class OrdritemsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def ordritem_params
-    params.require(:ordritem).permit(:ordr_id, :menuitem_id, :ordritemprice, :status)
+    params.require(:ordritem).permit(:ordr_id, :menuitem_id, :ordritemprice, :status, :size_name)
   end
 end

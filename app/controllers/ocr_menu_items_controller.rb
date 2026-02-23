@@ -93,6 +93,20 @@ class OcrMenuItemsController < ApplicationController
       @item.metadata.merge!(safe_md)
     end
 
+    # Handle size_prices (stored in metadata)
+    if params.dig(:ocr_menu_item, :size_prices).present?
+      sp = params[:ocr_menu_item][:size_prices]
+      sp = sp.to_unsafe_h if sp.respond_to?(:to_unsafe_h)
+      cleaned = sp.each_with_object({}) do |(k, v), h|
+        key = k.to_s
+        next unless %w[glass large_glass half_bottle bottle carafe].include?(key)
+        val = v.to_f
+        h[key] = val if val > 0
+      end
+      @item.metadata ||= {}
+      @item.metadata['size_prices'] = cleaned
+    end
+
     # Allow flat params too (from simple inline editors)
     if params.key?(:alcohol_override) || params.key?(:alcohol_abv) || params.key?(:alcohol_classification)
       @item.metadata ||= {}
@@ -160,6 +174,7 @@ class OcrMenuItemsController < ApplicationController
       is_gluten_free: item.respond_to?(:is_gluten_free) ? item.is_gluten_free : false,
       is_dairy_free: item.respond_to?(:is_dairy_free) ? item.is_dairy_free : false,
       is_nut_free: item.respond_to?(:is_nut_free) ? item.is_nut_free : false,
+      size_prices: (item.metadata || {})['size_prices'] || {},
     }
   end
 end

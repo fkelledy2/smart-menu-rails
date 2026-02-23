@@ -50,6 +50,7 @@ Rails.application.routes.draw do
         post :scrape_web_menus
         post :refresh_place_details
         post :resync_to_restaurant
+        post :kill_enrichment
         get :deep_dive_status
         get :web_menu_scrape_status
         get :place_details

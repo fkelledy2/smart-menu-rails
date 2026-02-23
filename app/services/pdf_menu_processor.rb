@@ -72,9 +72,18 @@ class PdfMenuProcessor
         Rails.logger.warn "PdfMenuProcessor: source locale detection failed: #{e.class}: #{e.message}"
       end
 
-      # Parse menu structure using ChatGPT
+      # Parse menu structure using ChatGPT (text-based first, then vision fallback)
       @ocr_menu_import.update!(metadata: (@ocr_menu_import.metadata || {}).merge('phase' => 'parsing_menu'))
       menu_data = parse_menu_with_chatgpt(pdf_text)
+
+      # If text-based parsing found no sections, try vision-based parsing
+      # (handles multi-column layouts, decorative PDFs, etc.)
+      if Array(menu_data[:sections]).empty? && @ocr_menu_import.pdf_file.attached?
+        Rails.logger.info 'PdfMenuProcessor: text-based parsing found 0 sections; retrying with vision-based parsing'
+        @ocr_menu_import.update!(metadata: (@ocr_menu_import.metadata || {}).merge('phase' => 'parsing_menu_vision'))
+        vision_data = parse_menu_with_vision
+        menu_data = vision_data if Array(vision_data[:sections]).any?
+      end
 
       # Save parsed data to the database
       @ocr_menu_import.update!(metadata: (@ocr_menu_import.metadata || {}).merge('phase' => 'saving_menu'))
@@ -241,6 +250,7 @@ class PdfMenuProcessor
                    "name": "<item name>",
                    "description": "<item description or empty>",
                    "price": <numeric price or null>,
+                   "size_prices": {"bottle": null, "glass": null, "large_glass": null, "half_bottle": null, "carafe": null},
                    "allergens": ["gluten", "dairy", ...]  // any allergens mentioned
                  }
                ]
@@ -306,6 +316,177 @@ class PdfMenuProcessor
     json.deep_symbolize_keys
   end
 
+  # Vision-based parsing: render PDF pages to images and send to GPT-4o vision.
+  # This handles multi-column layouts, decorative designs, and PDFs where text
+  # extraction produces garbled output due to complex visual structure.
+  def parse_menu_with_vision
+    return { sections: [] } unless @ocr_menu_import.pdf_file.attached?
+
+    api_key = Rails.application.credentials.openai_api_key
+    if api_key.blank?
+      Rails.logger.warn 'PdfMenuProcessor: openai_api_key missing; vision parsing skipped'
+      return { sections: [] }
+    end
+
+    unless defined?(OpenAI)
+      Rails.logger.warn 'PdfMenuProcessor: OpenAI gem not available; vision parsing skipped'
+      return { sections: [] }
+    end
+
+    # Use gpt-4o for vision (better at complex layouts than gpt-4o-mini)
+    vision_model = ENV.fetch('OPENAI_VISION_MODEL', 'gpt-4o')
+
+    tempfile = Tempfile.new(['pdf', '.pdf'])
+    begin
+      File.binwrite(tempfile.path, @ocr_menu_import.pdf_file.download)
+
+      # Render pages to images and base64-encode them
+      image_contents = render_pdf_pages_to_base64(tempfile.path)
+      if image_contents.empty?
+        Rails.logger.warn 'PdfMenuProcessor: could not render PDF pages to images for vision parsing'
+        return { sections: [] }
+      end
+
+      venue_context = build_venue_context
+
+      # Build vision message with page images
+      user_content = []
+      user_content << {
+        type: 'text',
+        text: <<~PROMPT,
+          You are looking at images of a #{venue_context[:label]} menu (#{image_contents.size} page(s)).
+
+          #{venue_context[:instructions]}
+
+          TASK:
+          1. Visually examine each page image. Pay attention to column layouts, decorative text, and groupings.
+          2. Parse ALL menu items into JSON with this exact schema:
+             {
+               "sections": [
+                 {
+                   "name": "<section name>",
+                   "items": [
+                     {
+                       "name": "<item name>",
+                       "description": "<item description or empty>",
+                       "price": <numeric price or null>,
+                       "size_prices": {"bottle": null, "glass": null, "large_glass": null, "half_bottle": null, "carafe": null},
+                       "allergens": []
+                     }
+                   ]
+                 }
+               ]
+             }
+
+          3. If the menu has multiple columns, parse EACH column as its own section(s).
+          4. If something is unknown, use null or empty values.
+          5. Output ONLY valid JSON. No commentary, no markdown fences.
+        PROMPT
+      }
+
+      image_contents.each_with_index do |b64, idx|
+        user_content << {
+          type: 'image_url',
+          image_url: {
+            url: "data:image/png;base64,#{b64}",
+            detail: 'high',
+          },
+        }
+      end
+
+      # Make the vision API call with appropriate timeout
+      timeout_seconds = [120 * image_contents.size, 360].min
+      wall_clock_limit = timeout_seconds + 30
+      client = @openai_client || OpenAI::Client.new(access_token: api_key, request_timeout: timeout_seconds)
+
+      Rails.logger.info "PdfMenuProcessor: vision parsing #{image_contents.size} page(s) with #{vision_model} (timeout: #{timeout_seconds}s)"
+
+      response = nil
+      attempts = 0
+      begin
+        attempts += 1
+        Timeout.timeout(wall_clock_limit, Net::ReadTimeout, "Vision call exceeded #{wall_clock_limit}s") do
+          response = client.chat(parameters: {
+            model: vision_model,
+            temperature: 0,
+            max_tokens: 16_000,
+            response_format: { type: 'json_object' },
+            messages: [
+              { role: 'system', content: 'You are a helpful assistant that outputs only valid JSON.' },
+              { role: 'user', content: user_content },
+            ],
+          })
+        end
+      rescue Net::ReadTimeout, Net::OpenTimeout, Errno::ETIMEDOUT, Faraday::TimeoutError => e
+        if attempts < 2
+          Rails.logger.info "PdfMenuProcessor: vision attempt #{attempts} timed out; retrying..."
+          sleep(2)
+          retry
+        else
+          Rails.logger.warn "PdfMenuProcessor: vision parsing failed after #{attempts} attempts: #{e.class} - #{e.message}"
+          return { sections: [] }
+        end
+      end
+
+      content = response&.dig('choices', 0, 'message', 'content').to_s.strip
+      if content.blank?
+        Rails.logger.warn 'PdfMenuProcessor: vision API returned empty response'
+        return { sections: [] }
+      end
+
+      # Parse JSON response
+      normalized = content.sub(/\A```\w*\s*/m, '').sub(/```\s*\z/m, '').strip
+      json = begin
+        JSON.parse(normalized)
+      rescue JSON::ParserError
+        start_idx = normalized.index('{')
+        end_idx = normalized.rindex('}')
+        if start_idx && end_idx && end_idx > start_idx
+          JSON.parse(normalized[start_idx..end_idx]) rescue nil
+        end
+      end
+
+      if json.nil?
+        Rails.logger.warn 'PdfMenuProcessor: vision response was not valid JSON'
+        return { sections: [] }
+      end
+
+      result = json.deep_symbolize_keys
+      section_count = Array(result[:sections]).size
+      item_count = Array(result[:sections]).sum { |s| Array(s[:items]).size }
+      Rails.logger.info "PdfMenuProcessor: vision parsing found #{section_count} sections, #{item_count} items"
+      result
+    rescue StandardError => e
+      Rails.logger.error "PdfMenuProcessor: vision parsing error: #{e.class}: #{e.message}"
+      { sections: [] }
+    ensure
+      tempfile.close
+      tempfile.unlink
+    end
+  end
+
+  # Render PDF pages to PNG images and return base64-encoded strings
+  def render_pdf_pages_to_base64(pdf_path)
+    images = []
+    Dir.mktmpdir(['pdf_vision']) do |dir|
+      MiniMagick.convert do |convert|
+        convert.density(150)
+        convert << pdf_path
+        convert.quality(80)
+        convert.resize('1200x1600>')
+        convert << File.join(dir, 'page-%d.png')
+      end
+
+      Dir[File.join(dir, 'page-*.png')].sort_by { |p| p[/page-(\d+)\.png/, 1].to_i }.each do |img_path|
+        images << Base64.strict_encode64(File.binread(img_path))
+      end
+    end
+    images
+  rescue StandardError => e
+    Rails.logger.error "PdfMenuProcessor: failed to render PDF pages: #{e.class}: #{e.message}"
+    []
+  end
+
   def ask_chatgpt(prompt)
     api_key = Rails.application.credentials.openai_api_key
 
@@ -333,10 +514,23 @@ class PdfMenuProcessor
             ENV['OPENAI_MODEL'] ||
             'gpt-3.5-turbo'
     # Network robustness: timeouts and limited retries (OpenAI SDK)
-    timeout_seconds = (ENV['OPENAI_TIMEOUT'] || 120).to_i
+    # Scale timeout for large prompts — GPT needs more time to generate structured JSON for big menus
+    base_timeout = (ENV['OPENAI_TIMEOUT'] || 120).to_i
+    prompt_chars = prompt.to_s.length
+    timeout_seconds = if prompt_chars > 10_000
+                        [base_timeout * 3, 360].min  # up to 6 min for large menus
+                      elsif prompt_chars > 5_000
+                        [base_timeout * 2, 300].min  # up to 5 min for medium menus
+                      else
+                        base_timeout
+                      end
+    # Hard wall-clock limit per attempt (request_timeout only covers individual reads,
+    # not slow-trickle responses that keep the connection alive)
+    wall_clock_limit = timeout_seconds + 30
     attempts = 0
-    client = @openai_client || Rails.configuration.x.openai_client || OpenAI::Client.new(access_token: api_key,
-                                                                                         request_timeout: timeout_seconds,)
+    # Always build a client with the scaled timeout (the global client may have a shorter default)
+    client = @openai_client || OpenAI::Client.new(access_token: api_key,
+                                                  request_timeout: timeout_seconds,)
     begin
       attempts += 1
       # Some models support response_format json_object; skip if it raises an error
@@ -348,19 +542,26 @@ class PdfMenuProcessor
           { role: 'user', content: prompt },
         ],
       }
-      begin
-        parameters[:response_format] = { type: 'json_object' }
-        response = client.chat(parameters: parameters)
-      rescue StandardError
-        parameters.delete(:response_format)
-        response = client.chat(parameters: parameters)
+      # Hard wall-clock timeout wraps each attempt
+      Timeout.timeout(wall_clock_limit, Net::ReadTimeout, "OpenAI call exceeded #{wall_clock_limit}s wall-clock limit") do
+        # Try with response_format first; fall back without it if the model rejects it
+        # Only rescue format-related errors — let timeout/network errors bubble up to the outer retry loop
+        begin
+          parameters[:response_format] = { type: 'json_object' }
+          response = client.chat(parameters: parameters)
+        rescue Faraday::BadRequestError, ArgumentError => e
+          Rails.logger.info "PdfMenuProcessor: response_format not supported (#{e.class}); retrying without it"
+          parameters.delete(:response_format)
+          response = client.chat(parameters: parameters)
+        end
       end
     rescue Net::ReadTimeout, Net::OpenTimeout, Errno::ETIMEDOUT, SocketError, Faraday::TimeoutError => e
       if attempts < 3
+        Rails.logger.info "PdfMenuProcessor: OpenAI attempt #{attempts} failed (#{e.class}); retrying in #{1.5 * attempts}s..."
         sleep(1.5 * attempts)
         retry
       else
-        Rails.logger.warn "PdfMenuProcessor: OpenAI request failed after retries due to network error: #{e.class} - #{e.message}; using fallback empty menu structure"
+        Rails.logger.warn "PdfMenuProcessor: OpenAI request failed after #{attempts} retries: #{e.class} - #{e.message}; using fallback empty menu structure"
         return OpenStruct.new(parsed_response: {
           'choices' => [
             { 'message' => { 'content' => { sections: [] }.to_json } },
@@ -407,6 +608,13 @@ class PdfMenuProcessor
         )
 
         Array(section_data[:items]).each_with_index do |item_data, item_index|
+          item_metadata = {}
+          # Store wine size prices in metadata if present
+          if item_data[:size_prices].is_a?(Hash)
+            sp = item_data[:size_prices].select { |_k, v| v.present? && v.to_f > 0 }
+            item_metadata['size_prices'] = sp.transform_values(&:to_f) if sp.any?
+          end
+
           section.ocr_menu_items.create!(
             name: item_data[:name],
             description: item_data[:description],
@@ -418,6 +626,7 @@ class PdfMenuProcessor
             is_dairy_free: item_data[:is_dairy_free] || false,
             sequence: item_index + 1,
             is_confirmed: true,
+            metadata: item_metadata.presence || {},
           )
 
           items_processed += 1
@@ -449,7 +658,12 @@ class PdfMenuProcessor
         - Group wines by region, grape variety, or style as shown in the source.
         - For each wine, include the full wine name (producer + cuvée if available).
         - Include vintage year, grape/blend, and region/appellation in the description.
-        - If both glass and bottle prices are listed, create separate items: "<Wine Name> (Glass)" and "<Wine Name> (Bottle)".
+        - Do NOT create separate items for different sizes of the same wine.
+        - If multiple serving sizes are listed (bottle, glass, carafe, half bottle, large glass),
+          include ALL prices in a "size_prices" object on the item.
+        - "price" should be the bottle price (or the first/primary price listed).
+        - Only include size keys that have prices on the menu. Omit sizes not listed.
+        - Valid size keys: "bottle", "glass", "large_glass", "half_bottle", "carafe".
         - Use sections like "Red Wines", "White Wines", "Sparkling", "Rosé", "Dessert Wines" if the menu groups them this way.
       WINE
     end

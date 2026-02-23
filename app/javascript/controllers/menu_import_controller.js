@@ -23,6 +23,8 @@ export default class extends Controller {
     'editItemGlutenFree',
     'editItemDairyFree',
     'editItemNutFree',
+    'sizePricesSection',
+    'editSizePrice',
     'overallPercent',
     'overallSlider',
     'overallFill',
@@ -115,6 +117,8 @@ export default class extends Controller {
         this.phaseTextTarget.textContent = 'Extracting PDF pages…';
       } else if (phase === 'parsing_menu') {
         this.phaseTextTarget.textContent = 'Parsing menu structure…';
+      } else if (phase === 'parsing_menu_vision') {
+        this.phaseTextTarget.textContent = 'Analysing menu layout with vision…';
       } else if (phase === 'saving_menu') {
         this.phaseTextTarget.textContent = 'Saving menu items…';
       } else if (phase === 'estimating_prices') {
@@ -246,6 +250,25 @@ export default class extends Controller {
     this.setDietaryRestrictionCheckbox('dairy_free', dietaryRestrictions);
     this.setDietaryRestrictionCheckbox('nut_free', dietaryRestrictions);
 
+    // Populate size prices
+    let sizePrices = {};
+    try {
+      sizePrices = JSON.parse(event.currentTarget.dataset.itemSizePrices || '{}');
+    } catch (e) {
+      sizePrices = {};
+    }
+    const hasSizePrices = Object.values(sizePrices).some(v => v != null && parseFloat(v) > 0);
+    if (this.hasSizePricesSectionTarget) {
+      this.sizePricesSectionTarget.style.display = hasSizePrices ? '' : 'none';
+    }
+    if (this.hasEditSizePriceTarget) {
+      this.editSizePriceTargets.forEach(input => {
+        const key = input.dataset.sizeKey;
+        const val = sizePrices[key];
+        input.value = (val != null && parseFloat(val) > 0) ? val : '';
+      });
+    }
+
     // Store id on modal dataset for save fallback
     try {
       this.editItemModalTarget.dataset.itemId = itemId;
@@ -336,6 +359,16 @@ export default class extends Controller {
     if (this.hasEditItemNutFreeTarget && this.editItemNutFreeTarget.checked)
       dietaryRestrictions.push('nut_free');
 
+    // Collect size prices
+    const sizePrices = {};
+    if (this.hasEditSizePriceTarget) {
+      this.editSizePriceTargets.forEach(input => {
+        const key = input.dataset.sizeKey;
+        const val = parseFloat(input.value);
+        if (!isNaN(val) && val > 0) sizePrices[key] = val;
+      });
+    }
+
     const payload = {
       ocr_menu_item: {
         name: formData.get('item_name'),
@@ -344,6 +377,7 @@ export default class extends Controller {
         price: parseFloat(formData.get('item_price')) || 0,
         allergens: allergens,
         dietary_restrictions: dietaryRestrictions,
+        size_prices: sizePrices,
       },
     };
     console.debug('[menu-import#saveItem] PATCH /ocr_menu_items/' + itemId, payload);
@@ -462,21 +496,43 @@ export default class extends Controller {
               if (!activeKeys.length) badgeWrap.remove();
             }
 
-            // Update edit trigger data attributes for next open
-            const editIcon = row.querySelector('.bi.bi-pencil');
-            if (editIcon) {
-              editIcon.dataset.itemName = item.name || '';
-              editIcon.dataset.itemDescription = item.description || '';
-              editIcon.dataset.itemImagePrompt = item.image_prompt || '';
-              editIcon.dataset.itemPrice = item.price || '';
-              editIcon.dataset.itemAllergens = JSON.stringify(item.allergens || []);
+            // Update size prices badge
+            const spData = data.item?.size_prices || {};
+            const spEntries = Object.entries(spData).filter(([, v]) => v != null && parseFloat(v) > 0);
+            let spBadge = row.querySelector('.badge.bg-purple');
+            if (spEntries.length) {
+              const spText = spEntries.map(([k, v]) => {
+                const label = k.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+                return `${label}: ${v}`;
+              }).join(' \u00b7 ');
+              if (!spBadge) {
+                spBadge = document.createElement('span');
+                spBadge.className = 'badge bg-purple bg-opacity-10 text-dark border border-secondary border-opacity-25';
+                spBadge.style.fontSize = '0.65rem';
+                const priceArea = row.querySelector('.d-flex.align-items-center.gap-2.flex-shrink-0');
+                if (priceArea) priceArea.insertBefore(spBadge, priceArea.querySelector('.btn'));
+              }
+              spBadge.innerHTML = `<i class="bi bi-cup-straw me-1" aria-hidden="true"></i>${spText}`;
+            } else if (spBadge) {
+              spBadge.remove();
+            }
+
+            // Update edit trigger data attributes on the button for next open
+            const editBtn = row.querySelector('[data-action="click->menu-import#showEditItemModal"]');
+            if (editBtn) {
+              editBtn.dataset.itemName = item.name || '';
+              editBtn.dataset.itemDescription = item.description || '';
+              editBtn.dataset.itemImagePrompt = item.image_prompt || '';
+              editBtn.dataset.itemPrice = item.price || '';
+              editBtn.dataset.itemAllergens = JSON.stringify(item.allergens || []);
+              editBtn.dataset.itemSizePrices = JSON.stringify(item.size_prices || {});
               const diet = [];
               if (item.is_vegetarian) diet.push('vegetarian');
               if (item.is_vegan) diet.push('vegan');
               if (item.is_gluten_free) diet.push('gluten_free');
               if (item.is_dairy_free) diet.push('dairy_free');
               if (item.is_nut_free) diet.push('nut_free');
-              editIcon.dataset.itemDietaryRestrictions = JSON.stringify(diet);
+              editBtn.dataset.itemDietaryRestrictions = JSON.stringify(diet);
             }
           }
         } catch (e) {

@@ -347,9 +347,10 @@ export function initOrderBindings() {
       const ordrId = document.getElementById('a2o_ordr_id')?.textContent?.trim() || currentOrderId;
       const menuitemId = document.getElementById('a2o_menuitem_id')?.textContent?.trim();
       const price = document.getElementById('a2o_menuitem_price')?.textContent?.trim();
+      const sizeName = document.getElementById('a2o_size_name')?.textContent?.trim() || null;
       const restaurantId = getRestaurantId();
       if (!ordrId || !menuitemId || !restaurantId) { console.error('[AddItem][capture] Missing data'); return; }
-      const ordritem = { ordritem: { ordr_id: ordrId, menuitem_id: menuitemId, status: 0, ordritemprice: price } };
+      const ordritem = { ordritem: { ordr_id: ordrId, menuitem_id: menuitemId, status: 0, ordritemprice: price, size_name: sizeName } };
       post(`/restaurants/${restaurantId}/ordritems`, ordritem)
         .then(() => hideClosestModal(btn))
         .catch((e) => console.error('[AddItem][capture] Post failed:', e));

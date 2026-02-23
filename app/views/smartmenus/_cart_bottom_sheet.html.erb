@@ -70,6 +70,9 @@
               <% else %>
                 <%= ordraction.ordritem.menuitem.name %>
               <% end %>
+              <% if ordraction.ordritem.size_name.present? %>
+                <span class="text-muted" style="font-size: 0.8em;">(<%= ordraction.ordritem.size_name.sub(/\s*\(.*\)/, '') %>)</span>
+              <% end %>
             </div>
             <div class="cart-sheet__item-price">
               <%= number_to_currency(ordraction.ordritem.ordritemprice, unit: restaurantCurrency&.symbol || '') %>
@@ -94,6 +97,9 @@
                 <%= ordraction.ordritem.menuitem.localised_name(menuparticipant.preferredlocale) %>
               <% else %>
                 <%= ordraction.ordritem.menuitem.name %>
+              <% end %>
+              <% if ordraction.ordritem.size_name.present? %>
+                <span class="text-muted" style="font-size: 0.8em;">(<%= ordraction.ordritem.size_name.sub(/\s*\(.*\)/, '') %>)</span>
               <% end %>
             </div>
             <div class="cart-sheet__item-price text-muted">

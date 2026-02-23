@@ -61,7 +61,19 @@ end %>
       <h1 class="h4 fw-semibold mb-0"><%= @discovered_restaurant.name %></h1>
       <span class="badge <%= status_badge_class %> ms-1"><%= @discovered_restaurant.status.upcase %></span>
     </div>
-    <span class="text-muted" style="font-size: 0.875rem;"><i class="bi bi-calendar3 me-1"></i>Discovered: <%= (@discovered_restaurant.discovered_at || @discovered_restaurant.created_at).strftime('%Y-%m-%d') %></span>
+    <div class="d-flex align-items-center gap-2">
+      <% enrichment_active = [deep_dive['status'], web_scrape['status']].any? { |s| %w[queued scraping processing].include?(s) } %>
+      <% if enrichment_active %>
+        <%= button_to kill_enrichment_admin_discovered_restaurant_path(@discovered_restaurant),
+              method: :post,
+              class: 'btn btn-outline-danger btn-sm',
+              title: 'Stop all running enrichment processes',
+              data: { turbo_confirm: 'Kill all running enrichment jobs?' } do %>
+          <i class="bi bi-x-octagon me-1"></i>Kill Enrichment
+        <% end %>
+      <% end %>
+      <span class="text-muted" style="font-size: 0.875rem;"><i class="bi bi-calendar3 me-1"></i>Discovered: <%= (@discovered_restaurant.discovered_at || @discovered_restaurant.created_at).strftime('%Y-%m-%d') %></span>
+    </div>
   </div>
 
 
@@ -269,6 +281,8 @@ end %>
           <span class="badge bg-success ms-1">completed</span>
         <% when 'failed' %>
           <span class="badge bg-danger ms-1">failed</span>
+        <% when 'killed' %>
+          <span class="badge bg-secondary ms-1">killed</span>
         <% end %>
       </h2>
       <div class="small">

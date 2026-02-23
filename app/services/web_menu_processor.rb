@@ -162,6 +162,7 @@ class WebMenuProcessor
                    "name": "<item name>",
                    "description": "<item description or empty>",
                    "price": <numeric price or null if not listed>,
+                   "size_prices": {"bottle": null, "glass": null, "large_glass": null, "half_bottle": null, "carafe": null},
                    "allergens": ["gluten", "dairy", ...]
                  }
                ]
@@ -244,9 +245,22 @@ class WebMenuProcessor
             ENV['OPENAI_MODEL'] ||
             'gpt-3.5-turbo'
 
-    timeout_seconds = (ENV['OPENAI_TIMEOUT'] || 120).to_i
+    # Scale timeout for large prompts — GPT needs more time to generate structured JSON for big menus
+    base_timeout = (ENV['OPENAI_TIMEOUT'] || 120).to_i
+    prompt_chars = prompt.to_s.length
+    timeout_seconds = if prompt_chars > 10_000
+                        [base_timeout * 3, 360].min
+                      elsif prompt_chars > 5_000
+                        [base_timeout * 2, 300].min
+                      else
+                        base_timeout
+                      end
+    # Hard wall-clock limit per attempt (request_timeout only covers individual reads,
+    # not slow-trickle responses that keep the connection alive)
+    wall_clock_limit = timeout_seconds + 30
     attempts = 0
-    client = @openai_client || Rails.configuration.x.openai_client || OpenAI::Client.new(
+    # Always build a client with the scaled timeout (the global client may have a shorter default)
+    client = @openai_client || OpenAI::Client.new(
       access_token: api_key,
       request_timeout: timeout_seconds,
     )
@@ -261,19 +275,26 @@ class WebMenuProcessor
           { role: 'user', content: prompt },
         ],
       }
-      begin
-        parameters[:response_format] = { type: 'json_object' }
-        response = client.chat(parameters: parameters)
-      rescue StandardError
-        parameters.delete(:response_format)
-        response = client.chat(parameters: parameters)
+      # Hard wall-clock timeout wraps each attempt
+      Timeout.timeout(wall_clock_limit, Net::ReadTimeout, "OpenAI call exceeded #{wall_clock_limit}s wall-clock limit") do
+        # Try with response_format first; fall back without it if the model rejects it
+        # Only rescue format-related errors — let timeout/network errors bubble up to the outer retry loop
+        begin
+          parameters[:response_format] = { type: 'json_object' }
+          response = client.chat(parameters: parameters)
+        rescue Faraday::BadRequestError, ArgumentError => e
+          Rails.logger.info "WebMenuProcessor: response_format not supported (#{e.class}); retrying without it"
+          parameters.delete(:response_format)
+          response = client.chat(parameters: parameters)
+        end
       end
     rescue Net::ReadTimeout, Net::OpenTimeout, Errno::ETIMEDOUT, SocketError, Faraday::TimeoutError => e
       if attempts < 3
+        Rails.logger.info "WebMenuProcessor: OpenAI attempt #{attempts} failed (#{e.class}); retrying in #{1.5 * attempts}s..."
         sleep(1.5 * attempts)
         retry
       else
-        Rails.logger.warn "WebMenuProcessor: OpenAI request failed after retries: #{e.class} - #{e.message}"
+        Rails.logger.warn "WebMenuProcessor: OpenAI request failed after #{attempts} retries: #{e.class} - #{e.message}"
         return fallback_response
       end
     end
@@ -323,6 +344,13 @@ class WebMenuProcessor
         )
 
         Array(section_data[:items]).each_with_index do |item_data, item_index|
+          item_metadata = {}
+          # Store wine size prices in metadata if present
+          if item_data[:size_prices].is_a?(Hash)
+            sp = item_data[:size_prices].select { |_k, v| v.present? && v.to_f > 0 }
+            item_metadata['size_prices'] = sp.transform_values(&:to_f) if sp.any?
+          end
+
           section.ocr_menu_items.create!(
             name: item_data[:name],
             description: item_data[:description],
@@ -334,6 +362,7 @@ class WebMenuProcessor
             is_dairy_free: item_data[:is_dairy_free] || false,
             sequence: item_index + 1,
             is_confirmed: true,
+            metadata: item_metadata.presence || {},
           )
           items_processed += 1
         end
@@ -482,7 +511,12 @@ class WebMenuProcessor
         - Group wines by region, grape variety, or style as shown in the source.
         - For each wine, include the full wine name (producer + cuvée if available).
         - Include vintage year, grape/blend, and region/appellation in the description.
-        - If both glass and bottle prices are listed, create separate items.
+        - Do NOT create separate items for different sizes of the same wine.
+        - If multiple serving sizes are listed (bottle, glass, carafe, half bottle, large glass),
+          include ALL prices in a "size_prices" object on the item.
+        - "price" should be the bottle price (or the first/primary price listed).
+        - Only include size keys that have prices on the menu. Omit sizes not listed.
+        - Valid size keys: "bottle", "glass", "large_glass", "half_bottle", "carafe".
         - Use sections like "Red Wines", "White Wines", "Sparkling", "Rosé" if the menu groups them.
       WINE
     end

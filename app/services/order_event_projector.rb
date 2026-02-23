@@ -63,6 +63,7 @@ class OrderEventProjector
       line_key = event.payload['line_key'] || event.payload[:line_key]
       menuitem_id = event.payload['menuitem_id'] || event.payload[:menuitem_id]
       price = event.payload['ordritemprice'] || event.payload[:ordritemprice]
+      size_name = event.payload['size_name'] || event.payload[:size_name]
       return if line_key.blank? || menuitem_id.blank?
 
       existing = Ordritem.find_by(ordr_id: ordr.id, line_key: line_key.to_s)
@@ -80,6 +81,7 @@ class OrderEventProjector
         ordritemprice: ordritemprice || 0.0,
         status: :opened,
         line_key: line_key.to_s,
+        size_name: size_name.presence,
       )
 
     else

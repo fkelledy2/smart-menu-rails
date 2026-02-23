@@ -87,6 +87,7 @@ class SmartmenuState
         name: name.to_s,
         price: price.to_f,
         status: item.status.to_s,
+        size_name: item.try(:size_name),
       }
     end
     opened_count         = items.count { |i| i[:status] == 'opened' }

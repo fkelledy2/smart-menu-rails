@@ -9,7 +9,7 @@ module Admin
     before_action :ensure_admin!
     before_action :require_super_admin!
 
-    before_action :set_discovered_restaurant, only: %i[show update approve reject deep_dive_website deep_dive_status scrape_web_menus web_menu_scrape_status place_details refresh_place_details resync_to_restaurant]
+    before_action :set_discovered_restaurant, only: %i[show update approve reject deep_dive_website deep_dive_status scrape_web_menus web_menu_scrape_status place_details refresh_place_details resync_to_restaurant kill_enrichment]
 
     def index
       base_scope = DiscoveredRestaurant.all
@@ -398,6 +398,40 @@ module Admin
       redirect_back_or_to(admin_discovered_restaurant_path(@discovered_restaurant), alert: "Sync failed: #{e.message}", status: :see_other)
     end
 
+    def kill_enrichment
+      killed = []
+      metadata = @discovered_restaurant.metadata.is_a?(Hash) ? @discovered_restaurant.metadata : {}
+
+      # Reset web_menu_scrape status if active
+      scrape = metadata['web_menu_scrape']
+      if scrape.is_a?(Hash) && %w[queued scraping processing].include?(scrape['status'])
+        scrape['status'] = 'killed'
+        scrape['killed_at'] = Time.current.iso8601
+        metadata['web_menu_scrape'] = scrape
+        killed << 'Web menu scrape'
+      end
+
+      # Reset website_deep_dive status if active
+      deep_dive = metadata['website_deep_dive']
+      if deep_dive.is_a?(Hash) && %w[queued processing scraping].include?(deep_dive['status'])
+        deep_dive['status'] = 'killed'
+        deep_dive['killed_at'] = Time.current.iso8601
+        metadata['website_deep_dive'] = deep_dive
+        killed << 'Website deep dive'
+      end
+
+      @discovered_restaurant.update!(metadata: metadata)
+
+      # Remove matching jobs from Sidekiq queues
+      removed = remove_sidekiq_jobs_for(@discovered_restaurant.id)
+      killed << "#{removed} Sidekiq job(s) removed" if removed > 0
+
+      msg = killed.any? ? "Killed: #{killed.join(', ')}" : 'No active enrichment processes found'
+      redirect_back_or_to(admin_discovered_restaurant_path(@discovered_restaurant), notice: msg, status: :see_other)
+    rescue StandardError => e
+      redirect_back_or_to(admin_discovered_restaurant_path(@discovered_restaurant), alert: "Kill failed: #{e.message}", status: :see_other)
+    end
+
     private
 
     def set_discovered_restaurant
@@ -493,6 +527,57 @@ module Admin
       return if current_user&.admin? && current_user.super_admin?
 
       redirect_to root_path, alert: 'Access denied. Super admin privileges required.'
+    end
+
+    # Remove queued/scheduled/retry Sidekiq jobs that target this discovered restaurant
+    DR_ENRICHMENT_JOB_CLASSES = %w[
+      DiscoveredRestaurantWebMenuScrapeJob
+      DiscoveredRestaurantWebsiteDeepDiveJob
+      DiscoveredRestaurantRefreshPlaceDetailsJob
+    ].freeze
+
+    def remove_sidekiq_jobs_for(dr_id)
+      require 'sidekiq/api'
+      removed = 0
+      dr_id_s = dr_id.to_s
+
+      # Scan default queue
+      Sidekiq::Queue.new('default').each do |job|
+        if dr_enrichment_job_for?(job, dr_id_s)
+          job.delete
+          removed += 1
+        end
+      end
+
+      # Scan scheduled set
+      Sidekiq::ScheduledSet.new.each do |job|
+        if dr_enrichment_job_for?(job, dr_id_s)
+          job.delete
+          removed += 1
+        end
+      end
+
+      # Scan retry set
+      Sidekiq::RetrySet.new.each do |job|
+        if dr_enrichment_job_for?(job, dr_id_s)
+          job.delete
+          removed += 1
+        end
+      end
+
+      removed
+    end
+
+    def dr_enrichment_job_for?(job, dr_id_s)
+      wrapped = job['wrapped'] || job.item['wrapped']
+      return false unless DR_ENRICHMENT_JOB_CLASSES.include?(wrapped.to_s)
+
+      args = job['args'] || job.item['args'] || []
+      aj_payload = args.first
+      return false unless aj_payload.is_a?(Hash)
+
+      aj_args = aj_payload['arguments'] || []
+      aj_args.any? { |a| a.is_a?(Hash) && a['discovered_restaurant_id'].to_s == dr_id_s }
     end
   end
 end
