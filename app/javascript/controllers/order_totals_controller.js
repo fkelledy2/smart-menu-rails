@@ -203,30 +203,22 @@ export default class extends Controller {
       if (!body || !totals) return;
       const currency = totals?.currency?.symbol || '';
       const price = (n) => `${currency}${(typeof n === 'number' ? n : parseFloat(n || 0)).toFixed(2)}`;
-      const row = (cols) => `<div class="row">${cols}</div>`;
-      const col = (n, html) => `<div class="col-${n}">${html}</div>`;
+      const line = (label, amount, cls) => `<div class="bill-line${cls ? ' ' + cls : ''}"><span>${label}</span><span class="bill-amount">${amount}</span></div>`;
 
       let html = '';
-      // Header
-      html += row(col(10, '<b>Item</b>') + col(2, `<span class="float-end"><b>Price</b></span>`));
-      // Cover charge
+      html += line('<b>Item</b>', '<b>Price</b>', 'bill-line-header');
       if ((totals.covercharge || 0) > 0) {
-        html += row(col(10, 'Cover charge') + col(2, `<span class="float-end">${price(totals.covercharge)}</span>`));
+        html += line('Cover charge', price(totals.covercharge));
       }
-      // Nett
-      html += row(col(10, 'Nett') + col(2, `<span class="float-end">${price(totals.nett)}</span>`));
-      // Service
+      html += line('Nett', price(totals.nett));
       if ((totals.service || 0) > 0) {
-        html += row(col(10, 'Service') + col(2, `<span class="float-end">${price(totals.service)}</span>`));
+        html += line('Service', price(totals.service));
       }
-      // Tax
       if ((totals.tax || 0) > 0) {
-        html += row(col(10, 'Tax') + col(2, `<span class="float-end">${price(totals.tax)}</span>`));
+        html += line('Tax', price(totals.tax));
       }
-      // Divider
-      html += row(col(10, '') + col(2, '<hr>'));
-      // Total (excluding tip)
-      html += row(col(10, '<b>Total</b> <i>(excluding tip)</i>') + col(2, `<span class="float-end"><b>${price(totals.gross)}</b></span>`));
+      html += '<hr>';
+      html += line('<b>Total</b> <i>(excluding tip)</i>', `<b>${price(totals.gross)}</b>`, 'bill-line-total');
 
       body.innerHTML = html;
     } catch (e) {
@@ -244,31 +236,30 @@ export default class extends Controller {
       if (!hasGross) {
         const currency = totals?.currency?.symbol || this.element.dataset.currencySymbol || '';
         const price = (n) => `${currency}${(typeof n === 'number' ? n : parseFloat(n || 0)).toFixed(2)}`;
-        const row = (cols) => `<div class="row">${cols}</div>`;
-        const col = (n, html) => `<div class="col-${n}">${html}</div>`;
+        const line = (label, amount, cls, id) => {
+          const idAttr = id ? ` id="${id}"` : '';
+          return `<div class="bill-line${cls ? ' ' + cls : ''}"><span>${label}</span><span class="bill-amount"${idAttr}>${amount}</span></div>`;
+        };
         const grossVal = (typeof totals.gross === 'number' ? totals.gross : parseFloat(totals.gross || 0)).toFixed(2);
         let html = '';
-        // Provide a local currency symbol for tip handlers
         html += `<span id="restaurantCurrency" style="display:none">${this.escape(currency)}</span>`;
-        html += row(col(9, '<b>Nett</b>') + col(3, `<span class="float-end"><span id="orderNett">${price(totals.nett||0)}</span></span>`));
-        if ((totals.service||0) > 0) html += row(col(9, '<b>Service</b>') + col(3, `<span class="float-end"><span id="orderService">${price(totals.service||0)}</span></span>`));
-        if ((totals.tax||0) > 0) html += row(col(9, '<b>Tax</b>') + col(3, `<span class="float-end"><span id="orderTax">${price(totals.tax||0)}</span></span>`));
-        html += row(col(9, '') + col(3, '<hr>'));
-        html += row(col(9, '<b>Total</b> <i>(excluding tip)</i>') + col(3, `<span class="float-end">${currency}<b><span id="orderGross">${grossVal}</span></b></span>`));
+        html += line('<b>Item</b>', '<b>Price</b>', 'bill-line-header');
+        html += line('Nett', `<span id="orderNett">${price(totals.nett||0)}</span>`);
+        if ((totals.service||0) > 0) html += line('Service', `<span id="orderService">${price(totals.service||0)}</span>`);
+        if ((totals.tax||0) > 0) html += line('Tax', `<span id="orderTax">${price(totals.tax||0)}</span>`);
+        html += '<hr>';
+        html += line('<b>Total</b> <i>(excluding tip)</i>', `<b>${currency}<span id="orderGross">${grossVal}</span></b>`, 'bill-line-total');
         // Tip presets + manual input
         let tipPresets = [];
         try { tipPresets = JSON.parse(this.element.dataset.tipPresets || '[]'); } catch (_) {}
-        let tipHtml = '<div class="row"><p></p><div class="col-12"><span class="float-end">';
-        tipHtml += '<div style="position:relative;left:15px" class="btn-toolbar btn-toolbar-sm mb-3" role="toolbar">';
-        tipHtml += '<div class="btn-group btn-group-sm mr-2" role="group">';
+        html += '<div class="bill-tip-row"><div class="d-flex flex-wrap align-items-center justify-content-end gap-2 mt-3 mb-3">';
         tipPresets.forEach(pct => {
-          tipHtml += `<button type="button" class="btn-touch-secondary btn-touch-sm"><span class="tipPreset">${pct}</span>%</button>`;
+          html += `<button type="button" class="btn-touch-secondary btn-touch-sm"><span class="tipPreset">${pct}</span>%</button>`;
         });
-        tipHtml += `<input id="tipNumberField" style="width:80px" type="number" min="0.00" class="form-control float-end text-end" value="0.00">`;
-        tipHtml += '</div></div></span></div></div>';
-        html += tipHtml;
-        html += row(col(9, '') + col(3, '<hr>'));
-        html += row(col(9, '<b>Total</b> <i>(including tip)</i>') + col(3, `<span class="float-end"><b><span id="orderGrandTotal">${currency}${grossVal}</span></b></span>`));
+        html += '<input id="tipNumberField" type="number" min="0.00" class="form-control form-control-sm text-end" style="width:80px" value="0.00">';
+        html += '</div></div>';
+        html += '<hr>';
+        html += line('<b>Total</b> <i>(including tip)</i>', `<b><span id="orderGrandTotal">${currency}${grossVal}</span></b>`, 'bill-line-total');
         body.innerHTML = html;
       }
     } catch (e) {

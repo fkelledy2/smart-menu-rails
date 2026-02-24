@@ -416,3 +416,28 @@
     margin-top: 0.5rem;
   }
 }
+
+// Bill / receipt line items (pay bill & request bill modals)
+.bill-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.35rem 0;
+}
+
+.bill-line-header {
+  border-bottom: 1px solid #dee2e6;
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.bill-line-total {
+  padding-top: 0.25rem;
+}
+
+.bill-amount {
+  white-space: nowrap;
+  text-align: right;
+  flex-shrink: 0;
+}

@@ -299,7 +299,7 @@
     </div>
 
     <div class="modal fade" id="requestBillModal" tabindex="-1" aria-labelledby="requestBillModalLabel" aria-hidden="true" data-controller="order-totals">
-      <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-fullscreen-sm-down">
+      <div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered modal-fullscreen-sm-down">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="requestBillModalLabel"><%= t(".requestBill") %></h5>
@@ -307,80 +307,39 @@
           </div>
           <div class="modal-body">
                 <% if order %>
-                    <div class="row">
-                        <div class="col-10">
-                            <b><%= t('.item') %></b>
-                        </div>
-                        <div class="col-2">
-                          <span class="float-end">
-                            <b><%= t('.price') %></b>
-                          </span>
-                        </div>
+                  <% cur = restaurantCurrency.symbol.presence || "" %>
+                  <div class="bill-line bill-line-header">
+                    <span><b><%= t('.item') %></b></span>
+                    <span><b><%= t('.price') %></b></span>
+                  </div>
+                  <% if order.covercharge.to_f > 0 %>
+                    <div class="bill-line">
+                      <span><%= t('.cover_charge') %></span>
+                      <span class="bill-amount"><%= number_to_currency(order.covercharge, unit: cur) %></span>
                     </div>
-                    <% if order.covercharge.to_f > 0 %>
-                        <div class="row">
-                            <div class="col-10">
-                                <%= t('.cover_charge') %>
-                            </div>
-                            <div class="col-2">
-                              <span class="float-end">
-                                <%= number_to_currency(order.covercharge, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %>
-                              </span>
-                            </div>
-                        </div>
-                    <% end %>
-                    <div class="row">
-                        <div class="col-10">
-                            <%= t('.nett') %>
-                        </div>
-                        <div class="col-2">
-                          <span class="float-end">
-                            <%= number_to_currency(order.nett, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %>
-                          </span>
-                        </div>
+                  <% end %>
+                  <div class="bill-line">
+                    <span><%= t('.nett') %></span>
+                    <span class="bill-amount"><%= number_to_currency(order.nett, unit: cur) %></span>
+                  </div>
+                  <hr>
+                  <% if order.service.to_f > 0 %>
+                    <div class="bill-line">
+                      <span><%= t('.service') %></span>
+                      <span class="bill-amount"><%= number_to_currency(order.service, unit: cur) %></span>
                     </div>
-                    <hr>
-                    <% if order.service.to_f > 0 %>
-                        <div class="row">
-                            <div class="col-10">
-                                <%= t('.service') %>
-                            </div>
-                            <div class="col-2">
-                              <span class="float-end">
-                                <%= number_to_currency(order.service, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %>
-                              </span>
-                            </div>
-                        </div>
-                    <% end %>
-                    <% if order.tax.to_f > 0 %>
-                        <div class="row">
-                            <div class="col-10">
-                                <%= t('.tax') %>
-                            </div>
-                            <div class="col-2">
-                              <span class="float-end">
-                                <%= number_to_currency(order.tax, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %>
-                              </span>
-                            </div>
-                        </div>
-                    <% end %>
-                    <div class="row">
-                        <div class="col-10">
-                        </div>
-                        <div class="col-2">
-                            <hr>
-                        </div>
+                  <% end %>
+                  <% if order.tax.to_f > 0 %>
+                    <div class="bill-line">
+                      <span><%= t('.tax') %></span>
+                      <span class="bill-amount"><%= number_to_currency(order.tax, unit: cur) %></span>
                     </div>
-                    <div class="row">
-                        <div class="col-10">
-                            <b><%= t('.total') %></b> <i>(<%= t('.excluding_tip') %>)</i>
-                        </div>
-                        <div class="col-2">
-                          <span class="float-end">
-                            <b><%= number_to_currency(order.gross, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %></b>
-                          </span>
-                        </div>
-                    </div>
+                  <% end %>
+                  <hr>
+                  <div class="bill-line bill-line-total">
+                    <span><b><%= t('.total') %></b> <i>(<%= t('.excluding_tip') %>)</i></span>
+                    <span class="bill-amount"><b><%= number_to_currency(order.gross, unit: cur) %></b></span>
+                  </div>
                 <% end %>
           </div>
           <%= render partial: "smartmenus/modal_footer_primary", locals: { primary_id: 'request-bill-confirm', primary_text: t('.requestBill'), disabled: !(order && order.gross.to_f > 0) } %>
@@ -389,158 +348,85 @@
     </div>
 
     <div class="modal fade" id="payOrderModal" tabindex="-1" aria-labelledby="payOrderModalLabel" aria-hidden="true" data-controller="order-totals" data-tip-presets="<%= restaurant.tips.sort_by(&:percentage).map(&:percentage).to_json %>" data-currency-symbol="<%= restaurantCurrency.symbol || '' %>">
-        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-fullscreen-sm-down">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered modal-fullscreen-sm-down">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="payOrderModalLabel"><%= t(".payBill") %></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="<%= t('common.close') %>"></button>
                 </div>
-                <div style='padding-right:0px' class="modal-body">
-                    <form>
-                        <div class="row">
-                            <% if order %>
-                                <div class="row">
-                                    <div class="col-9">
-                                        <b><%= t('.item') %></b>
-                                    </div>
-                                    <div class="col-3">
-                                        <span class="float-end">
-                                            <b><%= t('.price') %></b>
-                                        </span>
-                                    </div>
-                                </div>
-                                <% if order.covercharge.to_f > 0 %>
-                                    <div class="row">
-                                        <div class="col-10">
-                                            <%= t('.cover_charge') %>
-                                        </div>
-                                        <div class="col-2">
-                                          <span class="float-end">
-                                            <span id="orderCoverCharge"><%= number_to_currency(order.covercharge, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %></span>
-                                          </span>
-                                        </div>
-                                    </div>
-                                <% end %>
-                                <div class="row">
-                                    <div class="col-9">
-                                        <%= t('.nett') %>
-                                    </div>
-                                    <div class="col-3">
-                                        <span class="float-end">
-                                            <span id="orderNett"><%= number_to_currency(order.nett, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %></span>
-                                        </span>
-                                    </div>
-                                </div>
-                                <% if order.service.to_f > 0 %>
-                                    <div class="row">
-                                        <div class="col-9">
-                                            <%= t('.service') %>
-                                        </div>
-                                        <div class="col-3">
-                                            <span class="float-end">
-                                                <span id="orderService"><%= number_to_currency(order.service, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %></span>
-                                            </span>
-                                        </div>
-                                    </div>
-                                <% end %>
-                                <% if order.tax.to_f > 0 %>
-                                    <div class="row">
-                                        <div class="col-9">
-                                            <%= t('.tax') %>
-                                        </div>
-                                        <div class="col-3">
-                                            <span class="float-end">
-                                                <span id="orderTax"><%= number_to_currency(order.tax, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %></span>
-                                            </span>
-                                        </div>
-                                    </div>
-                                <% end %>
-                                <div class="row">
-                                    <div class="col-9">
-                                    </div>
-                                    <div class="col-3">
-                                        <hr>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-9">
-                                        <b><%= t('.total') %></b> <i>(<%= t('.excluding_tip') %>)</i>
-                                    </div>
-                                    <div class="col-3">
-                                        <span class="float-end">
-                                            <b><%= restaurantCurrency.symbol ? restaurantCurrency.symbol : "" %><span id="orderGross"><%= number_to_currency(order.gross, unit: "") %></span></b>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12">
-                                        <p></p>
-                                        <span class="float-end">
-                                            <div style="position:relative;left:15px" class="btn-toolbar btn-toolbar-sm mb-3" role="toolbar" aria-label="<%= t('.tip_options') %>">
-                                                <div class="btn-group btn-group-sm mr-2" role="group" aria-label="First group">
-                                                    <% restaurant.tips.sort_by(&:percentage).each do |tip| %>
-                                                        <button type="button" class="btn-touch-secondary btn-touch-sm"><span class="tipPreset"><%= tip.percentage %></span>%</button>
-                                                    <% end %>
-                                                    <input id="tipNumberField" style="width:80px" type="number" min="0.00" max="<%= number_to_currency(order.gross, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %>" class="form-control float-end text-end" id="tip" value="0.00">
-                                                </div>
-                                            </div>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-9">
-                                    </div>
-                                    <div class="col-3">
-                                        <hr>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-9">
-                                        <b><%= t('.total') %></b> <i>(<%= t('.including_tip') %>)</i>
-                                    </div>
-                                    <div class="col-3">
-                                        <span class="float-end">
-                                            <b><span id="orderGrandTotal"><%= number_to_currency(order.gross, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %></span></b>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <p></p>
-                                    <div style='display: flex;justify-content: center;' class="col-12">
-                                        <button id="refreshPaymentLink" type="button" class="btn-touch-dark" style="min-width: 200px;"><%= t('.payment_link') %></button>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <p></p>
-                                    <div class="row">
-                  <p></p>
-                  <div style='display: flex;justify-content: center;' class="col-12">
-                    <div id="wallet-button-container"
-                         data-controller="stripe-wallet"
-                         data-stripe-wallet-open-order-id-value="<%= order&.id %>"
-                         data-stripe-wallet-amount-cents-value="<%= order&.grossInCents %>"
-                         data-stripe-wallet-currency-value="<%= restaurantCurrency.code %>"></div>
-                  </div>
-                </div>
-                                <div class="row">
-                                    <p></p>
-                                    <p></p>
-                                    <div style='display: flex;justify-content: center;' class="col-12">
-                                        <input type="hidden" id="openOrderId" value="<%= order.id %>">
-                                        <input type="hidden" id="paymentAmount" value="<%= order.grossInCents %>">
-                                        <input type="hidden" id="paymentCurrency" value="<%= restaurantCurrency.code %>">
-                                        <input type="hidden" id="paymentRestaurantName" value="<%= t('.bill_prefix') %> <%= order.restaurant.name %>">
-                                        <input type="hidden" id="paymentRestaurantId" value="<%= order.restaurant.id %>">
-                                        <span style='display:none' id="qrIcon"><%= image_url('qr-icon.svg') %></span>
-                                        <span style='display:none' id="paymentlink"></span>
-                                        <a id="paymentAnchor" target="_blank" href="">
-                                            <span id="paymentQR"></span>
-                                        </a>
-                                    </div>
-                                </div>
-                            <% end %>
-                        </div>
-                    </form>
+                <div class="modal-body">
+                  <% if order %>
+                    <% cur = restaurantCurrency.symbol.presence || "" %>
+
+                    <div class="bill-line bill-line-header">
+                      <span><b><%= t('.item') %></b></span>
+                      <span><b><%= t('.price') %></b></span>
+                    </div>
+                    <% if order.covercharge.to_f > 0 %>
+                      <div class="bill-line">
+                        <span><%= t('.cover_charge') %></span>
+                        <span class="bill-amount" id="orderCoverCharge"><%= number_to_currency(order.covercharge, unit: cur) %></span>
+                      </div>
+                    <% end %>
+                    <div class="bill-line">
+                      <span><%= t('.nett') %></span>
+                      <span class="bill-amount" id="orderNett"><%= number_to_currency(order.nett, unit: cur) %></span>
+                    </div>
+                    <% if order.service.to_f > 0 %>
+                      <div class="bill-line">
+                        <span><%= t('.service') %></span>
+                        <span class="bill-amount" id="orderService"><%= number_to_currency(order.service, unit: cur) %></span>
+                      </div>
+                    <% end %>
+                    <% if order.tax.to_f > 0 %>
+                      <div class="bill-line">
+                        <span><%= t('.tax') %></span>
+                        <span class="bill-amount" id="orderTax"><%= number_to_currency(order.tax, unit: cur) %></span>
+                      </div>
+                    <% end %>
+                    <hr>
+
+                    <div class="bill-line bill-line-total">
+                      <span><b><%= t('.total') %></b> <i>(<%= t('.excluding_tip') %>)</i></span>
+                      <span class="bill-amount"><b><%= cur %><span id="orderGross"><%= number_to_currency(order.gross, unit: "") %></span></b></span>
+                    </div>
+
+                    <div class="bill-tip-row">
+                      <div class="d-flex flex-wrap align-items-center justify-content-end gap-2 mt-3 mb-3">
+                        <% restaurant.tips.sort_by(&:percentage).each do |tip| %>
+                          <button type="button" class="btn-touch-secondary btn-touch-sm"><span class="tipPreset"><%= tip.percentage %></span>%</button>
+                        <% end %>
+                        <input id="tipNumberField" type="number" min="0.00" max="<%= number_to_currency(order.gross, unit: cur) %>" class="form-control form-control-sm text-end" style="width: 80px;" value="0.00">
+                      </div>
+                    </div>
+                    <hr>
+
+                    <div class="bill-line bill-line-total">
+                      <span><b><%= t('.total') %></b> <i>(<%= t('.including_tip') %>)</i></span>
+                      <span class="bill-amount"><b><span id="orderGrandTotal"><%= number_to_currency(order.gross, unit: cur) %></span></b></span>
+                    </div>
+
+                    <div class="d-flex flex-column align-items-center gap-3 mt-4">
+                      <button id="refreshPaymentLink" type="button" class="btn-touch-dark" style="min-width: 200px;"><%= t('.payment_link') %></button>
+
+                      <div id="wallet-button-container"
+                           data-controller="stripe-wallet"
+                           data-stripe-wallet-open-order-id-value="<%= order&.id %>"
+                           data-stripe-wallet-amount-cents-value="<%= order&.grossInCents %>"
+                           data-stripe-wallet-currency-value="<%= restaurantCurrency.code %>"></div>
+
+                      <input type="hidden" id="openOrderId" value="<%= order.id %>">
+                      <input type="hidden" id="paymentAmount" value="<%= order.grossInCents %>">
+                      <input type="hidden" id="paymentCurrency" value="<%= restaurantCurrency.code %>">
+                      <input type="hidden" id="paymentRestaurantName" value="<%= t('.bill_prefix') %> <%= order.restaurant.name %>">
+                      <input type="hidden" id="paymentRestaurantId" value="<%= order.restaurant.id %>">
+                      <span style='display:none' id="qrIcon"><%= image_url('qr-icon.svg') %></span>
+                      <span style='display:none' id="paymentlink"></span>
+                      <a id="paymentAnchor" target="_blank" href="">
+                        <span id="paymentQR"></span>
+                      </a>
+                    </div>
+                  <% end %>
                 </div>
                 <%= render partial: "smartmenus/modal_footer_primary", locals: { primary_id: 'pay-order-confirm', primary_text: t('.confirmPayment'), disabled: !(order && order.gross.to_f > 0) } %>
             </div>
