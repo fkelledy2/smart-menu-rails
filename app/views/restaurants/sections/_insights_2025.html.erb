@@ -1,14 +1,14 @@
-<div class="container-fluid">
-  <div class="d-flex align-items-center justify-content-between mb-3">
-    <div>
-      <h1 class="h3 mb-1"><%= t('restaurants.insights.title') %></h1>
-      <div class="text-muted"><%= @restaurant.name %></div>
-    </div>
-  </div>
+<div class="card mb-3">
+  <div class="card-body">
+    <h2 class="h5 d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+      <span>
+        <i class="bi bi-bar-chart-line"></i>
+        <%= t('restaurants.insights.title') %>
+        <small class="text-muted fw-normal ms-1"><%= @restaurant.name %></small>
+      </span>
+    </h2>
 
-  <div class="card mb-3">
-    <div class="card-body">
-      <div class="row g-2 align-items-end">
+    <div class="row g-2 align-items-end">
         <div class="col-sm-4">
           <label for="ins-time-range" class="form-label"><%= t('restaurants.insights.filters.time_window') %></label>
           <select id="ins-time-range" class="form-select form-select-sm">
@@ -116,7 +116,6 @@
       </div>
     </div>
   </div>
-</div>
 
 <script>
   (function() {

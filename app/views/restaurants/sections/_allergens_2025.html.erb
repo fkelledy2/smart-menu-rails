@@ -20,13 +20,6 @@
       <i class="bi bi-plus-circle"></i>
       <span><%= t('.add_allergen') %></span>
     <% end %>
-
-    <%= link_to restaurant_allergyns_path(restaurant),
-        class: 'quick-action-btn',
-        data: { turbo_frame: '_top' } do %>
-      <i class="bi bi-pencil"></i>
-      <span><%= t('.manage_allergens') %></span>
-    <% end %>
   </div>
 </div>
 

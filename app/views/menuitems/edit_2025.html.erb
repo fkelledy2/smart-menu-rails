@@ -1,9 +1,14 @@
 <%#
   2025 Menu Item Edit Page
-  Modern design aligned with menu edit page
+  Modern card-based design with two-column desktop layout
 %>
 
 <% content_for :title, @menuitem.name %>
+<%
+  restaurant = @menuitem.menusection.menu.restaurant
+  menu = @menuitem.menusection.menu
+  menusection = @menuitem.menusection
+%>
 
 <!-- Page Header -->
 <div class="container-fluid px-0 py-4 bg-white border-bottom sticky-header">
@@ -11,35 +16,52 @@
     <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
       <div>
         <!-- Breadcrumb -->
-        <div class="text-sm text-gray-500 mb-2">
-          <%= link_to @menuitem.menusection.menu.restaurant.name,
-              edit_restaurant_path(@menuitem.menusection.menu.restaurant),
-              class: 'text-primary' %>
-          <i class="bi bi-chevron-right"></i>
-          <%= link_to @menuitem.menusection.menu.name,
-              edit_restaurant_menu_path(@menuitem.menusection.menu.restaurant, @menuitem.menusection.menu, section: 'items'),
-              class: 'text-primary' %>
-          <i class="bi bi-chevron-right"></i>
-          <%= t('.menu_item', default: 'Menu Item') %>
-        </div>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb mb-2 small">
+            <li class="breadcrumb-item"><%= link_to restaurant.name, edit_restaurant_path(restaurant) %></li>
+            <li class="breadcrumb-item"><%= link_to menu.name, edit_restaurant_menu_path(restaurant, menu, section: 'items') %></li>
+            <li class="breadcrumb-item"><%= link_to menusection.name, edit_restaurant_menu_path(restaurant, menu, section: 'items') %></li>
+            <li class="breadcrumb-item active" aria-current="page"><%= t('.menu_item', default: 'Menu Item') %></li>
+          </ol>
+        </nav>
 
         <h1 class="text-2xl font-semibold text-gray-900 mb-1">
           <%= @menuitem.name %>
         </h1>
 
-        <div class="d-flex align-items-center gap-3 mt-2">
-          <!-- Section Badge -->
-          <span class="badge bg-secondary">
-            <i class="bi bi-layout-text-sidebar"></i> <%= @menuitem.menusection.name %>
+        <div class="d-flex align-items-center gap-2 flex-wrap mt-2">
+          <!-- Status Badge -->
+          <% if @menuitem.active? %>
+            <span class="badge bg-success"><i class="bi bi-check-circle"></i> <%= t('.active', default: 'Active') %></span>
+          <% elsif @menuitem.archived? %>
+            <span class="badge bg-danger"><i class="bi bi-archive"></i> <%= t('.archived', default: 'Archived') %></span>
+          <% else %>
+            <span class="badge bg-warning text-dark"><i class="bi bi-pause-circle"></i> <%= t('.inactive_status', default: 'Inactive') %></span>
+          <% end %>
+
+          <!-- Itemtype Badge -->
+          <span class="badge bg-primary-subtle text-primary">
+            <i class="bi bi-tag"></i> <%= @menuitem.itemtype&.humanize || 'Unset' %>
           </span>
+
+          <!-- Section Badge -->
+          <span class="badge bg-secondary-subtle text-secondary">
+            <i class="bi bi-layout-text-sidebar"></i> <%= menusection.name %>
+          </span>
+
+          <!-- Price -->
+          <% if @menuitem.price.to_f > 0 %>
+            <span class="badge bg-light text-dark border">
+              <i class="bi bi-currency-exchange"></i> <%= number_to_currency(@menuitem.price, unit: restaurant.currency || '$') %>
+            </span>
+          <% end %>
         </div>
       </div>
 
       <div class="d-flex gap-2 align-items-center">
-        <!-- Back Button -->
-        <%= link_to edit_restaurant_menu_path(@menuitem.menusection.menu.restaurant, @menuitem.menusection.menu, section: 'items'),
+        <%= link_to edit_restaurant_menu_path(restaurant, menu, section: 'items'),
             class: 'btn btn-outline-secondary' do %>
-          <i class="bi bi-arrow-left"></i> <%= t('.back_to_items', default: 'Back to Items') %>
+          <i class="bi bi-arrow-left"></i> <span class="d-none d-sm-inline"><%= t('.back_to_items', default: 'Back to Items') %></span>
         <% end %>
       </div>
     </div>
@@ -51,6 +73,7 @@
   <%= render 'form', menuitem: @menuitem %>
 </div>
 
+<!-- AI Image Generator Modal -->
 <div data-controller="ai-image-generator">
   <div class="modal fade z-index-7000" id="menuitemAiImageModal" tabindex="-1" aria-hidden="true"
        data-ai-image-generator-target="modal"
@@ -94,9 +117,11 @@
 
 <% content_for :head do %>
   <style>
-    /* Page-specific styles */
-    body {
-      background: var(--color-gray-50);
+    body { background: var(--color-gray-50); }
+
+    .container, .container-fluid, .container-xxl, .container-xl, .container-lg, .container-md, .container-sm {
+      padding-right: 0;
+      padding-left: 0;
     }
 
     .container-2025 {
@@ -105,21 +130,127 @@
       padding: 0 var(--space-4);
     }
 
-    .text-2xl {
-      font-size: 1.5rem;
-      line-height: 2rem;
+    .text-2xl { font-size: 1.5rem; line-height: 2rem; }
+    .text-gray-900 { color: var(--color-gray-900); }
+    .text-gray-500 { color: var(--color-gray-500); }
+    .text-sm { font-size: var(--text-sm); }
+
+    /* Two-column layout for desktop */
+    .menuitem-edit-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-3);
     }
 
-    .text-gray-900 {
-      color: var(--color-gray-900);
+    @media (min-width: 992px) {
+      .menuitem-edit-grid {
+        grid-template-columns: 1fr 340px;
+        align-items: start;
+      }
     }
 
-    .text-gray-500 {
+    /* Card section styling */
+    .menuitem-card {
+      background: white;
+      border: 1px solid var(--color-gray-200);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      margin-bottom: var(--space-3);
+    }
+
+    .menuitem-card:last-child { margin-bottom: 0; }
+
+    .menuitem-card-header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-2) var(--space-3);
+      border-bottom: 1px solid var(--color-gray-100);
+      background: var(--color-gray-50);
+    }
+
+    .menuitem-card-header i {
+      font-size: 1.1rem;
       color: var(--color-gray-500);
     }
 
-    .text-sm {
+    .menuitem-card-header h2 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--color-gray-800);
+      margin: 0;
+    }
+
+    .menuitem-card-body {
+      padding: var(--space-3);
+    }
+
+    /* Form field rows */
+    .menuitem-field {
+      margin-bottom: var(--space-3);
+    }
+
+    .menuitem-field:last-child { margin-bottom: 0; }
+
+    .menuitem-field label,
+    .menuitem-field .field-label {
+      display: block;
       font-size: var(--text-sm);
+      font-weight: 500;
+      color: var(--color-gray-600);
+      margin-bottom: var(--space-2);
+    }
+
+    /* Image preview card */
+    .menuitem-image-preview-2025 {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-width: 100%;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-gray-200);
+    }
+
+    .menuitem-image-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-8) var(--space-4);
+      background: var(--color-gray-50);
+      border: 2px dashed var(--color-gray-300);
+      border-radius: var(--radius-md);
+      color: var(--color-gray-400);
+    }
+
+    .menuitem-image-placeholder i { font-size: 2rem; margin-bottom: var(--space-2); }
+
+    /* Inline field pairs on desktop */
+    @media (min-width: 576px) {
+      .field-row-inline {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-4);
+      }
+    }
+
+    /* Action bar */
+    .menuitem-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: var(--space-3);
+      padding-top: var(--space-4);
+      margin-top: var(--space-4);
+      border-top: 1px solid var(--color-gray-200);
+    }
+
+    /* Allergen / size checkbox grid */
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: var(--space-2);
     }
   </style>
 <% end %>

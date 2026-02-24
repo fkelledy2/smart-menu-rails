@@ -6,49 +6,49 @@
   raise "No restaurant context available for menusection form" unless restaurant
 %>
 <%= form_with(model: [restaurant, menu, menusection], html: { data: { turbo_frame: '_top' } }) do |form| %>
-  <div class="form-with-sticky-actions-2025 form-stack-2025" data-menusection-form-root>
+  <div data-menusection-form-root>
     <% if menusection.errors.any? %>
       <div class="alert alert-danger mb-3">
         <div class="fw-semibold mb-2"><%= t('common.errors') %></div>
-          <ul class="mb-0">
-              <% menusection.errors.full_messages.each do |message| %>
-                <li><%= message %></li>
-              <% end %>
-          </ul>
+        <ul class="mb-0">
+          <% menusection.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
       </div>
     <% end %>
 
-    <div class="mb-3 p-3">
-      <h2 class="h5 mb-3"><%= t(".details") %></h2>
-      <div class="form-group row mb-3">
-          <div class="col-12">
-            <%= form.label :name, class: 'col-form-label' %>
-          </div>
-          <div class="col-12">
-            <%= form.text_field :name, class: 'form-control' %>
-          </div>
+    <!-- Details Card -->
+    <div class="edit-card">
+      <div class="edit-card-header">
+        <i class="bi bi-card-text"></i>
+        <h2><%= t(".details") %></h2>
+      </div>
+      <div class="edit-card-body">
+        <div class="edit-field">
+          <%= form.label :name, class: 'form-label' %>
+          <%= form.text_field :name, class: 'form-control' %>
         </div>
-        <div class="form-group row mb-0">
-          <div class="col-12">
-            <%= form.label :description, class: 'col-form-label' %>
-          </div>
-          <div class="col-12">
-            <%= form.text_area :description, class: 'form-control', rows: 2 %>
-          </div>
+        <div class="edit-field">
+          <%= form.label :description, class: 'form-label' %>
+          <%= form.text_area :description, class: 'form-control', rows: 2 %>
         </div>
+      </div>
     </div>
 
-    <div class="mb-3 p-3">
-      <h2 class="h5 mb-3"><%= t('.availability_time', default: 'Availability Time') %></h2>
-        <!-- Hidden fields for time values -->
+    <!-- Availability Time Card -->
+    <div class="edit-card">
+      <div class="edit-card-header">
+        <i class="bi bi-clock"></i>
+        <h2><%= t('.availability_time', default: 'Availability Time') %></h2>
+      </div>
+      <div class="edit-card-body">
         <%= form.hidden_field :fromhour, class: 'from-hour-field' %>
         <%= form.hidden_field :frommin, class: 'from-min-field' %>
         <%= form.hidden_field :tohour, class: 'to-hour-field' %>
         <%= form.hidden_field :tomin, class: 'to-min-field' %>
 
-        <!-- Time Slider -->
         <div class="time-slider-container">
-          <!-- Time display above slider -->
           <div class="d-flex justify-content-between align-items-center mb-1">
             <div class="time-display opening-time">
               <i class="bi bi-sunrise"></i>
@@ -60,7 +60,6 @@
             </div>
           </div>
 
-          <!-- Range slider -->
           <%
             open_minutes = ((menusection.fromhour || 9) * 60) + (menusection.frommin || 0)
             close_minutes = ((menusection.tohour || 22) * 60) + (menusection.tomin || 0)
@@ -72,126 +71,100 @@
           </div>
         </div>
 
-        <div class="form-group row mb-0">
-          <div class="col-12">
-            <%= form.label :restricted, class: 'col-form-label' %>
-          </div>
-          <div class="col-12">
-            <%= form.select :restricted, [['on', true], ['off', false]], {}, class: 'form-control' %>
-          </div>
+        <div class="edit-field">
+          <%= form.label :restricted, class: 'form-label' %>
+          <%= form.select :restricted, [['on', true], ['off', false]], {}, class: 'form-control' %>
         </div>
+      </div>
     </div>
 
-    <div class="mb-3 p-3">
-      <h2 class="h5 mb-3"><%= t(".settings") %></h2>
-      <div class="form-group row mb-0">
-          <div class="col-12">
-            <%= form.label :status, class: 'col-form-label' %>
-          </div>
-          <div class="col-12">
-            <%= form.select :status, options_for_select(Menusection.statuses.keys.to_a, form.object.status), {}, class: 'form-control' %>
-          </div>
+    <!-- Settings Card -->
+    <div class="edit-card">
+      <div class="edit-card-header">
+        <i class="bi bi-gear"></i>
+        <h2><%= t(".settings") %></h2>
+      </div>
+      <div class="edit-card-body">
+        <div class="edit-field">
+          <%= form.label :status, class: 'form-label' %>
+          <%= form.select :status, options_for_select(Menusection.statuses.keys.to_a, form.object.status), {}, class: 'form-control' %>
         </div>
+      </div>
     </div>
 
-    <div class="mb-3 p-3">
-      <h2 class="h5 mb-3"><%= t('.tasting_menu_settings', default: 'Tasting Menu Settings') %></h2>
-      <div class="form-group row mb-2">
-          <div class="col-12">
-            <%= form.label :tasting_menu, class: 'col-form-label' %>
-          </div>
-          <div class="col-12 d-flex align-items-center gap-3">
+    <!-- Tasting Menu Card -->
+    <div class="edit-card">
+      <div class="edit-card-header">
+        <i class="bi bi-list-stars"></i>
+        <h2><%= t('.tasting_menu_settings', default: 'Tasting Menu Settings') %></h2>
+      </div>
+      <div class="edit-card-body">
+        <div class="edit-field">
+          <div class="d-flex align-items-center gap-3">
             <%= form.check_box :tasting_menu %>
-            <small class="text-muted"><%= t('.tasting_menu_help', default: 'When enabled, this section is a fixed-price tasting. Item prices are hidden; supplements may be added per item.') %></small>
+            <%= form.label :tasting_menu, class: 'form-label mb-0' %>
           </div>
+          <small class="text-muted"><%= t('.tasting_menu_help', default: 'When enabled, this section is a fixed-price tasting. Item prices are hidden; supplements may be added per item.') %></small>
         </div>
 
-      <div data-tasting-menu-advanced class="<%= menusection.tasting_menu? ? '' : 'd-none' %>">
-        <div class="form-group row mb-2">
-          <div class="col-12">
+        <div data-tasting-menu-advanced class="<%= menusection.tasting_menu? ? '' : 'd-none' %>">
+          <div class="edit-field">
             <small class="text-muted">
               <i class="bi bi-info-circle"></i>
               <%= t('.carrier_auto_help', default: 'A hidden carrier menu item is created and kept in sync automatically with this section\'s name, description, and tasting price.') %>
             </small>
           </div>
-        </div>
-        <div class="form-group row mb-3">
-          <div class="col-12">
-            <span><%= t('.tasting_price', default: 'Tasting Price') %></span>
-          </div>
-          <div class="col-12">
-            <div class="row g-2 align-items-center">
-              <div class="col-6">
-                <%= form.number_field :tasting_price_amount, class: 'form-control', min: 0, step: 0.01, inputmode: 'decimal' %>
-              </div>
-              <div class="col-6">
-                <small class="text-muted"><%= restaurant.currency %></small>
-              </div>
-            </div>
-            <small class="text-muted"><%= t('.tasting_price_help', default: 'Enter the fixed price in the restaurant currency. Currency is inferred from restaurant settings.') %></small>
-          </div>
-        </div>
-        <div class="form-group row mb-3">
-          <div class="col-12">
-            <%= form.label :price_per, class: 'col-form-label' %>
-          </div>
-          <div class="col-12">
-            <%= form.select :price_per, options_for_select([['Per Person', 'person'], ['Per Table', 'table']], form.object.price_per || 'person'), {}, class: 'form-control' %>
-          </div>
-        </div>
-        <div class="form-group row mb-3">
-          <div class="col-12">
-            <span><%= t('.party_size', default: 'Party Size (optional)') %></span>
-          </div>
-          <div class="col-12">
-            <div class="row g-2">
-              <div class="col-6">
-                <%= form.number_field :min_party_size, class: 'form-control', min: 1 %>
-              </div>
-              <div class="col-6">
-                <%= form.number_field :max_party_size, class: 'form-control', min: 1 %>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="form-group row mb-3">
-          <div class="col-12">
-            <span><%= t('.includes_description', default: 'Includes (description)') %></span>
-          </div>
-          <div class="col-12">
-            <%= form.text_area :includes_description, class: 'form-control', rows: 2 %>
-          </div>
-        </div>
-        <div class="form-group row mb-3">
-          <div class="col-12">
-            <%= form.label :allow_substitutions, class: 'col-form-label' %>
-          </div>
-          <div class="col-12 d-flex align-items-center gap-3">
-            <%= form.check_box :allow_substitutions %>
-          </div>
-        </div>
-        <div class="form-group row mb-3">
-          <div class="col-12">
-            <%= form.label :allow_pairing, class: 'col-form-label' %>
-          </div>
-          <div class="col-12 d-flex align-items-center gap-3">
-            <%= form.check_box :allow_pairing %>
-            <small class="text-muted"><%= t('.allow_pairing_help', default: 'Enable beverage pairing as an add-on.') %></small>
-          </div>
-        </div>
 
-        <div class="form-group row mb-0">
-          <div class="col-12">
-            <span><%= t('.pairing_price', default: 'Pairing Price') %></span>
-          </div>
-          <div class="col-12">
-            <div class="row g-2 align-items-center">
-              <div class="col-6">
-                <%= form.number_field :pairing_price_amount, class: 'form-control', min: 0, step: 0.01, inputmode: 'decimal' %>
-              </div>
-              <div class="col-6">
+          <div class="field-row-inline">
+            <div class="edit-field">
+              <span class="field-label"><%= t('.tasting_price', default: 'Tasting Price') %></span>
+              <div class="d-flex align-items-center gap-2">
+                <%= form.number_field :tasting_price_amount, class: 'form-control', min: 0, step: 0.01, inputmode: 'decimal' %>
                 <small class="text-muted"><%= restaurant.currency %></small>
               </div>
+              <small class="text-muted"><%= t('.tasting_price_help', default: 'Enter the fixed price in the restaurant currency. Currency is inferred from restaurant settings.') %></small>
+            </div>
+            <div class="edit-field">
+              <%= form.label :price_per, class: 'form-label' %>
+              <%= form.select :price_per, options_for_select([['Per Person', 'person'], ['Per Table', 'table']], form.object.price_per || 'person'), {}, class: 'form-control' %>
+            </div>
+          </div>
+
+          <div class="field-row-inline">
+            <div class="edit-field">
+              <span class="field-label"><%= t('.party_size', default: 'Party Size (optional)') %></span>
+              <div class="d-flex gap-2">
+                <%= form.number_field :min_party_size, class: 'form-control', min: 1, placeholder: 'Min' %>
+                <%= form.number_field :max_party_size, class: 'form-control', min: 1, placeholder: 'Max' %>
+              </div>
+            </div>
+            <div class="edit-field">
+              <span class="field-label"><%= t('.includes_description', default: 'Includes (description)') %></span>
+              <%= form.text_area :includes_description, class: 'form-control', rows: 2 %>
+            </div>
+          </div>
+
+          <div class="field-row-inline">
+            <div class="edit-field">
+              <div class="d-flex align-items-center gap-3">
+                <%= form.check_box :allow_substitutions %>
+                <%= form.label :allow_substitutions, class: 'form-label mb-0' %>
+              </div>
+            </div>
+            <div class="edit-field">
+              <div class="d-flex align-items-center gap-3">
+                <%= form.check_box :allow_pairing %>
+                <%= form.label :allow_pairing, class: 'form-label mb-0' %>
+              </div>
+              <small class="text-muted"><%= t('.allow_pairing_help', default: 'Enable beverage pairing as an add-on.') %></small>
+            </div>
+          </div>
+
+          <div class="edit-field">
+            <span class="field-label"><%= t('.pairing_price', default: 'Pairing Price') %></span>
+            <div class="d-flex align-items-center gap-2">
+              <%= form.number_field :pairing_price_amount, class: 'form-control', min: 0, step: 0.01, inputmode: 'decimal', style: 'max-width: 200px' %>
+              <small class="text-muted"><%= restaurant.currency %></small>
             </div>
           </div>
         </div>
@@ -219,23 +192,16 @@
       })();
     </script>
 
-    <div class="form-actions-2025 form-actions-2025-end d-none d-md-flex">
-          <% if menusection.persisted? %>
-            <%= link_to t(".delete"),
-                restaurant_menu_menusection_path(restaurant, menu, menusection),
-                method: :delete,
-                class: 'btn-2025 btn-2025-outline-danger btn-2025-md',
-                data: { confirm: t(".sure") } %>
-          <% end %>
-          <%= form.submit value: t(".save"), class: 'btn-2025 btn-2025-primary btn-2025-md' %>
-        </div>
-
-        <%= render 'shared/sticky_edit_actions_2025',
-            back_url: edit_restaurant_menu_path(restaurant, menu, section: 'sections'),
-            delete_url: (menusection.persisted? ? restaurant_menu_menusection_path(restaurant, menu, menusection) : nil),
-            delete_confirm: t(".sure"),
-            delete_label: t(".delete") %>
-      </div>
+    <!-- Form actions -->
+    <div class="edit-actions">
+      <% if menusection.persisted? %>
+        <%= link_to t(".delete"),
+            restaurant_menu_menusection_path(restaurant, menu, menusection),
+            method: :delete,
+            class: 'btn btn-outline-danger',
+            data: { confirm: t(".sure") } %>
+      <% end %>
+      <%= form.submit value: t(".save"), class: 'btn btn-primary' %>
     </div>
   </div>
 <% end %>

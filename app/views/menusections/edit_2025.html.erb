@@ -71,9 +71,11 @@
 
 <% content_for :head do %>
   <style>
-    /* Page-specific styles */
-    body {
-      background: var(--color-gray-50);
+    body { background: var(--color-gray-50); }
+
+    .container, .container-fluid, .container-xxl, .container-xl, .container-lg, .container-md, .container-sm {
+      padding-right: 0;
+      padding-left: 0;
     }
 
     .container-2025 {
@@ -82,21 +84,82 @@
       padding: 0 var(--space-4);
     }
 
-    .text-2xl {
-      font-size: 1.5rem;
-      line-height: 2rem;
+    .text-2xl { font-size: 1.5rem; line-height: 2rem; }
+    .text-gray-900 { color: var(--color-gray-900); }
+    .text-gray-500 { color: var(--color-gray-500); }
+    .text-sm { font-size: var(--text-sm); }
+
+    /* Card section styling */
+    .edit-card {
+      background: white;
+      border: 1px solid var(--color-gray-200);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      margin-bottom: var(--space-3);
     }
 
-    .text-gray-900 {
-      color: var(--color-gray-900);
+    .edit-card:last-child { margin-bottom: 0; }
+
+    .edit-card-header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-2) var(--space-3);
+      border-bottom: 1px solid var(--color-gray-100);
+      background: var(--color-gray-50);
     }
 
-    .text-gray-500 {
+    .edit-card-header i {
+      font-size: 1.1rem;
       color: var(--color-gray-500);
     }
 
-    .text-sm {
+    .edit-card-header h2 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--color-gray-800);
+      margin: 0;
+    }
+
+    .edit-card-body {
+      padding: var(--space-3);
+    }
+
+    /* Form field rows */
+    .edit-field {
+      margin-bottom: var(--space-3);
+    }
+
+    .edit-field:last-child { margin-bottom: 0; }
+
+    .edit-field label,
+    .edit-field .field-label {
+      display: block;
       font-size: var(--text-sm);
+      font-weight: 500;
+      color: var(--color-gray-600);
+      margin-bottom: var(--space-2);
+    }
+
+    /* Inline field pairs on desktop */
+    @media (min-width: 576px) {
+      .field-row-inline {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-4);
+      }
+    }
+
+    /* Action bar */
+    .edit-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: var(--space-3);
+      padding-top: var(--space-4);
+      margin-top: var(--space-4);
+      border-top: 1px solid var(--color-gray-200);
     }
 
     /* Time Slider Styles */
@@ -114,9 +177,7 @@
       color: var(--color-gray-900);
     }
 
-    .time-display i {
-      font-size: 1.125rem;
-    }
+    .time-display i { font-size: 1.125rem; }
 
     .time-value {
       font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
