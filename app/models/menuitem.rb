@@ -109,8 +109,20 @@ class Menuitem < ApplicationRecord
     food: 0,
     beverage: 1,
     wine: 2,
-    spirits: 3,
+    spirit: 3,
+    beer: 4,
+    cider: 5,
+    cocktail: 6,
+    liqueur: 7,
+    whiskey: 8,
+    non_alcoholic: 9,
+    other_spirit: 10,
   }
+
+  # Drink-type categories (everything except generic food / unclassified beverage)
+  DRINK_TYPES = %i[wine spirit beer cider cocktail liqueur whiskey non_alcoholic other_spirit].freeze
+
+  scope :drink_items, -> { where(itemtype: DRINK_TYPES) }
 
   # Size-based pricing helpers (unified for all item types: coffee, wine, etc.)
   def active_size_mappings

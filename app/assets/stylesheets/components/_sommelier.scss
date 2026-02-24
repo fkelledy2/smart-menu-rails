@@ -34,21 +34,31 @@
   @media (min-width: 768px) { align-items: center; }
 }
 .sommelier-panel-inner {
-  width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto;
+  width: 100%; max-width: 480px; max-height: 90vh;
+  display: flex; flex-direction: column; overflow: hidden;
   background: #fff; border-radius: 20px 20px 0 0;
-  padding: 24px 20px 32px; box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.12);
   animation: sommelier-slide-up 0.3s ease;
   @media (min-width: 768px) { border-radius: 20px; max-height: 80vh; }
 }
 
-.sommelier-header { position: relative; text-align: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid #f1f5f9; }
+.sommelier-header {
+  position: relative; text-align: center; flex-shrink: 0;
+  padding: 24px 20px 16px; border-bottom: 1px solid #f1f5f9;
+}
 .sommelier-title { font-size: 1.25rem; font-weight: 700; color: #1e293b; margin: 0; }
 .sommelier-subtitle { font-size: 0.875rem; color: #64748b; margin: 4px 0 0; }
 .sommelier-close {
-  position: absolute; top: 0; right: 0; background: none; border: none;
+  position: absolute; top: 24px; right: 20px; background: none; border: none;
   color: #94a3b8; cursor: pointer; padding: 4px; border-radius: 8px;
   transition: color 0.15s, background 0.15s;
   &:hover { color: #475569; background: #f1f5f9; }
+}
+
+// Scrollable body area between fixed header and footer
+.sommelier-body {
+  flex: 1; overflow-y: auto; padding: 24px 20px;
+  -webkit-overflow-scrolling: touch;
 }
 
 .sommelier-step { text-align: center; }
@@ -134,7 +144,11 @@
 }
 .sommelier-btn-sm { padding: 6px 12px; font-size: 0.75rem; }
 
-.sommelier-actions { text-align: center; margin-top: 20px; }
+// Fixed footer at bottom of panel
+.sommelier-actions {
+  text-align: center; flex-shrink: 0;
+  padding: 16px 20px; border-top: 1px solid #f1f5f9;
+}
 .sommelier-empty { text-align: center; padding: 24px 0; }
 .sommelier-empty-text { color: #64748b; font-size: 0.875rem; margin-bottom: 16px; }
 

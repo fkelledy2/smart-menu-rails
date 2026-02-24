@@ -1,6 +1,7 @@
 <div class="d-flex gap-1" role="group">
+    <% has_tables = Array(table_smartmenus).any? { |sm| sm.tablesetting && sm.tablesetting.status == 'free' } %>
     <div class="btn-group" role="group">
-        <button id="table-selector-customer" type="button" class="btn-touch-dark btn-touch-sm dropdown-toggle br-0-0-8-8" data-bs-toggle="dropdown" aria-expanded="false">
+        <button id="table-selector-customer" type="button" class="btn-touch-dark btn-touch-sm <%= 'dropdown-toggle' if has_tables %> br-0-0-8-8" <%= 'data-bs-toggle=dropdown aria-expanded=false' if has_tables %> <%= 'disabled' unless has_tables %>>
             <% if tablesetting %>
                 <%= tablesetting.name %>
             <% else %>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_02_22_100000) do
+ActiveRecord::Schema[7.2].define(version: 2026_02_24_171903) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "vector"
@@ -604,7 +604,6 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_22_100000) do
     t.decimal "abv", precision: 5, scale: 2
     t.string "alcohol_classification"
     t.text "alcohol_notes"
-    t.string "sommelier_category"
     t.decimal "sommelier_classification_confidence", precision: 5, scale: 4
     t.jsonb "sommelier_parsed_fields", default: {}, null: false
     t.decimal "sommelier_parse_confidence", precision: 5, scale: 4
@@ -624,7 +623,6 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_22_100000) do
     t.index ["menusection_id", "tasting_carrier"], name: "index_menuitems_on_section_and_carrier"
     t.index ["menusection_id"], name: "index_menuitems_on_menusection_id"
     t.index ["sequence"], name: "index_menuitems_on_sequence"
-    t.index ["sommelier_category"], name: "index_menuitems_on_sommelier_category"
     t.index ["sommelier_needs_review"], name: "index_menuitems_on_sommelier_needs_review"
     t.index ["status"], name: "index_menuitems_on_status"
     t.index ["updated_at"], name: "index_menuitems_on_updated_at"

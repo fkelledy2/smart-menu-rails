@@ -14,8 +14,8 @@ class BeverageIntelligence::RecommenderTest < ActiveSupport::TestCase
   test 'recommend_for_guest returns scored results based on preferences' do
     drink = Menuitem.create!(
       name: 'Peated Scotch', menusection: @menusection,
-      itemtype: :beverage, status: :active,
-      sommelier_category: 'whiskey', price: 12.0, preptime: 0, calories: 0,
+      itemtype: :whiskey, status: :active,
+      price: 12.0, preptime: 0, calories: 0,
     )
     FlavorProfile.create!(
       profilable: drink,
@@ -38,8 +38,8 @@ class BeverageIntelligence::RecommenderTest < ActiveSupport::TestCase
   test 'recommend_for_guest penalizes smoky drinks when smoky=false' do
     smoky_drink = Menuitem.create!(
       name: 'Heavy Peat', menusection: @menusection,
-      itemtype: :beverage, status: :active,
-      sommelier_category: 'whiskey', price: 14.0, preptime: 0, calories: 0,
+      itemtype: :whiskey, status: :active,
+      price: 14.0, preptime: 0, calories: 0,
     )
     FlavorProfile.create!(
       profilable: smoky_drink,
@@ -50,8 +50,8 @@ class BeverageIntelligence::RecommenderTest < ActiveSupport::TestCase
 
     clean_drink = Menuitem.create!(
       name: 'Speyside Malt', menusection: @menusection,
-      itemtype: :beverage, status: :active,
-      sommelier_category: 'whiskey', price: 14.0, preptime: 0, calories: 0,
+      itemtype: :whiskey, status: :active,
+      price: 14.0, preptime: 0, calories: 0,
     )
     FlavorProfile.create!(
       profilable: clean_drink,

@@ -340,68 +340,12 @@ export function initOCRMenuImportDnD() {
     });
   }
 
-  // Wire up Edit Item modal population (was previously inline)
+  // Edit Item modal population is now handled entirely by the Stimulus
+  // menu_import_controller (showEditItemModal / switchPricingMode / saveItem).
+  // The legacy show.bs.modal handler has been removed to avoid overwriting
+  // size-based pricing fields that the Stimulus controller populates.
   function initEditItemModal() {
-    const editItemModal = document.getElementById('editItemModal');
-    if (!editItemModal) return;
-    editItemModal.addEventListener('show.bs.modal', function (event) {
-      const trigger = event.relatedTarget;
-      if (!trigger) return;
-      const idInput = document.querySelector('[data-menu-import-target="editItemId"]');
-      const nameInput = document.getElementById('item_name');
-      const descInput = document.getElementById('item_description');
-      const priceInput = document.getElementById('item_price');
-      const sectionSelect = document.getElementById('item_section');
-      const positionInput = document.getElementById('item_position');
-      if (idInput) idInput.value = trigger.getAttribute('data-item-id') || '';
-      if (nameInput) nameInput.value = trigger.getAttribute('data-item-name') || '';
-      if (descInput) descInput.value = trigger.getAttribute('data-item-description') || '';
-      if (priceInput) priceInput.value = trigger.getAttribute('data-item-price') || '';
-      if (sectionSelect) {
-        sectionSelect.value = trigger.getAttribute('data-item-section') || '';
-        sectionSelect.setAttribute('disabled', 'disabled');
-        sectionSelect.title = 'Section cannot be changed here.';
-      }
-      if (positionInput) positionInput.value = trigger.getAttribute('data-item-position') || '';
-      // Allergens populate
-      let allergensData = [];
-      try {
-        allergensData = JSON.parse(trigger.getAttribute('data-item-allergens') || '[]');
-      } catch (_) {
-        allergensData = [];
-      }
-      const allergensSelect = document.getElementById('item_allergens');
-      if (allergensSelect) {
-        if (allergensSelect.tomselect) {
-          try {
-            allergensSelect.tomselect.setValue(allergensData, true);
-          } catch (_) {}
-        } else if (window.$) {
-          try {
-            window.$(allergensSelect).val(allergensData).trigger('change');
-          } catch (_) {}
-        } else {
-          Array.from(allergensSelect.options).forEach(function (opt) {
-            opt.selected = allergensData.includes(opt.value);
-          });
-        }
-      }
-      // Dietary checkboxes
-      let diet = [];
-      try {
-        diet = JSON.parse(trigger.getAttribute('data-item-dietary-restrictions') || '[]');
-      } catch (_) {
-        diet = [];
-      }
-      function setChecked(id, key) {
-        const el = document.getElementById(id);
-        if (el) el.checked = diet.includes(key);
-      }
-      setChecked('item_vegetarian', 'vegetarian');
-      setChecked('item_vegan', 'vegan');
-      setChecked('item_gluten_free', 'gluten_free');
-      setChecked('item_dairy_free', 'dairy_free');
-    });
+    // no-op — kept as stub so callers don't break
   }
 
   // Initialize helpers

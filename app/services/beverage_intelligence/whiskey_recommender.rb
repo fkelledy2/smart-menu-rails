@@ -104,7 +104,7 @@ module BeverageIntelligence
       menu.menuitems
           .joins(:menusection)
           .where('menusections.archived IS NOT TRUE')
-          .where(sommelier_category: 'whiskey', status: 'active')
+          .where(itemtype: :whiskey, status: 'active')
     end
 
     def parsed_fields(item)

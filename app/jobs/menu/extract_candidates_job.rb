@@ -29,14 +29,20 @@ class Menu::ExtractCandidatesJob
       category, conf, parsed, parse_conf = classify_and_parse(mi)
 
       needs_review_flag = category.present? ? (conf.to_f < 0.7 || parse_conf.to_f < 0.7) : true
-      mi.update_columns(
-        sommelier_category: category,
+      cols = {
         sommelier_classification_confidence: conf,
         sommelier_parsed_fields: (parsed.is_a?(Hash) ? parsed : {}),
         sommelier_parse_confidence: parse_conf,
         sommelier_needs_review: needs_review_flag,
         updated_at: Time.current,
-      )
+      }
+      # Map classifier category string to itemtype integer via the enum
+      if category.present?
+        mapped = category == 'spirit' ? 'spirit' : category
+        itemtype_int = Menuitem.itemtypes[mapped]
+        cols[:itemtype] = itemtype_int if itemtype_int.present?
+      end
+      mi.update_columns(cols)
 
       processed += 1
       if needs_review_flag

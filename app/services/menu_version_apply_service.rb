@@ -80,7 +80,7 @@ class MenuVersionApplyService
     %w[
       name description status sequence calories price preptime archived itemtype hidden
       tasting_carrier tasting_optional tasting_supplement_cents tasting_supplement_currency
-      course_order abv alcohol_classification alcohol_notes sommelier_category sommelier_parsed_fields
+      course_order abv alcohol_classification alcohol_notes sommelier_parsed_fields
       sommelier_needs_review image_prompt
     ].each do |k|
       next unless is.key?(k)

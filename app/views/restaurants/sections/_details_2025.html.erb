@@ -235,16 +235,6 @@
       </div>
     </div>
 
-    <div class="mb-4">
-      <%= form.label :currency, class: 'form-label d-inline-flex align-items-center gap-2' do %>
-        <%= t('activerecord.attributes.restaurant.currency') %>
-        <span class="form-autosave-inline small text-muted"></span>
-      <% end %>
-      <%= currency_select(form, :currency) %>
-      <div class="form-text">
-        <%= t('.currency_help') %>
-      </div>
-    </div>
   <% end %>
 </div>
 
@@ -356,6 +346,17 @@
         </div>
       </div>
     <% end %>
+
+    <div class="mb-4">
+      <%= form.label :currency, class: 'form-label d-inline-flex align-items-center gap-2' do %>
+        <%= t('activerecord.attributes.restaurant.currency') %>
+        <span class="form-autosave-inline small text-muted"></span>
+      <% end %>
+      <%= currency_select(form, :currency) %>
+      <div class="form-text">
+        <%= t('.currency_help') %>
+      </div>
+    </div>
   <% end %>
 
 </div>

@@ -228,6 +228,63 @@
         <span><%= t('.ai_polish') %></span>
       <% end %>
 
+      <%# Generate Pairings — only for manager/admin/super_admin when food + drink items exist %>
+      <% can_generate_pairings = current_user&.super_admin? || current_user&.manager_employee_for_restaurant?(restaurant.id) %>
+      <% if can_generate_pairings
+           food_count = menu.menuitems.joins(:menusection).where('menusections.archived IS NOT TRUE').where(itemtype: :food, status: 'active').count
+           drink_count = menu.menuitems.joins(:menusection).where('menusections.archived IS NOT TRUE').where(status: 'active').where(itemtype: [:wine, :spirit, :whiskey]).count
+           pairings_possible = food_count > 0 && drink_count > 0
+         end %>
+      <% if can_generate_pairings %>
+        <% pairings_tooltip = pairings_possible ?
+             "Generate AI pairings — #{food_count} food item#{'s' unless food_count == 1}, #{drink_count} drink item#{'s' unless drink_count == 1} (wine/spirit/whiskey)" :
+             "Requires food items (#{food_count}) and wine/spirit/whiskey items (#{drink_count})" %>
+        <div data-controller="generate-pairings" data-generate-pairings-url-value="<%= generate_pairings_restaurant_menu_path(restaurant, menu) %>">
+          <button type="button"
+              class="quick-action-btn quick-action-btn-secondary<%= ' disabled' unless pairings_possible %>"
+              <%= 'disabled' unless pairings_possible %>
+              data-action="click->generate-pairings#generate"
+              data-testid="generate-pairings-btn"
+              title="<%= pairings_tooltip %>">
+            <i class="bi bi-cup-straw"></i>
+            <span><%= t('.generate_pairings', default: 'Generate Pairings') %></span>
+          </button>
+
+          <%# Pairings result modal %>
+          <div class="modal fade" tabindex="-1" data-generate-pairings-target="modal" aria-labelledby="pairingsModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="pairingsModalLabel">
+                    <i class="bi bi-cup-straw me-2"></i>AI Food &amp; Drink Pairings
+                  </h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="max-height: 60vh; overflow-y: auto;">
+                  <%# Spinner while generating %>
+                  <div data-generate-pairings-target="spinner" class="text-center py-5">
+                    <div class="spinner-border text-primary mb-3" role="status">
+                      <span class="visually-hidden">Generating…</span>
+                    </div>
+                    <p class="text-muted">Generating pairings — this may take a moment…</p>
+                  </div>
+                  <%# Error state %>
+                  <div data-generate-pairings-target="error" class="alert alert-danger d-none"></div>
+                  <%# Results %>
+                  <div data-generate-pairings-target="results" class="d-none">
+                    <p class="text-muted mb-3" data-generate-pairings-target="count"></p>
+                    <div data-generate-pairings-target="pairingsBody"></div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
       <%= form_with model: menu,
             url: restaurant_menu_path(restaurant, menu),
             method: :patch,
@@ -236,18 +293,18 @@
             html: { class: 'd-inline' } do |f| %>
         <%= hidden_field_tag :return_to, 'menu_edit' %>
         <% if menu.active? %>
-          <%= hidden_field_tag 'menu[status]', 'inactive' %>
+          <%= hidden_field_tag 'menu[status]', 'inactive', id: 'menu_status_toggle' %>
           <%= hidden_field_tag :status, 'inactive' %>
           <button type="submit" class="quick-action-btn quick-action-btn-secondary menu-status-pill menu-status-pill--active" data-testid="menu-status-toggle-btn">
-            <i class="bi bi-toggle2-off"></i>
-            <span><%= t('.active') %></span>
+            <i class="bi bi-toggle2-on"></i>
+            <span><%= t('.active', default: 'Active') %></span>
           </button>
         <% else %>
-          <%= hidden_field_tag 'menu[status]', 'active' %>
+          <%= hidden_field_tag 'menu[status]', 'active', id: 'menu_status_toggle' %>
           <%= hidden_field_tag :status, 'active' %>
           <button type="submit" class="quick-action-btn menu-status-pill menu-status-pill--inactive" data-testid="menu-status-toggle-btn">
-            <i class="bi bi-toggle2-on"></i>
-            <span><%= t('.inactive') %></span>
+            <i class="bi bi-toggle2-off"></i>
+            <span><%= t('.inactive', default: 'Inactive') %></span>
           </button>
         <% end %>
       <% end %>

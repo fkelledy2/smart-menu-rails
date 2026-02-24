@@ -33,7 +33,7 @@ class BeverageReviewQueuesController < ApplicationController
     lock = ActiveModel::Type::Boolean.new.cast(params[:lock])
 
     Menuitem.transaction do
-      if whiskey_staff_params.present? && menuitem.sommelier_category == 'whiskey'
+      if whiskey_staff_params.present? && menuitem.whiskey?
         merged = (menuitem.sommelier_parsed_fields || {}).merge(whiskey_staff_params)
         merged['staff_tagged_at'] = Time.current.iso8601
         merged['staff_tagged_by'] = current_user.id

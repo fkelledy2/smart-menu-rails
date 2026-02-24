@@ -38,7 +38,6 @@ class MenuVersionDiffService
     abv
     alcohol_classification
     alcohol_notes
-    sommelier_category
     sommelier_parsed_fields
     sommelier_needs_review
     image_prompt

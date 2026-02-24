@@ -106,8 +106,8 @@ class Menu::GenerateWhiskeyFlightsJobTest < ActiveSupport::TestCase
     3.times do |i|
       Menuitem.create!(
         name: "Sparse Whiskey #{i}", description: '', menusection: sparse_section,
-        itemtype: :food, status: :active, price: 10.0, preptime: 0, calories: 0,
-        sommelier_category: 'whiskey', sommelier_parsed_fields: { 'whiskey_region' => 'islay' },
+        itemtype: :whiskey, status: :active, price: 10.0, preptime: 0, calories: 0,
+        sommelier_parsed_fields: { 'whiskey_region' => 'islay' },
       )
     end
 
@@ -143,9 +143,9 @@ class Menu::GenerateWhiskeyFlightsJobTest < ActiveSupport::TestCase
   def create_whiskey(name, price, parsed_fields)
     Menuitem.create!(
       name: name, description: '', menusection: @section,
-      itemtype: :food, status: :active, price: price,
+      itemtype: :whiskey, status: :active, price: price,
       preptime: 0, calories: 0,
-      sommelier_category: 'whiskey', sommelier_parsed_fields: parsed_fields,
+      sommelier_parsed_fields: parsed_fields,
     )
   end
 end

@@ -93,7 +93,7 @@ export default class extends Controller {
             if (payload) {
               try {
                 const cnt = Array.isArray(payload?.order?.items) ? payload.order.items.length : 0;
-                console.info('[State][hydrate] items=', cnt, 'orderId=', payload?.order?.id, 'hasTotals=', !!payload?.totals);
+                console.debug('[State][hydrate] items=', cnt, 'orderId=', payload?.order?.id, 'hasTotals=', !!payload?.totals);
               } catch (_) {}
               this.applyJsonState(payload);
               this.dispatchState();

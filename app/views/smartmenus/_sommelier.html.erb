@@ -2,14 +2,34 @@
     Rendered inside the customer smartmenu view when the menu has beverage items.
     Uses the sommelier Stimulus controller for the interactive flow.
 %>
-<% recommend_url = sommelier_recommend_smartmenu_path(smartmenu) %>
-<% recommend_wine_url = sommelier_recommend_wine_smartmenu_path(smartmenu) %>
-<% pairings_url_template = sommelier_pairings_smartmenu_path(smartmenu, menuitem_id: ':menuitem_id') %>
+<% recommend_url = smartmenu_sommelier_recommend_path(smartmenu.slug) %>
+<% recommend_wine_url = smartmenu_sommelier_recommend_wine_path(smartmenu.slug) %>
+<% pairings_url_template = smartmenu_sommelier_pairings_path(smartmenu.slug, menuitem_id: ':menuitem_id') %>
 
+<% restaurant_currency = smartmenu.restaurant&.currency || 'EUR' %>
+<%# Compute availability counts so the JS can hide empty options %>
+<% drink_items = smartmenu.menu.menuitems.joins(:menusection)
+     .where('menusections.archived IS NOT TRUE')
+     .where(status: 'active')
+     .drink_items %>
+<% cat_counts = drink_items.pluck(:itemtype).map { |v| Menuitem.itemtypes.key(v) }.tally %>
+<% spirits_count = (cat_counts['spirit'] || 0) + (cat_counts['whiskey'] || 0) %>
+<% wine_count = cat_counts['wine'] || 0 %>
+<% wine_colors = {} %>
+<% if wine_count > 0
+     drink_items.where(itemtype: :wine).each do |w|
+       parsed = w.sommelier_parsed_fields.is_a?(Hash) ? w.sommelier_parsed_fields : {}
+       color = parsed['wine_color'].presence || 'unknown'
+       wine_colors[color] = (wine_colors[color] || 0) + 1
+     end
+   end %>
+<% availability = { spirits: spirits_count, wine: wine_count, wine_colors: wine_colors } %>
 <div data-controller="sommelier"
      data-sommelier-url-value="<%= recommend_url %>"
      data-sommelier-wine-url-value="<%= recommend_wine_url %>"
-     data-sommelier-pairings-url-value="<%= pairings_url_template %>">
+     data-sommelier-pairings-url-value="<%= pairings_url_template %>"
+     data-sommelier-currency-value="<%= restaurant_currency %>"
+     data-sommelier-availability-value="<%= availability.to_json %>">
 
   <%# Floating action button — "Help me choose" %>
   <button class="sommelier-fab"
@@ -34,6 +54,9 @@
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
       </div>
+
+      <%# Scrollable body %>
+      <div class="sommelier-body">
 
       <%# Step 0: Mode selection — Whiskey/Spirits or Wine %>
       <div class="sommelier-step" data-sommelier-target="step">
@@ -203,6 +226,11 @@
 
       <%# Results container — populated by JS %>
       <div class="sommelier-results d-none" data-sommelier-target="results"></div>
+
+      </div><%# close sommelier-body %>
+
+      <%# Fixed footer — populated by JS when results are shown %>
+      <div class="sommelier-actions d-none" data-sommelier-target="footer"></div>
 
     </div>
   </div>

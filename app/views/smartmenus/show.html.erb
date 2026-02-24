@@ -94,12 +94,12 @@
 <%= render partial: "smartmenus/allergen_legend_modal", locals: { allergyns: @allergyns } %>
 
 <%# AI Sommelier — outside cache since it's interactive %>
-<% if show_customer_view && @menu&.menuitems&.where&.not(sommelier_category: [nil, ''])&.exists? %>
+<% if show_customer_view && @menu&.menuitems&.drink_items&.exists? %>
   <%= render partial: "smartmenus/sommelier", locals: { smartmenu: @smartmenu } %>
 <% end %>
 
 <%# Whiskey Ambassador — outside cache since it's interactive %>
-<% if show_customer_view && @smartmenu&.menu&.restaurant&.whiskey_ambassador_enabled? && @menu&.menuitems&.where(sommelier_category: 'whiskey')&.exists? %>
+<% if show_customer_view && @smartmenu&.menu&.restaurant&.whiskey_ambassador_enabled? && @menu&.menuitems&.where(itemtype: :whiskey)&.exists? %>
   <%= render partial: "smartmenus/whiskey_ambassador", locals: { smartmenu: @smartmenu } %>
 <% end %>
 </div><%# close menu-layout controller %>

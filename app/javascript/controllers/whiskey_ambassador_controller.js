@@ -18,6 +18,7 @@ export default class extends Controller {
     recommendUrl: String,
     exploreUrl: String,
     flightsUrl: String,
+    currency: { type: String, default: "EUR" },
   }
 
   connect() {
@@ -220,7 +221,7 @@ export default class extends Controller {
     const cards = this.myPicks.map(pick => `
       <div class="wa-pick-card">
         <span class="wa-pick-name">${pick.name}</span>
-        ${pick.price ? `<span class="wa-pick-price">€${parseFloat(pick.price).toFixed(2)}</span>` : ""}
+        ${pick.price ? `<span class="wa-pick-price">${this.formatPrice(pick.price)}</span>` : ""}
       </div>
     `).join("")
 
@@ -303,7 +304,7 @@ export default class extends Controller {
             <h4 class="wa-card-title">${rec.name}</h4>
             ${metaHtml}
           </div>
-          <span class="wa-card-price">${rec.price ? `€${parseFloat(rec.price).toFixed(2)}` : ""}</span>
+          <span class="wa-card-price">${rec.price ? this.formatPrice(rec.price) : ""}</span>
         </div>
         ${badgesHtml}
         <div class="wa-tags">${tags}</div>
@@ -340,7 +341,7 @@ export default class extends Controller {
       <div class="wa-explore-item">
         <div class="wa-explore-item-header">
           <h5>${item.name}</h5>
-          <span class="wa-card-price">${item.price ? `€${parseFloat(item.price).toFixed(2)}` : ""}</span>
+          <span class="wa-card-price">${item.price ? this.formatPrice(item.price) : ""}</span>
         </div>
         <div class="wa-explore-meta">
           ${item.distillery ? `<span>${item.distillery}</span>` : ""}
@@ -382,9 +383,9 @@ export default class extends Controller {
         <h4 class="wa-flight-title">${flight.title}</h4>
         <p class="wa-flight-narrative">${flight.narrative || ""}</p>
         <div class="wa-flight-meta">
-          <span class="wa-flight-price">${flight.display_price ? `€${parseFloat(flight.display_price).toFixed(2)}` : ""}</span>
-          ${flight.savings ? `<span class="wa-flight-savings">Save €${parseFloat(flight.savings).toFixed(2)}</span>` : ""}
-          ${flight.per_dram_price ? `<span class="wa-flight-per-dram">€${parseFloat(flight.per_dram_price).toFixed(2)}/dram</span>` : ""}
+          <span class="wa-flight-price">${flight.display_price ? this.formatPrice(flight.display_price) : ""}</span>
+          ${flight.savings ? `<span class="wa-flight-savings">Save ${this.formatPrice(flight.savings)}</span>` : ""}
+          ${flight.per_dram_price ? `<span class="wa-flight-per-dram">${this.formatPrice(flight.per_dram_price)}/dram</span>` : ""}
         </div>
         <div class="wa-flight-items">
           ${(flight.items || []).map((item, i) => `
@@ -431,6 +432,19 @@ export default class extends Controller {
 
   restart() {
     this.open()
+  }
+
+  formatPrice(price) {
+    if (!price) return ""
+    try {
+      return parseFloat(price).toLocaleString(undefined, {
+        style: "currency",
+        currency: this.currencyValue,
+        minimumFractionDigits: 2,
+      })
+    } catch {
+      return `${parseFloat(price).toFixed(2)} ${this.currencyValue}`
+    }
   }
 
   get _csrfToken() {

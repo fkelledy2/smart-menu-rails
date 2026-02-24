@@ -17,9 +17,8 @@ class BeverageIntelligence::PairingEngineTest < ActiveSupport::TestCase
     drink = Menuitem.create!(
       name: 'Lagavulin 16',
       menusection: @menusection,
-      itemtype: :beverage,
+      itemtype: :whiskey,
       status: :active,
-      sommelier_category: 'whiskey',
       price: 15.0,
       preptime: 0,
       calories: 0,

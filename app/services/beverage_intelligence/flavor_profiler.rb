@@ -47,7 +47,7 @@ module BeverageIntelligence
       return nil if text.blank?
 
       # Wine items get enhanced profiling from parsed fields
-      if menuitem.sommelier_category.to_s == 'wine'
+      if menuitem.wine?
         return profile_wine_item(menuitem, text)
       end
 

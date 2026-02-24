@@ -4,8 +4,8 @@ class MenusController < ApplicationController
   before_action :authenticate_user!, except: %i[index show]
   skip_before_action :verify_authenticity_token, only: %i[create_version activate_version]
   before_action :set_restaurant
-  before_action :set_menu, only: %i[show edit update destroy regenerate_images image_generation_progress localize localization_progress performance update_availabilities polish polish_progress versions version_diff versions_diff create_version activate_version]
-  before_action :ensure_owner_restaurant_context!, only: %i[update destroy regenerate_images localize update_availabilities polish create_version activate_version]
+  before_action :set_menu, only: %i[show edit update destroy regenerate_images image_generation_progress localize localization_progress performance update_availabilities polish polish_progress versions version_diff versions_diff create_version activate_version generate_pairings]
+  before_action :ensure_owner_restaurant_context!, only: %i[update destroy regenerate_images localize update_availabilities polish create_version activate_version generate_pairings]
 
   skip_around_action :switch_locale, only: %i[update_sequence bulk_update]
 
@@ -492,6 +492,66 @@ class MenusController < ApplicationController
     payload['menu_id'] ||= @menu.id
 
     render json: payload
+  end
+
+  # POST /restaurants/:restaurant_id/menus/:id/generate_pairings
+  def generate_pairings
+    authorize @menu, :update?
+
+    restaurant = @restaurant || @menu.restaurant
+
+    # Verify the user has the required role
+    unless current_user.super_admin? || current_user.manager_employee_for_restaurant?(restaurant.id)
+      respond_to do |format|
+        format.html do
+          flash[:alert] = t('menus.controller.generate_pairings_unauthorized', default: 'You do not have permission to generate pairings.')
+          redirect_to edit_restaurant_menu_path(restaurant, @menu, section: 'details')
+        end
+        format.json { render json: { error: 'Unauthorized' }, status: :forbidden }
+      end
+      return
+    end
+
+    # Run pairing engine synchronously so we can return results immediately
+    engine = BeverageIntelligence::PairingEngine.new
+    pairings_count = engine.generate_for_menu(@menu)
+
+    Rails.logger.info("[MenusController] Generated #{pairings_count} pairings for menu ##{@menu.id}")
+
+    respond_to do |format|
+      format.html do
+        flash[:notice] = t('menus.controller.generate_pairings_queued', default: 'Food & drink pairing generation complete.')
+        redirect_to edit_restaurant_menu_path(restaurant, @menu, section: 'details')
+      end
+      format.json do
+        pairings = PairingRecommendation
+          .joins(:drink_menuitem, :food_menuitem)
+          .where(drink_menuitem_id: @menu.menuitems.select(:id))
+          .order(score: :desc)
+          .limit(100)
+          .map do |p|
+            {
+              drink_name: p.drink_menuitem.name,
+              drink_type: p.drink_menuitem.itemtype,
+              food_name: p.food_menuitem.name,
+              score: p.score.to_f.round(4),
+              pairing_type: p.pairing_type,
+              rationale: p.rationale,
+            }
+          end
+
+        render json: { pairings_count: pairings_count, pairings: pairings }
+      end
+    end
+  rescue StandardError => e
+    Rails.logger.error("[MenusController] generate_pairings failed: #{e.class}: #{e.message}")
+    respond_to do |format|
+      format.html do
+        flash[:alert] = t('menus.controller.generate_pairings_failed', default: 'Failed to generate pairings.')
+        redirect_to edit_restaurant_menu_path(@restaurant || @menu.restaurant, @menu, section: 'details')
+      end
+      format.json { render json: { error: e.message }, status: :internal_server_error }
+    end
   end
 
   # POST /menus/:id/localize

@@ -217,12 +217,11 @@ class BeverageIntelligence::WhiskeyRecommenderTest < ActiveSupport::TestCase
       name: name,
       description: '',
       menusection: @section,
-      itemtype: :food,
+      itemtype: :whiskey,
       status: :active,
       price: price,
       preptime: 0,
       calories: 0,
-      sommelier_category: 'whiskey',
       sommelier_parsed_fields: parsed_fields,
     )
   end

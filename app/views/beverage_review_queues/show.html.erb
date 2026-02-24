@@ -48,12 +48,12 @@
         <td><%= mi.menusection&.menu&.name %></td>
         <td><%= mi.menusection&.name %></td>
         <td><%= mi.name %></td>
-        <td><%= mi.sommelier_category %></td>
+        <td><%= mi.itemtype %></td>
         <td><%= mi.sommelier_classification_confidence %></td>
         <td><%= mi.sommelier_parse_confidence %></td>
         <td><%= mi.sommelier_parsed_fields.to_json %></td>
         <td>
-          <% if mi.sommelier_category == 'whiskey' %>
+          <% if mi.whiskey? %>
             <% parsed = mi.sommelier_parsed_fields.is_a?(Hash) ? mi.sommelier_parsed_fields : {} %>
             <%= form_with url: beverage_review_queue_review_restaurant_path(@restaurant, menuitem_id: mi.id),
                           method: :patch, local: true, class: 'whiskey-tag-form' do |f| %>

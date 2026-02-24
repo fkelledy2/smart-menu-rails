@@ -120,7 +120,7 @@ class Restaurant < ApplicationRecord
 
     menus.any? do |menu|
       menu.menuitems
-          .where(sommelier_category: 'whiskey', status: 'active')
+          .where(itemtype: :whiskey, status: 'active')
           .where("sommelier_parsed_fields->>'whiskey_region' IS NOT NULL OR sommelier_parsed_fields->>'staff_flavor_cluster' IS NOT NULL")
           .count >= 10
     end

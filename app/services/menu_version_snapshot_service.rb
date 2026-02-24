@@ -107,7 +107,6 @@ class MenuVersionSnapshotService
           abv: item.abv,
           alcohol_classification: item.alcohol_classification,
           alcohol_notes: item.alcohol_notes,
-          sommelier_category: item.sommelier_category,
           sommelier_parsed_fields: item.sommelier_parsed_fields,
           sommelier_needs_review: item.sommelier_needs_review,
           image_prompt: item.image_prompt,

@@ -23,8 +23,12 @@ export default class extends Controller {
     'editItemGlutenFree',
     'editItemDairyFree',
     'editItemNutFree',
+    'pricingWrapper',
+    'pricingModeBtn',
+    'singlePriceSection',
     'sizePricesSection',
     'editSizePrice',
+    'editItemSectionSize',
     'overallPercent',
     'overallSlider',
     'overallFill',
@@ -42,13 +46,18 @@ export default class extends Controller {
   };
 
   connect() {
+    console.debug('[menu-import] connect() — element:', this.element.className);
     // Initialize modals
     if (this.hasConfirmModalTarget) {
-      this.confirmModal = new Modal(this.confirmModalTarget);
+      this.confirmModal = Modal.getOrCreateInstance(this.confirmModalTarget);
+      console.debug('[menu-import] confirmModal initialized');
     }
 
     if (this.hasEditItemModalTarget) {
-      this.editItemModal = new Modal(this.editItemModalTarget);
+      this.editItemModal = Modal.getOrCreateInstance(this.editItemModalTarget);
+      console.debug('[menu-import] editItemModal initialized');
+    } else {
+      console.warn('[menu-import] editItemModalTarget NOT found at connect time');
     }
 
     // Add event listener for keyboard shortcuts
@@ -191,7 +200,16 @@ export default class extends Controller {
 
   // Edit Item Modal Methods
   showEditItemModal(event) {
-    if (!this.hasEditItemModalTarget) return;
+    if (!this.hasEditItemModalTarget) {
+      console.warn('[menu-import#showEditItemModal] editItemModalTarget not found — aborting');
+      return;
+    }
+
+    // Lazy-init the Modal instance if connect() missed it
+    if (!this.editItemModal) {
+      console.debug('[menu-import#showEditItemModal] lazy-initializing Modal');
+      this.editItemModal = Modal.getOrCreateInstance(this.editItemModalTarget);
+    }
 
     const itemId = event.currentTarget.dataset.itemId;
     const itemName = event.currentTarget.dataset.itemName || '';
@@ -250,24 +268,40 @@ export default class extends Controller {
     this.setDietaryRestrictionCheckbox('dairy_free', dietaryRestrictions);
     this.setDietaryRestrictionCheckbox('nut_free', dietaryRestrictions);
 
-    // Populate size prices
+    // Populate size prices and set pricing mode
     let sizePrices = {};
     try {
-      sizePrices = JSON.parse(event.currentTarget.dataset.itemSizePrices || '{}');
+      const raw = event.currentTarget.dataset.itemSizePrices || '{}';
+      console.debug('[menu-import#showEditItemModal] raw itemSizePrices attr:', raw);
+      sizePrices = JSON.parse(raw);
     } catch (e) {
+      console.error('[menu-import#showEditItemModal] Error parsing size prices:', e);
       sizePrices = {};
     }
-    const hasSizePrices = Object.values(sizePrices).some(v => v != null && parseFloat(v) > 0);
-    if (this.hasSizePricesSectionTarget) {
-      this.sizePricesSectionTarget.style.display = hasSizePrices ? '' : 'none';
-    }
+    console.debug('[menu-import#showEditItemModal] parsed sizePrices:', sizePrices);
+    console.debug('[menu-import#showEditItemModal] hasEditSizePriceTarget:', this.hasEditSizePriceTarget);
+    console.debug('[menu-import#showEditItemModal] editSizePriceTargets count:', this.hasEditSizePriceTarget ? this.editSizePriceTargets.length : 0);
     if (this.hasEditSizePriceTarget) {
       this.editSizePriceTargets.forEach(input => {
         const key = input.dataset.sizeKey;
         const val = sizePrices[key];
+        console.debug(`[menu-import#showEditItemModal] size input key=${key} raw=${val} setting=${(val != null && parseFloat(val) > 0) ? val : ''}`);
         input.value = (val != null && parseFloat(val) > 0) ? val : '';
       });
     }
+
+    // Sync the duplicate section selector in size mode
+    if (this.hasEditItemSectionSizeTarget) {
+      this.editItemSectionSizeTarget.value = itemSection;
+    }
+
+    // Auto-select pricing mode based on whether size prices exist
+    const hasSizePrices = Object.values(sizePrices).some(v => v != null && parseFloat(v) > 0);
+    console.debug('[menu-import#showEditItemModal] hasSizePrices:', hasSizePrices, '=> mode:', hasSizePrices ? 'sizes' : 'single');
+    console.debug('[menu-import#showEditItemModal] hasPricingModeBtnTarget:', this.hasPricingModeBtnTarget);
+    console.debug('[menu-import#showEditItemModal] hasSinglePriceSectionTarget:', this.hasSinglePriceSectionTarget);
+    console.debug('[menu-import#showEditItemModal] hasSizePricesSectionTarget:', this.hasSizePricesSectionTarget);
+    this._applyPricingMode(hasSizePrices ? 'sizes' : 'single');
 
     // Store id on modal dataset for save fallback
     try {
@@ -283,6 +317,30 @@ export default class extends Controller {
     if (hasTargetProp) {
       const target = this[`editItem${this.capitalize(type)}Target`];
       if (target) target.checked = restrictions.includes(type);
+    }
+  }
+
+  // Pricing mode toggle — called from btn-group click
+  switchPricingMode(event) {
+    const mode = event.currentTarget.dataset.pricingMode;
+    if (mode) this._applyPricingMode(mode);
+  }
+
+  // Internal: show/hide the correct pricing panel and update button active state
+  _applyPricingMode(mode) {
+    // Toggle btn-group active states
+    if (this.hasPricingModeBtnTarget) {
+      this.pricingModeBtnTargets.forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.pricingMode === mode);
+      });
+    }
+
+    // Show/hide panels
+    if (this.hasSinglePriceSectionTarget) {
+      this.singlePriceSectionTarget.style.display = mode === 'single' ? '' : 'none';
+    }
+    if (this.hasSizePricesSectionTarget) {
+      this.sizePricesSectionTarget.style.display = mode === 'sizes' ? '' : 'none';
     }
   }
 
@@ -359,7 +417,7 @@ export default class extends Controller {
     if (this.hasEditItemNutFreeTarget && this.editItemNutFreeTarget.checked)
       dietaryRestrictions.push('nut_free');
 
-    // Collect size prices
+    // Collect size prices from inputs
     const sizePrices = {};
     if (this.hasEditSizePriceTarget) {
       this.editSizePriceTargets.forEach(input => {
@@ -369,15 +427,21 @@ export default class extends Controller {
       });
     }
 
+    // Detect the active pricing mode from the DOM (which panel is visible)
+    const sizePanelVisible = this.hasSizePricesSectionTarget && this.sizePricesSectionTarget.style.display !== 'none';
+    const pricingMode = sizePanelVisible ? 'sizes' : 'single';
+    const singlePrice = pricingMode === 'single' ? (parseFloat(formData.get('item_price')) || 0) : 0;
+    const finalSizePrices = pricingMode === 'sizes' ? sizePrices : {};
+
     const payload = {
       ocr_menu_item: {
         name: formData.get('item_name'),
         description: formData.get('item_description'),
         image_prompt: formData.get('item_image_prompt'),
-        price: parseFloat(formData.get('item_price')) || 0,
+        price: singlePrice,
         allergens: allergens,
         dietary_restrictions: dietaryRestrictions,
-        size_prices: sizePrices,
+        size_prices: finalSizePrices,
       },
     };
     console.debug('[menu-import#saveItem] PATCH /ocr_menu_items/' + itemId, payload);
@@ -434,28 +498,40 @@ export default class extends Controller {
               }
             }
 
-            // Update price text node inside the price container (first child text before buttons)
-            const priceWrap = row.querySelector('.text-nowrap');
-            if (priceWrap && item.price != null) {
-              const price = Number(item.price);
-              let formatted = '';
-              if (!isNaN(price)) {
-                // Try to reuse existing currency symbol if present
-                let existing = '';
-                if (priceWrap.firstChild && priceWrap.firstChild.nodeType === Node.TEXT_NODE) {
-                  existing = (priceWrap.firstChild.nodeValue || '').trim();
-                }
-                const symbolMatch = existing.match(/^[^\d\-\.,]+/);
-                const symbol = symbolMatch ? symbolMatch[0] : '';
-                const amount = price.toFixed(2);
-                formatted = symbol
-                  ? `${symbol}${amount}`
-                  : new Intl.NumberFormat(undefined, { style: 'currency', currency: 'USD' }).format(
-                      price
-                    );
+            // Update price / size-prices display
+            const spData = data.item?.size_prices || {};
+            const spEntries = Object.entries(spData).filter(([, v]) => v != null && parseFloat(v) > 0);
+            const priceArea = row.querySelector('.d-flex.align-items-center.gap-2.flex-shrink-0');
+
+            if (priceArea) {
+              // Remove old display elements
+              const oldSizeDisp = priceArea.querySelector('[data-item-size-prices-display]');
+              const oldPriceDisp = priceArea.querySelector('[data-item-price-display]');
+              const oldEstBadge = priceArea.querySelector('.badge.bg-warning');
+              if (oldSizeDisp) oldSizeDisp.remove();
+              if (oldPriceDisp) oldPriceDisp.remove();
+              if (oldEstBadge) oldEstBadge.remove();
+
+              const editBtn = priceArea.querySelector('.btn');
+              if (spEntries.length) {
+                // Show size prices as primary display
+                const sp = document.createElement('span');
+                sp.className = 'text-muted small';
+                sp.setAttribute('data-item-size-prices-display', id);
+                sp.textContent = spEntries.map(([k, v]) => {
+                  const label = k.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+                  return `${label}: ${parseFloat(v).toFixed(2)}`;
+                }).join(' \u00b7 ');
+                priceArea.insertBefore(sp, editBtn);
+              } else {
+                // Show single price
+                const price = Number(item.price || 0);
+                const sp = document.createElement('span');
+                sp.className = 'fw-medium';
+                sp.setAttribute('data-item-price-display', id);
+                sp.textContent = price.toFixed(2);
+                priceArea.insertBefore(sp, editBtn);
               }
-              if (!priceWrap.firstChild) priceWrap.appendChild(document.createTextNode(''));
-              priceWrap.firstChild.nodeValue = formatted ? formatted + ' ' : '';
             }
 
             // Update dietary badges (create or refresh)
@@ -494,27 +570,6 @@ export default class extends Controller {
                 )
                 .join('');
               if (!activeKeys.length) badgeWrap.remove();
-            }
-
-            // Update size prices badge
-            const spData = data.item?.size_prices || {};
-            const spEntries = Object.entries(spData).filter(([, v]) => v != null && parseFloat(v) > 0);
-            let spBadge = row.querySelector('.badge.bg-purple');
-            if (spEntries.length) {
-              const spText = spEntries.map(([k, v]) => {
-                const label = k.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-                return `${label}: ${v}`;
-              }).join(' \u00b7 ');
-              if (!spBadge) {
-                spBadge = document.createElement('span');
-                spBadge.className = 'badge bg-purple bg-opacity-10 text-dark border border-secondary border-opacity-25';
-                spBadge.style.fontSize = '0.65rem';
-                const priceArea = row.querySelector('.d-flex.align-items-center.gap-2.flex-shrink-0');
-                if (priceArea) priceArea.insertBefore(spBadge, priceArea.querySelector('.btn'));
-              }
-              spBadge.innerHTML = `<i class="bi bi-cup-straw me-1" aria-hidden="true"></i>${spText}`;
-            } else if (spBadge) {
-              spBadge.remove();
             }
 
             // Update edit trigger data attributes on the button for next open

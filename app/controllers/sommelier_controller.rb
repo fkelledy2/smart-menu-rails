@@ -6,6 +6,7 @@ class SommelierController < ApplicationController
   skip_before_action :set_permissions, raise: false
   skip_before_action :redirect_to_onboarding_if_needed, raise: false
   skip_around_action :switch_locale, raise: false
+  skip_forgery_protection
 
   before_action :set_smartmenu
   before_action :set_menu
@@ -157,7 +158,7 @@ class SommelierController < ApplicationController
       name: item.name,
       description: item.description,
       price: item.price,
-      category: item.sommelier_category,
+      category: item.itemtype,
       tags: rec[:tags],
       score: (rec[:score] * 100).round,
     }
@@ -168,6 +169,10 @@ class SommelierController < ApplicationController
 
     result[:story] = enrichment['brand_story'] if enrichment['brand_story'].present?
     result[:region] = enrichment['region'] if enrichment['region'].present?
+
+    has_pairings = rec[:best_pairing].present? ||
+                   PairingRecommendation.where(drink_menuitem_id: item.id).exists?
+    result[:has_pairings] = has_pairings
 
     if rec[:best_pairing]
       food = rec[:best_pairing].food_menuitem

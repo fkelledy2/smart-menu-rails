@@ -22,7 +22,7 @@ class Menu::GenerateWhiskeyFlightsJob < ApplicationJob
     items = menu.menuitems
                 .joins(:menusection)
                 .where('menusections.archived IS NOT TRUE')
-                .where(sommelier_category: 'whiskey', status: 'active')
+                .where(itemtype: :whiskey, status: 'active')
                 .to_a
 
     return if items.size < 6

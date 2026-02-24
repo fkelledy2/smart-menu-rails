@@ -11,21 +11,21 @@ class BeverageIntelligence::WhiskeyCsvImporterTest < ActiveSupport::TestCase
 
     @lagavulin = Menuitem.create!(
       name: 'Lagavulin 16yo', description: 'Islay single malt',
-      menusection: @section, itemtype: :food, status: :active,
+      menusection: @section, itemtype: :whiskey, status: :active,
       price: 18.0, preptime: 0, calories: 0,
-      sommelier_category: 'whiskey', sommelier_parsed_fields: {},
+      sommelier_parsed_fields: {},
     )
     @macallan = Menuitem.create!(
       name: 'Macallan 12 Double Cask', description: 'Speyside single malt',
-      menusection: @section, itemtype: :food, status: :active,
+      menusection: @section, itemtype: :whiskey, status: :active,
       price: 14.0, preptime: 0, calories: 0,
-      sommelier_category: 'whiskey', sommelier_parsed_fields: {},
+      sommelier_parsed_fields: {},
     )
     @redbreast = Menuitem.create!(
       name: 'Redbreast 12', description: 'Irish single pot still',
-      menusection: @section, itemtype: :food, status: :active,
+      menusection: @section, itemtype: :whiskey, status: :active,
       price: 12.0, preptime: 0, calories: 0,
-      sommelier_category: 'whiskey', sommelier_parsed_fields: {},
+      sommelier_parsed_fields: {},
     )
   end
 

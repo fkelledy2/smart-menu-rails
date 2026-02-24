@@ -17,9 +17,8 @@ class WhiskeyAmbassadorSmokeTest < ApplicationSystemTestCase
     # Create whiskey items for the review queue and ambassador
     @whiskey = Menuitem.create!(
       name: 'Lagavulin 16yo', description: 'Islay single malt',
-      menusection: @section, itemtype: :food, status: :active,
+      menusection: @section, itemtype: :whiskey, status: :active,
       price: 18.0, preptime: 0, calories: 0,
-      sommelier_category: 'whiskey',
       sommelier_parsed_fields: {
         'distillery' => 'Lagavulin', 'whiskey_region' => 'islay',
         'whiskey_type' => 'single_malt', 'age_years' => 16,

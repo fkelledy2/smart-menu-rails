@@ -14,11 +14,13 @@ import { Controller } from "@hotwired/stimulus"
  *   loading    — spinner shown during fetch
  */
 export default class extends Controller {
-  static targets = ["panel", "step", "results", "loading"]
+  static targets = ["panel", "step", "results", "loading", "footer"]
   static values  = {
     url: String,
     wineUrl: String,
     pairingsUrl: String,
+    currency: { type: String, default: "EUR" },
+    availability: { type: Object, default: {} },
   }
 
   connect() {
@@ -32,11 +34,32 @@ export default class extends Controller {
     this.mode = null
     this.preferences = { smoky: null, taste: null, budget: null }
     this.winePreferences = { wine_color: null, body: null, taste: null, budget: null }
-    this.flowSteps = [0] // start at mode selection
-    this.showStep(0)
+
+    const avail = this.availabilityValue || {}
+    const hasSpirits = (avail.spirits || 0) > 0
+    const hasWine = (avail.wine || 0) > 0
+
+    // Hide mode buttons that have zero items
+    this._filterModeButtons(hasSpirits, hasWine)
+
+    // Pre-filter wine color buttons
+    this._filterWineColorButtons(avail.wine_colors || {})
+
+    // Auto-select mode if only one category exists
+    if (hasSpirits && !hasWine) {
+      this.mode = "spirits"
+      this.flowSteps = this._spiritsStepIndices()
+    } else if (hasWine && !hasSpirits) {
+      this.mode = "wine"
+      this.flowSteps = this._wineStepIndices()
+    } else {
+      this.flowSteps = [0] // show mode selection
+    }
+
     this.panelTarget.classList.remove("d-none")
     this.panelTarget.classList.add("sommelier-open")
     document.body.classList.add("sommelier-active")
+    this._advanceFlow()
   }
 
   close() {
@@ -54,6 +77,34 @@ export default class extends Controller {
       this.flowSteps = this._spiritsStepIndices()
     }
     this._advanceFlow()
+  }
+
+  // Hide mode buttons with zero items; if only one visible, auto-select it
+  _filterModeButtons(hasSpirits, hasWine) {
+    const modeStep = this.stepTargets[0]
+    if (!modeStep) return
+    const buttons = modeStep.querySelectorAll(".sommelier-option-btn[data-value]")
+    buttons.forEach(btn => {
+      const val = btn.dataset.value
+      if (val === "spirits") btn.classList.toggle("d-none", !hasSpirits)
+      if (val === "wine") btn.classList.toggle("d-none", !hasWine)
+    })
+  }
+
+  // Hide wine color buttons with zero matching wines
+  _filterWineColorButtons(wineColors) {
+    // Find the wine color step (step 4, first wine flow step)
+    const wineColorStep = this.stepTargets.find(el =>
+      el.dataset.flow === "wine" && el.querySelector("[data-action*='setWineColor']")
+    )
+    if (!wineColorStep) return
+    const buttons = wineColorStep.querySelectorAll(".sommelier-option-btn")
+    buttons.forEach(btn => {
+      const color = btn.dataset.value
+      if (!color || color === "no_preference") return // always show "Surprise me"
+      const count = wineColors[color] || 0
+      btn.classList.toggle("d-none", count === 0)
+    })
   }
 
   // === SPIRITS FLOW ===
@@ -113,6 +164,18 @@ export default class extends Controller {
       return
     }
     const nextIdx = this.flowSteps.shift()
+
+    // Auto-skip steps where only one option is visible
+    const step = this.stepTargets[nextIdx]
+    if (step) {
+      const visibleButtons = Array.from(step.querySelectorAll(".sommelier-option-btn"))
+        .filter(btn => !btn.classList.contains("d-none"))
+      if (visibleButtons.length === 1) {
+        visibleButtons[0].click()
+        return
+      }
+    }
+
     this.showStep(nextIdx)
   }
 
@@ -121,12 +184,14 @@ export default class extends Controller {
       el.classList.toggle("d-none", i !== index)
     })
     if (this.hasResultsTarget) this.resultsTarget.classList.add("d-none")
+    if (this.hasFooterTarget) this.footerTarget.classList.add("d-none")
   }
 
   async _fetchResults() {
     this.stepTargets.forEach(el => el.classList.add("d-none"))
     if (this.hasLoadingTarget) this.loadingTarget.classList.remove("d-none")
     if (this.hasResultsTarget) this.resultsTarget.classList.add("d-none")
+    if (this.hasFooterTarget) this.footerTarget.classList.add("d-none")
 
     const isWine = this.mode === "wine"
     const url = isWine ? this.wineUrlValue : this.urlValue
@@ -162,9 +227,14 @@ export default class extends Controller {
       this.resultsTarget.innerHTML = `
         <div class="sommelier-empty">
           <p class="sommelier-empty-text">No recommendations found for your preferences. Try different options!</p>
-          <button class="sommelier-btn sommelier-btn-outline" data-action="click->sommelier#restart">Try again</button>
         </div>
       `
+      if (this.hasFooterTarget) {
+        this.footerTarget.classList.remove("d-none")
+        this.footerTarget.innerHTML = `
+          <button class="sommelier-btn sommelier-btn-outline" data-action="click->sommelier#restart">Try again</button>
+        `
+      }
       return
     }
 
@@ -179,12 +249,16 @@ export default class extends Controller {
         <p class="sommelier-results-subtitle">Based on your preferences</p>
       </div>
       <div class="sommelier-cards">${cards}</div>
-      <div class="sommelier-actions">
+    `
+
+    if (this.hasFooterTarget) {
+      this.footerTarget.classList.remove("d-none")
+      this.footerTarget.innerHTML = `
         <button class="sommelier-btn sommelier-btn-outline" data-action="click->sommelier#restart">
           Try different preferences
         </button>
-      </div>
-    `
+      `
+    }
   }
 
   buildCard(rec, index) {
@@ -224,7 +298,7 @@ export default class extends Controller {
             <h4 class="sommelier-card-title">${rec.name}</h4>
             ${region}
           </div>
-          <span class="sommelier-card-price">${rec.price ? `€${parseFloat(rec.price).toFixed(2)}` : ""}</span>
+          <span class="sommelier-card-price">${rec.price ? this.formatPrice(rec.price) : ""}</span>
         </div>
         ${rec.description ? `<p class="sommelier-card-desc">${rec.description}</p>` : ""}
         <div class="sommelier-tags">${tags}</div>
@@ -233,11 +307,11 @@ export default class extends Controller {
         ${pairing}
         <div class="sommelier-card-footer">
           <span class="sommelier-match-score">${rec.score}% match</span>
-          <button class="sommelier-btn sommelier-btn-sm"
+          ${rec.has_pairings ? `<button class="sommelier-btn sommelier-btn-sm"
                   data-action="click->sommelier#showPairings"
                   data-menuitem-id="${rec.id}">
             View pairings
-          </button>
+          </button>` : ""}
         </div>
       </div>
     `
@@ -279,7 +353,7 @@ export default class extends Controller {
             <h4 class="sommelier-card-title">${rec.name}</h4>
             ${wineMetaHtml}
           </div>
-          <span class="sommelier-card-price">${rec.price ? `€${parseFloat(rec.price).toFixed(2)}` : ""}</span>
+          <span class="sommelier-card-price">${rec.price ? this.formatPrice(rec.price) : ""}</span>
         </div>
         ${rec.description ? `<p class="sommelier-card-desc">${rec.description}</p>` : ""}
         <div class="sommelier-tags">${tags}</div>
@@ -287,11 +361,11 @@ export default class extends Controller {
         ${pairing}
         <div class="sommelier-card-footer">
           <span class="sommelier-match-score">${rec.score}% match</span>
-          <button class="sommelier-btn sommelier-btn-sm"
+          ${rec.has_pairings ? `<button class="sommelier-btn sommelier-btn-sm"
                   data-action="click->sommelier#showPairings"
                   data-menuitem-id="${rec.id}">
             View pairings
-          </button>
+          </button>` : ""}
         </div>
       </div>
     `
@@ -325,7 +399,7 @@ export default class extends Controller {
           <span class="sommelier-match-score">${p.score}%</span>
         </div>
         ${p.food_description ? `<p class="sommelier-pairing-desc">${p.food_description}</p>` : ""}
-        ${p.food_price ? `<span class="sommelier-pairing-price">€${parseFloat(p.food_price).toFixed(2)}</span>` : ""}
+        ${p.food_price ? `<span class="sommelier-pairing-price">${this.formatPrice(p.food_price)}</span>` : ""}
         <p class="sommelier-pairing-rationale">${p.rationale || ""}</p>
         ${p.pairing_type === "surprise" ? '<span class="sommelier-badge-surprise">Surprise pick</span>' : ""}
       </div>
@@ -335,7 +409,7 @@ export default class extends Controller {
       <div class="sommelier-similar-card">
         <h5>${s.menuitem_name || s.product_name}</h5>
         <span class="sommelier-match-score">${s.score}% similar</span>
-        ${s.menuitem_price ? `<span class="sommelier-pairing-price">€${parseFloat(s.menuitem_price).toFixed(2)}</span>` : ""}
+        ${s.menuitem_price ? `<span class="sommelier-pairing-price">${this.formatPrice(s.menuitem_price)}</span>` : ""}
         <p class="sommelier-similar-rationale">${s.rationale || ""}</p>
       </div>
     `).join("")
@@ -347,7 +421,7 @@ export default class extends Controller {
       <div class="sommelier-modal">
         <div class="sommelier-modal-header">
           <h3>Pairings for ${data.drink.name}</h3>
-          <button class="sommelier-modal-close" data-action="click->sommelier#closePairingsModal">✕</button>
+          <button class="sommelier-modal-close" id="sommelier-pairings-close-btn">✕</button>
         </div>
         <div class="sommelier-modal-body">
           ${pairingsHtml.length > 0 ? `<h4>Food pairings</h4>${pairingsHtml}` : "<p>No pairings available yet.</p>"}
@@ -356,6 +430,10 @@ export default class extends Controller {
       </div>
     `
     document.body.appendChild(modal)
+
+    // Wire close handlers directly (modal is outside Stimulus scope)
+    modal.querySelector("#sommelier-pairings-close-btn").addEventListener("click", () => this.closePairingsModal())
+    modal.addEventListener("click", (e) => { if (e.target === modal) this.closePairingsModal() })
   }
 
   closePairingsModal() {
@@ -369,13 +447,31 @@ export default class extends Controller {
     this.resultsTarget.innerHTML = `
       <div class="sommelier-empty">
         <p class="sommelier-empty-text">Something went wrong. Please try again.</p>
-        <button class="sommelier-btn sommelier-btn-outline" data-action="click->sommelier#restart">Retry</button>
       </div>
     `
+    if (this.hasFooterTarget) {
+      this.footerTarget.classList.remove("d-none")
+      this.footerTarget.innerHTML = `
+        <button class="sommelier-btn sommelier-btn-outline" data-action="click->sommelier#restart">Retry</button>
+      `
+    }
   }
 
   restart() {
     this.open()
+  }
+
+  formatPrice(price) {
+    if (!price) return ""
+    try {
+      return parseFloat(price).toLocaleString(undefined, {
+        style: "currency",
+        currency: this.currencyValue,
+        minimumFractionDigits: 2,
+      })
+    } catch {
+      return `${parseFloat(price).toFixed(2)} ${this.currencyValue}`
+    }
   }
 
   get csrfToken() {

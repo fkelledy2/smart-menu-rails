@@ -13,6 +13,7 @@ Rails.application.configure do
     policy.script_src  :self, :unsafe_inline, :unsafe_eval, :https
     policy.style_src   :self, :unsafe_inline, :https
     policy.connect_src :self, :https, 'wss:', 'ws:'
+    policy.frame_src       :self, 'https://js.stripe.com', 'https://hooks.stripe.com'
     policy.frame_ancestors :self
     policy.base_uri    :self
     policy.form_action :self, :https

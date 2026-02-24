@@ -16,9 +16,7 @@ class Menu::ResolveEntitiesJob
     still_needs_review = 0
 
     items.find_each do |mi|
-      next if mi.sommelier_category.to_s.strip == ''
-
-      next unless %w[whiskey wine].include?(mi.sommelier_category)
+      next unless %w[whiskey wine].include?(mi.itemtype)
 
       class_conf = mi.sommelier_classification_confidence.to_f
       parse_conf = mi.sommelier_parse_confidence.to_f
@@ -31,16 +29,16 @@ class Menu::ResolveEntitiesJob
 
       parsed = mi.sommelier_parsed_fields.is_a?(Hash) ? mi.sommelier_parsed_fields : {}
 
-      canonical_name = build_canonical_name(mi.sommelier_category, parsed)
+      canonical_name = build_canonical_name(mi.itemtype, parsed)
       next if canonical_name.blank?
 
-      product = Product.where(product_type: mi.sommelier_category, canonical_name: canonical_name).first_or_create!(
+      product = Product.where(product_type: mi.itemtype, canonical_name: canonical_name).first_or_create!(
         attributes_json: {
           source: 'menuitem_rules',
         },
       )
 
-      explanation = build_explanation(mi.sommelier_category, parsed)
+      explanation = build_explanation(mi.itemtype, parsed)
       link = MenuItemProductLink.where(menuitem_id: mi.id, product_id: product.id).first_or_initialize
       link.resolution_confidence = [class_conf, parse_conf].min
       link.explanations = explanation
@@ -61,7 +59,7 @@ class Menu::ResolveEntitiesJob
         .count,
       unresolved_count: Menuitem.joins(menusection: :menu)
         .where(menus: { id: menu.id })
-        .where(sommelier_needs_review: true, sommelier_category: [nil, ''])
+        .where(sommelier_needs_review: true, itemtype: :beverage)
         .count,
     )
 

@@ -14,9 +14,8 @@ class BeverageIntelligence::WineRecommenderTest < ActiveSupport::TestCase
     @red_wine = Menuitem.create!(
       name: 'Chianti Classico Riserva',
       description: 'Full-bodied Sangiovese from Tuscany',
-      menusection: @menusection, itemtype: :food, status: :active,
+      menusection: @menusection, itemtype: :wine, status: :active,
       price: 28.0, preptime: 0, calories: 0,
-      sommelier_category: 'wine',
       sommelier_parsed_fields: { 'wine_color' => 'red', 'grape_variety' => ['sangiovese'], 'appellation' => 'chianti' },
     )
     FlavorProfile.create!(
@@ -29,9 +28,8 @@ class BeverageIntelligence::WineRecommenderTest < ActiveSupport::TestCase
     @white_wine = Menuitem.create!(
       name: 'Sancerre Sauvignon Blanc',
       description: 'Crisp and zesty Loire white',
-      menusection: @menusection, itemtype: :food, status: :active,
+      menusection: @menusection, itemtype: :wine, status: :active,
       price: 14.0, preptime: 0, calories: 0,
-      sommelier_category: 'wine',
       sommelier_parsed_fields: { 'wine_color' => 'white', 'grape_variety' => ['sauvignon blanc'], 'appellation' => 'sancerre' },
     )
     FlavorProfile.create!(

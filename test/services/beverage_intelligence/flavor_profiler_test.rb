@@ -61,7 +61,7 @@ class BeverageIntelligence::FlavorProfilerTest < ActiveSupport::TestCase
     menuitem.update_columns(
       name: 'Smoky Islay Whisky',
       description: 'Peated single malt with vanilla and honey notes',
-      sommelier_category: 'whiskey',
+      itemtype: Menuitem.itemtypes[:whiskey],
     )
 
     profile = @profiler.profile_product_for_menuitem(menuitem)

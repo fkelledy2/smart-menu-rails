@@ -371,6 +371,15 @@
       color: var(--color-gray-800);
     }
   }
+
+  // Disabled state
+  &.disabled, &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    pointer-events: none;
+    transform: none;
+    box-shadow: none;
+  }
 }
 
 // Overview Stats Card

@@ -8,7 +8,7 @@ module BeverageIntelligence
       drink_items = menu.menuitems
                         .joins(:menusection)
                         .where('menusections.archived IS NOT TRUE')
-                        .where.not(sommelier_category: [nil, ''])
+                        .drink_items
                         .where(status: 'active')
 
       food_items = menu.menuitems
@@ -148,7 +148,7 @@ module BeverageIntelligence
     end
 
     def wine_item?(menuitem)
-      menuitem.sommelier_category.to_s == 'wine' || menuitem.itemtype.to_s == 'wine'
+      menuitem.wine?
     end
 
     def wine_color(menuitem)

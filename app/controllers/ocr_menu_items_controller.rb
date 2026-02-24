@@ -94,8 +94,9 @@ class OcrMenuItemsController < ApplicationController
     end
 
     # Handle size_prices (stored in metadata)
-    if params.dig(:ocr_menu_item, :size_prices).present?
-      sp = params[:ocr_menu_item][:size_prices]
+    # Accept both populated and empty hashes so switching to single-price mode clears sizes
+    if params.dig(:ocr_menu_item).respond_to?(:key?) && params[:ocr_menu_item].key?(:size_prices)
+      sp = params[:ocr_menu_item][:size_prices] || {}
       sp = sp.to_unsafe_h if sp.respond_to?(:to_unsafe_h)
       cleaned = sp.each_with_object({}) do |(k, v), h|
         key = k.to_s

@@ -2,14 +2,16 @@
     Rendered inside the customer smartmenu view when the restaurant has whiskey_ambassador_enabled.
     Uses the whiskey_ambassador Stimulus controller for the interactive flow.
 %>
-<% recommend_url = sommelier_recommend_whiskey_smartmenu_path(smartmenu) %>
-<% explore_url = sommelier_explore_whiskeys_smartmenu_path(smartmenu) %>
-<% flights_url = sommelier_whiskey_flights_smartmenu_path(smartmenu) %>
+<% recommend_url = smartmenu_sommelier_recommend_whiskey_path(smartmenu.slug) %>
+<% explore_url = smartmenu_sommelier_explore_whiskeys_path(smartmenu.slug) %>
+<% flights_url = smartmenu_sommelier_whiskey_flights_path(smartmenu.slug) %>
 
+<% restaurant_currency = smartmenu.restaurant&.currency || 'EUR' %>
 <div data-controller="whiskey-ambassador"
      data-whiskey-ambassador-recommend-url-value="<%= recommend_url %>"
      data-whiskey-ambassador-explore-url-value="<%= explore_url %>"
-     data-whiskey-ambassador-flights-url-value="<%= flights_url %>">
+     data-whiskey-ambassador-flights-url-value="<%= flights_url %>"
+     data-whiskey-ambassador-currency-value="<%= restaurant_currency %>">
 
   <%# Floating action button %>
   <button class="wa-fab"

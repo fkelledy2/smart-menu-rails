@@ -262,21 +262,21 @@
                     <% end %>
                   </div>
                   <div class="d-flex align-items-center gap-2 flex-shrink-0">
-                    <span class="fw-medium"><%= number_to_currency(item.price, unit: @restaurantCurrency&.symbol || "$") %></span>
-                    <% if (item.metadata || {})['price_estimated'] == true %>
-                      <span class="badge bg-warning bg-opacity-25 text-dark border border-warning border-opacity-50" style="font-size: 0.65rem;" title="Price estimated by AI — click edit to adjust">
-                        <i class="bi bi-lightbulb me-1" aria-hidden="true"></i>est.
-                      </span>
-                    <% end %>
                     <% wine_sp = (item.metadata || {})['size_prices'] %>
-                    <% if wine_sp.is_a?(Hash) && wine_sp.any? %>
-                      <span class="badge bg-purple bg-opacity-10 text-dark border border-secondary border-opacity-25" style="font-size: 0.65rem;" title="Wine sizes extracted">
-                        <i class="bi bi-cup-straw me-1" aria-hidden="true"></i><%= wine_sp.map { |k, v| "#{k.to_s.humanize}: #{number_to_currency(v, unit: @restaurantCurrency&.symbol || '$')}" }.join(' · ') %>
+                    <% has_size_prices = wine_sp.is_a?(Hash) && wine_sp.values.any? { |v| v.present? && v.to_f > 0 } %>
+                    <% if has_size_prices %>
+                      <span class="text-muted small" data-item-size-prices-display="<%= item.id %>">
+                        <%= wine_sp.select { |_, v| v.present? && v.to_f > 0 }.map { |k, v| "#{k.to_s.humanize}: #{number_to_currency(v, unit: @restaurantCurrency&.symbol || '$')}" }.join(' · ') %>
                       </span>
+                    <% else %>
+                      <span class="fw-medium" data-item-price-display="<%= item.id %>"><%= number_to_currency(item.price, unit: @restaurantCurrency&.symbol || "$") %></span>
+                      <% if (item.metadata || {})['price_estimated'] == true %>
+                        <span class="badge bg-warning bg-opacity-25 text-dark border border-warning border-opacity-50" style="font-size: 0.65rem;" title="Price estimated by AI — click edit to adjust">
+                          <i class="bi bi-lightbulb me-1" aria-hidden="true"></i>est.
+                        </span>
+                      <% end %>
                     <% end %>
                     <button type="button" class="btn btn-sm btn-outline-secondary px-1 py-0"
-                            data-bs-toggle="modal"
-                            data-bs-target="#editItemModal"
                             data-item-id="<%= item.id %>"
                             data-item-name="<%= item.name %>"
                             data-item-description="<%= item.description.to_s %>"
@@ -360,11 +360,6 @@
     </div>
   <% end %>
 
-  </div>
-  </div>
-  </div>
-</div>
-
 <script>
   (function(){
     const container = document.currentScript.closest('.container-fluid');
@@ -393,7 +388,7 @@
   })();
 </script>
 <!-- Confirmation Modal -->
-<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true" data-bs-backdrop="static" data-controller="menu-import" data-menu-import-target="confirmModal">
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true" data-bs-backdrop="static" data-menu-import-target="confirmModal">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-body text-center p-4">
@@ -422,7 +417,7 @@
 </div>
 
 <!-- Edit Item Modal -->
-<div class="modal fade" id="editItemModal" tabindex="-1" aria-labelledby="editItemModalLabel" aria-hidden="true" data-bs-backdrop="static" data-controller="menu-import" data-menu-import-target="editItemModal">
+<div class="modal fade" id="editItemModal" tabindex="-1" aria-labelledby="editItemModalLabel" aria-hidden="true" data-bs-backdrop="static" data-menu-import-target="editItemModal">
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
@@ -448,45 +443,80 @@
             <textarea class="form-control" id="item_image_prompt" name="item_image_prompt" rows="2" data-menu-import-target="editItemImagePrompt"></textarea>
           </div>
 
-          <div class="row g-3 mb-3">
-            <div class="col-md-4">
-              <label for="item_price" class="form-label"><%= t('.price') %></label>
-              <div class="input-group">
-                <span class="input-group-text"><%= @restaurantCurrency&.symbol || "$" %></span>
-                <input type="text" class="form-control" id="item_price" name="item_price" placeholder="0.00" data-menu-import-target="editItemPrice" autocomplete="off">
+          <%# -- Pricing ------------------------------------------------- %>
+          <div class="mb-3" data-menu-import-target="pricingWrapper">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              <label class="form-label mb-0 fw-semibold">Pricing</label>
+              <div class="btn-group btn-group-sm" role="group" aria-label="Pricing mode">
+                <button type="button"
+                        class="btn btn-outline-secondary active"
+                        data-menu-import-target="pricingModeBtn"
+                        data-pricing-mode="single"
+                        data-action="click->menu-import#switchPricingMode">
+                  <i class="bi bi-tag me-1"></i>Single price
+                </button>
+                <button type="button"
+                        class="btn btn-outline-secondary"
+                        data-menu-import-target="pricingModeBtn"
+                        data-pricing-mode="sizes"
+                        data-action="click->menu-import#switchPricingMode">
+                  <i class="bi bi-cup-straw me-1"></i>By size
+                </button>
               </div>
             </div>
 
-            <div class="col-md-4">
-              <label for="item_section" class="form-label"><%= t('.section') %></label>
-              <select class="form-select" id="item_section" name="item_section" data-menu-import-target="editItemSection" disabled title="<%= t('.section_disabled_title') %>">
-                <% @ocr_menu_import.ocr_menu_sections.ordered.each do |section| %>
-                  <option value="<%= section.id %>"><%= section.name %></option>
-                <% end %>
-              </select>
-              <div class="form-text text-muted"><%= t('.reorder_hint') %></div>
-            </div>
-            <div class="col-md-4"></div>
-          </div>
-
-          <%# Size-based prices (glass, bottle, etc.) %>
-          <div id="sizePricesSection" class="mb-3" style="display: none;" data-menu-import-target="sizePricesSection">
-            <label class="form-label fw-semibold"><i class="bi bi-cup-straw me-1"></i>Size Prices</label>
-            <div class="row g-2">
-              <% %w[glass large_glass half_bottle bottle carafe].each do |size_key| %>
-                <div class="col">
-                  <label for="item_size_<%= size_key %>" class="form-label small text-muted mb-1"><%= size_key.humanize %></label>
-                  <div class="input-group input-group-sm">
+            <%# Single price + section row %>
+            <div data-menu-import-target="singlePriceSection">
+              <div class="row g-3">
+                <div class="col-md-4">
+                  <div class="input-group">
                     <span class="input-group-text"><%= @restaurantCurrency&.symbol || "$" %></span>
-                    <input type="number" step="0.01" min="0" class="form-control form-control-sm"
-                           id="item_size_<%= size_key %>"
-                           name="item_size_prices[<%= size_key %>]"
-                           placeholder="0"
-                           data-size-key="<%= size_key %>"
-                           data-menu-import-target="editSizePrice">
+                    <input type="text" class="form-control" id="item_price" name="item_price" placeholder="0.00" data-menu-import-target="editItemPrice" autocomplete="off">
                   </div>
                 </div>
-              <% end %>
+                <div class="col-md-4">
+                  <select class="form-select" id="item_section" name="item_section" data-menu-import-target="editItemSection" disabled title="<%= t('.section_disabled_title') %>">
+                    <% @ocr_menu_import.ocr_menu_sections.ordered.each do |section| %>
+                      <option value="<%= section.id %>"><%= section.name %></option>
+                    <% end %>
+                  </select>
+                  <div class="form-text text-muted"><%= t('.reorder_hint') %></div>
+                </div>
+                <div class="col-md-4"></div>
+              </div>
+            </div>
+
+            <%# Size-based prices %>
+            <div data-menu-import-target="sizePricesSection" style="display:none;">
+              <div class="row g-2">
+                <% %w[glass large_glass half_bottle bottle carafe].each do |size_key| %>
+                  <div class="col">
+                    <label for="item_size_<%= size_key %>" class="form-label small text-muted mb-1"><%= size_key.humanize %></label>
+                    <div class="input-group input-group-sm">
+                      <span class="input-group-text"><%= @restaurantCurrency&.symbol || "$" %></span>
+                      <input type="number" step="0.01" min="0" class="form-control form-control-sm"
+                             id="item_size_<%= size_key %>"
+                             name="item_size_prices[<%= size_key %>]"
+                             placeholder="0.00"
+                             data-size-key="<%= size_key %>"
+                             data-menu-import-target="editSizePrice">
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+              <div class="form-text text-muted mt-1">Leave a size blank to omit it.</div>
+
+              <%# Section selector (duplicated so it stays visible in size mode) %>
+              <div class="row g-3 mt-2">
+                <div class="col-md-4">
+                  <label class="form-label small text-muted mb-1"><%= t('.section') %></label>
+                  <select class="form-select form-select-sm" name="item_section_size" data-menu-import-target="editItemSectionSize" disabled title="<%= t('.section_disabled_title') %>">
+                    <% @ocr_menu_import.ocr_menu_sections.ordered.each do |section| %>
+                      <option value="<%= section.id %>"><%= section.name %></option>
+                    <% end %>
+                  </select>
+                </div>
+              </div>
             </div>
           </div>
 

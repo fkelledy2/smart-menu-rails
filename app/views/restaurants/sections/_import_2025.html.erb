@@ -254,7 +254,7 @@
                  data-testid="import-row-<%= import.id %>"
                  data-href="<%= restaurant_ocr_menu_import_path(restaurant, import) %>">
               <div class="d-flex align-items-center gap-2 p-3">
-                <div class="w-40px flex-shrink-0">
+                <div class="flex-shrink-0" style="width: 24px;">
                   <input type="checkbox"
                          name="ocr_menu_import_ids[]"
                          value="<%= import.id %>"
@@ -264,42 +264,42 @@
                 </div>
 
                 <div class="flex-grow-1" style="min-width: 0;">
-                  <div class="fw-semibold d-flex align-items-center justify-content-between gap-2">
-                    <span class="text-truncate" style="min-width: 0;"><%= import.name.presence || t('.default_title', id: import.id) %></span>
-                    <div class="flex-shrink-0 text-end">
-                      <% if import.completed? %>
-                        <span class="badge text-bg-success"><i class="bi bi-check-circle"></i> <%= t('.status_completed') %></span>
-                      <% elsif import.failed? %>
-                        <span class="badge text-bg-danger"><i class="bi bi-x-circle"></i> <%= t('.status_failed') %></span>
-                      <% elsif import.processing? %>
-                        <span class="badge text-bg-primary"><i class="bi bi-arrow-repeat"></i> <%= t('.status_processing') %></span>
-                      <% else %>
-                        <span class="badge text-bg-secondary"><i class="bi bi-pause-circle"></i> <%= t('.status_pending') %></span>
-                      <% end %>
-                    </div>
+                  <div class="d-flex align-items-center gap-2">
+                    <span class="fw-semibold text-truncate" style="min-width: 0;"><%= import.name.presence || t('.default_title', id: import.id) %></span>
+                    <% if import.completed? %>
+                      <span class="badge text-bg-success flex-shrink-0"><i class="bi bi-check-circle"></i> <%= t('.status_completed') %></span>
+                    <% elsif import.failed? %>
+                      <span class="badge text-bg-danger flex-shrink-0"><i class="bi bi-x-circle"></i> <%= t('.status_failed') %></span>
+                    <% elsif import.processing? %>
+                      <span class="badge text-bg-primary flex-shrink-0"><i class="bi bi-arrow-repeat"></i> <%= t('.status_processing') %></span>
+                    <% else %>
+                      <span class="badge text-bg-secondary flex-shrink-0"><i class="bi bi-pause-circle"></i> <%= t('.status_pending') %></span>
+                    <% end %>
                   </div>
                   <div class="text-muted small"><%= time_ago_in_words(import.created_at) %> <%= t('.ago') %></div>
                 </div>
 
-                <%= link_to restaurant_ocr_menu_import_path(restaurant, import),
-                    class: 'btn btn-sm btn-outline-secondary',
-                    title: t('.view', default: 'View'),
-                    aria: { label: t('.view', default: 'View') },
-                    data: { turbo_frame: '_top', row_primary_link: true },
-                    "data-testid": "import-link-#{import.id}" do %>
-                  <i class="bi bi-chevron-right"></i>
-                <% end %>
+                <div class="d-flex align-items-center gap-1 flex-shrink-0">
+                  <%= link_to restaurant_ocr_menu_import_path(restaurant, import),
+                      class: 'import-row-action btn btn-sm btn-outline-secondary',
+                      title: t('.view', default: 'View'),
+                      aria: { label: t('.view', default: 'View') },
+                      data: { turbo_frame: '_top', row_primary_link: true },
+                      "data-testid": "import-link-#{import.id}" do %>
+                    <i class="bi bi-chevron-right"></i>
+                  <% end %>
 
-                <%= button_to restaurant_ocr_menu_import_path(restaurant, import),
-                    method: :delete,
-                    class: 'btn btn-sm btn-outline-danger delete-import-btn',
-                    title: t('.delete', default: 'Delete'),
-                    aria: { label: t('.delete', default: 'Delete') },
-                    form: { data: { turbo_frame: '_top' } },
-                    data: { turbo_confirm: t('.confirm_delete', default: 'Are you sure?') },
-                    "data-testid": "delete-import-#{import.id}" do %>
-                  <i class="bi bi-trash"></i>
-                <% end %>
+                  <%= button_to restaurant_ocr_menu_import_path(restaurant, import),
+                      method: :delete,
+                      class: 'import-row-action btn btn-sm btn-outline-danger',
+                      title: t('.delete', default: 'Delete'),
+                      aria: { label: t('.delete', default: 'Delete') },
+                      form: { data: { turbo_frame: '_top' }, class: 'import-row-action-form' },
+                      data: { turbo_confirm: t('.confirm_delete', default: 'Are you sure?') },
+                      "data-testid": "delete-import-#{import.id}" do %>
+                    <i class="bi bi-trash"></i>
+                  <% end %>
+                </div>
               </div>
             </div>
           <% end %>
@@ -387,7 +387,7 @@
     opacity: 0.6;
   }
 
-  /* Import row and delete button styling */
+  /* Import row styling */
   .import-row {
     transition: background-color 0.2s;
   }
@@ -396,25 +396,26 @@
     background-color: #f9fafb;
   }
 
-  .delete-import-btn {
-    padding: 0.75rem 1rem;
-    font-size: 1.125rem;
-    border-left: 1px solid #e5e7eb;
-    border-radius: 0;
-    opacity: 0.6;
-    transition: opacity 0.2s, background-color 0.2s;
+  /* Unified action button sizing for chevron + delete */
+  .import-row-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    font-size: 0.875rem;
+    line-height: 1;
+    flex-shrink: 0;
   }
 
-  .delete-import-btn:hover {
-    opacity: 1;
-    background-color: #fee2e2;
+  .import-row-action i {
+    font-size: 0.875rem;
+    line-height: 1;
   }
 
-  .delete-import-btn form {
-    margin: 0;
-  }
-
-  .import-row .delete-import-btn i {
-    font-size: 1rem;
+  /* Make the button_to form wrapper invisible to flex layout */
+  .import-row-action-form {
+    display: contents;
   }
 </style>

@@ -56,14 +56,18 @@ module BeverageIntelligence
       wine_items = menu.menuitems
                        .joins(:menusection)
                        .where('menusections.archived IS NOT TRUE')
-                       .where(sommelier_category: 'wine', status: 'active')
+                       .where(itemtype: :wine, status: 'active')
                        .includes(:flavor_profile, menu_item_product_links: { product: :product_enrichments })
 
       scored = wine_items.filter_map do |item|
         profile = item.flavor_profile
-        next unless profile&.tags&.any?
+        tags = profile&.tags || []
 
-        score = wine_preference_score(profile, wine_color_pref, body_pref, taste, budget, item)
+        score = if tags.any?
+                  wine_preference_score(profile, wine_color_pref, body_pref, taste, budget, item)
+                else
+                  basic_wine_preference_score(wine_color_pref, taste, budget, item)
+                end
         next if score <= 0
 
         best_pairing = PairingRecommendation
@@ -76,7 +80,7 @@ module BeverageIntelligence
         {
           menuitem: item,
           score: score,
-          tags: profile.tags.first(3),
+          tags: tags.first(3),
           best_pairing: best_pairing,
           enrichment: item_enrichment(item),
           wine_color: parsed['wine_color'],
@@ -87,7 +91,20 @@ module BeverageIntelligence
         }
       end
 
-      scored.sort_by { |s| -s[:score] }.first(limit)
+      results = scored.sort_by { |s| -s[:score] }.first(limit)
+
+      # Never return empty — fall back to a random sample of wine items
+      if results.empty? && wine_items.any?
+        results = wine_items.sample(limit).map do |item|
+          parsed = item.sommelier_parsed_fields.is_a?(Hash) ? item.sommelier_parsed_fields : {}
+          { menuitem: item, score: 0.5, tags: [], best_pairing: nil, enrichment: nil,
+            wine_color: parsed['wine_color'], grape_variety: Array(parsed['grape_variety']).first,
+            appellation: parsed['appellation'], vintage_year: parsed['vintage_year'],
+            classification: parsed['classification'] }
+        end
+      end
+
+      results
     end
 
     # Recommend drinks for a guest based on preferences (tap-driven flow)
@@ -99,18 +116,21 @@ module BeverageIntelligence
       drink_items = menu.menuitems
                         .joins(:menusection)
                         .where('menusections.archived IS NOT TRUE')
-                        .where.not(sommelier_category: [nil, ''])
+                        .drink_items
                         .where(status: 'active')
                         .includes(:flavor_profile, menu_item_product_links: { product: :product_enrichments })
 
       scored = drink_items.filter_map do |item|
         profile = item.flavor_profile
-        next unless profile&.tags&.any?
+        tags = profile&.tags || []
 
-        score = preference_score(profile, smoky, taste, budget, item)
+        score = if tags.any?
+                  preference_score(profile, smoky, taste, budget, item)
+                else
+                  basic_preference_score(smoky, taste, budget, item)
+                end
         next if score <= 0
 
-        # Get best pairing for this drink
         best_pairing = PairingRecommendation
           .where(drink_menuitem_id: item.id)
           .order(score: :desc)
@@ -119,13 +139,22 @@ module BeverageIntelligence
         {
           menuitem: item,
           score: score,
-          tags: profile.tags.first(3),
+          tags: tags.first(3),
           best_pairing: best_pairing,
           enrichment: item_enrichment(item),
         }
       end
 
-      scored.sort_by { |s| -s[:score] }.first(limit)
+      results = scored.sort_by { |s| -s[:score] }.first(limit)
+
+      # Never return empty — fall back to a random sample of drink items
+      if results.empty? && drink_items.any?
+        results = drink_items.sample(limit).map do |item|
+          { menuitem: item, score: 0.5, tags: [], best_pairing: nil, enrichment: nil }
+        end
+      end
+
+      results
     end
 
     private
@@ -297,6 +326,102 @@ module BeverageIntelligence
 
       # Baseline
       score += 0.05
+      score
+    end
+
+    # Lightweight scoring when no flavor profile exists — uses item name, category, and price
+    def basic_preference_score(smoky, taste, budget, menuitem)
+      score = 0.0
+      name_lower = menuitem.name.to_s.downcase
+      desc_lower = menuitem.description.to_s.downcase
+      text = "#{name_lower} #{desc_lower}"
+
+      # Smoky preference — simple keyword match
+      smoky_keywords = %w[smoky smoked peated peat islay campfire charred]
+      if smoky
+        score += 0.3 if smoky_keywords.any? { |kw| text.include?(kw) }
+      end
+
+      # Taste preference — keyword match
+      case taste
+      when 'sweet'
+        score += 0.25 if %w[sweet honey caramel vanilla dessert cream].any? { |kw| text.include?(kw) }
+      when 'dry'
+        score += 0.25 if %w[dry crisp brut herbal citrus mineral].any? { |kw| text.include?(kw) }
+      when 'spicy'
+        score += 0.25 if %w[spicy spice pepper cinnamon rye].any? { |kw| text.include?(kw) }
+      end
+
+      # Budget preference
+      price = menuitem.price.to_f
+      if price > 0
+        all_prices = menuitem.menusection&.menuitems&.where(status: 'active')&.pluck(:price)&.map(&:to_f)&.select(&:positive?) || [price]
+        median = all_prices.sort[all_prices.size / 2] || price
+        case budget
+        when 1 then score += 0.2 if price <= median * 0.7
+        when 2 then score += 0.2 if price > median * 0.5 && price <= median * 1.3
+        when 3 then score += 0.2 if price > median
+        end
+      end
+
+      # Baseline — every drink gets a positive score so we never return empty
+      score += 0.15
+
+      score
+    end
+
+    # Lightweight wine scoring without flavor profile
+    def basic_wine_preference_score(wine_color_pref, taste, budget, menuitem)
+      score = 0.0
+      name_lower = menuitem.name.to_s.downcase
+      desc_lower = menuitem.description.to_s.downcase
+      text = "#{name_lower} #{desc_lower}"
+      parsed = menuitem.sommelier_parsed_fields.is_a?(Hash) ? menuitem.sommelier_parsed_fields : {}
+      item_color = parsed['wine_color']
+
+      # Wine color — check parsed fields then name keywords
+      if wine_color_pref.present? && wine_color_pref != 'no_preference'
+        if item_color.present?
+          score += 0.3 if wine_color_pref == item_color
+        else
+          color_keywords = {
+            'red' => %w[red rouge rosso tinto merlot cabernet syrah shiraz pinot\ noir malbec],
+            'white' => %w[white blanc bianco chardonnay sauvignon riesling pinot\ grigio grüner],
+            'rosé' => %w[rosé rose blush pink],
+            'sparkling' => %w[sparkling prosecco champagne cava brut spumante crémant sekt],
+          }
+          if (kws = color_keywords[wine_color_pref])
+            score += 0.25 if kws.any? { |kw| text.include?(kw) }
+          end
+        end
+      else
+        score += 0.1
+      end
+
+      # Taste preference
+      case taste
+      when 'sweet'
+        score += 0.2 if %w[sweet dessert moscato late\ harvest ice\ wine].any? { |kw| text.include?(kw) }
+      when 'dry'
+        score += 0.2 if %w[dry brut sec crisp mineral].any? { |kw| text.include?(kw) }
+      when 'fruity'
+        score += 0.2 if %w[fruity berry fruit tropical plum cherry].any? { |kw| text.include?(kw) }
+      end
+
+      # Budget preference
+      price = menuitem.price.to_f
+      if price > 0
+        all_prices = menuitem.menusection&.menuitems&.where(itemtype: :wine, status: 'active')&.pluck(:price)&.map(&:to_f)&.select(&:positive?) || [price]
+        median = all_prices.sort[all_prices.size / 2] || price
+        case budget
+        when 1 then score += 0.15 if price <= median * 0.7
+        when 2 then score += 0.15 if price > median * 0.5 && price <= median * 1.3
+        when 3 then score += 0.15 if price > median
+        end
+      end
+
+      # Baseline
+      score += 0.1
       score
     end
 
