@@ -115,13 +115,26 @@ ruby -ryaml -e '
 
   def load_tree(path)
     return {} unless File.exist?(path)
-    data = YAML.load_file(path) || {}
+    data = YAML.safe_load(File.read(path), permitted_classes: [Symbol, Date, Time]) || {}
     # Strip the root locale key: { "en" => { ... } } → { ... }
     data.is_a?(Hash) && data.size == 1 ? data.values.first : data
+  rescue Psych::SyntaxError
+    {} # skip unparseable files
+  end
+
+  def deep_sort(obj)
+    case obj
+    when Hash
+      obj.sort_by { |k, _| k.to_s }.to_h.transform_values { |v| deep_sort(v) }
+    when Array
+      obj.map { |v| deep_sort(v) }
+    else
+      obj
+    end
   end
 
   def dump_locale(locale, tree)
-    YAML.dump({ locale => tree })
+    YAML.dump({ locale => deep_sort(tree) })
   end
 
   # Map an en filename to its target locale filename
@@ -228,14 +241,125 @@ ruby -ryaml -e '
 '
 
 # ---------------------------------------------------------------------------
-# Step 3: Normalize locale files
+# Step 3: Normalize ALL locale files (deep-sort keys, fix formatting)
 # ---------------------------------------------------------------------------
-step "Step 3/4 — Normalizing locale files"
+step "Step 3/4 — Normalizing all resource bundles"
 
-bundle exec i18n-tasks normalize 2>&1
+# 3a. Run i18n-tasks normalize for the main locale files it manages (non-fatal)
+bundle exec i18n-tasks normalize 2>&1 || warn "i18n-tasks normalize encountered an error (non-fatal)"
+
+# 3b. Normalize every YAML bundle by deep-sorting mapping keys.
+#     Uses Psych AST manipulation to preserve all scalar styles (quotes, emoji,
+#     booleans, numbers) — only key order is changed.
+LOCALE_ARG="$LOCALE" LOCALES_ROOT="$LOCALES_ROOT" \
+ruby -ryaml <<'NORMALIZE_RUBY'
+  locales_root = ENV.fetch("LOCALES_ROOT")
+  only_locale  = ENV.fetch("LOCALE_ARG", "").strip
+
+  # Recursively sort mapping keys in a Psych AST node.
+  # Mappings store children as [key1, val1, key2, val2, ...].
+  def sort_mapping_keys!(node)
+    case node
+    when Psych::Nodes::Mapping
+      pairs = node.children.each_slice(2).to_a
+      sorted = pairs.sort_by { |key_node, _| key_node.respond_to?(:value) ? key_node.value : "" }
+      was_sorted = pairs == sorted
+      node.children.replace(sorted.flatten(1))
+      sorted.each { |_, val_node| sort_mapping_keys!(val_node) }
+      was_sorted && sorted.all? { |_, v| mapping_sorted?(v) }
+    when Psych::Nodes::Sequence
+      node.children.each { |child| sort_mapping_keys!(child) }
+      true
+    when Psych::Nodes::Document
+      sort_mapping_keys!(node.root)
+    when Psych::Nodes::Stream
+      node.children.all? { |child| sort_mapping_keys!(child) }
+    else
+      true
+    end
+  end
+
+  # Check if all mappings in a node are already sorted (without mutating).
+  def mapping_sorted?(node)
+    case node
+    when Psych::Nodes::Mapping
+      pairs = node.children.each_slice(2).to_a
+      keys = pairs.map { |k, _| k.respond_to?(:value) ? k.value : "" }
+      return false unless keys == keys.sort
+      pairs.all? { |_, v| mapping_sorted?(v) }
+    when Psych::Nodes::Sequence
+      node.children.all? { |child| mapping_sorted?(child) }
+    when Psych::Nodes::Document
+      mapping_sorted?(node.root)
+    when Psych::Nodes::Stream
+      node.children.all? { |child| mapping_sorted?(child) }
+    else
+      true
+    end
+  end
+
+  all_locales = Dir.children(locales_root)
+    .select { |d| File.directory?(File.join(locales_root, d)) }
+    .sort
+  all_locales = all_locales & [only_locale] unless only_locale.empty?
+
+  # Fix escaped Unicode sequences (\U0001FXXX) → real UTF-8 characters.
+  # These appear in double-quoted YAML strings written by YAML.dump.
+  UNICODE_ESCAPE_RE = /\\U([0-9A-Fa-f]{8})/
+
+  files_normalised = 0
+  skipped = []
+
+  all_locales.each do |locale|
+    Dir.glob(File.join(locales_root, locale, "*.yml")).sort.each do |path|
+      raw = File.read(path)
+      changed = false
+
+      # Fix escaped emoji first (text-level, safe for any YAML)
+      if raw.match?(UNICODE_ESCAPE_RE)
+        raw = raw.gsub(UNICODE_ESCAPE_RE) { [$1.hex].pack("U") }
+        changed = true
+      end
+
+      begin
+        ast = Psych.parse_stream(raw)
+      rescue Psych::SyntaxError
+        # Write emoji fixes even if AST parsing fails
+        if changed
+          File.write(path, raw)
+          files_normalised += 1
+        else
+          skipped << File.basename(path)
+        end
+        next
+      end
+
+      # Sort keys if not already sorted
+      unless mapping_sorted?(ast)
+        sort_mapping_keys!(ast)
+        raw = ast.to_yaml
+        changed = true
+      end
+
+      if changed
+        File.write(path, raw)
+        files_normalised += 1
+      end
+    end
+  end
+
+  if files_normalised > 0
+    puts "  Normalised #{files_normalised} file(s)"
+  else
+    puts "  All resource bundles are already normalised"
+  end
+  puts "  Skipped #{skipped.uniq.size} unparseable file(s): #{skipped.uniq.join(', ')}" if skipped.any?
+NORMALIZE_RUBY
+
+# 3c. Verify normalisation
 NORM_CHECK=$(bundle exec i18n-tasks check-normalized 2>&1 || true)
 
-if echo "$NORM_CHECK" | grep -qi "not normalized\|error"; then
+if echo "$NORM_CHECK" | grep -qi "not normalized\|requires normalization\|error"; then
   warn "Some files may not be fully normalized — review output above"
 else
   ok "All locale files are normalized"
