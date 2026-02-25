@@ -457,12 +457,26 @@ ruby -ryaml -e '
 # ---------------------------------------------------------------------------
 step "Step 4/5 — Normalizing all resource bundles"
 
-# 3a. Run i18n-tasks normalize for the main locale files it manages (non-fatal)
-bundle exec i18n-tasks normalize 2>&1 || warn "i18n-tasks normalize encountered an error (non-fatal)"
+# 4a. Check if normalization is needed
+NORM_CHECK=$(bundle exec i18n-tasks check-normalized 2>&1 || true)
 
-# 3b. Normalize every YAML bundle by deep-sorting mapping keys.
+if echo "$NORM_CHECK" | grep -qi "not normalized\|requires normalization\|error"; then
+  warn "Some files are not normalized — running normalization now"
+
+  # 4b. Run i18n-tasks normalize for the main locale files it manages (non-fatal)
+  bundle exec i18n-tasks normalize 2>&1 || warn "i18n-tasks normalize encountered an error (non-fatal)"
+
+  NEEDS_NORMALIZE=true
+else
+  ok "All locale files are already normalized (i18n-tasks check-normalized)"
+  NEEDS_NORMALIZE=false
+fi
+
+# 4c. Normalize every YAML bundle by deep-sorting mapping keys.
 #     Uses Psych AST manipulation to preserve all scalar styles (quotes, emoji,
 #     booleans, numbers) — only key order is changed.
+#     Runs unconditionally because check-normalized only covers i18n-tasks-managed
+#     files — our custom sort covers all YAML bundles.
 LOCALE_ARG="$LOCALE" LOCALES_ROOT="$LOCALES_ROOT" \
 ruby -ryaml <<'NORMALIZE_RUBY'
   locales_root = ENV.fetch("LOCALES_ROOT")
@@ -568,13 +582,14 @@ ruby -ryaml <<'NORMALIZE_RUBY'
   puts "  Skipped #{skipped.uniq.size} unparseable file(s): #{skipped.uniq.join(', ')}" if skipped.any?
 NORMALIZE_RUBY
 
-# 3c. Verify normalisation
-NORM_CHECK=$(bundle exec i18n-tasks check-normalized 2>&1 || true)
-
-if echo "$NORM_CHECK" | grep -qi "not normalized\|requires normalization\|error"; then
-  warn "Some files may not be fully normalized — review output above"
-else
-  ok "All locale files are normalized"
+# 4d. Re-verify normalization if we ran the normalizer
+if $NEEDS_NORMALIZE; then
+  RECHECK=$(bundle exec i18n-tasks check-normalized 2>&1 || true)
+  if echo "$RECHECK" | grep -qi "not normalized\|requires normalization\|error"; then
+    warn "Some files may still not be fully normalized — review manually"
+  else
+    ok "All locale files are now normalized"
+  fi
 fi
 
 if $SYNC_ONLY; then
