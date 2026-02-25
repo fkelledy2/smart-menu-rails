@@ -99,9 +99,27 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     if SKIPPED_SYSTEM_TEST_CLASSES.include?(self.class.name)
       skip('Obsolete scaffold-generated system test (routes/UI no longer match application)')
     end
+    ensure_browser_session!
   end
 
   teardown do
     Capybara.reset_sessions!
+  rescue Selenium::WebDriver::Error::InvalidSessionIdError, Selenium::WebDriver::Error::NoSuchWindowError
+    # Browser crashed — force a new driver instance so the next test gets a fresh session
+    Capybara.current_session.driver.quit
+  end
+
+  private
+
+  # Detect a dead browser session and spin up a fresh one before the test runs.
+  def ensure_browser_session!
+    page.driver.browser.window_handles
+  rescue Selenium::WebDriver::Error::InvalidSessionIdError, Errno::ECONNREFUSED, StandardError => e
+    raise unless e.is_a?(Selenium::WebDriver::Error::InvalidSessionIdError) ||
+                 e.is_a?(Errno::ECONNREFUSED) ||
+                 e.message.include?('invalid session id')
+
+    Capybara.current_session.driver.quit
+    Capybara.current_session.driver.browser # triggers new session
   end
 end

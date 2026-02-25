@@ -40,8 +40,8 @@ class AuthenticationTest < ApplicationSystemTestCase
     fill_testid('login-password-input', 'password123')
     click_testid('login-submit-btn')
 
-    # Verify successful login - should redirect to dashboard/restaurants
-    assert_current_path root_path, ignore_query: true
+    # Verify successful login - should redirect to restaurants index
+    assert_current_path '/restaurants', ignore_query: true
 
     # Clean up
     user.destroy
@@ -75,7 +75,7 @@ class AuthenticationTest < ApplicationSystemTestCase
     click_testid('login-submit-btn')
 
     # Verify login succeeded
-    assert_current_path root_path, ignore_query: true
+    assert_current_path '/restaurants', ignore_query: true
 
     user.destroy
   end
@@ -215,21 +215,21 @@ class AuthenticationTest < ApplicationSystemTestCase
     fill_testid('forgot-password-email-input', 'reset@example.com')
     click_testid('forgot-password-submit-btn')
 
-    # Should show success message
-    assert_text 'You will receive an email'
+    # Devise paranoid mode shows generic message
+    assert_text 'you will receive a password recovery link'
 
     user.destroy
   end
 
-  test 'password reset with non-existent email shows error' do
-    # Devise by default shows an error for non-existent emails
+  test 'password reset with non-existent email shows same message for security' do
+    # Devise paranoid mode shows the same message for security
     visit new_user_password_path
 
     fill_testid('forgot-password-email-input', 'nonexistent@example.com')
     click_testid('forgot-password-submit-btn')
 
-    # Devise shows "Email not found" by default
-    assert_text 'Email not found'
+    # Paranoid mode: same message whether email exists or not
+    assert_text 'you will receive a password recovery link'
   end
 
   test 'clicking back to login from password reset navigates to login' do

@@ -317,7 +317,10 @@ class OrdrsController < ApplicationController
 
   # POST /ordrs or /ordrs.json
   def create
-    return unless ensure_ordering_enabled!(@restaurant)
+    unless ensure_ordering_enabled!(@restaurant)
+      skip_authorization
+      return
+    end
 
     # Ensure restaurant_id is set from nested route
     restaurant_id = @restaurant&.id || ordr_params[:restaurant_id]

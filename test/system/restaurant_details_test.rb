@@ -53,9 +53,9 @@ class RestaurantDetailsTest < ApplicationSystemTestCase
     visit edit_restaurant_path(@restaurant, section: 'details')
 
     within_testid('overview-stats-card') do
-      # Should display counts (case-insensitive)
-      assert_text 'MENUS', normalize_ws: true
-      assert_text 'ITEMS', normalize_ws: true
+      # Should display counts
+      assert_text 'Menus', normalize_ws: true
+      assert_text 'Tables', normalize_ws: true
     end
   end
 
@@ -104,8 +104,10 @@ class RestaurantDetailsTest < ApplicationSystemTestCase
   test 'can update restaurant name' do
     visit edit_restaurant_path(@restaurant, section: 'details')
 
-    # Update name and verify field updates
-    fill_testid('restaurant-name-input', 'Updated Restaurant Name')
+    # Clear and update name
+    name_input = find_testid('restaurant-name-input')
+    name_input.native.clear
+    name_input.set('Updated Restaurant Name')
 
     # Verify field value changed
     assert_equal 'Updated Restaurant Name', find_testid('restaurant-name-input').value
@@ -114,9 +116,11 @@ class RestaurantDetailsTest < ApplicationSystemTestCase
   test 'can update restaurant description' do
     visit edit_restaurant_path(@restaurant, section: 'details')
 
-    # Update description
+    # Clear and update description
     new_description = 'This is our newly updated restaurant description.'
-    fill_testid('restaurant-description-input', new_description)
+    desc_input = find_testid('restaurant-description-input')
+    desc_input.native.clear
+    desc_input.set(new_description)
 
     # Verify field value changed
     assert_equal new_description, find_testid('restaurant-description-input').value
@@ -125,15 +129,12 @@ class RestaurantDetailsTest < ApplicationSystemTestCase
   test 'can update address information' do
     visit edit_restaurant_path(@restaurant, section: 'details')
 
-    # Update address fields
-    fill_testid('restaurant-address1-input', '456 New Street')
-    fill_testid('restaurant-city-input', 'Boston')
-    fill_testid('restaurant-postcode-input', '02101')
+    # Address fields are readonly (populated by Google Places autocomplete)
+    city_input = find_testid('restaurant-city-input')
+    assert city_input[:readonly], 'City field should be readonly (Google Places)'
 
-    # Verify field values changed
-    assert_equal '456 New Street', find_testid('restaurant-address1-input').value
-    assert_equal 'Boston', find_testid('restaurant-city-input').value
-    assert_equal '02101', find_testid('restaurant-postcode-input').value
+    postcode_input = find_testid('restaurant-postcode-input')
+    assert postcode_input[:readonly], 'Postcode field should be readonly (Google Places)'
   end
 
   test 'can update image context fields' do
@@ -209,11 +210,10 @@ class RestaurantDetailsTest < ApplicationSystemTestCase
 
     visit edit_restaurant_path(@restaurant, section: 'details')
 
-    # Clear address2
-    fill_testid('restaurant-address2-input', '')
-
-    # Verify field is empty
-    assert_equal '', find_testid('restaurant-address2-input').value
+    # Address2 is readonly (populated by Google Places autocomplete)
+    address2_input = find_testid('restaurant-address2-input')
+    assert address2_input[:readonly], 'Address2 field should be readonly (Google Places)'
+    assert_equal 'Suite 100', address2_input.value
   end
 
   # ===================
@@ -223,15 +223,22 @@ class RestaurantDetailsTest < ApplicationSystemTestCase
   test 'can update multiple fields at once' do
     visit edit_restaurant_path(@restaurant, section: 'details')
 
-    # Update multiple fields
-    fill_testid('restaurant-name-input', 'Multi-Update Restaurant')
-    fill_testid('restaurant-description-input', 'Updated description')
-    fill_testid('restaurant-city-input', 'Chicago')
+    # Clear and update editable fields
+    name_input = find_testid('restaurant-name-input')
+    name_input.native.clear
+    name_input.set('Multi-Update Restaurant')
 
-    # Verify all fields updated
+    desc_input = find_testid('restaurant-description-input')
+    desc_input.native.clear
+    desc_input.set('Updated description')
+
+    # Verify editable fields updated
     assert_equal 'Multi-Update Restaurant', find_testid('restaurant-name-input').value
     assert_equal 'Updated description', find_testid('restaurant-description-input').value
-    assert_equal 'Chicago', find_testid('restaurant-city-input').value
+
+    # City is readonly (Google Places autocomplete)
+    city_input = find_testid('restaurant-city-input')
+    assert city_input[:readonly]
   end
 
   # ===================

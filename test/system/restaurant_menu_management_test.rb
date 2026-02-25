@@ -38,7 +38,6 @@ class RestaurantMenuManagementTest < ApplicationSystemTestCase
     assert_testid('sidebar-menus-link')
     assert_testid('sidebar-allergens-link')
     assert_testid('sidebar-sizes-link')
-    assert_testid('sidebar-import-link')
 
     # Team section
     assert_testid('sidebar-staff-link')
@@ -48,7 +47,6 @@ class RestaurantMenuManagementTest < ApplicationSystemTestCase
 
     # Setup section
     assert_testid('sidebar-settings-link')
-    assert_testid('sidebar-qrcodes-link')
     assert_testid('sidebar-jukebox-link')
   end
 
@@ -59,13 +57,9 @@ class RestaurantMenuManagementTest < ApplicationSystemTestCase
     click_testid('sidebar-menus-link')
     assert_testid('menus-list-card')
 
-    # Navigate to import
-    click_testid('sidebar-import-link')
-    assert_testid('import-form-card')
-
     # Navigate back to details
     click_testid('sidebar-details-link')
-    # Back on details page
+    assert_testid('overview-stats-card')
   end
 
   test 'sidebar navigation using turbo frames updates content without full page reload' do
@@ -88,32 +82,15 @@ class RestaurantMenuManagementTest < ApplicationSystemTestCase
 
     # Quick actions
     assert_testid('menus-quick-actions')
-    assert_testid('new-menu-btn')
     assert_testid('import-menu-btn')
 
     # List card
     assert_testid('menus-list-card')
-
-    # Filter tabs
-    assert_testid('menus-filter-all')
-    assert_testid('menus-filter-active')
-    assert_testid('menus-filter-inactive')
   end
 
-  test 'clicking new menu button navigates to menu creation' do
-    visit edit_restaurant_path(@restaurant, section: 'menus')
+  test 'import section displays import form' do
+    visit edit_restaurant_path(@restaurant, section: 'import')
 
-    click_testid('new-menu-btn')
-
-    assert_current_path new_restaurant_menu_path(@restaurant), ignore_query: true
-  end
-
-  test 'clicking import menu button navigates to import section' do
-    visit edit_restaurant_path(@restaurant, section: 'menus')
-
-    click_testid('import-menu-btn')
-
-    # Verify we're on import section by checking for import card
     assert_testid('import-form-card')
   end
 
@@ -135,12 +112,9 @@ class RestaurantMenuManagementTest < ApplicationSystemTestCase
     # Verify menus list exists
     assert_testid('menus-list')
 
-    # Verify individual menu cards
-    assert_testid("menu-card-#{menu1.id}")
-    assert_testid("menu-card-#{menu2.id}")
-
-    # Verify action buttons exist
-    assert_testid("edit-menu-#{menu1.id}-btn")
+    # Verify individual menu rows
+    assert_testid("menu-row-#{menu1.id}")
+    assert_testid("menu-row-#{menu2.id}")
 
     # Cleanup
     menu1.destroy
@@ -151,7 +125,7 @@ class RestaurantMenuManagementTest < ApplicationSystemTestCase
   # MENU FILTERING TESTS
   # ===================
 
-  test 'filter tabs work correctly' do
+  test 'menus list displays both active and inactive menus' do
     # Create menus with different statuses
     active_menu = Menu.create!(
       restaurant: @restaurant,
@@ -166,24 +140,9 @@ class RestaurantMenuManagementTest < ApplicationSystemTestCase
 
     visit edit_restaurant_path(@restaurant, section: 'menus')
 
-    # All filter (default)
-    assert_testid("menu-card-#{active_menu.id}")
-    assert_testid("menu-card-#{inactive_menu.id}")
-
-    # Active filter
-    click_testid('menus-filter-active')
-    assert_testid("menu-card-#{active_menu.id}")
-    # Inactive menu should not be visible
-
-    # Inactive filter
-    click_testid('menus-filter-inactive')
-    assert_testid("menu-card-#{inactive_menu.id}")
-    # Active menu should not be visible
-
-    # Back to all
-    click_testid('menus-filter-all')
-    assert_testid("menu-card-#{active_menu.id}")
-    assert_testid("menu-card-#{inactive_menu.id}")
+    # Both should be visible by default
+    assert_testid("menu-row-#{active_menu.id}")
+    assert_testid("menu-row-#{inactive_menu.id}")
 
     # Cleanup
     active_menu.destroy
@@ -194,7 +153,7 @@ class RestaurantMenuManagementTest < ApplicationSystemTestCase
   # MENU ACTIONS TESTS
   # ===================
 
-  test 'clicking edit menu navigates to menu edit page' do
+  test 'clicking menu row navigates to menu edit page' do
     menu = Menu.create!(
       restaurant: @restaurant,
       name: 'Test Menu',
@@ -203,14 +162,15 @@ class RestaurantMenuManagementTest < ApplicationSystemTestCase
 
     visit edit_restaurant_path(@restaurant, section: 'menus')
 
-    click_testid("edit-menu-#{menu.id}-btn")
+    # Menu rows are clickable via data-href
+    find_testid("menu-row-#{menu.id}").click
 
     assert_current_path edit_restaurant_menu_path(@restaurant, menu), ignore_query: true
 
     menu.destroy
   end
 
-  test 'menu card displays correct information' do
+  test 'menu row displays correct information' do
     menu = Menu.create!(
       restaurant: @restaurant,
       name: 'Summer Menu 2024',
@@ -220,17 +180,14 @@ class RestaurantMenuManagementTest < ApplicationSystemTestCase
 
     visit edit_restaurant_path(@restaurant, section: 'menus')
 
-    within_testid("menu-card-#{menu.id}") do
+    within_testid("menu-row-#{menu.id}") do
       assert_text 'Summer Menu 2024'
-      assert_text 'Active'
-      # Description might be truncated
-      assert_text 'Seasonal'
     end
 
     menu.destroy
   end
 
-  test 'menu card displays action buttons' do
+  test 'menu row exists for created menu' do
     menu = Menu.create!(
       restaurant: @restaurant,
       name: 'Test Menu',
@@ -239,11 +196,8 @@ class RestaurantMenuManagementTest < ApplicationSystemTestCase
 
     visit edit_restaurant_path(@restaurant, section: 'menus')
 
-    # Verify edit button exists
-    assert_testid("edit-menu-#{menu.id}-btn")
-
-    # Verify menu card exists
-    assert_testid("menu-card-#{menu.id}")
+    # Verify menu row exists
+    assert_testid("menu-row-#{menu.id}")
 
     menu.destroy
   end
@@ -252,14 +206,12 @@ class RestaurantMenuManagementTest < ApplicationSystemTestCase
   # EMPTY STATE TESTS
   # ===================
 
-  test 'empty state displays when no menus exist' do
-    # Skip menu deletion due to foreign key constraints
-    # Just verify quick actions are always present
+  test 'quick actions always present on menus page' do
     visit edit_restaurant_path(@restaurant, section: 'menus')
 
     # Quick actions should always be visible
     assert_testid('menus-quick-actions')
-    assert_testid('new-menu-btn')
+    assert_testid('import-menu-btn')
   end
 
   # ===================
@@ -275,10 +227,6 @@ class RestaurantMenuManagementTest < ApplicationSystemTestCase
     # Navigate to menus
     click_testid('sidebar-menus-link')
     assert_testid('menus-list-card')
-
-    # Navigate to import
-    click_testid('sidebar-import-link')
-    assert_testid('import-form-card')
 
     # Navigate to settings
     click_testid('sidebar-settings-link')
@@ -300,13 +248,13 @@ class RestaurantMenuManagementTest < ApplicationSystemTestCase
     visit edit_restaurant_path(@restaurant, section: 'menus')
     assert_testid('menus-list-card')
 
-    # Navigate to edit menu
-    click_testid("edit-menu-#{menu.id}-btn")
+    # Navigate to edit menu via clickable row
+    find_testid("menu-row-#{menu.id}").click
 
     # Should be on edit page
     assert_current_path edit_restaurant_menu_path(@restaurant, menu), ignore_query: true
 
-    # Navigate back (browser back or sidebar)
+    # Navigate back
     visit edit_restaurant_path(@restaurant, section: 'menus')
     assert_testid('menus-list-card')
 
@@ -329,30 +277,14 @@ class RestaurantMenuManagementTest < ApplicationSystemTestCase
   # INTEGRATION TESTS
   # ===================
 
-  test 'creating menu from menus page and seeing it in list' do
-    visit edit_restaurant_path(@restaurant, section: 'menus')
+  test 'import section accessible and can navigate back to menus' do
+    visit edit_restaurant_path(@restaurant, section: 'import')
 
-    @restaurant.menus.count
-
-    click_testid('new-menu-btn')
-
-    # Would continue with form filling, but that's a separate flow
-    # Just verify navigation works
-    assert_current_path new_restaurant_menu_path(@restaurant), ignore_query: true
-  end
-
-  test 'import menu button connects to import flow' do
-    visit edit_restaurant_path(@restaurant, section: 'menus')
-
-    click_testid('import-menu-btn')
-
-    # Should navigate to import section
     assert_testid('import-form-card')
-    assert_testid('import-form')
 
     # Verify we can navigate back
     click_testid('sidebar-menus-link')
-    assert_testid('menus-list-card')
+    assert_testid('menus-list-card', wait: 5)
   end
 end
 

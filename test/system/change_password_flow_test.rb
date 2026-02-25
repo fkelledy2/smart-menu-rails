@@ -66,7 +66,7 @@ class ChangePasswordFlowTest < ApplicationSystemTestCase
     fill_in 'user_email', with: user.email
     fill_in 'user_password', with: 'newpassword1'
     find('input[type="submit"]').click
-    assert_current_path root_path, ignore_query: true
+    assert_current_path '/restaurants', ignore_query: true
 
     # Optional: old password should fail now
     page.evaluate_async_script(<<~JS, 10000)

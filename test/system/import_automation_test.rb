@@ -26,7 +26,6 @@ class ImportAutomationTest < ApplicationSystemTestCase
     # ✅ Using test IDs - stable across UI changes
     assert_testid('import-info-banner', text: 'AI-Powered Menu Import')
     assert_testid('import-form-card')
-    assert_testid('import-tips-card')
 
     # Verify form elements exist
     assert_testid('import-name-input')

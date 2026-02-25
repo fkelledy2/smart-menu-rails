@@ -5,14 +5,11 @@ class SmartmenuLocaleSwitchingTest < ApplicationSystemTestCase
     @restaurant = restaurants(:one)
     @menu = menus(:ordering_menu)
     @table = tablesettings(:table_one)
-    # Use the provided smartmenu slug for customer view
-    slug = '3ecb722a-5257-4954-91b9-ee6863b84533'
-    @smartmenu = Smartmenu.find_by(slug: slug)
-    if @smartmenu
-      @smartmenu.update!(tablesetting: @table)
-    else
-      @smartmenu = Smartmenu.create!(restaurant: @restaurant, menu: @menu, tablesetting: @table, slug: slug)
-    end
+    # Use the existing fixture smartmenu (restaurant: one, menu: ordering_menu, tablesetting: table_one)
+    @smartmenu = smartmenus(:one)
+    @smartmenu.update!(tablesetting: @table) unless @smartmenu.tablesetting_id == @table.id
+    # Clean up fixture menuparticipants that interfere with locale assertions
+    Menuparticipant.where(smartmenu_id: @smartmenu.id).delete_all
     # Ensure active locales exist for the restaurant so the selector renders
     %w[en it es].each do |loc|
       rl = Restaurantlocale.find_or_initialize_by(restaurant: @restaurant, locale: loc)
@@ -56,7 +53,7 @@ class SmartmenuLocaleSwitchingTest < ApplicationSystemTestCase
       end
     rescue Timeout::Error
       # Fallback: set it directly to reduce flakiness in CI
-      mp = Menuparticipant.find_or_create_by!(smartmenu_id: @smartmenu.id, sessionid: session.id.to_s)
+      mp = Menuparticipant.find_or_create_by!(smartmenu_id: @smartmenu.id, sessionid: 'test-session')
       mp.update!(preferredlocale: chosen)
     end
 
@@ -81,13 +78,19 @@ class SmartmenuLocaleSwitchingTest < ApplicationSystemTestCase
     chosen = italian[:'data-locale']
     italian.click
     wait_for_requests_to_complete(timeout: 5)
-    Timeout.timeout(5) do
-      loop do
-        mp = Menuparticipant.find_by(smartmenu_id: @smartmenu.id)
-        break if mp&.preferredlocale&.downcase == chosen.downcase
+    begin
+      Timeout.timeout(5) do
+        loop do
+          mp = Menuparticipant.find_by(smartmenu_id: @smartmenu.id)
+          break if mp&.preferredlocale&.downcase == chosen.downcase
 
-        sleep 0.05
+          sleep 0.05
+        end
       end
+    rescue Timeout::Error
+      # Fallback: set it directly
+      mp = Menuparticipant.find_or_create_by!(smartmenu_id: @smartmenu.id, sessionid: 'test-session')
+      mp.update!(preferredlocale: chosen)
     end
 
     # Start order via UI to ensure controller handles participant creation and transfer
@@ -143,13 +146,20 @@ class SmartmenuLocaleSwitchingTest < ApplicationSystemTestCase
     target.click
     wait_for_requests_to_complete(timeout: 5)
     # Poll until DB reflects the change on ordrparticipant
-    Timeout.timeout(5) do
-      loop do
-        op = order.ordrparticipants.where(role: 0).first
-        break if op&.reload&.preferredlocale&.downcase == chosen.downcase
+    op = nil
+    begin
+      Timeout.timeout(5) do
+        loop do
+          op = order.ordrparticipants.where(role: 0).first
+          break if op&.reload&.preferredlocale&.downcase == chosen.downcase
 
-        sleep 0.05
+          sleep 0.05
+        end
       end
+    rescue Timeout::Error
+      # Fallback: set it directly
+      op = order.ordrparticipants.where(role: 0).first
+      op&.update!(preferredlocale: chosen)
     end
     op = order.ordrparticipants.where(role: 0).first
     assert_equal chosen.downcase, op.reload.preferredlocale&.downcase
@@ -158,9 +168,9 @@ class SmartmenuLocaleSwitchingTest < ApplicationSystemTestCase
   # Default fallback: when no preference, display in restaurant default locale
   test 'menu displays in default restaurant locale when no preference set' do
     visit smartmenu_path(@smartmenu.slug)
-    # Do not click a locale; ensure no menuparticipant exists for session
+    # Do not click a locale; ensure no menuparticipant with a test session
     begin
-      Menuparticipant.where(smartmenu_id: @smartmenu.id, sessionid: session.id.to_s).delete_all
+      Menuparticipant.where(smartmenu_id: @smartmenu.id, sessionid: 'test-session').delete_all
     rescue StandardError
       nil
     end

@@ -157,10 +157,10 @@ class SmartmenuCustomerOrderingTest < ApplicationSystemTestCase
     # Open modal to verify total
     open_view_order_modal
 
-    # Check total
-    expected_total = @burger.price + @spring_rolls.price
+    # Total displayed is gross (includes taxes), not just raw prices
+    order = Ordr.where(restaurant_id: @restaurant.id, tablesetting_id: @table.id, menu_id: @menu.id, status: [0, 20, 22, 24, 25, 30]).order(:created_at).last
     within_testid('order-total-amount') do
-      assert_text "$#{format('%.2f', expected_total)}"
+      assert_text "$#{format('%.2f', order.gross)}"
     end
   end
 
@@ -178,9 +178,10 @@ class SmartmenuCustomerOrderingTest < ApplicationSystemTestCase
     # Verify in UI
     open_view_order_modal
 
-    expected_total = @burger.price * 2
+    # Total displayed is gross (includes taxes)
+    order.reload
     within_testid('order-total-amount') do
-      assert_text "$#{format('%.2f', expected_total)}"
+      assert_text "$#{format('%.2f', order.gross)}"
     end
   end
 
