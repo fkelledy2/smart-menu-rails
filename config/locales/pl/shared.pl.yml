@@ -33,6 +33,7 @@ pl:
       adminArea: Administracja
       billing: Fakturowanie
       dashboard: Pulpit nawigacyjny
+      featureFlags: Feature Flags
       heroImages: Hero Images
       impersonated_as: Jesteś zalogowany jako
       login: Zaloguj się

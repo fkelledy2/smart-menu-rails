@@ -34,6 +34,7 @@ pt:
       adminArea: Administrador
       billing: Faturação
       dashboard: Painel de controlo
+      featureFlags: Feature Flags
       heroImages: Imagens de heróis
       impersonated_as: Tem sessão iniciada como
       login: Iniciar sessão

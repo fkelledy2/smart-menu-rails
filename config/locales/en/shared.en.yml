@@ -30,6 +30,7 @@ en:
       adminArea: Admin
       billing: Billing
       dashboard: Dashboard
+      featureFlags: Feature Flags
       heroImages: Hero Images
       impersonated_as: You're logged in as
       login: Log in

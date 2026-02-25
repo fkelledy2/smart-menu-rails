@@ -31,6 +31,7 @@ it:
       adminArea: Amministrazione
       billing: Fatturazione
       dashboard: Cruscotto
+      featureFlags: Feature Flags
       heroImages: Immagini Hero
       impersonated_as: Accesso come
       login: Accedi

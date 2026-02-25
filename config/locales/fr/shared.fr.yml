@@ -35,6 +35,7 @@ fr:
       adminArea: Administrateur
       billing: Facturation
       dashboard: Tableau de bord
+      featureFlags: Feature Flags
       heroImages: Images de héros
       impersonated_as: Vous êtes connecté en tant que
       login: Connexion

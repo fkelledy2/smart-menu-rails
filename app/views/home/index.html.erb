@@ -549,7 +549,7 @@
     </div>
    </div>
 
-  <% if @testimonials.size > 0 %>
+  <% if Flipper.enabled?(:homepage_testimonials) && @testimonials.size > 0 %>
       <div class="bunq-section bunq-section--testimonials">
         <div id="testimonials" class="container px-3 px-md-1">
           <div class="bunq-surface p-3 p-lg-4">

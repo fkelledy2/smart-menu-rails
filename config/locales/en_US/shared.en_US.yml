@@ -23,6 +23,7 @@ en_US:
       adminArea: ''
       billing: ''
       dashboard: ''
+      featureFlags: ''
       heroImages: ''
       impersonated_as: ''
       login: ''

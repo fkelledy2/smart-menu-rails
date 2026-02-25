@@ -155,6 +155,11 @@ gem 'tabulator-rails'
 gem 'tom-select-rails', '~> 2.3'
 gem 'whenever', require: false
 
+# Feature flags
+gem 'flipper', '~> 1.3'
+gem 'flipper-active_record', '~> 1.3'
+gem 'flipper-ui', '~> 1.3'
+
 # Memcached client for Rails cache store (used with MemCachier) for IdentityCache CAS support
 gem 'dalli', '~> 3.2'
 

@@ -34,6 +34,7 @@ de:
       adminArea: Admin-Bereich
       billing: Abrechnung
       dashboard: Dashboard
+      featureFlags: Feature-Flags
       heroImages: Heldenbilder
       impersonated_as: Sie sind eingeloggt als
       login: Anmelden

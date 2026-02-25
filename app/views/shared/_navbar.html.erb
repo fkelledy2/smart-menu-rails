@@ -107,6 +107,11 @@
                 <%= link_to hero_images_path, class: "dropdown-item ps-4" do %>
                   <i class="bi bi-image me-2"></i><%= t(".heroImages") %>
                 <% end %>
+                <% if current_user.respond_to?(:super_admin?) && current_user.super_admin? %>
+                  <%= link_to flipper_ui_path, class: "dropdown-item ps-4" do %>
+                    <i class="bi bi-toggles me-2"></i><%= t(".featureFlags") %>
+                  <% end %>
+                <% end %>
               <% end %>
               <div class="dropdown-divider"></div>
               <%= button_to t(".logout"), destroy_user_session_path, method: :delete, class: "dropdown-item" %>

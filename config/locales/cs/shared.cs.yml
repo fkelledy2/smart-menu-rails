@@ -32,6 +32,7 @@ cs:
       adminArea: Administrace
       billing: Fakturace
       dashboard: Přístrojová deska
+      featureFlags: Feature Flags
       heroImages: Obrázky hrdinů
       impersonated_as: Jste přihlášeni jako
       login: Přihlášení

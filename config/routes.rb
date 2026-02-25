@@ -1,4 +1,5 @@
 require 'sidekiq/web'
+require 'flipper/ui'
 
 Rails.application.routes.draw do
   # ============================================================================
@@ -562,6 +563,7 @@ Rails.application.routes.draw do
   # ============================================================================
   authenticate :user, lambda { |u| u.admin? } do
     mount Sidekiq::Web => '/sidekiq'
+    mount Flipper::UI.app(Flipper) => '/flipper', as: :flipper_ui
     mount ActionCable.server => "/cable"
     
     draw :madmin
