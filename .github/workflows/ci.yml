@@ -385,12 +385,18 @@ jobs:
           bundle exec rails db:migrate:status
 
       - name: Verify credentials
+        env:
+          RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
         run: |
           bundle exec rails credentials:show > /dev/null
 
       - name: Check asset compilation
+        env:
+          RAILS_ENV: production
+          SECRET_KEY_BASE: dummy-secret-key-base-for-asset-precompilation
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/smart_menu_test
         run: |
-          bundle exec rails assets:precompile RAILS_ENV=production
+          bundle exec rails assets:precompile
 
       - name: Deployment ready
         run: |
