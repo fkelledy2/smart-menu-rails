@@ -371,6 +371,18 @@ jobs:
           ruby-version: ${{ env.RUBY_VERSION }}
           bundler-cache: true
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'yarn'
+
+      - name: Install Yarn
+        run: npm install -g yarn@1.22.22
+
+      - name: Install Node dependencies
+        run: yarn install --frozen-lockfile
+
       - name: Set up database
         env:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/smart_menu_test
