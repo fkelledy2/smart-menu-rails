@@ -70,14 +70,14 @@ class SeoStructuredDataTest < ActionDispatch::IntegrationTest
   test 'home page does not include JSON-LD' do
     get root_path
     if response.status == 200
-      assert_no_match(/application\/ld\+json/, response.body)
+      assert_no_match(%r{application/ld\+json}, response.body)
     end
   end
 
   private
 
   def extract_json_ld(html)
-    match = html.match(/<script type="application\/ld\+json">\s*(.+?)\s*<\/script>/m)
+    match = html.match(%r{<script type="application/ld\+json">\s*(.+?)\s*</script>}m)
     assert match, 'Expected JSON-LD script block in response'
     JSON.parse(match[1])
   end

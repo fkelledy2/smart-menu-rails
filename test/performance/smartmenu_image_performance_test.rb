@@ -42,8 +42,11 @@ class SmartmenuImagePerformanceTest < ActiveSupport::TestCase
 
     # Extract quality values in order of appearance after 'webp' keyword
     webp_qualities = source.scan(/convert\('webp'\)\s*\.\s*saver\(quality:\s*(\d+)\)/).flatten.map(&:to_i)
-    assert_equal [70, 75, 75, 80], webp_qualities,
+    # Exclude LQIP (quality 20) — it's a placeholder, not a display-quality derivative
+    display_qualities = webp_qualities.reject { |q| q == 20 }
+    assert_equal [70, 75, 75, 80], display_qualities,
                  'WebP quality should be tiered: card_webp=70, thumb_webp=75, medium_webp=75, large_webp=80'
+    assert_includes webp_qualities, 20, 'LQIP derivative should use quality 20'
   end
 
   # ---------- GenerateImageDerivativesJob ----------

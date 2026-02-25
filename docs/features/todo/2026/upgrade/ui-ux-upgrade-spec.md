@@ -846,6 +846,20 @@ lighthouse:
 | Mobile tab bar for restaurant edit | `_mobile_tab_bar.html.erb` (rendered in `edit_2025.html.erb`) |
 | Auto-save Stimulus | `auto_save_controller.js` |
 
+### Phase 4 Items Delivered (2026-02-25)
+
+| Item | Files Created/Modified |
+|---|---|
+| **List layout default** | `menu_layout_controller.js` — default changed from card→list (Deliveroo/Uber Eats style) |
+| **Menu search + section tabs wired** | `_showMenuContentCustomer.html.erb` — both controllers connected with search bar + sticky tab nav |
+| **Cart bottom sheet wired** | `smartmenu.html.erb` — renders `_cart_bottom_sheet.html.erb` for customer view |
+| **Footer removed for customers** | `smartmenu.html.erb` — conditional footer (staff only), saves DOM + paint on mobile |
+| **Skeleton loading wired** | `show.html.erb` — renders `_skeleton_loading.html.erb` with auto-hide on content paint |
+| **Lazy Stripe.js** | `lazy_stripe_controller.js` (new), `stripe_wallet_controller.js` (updated) — Stripe loaded on demand for customers (~40KB saved) |
+| **Cart badge controller** | `cart_badge_controller.js` (new) — animates cart count on add/remove with bounce effect |
+| **LQIP blur-up placeholders** | `image_uploader.rb` — added `lqip` derivative (20px WebP q20); `responsive_image_helper.rb` — blur-up wrapper in `picture_tag_for_shrine` |
+| **All Stimulus controllers registered** | `index.js` — registered `menu-search`, `section-tabs`, `welcome-banner`, `ai-progress`, `whiskey-ambassador`, `cart-badge`, `lazy-stripe` |
+
 ### Phase 6 Items Delivered (partial)
 
 | Item | Files |
@@ -874,11 +888,11 @@ lighthouse:
 | `app/javascript/controllers/ai_image_generator_controller.js` | 3 | Stimulus | ✅ Created (named `ai_image_generator` not `ai_progress`) |
 | `app/javascript/controllers/sortable_controller.js` | 3 | Stimulus | ✅ Created |
 | `app/javascript/controllers/inline_edit_controller.js` | 3 | Stimulus | ✅ Created |
-| `app/javascript/controllers/menu_search_controller.js` | 4 | Stimulus | ❌ Not created |
-| `app/javascript/controllers/section_tabs_controller.js` | 4 | Stimulus | ❌ Not created |
-| `app/javascript/controllers/cart_badge_controller.js` | 4 | Stimulus | ❌ Not created |
-| `app/javascript/controllers/welcome_banner_controller.js` | 4 | Stimulus | ❌ Not created |
-| `app/javascript/controllers/lazy_stripe_controller.js` | 4 | Stimulus | ❌ Not created |
+| `app/javascript/controllers/menu_search_controller.js` | 4 | Stimulus | ✅ Created + wired |
+| `app/javascript/controllers/section_tabs_controller.js` | 4 | Stimulus | ✅ Created + wired |
+| `app/javascript/controllers/cart_badge_controller.js` | 4 | Stimulus | ✅ Created |
+| `app/javascript/controllers/welcome_banner_controller.js` | 4 | Stimulus | ✅ Created + wired |
+| `app/javascript/controllers/lazy_stripe_controller.js` | 4 | Stimulus | ✅ Created |
 | `app/views/shared/_bottom_sheet.html.erb` | 1 | Partial | ✅ Created |
 | `app/views/shared/_mobile_tab_bar.html.erb` | 1 | Partial | ✅ Created |
 | `app/views/restaurants/_mobile_tab_bar.html.erb` | 3 | Partial | ✅ Created |
@@ -886,8 +900,8 @@ lighthouse:
 | `app/views/shared/_inline_save_indicator.html.erb` | 1 | Partial | ✅ Created |
 | `app/views/shared/_empty_state.html.erb` | 1 | Partial | ❌ Not created (ViewComponent exists) |
 | `app/views/shared/_staff_banner.html.erb` | 5 | Partial | ❌ Not created |
-| `app/views/smartmenus/_sticky_action_bar.html.erb` | 4 | Partial | ❌ Not created |
-| `app/views/smartmenus/_section_tabs.html.erb` | 4 | Partial | ❌ Not created |
+| `app/views/smartmenus/_sticky_action_bar.html.erb` | 4 | Partial | ⏭️ Deferred (cart bottom sheet replaces this) |
+| `app/views/smartmenus/_section_tabs.html.erb` | 4 | Partial | ✅ Inline in `_showMenuContentCustomer.html.erb` |
 | `lighthouse-budget.json` | 1 | Config | ✅ Created |
 
 ---

@@ -84,7 +84,7 @@ class SeoGuidesTest < ActionDispatch::IntegrationTest
   private
 
   def extract_json_ld(html)
-    match = html.match(/<script type="application\/ld\+json">\s*(.+?)\s*<\/script>/m)
+    match = html.match(%r{<script type="application/ld\+json">\s*(.+?)\s*</script>}m)
     assert match, 'Expected JSON-LD script block in response'
     JSON.parse(match[1])
   end

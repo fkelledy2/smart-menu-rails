@@ -95,8 +95,14 @@ section "2/6  Code Quality"
 # RuboCop
 if $FIX; then
   echo -e "  ${YELLOW}↻ Running RuboCop with auto-correct…${NC}"
-  bundle exec rubocop -A --format simple 2>&1 | tail -3
-  step_pass "RuboCop — auto-corrected"
+  bundle exec rubocop -A --format simple 2>&1 | tail -5 || true
+  # Re-check: are there any remaining offenses after auto-correct?
+  if bundle exec rubocop --format simple > /dev/null 2>&1; then
+    step_pass "RuboCop — all offenses auto-corrected"
+  else
+    step_fail "RuboCop — unfixable offenses remain after auto-correct"
+    echo -e "       Run ${BOLD}bundle exec rubocop${NC} for details"
+  fi
 else
   if bundle exec rubocop --format simple > /dev/null 2>&1; then
     step_pass "RuboCop — no offenses"

@@ -157,8 +157,8 @@ module ResponsiveImageHelper
     # Get derivatives from the model's attacher (preferred) or from the uploaded file data
     derivatives = get_shrine_derivatives(image, model: model)
 
-    # Use Shrine's derivative system
-    content_tag(:picture) do
+    # Build the <picture> tag
+    picture = content_tag(:picture) do
       sources = []
 
       # WebP source if derivatives exist
@@ -202,12 +202,24 @@ module ResponsiveImageHelper
       sources << image_tag(
         fallback_url,
         alt: alt,
-        class: class_name,
+        class: "#{class_name} image-full",
         loading: loading,
         decoding: 'async',
+        onload: 'this.classList.add("loaded");var p=this.closest(".menu-item-image-progressive");if(p)p.classList.add("loaded")',
       )
 
       safe_join(sources)
+    end
+
+    # Wrap with LQIP blur-up container when derivative exists
+    lqip = derivatives && derivatives[:lqip]
+    if lqip
+      content_tag(:div, class: 'menu-item-image-progressive') do
+        placeholder = image_tag(lqip.url, alt: '', class: 'image-placeholder', aria: { hidden: true })
+        safe_join([placeholder, picture])
+      end
+    else
+      picture
     end
   end
 

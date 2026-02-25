@@ -19,7 +19,8 @@ export default class extends Controller {
 
   connect() {
     const saved = localStorage.getItem("smartmenu-layout")
-    this.applyLayout(saved === "list" ? "list" : "card")
+    // Default to list layout (mobile-first, Deliveroo/Uber Eats style)
+    this.applyLayout(saved === "card" ? "card" : "list")
   }
 
   setCard() {

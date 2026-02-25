@@ -69,6 +69,16 @@
 <% end %>
 
 <div id="menuContentContainer" data-testid="menu-content-container">
+    <%# Skeleton loading state — hidden once real content paints %>
+    <div id="skeletonLoading" data-testid="skeleton-loading">
+      <%= render partial: "smartmenus/skeleton_loading" %>
+    </div>
+    <script>
+      requestAnimationFrame(function(){
+        var sk = document.getElementById('skeletonLoading');
+        if (sk) sk.style.display = 'none';
+      });
+    </script>
     <%# Cache menu content separately - disable cache in test for reliability %>
     <% if Rails.env.test? %>
         <% if show_customer_view %>

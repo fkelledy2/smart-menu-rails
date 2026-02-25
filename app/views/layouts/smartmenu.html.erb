@@ -8,7 +8,9 @@
     <%= javascript_system_tags %>
     <script>window.USE_JSON_STATE = true;</script>
     <meta name="stripe-publishable-key" content="<%= Rails.application.credentials.stripe_publishable_key %>">
-    <script src="https://js.stripe.com/v3" defer></script>
+    <% if current_user || @current_employee %>
+      <script src="https://js.stripe.com/v3" defer></script>
+    <% end %>
   </head>
   <body class="d-flex flex-column min-vh-100"
       data-smartmenu-id="<%= @smartmenu.slug %>"
@@ -26,7 +28,10 @@
                 <%= yield %>
           </div>
         </main>
-      <%= render 'shared/footer' %>
+      <%# Hide footer for customer smartmenu view — saves DOM + paint on mobile %>
+      <% if current_user || @current_employee %>
+        <%= render 'shared/footer' %>
+      <% end %>
     </div>
     <%= render partial: "smartmenus/showModals", locals: { order: @openOrder, menu: @menu, restaurant: @restaurant, allergyns: @allergyns, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant, restaurantCurrency: @restaurantCurrency, tablesetting: @tablesetting, current_employee: @current_employee } %>
     <%= render partial: "smartmenus/showContext", locals: { order: @openOrder, menu: @menu, restaurant: @restaurant, current_employee: @current_employee, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant, restaurantCurrency: @restaurantCurrency, tablesetting: @tablesetting } %>

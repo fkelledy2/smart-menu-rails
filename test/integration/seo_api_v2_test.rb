@@ -13,7 +13,7 @@ class SeoApiV2Test < ActionDispatch::IntegrationTest
   test 'GET /api/v2/restaurants returns 200 with JSON' do
     get '/api/v2/restaurants'
     assert_response :success
-    json = JSON.parse(response.body)
+    json = response.parsed_body
     assert json.key?('data')
     assert json.key?('meta')
     assert json.key?('attribution')
@@ -31,8 +31,8 @@ class SeoApiV2Test < ActionDispatch::IntegrationTest
     hidden.update_columns(preview_enabled: false)
 
     get '/api/v2/restaurants'
-    json = JSON.parse(response.body)
-    ids = json['data'].map { |r| r['id'] }
+    json = response.parsed_body
+    ids = json['data'].pluck('id')
     assert_includes ids, @restaurant.id
     assert_not_includes ids, hidden.id
   end
@@ -40,7 +40,7 @@ class SeoApiV2Test < ActionDispatch::IntegrationTest
   test 'filtering by city works' do
     @restaurant.update_columns(city: 'Dublin')
     get '/api/v2/restaurants', params: { city: 'Dublin' }
-    json = JSON.parse(response.body)
+    json = response.parsed_body
     json['data'].each do |r|
       # All returned restaurants should be from Dublin
       assert_not_nil r['name']
@@ -49,7 +49,7 @@ class SeoApiV2Test < ActionDispatch::IntegrationTest
 
   test 'pagination meta is present' do
     get '/api/v2/restaurants', params: { page: 1, per_page: 5 }
-    json = JSON.parse(response.body)
+    json = response.parsed_body
     meta = json['meta']
     assert_equal 1, meta['page']
     assert_equal 5, meta['per_page']
@@ -62,7 +62,7 @@ class SeoApiV2Test < ActionDispatch::IntegrationTest
   test 'GET /api/v2/restaurants/:id returns restaurant detail' do
     get "/api/v2/restaurants/#{@restaurant.id}"
     assert_response :success
-    json = JSON.parse(response.body)
+    json = response.parsed_body
     assert_equal 'Restaurant', json['data']['@type']
     assert_equal @restaurant.name, json['data']['name']
   end
@@ -79,7 +79,7 @@ class SeoApiV2Test < ActionDispatch::IntegrationTest
     get "/api/v2/restaurants/#{@restaurant.id}/menu"
     # May be 200 or 404 depending on whether restaurant has menus in fixtures
     assert_includes [200, 404], response.status
-    json = JSON.parse(response.body)
+    json = response.parsed_body
     if response.status == 200
       assert_equal 'Restaurant', json['data']['@type']
       assert json['data'].key?('menu')

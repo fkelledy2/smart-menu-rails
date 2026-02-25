@@ -10,7 +10,19 @@ export default class extends Controller {
   connect() {
     const pkMeta = document.querySelector('meta[name="stripe-publishable-key"]');
     const pk = pkMeta && pkMeta.content;
-    if (!pk || !window.Stripe) return;
+    if (!pk) return;
+
+    this._initStripe(pk);
+  }
+
+  async _initStripe(pk) {
+    if (!window.Stripe) {
+      try {
+        await this._loadStripeScript();
+      } catch (e) {
+        return;
+      }
+    }
 
     this.stripe = window.Stripe(pk);
     const pr = this.stripe.paymentRequest({
@@ -78,6 +90,19 @@ export default class extends Controller {
     });
     const data = await res.json();
     return data.client_secret;
+  }
+
+  _loadStripeScript() {
+    if (this._stripePromise) return this._stripePromise;
+    this._stripePromise = new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = "https://js.stripe.com/v3";
+      script.async = true;
+      script.onload = () => resolve();
+      script.onerror = () => reject(new Error("Failed to load Stripe.js"));
+      document.head.appendChild(script);
+    });
+    return this._stripePromise;
   }
 
   _notifySuccess() {

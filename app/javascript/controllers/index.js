@@ -35,6 +35,13 @@ import AiImageGeneratorController from "./ai_image_generator_controller"
 import ScrollspyController from "./scrollspy_controller"
 import SommelierController from "./sommelier_controller"
 import GeneratePairingsController from "./generate_pairings_controller"
+import MenuSearchController from "./menu_search_controller"
+import SectionTabsController from "./section_tabs_controller"
+import WelcomeBannerController from "./welcome_banner_controller"
+import AiProgressController from "./ai_progress_controller"
+import WhiskeyAmbassadorController from "./whiskey_ambassador_controller"
+import CartBadgeController from "./cart_badge_controller"
+import LazyStripeController from "./lazy_stripe_controller"
 
 application.register("sortable", SortableController)
 application.register("auto-save", AutoSaveController)
@@ -69,5 +76,12 @@ application.register("ai-image-generator", AiImageGeneratorController)
 application.register("scrollspy", ScrollspyController)
 application.register("sommelier", SommelierController)
 application.register("generate-pairings", GeneratePairingsController)
+application.register("menu-search", MenuSearchController)
+application.register("section-tabs", SectionTabsController)
+application.register("welcome-banner", WelcomeBannerController)
+application.register("ai-progress", AiProgressController)
+application.register("whiskey-ambassador", WhiskeyAmbassadorController)
+application.register("cart-badge", CartBadgeController)
+application.register("lazy-stripe", LazyStripeController)
 
-console.log('[Stimulus] Controllers registered:', ['sortable', 'auto-save', 'menu-import', 'sidebar', 'hello', 'ocr-upload', 'stripe-wallet', 'state', 'order-header', 'order-totals', 'ordering', 'localization-bulk', 'menuitems-bulk', 'menusections-bulk', 'restaurants-bulk', 'discovered-restaurant-deep-dive', 'discovered-restaurant-web-scrape', 'restaurantmenus-bulk', 'discovered-restaurants-bulk', 'password-confirmation-toggle', 'disabled-action', 'userplan-plan-change', 'go-live-progress', 'settings-dependencies', 'bottom-sheet', 'tab-bar', 'menu-layout', 'inline-edit', 'mobile-tab-bar', 'ai-image-generator', 'scrollspy', 'generate-pairings'])
+console.log('[Stimulus] Controllers registered:', ['sortable', 'auto-save', 'menu-import', 'sidebar', 'hello', 'ocr-upload', 'stripe-wallet', 'state', 'order-header', 'order-totals', 'ordering', 'localization-bulk', 'menuitems-bulk', 'menusections-bulk', 'restaurants-bulk', 'discovered-restaurant-deep-dive', 'discovered-restaurant-web-scrape', 'restaurantmenus-bulk', 'discovered-restaurants-bulk', 'password-confirmation-toggle', 'disabled-action', 'userplan-plan-change', 'go-live-progress', 'settings-dependencies', 'bottom-sheet', 'tab-bar', 'menu-layout', 'inline-edit', 'mobile-tab-bar', 'ai-image-generator', 'scrollspy', 'generate-pairings', 'menu-search', 'section-tabs', 'welcome-banner', 'ai-progress', 'whiskey-ambassador', 'cart-badge', 'lazy-stripe'])

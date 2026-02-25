@@ -32,6 +32,14 @@ class ImageUploader < Shrine
     # thumb_webp (200px, q75): small thumbnails
     # medium_webp (600px, q75): modal "add to order" popup and tablet card view
     # large_webp (1000px, q80): full-screen / desktop hero images
+    # LQIP — 20px wide, q20, WebP. Tiny enough to inline as base64 data URI
+    # for instant blur-up placeholder on customer smartmenu pages.
+    derivatives[:lqip] = ImageProcessing::MiniMagick
+      .source(original)
+      .convert('webp')
+      .saver(quality: 20)
+      .resize_to_limit!(20, 20)
+
     derivatives.merge!({
       card_webp: ImageProcessing::MiniMagick
         .source(original)
