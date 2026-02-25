@@ -7,6 +7,10 @@ pt:
       updated: O item de menu foi atualizado com sucesso.
     edit:
       tab_item: Item
+    edit_2025:
+      active: Ativo
+      archived: Arquivado
+      inactive_status: Inativo
     errors:
       menusection_required: Crie itens de menu a partir de uma secção de menu.
     form:
@@ -16,6 +20,8 @@ pt:
       alcohol_notes_ph: Notas facultativas, por exemplo, contém rum
       alcohol_settings: Definições de álcool
       alcoholic_help: Verificar se este artigo contém álcool.
+      allergens: Alergénios
+      available_sizes: Tamanhos disponíveis
       classification_beer: Cerveja
       classification_cocktail: Cocktail
       classification_help: Selecionar uma categoria. Utilizar non_alcoholic para variantes
@@ -37,6 +43,7 @@ pt:
       no_image: Nenhuma imagem ainda
       save: Guardar
       settings: Configurações
+      sizes_heading: Tamanhos
       sure: Tem a certeza?
       tasting_carrier: Utilização como suporte de degustação
       tasting_carrier_help: Apenas um transportador por secção de degustação. Os artigos

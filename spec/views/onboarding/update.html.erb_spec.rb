@@ -1,29 +1,24 @@
 require 'rails_helper'
 
-RSpec.describe 'onboarding/update.html.erb' do
+# The update action re-renders account_details on validation failure
+# or redirects on success — there is no update.html.erb template.
+RSpec.describe 'onboarding/account_details.html.erb (re-render on update failure)' do
   let(:user) { create(:user) }
-  let(:onboarding_session) { create(:onboarding_session, user: user, status: 'restaurant_details') }
+  let(:onboarding_session) { create(:onboarding_session, user: user, status: 'started') }
 
   before do
-    assign(:current_user, user)
-    assign(:onboarding_session, onboarding_session)
-    assign(:step, 2)
-    assign(:progress, 50)
-    assign(:step_title, 'Restaurant Details')
+    assign(:onboarding, onboarding_session)
+    allow(view).to receive(:current_user).and_return(user)
+    allow(view).to receive(:onboarding_path).and_return('/onboarding')
+    flash.now[:alert] = 'Please enter a restaurant name to continue.'
   end
 
-  it 'renders the onboarding update page' do
-    render
-    expect(rendered).to be_present
-  end
-
-  it 'displays update confirmation or redirect content' do
-    render
-    # The update.html.erb is likely a simple redirect or confirmation page
-    expect(rendered).to match(/redirect|success|complete|update/i)
+  it 're-renders the account details form' do
+    render template: 'onboarding/account_details'
+    expect(rendered).to include('wizard-form')
   end
 
   it 'renders without errors' do
-    expect { render }.not_to raise_error
+    expect { render template: 'onboarding/account_details' }.not_to raise_error
   end
 end

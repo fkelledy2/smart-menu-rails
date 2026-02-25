@@ -10,6 +10,7 @@ en_US:
       sales_disabled: ''
       verify_age: ''
       zero_abv_short: ''
+    clear_search: replace_me
     controller:
       created: ''
       deleted: ''
@@ -46,6 +47,7 @@ en_US:
       cancel: ''
     new:
       title: ''
+    no_results: replace_me
     ocr:
       alcohol:
         abv: ''
@@ -65,6 +67,8 @@ en_US:
       order: ''
       startOrder: ''
       takePayment: ''
+    search_placeholder: replace_me
+    section_navigation: replace_me
     showAllergyns:
       allergyns: ''
     showCoverCharge:
@@ -72,6 +76,9 @@ en_US:
       coverchargeUnit: ''
     showMenuBanner:
       allergyns: ''
+      card_view: replace_me
+      layout: replace_me
+      list_view: replace_me
     showMenuContentCustomer:
       search_placeholder: ''
     showMenuitem:
@@ -84,14 +91,18 @@ en_US:
       allergyns: ''
       order: ''
       toggle_dropdown: ''
+    showMenuitemSizes:
+      allergyns: replace_me
     showModals:
       add: ''
       addToOrder: ''
+      add_items_hint: replace_me
       bill_prefix: ''
       cancel: ''
       confirmPayment: ''
       cover_charge: ''
       customiseOrderWithName: ''
+      empty_cart: replace_me
       excluding_tip: ''
       filterAllergyns: ''
       filterBy: ''
@@ -115,6 +126,7 @@ en_US:
       tax: ''
       tip_options: ''
       total: ''
+      view_full_order: replace_me
       yourOrder: ''
     showTableLocaleSelectorCustomer:
       table: ''

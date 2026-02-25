@@ -10,6 +10,7 @@ cs:
       sales_disabled: Prodej alkoholu je v této restauraci zakázán.
       verify_age: Před podáváním alkoholických nápojů ověřte věk zákazníka.
       zero_abv_short: 0.0%
+    clear_search: Přehledné vyhledávání
     controller:
       created: Smartmenu bylo úspěšně vytvořeno.
       deleted: Smartmenu bylo úspěšně odstraněno.
@@ -49,6 +50,7 @@ cs:
       cancel: Zrušit
     new:
       title: Nové Smartmenu
+    no_results: Nebyly nalezeny žádné položky
     ocr:
       alcohol:
         abv: ABV
@@ -68,6 +70,8 @@ cs:
       order: Objednávka
       startOrder: Počáteční objednávka
       takePayment: Přijmout platbu
+    search_placeholder: Nabídka vyhledávání...
+    section_navigation: Sekce menu
     showAllergyns:
       allergyns: Alergeny
     showCoverCharge:
@@ -75,6 +79,9 @@ cs:
       coverchargeUnit: Jednotka krycího náboje
     showMenuBanner:
       allergyns: Alergeny
+      card_view: Zobrazení karty
+      layout: Rozložení
+      list_view: Zobrazení seznamu
     showMenuContentCustomer:
       search_placeholder: Vyhledávání položek nabídky...
     showMenuitem:
@@ -87,14 +94,18 @@ cs:
       allergyns: Alergeny
       order: Objednávka
       toggle_dropdown: Přepínání rozbalovacího seznamu
+    showMenuitemSizes:
+      allergyns: Alergeny
     showModals:
       add: Přidat jméno
       addToOrder: Přidat do objednávky
+      add_items_hint: Klepnutím na + na libovolné položce ji přidáte
       bill_prefix: 'Bill:'
       cancel: Zrušit
       confirmPayment: Potvrdit platbu
       cover_charge: Poplatek za obálku
       customiseOrderWithName: Přidejte své jméno do objednávky
+      empty_cart: Váš košík je prázdný
       excluding_tip: bez spropitného
       filterAllergyns: Filtrovat alergeny
       filterBy: Filtr
@@ -118,6 +129,7 @@ cs:
       tax: Daň
       tip_options: Možnosti tipů
       total: Celkem
+      view_full_order: Zobrazit celou objednávku
       yourOrder: Vaše objednávka
     showTableLocaleSelectorCustomer:
       table: Tabulka

@@ -35,6 +35,7 @@ pl:
         description_help: Opcjonalny opis pomagający klientom zrozumieć to menu
         description_placeholder: Opisz to menu...
         generate_images: Generowanie obrazów
+        generate_pairings: Generowanie par
         inactive: Nieaktywny
         items: Przedmioty
         localize_menu: Tłumaczenia
@@ -54,6 +55,7 @@ pl:
         unavailable: Niedostępne
       items_2025:
         add_item: Dodaj pozycję menu
+        click_to_edit: Kliknij, aby edytować
         edit: Edytuj
         go_to_sections: Przejdź do sekcji
         has_image_title: Ma obraz - najedź kursorem, aby wyświetlić podgląd

@@ -38,6 +38,7 @@ fr:
           ce menu
         description_placeholder: Décrivez ce menu...
         generate_images: Générer des images
+        generate_pairings: Générer des paires
         inactive: Inactif
         items: Articles
         localize_menu: Traductions
@@ -58,6 +59,7 @@ fr:
         unavailable: Indisponible
       items_2025:
         add_item: Ajouter un élément de menu
+        click_to_edit: Cliquer pour modifier
         edit: Editer
         go_to_sections: Aller aux sections
         has_image_title: Possède une image - survoler pour prévisualiser

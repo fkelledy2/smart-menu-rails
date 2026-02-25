@@ -20,6 +20,8 @@ it:
       tipsTab: Mance
       tracksTab: Brani
     edit_2025:
+      home: Casa
+      restaurants: Ristoranti
       subtitle: Gestisci la configurazione del tuo ristorante
       toggle_navigation: Attiva/disattiva navigazione
     form:
@@ -123,6 +125,13 @@ it:
       values:
         'false': false
         'true': Sì
+    mobile_tab_bar:
+      details: Dettagli
+      menus: Menù
+      more: Di più
+      quick_navigation: Navigazione rapida
+      staff: Personale
+      tables: Tavoli
     new:
       restaurant: Ristorante
       restaurants: Ristoranti

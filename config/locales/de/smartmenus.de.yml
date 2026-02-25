@@ -11,6 +11,7 @@ de:
       verify_age: Bitte überprüfen Sie das Alter der Gäste, bevor Sie alkoholische
         Getränke ausschenken.
       zero_abv_short: 0.0%
+    clear_search: Suche löschen
     controller:
       created: Das Smartmenu wurde erfolgreich erstellt.
       deleted: Smartmenu wurde erfolgreich gelöscht.
@@ -54,6 +55,7 @@ de:
       cancel: Abbrechen
     new:
       title: Neues Smartmenu
+    no_results: Keine Artikel gefunden
     ocr:
       alcohol:
         abv: ABV
@@ -73,6 +75,8 @@ de:
       order: Bestellen
       startOrder: Bestellung starten
       takePayment: Zahlung
+    search_placeholder: Menü durchsuchen...
+    section_navigation: Menüpunkte
     showAllergyns:
       allergyns: Allergene
     showCoverCharge:
@@ -80,6 +84,9 @@ de:
       coverchargeUnit: pro Person
     showMenuBanner:
       allergyns: Allergene
+      card_view: Ansicht der Karte
+      layout: Layout
+      list_view: Listenansicht
     showMenuContentCustomer:
       search_placeholder: Menüpunkte suchen...
     showMenuitem:
@@ -92,14 +99,18 @@ de:
       allergyns: Allergene
       order: Bestellung
       toggle_dropdown: Dropdown umschalten
+    showMenuitemSizes:
+      allergyns: Allergene
     showModals:
       add: Name hinzufügen
       addToOrder: Zur Bestellung hinzufügen
+      add_items_hint: Tippen Sie auf ein beliebiges Element +, um es hinzuzufügen.
       bill_prefix: 'Rechnung:'
       cancel: Abbrechen
       confirmPayment: Zahlung bestätigen
       cover_charge: Deckungsbeitrag
       customiseOrderWithName: Personalisieren Sie Ihre Bestellung
+      empty_cart: Ihr Warenkorb ist leer
       excluding_tip: ohne Trinkgeld
       filterAllergyns: Allergene filtern
       filterBy: Filtern nach
@@ -123,6 +134,7 @@ de:
       tax: Steuer
       tip_options: Tipp-Optionen
       total: Gesamt
+      view_full_order: Vollständige Bestellung anzeigen
       yourOrder: Ihre Bestellung
     showTableLocaleSelectorCustomer:
       table: Tisch

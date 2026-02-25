@@ -10,6 +10,7 @@ it:
       sales_disabled: La vendita di alcol è disabilitata per questo ristorante.
       verify_age: Verifica l'età del cliente prima di servire bevande alcoliche.
       zero_abv_short: 0,0%
+    clear_search: Ricerca chiara
     controller:
       created: Smartmenu creato con successo.
       deleted: Smartmenu eliminato con successo.
@@ -49,6 +50,7 @@ it:
       cancel: Annulla
     new:
       title: Nuovo Smartmenu
+    no_results: Nessun articolo trovato
     ocr:
       alcohol:
         abv: ABV
@@ -68,6 +70,8 @@ it:
       order: Ordine
       startOrder: Inizia ordine
       takePayment: Incassa pagamento
+    search_placeholder: Menu di ricerca...
+    section_navigation: Sezioni del menu
     showAllergyns:
       allergyns: Allergeni
     showCoverCharge:
@@ -75,6 +79,9 @@ it:
       coverchargeUnit: Unità coperto
     showMenuBanner:
       allergyns: Allergeni
+      card_view: Vista della carta
+      layout: Layout
+      list_view: Vista elenco
     showMenuContentCustomer:
       search_placeholder: Cerca articoli del menu...
     showMenuitem:
@@ -87,14 +94,18 @@ it:
       allergyns: Allergeni
       order: Ordine
       toggle_dropdown: Apri/Chiudi menu
+    showMenuitemSizes:
+      allergyns: Allergeni
     showModals:
       add: Aggiungi
       addToOrder: Aggiungi all'ordine
+      add_items_hint: Toccare + su qualsiasi elemento per aggiungerlo
       bill_prefix: 'Conto:'
       cancel: Annulla
       confirmPayment: Conferma pagamento
       cover_charge: Coperto
       customiseOrderWithName: Aggiungi il tuo nome all'ordine
+      empty_cart: Il carrello è vuoto
       excluding_tip: escl. mancia
       filterAllergyns: Filtra allergeni
       filterBy: Filtra
@@ -118,6 +129,7 @@ it:
       tax: Tassa
       tip_options: Opzioni mancia
       total: Totale
+      view_full_order: Visualizza l'ordine completo
       yourOrder: Il tuo ordine
     showTableLocaleSelectorCustomer:
       table: Tavolo

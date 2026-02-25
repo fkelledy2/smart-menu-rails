@@ -5,6 +5,9 @@ hu:
       ai_image_generation_queued: A menü elemeinek AI képgenerálása sorba került.
       created: A menü sikeresen létrejött.
       deleted: A menü sikeresen törlődött.
+      generate_pairings_failed: Nem sikerült párosításokat létrehozni.
+      generate_pairings_queued: Az étel- és italpárosítás generációja teljes.
+      generate_pairings_unauthorized: Nincs engedélyed párosítások létrehozására.
       image_regeneration_queued: A menü %{szám} elemeinek várakozó képregenerálása.
       image_regeneration_queued_rake: A képregenerálási feladat sorba került ehhez
         a menühöz.

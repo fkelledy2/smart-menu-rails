@@ -35,6 +35,7 @@ en:
         description_help: Optional description to help customers understand this menu
         description_placeholder: Describe this menu...
         generate_images: Generate Images
+        generate_pairings: Generate Pairings
         inactive: Inactive
         items: Items
         localize_menu: Translations
@@ -54,6 +55,7 @@ en:
         unavailable: Unavailable
       items_2025:
         add_item: Add Menu Item
+        click_to_edit: Click to edit
         edit: Edit
         go_to_sections: Go to Sections
         has_image_title: Has image - hover to preview

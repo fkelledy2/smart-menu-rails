@@ -6,6 +6,9 @@ pl:
         dla pozycji tego menu.
       created: Menu zostało pomyślnie utworzone.
       deleted: Menu zostało pomyślnie usunięte.
+      generate_pairings_failed: Nie udało się wygenerować parowania.
+      generate_pairings_queued: Generowanie parowania żywności i napojów zakończone.
+      generate_pairings_unauthorized: Nie masz uprawnień do generowania par.
       image_regeneration_queued: Regeneracja obrazu w kolejce dla %{count} pozycji
         w tym menu.
       image_regeneration_queued_rake: Zadanie regeneracji obrazu zostało ustawione

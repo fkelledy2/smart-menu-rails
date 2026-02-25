@@ -7,6 +7,10 @@ de:
       updated: Der Menüpunkt wurde erfolgreich aktualisiert.
     edit:
       tab_item: Artikel
+    edit_2025:
+      active: Aktiv
+      archived: Archiviert
+      inactive_status: Inaktiv
     errors:
       menusection_required: Bitte erstellen Sie Menüpunkte aus einem Menüabschnitt
         heraus.
@@ -17,6 +21,8 @@ de:
       alcohol_notes_ph: Optionale Hinweise, z. B. enthält Rum
       alcohol_settings: Alkohol Einstellungen
       alcoholic_help: Prüfen Sie, ob dieser Artikel Alkohol enthält.
+      allergens: Allergene
+      available_sizes: Verfügbare Größen
       classification_beer: Bier
       classification_cocktail: Cocktail
       classification_help: Wählen Sie eine Kategorie. Verwenden Sie non_alcoholic
@@ -38,6 +44,7 @@ de:
       no_image: Noch kein Bild
       save: Speichern
       settings: Einstellungen
+      sizes_heading: Größen
       sure: Sind Sie sicher?
       tasting_carrier: Verwendung als Verkostungsträger
       tasting_carrier_help: Nur ein Träger pro Verkostungsabschnitt. Trägerartikel

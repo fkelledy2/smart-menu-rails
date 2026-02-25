@@ -20,6 +20,8 @@ de:
       tipsTab: Tipps
       tracksTab: Titel
     edit_2025:
+      home: Startseite
+      restaurants: Gastronomiebetriebe
       subtitle: Verwalten Sie die Konfiguration Ihres Restaurants
       toggle_navigation: Umschaltbare Navigation
     form:
@@ -123,6 +125,13 @@ de:
       values:
         'false': ''
         'true': ''
+    mobile_tab_bar:
+      details: Einzelheiten
+      menus: Speisekarten
+      more: Mehr
+      quick_navigation: Schnelle Navigation
+      staff: Personal
+      tables: Tische
     new:
       restaurant: Gastronomiebetrieb
       restaurants: Gastronomiebetriebe

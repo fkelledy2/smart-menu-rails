@@ -7,6 +7,10 @@ en_GB:
       updated: ''
     edit:
       tab_item: ''
+    edit_2025:
+      active: replace_me
+      archived: replace_me
+      inactive_status: replace_me
     errors:
       menusection_required: ''
     form:
@@ -16,6 +20,8 @@ en_GB:
       alcohol_notes_ph: ''
       alcohol_settings: ''
       alcoholic_help: ''
+      allergens: replace_me
+      available_sizes: replace_me
       classification_beer: ''
       classification_cocktail: ''
       classification_help: ''
@@ -36,6 +42,7 @@ en_GB:
       no_image: ''
       save: ''
       settings: ''
+      sizes_heading: replace_me
       sure: ''
       tasting_carrier: ''
       tasting_carrier_help: ''

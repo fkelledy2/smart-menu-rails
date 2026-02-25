@@ -6,6 +6,9 @@ it:
         per le voci di questo menu.
       created: Menu creato con successo.
       deleted: Menu eliminato con successo.
+      generate_pairings_failed: Impossibile generare gli accoppiamenti.
+      generate_pairings_queued: Generazione di abbinamenti di cibo e bevande completa.
+      generate_pairings_unauthorized: Non si ha l'autorizzazione a generare abbinamenti.
       image_regeneration_queued: Rigenerazione delle immagini in coda per %{count}
         elementi di questo menu.
       image_regeneration_queued_rake: Il lavoro di rigenerazione delle immagini è

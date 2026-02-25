@@ -20,6 +20,8 @@ en_US:
       tipsTab: ''
       tracksTab: ''
     edit_2025:
+      home: replace_me
+      restaurants: replace_me
       subtitle: ''
       toggle_navigation: ''
     form:
@@ -118,6 +120,13 @@ en_US:
       values:
         'false': ''
         'true': ''
+    mobile_tab_bar:
+      details: replace_me
+      menus: replace_me
+      more: replace_me
+      quick_navigation: replace_me
+      staff: replace_me
+      tables: replace_me
     new:
       restaurant: ''
       restaurants: ''

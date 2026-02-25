@@ -11,6 +11,7 @@ fr:
       verify_age: Veuillez vérifier l'âge du client avant de lui servir des boissons
         alcoolisées.
       zero_abv_short: 0.0%
+    clear_search: Recherche claire
     controller:
       created: Le Smartmenu a été créé avec succès.
       deleted: Smartmenu a été supprimé avec succès.
@@ -53,6 +54,7 @@ fr:
       cancel: Annuler
     new:
       title: Nouveau Smartmenu
+    no_results: Aucun élément trouvé
     ocr:
       alcohol:
         abv: ABV
@@ -72,6 +74,8 @@ fr:
       order: Commander
       startOrder: Commencer commande
       takePayment: Payer
+    search_placeholder: Menu de recherche...
+    section_navigation: Rubriques du menu
     showAllergyns:
       allergyns: Allergènes
     showCoverCharge:
@@ -79,6 +83,9 @@ fr:
       coverchargeUnit: par personne
     showMenuBanner:
       allergyns: Allergènes
+      card_view: Vue de la carte
+      layout: Mise en page
+      list_view: Vue de la liste
     showMenuContentCustomer:
       search_placeholder: Recherche dans le menu...
     showMenuitem:
@@ -91,14 +98,18 @@ fr:
       allergyns: Allergènes
       order: Commande
       toggle_dropdown: Basculer vers le bas
+    showMenuitemSizes:
+      allergyns: Allergènes
     showModals:
       add: Ajouter un nom
       addToOrder: Ajouter à la commande
+      add_items_hint: Tapez sur + sur un élément pour l'ajouter
       bill_prefix: 'Projet de loi :'
       cancel: Annuler
       confirmPayment: Confirmer le paiement
       cover_charge: Frais de couverture
       customiseOrderWithName: Personnalisez votre commande
+      empty_cart: Votre panier est vide
       excluding_tip: sans pointe
       filterAllergyns: Filtrer les allergènes
       filterBy: Filtrer par
@@ -122,6 +133,7 @@ fr:
       tax: Impôts
       tip_options: Options de conseil
       total: Total
+      view_full_order: Voir la commande complète
       yourOrder: Votre commande
     showTableLocaleSelectorCustomer:
       table: Tableau

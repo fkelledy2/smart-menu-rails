@@ -34,6 +34,7 @@ en_GB:
         description_help: ''
         description_placeholder: ''
         generate_images: ''
+        generate_pairings: replace_me
         inactive: ''
         items: ''
         localize_menu: ''
@@ -52,6 +53,7 @@ en_GB:
         unavailable: ''
       items_2025:
         add_item: ''
+        click_to_edit: replace_me
         edit: ''
         go_to_sections: ''
         has_image_title: ''

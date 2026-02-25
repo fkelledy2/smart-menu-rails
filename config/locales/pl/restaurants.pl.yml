@@ -20,6 +20,8 @@ pl:
       tipsTab: Wskazówki
       tracksTab: Utwory
     edit_2025:
+      home: Strona główna
+      restaurants: Restauracje
       subtitle: Zarządzanie konfiguracją restauracji
       toggle_navigation: Przełącz nawigację
     form:
@@ -123,6 +125,13 @@ pl:
       values:
         'false': replace_me
         'true': replace_me
+    mobile_tab_bar:
+      details: Szczegóły
+      menus: Menu
+      more: Więcej
+      quick_navigation: Szybka nawigacja
+      staff: Personel
+      tables: Stoły
     new:
       restaurant: Restauracja
       restaurants: Restauracje

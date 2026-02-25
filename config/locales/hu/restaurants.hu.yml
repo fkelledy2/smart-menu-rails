@@ -20,6 +20,8 @@ hu:
       tipsTab: Borravalók
       tracksTab: Lejátszási lista
     edit_2025:
+      home: Home
+      restaurants: Éttermek
       subtitle: Az étterem konfigurációjának kezelése
       toggle_navigation: Navigáció váltás
     form:
@@ -123,6 +125,13 @@ hu:
       values:
         'false': ''
         'true': ''
+    mobile_tab_bar:
+      details: Részletek
+      menus: Étlapok
+      more: További
+      quick_navigation: Gyors navigáció
+      staff: Személyzet
+      tables: Táblák
     new:
       restaurant: Új étterem
       restaurants: Éttermek

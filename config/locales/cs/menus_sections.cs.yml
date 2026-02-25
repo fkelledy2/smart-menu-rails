@@ -37,6 +37,7 @@ cs:
           nabídce
         description_placeholder: Popište toto menu...
         generate_images: Generování obrázků
+        generate_pairings: Generování párování
         inactive: Neaktivní
         items: Položky
         localize_menu: Překlady
@@ -56,6 +57,7 @@ cs:
         unavailable: Nedostupné
       items_2025:
         add_item: Přidání položky nabídky
+        click_to_edit: Klikněte pro úpravu
         edit: Upravit
         go_to_sections: Přejít na sekce
         has_image_title: Má obrázek - pro náhled najetím myši

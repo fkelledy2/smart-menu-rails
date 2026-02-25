@@ -7,9 +7,10 @@ set -euo pipefail
 # A single script that covers all i18n maintenance tasks:
 #
 #   1. Check for missing translation keys (i18n-tasks missing)
-#   2. Copy missing keys from en/ into each locale with "replace_me" placeholder
-#   3. Normalize locale files (i18n-tasks normalize)
-#   4. Translate all "replace_me" strings via DeepL
+#   2. Add missing keys to en/ by extracting default: values from source code
+#   3. Copy missing keys from en/ into each locale with "replace_me" placeholder
+#   4. Normalize locale files (i18n-tasks normalize)
+#   5. Translate all "replace_me" strings via DeepL
 #
 # Usage:
 #   scripts/i18n_sync_and_translate.sh [options]
@@ -67,7 +68,7 @@ fail() { echo -e "${RED}  ✘ $1${NC}"; }
 # ---------------------------------------------------------------------------
 # Step 1: Check for missing translation keys
 # ---------------------------------------------------------------------------
-step "Step 1/4 — Checking for missing translation keys"
+step "Step 1/5 — Checking for missing translation keys"
 
 MISSING_OUTPUT=$(bundle exec i18n-tasks missing 2>&1 || true)
 
@@ -89,9 +90,220 @@ if $CHECK_ONLY; then
 fi
 
 # ---------------------------------------------------------------------------
-# Step 2: Copy missing keys from en/ into target locales with "replace_me"
+# Step 2: Add missing keys to en/ with defaults extracted from source code
 # ---------------------------------------------------------------------------
-step "Step 2/4 — Syncing missing keys to target locales (placeholder: replace_me)"
+step "Step 2/5 — Adding missing keys to en locale files"
+
+MISSING_TABLE="$MISSING_OUTPUT" LOCALES_ROOT="$LOCALES_ROOT" PROJECT_ROOT="$PROJECT_ROOT" \
+ruby -ryaml <<'ADD_MISSING_EN_RUBY'
+  require 'set'
+  locales_root  = ENV.fetch("LOCALES_ROOT")
+  project_root  = ENV.fetch("PROJECT_ROOT")
+  missing_table = ENV.fetch("MISSING_TABLE", "")
+
+  # --- Parse i18n-tasks missing table for "all" locale entries (missing from en) ---
+  entries = []
+  missing_table.each_line do |line|
+    next unless line =~ /^\s*\|\s+(all|en)\s+\|\s+([\w.]+)\s+\|\s+(.+?)\s+\|/
+    _locale, key, source_info = $1, $2, $3.strip
+    source_path, line_num = nil, nil
+    if source_info =~ /^([\w\/.\-_]+):(\d+)/
+      source_path = $1
+      line_num = $2.to_i
+    end
+    entries << { key: key, source_path: source_path, line_num: line_num }
+  end
+
+  if entries.empty?
+    puts "  No keys missing from en — nothing to add"
+    exit 0
+  end
+
+  # --- Helpers ---
+
+  # Extract default: value from a source file line
+  def extract_default(project_root, source_path, line_num)
+    return nil unless source_path && line_num
+    full_path = File.join(project_root, source_path)
+    return nil unless File.exist?(full_path)
+    lines = File.readlines(full_path)
+    start_idx = [line_num - 1, 0].max
+    end_idx   = [line_num + 2, lines.size - 1].min
+    chunk = lines[start_idx..end_idx].join
+    chunk =~ /default:\s*['"](.+?)['"]/ ? $1 : nil
+  end
+
+  def humanize_key(key)
+    key.to_s.tr('_', ' ').sub(/\A\w/, &:upcase)
+  end
+
+  # --- Psych AST helpers for safe insertion ---
+
+  # Find a child key-value pair in a Mapping node by key string
+  def find_child(mapping, key_str)
+    mapping.children.each_slice(2) do |k, v|
+      return [k, v] if k.respond_to?(:value) && k.value == key_str
+    end
+    nil
+  end
+
+  # Find sorted insertion index for a new key in a Mapping
+  def sorted_insert_idx(mapping, key_str)
+    pairs = mapping.children.each_slice(2).to_a
+    idx = pairs.index { |k, _| k.respond_to?(:value) && k.value.to_s > key_str }
+    idx || pairs.size
+  end
+
+  # Insert a scalar key-value pair into a Mapping at sorted position
+  def insert_scalar!(mapping, key_str, val_str)
+    return false if find_child(mapping, key_str)
+    key_node = Psych::Nodes::Scalar.new(key_str)
+    val_node = Psych::Nodes::Scalar.new(val_str)
+    pos = sorted_insert_idx(mapping, key_str)
+    pairs = mapping.children.each_slice(2).to_a
+    pairs.insert(pos, [key_node, val_node])
+    mapping.children.replace(pairs.flatten(1))
+    true
+  end
+
+  # Navigate/create a path of Mapping nodes, returning the deepest Mapping
+  def ensure_mapping_path!(mapping, parts)
+    current = mapping
+    parts.each do |part|
+      pair = find_child(current, part)
+      if pair
+        _, val = pair
+        return nil unless val.is_a?(Psych::Nodes::Mapping)
+        current = val
+      else
+        new_map = Psych::Nodes::Mapping.new
+        key_node = Psych::Nodes::Scalar.new(part)
+        pos = sorted_insert_idx(current, part)
+        pairs = current.children.each_slice(2).to_a
+        pairs.insert(pos, [key_node, new_map])
+        current.children.replace(pairs.flatten(1))
+        current = new_map
+      end
+    end
+    current
+  end
+
+  # Get the root Mapping from a parsed YAML stream (stream > document > mapping)
+  def root_mapping(ast)
+    doc = ast.children.first
+    return nil unless doc.is_a?(Psych::Nodes::Document)
+    root = doc.root
+    return nil unless root.is_a?(Psych::Nodes::Mapping)
+    root
+  end
+
+  # Count depth of matching key path in an AST Mapping
+  def matching_depth(mapping, key_parts)
+    depth = 0
+    current = mapping
+    key_parts.each do |part|
+      pair = find_child(current, part)
+      break unless pair
+      depth += 1
+      _, val = pair
+      break unless val.is_a?(Psych::Nodes::Mapping)
+      current = val
+    end
+    depth
+  end
+
+  # --- Load all en YAML files as Psych ASTs ---
+  en_asts = {}
+  Dir.glob(File.join(locales_root, "en", "*.en.yml")).sort.each do |path|
+    begin
+      ast = Psych.parse_stream(File.read(path))
+      rm = root_mapping(ast)
+      next unless rm
+      # The root mapping has one child: the locale key ("en") pointing to the content mapping
+      pair = find_child(rm, "en")
+      next unless pair
+      _, content_mapping = pair
+      next unless content_mapping.is_a?(Psych::Nodes::Mapping)
+      en_asts[path] = { ast: ast, content: content_mapping }
+    rescue Psych::SyntaxError
+      next
+    end
+  end
+
+  # --- Find which en file a key belongs to ---
+  # Strategy: prefer files whose basename matches the first key segment (e.g.
+  # "smartmenus.*" → smartmenus.en.yml), then fall back to deepest AST match.
+  def find_target_file(key_parts, en_asts)
+    prefix = key_parts.first
+
+    # 1. Exact filename match: "smartmenus" → "smartmenus.en.yml"
+    exact = en_asts.keys.find { |p| File.basename(p, ".en.yml") == prefix }
+    return exact if exact
+
+    # 2. Filename prefix match: "smartmenus" → "smartmenus_sections.en.yml" etc.
+    # Pick the one with the deepest matching key path among prefix-matching files.
+    prefix_matches = en_asts.select { |p, _| File.basename(p).start_with?(prefix) }
+    unless prefix_matches.empty?
+      best = prefix_matches.max_by { |_, info| matching_depth(info[:content], key_parts) }
+      return best.first
+    end
+
+    # 3. Global fallback: deepest AST match across all files
+    best_file, best_depth = nil, -1
+    en_asts.each do |path, info|
+      d = matching_depth(info[:content], key_parts)
+      if d > best_depth
+        best_depth = d
+        best_file = path
+      end
+    end
+    best_file
+  end
+
+  # --- Process each missing key ---
+  added = 0
+  modified_files = Set.new
+
+  entries.each do |entry|
+    key_parts = entry[:key].split('.')
+    target_path = find_target_file(key_parts, en_asts)
+    next unless target_path
+
+    content = en_asts[target_path][:content]
+
+    # Extract default from source, or humanize the last key segment
+    default_val = extract_default(project_root, entry[:source_path], entry[:line_num])
+    default_val ||= humanize_key(key_parts.last)
+
+    # Navigate to parent mapping (creating intermediate mappings as needed)
+    parent_parts = key_parts[0..-2]
+    leaf_key = key_parts.last
+
+    parent_mapping = parent_parts.empty? ? content : ensure_mapping_path!(content, parent_parts)
+    next unless parent_mapping
+
+    if insert_scalar!(parent_mapping, leaf_key, default_val)
+      added += 1
+      modified_files << target_path
+    end
+  end
+
+  # Write modified files back (AST preserves all existing formatting)
+  modified_files.each do |path|
+    File.write(path, en_asts[path][:ast].to_yaml)
+  end
+
+  if added > 0
+    puts "  Added #{added} missing key(s) to #{modified_files.size} en file(s)"
+  else
+    puts "  No keys to add"
+  end
+ADD_MISSING_EN_RUBY
+
+# ---------------------------------------------------------------------------
+# Step 3: Copy missing keys from en/ into target locales with "replace_me"
+# ---------------------------------------------------------------------------
+step "Step 3/5 — Syncing missing keys to target locales (placeholder: replace_me)"
 
 LOCALE_ARG="$LOCALE" LOCALES_ROOT="$LOCALES_ROOT" \
 ruby -ryaml -e '
@@ -241,9 +453,9 @@ ruby -ryaml -e '
 '
 
 # ---------------------------------------------------------------------------
-# Step 3: Normalize ALL locale files (deep-sort keys, fix formatting)
+# Step 4: Normalize ALL locale files (deep-sort keys, fix formatting)
 # ---------------------------------------------------------------------------
-step "Step 3/4 — Normalizing all resource bundles"
+step "Step 4/5 — Normalizing all resource bundles"
 
 # 3a. Run i18n-tasks normalize for the main locale files it manages (non-fatal)
 bundle exec i18n-tasks normalize 2>&1 || warn "i18n-tasks normalize encountered an error (non-fatal)"
@@ -375,7 +587,7 @@ fi
 # ---------------------------------------------------------------------------
 # Step 4: Translate all "replace_me" strings via DeepL
 # ---------------------------------------------------------------------------
-step "Step 4/4 — Translating replace_me strings via DeepL"
+step "Step 5/5 — Translating replace_me strings via DeepL"
 
 if [[ -n "$LOCALE" ]]; then
   DEEPL_ARGS+=("--locale" "$LOCALE")

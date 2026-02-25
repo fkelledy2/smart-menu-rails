@@ -20,6 +20,8 @@ fr:
       tipsTab: Conseils
       tracksTab: Pistes
     edit_2025:
+      home: Accueil
+      restaurants: Établissements
       subtitle: Gérer la configuration de votre restaurant
       toggle_navigation: Toggle navigation
     form:
@@ -123,6 +125,13 @@ fr:
       values:
         'false': ''
         'true': ''
+    mobile_tab_bar:
+      details: Détails
+      menus: Cartes
+      more: Plus d'informations
+      quick_navigation: Navigation rapide
+      staff: Personnel
+      tables: Tableaux
     new:
       restaurant: Établissement
       restaurants: Établissements

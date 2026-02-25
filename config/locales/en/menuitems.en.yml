@@ -7,6 +7,10 @@ en:
       updated: Menu item was successfully updated.
     edit:
       tab_item: Item
+    edit_2025:
+      active: Active
+      archived: Archived
+      inactive_status: Inactive
     errors:
       menusection_required: Please create menu items from within a menu section.
     form:
@@ -16,6 +20,8 @@ en:
       alcohol_notes_ph: Optional notes, e.g. contains rum
       alcohol_settings: Alcohol Settings
       alcoholic_help: Check if this item contains alcohol.
+      allergens: Allergens
+      available_sizes: Available Sizes
       classification_beer: Beer
       classification_cocktail: Cocktail
       classification_help: Choose a category. Use non_alcoholic for 0.0% variants.
@@ -36,6 +42,7 @@ en:
       no_image: No image yet
       save: Save
       settings: Settings
+      sizes_heading: Sizes
       sure: Are you sure?
       tasting_carrier: Use as Tasting Carrier
       tasting_carrier_help: Only one carrier per tasting section. Carrier items are

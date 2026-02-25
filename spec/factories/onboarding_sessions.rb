@@ -1,8 +1,8 @@
 FactoryBot.define do
   factory :onboarding_session do
     user { nil }
-    status { 1 }
-    wizard_data { 'MyText' }
+    status { 'started' }
+    wizard_data { {} }
     restaurant { nil }
     menu { nil }
   end

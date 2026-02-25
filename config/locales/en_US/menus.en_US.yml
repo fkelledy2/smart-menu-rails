@@ -5,6 +5,9 @@ en_US:
       ai_image_generation_queued: ''
       created: ''
       deleted: ''
+      generate_pairings_failed: replace_me
+      generate_pairings_queued: replace_me
+      generate_pairings_unauthorized: replace_me
       image_regeneration_queued: ''
       image_regeneration_queued_rake: ''
       updated: ''

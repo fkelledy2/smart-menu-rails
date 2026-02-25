@@ -38,6 +38,7 @@ hu:
           ezt a menüt
         description_placeholder: Írja le ezt a menüt...
         generate_images: Képek generálása
+        generate_pairings: Párosítások létrehozása
         inactive: Inaktív
         items: Tételek
         localize_menu: Fordítások
@@ -58,6 +59,7 @@ hu:
         unavailable: Nem elérhető
       items_2025:
         add_item: Menüelem hozzáadása
+        click_to_edit: Kattintson a szerkesztéshez
         edit: Szerkesztés
         go_to_sections: Tovább a szakaszokhoz
         has_image_title: Van kép - lebegtetés az előnézethez

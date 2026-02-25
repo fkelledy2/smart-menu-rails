@@ -7,6 +7,10 @@ es:
       updated: El elemento del menú se ha actualizado correctamente.
     edit:
       tab_item: Artículo
+    edit_2025:
+      active: Activo
+      archived: Archivado
+      inactive_status: Inactivo
     errors:
       menusection_required: Cree elementos de menú desde una sección de menú.
     form:
@@ -16,6 +20,8 @@ es:
       alcohol_notes_ph: Notas opcionales, por ejemplo, contiene ron
       alcohol_settings: Ajustes de alcohol
       alcoholic_help: Compruebe si este artículo contiene alcohol.
+      allergens: Alérgenos
+      available_sizes: Tamaños disponibles
       classification_beer: Cerveza
       classification_cocktail: Cóctel
       classification_help: Elija una categoría. Utilice sin_alcohol para las variantes
@@ -38,6 +44,7 @@ es:
       no_image: Aún no hay imagen
       save: Guardar
       settings: Configuración
+      sizes_heading: Tallas
       sure: "¿Estás seguro?"
       tasting_carrier: Uso como soporte de degustación
       tasting_carrier_help: Sólo un portador por sección de degustación. Los artículos

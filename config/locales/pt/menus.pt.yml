@@ -6,6 +6,9 @@ pt:
         de espera para os itens deste menu.
       created: O menu foi criado com sucesso.
       deleted: O menu foi eliminado com êxito.
+      generate_pairings_failed: Falha ao gerar emparelhamentos.
+      generate_pairings_queued: Geração completa de combinações de comida e bebida.
+      generate_pairings_unauthorized: Não tem permissão para gerar emparelhamentos.
       image_regeneration_queued: Regeneração de imagens em fila de espera para %{count}
         itens deste menu.
       image_regeneration_queued_rake: O trabalho de regeneração de imagens foi colocado

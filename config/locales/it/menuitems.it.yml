@@ -7,6 +7,10 @@ it:
       updated: Voce di menu aggiornata con successo.
     edit:
       tab_item: Articolo
+    edit_2025:
+      active: Attivo
+      archived: Archiviato
+      inactive_status: Inattivo
     errors:
       menusection_required: Creare voci di menu all'interno di una sezione di menu.
     form:
@@ -16,6 +20,8 @@ it:
       alcohol_notes_ph: Note opzionali, es. contiene rum
       alcohol_settings: Impostazioni Alcol
       alcoholic_help: Seleziona se questo articolo contiene alcol.
+      allergens: Allergeni
+      available_sizes: Taglie disponibili
       classification_beer: Birra
       classification_cocktail: Cocktail
       classification_help: Scegli una categoria. Usa non_alcoholic per varianti 0,0%.
@@ -36,6 +42,7 @@ it:
       no_image: Nessuna immagine ancora
       save: Salva
       settings: Impostazioni
+      sizes_heading: Dimensioni
       sure: Sei sicuro?
       tasting_carrier: Usa come supporto degustazione
       tasting_carrier_help: Solo un supporto per sezione degustazione. Gli articoli

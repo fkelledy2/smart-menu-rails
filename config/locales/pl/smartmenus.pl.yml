@@ -10,6 +10,7 @@ pl:
       sales_disabled: Sprzedaż alkoholu w tej restauracji jest wyłączona.
       verify_age: Przed podaniem napojów alkoholowych należy zweryfikować wiek klienta.
       zero_abv_short: 0.0%
+    clear_search: Wyczyść wyszukiwanie
     controller:
       created: Smartmenu zostało pomyślnie utworzone.
       deleted: Smartmenu zostało pomyślnie usunięte.
@@ -49,6 +50,7 @@ pl:
       cancel: Anuluj
     new:
       title: Nowe Smartmenu
+    no_results: Nie znaleziono żadnych elementów
     ocr:
       alcohol:
         abv: ABV
@@ -68,6 +70,8 @@ pl:
       order: Zamówienie
       startOrder: Zamówienie początkowe
       takePayment: Przyjmowanie płatności
+    search_placeholder: Menu wyszukiwania...
+    section_navigation: Sekcje menu
     showAllergyns:
       allergyns: Alergeny
     showCoverCharge:
@@ -75,6 +79,9 @@ pl:
       coverchargeUnit: Jednostka ładowania pokrywy
     showMenuBanner:
       allergyns: Alergeny
+      card_view: Widok karty
+      layout: Układ
+      list_view: Widok listy
     showMenuContentCustomer:
       search_placeholder: Pozycje menu wyszukiwania...
     showMenuitem:
@@ -87,14 +94,18 @@ pl:
       allergyns: Alergeny
       order: Zamówienie
       toggle_dropdown: Przełączanie listy rozwijanej
+    showMenuitemSizes:
+      allergyns: Alergeny
     showModals:
       add: Dodaj
       addToOrder: Dodaj do zamówienia
+      add_items_hint: Stuknij + na dowolnym elemencie, aby go dodać
       bill_prefix: 'Bill:'
       cancel: Anuluj
       confirmPayment: Potwierdź płatność
       cover_charge: Opłata za okładkę
       customiseOrderWithName: Dodaj swoje imię i nazwisko do zamówienia
+      empty_cart: Twój koszyk jest pusty
       excluding_tip: bez końcówki
       filterAllergyns: Filtruj alergeny
       filterBy: Filtr
@@ -118,6 +129,7 @@ pl:
       tax: Podatek
       tip_options: Opcje podpowiedzi
       total: Łącznie
+      view_full_order: Zobacz pełne zamówienie
       yourOrder: Twoje zamówienie
     showTableLocaleSelectorCustomer:
       table: Tabela

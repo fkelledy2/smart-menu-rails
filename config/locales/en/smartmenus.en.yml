@@ -10,6 +10,7 @@ en:
       sales_disabled: Alcohol sales are disabled for this restaurant.
       verify_age: Please verify the customer's age before serving alcoholic beverages.
       zero_abv_short: 0.0%
+    clear_search: Clear search
     controller:
       created: Smartmenu was successfully created.
       deleted: Smartmenu was successfully deleted.
@@ -50,6 +51,7 @@ en:
       cancel: Cancel
     new:
       title: New Smartmenu
+    no_results: No items found
     ocr:
       alcohol:
         abv: ABV
@@ -69,6 +71,8 @@ en:
       order: Order
       startOrder: Start Order
       takePayment: Take Payment
+    search_placeholder: Search menu…
+    section_navigation: Menu sections
     showAllergyns:
       allergyns: Allergens
     showCoverCharge:
@@ -76,6 +80,9 @@ en:
       coverchargeUnit: Cover Charge Unit
     showMenuBanner:
       allergyns: Allergens
+      card_view: Card view
+      layout: Layout
+      list_view: List view
     showMenuContentCustomer:
       search_placeholder: Search menu items...
     showMenuitem:
@@ -88,14 +95,18 @@ en:
       allergyns: Allergens
       order: Order
       toggle_dropdown: Toggle Dropdown
+    showMenuitemSizes:
+      allergyns: Allergens
     showModals:
       add: Add
       addToOrder: Add to Order
+      add_items_hint: Tap + on any item to add it
       bill_prefix: 'Bill:'
       cancel: Cancel
       confirmPayment: Confirm Payment
       cover_charge: Cover Charge
       customiseOrderWithName: Add your name to the order
+      empty_cart: Your cart is empty
       excluding_tip: excl. tip
       filterAllergyns: Filter Allergens
       filterBy: Filter
@@ -119,6 +130,7 @@ en:
       tax: Tax
       tip_options: Tip Options
       total: Total
+      view_full_order: View full order
       yourOrder: Your Order
     showTableLocaleSelectorCustomer:
       table: Table

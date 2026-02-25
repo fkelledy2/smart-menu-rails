@@ -10,6 +10,7 @@ es:
       sales_disabled: La venta de alcohol está prohibida en este restaurante.
       verify_age: Compruebe la edad del cliente antes de servirle bebidas alcohólicas.
       zero_abv_short: 0.0%
+    clear_search: Búsqueda clara
     controller:
       created: El Smartmenu se ha creado correctamente.
       deleted: Smartmenu se ha eliminado correctamente.
@@ -51,6 +52,7 @@ es:
       cancel: Cancelar
     new:
       title: Nuevo Smartmenu
+    no_results: No se han encontrado artículos
     ocr:
       alcohol:
         abv: ABV
@@ -70,6 +72,8 @@ es:
       order: Pedir
       startOrder: Iniciar pedido
       takePayment: Pagar
+    search_placeholder: Menú de búsqueda...
+    section_navigation: Secciones del menú
     showAllergyns:
       allergyns: Alérgenos
     showCoverCharge:
@@ -77,6 +81,9 @@ es:
       coverchargeUnit: por persona
     showMenuBanner:
       allergyns: Alérgenos
+      card_view: Vista de la tarjeta
+      layout: Diseño
+      list_view: Vista de lista
     showMenuContentCustomer:
       search_placeholder: Buscar elementos en el menú...
     showMenuitem:
@@ -89,14 +96,18 @@ es:
       allergyns: Alérgenos
       order: Pida
       toggle_dropdown: Desplegable
+    showMenuitemSizes:
+      allergyns: Alérgenos
     showModals:
       add: Añadir nombre
       addToOrder: Añadir al pedido
+      add_items_hint: Pulse + en cualquier elemento para añadirlo
       bill_prefix: 'Bill:'
       cancel: Cancelar
       confirmPayment: Confirmar pago
       cover_charge: Tasa de cobertura
       customiseOrderWithName: Personaliza tu pedido
+      empty_cart: Su cesta está vacía
       excluding_tip: sin propina
       filterAllergyns: Filtrar alérgenos
       filterBy: Filtrar por
@@ -120,6 +131,7 @@ es:
       tax: Impuesto
       tip_options: Opciones
       total: Total
+      view_full_order: Ver pedido completo
       yourOrder: Tu pedido
     showTableLocaleSelectorCustomer:
       table: Mesa

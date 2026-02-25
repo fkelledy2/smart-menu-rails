@@ -6,6 +6,9 @@ es:
         para los elementos de este menú.
       created: El menú se ha creado correctamente.
       deleted: El menú se ha eliminado correctamente.
+      generate_pairings_failed: Error al generar emparejamientos.
+      generate_pairings_queued: Generación de maridaje completa.
+      generate_pairings_unauthorized: No tiene permiso para generar emparejamientos.
       image_regeneration_queued: Regeneración de imágenes en cola para %{count} elementos
         de este menú.
       image_regeneration_queued_rake: El trabajo de regeneración de imagen se ha puesto

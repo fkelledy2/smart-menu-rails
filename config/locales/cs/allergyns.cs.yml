@@ -22,7 +22,7 @@ cs:
       name_placeholder: např. arašídy, mléčné výrobky, lepek.
       symbol: Symbol
       symbol_help: 'Volitelně: Emoji nebo krátký symbol, který představuje tento alergen.'
-      symbol_placeholder: "např. 🥜, 🥛, 🌾."
+      symbol_placeholder: "např. \U0001F95C, \U0001F95B, \U0001F33E."
     index:
       all_allergyns: Všechny alergeny
       allergyns: Alergeny

@@ -6,6 +6,9 @@ en:
         items.
       created: Menu was successfully created.
       deleted: Menu was successfully deleted.
+      generate_pairings_failed: Failed to generate pairings.
+      generate_pairings_queued: Food & drink pairing generation complete.
+      generate_pairings_unauthorized: You do not have permission to generate pairings.
       image_regeneration_queued: Queued image regeneration for %{count} items on this
         menu.
       image_regeneration_queued_rake: Image regeneration job has been queued for this

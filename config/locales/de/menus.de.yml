@@ -6,6 +6,10 @@ de:
         dieses Menüs in die Warteschlange gestellt.
       created: Das Menü wurde erfolgreich erstellt.
       deleted: Das Menü wurde erfolgreich gelöscht.
+      generate_pairings_failed: Es konnten keine Paarungen erzeugt werden.
+      generate_pairings_queued: Food & Drink Pairing Generation komplett.
+      generate_pairings_unauthorized: Sie haben nicht die Erlaubnis, Paarungen zu
+        erstellen.
       image_regeneration_queued: Bildregeneration in der Warteschlange für %{count}
         Einträge in diesem Menü.
       image_regeneration_queued_rake: Für dieses Menü wurde ein Bildregenerierungsauftrag

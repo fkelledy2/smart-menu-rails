@@ -6,6 +6,10 @@ fr:
         pour les éléments de ce menu.
       created: Le menu a été créé avec succès.
       deleted: Le menu a été supprimé avec succès.
+      generate_pairings_failed: Échec de la génération d'appariements.
+      generate_pairings_queued: La génération des accords mets et boissons est terminée.
+      generate_pairings_unauthorized: Vous n'avez pas l'autorisation de générer des
+        appariements.
       image_regeneration_queued: Régénération de l'image en file d'attente pour %{count}
         éléments de ce menu.
       image_regeneration_queued_rake: Un travail de régénération d'image a été mis

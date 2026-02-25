@@ -11,6 +11,7 @@ hu:
       verify_age: Kérjük, ellenőrizze a vendég életkorát, mielőtt alkoholtartalmú
         italokat szolgál fel.
       zero_abv_short: 0.0%
+    clear_search: Tiszta keresés
     controller:
       created: Az intelligens menü sikeresen létrejött.
       deleted: A Smartmenu sikeresen törlődött.
@@ -51,6 +52,7 @@ hu:
       cancel: Törölje
     new:
       title: Új intelligens menü
+    no_results: Nem találtunk tárgyakat
     ocr:
       alcohol:
         abv: ABV
@@ -70,6 +72,8 @@ hu:
       order: Megrendelés
       startOrder: Start sorrend
       takePayment: Fizetés átvétele
+    search_placeholder: Keresés menü...
+    section_navigation: Menüszekciók
     showAllergyns:
       allergyns: Allergének
     showCoverCharge:
@@ -77,6 +81,9 @@ hu:
       coverchargeUnit: Fedezeti díj egység
     showMenuBanner:
       allergyns: Allergének
+      card_view: Kártya nézet
+      layout: Elrendezés
+      list_view: Lista nézet
     showMenuContentCustomer:
       search_placeholder: Keresés menüpontok...
     showMenuitem:
@@ -89,14 +96,18 @@ hu:
       allergyns: Allergének
       order: Megrendelés
       toggle_dropdown: Dropdown kapcsoló
+    showMenuitemSizes:
+      allergyns: Allergének
     showModals:
       add: Név hozzáadása
       addToOrder: Hozzáadás a rendeléshez
+      add_items_hint: Koppintson a + gombra bármely elemen a hozzáadáshoz
       bill_prefix: 'Bill:'
       cancel: Mégse
       confirmPayment: Fizetés megerősítése
       cover_charge: Fedezeti díj
       customiseOrderWithName: Adja hozzá a nevét a megrendeléshez
+      empty_cart: A kosár üres
       excluding_tip: borravaló nélkül
       filterAllergyns: Allergének szűrése
       filterBy: Szűrő
@@ -120,6 +131,7 @@ hu:
       tax: Adó
       tip_options: Tipp Opciók
       total: Összesen
+      view_full_order: Teljes rendelés megtekintése
       yourOrder: Az Ön rendelése
     showTableLocaleSelectorCustomer:
       table: Asztal

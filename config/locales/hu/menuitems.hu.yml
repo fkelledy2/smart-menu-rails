@@ -7,6 +7,10 @@ hu:
       updated: A menüpont sikeresen frissült.
     edit:
       tab_item: Tétel
+    edit_2025:
+      active: Aktív
+      archived: Archivált
+      inactive_status: Inaktív
     errors:
       menusection_required: Kérjük, hozzon létre menüpontokat egy menüszekción belül.
     form:
@@ -16,6 +20,8 @@ hu:
       alcohol_notes_ph: Választható megjegyzések, pl. rumot tartalmaz
       alcohol_settings: Alkohol beállítások
       alcoholic_help: Ellenőrizze, hogy ez a termék tartalmaz-e alkoholt.
+      allergens: Allergének
+      available_sizes: Elérhető méretek
       classification_beer: Sör
       classification_cocktail: Koktél
       classification_help: Válasszon kategóriát. A 0,0%-os változatokhoz használja
@@ -37,6 +43,7 @@ hu:
       no_image: Még nincs kép
       save: Mentés
       settings: Beállítások
+      sizes_heading: Méretek
       sure: Biztos vagy benne?
       tasting_carrier: Kóstoló hordozóként való felhasználás
       tasting_carrier_help: Kóstolási szakaszonként csak egy fuvarozó. A hordozóelemek

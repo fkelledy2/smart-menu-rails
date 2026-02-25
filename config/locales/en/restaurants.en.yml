@@ -20,6 +20,8 @@ en:
       tipsTab: Tips
       tracksTab: Tracks
     edit_2025:
+      home: Home
+      restaurants: Restaurants
       subtitle: Manage your restaurant configuration
       toggle_navigation: Toggle navigation
     form:
@@ -123,6 +125,13 @@ en:
       values:
         'false': false
         'true': true
+    mobile_tab_bar:
+      details: Details
+      menus: Menus
+      more: More
+      quick_navigation: Quick navigation
+      staff: Staff
+      tables: Tables
     new:
       restaurant: Restaurant
       restaurants: Restaurants

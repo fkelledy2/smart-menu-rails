@@ -7,6 +7,10 @@ cs:
       updated: Položka nabídky byla úspěšně aktualizována.
     edit:
       tab_item: Položka
+    edit_2025:
+      active: Aktivní
+      archived: Archivováno
+      inactive_status: Neaktivní
     errors:
       menusection_required: Vytvářejte položky menu v rámci sekce menu.
     form:
@@ -16,6 +20,8 @@ cs:
       alcohol_notes_ph: Nepovinné poznámky, např. obsahuje rum
       alcohol_settings: Nastavení alkoholu
       alcoholic_help: Zkontrolujte, zda tato položka neobsahuje alkohol.
+      allergens: Alergeny
+      available_sizes: Dostupné velikosti
       classification_beer: Pivo
       classification_cocktail: Koktejl
       classification_help: Vyberte kategorii. Pro varianty 0,0 % použijte non_alcoholic.
@@ -36,6 +42,7 @@ cs:
       no_image: Zatím bez obrázku
       save: Uložit
       settings: Nastavení
+      sizes_heading: Velikosti
       sure: Jste si jistí?
       tasting_carrier: Použití jako degustační nosič
       tasting_carrier_help: V každé degustační části je pouze jeden nosič. Nosiče

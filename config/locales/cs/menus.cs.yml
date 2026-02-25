@@ -6,6 +6,9 @@ cs:
         položky této nabídky zařazeno do fronty.
       created: Nabídka byla úspěšně vytvořena.
       deleted: Nabídka byla úspěšně odstraněna.
+      generate_pairings_failed: Nepodařilo se vygenerovat párování.
+      generate_pairings_queued: Generace párování jídla a pití je kompletní.
+      generate_pairings_unauthorized: Nemáte oprávnění vytvářet dvojice.
       image_regeneration_queued: Regenerace obrázku ve frontě pro položky %{count}
         v této nabídce.
       image_regeneration_queued_rake: Úloha regenerace obrazu byla pro tuto nabídku

@@ -7,6 +7,10 @@ pl:
       updated: Pozycja menu została pomyślnie zaktualizowana.
     edit:
       tab_item: Pozycja
+    edit_2025:
+      active: Aktywny
+      archived: Zarchiwizowane
+      inactive_status: Nieaktywny
     errors:
       menusection_required: Pozycje menu należy tworzyć z poziomu sekcji menu.
     form:
@@ -16,6 +20,8 @@ pl:
       alcohol_notes_ph: Uwagi opcjonalne, np. zawiera rum
       alcohol_settings: Ustawienia alkoholu
       alcoholic_help: Sprawdź, czy produkt zawiera alkohol.
+      allergens: Alergeny
+      available_sizes: Dostępne rozmiary
       classification_beer: Piwo
       classification_cocktail: Koktajl
       classification_help: Wybierz kategorię. Użyj non_alcoholic dla wariantów 0,0%.
@@ -36,6 +42,7 @@ pl:
       no_image: Brak obrazu
       save: Zapisz
       settings: Ustawienia
+      sizes_heading: Rozmiary
       sure: Jesteś pewien?
       tasting_carrier: Użyj jako nośnika do degustacji
       tasting_carrier_help: Tylko jeden nośnik na sekcję degustacji. Elementy nośnika

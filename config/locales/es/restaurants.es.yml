@@ -20,6 +20,8 @@ es:
       tipsTab: Consejos
       tracksTab: Pistas
     edit_2025:
+      home: Inicio
+      restaurants: Restaurantes
       subtitle: Gestione la configuración de su restaurante
       toggle_navigation: Alternar navegación
     form:
@@ -123,6 +125,13 @@ es:
       values:
         'false': ''
         'true': ''
+    mobile_tab_bar:
+      details: Detalles
+      menus: Menús
+      more: Más
+      quick_navigation: Navegación rápida
+      staff: Personal
+      tables: Tablas
     new:
       restaurant: Restaurante
       restaurants: Restaurantes

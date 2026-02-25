@@ -37,6 +37,7 @@ es:
           este menú
         description_placeholder: Describe este menú...
         generate_images: Generar imágenes
+        generate_pairings: Generar emparejamientos
         inactive: Inactivo
         items: Artículos
         localize_menu: Traducciones
@@ -56,6 +57,7 @@ es:
         unavailable: No disponible
       items_2025:
         add_item: Añadir elemento de menú
+        click_to_edit: Haz clic para editar
         edit: Editar
         go_to_sections: Ir a las secciones
         has_image_title: Tiene imagen - pase el ratón para previsualizar

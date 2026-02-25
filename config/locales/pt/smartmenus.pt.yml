@@ -11,6 +11,7 @@ pt:
       verify_age: Por favor, verifique a idade do cliente antes de servir bebidas
         alcoólicas.
       zero_abv_short: 0.0%
+    clear_search: Pesquisa clara
     controller:
       created: O Smartmenu foi criado com sucesso.
       deleted: O Smartmenu foi eliminado com êxito.
@@ -52,6 +53,7 @@ pt:
       cancel: Cancelar
     new:
       title: Novo Smartmenu
+    no_results: Nenhum item encontrado
     ocr:
       alcohol:
         abv: TEOR ALCOÓLICO
@@ -71,6 +73,8 @@ pt:
       order: Pedir
       startOrder: Iniciar pedido
       takePayment: Pagar
+    search_placeholder: Menu de pesquisa...
+    section_navigation: Secções do menu
     showAllergyns:
       allergyns: Alergénios
     showCoverCharge:
@@ -78,6 +82,9 @@ pt:
       coverchargeUnit: por pessoa
     showMenuBanner:
       allergyns: Alergénios
+      card_view: Vista do cartão
+      layout: Disposição
+      list_view: Vista de lista
     showMenuContentCustomer:
       search_placeholder: Procurar itens de menu...
     showMenuitem:
@@ -90,14 +97,18 @@ pt:
       allergyns: Alergénios
       order: Encomendar
       toggle_dropdown: Alternar menu pendente
+    showMenuitemSizes:
+      allergyns: Alergénios
     showModals:
       add: Adicionar nome
       addToOrder: Adicionar ao pedido
+      add_items_hint: Toque em + em qualquer item para o adicionar
       bill_prefix: 'Projeto de lei:'
       cancel: Cancelar
       confirmPayment: Confirmar pagamento
       cover_charge: Taxa de cobertura
       customiseOrderWithName: Personalize o seu pedido
+      empty_cart: O seu carrinho está vazio
       excluding_tip: excl. ponta
       filterAllergyns: Filtrar alergénios
       filterBy: Filtrar por
@@ -121,6 +132,7 @@ pt:
       tax: Imposto
       tip_options: Opções de dicas
       total: Total
+      view_full_order: Ver encomenda completa
       yourOrder: O seu pedido
     showTableLocaleSelectorCustomer:
       table: Mesa

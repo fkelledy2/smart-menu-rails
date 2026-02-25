@@ -20,6 +20,8 @@ cs:
       tipsTab: Spropitné
       tracksTab: Playlist
     edit_2025:
+      home: Home
+      restaurants: Restaurace
       subtitle: Správa konfigurace restaurace
       toggle_navigation: Přepínání navigace
     form:
@@ -123,6 +125,13 @@ cs:
       values:
         'false': ''
         'true': ''
+    mobile_tab_bar:
+      details: Podrobnosti na
+      menus: Jídelní lístky
+      more: Více na
+      quick_navigation: Rychlá navigace
+      staff: Zaměstnanci
+      tables: Tabulky
     new:
       restaurant: Nová restaurace
       restaurants: Restaurace

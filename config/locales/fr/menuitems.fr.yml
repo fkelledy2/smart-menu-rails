@@ -7,6 +7,10 @@ fr:
       updated: L'élément de menu a été mis à jour avec succès.
     edit:
       tab_item: Objet
+    edit_2025:
+      active: Actif
+      archived: Archivé
+      inactive_status: Inactif
     errors:
       menusection_required: Veuillez créer des éléments de menu à partir d'une section
         de menu.
@@ -18,6 +22,8 @@ fr:
       alcohol_notes_ph: Notes facultatives, par exemple contient du rhum
       alcohol_settings: Réglages de l'alcool
       alcoholic_help: Vérifier si cet article contient de l'alcool.
+      allergens: Allergènes
+      available_sizes: Tailles disponibles
       classification_beer: Bière
       classification_cocktail: Cocktail
       classification_help: Choisissez une catégorie. Utilisez non_alcoholic pour les
@@ -39,6 +45,7 @@ fr:
       no_image: Pas encore d'image
       save: Enregistrer
       settings: Paramètres
+      sizes_heading: Tailles
       sure: Êtes-vous sûr ?
       tasting_carrier: Utilisation comme support de dégustation
       tasting_carrier_help: Un seul transporteur par section de dégustation. Les objets
