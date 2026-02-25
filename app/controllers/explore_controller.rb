@@ -11,10 +11,10 @@ class ExploreController < ApplicationController
 
   def index
     @countries = ExplorePage.published.select(:country_slug, :country_name)
-                            .distinct.order(:country_name)
-    @page_title = "Explore Restaurant Menus | mellow.menu"
-    @page_description = "Discover restaurant menus by city. Prices, allergens, and descriptions."
-    @canonical_url = "https://www.mellow.menu/explore"
+      .distinct.order(:country_name)
+    @page_title = 'Explore Restaurant Menus | mellow.menu'
+    @page_description = 'Discover restaurant menus by city. Prices, allergens, and descriptions.'
+    @canonical_url = 'https://www.mellow.menu/explore'
     @og_title = @page_title
     @og_description = @page_description
     @og_url = @canonical_url
@@ -23,9 +23,9 @@ class ExploreController < ApplicationController
   def country
     @country = params[:country]
     @cities = ExplorePage.published
-                         .where(country_slug: @country)
-                         .city_level
-                         .order(:city_name)
+      .where(country_slug: @country)
+      .city_level
+      .order(:city_name)
     render_404 and return if @cities.empty?
 
     country_name = @cities.first.country_name
@@ -45,9 +45,9 @@ class ExploreController < ApplicationController
     )
     @restaurants = @page.restaurants.limit(100)
     @categories = ExplorePage.published
-                             .where(country_slug: params[:country], city_slug: params[:city])
-                             .where.not(category_slug: nil)
-                             .order(:category_name)
+      .where(country_slug: params[:country], city_slug: params[:city])
+      .where.not(category_slug: nil)
+      .order(:category_name)
     set_explore_meta_tags
     set_explore_schema_org
   rescue ActiveRecord::RecordNotFound
@@ -71,9 +71,9 @@ class ExploreController < ApplicationController
 
   def set_explore_meta_tags
     @page_title = @page.meta_title.presence ||
-      "#{@page.category_name || 'All'} Restaurants in #{@page.city_name}, #{@page.country_name} | mellow.menu"
+                  "#{@page.category_name || 'All'} Restaurants in #{@page.city_name}, #{@page.country_name} | mellow.menu"
     @page_description = @page.meta_description.presence ||
-      "Discover #{@page.category_name&.downcase || ''} restaurants in #{@page.city_name}. View menus, prices, and allergen info."
+                        "Discover #{@page.category_name&.downcase || ''} restaurants in #{@page.city_name}. View menus, prices, and allergen info."
     @canonical_url = "https://www.mellow.menu#{@page.path}"
     @og_title = @page_title
     @og_description = @page_description
@@ -83,23 +83,23 @@ class ExploreController < ApplicationController
   def set_explore_schema_org
     items = @restaurants.first(50).map.with_index do |r, i|
       {
-        "@type" => "ListItem",
-        "position" => i + 1,
-        "item" => {
-          "@type" => "Restaurant",
-          "name" => r.name,
-          "address" => { "@type" => "PostalAddress", "addressLocality" => r.city }.compact,
-          "servesCuisine" => r.establishment_types,
+        '@type' => 'ListItem',
+        'position' => i + 1,
+        'item' => {
+          '@type' => 'Restaurant',
+          'name' => r.name,
+          'address' => { '@type' => 'PostalAddress', 'addressLocality' => r.city }.compact,
+          'servesCuisine' => r.establishment_types,
         }.compact,
       }
     end
 
     @schema_org_json_ld = JSON.generate({
-      "@context" => "https://schema.org",
-      "@type" => "ItemList",
-      "name" => @page_title,
-      "numberOfItems" => @restaurants.size,
-      "itemListElement" => items,
+      '@context' => 'https://schema.org',
+      '@type' => 'ItemList',
+      'name' => @page_title,
+      'numberOfItems' => @restaurants.size,
+      'itemListElement' => items,
     })
   end
 

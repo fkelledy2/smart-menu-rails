@@ -4,7 +4,7 @@ module Admin
   class WhiskeyFlightsController < ApplicationController
     before_action :authenticate_user!
     before_action :set_restaurant
-    before_action :set_flight, only: [:edit, :update, :destroy, :publish, :archive, :regenerate]
+    before_action :set_flight, only: %i[edit update destroy publish archive regenerate]
 
     after_action :verify_authorized
 
@@ -18,6 +18,12 @@ module Admin
       @flight = WhiskeyFlight.new(menu: @restaurant.menus.first, source: :manual)
       @menus = @restaurant.menus.where(status: Menu.statuses[:active])
       @whiskey_items = whiskey_items_for_menu(@menus.first)
+    end
+
+    def edit
+      authorize @restaurant, :show?
+      @menus = @restaurant.menus.where(status: Menu.statuses[:active])
+      @whiskey_items = whiskey_items_for_menu(@flight.menu)
     end
 
     def create
@@ -44,14 +50,8 @@ module Admin
       else
         @menus = @restaurant.menus.where(status: Menu.statuses[:active])
         @whiskey_items = whiskey_items_for_menu(menu)
-        render :new, status: :unprocessable_entity
+        render :new, status: :unprocessable_content
       end
-    end
-
-    def edit
-      authorize @restaurant, :show?
-      @menus = @restaurant.menus.where(status: Menu.statuses[:active])
-      @whiskey_items = whiskey_items_for_menu(@flight.menu)
     end
 
     def update
@@ -73,7 +73,7 @@ module Admin
       else
         @menus = @restaurant.menus.where(status: Menu.statuses[:active])
         @whiskey_items = whiskey_items_for_menu(@flight.menu)
-        render :edit, status: :unprocessable_entity
+        render :edit, status: :unprocessable_content
       end
     end
 
@@ -126,10 +126,10 @@ module Admin
       return [] unless menu
 
       menu.menuitems
-          .joins(:menusection)
-          .where('menusections.archived IS NOT TRUE')
-          .where(itemtype: :whiskey, status: 'active')
-          .order(:name)
+        .joins(:menusection)
+        .where('menusections.archived IS NOT TRUE')
+        .where(itemtype: :whiskey, status: 'active')
+        .order(:name)
     end
   end
 end

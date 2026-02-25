@@ -80,5 +80,4 @@ class PwaFunctionalityTest < ActionDispatch::IntegrationTest
     # to allow updates to be picked up
     assert_response :success
   end
-
 end

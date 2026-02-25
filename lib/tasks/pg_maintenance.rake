@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 namespace :pg do
-  desc "Run VACUUM ANALYZE on high-churn tables (ordrs, ordritems, ordrparticipants, etc.)"
+  desc 'Run VACUUM ANALYZE on high-churn tables (ordrs, ordritems, ordrparticipants, etc.)'
   task vacuum_analyze: :environment do
     tables = %w[
       ordrs
@@ -17,15 +17,15 @@ namespace :pg do
     tables.each do |table|
       puts "VACUUM ANALYZE #{table}..."
       conn.execute("VACUUM ANALYZE #{conn.quote_table_name(table)}")
-      puts "  done."
+      puts '  done.'
     end
 
     puts "\nAll tables vacuumed and analyzed."
   end
 
-  desc "Report table bloat and dead tuple counts for hot tables"
+  desc 'Report table bloat and dead tuple counts for hot tables'
   task bloat_report: :environment do
-    sql = <<~SQL
+    sql = <<~SQL.squish
       SELECT
         schemaname,
         relname AS table_name,
@@ -50,24 +50,23 @@ namespace :pg do
 
     rows = ActiveRecord::Base.connection.execute(sql)
 
-    puts format("%-25s %10s %10s %8s %20s %20s",
-                "Table", "Live", "Dead", "Dead%", "Last Vacuum", "Last Autovacuum")
-    puts "-" * 100
+    puts 'Table                           Live       Dead    Dead%          Last Vacuum      Last Autovacuum'
+    puts '-' * 100
 
     rows.each do |row|
-      puts format("%-25s %10s %10s %7s%% %20s %20s",
-                   row['table_name'],
-                   row['live_tuples'],
-                   row['dead_tuples'],
-                   row['dead_pct'],
-                   row['last_vacuum']&.to_s&.slice(0, 19) || 'never',
-                   row['last_autovacuum']&.to_s&.slice(0, 19) || 'never')
+      puts format('%-25s %10s %10s %7s%% %20s %20s',
+                  row['table_name'],
+                  row['live_tuples'],
+                  row['dead_tuples'],
+                  row['dead_pct'],
+                  row['last_vacuum']&.to_s&.slice(0, 19) || 'never',
+                  row['last_autovacuum']&.to_s&.slice(0, 19) || 'never',)
     end
   end
 
-  desc "Report index bloat for tables with high write volume"
+  desc 'Report index bloat for tables with high write volume'
   task index_bloat: :environment do
-    sql = <<~SQL
+    sql = <<~SQL.squish
       SELECT
         t.tablename AS table_name,
         i.indexrelname AS index_name,
@@ -87,20 +86,19 @@ namespace :pg do
 
     rows = ActiveRecord::Base.connection.execute(sql)
 
-    puts format("%-25s %-50s %10s %10s",
-                "Table", "Index", "Size", "Scans")
-    puts "-" * 100
+    puts 'Table                     Index                                                    Size      Scans'
+    puts '-' * 100
 
     rows.each do |row|
-      puts format("%-25s %-50s %10s %10s",
-                   row['table_name'],
-                   row['index_name'],
-                   row['index_size'],
-                   row['scans'])
+      puts format('%-25s %-50s %10s %10s',
+                  row['table_name'],
+                  row['index_name'],
+                  row['index_size'],
+                  row['scans'],)
     end
   end
 
-  desc "Tune autovacuum for high-churn tables (run once)"
+  desc 'Tune autovacuum for high-churn tables (run once)'
   task tune_autovacuum: :environment do
     tables = %w[ordrs ordritems ordrparticipants ordractions menuparticipants]
     conn = ActiveRecord::Base.connection

@@ -442,7 +442,11 @@ class PdfMenuProcessor
         start_idx = normalized.index('{')
         end_idx = normalized.rindex('}')
         if start_idx && end_idx && end_idx > start_idx
-          JSON.parse(normalized[start_idx..end_idx]) rescue nil
+          begin
+            JSON.parse(normalized[start_idx..end_idx])
+          rescue StandardError
+            nil
+          end
         end
       end
 
@@ -546,14 +550,13 @@ class PdfMenuProcessor
       Timeout.timeout(wall_clock_limit, Net::ReadTimeout, "OpenAI call exceeded #{wall_clock_limit}s wall-clock limit") do
         # Try with response_format first; fall back without it if the model rejects it
         # Only rescue format-related errors — let timeout/network errors bubble up to the outer retry loop
-        begin
-          parameters[:response_format] = { type: 'json_object' }
-          response = client.chat(parameters: parameters)
-        rescue Faraday::BadRequestError, ArgumentError => e
-          Rails.logger.info "PdfMenuProcessor: response_format not supported (#{e.class}); retrying without it"
-          parameters.delete(:response_format)
-          response = client.chat(parameters: parameters)
-        end
+
+        parameters[:response_format] = { type: 'json_object' }
+        client.chat(parameters: parameters)
+      rescue Faraday::BadRequestError, ArgumentError => e
+        Rails.logger.info "PdfMenuProcessor: response_format not supported (#{e.class}); retrying without it"
+        parameters.delete(:response_format)
+        client.chat(parameters: parameters)
       end
     rescue Net::ReadTimeout, Net::OpenTimeout, Errno::ETIMEDOUT, SocketError, Faraday::TimeoutError => e
       if attempts < 3
@@ -611,7 +614,7 @@ class PdfMenuProcessor
           item_metadata = {}
           # Store wine size prices in metadata if present
           if item_data[:size_prices].is_a?(Hash)
-            sp = item_data[:size_prices].select { |_k, v| v.present? && v.to_f > 0 }
+            sp = item_data[:size_prices].select { |_k, v| v.present? && v.to_f.positive? }
             item_metadata['size_prices'] = sp.transform_values(&:to_f) if sp.any?
           end
 

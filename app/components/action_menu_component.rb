@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ActionMenuComponent < ViewComponent::Base
-  renders_many :items, "ActionItem"
+  renders_many :items, 'ActionItem'
 
   attr_reader :id, :align, :size
 
@@ -18,7 +18,7 @@ class ActionMenuComponent < ViewComponent::Base
   class ActionItem < ViewComponent::Base
     attr_reader :label, :url, :icon, :method, :variant, :confirm, :turbo_frame, :disabled
 
-    def initialize(label:, url: "#", icon: nil, method: :get, variant: :default, confirm: nil, turbo_frame: nil, disabled: false)
+    def initialize(label:, url: '#', icon: nil, method: :get, variant: :default, confirm: nil, turbo_frame: nil, disabled: false)
       @label       = label
       @url         = url
       @icon        = icon
@@ -39,9 +39,9 @@ class ActionMenuComponent < ViewComponent::Base
     end
 
     def css_class
-      base = "dropdown-item"
-      base += " text-danger" if variant == :danger
-      base += " disabled" if disabled
+      base = 'dropdown-item'
+      base += ' text-danger' if variant == :danger
+      base += ' disabled' if disabled
       base
     end
 

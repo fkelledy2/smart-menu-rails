@@ -279,14 +279,13 @@ class WebMenuProcessor
       Timeout.timeout(wall_clock_limit, Net::ReadTimeout, "OpenAI call exceeded #{wall_clock_limit}s wall-clock limit") do
         # Try with response_format first; fall back without it if the model rejects it
         # Only rescue format-related errors — let timeout/network errors bubble up to the outer retry loop
-        begin
-          parameters[:response_format] = { type: 'json_object' }
-          response = client.chat(parameters: parameters)
-        rescue Faraday::BadRequestError, ArgumentError => e
-          Rails.logger.info "WebMenuProcessor: response_format not supported (#{e.class}); retrying without it"
-          parameters.delete(:response_format)
-          response = client.chat(parameters: parameters)
-        end
+
+        parameters[:response_format] = { type: 'json_object' }
+        client.chat(parameters: parameters)
+      rescue Faraday::BadRequestError, ArgumentError => e
+        Rails.logger.info "WebMenuProcessor: response_format not supported (#{e.class}); retrying without it"
+        parameters.delete(:response_format)
+        client.chat(parameters: parameters)
       end
     rescue Net::ReadTimeout, Net::OpenTimeout, Errno::ETIMEDOUT, SocketError, Faraday::TimeoutError => e
       if attempts < 3
@@ -347,7 +346,7 @@ class WebMenuProcessor
           item_metadata = {}
           # Store wine size prices in metadata if present
           if item_data[:size_prices].is_a?(Hash)
-            sp = item_data[:size_prices].select { |_k, v| v.present? && v.to_f > 0 }
+            sp = item_data[:size_prices].select { |_k, v| v.present? && v.to_f.positive? }
             item_metadata['size_prices'] = sp.transform_values(&:to_f) if sp.any?
           end
 
@@ -380,16 +379,16 @@ class WebMenuProcessor
     sections.each do |section|
       items = section.ocr_menu_items.ordered
       unpriced = items.select { |i| i.price.blank? || i.price.to_f.zero? }
-      priced = items.select { |i| i.price.present? && i.price.to_f > 0 }
+      priced = items.select { |i| i.price.present? && i.price.to_f.positive? }
 
       priced.each { |i| priced_reference << { section: section.name, name: i.name, price: i.price.to_f } }
 
-      if unpriced.any?
-        unpriced_sections << {
-          section: section,
-          items: unpriced,
-        }
-      end
+      next unless unpriced.any?
+
+      unpriced_sections << {
+        section: section,
+        items: unpriced,
+      }
     end
 
     return if unpriced_sections.empty?
@@ -415,7 +414,7 @@ class WebMenuProcessor
 
     prompt = <<~PROMPT
       You are a pricing expert for #{venue_context[:label]} venues.
-      A menu has been scraped from a #{venue_context[:label]} in #{city}#{country.present? ? ", #{country}" : ''}.
+      A menu has been scraped from a #{venue_context[:label]} in #{city}#{", #{country}" if country.present?}.
       Some items have prices and some do not. Your job is to estimate realistic per-serve
       prices (in #{currency}) for the unpriced items based on:
       - The priced items on the same menu as reference
@@ -462,7 +461,11 @@ class WebMenuProcessor
         JSON.parse(normalized)
       rescue JSON::ParserError
         json_str = normalized[normalized.index('{')..normalized.rindex('}')]
-        JSON.parse(json_str) rescue {}
+        begin
+          JSON.parse(json_str)
+        rescue StandardError
+          {}
+        end
       end
 
       return if estimates.empty?
@@ -474,7 +477,7 @@ class WebMenuProcessor
 
         item = OcrMenuItem.find_by(id: item_id_str.to_i)
         next unless item
-        next if item.price.present? && item.price.to_f > 0
+        next if item.price.present? && item.price.to_f.positive?
 
         item.update!(
           price: price,

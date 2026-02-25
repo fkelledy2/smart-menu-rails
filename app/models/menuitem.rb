@@ -130,7 +130,7 @@ class Menuitem < ApplicationRecord
   end
 
   def has_size_options?
-    menuitem_size_mappings.joins(:size).where(sizes: { status: 'active' }).exists?
+    menuitem_size_mappings.joins(:size).exists?(sizes: { status: 'active' })
   end
 
   # Wine-specific convenience wrappers (kept for backward compatibility)

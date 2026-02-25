@@ -7,7 +7,7 @@ class BeverageIntelligence::WhiskeyParserTest < ActiveSupport::TestCase
     @parser = BeverageIntelligence::WhiskeyParser.new
     @menu = menus(:one)
     @section = @menu.menusections.first || Menusection.create!(
-      menu: @menu, name: 'Whiskey', sequence: 1, status: :active
+      menu: @menu, name: 'Whiskey', sequence: 1, status: :active,
     )
   end
 
@@ -178,8 +178,8 @@ class BeverageIntelligence::WhiskeyParserTest < ActiveSupport::TestCase
     _, conf_rich = @parser.parse(rich)
 
     assert conf_rich > conf_minimal, "Rich item (#{conf_rich}) should score higher than minimal (#{conf_minimal})"
-    assert conf_rich >= 0.9, "Fully parsed item should have high confidence"
-    assert conf_minimal <= 0.3, "Minimal item should have low confidence"
+    assert conf_rich >= 0.9, 'Fully parsed item should have high confidence'
+    assert conf_minimal <= 0.3, 'Minimal item should have low confidence'
   end
 
   # ── Region from text (no distillery match) ──────────────────────

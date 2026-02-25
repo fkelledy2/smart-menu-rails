@@ -114,7 +114,7 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   # Detect a dead browser session and spin up a fresh one before the test runs.
   def ensure_browser_session!
     page.driver.browser.window_handles
-  rescue Selenium::WebDriver::Error::InvalidSessionIdError, Errno::ECONNREFUSED, StandardError => e
+  rescue StandardError => e
     raise unless e.is_a?(Selenium::WebDriver::Error::InvalidSessionIdError) ||
                  e.is_a?(Errno::ECONNREFUSED) ||
                  e.message.include?('invalid session id')

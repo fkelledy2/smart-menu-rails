@@ -428,7 +428,7 @@ class ImportToMenu
 
     # Set the default price to bottle price if available
     bottle_price = size_prices['bottle']&.to_f
-    if bottle_price && bottle_price > 0 && menuitem.price.to_f.zero?
+    if bottle_price&.positive? && menuitem.price.to_f.zero?
       menuitem.update!(price: bottle_price)
     end
   rescue StandardError => e

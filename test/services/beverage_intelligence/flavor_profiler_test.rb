@@ -92,8 +92,8 @@ class BeverageIntelligence::FlavorProfilerTest < ActiveSupport::TestCase
     assert_includes profile.tags, 'tannic'
     assert_includes profile.tags, 'earthy'
     metrics = profile.structure_metrics
-    assert metrics['body'].to_f >= 0.7, "Expected high body for full-bodied wine"
-    assert metrics['tannin'].to_f >= 0.6, "Expected high tannin"
-    assert metrics['finish_length'].to_f >= 0.7, "Expected long finish"
+    assert metrics['body'].to_f >= 0.7, 'Expected high body for full-bodied wine'
+    assert metrics['tannin'].to_f >= 0.6, 'Expected high tannin'
+    assert metrics['finish_length'].to_f >= 0.7, 'Expected long finish'
   end
 end

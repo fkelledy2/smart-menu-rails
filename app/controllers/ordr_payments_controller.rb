@@ -12,10 +12,6 @@ class OrdrPaymentsController < ApplicationController
 
   after_action :verify_authorized
 
-  private def csrf_skipped_action?
-    %w[request_bill split_evenly checkout_session].include?(action_name)
-  end
-
   def request_bill
     authorize @ordr, :update?
 
@@ -228,6 +224,10 @@ class OrdrPaymentsController < ApplicationController
   end
 
   private
+
+  def csrf_skipped_action?
+    %w[request_bill split_evenly checkout_session].include?(action_name)
+  end
 
   def set_restaurant
     @restaurant = Restaurant.find(params[:restaurant_id]) if params[:restaurant_id]

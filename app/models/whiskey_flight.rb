@@ -35,7 +35,7 @@ class WhiskeyFlight < ApplicationRecord
   def recalculate_total_price!
     return unless items.is_a?(Array) && items.any?
 
-    menuitem_ids = items.map { |i| i['menuitem_id'] || i[:menuitem_id] }.compact
+    menuitem_ids = items.filter_map { |i| i['menuitem_id'] || i[:menuitem_id] }
     prices = Menuitem.where(id: menuitem_ids).pluck(:price).compact.map(&:to_f)
     update!(total_price: prices.sum.round(2))
   end

@@ -172,7 +172,6 @@ class TipsControllerTest < ActionDispatch::IntegrationTest
     assert_response_in [200, 201, 302]
   end
 
-
   test 'should return proper JSON error responses' do
     post restaurant_tips_url(@restaurant), params: {
       tip: {

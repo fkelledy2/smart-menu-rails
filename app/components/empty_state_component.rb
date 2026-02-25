@@ -2,16 +2,16 @@
 
 class EmptyStateComponent < ViewComponent::Base
   ICON_MAP = {
-    menu:     "bi-journal-text",
-    cart:     "bi-cart3",
-    search:   "bi-search",
-    table:    "bi-geo-alt",
-    staff:    "bi-people",
-    order:    "bi-receipt",
-    item:     "bi-plus-circle",
-    section:  "bi-collection",
-    allergen: "bi-shield-check",
-    default:  "bi-inbox"
+    menu: 'bi-journal-text',
+    cart: 'bi-cart3',
+    search: 'bi-search',
+    table: 'bi-geo-alt',
+    staff: 'bi-people',
+    order: 'bi-receipt',
+    item: 'bi-plus-circle',
+    section: 'bi-collection',
+    allergen: 'bi-shield-check',
+    default: 'bi-inbox',
   }.freeze
 
   attr_reader :title, :description, :icon, :action_text, :action_url, :action_method, :compact
@@ -36,7 +36,7 @@ class EmptyStateComponent < ViewComponent::Base
   private
 
   def resolve_icon(icon)
-    return icon.to_s if icon.to_s.start_with?("bi-")
+    return icon.to_s if icon.to_s.start_with?('bi-')
 
     ICON_MAP.fetch(icon.to_sym, ICON_MAP[:default])
   end

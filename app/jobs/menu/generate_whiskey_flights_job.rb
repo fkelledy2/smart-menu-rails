@@ -4,14 +4,14 @@ class Menu::GenerateWhiskeyFlightsJob < ApplicationJob
   queue_as :default
 
   FLIGHT_THEMES = {
-    'regional_journey'  => { title_template: '%{region} Journey',     description: 'Explore a region from light to bold' },
-    'peat_spectrum'     => { title_template: 'Peat Spectrum',         description: 'From gentle smoke to full peat storm' },
-    'sherry_showcase'   => { title_template: 'Sherry Cask Showcase',  description: 'The influence of sherry wood on whiskey' },
-    'age_progression'   => { title_template: 'Age Progression',       description: 'See how age transforms the spirit' },
-    'world_tour'        => { title_template: 'World Tour',            description: 'A journey across whiskey-producing nations' },
-    'staff_picks'       => { title_template: 'Staff Picks Flight',    description: 'Our team\'s favourite drams' },
+    'regional_journey' => { title_template: '%{region} Journey', description: 'Explore a region from light to bold' },
+    'peat_spectrum' => { title_template: 'Peat Spectrum', description: 'From gentle smoke to full peat storm' },
+    'sherry_showcase' => { title_template: 'Sherry Cask Showcase',  description: 'The influence of sherry wood on whiskey' },
+    'age_progression' => { title_template: 'Age Progression',       description: 'See how age transforms the spirit' },
+    'world_tour' => { title_template: 'World Tour', description: 'A journey across whiskey-producing nations' },
+    'staff_picks' => { title_template: 'Staff Picks Flight', description: 'Our team\'s favourite drams' },
     'newcomer_friendly' => { title_template: 'Newcomer\'s Discovery', description: 'An approachable introduction to whiskey' },
-    'cask_explorer'     => { title_template: 'Cask Explorer',         description: 'How different casks shape flavour' },
+    'cask_explorer' => { title_template: 'Cask Explorer', description: 'How different casks shape flavour' },
   }.freeze
 
   def perform(menu_id)
@@ -20,10 +20,10 @@ class Menu::GenerateWhiskeyFlightsJob < ApplicationJob
     max_flights = restaurant.max_whiskey_flights || 5
 
     items = menu.menuitems
-                .joins(:menusection)
-                .where('menusections.archived IS NOT TRUE')
-                .where(itemtype: :whiskey, status: 'active')
-                .to_a
+      .joins(:menusection)
+      .where('menusections.archived IS NOT TRUE')
+      .where(itemtype: :whiskey, status: 'active')
+      .to_a
 
     return if items.size < 6
 
@@ -100,12 +100,12 @@ class Menu::GenerateWhiskeyFlightsJob < ApplicationJob
 
   def peat_spectrum_flight(items)
     peated = items.select { |i| %w[heavily_peated smoky_coastal].include?(parsed(i)['staff_flavor_cluster']) }
-    non_peated = items.select { |i| !%w[heavily_peated smoky_coastal].include?(parsed(i)['staff_flavor_cluster']) && parsed(i)['staff_flavor_cluster'].present? }
+    non_peated = items.select { |i| %w[heavily_peated smoky_coastal].exclude?(parsed(i)['staff_flavor_cluster']) && parsed(i)['staff_flavor_cluster'].present? }
 
     return nil if peated.empty? || non_peated.empty?
 
     light = non_peated.min_by { |i| i.price.to_f } || non_peated.first
-    medium = (items.select { |i| parsed(i)['staff_flavor_cluster'] == 'smoky_coastal' }.first) || peated.first
+    medium = items.find { |i| parsed(i)['staff_flavor_cluster'] == 'smoky_coastal' } || peated.first
     heavy = peated.max_by { |i| parsed(i)['bottling_strength_abv'].to_f } || peated.last
 
     picked = [light, medium, heavy].uniq.first(3)
@@ -132,7 +132,7 @@ class Menu::GenerateWhiskeyFlightsJob < ApplicationJob
   end
 
   def age_progression_flight(items)
-    aged = items.select { |i| parsed(i)['age_years'].to_i > 0 }.sort_by { |i| parsed(i)['age_years'].to_i }
+    aged = items.select { |i| parsed(i)['age_years'].to_i.positive? }.sort_by { |i| parsed(i)['age_years'].to_i }
     return nil if aged.size < 3
 
     young = aged.first
@@ -152,7 +152,7 @@ class Menu::GenerateWhiskeyFlightsJob < ApplicationJob
     region_groups = items.group_by { |i| parsed(i)['whiskey_region'] }.reject { |k, _| k.blank? }
     return nil if region_groups.keys.size < 3
 
-    picked = region_groups.values.map(&:first).shuffle.first(3)
+    picked = region_groups.values.map(&:first).sample(3)
     picked.map do |item|
       region_label = BeverageIntelligence::WhiskeyParser::WHISKEY_REGIONS[parsed(item)['whiskey_region']] || 'Unknown'
       { menuitem: item, note: "From #{region_label}" }
@@ -163,14 +163,14 @@ class Menu::GenerateWhiskeyFlightsJob < ApplicationJob
     picks = items.select { |i| parsed(i)['staff_pick'] == true }
     return nil if picks.size < 3
 
-    picked = picks.shuffle.first(3)
-    picked.map { |item| { menuitem: item, note: "Handpicked by our team" } }
+    picked = picks.sample(3)
+    picked.map { |item| { menuitem: item, note: 'Handpicked by our team' } }
   end
 
   def newcomer_flight(items)
     friendly = items
       .select { |i| parsed(i)['bottling_strength_abv'].to_f.between?(38, 44) || parsed(i)['bottling_strength_abv'].to_f.zero? }
-      .select { |i| !%w[heavily_peated].include?(parsed(i)['staff_flavor_cluster']) }
+      .reject { |i| %w[heavily_peated].include?(parsed(i)['staff_flavor_cluster']) }
       .sort_by { |i| i.price.to_f }
 
     return nil if friendly.size < 3
@@ -186,7 +186,7 @@ class Menu::GenerateWhiskeyFlightsJob < ApplicationJob
     cask_groups = items.group_by { |i| parsed(i)['cask_type'] }.reject { |k, _| k.blank? }
     return nil if cask_groups.keys.size < 3
 
-    picked = cask_groups.values.map(&:first).shuffle.first(3)
+    picked = cask_groups.values.map(&:first).sample(3)
     picked.map do |item|
       cask = parsed(item)['cask_type'].to_s.tr('_', ' ').titleize
       { menuitem: item, note: "Matured in #{cask}" }

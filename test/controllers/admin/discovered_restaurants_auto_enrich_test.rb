@@ -67,7 +67,7 @@ class Admin::DiscoveredRestaurantsAutoEnrichTest < ActionDispatch::IntegrationTe
   end
 
   test 'show does not trigger place details for manual google_place_id' do
-    @dr.update!(google_place_id: "manual_abc123", website_url: nil)
+    @dr.update!(google_place_id: 'manual_abc123', website_url: nil)
 
     assert_no_enqueued_jobs do
       get admin_discovered_restaurant_path(@dr)

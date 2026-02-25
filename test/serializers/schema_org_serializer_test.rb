@@ -26,7 +26,7 @@ class SchemaOrgSerializerTest < ActiveSupport::TestCase
       latitude: 53.3598,
       longitude: -6.2451,
       currency: 'EUR',
-      establishment_types: ['Italian', 'Pizza'],
+      establishment_types: %w[Italian Pizza],
     )
 
     @menu = Menu.new(id: 10, name: 'Lunch Menu')
@@ -127,7 +127,7 @@ class SchemaOrgSerializerTest < ActiveSupport::TestCase
   test 'only includes active menu items' do
     data = parsed_json
     items = data.dig('menu', 'hasMenuSection', 0, 'hasMenuItem')
-    names = items.map { |i| i['name'] }
+    names = items.pluck('name')
     assert_includes names, 'Bruschetta'
     assert_includes names, 'Soup of the Day'
     assert_not_includes names, 'Archived Item'
@@ -159,7 +159,7 @@ class SchemaOrgSerializerTest < ActiveSupport::TestCase
 
   test 'includes servesCuisine from establishment_types' do
     data = parsed_json
-    assert_equal ['Italian', 'Pizza'], data['servesCuisine']
+    assert_equal %w[Italian Pizza], data['servesCuisine']
   end
 
   test 'omits servesCuisine when establishment_types is empty' do

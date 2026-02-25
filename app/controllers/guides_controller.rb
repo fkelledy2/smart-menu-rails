@@ -8,9 +8,9 @@ class GuidesController < ApplicationController
 
   def index
     @guides = LocalGuide.published.order(published_at: :desc)
-    @page_title = "Local Restaurant Guides | mellow.menu"
-    @page_description = "AI-powered local guides to the best restaurants. Grounded in real menu data."
-    @canonical_url = "https://www.mellow.menu/guides"
+    @page_title = 'Local Restaurant Guides | mellow.menu'
+    @page_description = 'AI-powered local guides to the best restaurants. Grounded in real menu data.'
+    @canonical_url = 'https://www.mellow.menu/guides'
     @og_title = @page_title
     @og_description = @page_description
     @og_url = @canonical_url
@@ -37,22 +37,22 @@ class GuidesController < ApplicationController
 
   def set_guide_schema_org
     schema = {
-      "@context" => "https://schema.org",
-      "@type" => "Article",
-      "headline" => @guide.title,
-      "datePublished" => @guide.published_at&.iso8601,
-      "dateModified" => @guide.updated_at&.iso8601,
-      "publisher" => { "@type" => "Organization", "name" => "mellow.menu" },
+      '@context' => 'https://schema.org',
+      '@type' => 'Article',
+      'headline' => @guide.title,
+      'datePublished' => @guide.published_at&.iso8601,
+      'dateModified' => @guide.updated_at&.iso8601,
+      'publisher' => { '@type' => 'Organization', 'name' => 'mellow.menu' },
     }
 
     if @guide.faq_data.present? && @guide.faq_data.any?
-      schema["mainEntity"] = {
-        "@type" => "FAQPage",
-        "mainEntity" => @guide.faq_data.map do |faq|
+      schema['mainEntity'] = {
+        '@type' => 'FAQPage',
+        'mainEntity' => @guide.faq_data.map do |faq|
           {
-            "@type" => "Question",
-            "name" => faq["question"],
-            "acceptedAnswer" => { "@type" => "Answer", "text" => faq["answer"] },
+            '@type' => 'Question',
+            'name' => faq['question'],
+            'acceptedAnswer' => { '@type' => 'Answer', 'text' => faq['answer'] },
           }
         end,
       }

@@ -27,81 +27,83 @@ class SchemaOrgSerializer
 
   def restaurant_with_menu
     {
-      "@context" => "https://schema.org",
-      "@type" => "Restaurant",
-      "name" => @restaurant.name,
-      "description" => @restaurant.description,
-      "url" => smartmenu_url,
-      "address" => address_hash,
-      "geo" => geo_hash,
-      "menu" => menu_hash,
-      "servesCuisine" => serves_cuisine,
+      '@context' => 'https://schema.org',
+      '@type' => 'Restaurant',
+      'name' => @restaurant.name,
+      'description' => @restaurant.description,
+      'url' => smartmenu_url,
+      'address' => address_hash,
+      'geo' => geo_hash,
+      'menu' => menu_hash,
+      'servesCuisine' => serves_cuisine,
     }.compact
   end
 
   def address_hash
     return nil if @restaurant.address1.blank?
+
     {
-      "@type" => "PostalAddress",
-      "streetAddress" => [@restaurant.address1, @restaurant.address2].compact_blank.join(", "),
-      "addressLocality" => @restaurant.city,
-      "addressRegion" => @restaurant.state,
-      "postalCode" => @restaurant.postcode,
-      "addressCountry" => @restaurant.country,
+      '@type' => 'PostalAddress',
+      'streetAddress' => [@restaurant.address1, @restaurant.address2].compact_blank.join(', '),
+      'addressLocality' => @restaurant.city,
+      'addressRegion' => @restaurant.state,
+      'postalCode' => @restaurant.postcode,
+      'addressCountry' => @restaurant.country,
     }.compact
   end
 
   def geo_hash
     return nil if @restaurant.latitude.blank? || @restaurant.longitude.blank?
+
     {
-      "@type" => "GeoCoordinates",
-      "latitude" => @restaurant.latitude,
-      "longitude" => @restaurant.longitude,
+      '@type' => 'GeoCoordinates',
+      'latitude' => @restaurant.latitude,
+      'longitude' => @restaurant.longitude,
     }
   end
 
   def menu_hash
     {
-      "@type" => "Menu",
-      "name" => @menu.name,
-      "hasMenuSection" => @menusections.map { |s| menu_section_hash(s) },
+      '@type' => 'Menu',
+      'name' => @menu.name,
+      'hasMenuSection' => @menusections.map { |s| menu_section_hash(s) },
     }
   end
 
   def menu_section_hash(section)
     items = section.menuitems.select(&:active?)
     {
-      "@type" => "MenuSection",
-      "name" => section.name,
-      "description" => section.description,
-      "hasMenuItem" => items.map { |item| menu_item_hash(item) },
+      '@type' => 'MenuSection',
+      'name' => section.name,
+      'description' => section.description,
+      'hasMenuItem' => items.map { |item| menu_item_hash(item) },
     }.compact
   end
 
   def menu_item_hash(item)
     hash = {
-      "@type" => "MenuItem",
-      "name" => item.name,
-      "description" => item.description,
+      '@type' => 'MenuItem',
+      'name' => item.name,
+      'description' => item.description,
     }
 
-    if item.price.present? && item.price > 0
-      hash["offers"] = {
-        "@type" => "Offer",
-        "price" => item.price.to_f,
-        "priceCurrency" => @restaurant.currency || "EUR",
+    if item.price.present? && item.price.positive?
+      hash['offers'] = {
+        '@type' => 'Offer',
+        'price' => item.price.to_f,
+        'priceCurrency' => @restaurant.currency || 'EUR',
       }
     end
 
-    if item.calories.present? && item.calories > 0
-      hash["nutrition"] = {
-        "@type" => "NutritionInformation",
-        "calories" => "#{item.calories} cal",
+    if item.calories.present? && item.calories.positive?
+      hash['nutrition'] = {
+        '@type' => 'NutritionInformation',
+        'calories' => "#{item.calories} cal",
       }
     end
 
     if item.allergyns.any?
-      hash["suitableForDiet"] = item.allergyns.map(&:name)
+      hash['suitableForDiet'] = item.allergyns.map(&:name)
     end
 
     hash.compact
@@ -110,6 +112,7 @@ class SchemaOrgSerializer
   def serves_cuisine
     types = @restaurant.try(:establishment_types)
     return nil if types.blank?
+
     types
   end
 

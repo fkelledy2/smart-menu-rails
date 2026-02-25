@@ -23,11 +23,11 @@ class WineSizeSeeder
 
   # Map from GPT size key to canonical wine size name
   SIZE_KEY_TO_NAME = {
-    'bottle'      => 'Bottle (750ml)',
+    'bottle' => 'Bottle (750ml)',
     'half_bottle' => 'Half Bottle (375ml)',
-    'carafe'      => 'Carafe (500ml)',
+    'carafe' => 'Carafe (500ml)',
     'large_glass' => 'Large Glass (250ml)',
-    'glass'       => 'Glass (175ml)',
+    'glass' => 'Glass (175ml)',
   }.freeze
 
   def self.size_name_for_key(key)

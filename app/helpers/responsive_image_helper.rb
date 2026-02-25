@@ -216,7 +216,7 @@ module ResponsiveImageHelper
   # @param model [ActiveRecord::Base, nil] The model that owns the image (e.g., Menuitem)
   def get_shrine_derivatives(image, model: nil)
     # Preferred path: use the model's attacher which has direct access to derivatives
-    if model && model.respond_to?(:image_attacher)
+    if model.respond_to?(:image_attacher)
       attacher_derivs = model.image_attacher.derivatives
       return attacher_derivs if attacher_derivs.present?
     end

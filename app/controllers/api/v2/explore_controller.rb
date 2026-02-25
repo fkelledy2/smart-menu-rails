@@ -10,15 +10,13 @@ module Api
         render json: {
           data: result[:data].map { |p| explore_summary(p) },
           meta: result[:meta],
-          attribution: "Data by mellow.menu",
+          attribution: 'Data by mellow.menu',
           generated_at: Time.current.iso8601,
         }
       end
 
       def show
-        page = ExplorePage.published.find_by!(
-          id: params[:path],
-        )
+        page = ExplorePage.published.find(params[:path])
 
         restaurants = page.restaurants.limit(50)
 
@@ -31,7 +29,7 @@ module Api
             restaurant_count: page.restaurant_count,
             restaurants: restaurants.map { |r| restaurant_summary(r) },
           },
-          attribution: "Data by mellow.menu",
+          attribution: 'Data by mellow.menu',
           generated_at: Time.current.iso8601,
         }
       end

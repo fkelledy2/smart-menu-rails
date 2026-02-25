@@ -54,10 +54,10 @@ module BeverageIntelligence
       budget          = preferences[:budget]      # 1, 2, 3
 
       wine_items = menu.menuitems
-                       .joins(:menusection)
-                       .where('menusections.archived IS NOT TRUE')
-                       .where(itemtype: :wine, status: 'active')
-                       .includes(:flavor_profile, menu_item_product_links: { product: :product_enrichments })
+        .joins(:menusection)
+        .where('menusections.archived IS NOT TRUE')
+        .where(itemtype: :wine, status: 'active')
+        .includes(:flavor_profile, menu_item_product_links: { product: :product_enrichments })
 
       scored = wine_items.filter_map do |item|
         profile = item.flavor_profile
@@ -100,7 +100,7 @@ module BeverageIntelligence
           { menuitem: item, score: 0.5, tags: [], best_pairing: nil, enrichment: nil,
             wine_color: parsed['wine_color'], grape_variety: Array(parsed['grape_variety']).first,
             appellation: parsed['appellation'], vintage_year: parsed['vintage_year'],
-            classification: parsed['classification'] }
+            classification: parsed['classification'], }
         end
       end
 
@@ -114,11 +114,11 @@ module BeverageIntelligence
       budget = preferences[:budget] # 1, 2, 3
 
       drink_items = menu.menuitems
-                        .joins(:menusection)
-                        .where('menusections.archived IS NOT TRUE')
-                        .drink_items
-                        .where(status: 'active')
-                        .includes(:flavor_profile, menu_item_product_links: { product: :product_enrichments })
+        .joins(:menusection)
+        .where('menusections.archived IS NOT TRUE')
+        .drink_items
+        .where(status: 'active')
+        .includes(:flavor_profile, menu_item_product_links: { product: :product_enrichments })
 
       scored = drink_items.filter_map do |item|
         profile = item.flavor_profile
@@ -166,6 +166,7 @@ module BeverageIntelligence
       # Jaccard similarity on tags
       union = (tags_a | tags_b).size
       return 0.0 if union.zero?
+
       tag_sim = (tags_a & tags_b).size.to_f / union
 
       # Structural similarity
@@ -179,7 +180,7 @@ module BeverageIntelligence
                      0.5
                    end
 
-      (tag_sim * 0.6 + struct_sim * 0.4).round(4)
+      ((tag_sim * 0.6) + (struct_sim * 0.4)).round(4)
     end
 
     def price_tier_compatible?(product_a, product_b, menu)
@@ -193,9 +194,9 @@ module BeverageIntelligence
 
     def avg_price_for_product(product, menu)
       items = product.menuitems
-                     .joins(menusection: :menu)
-                     .where(menus: { id: menu.id })
-                     .where.not(price: nil)
+        .joins(menusection: :menu)
+        .where(menus: { id: menu.id })
+        .where.not(price: nil)
       prices = items.pluck(:price).map(&:to_f).select(&:positive?)
       prices.any? ? (prices.sum / prices.size) : nil
     end
@@ -209,11 +210,9 @@ module BeverageIntelligence
       sorted_candidates.each do |c|
         ctype = c[:candidate].product_type
         # Always take if we have fewer than 3 and haven't seen this type twice
-        if selected.size < 3
-          if types_seen.count(ctype).to_i < 2 || selected.size < 2
-            selected << c
-            types_seen << ctype
-          end
+        if (selected.size < 3) && (types_seen.count(ctype).to_i < 2 || selected.size < 2)
+          selected << c
+          types_seen << ctype
         end
         break if selected.size >= 3
       end
@@ -222,6 +221,7 @@ module BeverageIntelligence
       if selected.size < 3
         sorted_candidates.each do |c|
           break if selected.size >= 3
+
           selected << c unless selected.include?(c)
         end
       end
@@ -257,7 +257,7 @@ module BeverageIntelligence
 
       # Budget preference
       price = menuitem.price.to_f
-      if price > 0
+      if price.positive?
         case budget
         when 1 then score += 0.2 if price <= 10
         when 2 then score += 0.2 if price > 8 && price <= 18
@@ -297,7 +297,7 @@ module BeverageIntelligence
         score += 0.25 if body < 0.4
         score -= 0.1 if body > 0.6
       when 'medium'
-        score += 0.25 if body >= 0.35 && body <= 0.65
+        score += 0.25 if body.between?(0.35, 0.65)
       when 'full'
         score += 0.25 if body > 0.55
         score -= 0.1 if body < 0.35
@@ -316,7 +316,7 @@ module BeverageIntelligence
 
       # Budget preference
       price = menuitem.price.to_f
-      if price > 0
+      if price.positive?
         case budget
         when 1 then score += 0.15 if price <= 12
         when 2 then score += 0.15 if price > 10 && price <= 25
@@ -338,8 +338,8 @@ module BeverageIntelligence
 
       # Smoky preference — simple keyword match
       smoky_keywords = %w[smoky smoked peated peat islay campfire charred]
-      if smoky
-        score += 0.3 if smoky_keywords.any? { |kw| text.include?(kw) }
+      if smoky && smoky_keywords.any? { |kw| text.include?(kw) }
+        score += 0.3
       end
 
       # Taste preference — keyword match
@@ -354,7 +354,7 @@ module BeverageIntelligence
 
       # Budget preference
       price = menuitem.price.to_f
-      if price > 0
+      if price.positive?
         all_prices = menuitem.menusection&.menuitems&.where(status: 'active')&.pluck(:price)&.map(&:to_f)&.select(&:positive?) || [price]
         median = all_prices.sort[all_prices.size / 2] || price
         case budget
@@ -385,13 +385,13 @@ module BeverageIntelligence
           score += 0.3 if wine_color_pref == item_color
         else
           color_keywords = {
-            'red' => %w[red rouge rosso tinto merlot cabernet syrah shiraz pinot\ noir malbec],
-            'white' => %w[white blanc bianco chardonnay sauvignon riesling pinot\ grigio grüner],
+            'red' => ['red', 'rouge', 'rosso', 'tinto', 'merlot', 'cabernet', 'syrah', 'shiraz', 'pinot noir', 'malbec'],
+            'white' => ['white', 'blanc', 'bianco', 'chardonnay', 'sauvignon', 'riesling', 'pinot grigio', 'grüner'],
             'rosé' => %w[rosé rose blush pink],
             'sparkling' => %w[sparkling prosecco champagne cava brut spumante crémant sekt],
           }
-          if (kws = color_keywords[wine_color_pref])
-            score += 0.25 if kws.any? { |kw| text.include?(kw) }
+          if (kws = color_keywords[wine_color_pref]) && kws.any? { |kw| text.include?(kw) }
+            score += 0.25
           end
         end
       else
@@ -401,7 +401,7 @@ module BeverageIntelligence
       # Taste preference
       case taste
       when 'sweet'
-        score += 0.2 if %w[sweet dessert moscato late\ harvest ice\ wine].any? { |kw| text.include?(kw) }
+        score += 0.2 if ['sweet', 'dessert', 'moscato', 'late harvest', 'ice wine'].any? { |kw| text.include?(kw) }
       when 'dry'
         score += 0.2 if %w[dry brut sec crisp mineral].any? { |kw| text.include?(kw) }
       when 'fruity'
@@ -410,7 +410,7 @@ module BeverageIntelligence
 
       # Budget preference
       price = menuitem.price.to_f
-      if price > 0
+      if price.positive?
         all_prices = menuitem.menusection&.menuitems&.where(itemtype: :wine, status: 'active')&.pluck(:price)&.map(&:to_f)&.select(&:positive?) || [price]
         median = all_prices.sort[all_prices.size / 2] || price
         case budget

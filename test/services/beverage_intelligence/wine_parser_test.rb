@@ -7,7 +7,7 @@ class BeverageIntelligence::WineParserTest < ActiveSupport::TestCase
     @parser = BeverageIntelligence::WineParser.new
     @menu = menus(:one)
     @menusection = @menu.menusections.first || Menusection.create!(
-      menu: @menu, name: 'Red Wines', sequence: 1, status: :active
+      menu: @menu, name: 'Red Wines', sequence: 1, status: :active,
     )
   end
 
@@ -43,7 +43,7 @@ class BeverageIntelligence::WineParserTest < ActiveSupport::TestCase
 
   test 'detects wine color from section name' do
     white_section = Menusection.create!(
-      menu: @menu, name: 'White Wines', sequence: 2, status: :active
+      menu: @menu, name: 'White Wines', sequence: 2, status: :active,
     )
     item = Menuitem.create!(
       name: 'Cloudy Bay Sauvignon Blanc',
@@ -117,7 +117,7 @@ class BeverageIntelligence::WineParserTest < ActiveSupport::TestCase
     )
     fields, _conf = @parser.parse(item)
 
-    assert fields['producer'].present?, "Expected producer to be extracted"
+    assert fields['producer'].present?, 'Expected producer to be extracted'
   end
 
   test 'confidence increases with more parsed fields' do
@@ -136,6 +136,6 @@ class BeverageIntelligence::WineParserTest < ActiveSupport::TestCase
     _, conf_minimal = @parser.parse(minimal)
     _, conf_rich = @parser.parse(rich)
 
-    assert conf_rich > conf_minimal, "Rich wine should have higher confidence"
+    assert conf_rich > conf_minimal, 'Rich wine should have higher confidence'
   end
 end

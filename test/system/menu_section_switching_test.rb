@@ -308,7 +308,7 @@ class MenuSectionSwitchingTest < ApplicationSystemTestCase
     find("[data-testid='edit-item-#{@item1.id}-btn']").click
 
     assert_current_path edit_restaurant_menu_menusection_menuitem_path(
-      @restaurant, @menu, @section1, @item1
+      @restaurant, @menu, @section1, @item1,
     ), ignore_query: true
   end
 
@@ -318,7 +318,10 @@ class MenuSectionSwitchingTest < ApplicationSystemTestCase
 
   test 'sections tab shows empty state when no sections exist' do
     # Remove all sections
-    @menu.menusections.each { |s| s.menuitems.delete_all; s.delete }
+    @menu.menusections.each do |s|
+      s.menuitems.delete_all
+      s.delete
+    end
 
     visit edit_restaurant_menu_path(@restaurant, @menu, section: 'sections')
 

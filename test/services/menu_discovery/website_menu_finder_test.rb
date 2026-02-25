@@ -102,7 +102,7 @@ class MenuDiscovery::WebsiteMenuFinderTest < ActiveSupport::TestCase
     )
 
     result = finder.find_menus
-    urls = result[:html_menu_pages].map { |p| p[:url] }
+    urls = result[:html_menu_pages].pluck(:url)
     assert_includes urls, 'https://example.com/food'
     assert_includes urls, 'https://example.com/drink-list'
   end
@@ -133,17 +133,17 @@ class MenuDiscovery::WebsiteMenuFinderTest < ActiveSupport::TestCase
         body: make_page(title: 'Home', links: [
           { href: 'https://example.com/lunch-brunch/', text: 'Lunch & Brunch' },
           { href: 'https://example.com/bistrot/', text: 'Bistrot' },
-        ]),
+        ],),
       },
       'https://example.com/lunch-brunch' => {
         body: make_page(title: 'Lunch', links: [
           { href: 'https://example.com/menu_food_lunch/', text: 'See our menu' },
-        ]),
+        ],),
       },
       'https://example.com/bistrot' => {
         body: make_page(title: 'Bistrot', links: [
           { href: 'https://example.com/bistrot/carta/', text: 'La Carta' },
-        ]),
+        ],),
       },
       'https://example.com/menu_food_lunch' => {
         body: make_page(title: 'Lunch Menu', prices: 8),
@@ -160,7 +160,7 @@ class MenuDiscovery::WebsiteMenuFinderTest < ActiveSupport::TestCase
     )
 
     result = finder.find_menus
-    urls = result[:html_menu_pages].map { |p| p[:url] }
+    urls = result[:html_menu_pages].pluck(:url)
     assert_includes urls, 'https://example.com/menu_food_lunch'
     assert_includes urls, 'https://example.com/bistrot/carta'
   end
@@ -172,7 +172,7 @@ class MenuDiscovery::WebsiteMenuFinderTest < ActiveSupport::TestCase
           { href: 'https://example.com/about/', text: 'About Us' },
           { href: 'https://example.com/caffetteria/', text: 'Caffetteria' },
           { href: 'https://example.com/events/', text: 'Events' },
-        ]),
+        ],),
       },
       'https://example.com/about' => {
         body: '<html><body><p>About our restaurant</p></body></html>',
@@ -192,7 +192,7 @@ class MenuDiscovery::WebsiteMenuFinderTest < ActiveSupport::TestCase
     )
 
     result = finder.find_menus
-    urls = result[:html_menu_pages].map { |p| p[:url] }
+    urls = result[:html_menu_pages].pluck(:url)
     assert_includes urls, 'https://example.com/caffetteria'
   end
 
@@ -202,7 +202,7 @@ class MenuDiscovery::WebsiteMenuFinderTest < ActiveSupport::TestCase
         body: make_page(title: 'Home', links: [
           'https://example.com/brunch/',
           'https://example.com/cocktail-bar/',
-        ]),
+        ],),
       },
       'https://example.com/brunch' => {
         body: make_page(title: 'Brunch', prices: 4),
@@ -219,7 +219,7 @@ class MenuDiscovery::WebsiteMenuFinderTest < ActiveSupport::TestCase
     )
 
     result = finder.find_menus
-    urls = result[:html_menu_pages].map { |p| p[:url] }
+    urls = result[:html_menu_pages].pluck(:url)
     assert_includes urls, 'https://example.com/brunch'
     assert_includes urls, 'https://example.com/cocktail-bar'
   end

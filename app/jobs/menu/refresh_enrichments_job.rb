@@ -10,7 +10,7 @@ class Menu::RefreshEnrichmentsJob
   # Intended to run via Sidekiq-Cron or similar scheduler (e.g. weekly).
   def perform(batch_size = 50)
     stale = ProductEnrichment
-      .where('expires_at < ?', Time.current)
+      .where(expires_at: ...Time.current)
       .order(expires_at: :asc)
       .limit(batch_size)
       .includes(:product)

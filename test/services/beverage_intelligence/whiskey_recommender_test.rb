@@ -6,7 +6,7 @@ class BeverageIntelligence::WhiskeyRecommenderTest < ActiveSupport::TestCase
   setup do
     @menu = menus(:one)
     @section = @menu.menusections.first || Menusection.create!(
-      menu: @menu, name: 'Whiskey', sequence: 1, status: :active
+      menu: @menu, name: 'Whiskey', sequence: 1, status: :active,
     )
     @recommender = BeverageIntelligence::WhiskeyRecommender.new
 
@@ -76,7 +76,7 @@ class BeverageIntelligence::WhiskeyRecommenderTest < ActiveSupport::TestCase
     )
 
     assert results.any?
-    assert results.any? { |r| r[:parsed_fields]['whiskey_region'] == 'kentucky' }
+    assert(results.any? { |r| r[:parsed_fields]['whiskey_region'] == 'kentucky' })
   end
 
   test 'flavor_pref heavily_peated favors peated whiskeys' do
@@ -88,7 +88,7 @@ class BeverageIntelligence::WhiskeyRecommenderTest < ActiveSupport::TestCase
     assert results.any?
     top = results.first
     assert_equal 'heavily_peated', top[:parsed_fields]['staff_flavor_cluster'],
-                 "Top result should be heavily peated"
+                 'Top result should be heavily peated'
   end
 
   test 'newcomer experience favors lower ABV' do
@@ -139,7 +139,7 @@ class BeverageIntelligence::WhiskeyRecommenderTest < ActiveSupport::TestCase
       exclude_ids: first_ids,
     )
 
-    second_ids = results_second.map { |r| r[:menuitem].id }
+    results_second.map { |r| r[:menuitem].id }
     # Not all excluded items should be in second result set (deprioritized but not excluded)
     # At minimum the ordering should differ if there are alternatives
     assert results_second.any?, 'Should still return results even with exclusions'

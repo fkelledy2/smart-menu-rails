@@ -2,13 +2,13 @@
 
 class StatusBadgeComponent < ViewComponent::Base
   VARIANT_MAP = {
-    active:   { css: "text-bg-success", label: "Active" },
-    inactive: { css: "text-bg-secondary", label: "Inactive" },
-    draft:    { css: "text-bg-warning",  label: "Draft" },
-    archived: { css: "text-bg-danger",   label: "Archived" },
-    pending:  { css: "text-bg-info",     label: "Pending" },
-    live:     { css: "text-bg-success",  label: "Live" },
-    paused:   { css: "text-bg-warning",  label: "Paused" }
+    active: { css: 'text-bg-success', label: 'Active' },
+    inactive: { css: 'text-bg-secondary', label: 'Inactive' },
+    draft: { css: 'text-bg-warning', label: 'Draft' },
+    archived: { css: 'text-bg-danger', label: 'Archived' },
+    pending: { css: 'text-bg-info', label: 'Pending' },
+    live: { css: 'text-bg-success', label: 'Live' },
+    paused: { css: 'text-bg-warning', label: 'Paused' },
   }.freeze
 
   attr_reader :status, :label, :size, :pill
@@ -28,7 +28,7 @@ class StatusBadgeComponent < ViewComponent::Base
     tag.span(
       label,
       class: css_classes,
-      data: { testid: "status-badge-#{status}" }
+      data: { testid: "status-badge-#{status}" },
     )
   end
 
@@ -39,10 +39,10 @@ class StatusBadgeComponent < ViewComponent::Base
   end
 
   def css_classes
-    classes = ["badge", variant[:css]]
-    classes << "rounded-pill" if pill
-    classes << "badge-sm" if size == :sm
-    classes << "badge-lg" if size == :lg
-    classes.join(" ")
+    classes = ['badge', variant[:css]]
+    classes << 'rounded-pill' if pill
+    classes << 'badge-sm' if size == :sm
+    classes << 'badge-lg' if size == :lg
+    classes.join(' ')
   end
 end

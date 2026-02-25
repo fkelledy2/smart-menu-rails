@@ -53,10 +53,6 @@ class OrdritemsController < ApplicationController
   after_action :verify_authorized, except: [:index]
   after_action :verify_policy_scoped, only: [:index]
 
-  private def csrf_skipped_action?
-    %w[create update destroy].include?(action_name)
-  end
-
   # GET /ordritems or /ordritems.json
   def index
     @ordritems = policy_scope(Ordritem)
@@ -303,6 +299,10 @@ class OrdritemsController < ApplicationController
   end
 
   private
+
+  def csrf_skipped_action?
+    %w[create update destroy].include?(action_name)
+  end
 
   # Set restaurant from nested route parameter
   def set_restaurant

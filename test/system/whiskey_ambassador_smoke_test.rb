@@ -11,7 +11,7 @@ class WhiskeyAmbassadorSmokeTest < ApplicationSystemTestCase
     @menu.update!(restaurant: @restaurant) if @menu.restaurant != @restaurant
 
     @section = @menu.menusections.first || Menusection.create!(
-      menu: @menu, name: 'Whiskey', sequence: 1, status: :active
+      menu: @menu, name: 'Whiskey', sequence: 1, status: :active,
     )
 
     # Create whiskey items for the review queue and ambassador

@@ -60,15 +60,14 @@ class BeverageReviewQueuesControllerTest < ActionDispatch::IntegrationTest
     ActionController::Base.allow_forgery_protection = false
 
     patch beverage_review_queue_review_restaurant_path(@restaurant,
-      menuitem_id: @menuitem.id,
-      whiskey_region: 'islay',
-      whiskey_type: 'single_malt',
-      distillery: 'Test Distillery',
-      cask_type: 'sherry_cask',
-      staff_flavor_cluster: 'heavily_peated',
-      staff_tasting_note: 'Peaty and medicinal',
-      staff_pick: 'true',
-    )
+                                                       menuitem_id: @menuitem.id,
+                                                       whiskey_region: 'islay',
+                                                       whiskey_type: 'single_malt',
+                                                       distillery: 'Test Distillery',
+                                                       cask_type: 'sherry_cask',
+                                                       staff_flavor_cluster: 'heavily_peated',
+                                                       staff_tasting_note: 'Peaty and medicinal',
+                                                       staff_pick: 'true',)
     assert_response :redirect
 
     @menuitem.reload

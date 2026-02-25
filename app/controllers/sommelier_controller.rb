@@ -171,7 +171,7 @@ class SommelierController < ApplicationController
     result[:region] = enrichment['region'] if enrichment['region'].present?
 
     has_pairings = rec[:best_pairing].present? ||
-                   PairingRecommendation.where(drink_menuitem_id: item.id).exists?
+                   PairingRecommendation.exists?(drink_menuitem_id: item.id)
     result[:has_pairings] = has_pairings
 
     if rec[:best_pairing]
@@ -211,9 +211,9 @@ class SommelierController < ApplicationController
   def format_similar(rec, menu)
     product = rec.recommended_product
     on_menu_item = product.menuitems
-                          .joins(menusection: :menu)
-                          .where(menus: { id: menu.id }, status: 'active')
-                          .first
+      .joins(menusection: :menu)
+      .where(menus: { id: menu.id }, status: 'active')
+      .first
 
     {
       product_name: product.canonical_name,

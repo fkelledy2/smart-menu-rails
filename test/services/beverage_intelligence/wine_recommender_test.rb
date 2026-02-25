@@ -6,7 +6,7 @@ class BeverageIntelligence::WineRecommenderTest < ActiveSupport::TestCase
   setup do
     @menu = menus(:one)
     @menusection = @menu.menusections.first || Menusection.create!(
-      menu: @menu, name: 'Wine List', sequence: 1, status: :active
+      menu: @menu, name: 'Wine List', sequence: 1, status: :active,
     )
     @recommender = BeverageIntelligence::Recommender.new
 
@@ -48,7 +48,7 @@ class BeverageIntelligence::WineRecommenderTest < ActiveSupport::TestCase
       preferences: { wine_color: 'red', body: 'full', taste: 'dry', budget: 2 },
       limit: 3,
     )
-    assert results.size > 0, "Expected at least one wine recommendation"
+    assert results.size.positive?, 'Expected at least one wine recommendation'
     assert results.first[:wine_color].present? || results.first[:tags].any?
   end
 
@@ -68,8 +68,8 @@ class BeverageIntelligence::WineRecommenderTest < ActiveSupport::TestCase
     red_top = red_results.first
     white_top = white_results.first
 
-    assert_equal @red_wine.id, red_top[:menuitem].id, "Red wine should be top pick for red preference"
-    assert_equal @white_wine.id, white_top[:menuitem].id, "White wine should be top pick for white preference"
+    assert_equal @red_wine.id, red_top[:menuitem].id, 'Red wine should be top pick for red preference'
+    assert_equal @white_wine.id, white_top[:menuitem].id, 'White wine should be top pick for white preference'
   end
 
   test 'body preference affects scoring' do
@@ -81,7 +81,7 @@ class BeverageIntelligence::WineRecommenderTest < ActiveSupport::TestCase
 
     # White wine (body 0.35) should score higher for light preference
     assert light_results.first[:menuitem].id == @white_wine.id,
-           "Light body preference should favour the lighter wine"
+           'Light body preference should favour the lighter wine'
   end
 
   test 'results include wine metadata fields' do
@@ -91,7 +91,7 @@ class BeverageIntelligence::WineRecommenderTest < ActiveSupport::TestCase
       limit: 3,
     )
     rec = results.find { |r| r[:menuitem].id == @red_wine.id }
-    assert rec, "Expected red wine in results"
+    assert rec, 'Expected red wine in results'
     assert_equal 'red', rec[:wine_color]
     assert_equal 'sangiovese', rec[:grape_variety]
     assert_equal 'chianti', rec[:appellation]

@@ -30,9 +30,9 @@ class BeverageIntelligence::RecommenderTest < ActiveSupport::TestCase
       limit: 3,
     )
     assert results.is_a?(Array)
-    assert results.size >= 1, "Expected at least one recommendation"
+    assert results.size >= 1, 'Expected at least one recommendation'
     assert results.first[:menuitem].id == drink.id
-    assert results.first[:score] > 0
+    assert results.first[:score].positive?
   end
 
   test 'recommend_for_guest penalizes smoky drinks when smoky=false' do
@@ -70,7 +70,7 @@ class BeverageIntelligence::RecommenderTest < ActiveSupport::TestCase
     # The clean drink should rank higher
     if results.size >= 2
       assert results.first[:menuitem].id == clean_drink.id,
-             "Expected non-smoky drink to rank first when smoky=false"
+             'Expected non-smoky drink to rank first when smoky=false'
     end
   end
 end

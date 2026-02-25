@@ -8,8 +8,7 @@ RSpec.describe 'onboarding/account_details.html.erb (re-render on update failure
 
   before do
     assign(:onboarding, onboarding_session)
-    allow(view).to receive(:current_user).and_return(user)
-    allow(view).to receive(:onboarding_path).and_return('/onboarding')
+    allow(view).to receive_messages(current_user: user, onboarding_path: '/onboarding')
     flash.now[:alert] = 'Please enter a restaurant name to continue.'
   end
 

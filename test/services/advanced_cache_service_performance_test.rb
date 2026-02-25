@@ -85,7 +85,7 @@ class AdvancedCacheServicePerformanceTest < ActiveSupport::TestCase
     AdvancedCacheService.clear_all_caches
 
     # Measure cache warming performance
-    warming_time = Benchmark.realtime do
+    Benchmark.realtime do
       result = AdvancedCacheService.warm_critical_caches(@restaurant.id)
       assert result[:success], 'Cache warming should succeed'
       assert_equal 1, result[:restaurants_warmed], 'Should warm exactly 1 restaurant'

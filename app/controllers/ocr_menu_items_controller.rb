@@ -95,14 +95,15 @@ class OcrMenuItemsController < ApplicationController
 
     # Handle size_prices (stored in metadata)
     # Accept both populated and empty hashes so switching to single-price mode clears sizes
-    if params.dig(:ocr_menu_item).respond_to?(:key?) && params[:ocr_menu_item].key?(:size_prices)
+    if params[:ocr_menu_item].respond_to?(:key?) && params[:ocr_menu_item].key?(:size_prices)
       sp = params[:ocr_menu_item][:size_prices] || {}
       sp = sp.to_unsafe_h if sp.respond_to?(:to_unsafe_h)
       cleaned = sp.each_with_object({}) do |(k, v), h|
         key = k.to_s
         next unless %w[glass large_glass half_bottle bottle carafe].include?(key)
+
         val = v.to_f
-        h[key] = val if val > 0
+        h[key] = val if val.positive?
       end
       @item.metadata ||= {}
       @item.metadata['size_prices'] = cleaned

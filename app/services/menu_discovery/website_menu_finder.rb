@@ -24,7 +24,7 @@ module MenuDiscovery
     ].freeze
 
     # Paths that should never be classified as menu pages, regardless of content.
-    NON_MENU_PATH_PATTERN = %r{/(about|contact|blog|news|press|careers|jobs|faq|team|gallery|events|booking|reserv|privacy|cookie|terms|legal|imprint|impressum|login|signup|register|cart|checkout|shop|store|account|search|sitemap|404|500)([/\-]|$)}i
+    NON_MENU_PATH_PATTERN = %r{/(about|contact|blog|news|press|careers|jobs|faq|team|gallery|events|booking|reserv|privacy|cookie|terms|legal|imprint|impressum|login|signup|register|cart|checkout|shop|store|account|search|sitemap|404|500)([/-]|$)}i
 
     # Common language path prefixes used by multilingual sites.
     LANGUAGE_PREFIX_PATTERN = %r{\A/(en|it|de|fr|es|nl|pt|cs|pl|ru|ja|zh|ko|ar|tr|sv|da|fi|no|el|hu|ro|bg|hr|sk|sl|uk|ca|eu|gl|et|lv|lt)(/.*)}i
@@ -96,9 +96,9 @@ module MenuDiscovery
         # Evaluate this page for menu content (skip known non-menu paths)
         url_score = score_url(url)
         is_excluded = excluded_path?(url)
-        if !is_excluded && url_score > 0 && page_has_menu_content?(doc)
+        if !is_excluded && url_score.positive? && page_has_menu_content?(doc)
           html_menu_pages << { url: url, html: html }
-        elsif !is_excluded && depth > 0 && url_score == 0 && page_has_strong_menu_content?(doc)
+        elsif !is_excluded && depth.positive? && url_score.zero? && page_has_strong_menu_content?(doc)
           # No URL signal but very strong content — include with higher bar
           html_menu_pages << { url: url, html: html }
         end
@@ -128,7 +128,7 @@ module MenuDiscovery
 
           # From homepage (depth 0): queue ALL internal links (broader discovery)
           # From deeper pages: only queue if the link scores > 0
-          if depth == 0 || link_score > 0
+          if depth.zero? || link_score.positive?
             pq.push(link_score, link_url, depth + 1)
           end
         end
@@ -254,7 +254,11 @@ module MenuDiscovery
       # Group pages by their "canonical" path (stripped of language prefix)
       grouped = {}
       pages.each do |page|
-        uri = URI.parse(page[:url]) rescue next
+        uri = begin
+          URI.parse(page[:url])
+        rescue StandardError
+          next
+        end
         path = uri.path.to_s.downcase
 
         lang_match = path.match(LANGUAGE_PREFIX_PATTERN)
@@ -313,7 +317,7 @@ module MenuDiscovery
         Output ONLY valid JSON. No commentary.
       PROMPT
 
-      api_key = Rails.application.credentials.dig(:openai, :api_key) || ENV['OPENAI_API_KEY']
+      api_key = Rails.application.credentials.dig(:openai, :api_key) || ENV.fetch('OPENAI_API_KEY', nil)
       return [] if api_key.blank?
 
       response = HTTParty.post(
@@ -413,9 +417,7 @@ module MenuDiscovery
         @items.shift
       end
 
-      def any?
-        @items.any?
-      end
+      delegate :any?, to: :@items
     end
   end
 end

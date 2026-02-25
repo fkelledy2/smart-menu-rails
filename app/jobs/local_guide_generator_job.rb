@@ -54,10 +54,10 @@ class LocalGuideGeneratorJob < ApplicationJob
 
   def fetch_restaurants(city, category)
     scope = Restaurant.where(preview_enabled: true)
-                      .where("LOWER(city) = ?", city.downcase)
-                      .includes(menus: { menusections: :menuitems })
+      .where('LOWER(city) = ?', city.downcase)
+      .includes(menus: { menusections: :menuitems })
     if category.present?
-      scope = scope.where("? = ANY(establishment_types)", category)
+      scope = scope.where('? = ANY(establishment_types)', category)
     end
     scope.limit(20)
   end
@@ -65,8 +65,8 @@ class LocalGuideGeneratorJob < ApplicationJob
   def build_prompt(city, category, restaurants)
     restaurant_data = restaurants.map do |r|
       items = r.menus.flat_map { |m| m.menusections.flat_map(&:menuitems) }
-                     .select { |i| i.try(:active?) }
-                     .first(10)
+        .select { |i| i.try(:active?) }
+        .first(10)
       {
         name: r.name,
         description: r.description,
@@ -95,16 +95,16 @@ class LocalGuideGeneratorJob < ApplicationJob
   def call_openai(prompt)
     client = OpenAI::Client.new
     response = client.chat(parameters: {
-      model: "gpt-4o-mini",
+      model: 'gpt-4o-mini',
       messages: [
-        { role: "system", content: "You are a knowledgeable local food guide writer." },
-        { role: "user", content: prompt },
+        { role: 'system', content: 'You are a knowledgeable local food guide writer.' },
+        { role: 'user', content: prompt },
       ],
       temperature: 0.7,
     })
-    raw = response.dig("choices", 0, "message", "content")
+    raw = response.dig('choices', 0, 'message', 'content')
     parsed = JSON.parse(raw)
-    { content: parsed["content"], faq: parsed["faq"], raw: raw }
+    { content: parsed['content'], faq: parsed['faq'], raw: raw }
   rescue JSON::ParserError
     { content: raw, faq: [], raw: raw }
   end
@@ -114,16 +114,16 @@ class LocalGuideGeneratorJob < ApplicationJob
       {
         id: r.id,
         name: r.name,
-        menuitem_ids: r.menus.flat_map { |m|
+        menuitem_ids: r.menus.flat_map do |m|
           m.menusections.flat_map { |s| s.menuitems.map(&:id) }
-        }.first(20),
+        end.first(20),
       }
     end
   end
 
   def infer_country(city)
-    Restaurant.where("LOWER(city) = ?", city.downcase)
-              .where.not(country: [nil, ''])
-              .limit(1).pick(:country) || "Unknown"
+    Restaurant.where('LOWER(city) = ?', city.downcase)
+      .where.not(country: [nil, ''])
+      .limit(1).pick(:country) || 'Unknown'
   end
 end

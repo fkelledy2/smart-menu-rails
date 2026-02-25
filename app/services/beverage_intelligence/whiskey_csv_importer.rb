@@ -16,10 +16,10 @@ module BeverageIntelligence
     def initialize(menu)
       @menu = menu
       @menuitems = menu.menuitems
-                       .joins(:menusection)
-                       .where('menusections.archived IS NOT TRUE')
-                       .where(status: 'active')
-                       .to_a
+        .joins(:menusection)
+        .where('menusections.archived IS NOT TRUE')
+        .where(status: 'active')
+        .to_a
     end
 
     def import(csv_content)
@@ -100,7 +100,7 @@ module BeverageIntelligence
 
     def normalize(str)
       s = str.to_s.downcase
-      s = s.gsub(/[''`]/, "'").gsub(/[^\w\s']/, ' ')
+      s = s.gsub(/['`]/, "'").gsub(/[^\w\s']/, ' ')
       # Normalize age patterns: "16yo", "16 y.o.", "16 years old", "16 year old" → "16"
       s = s.gsub(/(\d{1,2})\s*(?:yo|y\.?o\.?|years?\s*old|yr)\b/, '\1')
       s.squish
@@ -112,8 +112,8 @@ module BeverageIntelligence
       fields['whiskey_region']      = row['whiskey_region'].strip if row['whiskey_region'].present?
       fields['distillery']          = row['distillery'].strip     if row['distillery'].present?
       fields['cask_type']           = row['cask_type'].strip      if row['cask_type'].present?
-      fields['age_years']           = row['age'].to_i             if row['age'].present? && row['age'].to_i > 0
-      fields['bottling_strength_abv'] = row['abv'].to_f           if row['abv'].present? && row['abv'].to_f > 0
+      fields['age_years']           = row['age'].to_i             if row['age'].present? && row['age'].to_i.positive?
+      fields['bottling_strength_abv'] = row['abv'].to_f           if row['abv'].present? && row['abv'].to_f.positive?
       fields['staff_flavor_cluster'] = row['staff_flavor_cluster'].strip if row['staff_flavor_cluster'].present?
       fields['staff_tasting_note']  = row['staff_tasting_note'].strip[0, 200] if row['staff_tasting_note'].present?
       fields['staff_pick']          = ActiveModel::Type::Boolean.new.cast(row['staff_pick']) if row['staff_pick'].present?

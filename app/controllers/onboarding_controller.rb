@@ -30,7 +30,7 @@ class OnboardingController < ApplicationController
     return if request.format.json?
 
     # If user already has a restaurant, skip onboarding entirely
-    if current_user.restaurants.where(archived: false).exists?
+    if current_user.restaurants.exists?(archived: false)
       complete_onboarding_session!
       redirect_to edit_restaurant_path(current_user.restaurants.where(archived: false).first)
       return

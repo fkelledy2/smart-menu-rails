@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "test_helper"
+require 'test_helper'
 
 class GoLiveChecklistComponentTest < ViewComponent::TestCase
   def setup
@@ -26,7 +26,7 @@ class GoLiveChecklistComponentTest < ViewComponent::TestCase
 
     assert_selector "[data-testid='onboarding-guidance']"
     assert_selector "[data-controller='go-live-progress']"
-    assert_text "Go-live checklist"
+    assert_text 'Go-live checklist'
   end
 
   def test_shows_progress_bar
@@ -34,7 +34,7 @@ class GoLiveChecklistComponentTest < ViewComponent::TestCase
 
     render_inline(GoLiveChecklistComponent.new(restaurant: @restaurant))
 
-    assert_selector ".progress-bar"
+    assert_selector '.progress-bar'
     assert_selector "[role='progressbar']"
   end
 
@@ -44,7 +44,7 @@ class GoLiveChecklistComponentTest < ViewComponent::TestCase
     render_inline(GoLiveChecklistComponent.new(restaurant: @restaurant))
 
     # At minimum, restaurant name should be complete
-    assert_selector ".text-muted.small"
+    assert_selector '.text-muted.small'
   end
 
   def test_completed_steps_have_check_icon
@@ -52,7 +52,7 @@ class GoLiveChecklistComponentTest < ViewComponent::TestCase
 
     render_inline(GoLiveChecklistComponent.new(restaurant: @restaurant))
 
-    assert_selector ".bi-check-circle-fill.text-success"
+    assert_selector '.bi-check-circle-fill.text-success'
   end
 
   def test_incomplete_steps_have_contextual_icon

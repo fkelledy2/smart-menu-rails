@@ -14,49 +14,50 @@ class ExplorePageGeneratorJob < ApplicationJob
     generate_city_pages
     generate_category_pages
     unpublish_empty_pages
-    Rails.logger.info("[ExplorePageGeneratorJob] Refresh complete")
+    Rails.logger.info('[ExplorePageGeneratorJob] Refresh complete')
   end
 
   private
 
   def generate_city_pages
     Restaurant.where(preview_enabled: true)
-              .where.not(city: [nil, ''])
-              .where.not(country: [nil, ''])
-              .group(:city, :country)
-              .having("COUNT(*) >= ?", MIN_RESTAURANTS_FOR_PAGE)
-              .count
-              .each do |(city, country), count|
-      page = ExplorePage.find_or_initialize_by(
-        country_slug: country.parameterize,
-        city_slug: city.parameterize,
-        category_slug: nil,
-      )
-      page.assign_attributes(
-        country_name: country,
-        city_name: city,
-        restaurant_count: count,
-        published: true,
-        last_refreshed_at: Time.current,
-      )
-      page.save!
+      .where.not(city: [nil, ''])
+      .where.not(country: [nil, ''])
+      .group(:city, :country)
+      .having('COUNT(*) >= ?', MIN_RESTAURANTS_FOR_PAGE)
+      .count
+      .each do |(city, country), count|
+        page = ExplorePage.find_or_initialize_by(
+          country_slug: country.parameterize,
+          city_slug: city.parameterize,
+          category_slug: nil,
+        )
+        page.assign_attributes(
+          country_name: country,
+          city_name: city,
+          restaurant_count: count,
+          published: true,
+          last_refreshed_at: Time.current,
+        )
+        page.save!
     end
   end
 
   def generate_category_pages
     Restaurant.where(preview_enabled: true)
-              .where.not(city: [nil, ''])
-              .where.not(establishment_types: [])
-              .find_each do |r|
-      r.establishment_types.each do |etype|
-        key = [r.city.parameterize, r.country.parameterize, etype.parameterize]
-        @category_counts[key] += 1
-        @category_names[key] = [r.city, r.country, etype]
-      end
+      .where.not(city: [nil, ''])
+      .where.not(establishment_types: [])
+      .find_each do |r|
+        r.establishment_types.each do |etype|
+          key = [r.city.parameterize, r.country.parameterize, etype.parameterize]
+          @category_counts[key] += 1
+          @category_names[key] = [r.city, r.country, etype]
+        end
     end
 
     @category_counts.each do |key, count|
       next if count < MIN_RESTAURANTS_FOR_PAGE
+
       city, country, category = @category_names[key]
 
       page = ExplorePage.find_or_initialize_by(
@@ -78,7 +79,7 @@ class ExplorePageGeneratorJob < ApplicationJob
 
   def unpublish_empty_pages
     ExplorePage.where(published: true)
-               .where("last_refreshed_at < ? OR last_refreshed_at IS NULL", 1.hour.ago)
-               .update_all(published: false)
+      .where('last_refreshed_at < ? OR last_refreshed_at IS NULL', 1.hour.ago)
+      .update_all(published: false)
   end
 end

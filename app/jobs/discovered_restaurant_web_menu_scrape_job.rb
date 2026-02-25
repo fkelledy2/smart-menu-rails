@@ -50,7 +50,7 @@ class DiscoveredRestaurantWebMenuScrapeJob < ApplicationJob
         'html_pages_found' => 0,
         'pdf_urls_found' => pdf_urls.size,
         'message' => pdf_urls.any? ? 'No HTML menus found, but PDF menu URLs discovered' : 'No menu content found on website',
-      })
+      },)
       return
     end
 
@@ -63,7 +63,7 @@ class DiscoveredRestaurantWebMenuScrapeJob < ApplicationJob
         'html_pages_found' => html_pages.size,
         'pages_scraped' => 0,
         'message' => 'Found menu pages but could not extract usable text',
-      })
+      },)
       return
     end
 
@@ -88,7 +88,7 @@ class DiscoveredRestaurantWebMenuScrapeJob < ApplicationJob
         'pages_scraped' => scrape_result[:pages_scraped],
         'menu_text_length' => scrape_result[:menu_text].length,
         'message' => 'Menu text scraped successfully but no linked restaurant — approve the discovered restaurant first to create an import',
-      })
+      },)
       return
     end
 
@@ -121,9 +121,13 @@ class DiscoveredRestaurantWebMenuScrapeJob < ApplicationJob
         'sections_count' => import.ocr_menu_sections.count,
         'items_count' => import.ocr_menu_items.count,
         'message' => 'Web menu successfully scraped and parsed',
-      })
+      },)
     rescue StandardError => e
-      import.fail!(e.message) rescue nil
+      begin
+        import.fail!(e.message)
+      rescue StandardError
+        nil
+      end
       update_status!(dr, 'failed', error: "Processing failed: #{e.message}")
       Rails.logger.error "WebMenuScrapeJob: #{e.message}\n#{e.backtrace.first(5).join("\n")}"
     end

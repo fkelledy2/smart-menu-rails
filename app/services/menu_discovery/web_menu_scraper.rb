@@ -60,7 +60,7 @@ module MenuDiscovery
       resp = @http_client.get(url, headers: {
         'User-Agent' => 'SmartMenuBot/1.0 (+https://www.mellow.menu)',
         'Accept' => 'text/html,application/xhtml+xml',
-      }, timeout: 20)
+      }, timeout: 20,)
 
       return nil unless resp.respond_to?(:code)
       return nil unless resp.code.to_i >= 200 && resp.code.to_i < 300
@@ -83,11 +83,12 @@ module MenuDiscovery
       # Pattern: x-text="(new Intl.NumberFormat('en-IE', { style: 'currency', currency: 'EUR' }).format('15'))"
       doc.css('[x-text]').each do |node|
         xtext = node['x-text'].to_s
-        if xtext.include?('currency') && (m = xtext.match(/currency:\s*'(\w+)'.*?format\(\s*'([\d.]+)'\s*\)/))
-          currency_code, amount = m[1], m[2]
-          symbol = { 'EUR' => '€', 'GBP' => '£', 'USD' => '$', 'CZK' => 'Kč' }[currency_code] || currency_code
-          node.content = "#{symbol}#{amount}"
-        end
+        next unless xtext.include?('currency') && (m = xtext.match(/currency:\s*'(\w+)'.*?format\(\s*'([\d.]+)'\s*\)/))
+
+        currency_code = m[1]
+        amount = m[2]
+        symbol = { 'EUR' => '€', 'GBP' => '£', 'USD' => '$', 'CZK' => 'Kč' }[currency_code] || currency_code
+        node.content = "#{symbol}#{amount}"
       end
 
       # Strip Alpine.js / Vue / React inline event attributes that leak into text
@@ -129,7 +130,7 @@ module MenuDiscovery
       return nil if candidates.empty?
 
       # Deduplicate: if a parent container already captured child content, prefer the parent
-      candidates.uniq.sort_by(&:length).reverse.first(5).join("\n\n")
+      candidates.uniq.sort_by(&:length).last(5).reverse.join("\n\n")
     end
 
     def extract_from_main_content(doc)
@@ -170,20 +171,20 @@ module MenuDiscovery
         parent = child.parent
         tag = parent&.name.to_s.downcase
 
-        case tag
-        when 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'
-          lines << "\n## #{text}"
-        when 'li'
-          lines << "- #{text}"
-        when 'dt'
-          lines << "\n#{text}"
-        when 'dd'
-          lines << "  #{text}"
-        when 'p', 'div', 'span', 'td', 'th', 'a', 'strong', 'em', 'b', 'i'
-          lines << text
-        else
-          lines << text
-        end
+        lines << case tag
+                 when 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'
+                   "\n## #{text}"
+                 when 'li'
+                   "- #{text}"
+                 when 'dt'
+                   "\n#{text}"
+                 when 'dd'
+                   "  #{text}"
+                 when 'p', 'div', 'span', 'td', 'th', 'a', 'strong', 'em', 'b', 'i'
+                   text
+                 else
+                   text
+                 end
       end
 
       result = lines.join("\n").gsub(/\n{3,}/, "\n\n").strip
@@ -196,9 +197,9 @@ module MenuDiscovery
       return true if text.match?(/\{\s*(var |let |const |return |function |focusImage|focusTitle|currentMain)/)
       return true if text.match?(/@mouse(leave|enter|over)\s*=/)
       return true if text.match?(/\(\(\)\s*=>/)
-      return true if text.match?(/document\.querySelector/)
-      return true if text.match?(/\.scrollIntoView/)
-      return true if text.match?(/element\.scroll/)
+      return true if text.include?('document.querySelector')
+      return true if text.include?('.scrollIntoView')
+      return true if text.include?('element.scroll')
 
       false
     end
@@ -207,14 +208,13 @@ module MenuDiscovery
     def clean_javascript_noise(text)
       result = text.to_s
       # Remove Alpine.js / JS template expressions: { ... })" or similar
-      result = result.gsub(/\{\s*(?:var|let|const|return|focusImage|focusTitle|currentMain)[^}]*\}\)?\"?\s*/m, '')
+      result = result.gsub(/\{\s*(?:var|let|const|return|focusImage|focusTitle|currentMain)[^}]*\}\)?"?\s*/m, '')
       # Remove @event handlers that leaked
       result = result.gsub(/@(?:click|mouseleave|mouseenter|mouseover)="[^"]*"\s*/m, '')
       # Remove orphaned closing patterns
-      result = result.gsub(/\)\"\s*>/, '')
+      result = result.gsub(/\)"\s*>/, '')
       # Clean up excessive whitespace from removals
-      result = result.gsub(/\n{3,}/, "\n\n").strip
-      result
+      result.gsub(/\n{3,}/, "\n\n").strip
     end
   end
 end

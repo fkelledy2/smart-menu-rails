@@ -14,7 +14,7 @@ class WhiskeyImportsController < ApplicationController
 
     menu = @restaurant.menus.find(params[:menu_id])
 
-    unless params[:csv_file].present?
+    if params[:csv_file].blank?
       redirect_to new_whiskey_import_restaurant_path(@restaurant), alert: 'Please select a CSV file'
       return
     end

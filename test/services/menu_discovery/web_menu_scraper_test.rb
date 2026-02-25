@@ -66,9 +66,9 @@ class MenuDiscovery::WebMenuScraperTest < ActiveSupport::TestCase
     assert_includes result[:menu_text], 'Aurora'
     assert_includes result[:menu_text], 'Backbone'
     # Should NOT contain JavaScript artifacts
-    refute_includes result[:menu_text], 'focusImage'
-    refute_includes result[:menu_text], 'focusTitle'
-    refute_includes result[:menu_text], 'scrollIntoView'
+    assert_not_includes result[:menu_text], 'focusImage'
+    assert_not_includes result[:menu_text], 'focusTitle'
+    assert_not_includes result[:menu_text], 'scrollIntoView'
   end
 
   test 'scrape removes script, style, nav, footer, header elements' do
@@ -97,9 +97,9 @@ class MenuDiscovery::WebMenuScraperTest < ActiveSupport::TestCase
     assert result[:menu_text].present?
     assert_includes result[:menu_text], 'Wine List'
     assert_includes result[:menu_text], 'Chardonnay'
-    refute_includes result[:menu_text], 'var x = 1'
-    refute_includes result[:menu_text], 'color: red'
-    refute_includes result[:menu_text], '© 2025'
+    assert_not_includes result[:menu_text], 'var x = 1'
+    assert_not_includes result[:menu_text], 'color: red'
+    assert_not_includes result[:menu_text], '© 2025'
   end
 
   test 'scrape handles multiple pages' do

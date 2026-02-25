@@ -415,8 +415,8 @@ class SmartmenusController < ApplicationController
 
     # Schema.org JSON-LD
     menusections = Menusection.where(menu_id: @menu.id, archived: false)
-                              .includes(menuitems: :allergyns)
-                              .order(:sequence)
+      .includes(menuitems: :allergyns)
+      .order(:sequence)
     @schema_org_json_ld = SchemaOrgSerializer.new(
       restaurant: @restaurant,
       menu: @menu,
@@ -427,12 +427,12 @@ class SmartmenusController < ApplicationController
     # Dynamic meta tags
     @page_title = "#{@restaurant.name} — Menu | mellow.menu"
     @page_description = "View the menu for #{@restaurant.name}" +
-      (@restaurant.city.present? ? " in #{@restaurant.city}" : "") +
-      ". Prices, allergens, and descriptions."
+                        (@restaurant.city.present? ? " in #{@restaurant.city}" : '') +
+                        '. Prices, allergens, and descriptions.'
     @og_title = @page_title
     @og_description = @page_description
     @og_url = "https://www.mellow.menu/smartmenus/#{@smartmenu.slug}"
-    @og_image = @restaurant.try(:image_url) || "https://www.mellow.menu/images/featured-dish.jpg"
+    @og_image = @restaurant.try(:image_url) || 'https://www.mellow.menu/images/featured-dish.jpg'
     @canonical_url = @og_url
     @geo_lat = @restaurant.latitude
     @geo_lng = @restaurant.longitude

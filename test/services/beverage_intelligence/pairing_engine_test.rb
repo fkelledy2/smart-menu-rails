@@ -44,11 +44,11 @@ class BeverageIntelligence::PairingEngineTest < ActiveSupport::TestCase
 
     @menu.reload
     count = @engine.generate_for_menu(@menu)
-    assert count > 0, "Expected at least one pairing to be created"
+    assert count.positive?, 'Expected at least one pairing to be created'
 
     pairing = PairingRecommendation.find_by(drink_menuitem_id: drink.id, food_menuitem_id: food.id)
-    assert pairing.present?, "Expected a pairing between the drink and food"
-    assert pairing.score.to_f > 0, "Expected a positive pairing score"
-    assert pairing.rationale.present?, "Expected a rationale"
+    assert pairing.present?, 'Expected a pairing between the drink and food'
+    assert pairing.score.to_f.positive?, 'Expected a positive pairing score'
+    assert pairing.rationale.present?, 'Expected a rationale'
   end
 end

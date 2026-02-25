@@ -25,6 +25,10 @@ module Admin
       authorize @local_guide
     end
 
+    def edit
+      authorize @local_guide
+    end
+
     def create
       @local_guide = LocalGuide.new(local_guide_params)
       authorize @local_guide
@@ -32,12 +36,8 @@ module Admin
       if @local_guide.save
         redirect_to admin_local_guide_path(@local_guide), notice: 'Guide created as draft.'
       else
-        render :new, status: :unprocessable_entity
+        render :new, status: :unprocessable_content
       end
-    end
-
-    def edit
-      authorize @local_guide
     end
 
     def update
@@ -46,7 +46,7 @@ module Admin
       if @local_guide.update(local_guide_params)
         redirect_to admin_local_guide_path(@local_guide), notice: 'Guide updated.'
       else
-        render :edit, status: :unprocessable_entity
+        render :edit, status: :unprocessable_content
       end
     end
 

@@ -113,7 +113,7 @@ module BeverageIntelligence
         'floral' => /\b(floral|flower|rose|violet|lavender|jasmine|blossom|elderflower)\b/,
         'nutty' => /\b(nut[ty]?|almond|walnut|hazelnut|pecan|marzipan|praline)\b/,
         'saline' => /\b(salin[ey]?|salt[ey]?|brine|briny|sea|maritime|coastal|iodine)\b/,
-        'umami' => /\b(umami|savo[u]?ry|meaty|soy|miso)\b/,
+        'umami' => /\b(umami|savou?ry|meaty|soy|miso)\b/,
         'bitter' => /\b(bitter|dark chocolate|espresso|coffee|cocoa)\b/,
         'creamy' => /\b(cream[ey]?|butter[ey]?|silky|smooth|velvet[ey]?|rich)\b/,
         'tannic' => /\b(tannic|tannin|grippy|astringent|firm|structured)\b/,
@@ -143,7 +143,7 @@ module BeverageIntelligence
 
       abv = payload['abv'].to_f
       abv = product.attributes_json['abv'].to_f if abv.zero? && product.attributes_json.is_a?(Hash)
-      metrics['alcohol_intensity'] = if abv > 0
+      metrics['alcohol_intensity'] = if abv.positive?
                                        [(abv / 60.0).round(2), 1.0].min
                                      else
                                        product.product_type == 'wine' ? 0.2 : 0.5
@@ -244,28 +244,28 @@ module BeverageIntelligence
     def grape_flavor_tags(grape)
       grape_tag_map = {
         'cabernet sauvignon' => %w[tannic berry vanilla_oak],
-        'merlot'             => %w[berry creamy stone_fruit],
-        'pinot noir'         => %w[berry earthy floral],
-        'syrah'              => %w[spice berry smoke_peat],
-        'shiraz'             => %w[spice berry smoke_peat],
-        'malbec'             => %w[berry spice chocolate],
-        'tempranillo'        => %w[berry vanilla_oak earthy],
-        'sangiovese'         => %w[berry earthy herbal],
-        'nebbiolo'           => %w[tannic floral earthy],
-        'grenache'           => %w[berry spice herbal],
-        'primitivo'          => %w[berry sweet spice],
-        'zinfandel'          => %w[berry spice sweet],
-        'chardonnay'         => %w[citrus creamy vanilla_oak],
-        'sauvignon blanc'    => %w[citrus herbal floral],
-        'riesling'           => %w[citrus floral sweet],
-        'pinot grigio'       => %w[citrus floral],
-        'gewürztraminer'     => %w[floral spice tropical],
-        'viognier'           => %w[floral stone_fruit creamy],
-        'chenin blanc'       => %w[citrus honey floral],
-        'albariño'           => %w[citrus saline floral],
-        'verdejo'            => %w[citrus herbal],
-        'vermentino'         => %w[citrus herbal saline],
-        'muscadet'           => %w[citrus saline],
+        'merlot' => %w[berry creamy stone_fruit],
+        'pinot noir' => %w[berry earthy floral],
+        'syrah' => %w[spice berry smoke_peat],
+        'shiraz' => %w[spice berry smoke_peat],
+        'malbec' => %w[berry spice chocolate],
+        'tempranillo' => %w[berry vanilla_oak earthy],
+        'sangiovese' => %w[berry earthy herbal],
+        'nebbiolo' => %w[tannic floral earthy],
+        'grenache' => %w[berry spice herbal],
+        'primitivo' => %w[berry sweet spice],
+        'zinfandel' => %w[berry spice sweet],
+        'chardonnay' => %w[citrus creamy vanilla_oak],
+        'sauvignon blanc' => %w[citrus herbal floral],
+        'riesling' => %w[citrus floral sweet],
+        'pinot grigio' => %w[citrus floral],
+        'gewürztraminer' => %w[floral spice tropical],
+        'viognier' => %w[floral stone_fruit creamy],
+        'chenin blanc' => %w[citrus honey floral],
+        'albariño' => %w[citrus saline floral],
+        'verdejo' => %w[citrus herbal],
+        'vermentino' => %w[citrus herbal saline],
+        'muscadet' => %w[citrus saline],
       }
       grape_tag_map[grape.to_s.downcase] || []
     end
@@ -275,18 +275,18 @@ module BeverageIntelligence
 
       # Alcohol intensity
       abv = parsed['bottling_strength_abv'].to_f
-      metrics['alcohol_intensity'] = abv > 0 ? [(abv / 20.0).round(2), 1.0].min : 0.2
+      metrics['alcohol_intensity'] = abv.positive? ? [(abv / 20.0).round(2), 1.0].min : 0.2
 
       # Body from color/grape defaults
       metrics['body'] = case color
-                         when 'red' then text.match?(/\b(full|bold|rich|robust)\b/) ? 0.8 : 0.6
-                         when 'white' then text.match?(/\b(full|rich|oaked)\b/) ? 0.6 : 0.35
-                         when 'rosé' then 0.35
-                         when 'sparkling' then 0.3
-                         when 'dessert' then 0.7
-                         when 'fortified' then 0.8
-                         else 0.5
-                         end
+                        when 'red' then text.match?(/\b(full|bold|rich|robust)\b/) ? 0.8 : 0.6
+                        when 'white' then text.match?(/\b(full|rich|oaked)\b/) ? 0.6 : 0.35
+                        when 'rosé' then 0.35
+                        when 'sparkling' then 0.3
+                        when 'dessert' then 0.7
+                        when 'fortified' then 0.8
+                        else 0.5
+                        end
 
       # Sweetness
       metrics['sweetness_level'] = if text.match?(/\b(sweet|dessert|luscious|doux|dolce|amabile)\b/)
@@ -303,25 +303,25 @@ module BeverageIntelligence
 
       # Acidity
       metrics['acidity'] = if text.match?(/\b(acid|crisp|tart|zesty|bright|fresh|racy)\b/)
-                              0.7
-                            elsif %w[sauvignon blanc riesling albariño muscadet].include?(grapes.first)
-                              0.7
-                            elsif color == 'white' || color == 'sparkling'
-                              0.55
-                            else
-                              0.4
-                            end
+                             0.7
+                           elsif %w[sauvignon blanc riesling albariño muscadet].include?(grapes.first)
+                             0.7
+                           elsif %w[white sparkling].include?(color)
+                             0.55
+                           else
+                             0.4
+                           end
 
       # Tannin
       metrics['tannin'] = if text.match?(/\b(tannic|tannin|grippy|structured|firm)\b/)
-                             0.7
-                           elsif %w[cabernet sauvignon nebbiolo tempranillo].include?(grapes.first)
-                             0.7
-                           elsif color == 'red'
-                             0.5
-                           else
-                             0.15
-                           end
+                            0.7
+                          elsif %w[cabernet sauvignon nebbiolo tempranillo].include?(grapes.first)
+                            0.7
+                          elsif color == 'red'
+                            0.5
+                          else
+                            0.15
+                          end
 
       # Finish
       metrics['finish_length'] = text.match?(/\b(long|lingering|persistent)\b/) ? 0.8 : 0.5

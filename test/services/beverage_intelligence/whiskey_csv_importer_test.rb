@@ -6,7 +6,7 @@ class BeverageIntelligence::WhiskeyCsvImporterTest < ActiveSupport::TestCase
   setup do
     @menu = menus(:one)
     @section = @menu.menusections.first || Menusection.create!(
-      menu: @menu, name: 'Whiskey', sequence: 1, status: :active
+      menu: @menu, name: 'Whiskey', sequence: 1, status: :active,
     )
 
     @lagavulin = Menuitem.create!(

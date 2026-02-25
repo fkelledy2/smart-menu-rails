@@ -76,6 +76,49 @@ module Admin
       auto_enrich_if_needed
     end
 
+    # POST /admin/discovered_restaurants
+    def create
+      website_url = params.dig(:discovered_restaurant, :website_url).to_s.strip
+      name = params.dig(:discovered_restaurant, :name).to_s.strip
+      city_name = params.dig(:discovered_restaurant, :city_name).to_s.strip
+
+      if website_url.blank?
+        redirect_to admin_discovered_restaurants_path, alert: 'Website URL is required', status: :see_other
+        return
+      end
+
+      # Normalize URL
+      website_url = "https://#{website_url}" unless website_url.match?(%r{\Ahttps?://}i)
+
+      # Auto-fill name from domain if not provided
+      if name.blank?
+        uri = begin
+          URI.parse(website_url)
+        rescue StandardError
+          nil
+        end
+        name = uri&.host&.delete_prefix('www.')&.split('.')&.first&.titleize || 'Unknown'
+      end
+
+      city_name = 'Manual Entry' if city_name.blank?
+
+      dr = DiscoveredRestaurant.new(
+        name: name,
+        website_url: website_url,
+        city_name: city_name,
+        google_place_id: "manual_#{SecureRandom.hex(8)}",
+        status: :pending,
+        discovered_at: Time.current,
+        metadata: { 'source' => 'manual', 'created_by' => current_user&.id },
+      )
+
+      if dr.save
+        redirect_to admin_discovered_restaurant_path(dr), notice: "#{dr.name} added — run Deep Dive or Web Menu Scrape to populate details", status: :see_other
+      else
+        redirect_to admin_discovered_restaurants_path, alert: "Could not create: #{dr.errors.full_messages.join(', ')}", status: :see_other
+      end
+    end
+
     def update
       @discovered_restaurant.assign_attributes(discovered_restaurant_params)
 
@@ -112,45 +155,6 @@ module Admin
       redirect_back_or_to(admin_discovered_restaurant_path(@discovered_restaurant), notice: 'Saved', status: :see_other)
     rescue ActiveRecord::RecordInvalid => e
       redirect_back_or_to(admin_discovered_restaurant_path(@discovered_restaurant), alert: e.record.errors.full_messages.first, status: :see_other)
-    end
-
-    # POST /admin/discovered_restaurants
-    def create
-      website_url = params.dig(:discovered_restaurant, :website_url).to_s.strip
-      name = params.dig(:discovered_restaurant, :name).to_s.strip
-      city_name = params.dig(:discovered_restaurant, :city_name).to_s.strip
-
-      if website_url.blank?
-        redirect_to admin_discovered_restaurants_path, alert: 'Website URL is required', status: :see_other
-        return
-      end
-
-      # Normalize URL
-      website_url = "https://#{website_url}" unless website_url.match?(%r{\Ahttps?://}i)
-
-      # Auto-fill name from domain if not provided
-      if name.blank?
-        uri = URI.parse(website_url) rescue nil
-        name = uri&.host&.sub(/\Awww\./, '')&.split('.')&.first&.titleize || 'Unknown'
-      end
-
-      city_name = 'Manual Entry' if city_name.blank?
-
-      dr = DiscoveredRestaurant.new(
-        name: name,
-        website_url: website_url,
-        city_name: city_name,
-        google_place_id: "manual_#{SecureRandom.hex(8)}",
-        status: :pending,
-        discovered_at: Time.current,
-        metadata: { 'source' => 'manual', 'created_by' => current_user&.id },
-      )
-
-      if dr.save
-        redirect_to admin_discovered_restaurant_path(dr), notice: "#{dr.name} added — run Deep Dive or Web Menu Scrape to populate details", status: :see_other
-      else
-        redirect_to admin_discovered_restaurants_path, alert: "Could not create: #{dr.errors.full_messages.join(', ')}", status: :see_other
-      end
     end
 
     def bulk_update
@@ -424,7 +428,7 @@ module Admin
 
       # Remove matching jobs from Sidekiq queues
       removed = remove_sidekiq_jobs_for(@discovered_restaurant.id)
-      killed << "#{removed} Sidekiq job(s) removed" if removed > 0
+      killed << "#{removed} Sidekiq job(s) removed" if removed.positive?
 
       msg = killed.any? ? "Killed: #{killed.join(', ')}" : 'No active enrichment processes found'
       redirect_back_or_to(admin_discovered_restaurant_path(@discovered_restaurant), notice: msg, status: :see_other)

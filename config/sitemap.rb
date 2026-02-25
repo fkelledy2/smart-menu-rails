@@ -12,10 +12,10 @@ SitemapGenerator::Sitemap.create do
     .where(tablesetting_id: nil)
     .where(restaurants: { preview_enabled: true })
     .find_each do |sm|
-    add "/smartmenus/#{sm.slug}",
-        lastmod: [sm.updated_at, sm.menu&.updated_at, sm.restaurant&.updated_at].compact.max,
-        changefreq: 'weekly',
-        priority: 0.8
+      add "/smartmenus/#{sm.slug}",
+          lastmod: [sm.updated_at, sm.menu&.updated_at, sm.restaurant&.updated_at].compact.max,
+          changefreq: 'weekly',
+          priority: 0.8
   end
 
   # Explore pages

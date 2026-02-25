@@ -8,6 +8,6 @@ class SitemapGeneratorJob < ApplicationJob
   def perform
     SitemapGenerator::Interpreter.run
     SitemapGenerator::Sitemap.ping_search_engines
-    Rails.logger.info("[SitemapGeneratorJob] Sitemap regenerated and search engines pinged")
+    Rails.logger.info('[SitemapGeneratorJob] Sitemap regenerated and search engines pinged')
   end
 end

@@ -55,22 +55,22 @@ module GooglePlaces
       comps = Array(components)
 
       postcode = comps.find { |c| Array(c['types']).include?('postal_code') }
-                   &.dig('long_name')
+        &.dig('long_name')
 
       country_code = comps.find { |c| Array(c['types']).include?('country') }
-                       &.dig('short_name')
+        &.dig('short_name')
 
       city = (comps.find { |c| Array(c['types']).include?('locality') } ||
               comps.find { |c| Array(c['types']).include?('postal_town') })
-               &.dig('long_name')
+        &.dig('long_name')
 
       state = comps.find { |c| Array(c['types']).include?('administrative_area_level_1') }
-                &.dig('short_name')
+        &.dig('short_name')
 
       street_number = comps.find { |c| Array(c['types']).include?('street_number') }
-                        &.dig('long_name')
+        &.dig('long_name')
       route = comps.find { |c| Array(c['types']).include?('route') }
-                &.dig('long_name')
+        &.dig('long_name')
       address1 = [street_number, route].compact.join(' ').presence
 
       {
@@ -90,7 +90,7 @@ module GooglePlaces
         inputtype: 'textquery',
         fields: 'place_id,formatted_address,geometry',
         key: config[:api_key],
-      })
+      },)
 
       body = response.parsed_response
       status = body['status'].to_s

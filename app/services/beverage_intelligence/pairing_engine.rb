@@ -6,15 +6,15 @@ module BeverageIntelligence
     # within a single menu.
     def generate_for_menu(menu)
       drink_items = menu.menuitems
-                        .joins(:menusection)
-                        .where('menusections.archived IS NOT TRUE')
-                        .drink_items
-                        .where(status: 'active')
+        .joins(:menusection)
+        .where('menusections.archived IS NOT TRUE')
+        .drink_items
+        .where(status: 'active')
 
       food_items = menu.menuitems
-                       .joins(:menusection)
-                       .where('menusections.archived IS NOT TRUE')
-                       .where(itemtype: :food, status: 'active')
+        .joins(:menusection)
+        .where('menusections.archived IS NOT TRUE')
+        .where(itemtype: :food, status: 'active')
 
       return 0 if drink_items.empty? || food_items.empty?
 
@@ -31,6 +31,7 @@ module BeverageIntelligence
 
         scored = food_items.filter_map do |food|
           next if food.id == drink.id
+
           food_profile = food.flavor_profile
           next unless food_profile&.tags&.any?
 
@@ -111,10 +112,10 @@ module BeverageIntelligence
       # Penalize risky combos
       risk_penalty = risk_flags.size * 0.1
 
-      total = [(complement * 0.6 + contrast * 0.4 - risk_penalty), 0.0].max
+      total = [((complement * 0.6) + (contrast * 0.4) - risk_penalty), 0.0].max
       total = [total, 1.0].min
 
-      rationale = build_rationale(drink, food, drink_tags, food_tags, complement, contrast, risk_flags)
+      rationale = build_rationale(drink, food, drink_tags, food_tags, complement, contrast, risk_flags: risk_flags)
 
       {
         complement_score: complement.round(4),
@@ -137,7 +138,7 @@ module BeverageIntelligence
       drink_tags.include?('smoke_peat') && food_tags.include?('smoke_peat')
     end
 
-    def build_rationale(drink, food, drink_tags, food_tags, complement, contrast, risk_flags)
+    def build_rationale(drink, food, drink_tags, food_tags, complement, contrast, risk_flags:)
       parts = []
       shared = (drink_tags & food_tags)
       parts << "Shared flavors: #{shared.to_a.join(', ')}" if shared.any?
@@ -226,7 +227,7 @@ module BeverageIntelligence
       end
 
       # Sweet wine + savoury main
-      if dm['sweetness_level'].to_f > 0.6 && !food_tags.include?('sweet') && fm['body'].to_f > 0.5
+      if dm['sweetness_level'].to_f > 0.6 && food_tags.exclude?('sweet') && fm['body'].to_f > 0.5
         flags << 'sweet_wine_vs_savoury_main'
       end
 

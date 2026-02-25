@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 namespace :images do
-  desc "Backfill WebP and card_webp derivatives for all existing images"
+  desc 'Backfill WebP and card_webp derivatives for all existing images'
   task backfill_derivatives: :environment do
     models = [
       { class: Menuitem, scope: -> { Menuitem.where.not(image_data: nil) } },
@@ -29,16 +29,16 @@ namespace :images do
 
         BackfillImageDerivativesJob.perform_later(klass.name, record.id)
         enqueued += 1
-        print "." if (enqueued % 10).zero?
+        print '.' if (enqueued % 10).zero?
       end
       puts
     end
 
     puts "\nDone. #{enqueued} jobs enqueued out of #{total} total records with images."
-    puts "Jobs will process in the background via Sidekiq."
+    puts 'Jobs will process in the background via Sidekiq.'
   end
 
-  desc "Regenerate derivatives for a single record (e.g. rake images:regenerate CLASS=Menuitem ID=123)"
+  desc 'Regenerate derivatives for a single record (e.g. rake images:regenerate CLASS=Menuitem ID=123)'
   task regenerate: :environment do
     klass = ENV.fetch('CLASS', 'Menuitem').constantize
     id = ENV.fetch('ID').to_i
@@ -49,10 +49,10 @@ namespace :images do
     attacher.create_derivatives(force: true)
     attacher.atomic_persist
     puts "After:  #{attacher.derivatives.keys.sort}"
-    puts "Done."
+    puts 'Done.'
   end
 
-  desc "Report on derivative coverage across all image-bearing models"
+  desc 'Report on derivative coverage across all image-bearing models'
   task derivative_report: :environment do
     models = [Menuitem, Menusection, Restaurant]
     expected_keys = %i[thumb medium large card_webp thumb_webp medium_webp large_webp].sort

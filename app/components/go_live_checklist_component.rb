@@ -42,15 +42,15 @@ class GoLiveChecklistComponent < ViewComponent::Base
 
   def build_steps
     [
-      { label: "Restaurant Name",     complete: restaurant.name.present?,     path: details_path, icon: "bi-shop" },
-      { label: "Restaurant Currency",  complete: restaurant.currency.present?, path: details_path, icon: "bi-currency-exchange" },
-      { label: "Restaurant Address",   complete: address_ok?,                  path: details_path, icon: "bi-geo-alt" },
-      { label: "Restaurant Country",   complete: restaurant.country.present?,  path: details_path, icon: "bi-globe" },
-      { label: "Add Language",         complete: default_language_ok?,         path: section_path("localization"), icon: "bi-translate" },
-      { label: "Add Table",            complete: has_table?,                   path: section_path("tables"), icon: "bi-layout-wtf" },
-      { label: "Add Menu",             complete: has_menu?,                    path: section_path("menus"), icon: "bi-menu-button-wide" },
-      { label: "Set Merchant Of Record", complete: stripe_connect_enabled?,   path: section_path("settings"), icon: "bi-credit-card" },
-      { label: "Billing Configured",   complete: subscription_ok?,            path: billing_path, icon: "bi-receipt", external: true },
+      { label: 'Restaurant Name', complete: restaurant.name.present?, path: details_path, icon: 'bi-shop' },
+      { label: 'Restaurant Currency',  complete: restaurant.currency.present?, path: details_path, icon: 'bi-currency-exchange' },
+      { label: 'Restaurant Address',   complete: address_ok?,                  path: details_path, icon: 'bi-geo-alt' },
+      { label: 'Restaurant Country',   complete: restaurant.country.present?,  path: details_path, icon: 'bi-globe' },
+      { label: 'Add Language',         complete: default_language_ok?,         path: section_path('localization'), icon: 'bi-translate' },
+      { label: 'Add Table',            complete: has_table?,                   path: section_path('tables'), icon: 'bi-layout-wtf' },
+      { label: 'Add Menu',             complete: has_menu?,                    path: section_path('menus'), icon: 'bi-menu-button-wide' },
+      { label: 'Set Merchant Of Record', complete: stripe_connect_enabled?, path: section_path('settings'), icon: 'bi-credit-card' },
+      { label: 'Billing Configured', complete: subscription_ok?, path: billing_path, icon: 'bi-receipt', external: true },
     ]
   end
 
@@ -59,11 +59,11 @@ class GoLiveChecklistComponent < ViewComponent::Base
   end
 
   def default_language_ok?
-    restaurant.restaurantlocales.where(status: "active", dfault: true).exists?
+    restaurant.restaurantlocales.exists?(status: 'active', dfault: true)
   end
 
   def has_table?
-    restaurant.tablesettings.where(archived: false).exists?
+    restaurant.tablesettings.exists?(archived: false)
   end
 
   def has_menu?
@@ -74,12 +74,12 @@ class GoLiveChecklistComponent < ViewComponent::Base
   end
 
   def stripe_connect_enabled?
-    stripe_account&.status.to_s == "enabled"
+    stripe_account&.status.to_s == 'enabled'
   end
 
   def stripe_account
-    @stripe_account ||= restaurant.provider_accounts.find { |a| a.provider.to_s == "stripe" } ||
-      restaurant.provider_accounts.where(provider: :stripe).first
+    @stripe_account ||= restaurant.provider_accounts.find { |a| a.provider.to_s == 'stripe' } ||
+                        restaurant.provider_accounts.where(provider: :stripe).first
   end
 
   def subscription_ok?
@@ -92,7 +92,7 @@ class GoLiveChecklistComponent < ViewComponent::Base
   end
 
   def details_path
-    helpers.edit_restaurant_path(restaurant, section: "details")
+    helpers.edit_restaurant_path(restaurant, section: 'details')
   end
 
   def section_path(section)

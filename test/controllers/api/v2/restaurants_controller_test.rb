@@ -28,28 +28,28 @@ class Api::V2::RestaurantsControllerTest < ActionDispatch::IntegrationTest
   test 'GET /api/v2/restaurants returns JSON with published restaurants' do
     get '/api/v2/restaurants', as: :json
     assert_response :success
-    json = JSON.parse(response.body)
+    json = response.parsed_body
 
     assert json['data'].is_a?(Array)
     assert json['meta'].present?
     assert json['attribution'].present?
     assert json['generated_at'].present?
 
-    names = json['data'].map { |r| r['name'] }
+    names = json['data'].pluck('name')
     assert_includes names, 'Test Restaurant'
   end
 
   test 'GET /api/v2/restaurants filters by city' do
     get '/api/v2/restaurants', params: { city: 'Dublin' }, as: :json
     assert_response :success
-    json = JSON.parse(response.body)
-    assert json['data'].any? { |r| r['name'] == 'Test Restaurant' }
+    json = response.parsed_body
+    assert(json['data'].any? { |r| r['name'] == 'Test Restaurant' })
   end
 
   test 'GET /api/v2/restaurants/:id returns restaurant detail' do
     get "/api/v2/restaurants/#{@restaurant.id}", as: :json
     assert_response :success
-    json = JSON.parse(response.body)
+    json = response.parsed_body
 
     assert_equal 'Restaurant', json['data']['@type']
     assert_equal 'Test Restaurant', json['data']['name']
@@ -81,8 +81,8 @@ class Api::V2::RestaurantsControllerTest < ActionDispatch::IntegrationTest
     )
 
     get '/api/v2/restaurants', as: :json
-    json = JSON.parse(response.body)
-    names = json['data'].map { |r| r['name'] }
+    json = response.parsed_body
+    names = json['data'].pluck('name')
     assert_not_includes names, 'Hidden Restaurant'
 
     hidden.destroy

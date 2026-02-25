@@ -82,8 +82,8 @@ class Menu::ResolveEntitiesJob
         parts = [parsed['producer']]
       end
       grapes = Array(parsed['grape_variety'])
-      parts << grapes.first if grapes.any? && !name.downcase.include?(grapes.first.to_s.downcase)
-      parts << parsed['appellation'] if parsed['appellation'].present? && !name.downcase.include?(parsed['appellation'].to_s.downcase)
+      parts << grapes.first if grapes.any? && name.downcase.exclude?(grapes.first.to_s.downcase)
+      parts << parsed['appellation'] if parsed['appellation'].present? && name.downcase.exclude?(parsed['appellation'].to_s.downcase)
       vintage = parsed['vintage_year']
       parts << vintage.to_s if vintage.present?
     end

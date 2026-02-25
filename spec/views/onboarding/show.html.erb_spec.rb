@@ -7,9 +7,8 @@ RSpec.describe 'onboarding/account_details.html.erb' do
   before do
     assign(:onboarding, onboarding_session)
     # The template uses current_user from the controller, stub via helper
-    allow(view).to receive(:current_user).and_return(user)
     # Provide route helpers
-    allow(view).to receive(:onboarding_path).and_return('/onboarding')
+    allow(view).to receive_messages(current_user: user, onboarding_path: '/onboarding')
   end
 
   it 'renders without errors' do
@@ -23,16 +22,16 @@ RSpec.describe 'onboarding/account_details.html.erb' do
 
   it 'includes a name field' do
     render
-    expect(rendered).to have_selector('input[name="user[name]"]')
+    expect(rendered).to have_field('user[name]')
   end
 
   it 'includes a restaurant name field' do
     render
-    expect(rendered).to have_selector('input[name="onboarding_session[restaurant_name]"]')
+    expect(rendered).to have_field('onboarding_session[restaurant_name]')
   end
 
   it 'includes a continue button' do
     render
-    expect(rendered).to have_selector('#continue-btn')
+    expect(rendered).to have_css('#continue-btn')
   end
 end

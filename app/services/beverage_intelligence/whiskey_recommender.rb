@@ -7,24 +7,24 @@ module BeverageIntelligence
 
     NEIGHBORING_CLUSTERS = {
       'light_delicate' => %w[fruity_sweet spicy_dry],
-      'fruity_sweet'   => %w[light_delicate rich_sherried],
-      'rich_sherried'  => %w[fruity_sweet spicy_dry],
-      'spicy_dry'      => %w[light_delicate rich_sherried smoky_coastal],
-      'smoky_coastal'  => %w[spicy_dry heavily_peated],
+      'fruity_sweet' => %w[light_delicate rich_sherried],
+      'rich_sherried' => %w[fruity_sweet spicy_dry],
+      'spicy_dry' => %w[light_delicate rich_sherried smoky_coastal],
+      'smoky_coastal' => %w[spicy_dry heavily_peated],
       'heavily_peated' => %w[smoky_coastal],
     }.freeze
 
     REGION_GROUPS = {
-      'scotch'      => %w[islay speyside highland lowland campbeltown islands],
+      'scotch' => %w[islay speyside highland lowland campbeltown islands],
       'bourbon_rye' => %w[kentucky tennessee american_other],
-      'irish'       => %w[ireland],
-      'japanese'    => %w[japan],
+      'irish' => %w[ireland],
+      'japanese' => %w[japan],
     }.freeze
 
     # ── Quick Pick Mode ────────────────────────────────────────────
 
     def recommend_for_guest(menu:, preferences:, limit: 3, exclude_ids: [])
-      experience   = preferences[:experience_level]  # newcomer, casual, enthusiast
+      experience   = preferences[:experience_level] # newcomer, casual, enthusiast
       region_pref  = preferences[:region_pref]        # scotch, bourbon_rye, irish, japanese, surprise_me
       flavor_pref  = preferences[:flavor_pref]        # cluster key
       budget       = preferences[:budget]             # 1, 2, 3
@@ -102,9 +102,9 @@ module BeverageIntelligence
 
     def whiskey_items(menu)
       menu.menuitems
-          .joins(:menusection)
-          .where('menusections.archived IS NOT TRUE')
-          .where(itemtype: :whiskey, status: 'active')
+        .joins(:menusection)
+        .where('menusections.archived IS NOT TRUE')
+        .where(itemtype: :whiskey, status: 'active')
     end
 
     def parsed_fields(item)
@@ -150,7 +150,7 @@ module BeverageIntelligence
 
       # Budget preference (0.20 weight)
       price = item.price.to_f
-      if price > 0
+      if price.positive?
         case budget.to_i
         when 1 then score += 0.20 if price <= 12
         when 2 then score += 0.20 if price > 10 && price <= 20
@@ -251,7 +251,7 @@ module BeverageIntelligence
         parts << "in #{REGIONS[parsed['whiskey_region']]}" if parsed['whiskey_region'].present?
       end
 
-      if parsed['age_years'].present? && parsed['age_years'] > 0
+      if parsed['age_years'].present? && parsed['age_years'].positive?
         parts << "aged #{parsed['age_years']} years"
       end
 
@@ -261,12 +261,12 @@ module BeverageIntelligence
 
       case experience
       when 'newcomer'
-        parts << "— a great starting point" if parsed.fetch('bottling_strength_abv', 43).to_f <= 43
+        parts << '— a great starting point' if parsed.fetch('bottling_strength_abv', 43).to_f <= 43
       when 'enthusiast'
         parts << "— #{parsed['bottling_strength_abv']}% ABV" if parsed['bottling_strength_abv'].to_f > 46
       end
 
-      parts.compact_blank.join(', ').presence || "A fine choice from the collection"
+      parts.compact_blank.join(', ').presence || 'A fine choice from the collection'
     end
   end
 end

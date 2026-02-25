@@ -118,7 +118,7 @@ class MenuparticipantsController < ApplicationController
   end
 
   def broadcastState
-    menuparticipant = Menuparticipant.includes(smartmenu: [:menu, :restaurant, :tablesetting]).find_by(sessionid: session.id.to_s)
+    menuparticipant = Menuparticipant.includes(smartmenu: %i[menu restaurant tablesetting]).find_by(sessionid: session.id.to_s)
     return unless menuparticipant&.smartmenu
 
     smartmenu = menuparticipant.smartmenu

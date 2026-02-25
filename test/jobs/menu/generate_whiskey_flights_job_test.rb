@@ -9,7 +9,7 @@ class Menu::GenerateWhiskeyFlightsJobTest < ActiveSupport::TestCase
     @restaurant.update_columns(whiskey_ambassador_enabled: true, max_whiskey_flights: 5)
 
     @section = @menu.menusections.first || Menusection.create!(
-      menu: @menu, name: 'Whiskey', sequence: 1, status: :active
+      menu: @menu, name: 'Whiskey', sequence: 1, status: :active,
     )
 
     # Create enough whiskey items for flights (need ≥6)
@@ -59,11 +59,11 @@ class Menu::GenerateWhiskeyFlightsJobTest < ActiveSupport::TestCase
   end
 
   test 'generates flights for menu with enough items' do
-    before_count = WhiskeyFlight.count
+    WhiskeyFlight.count
     Menu::GenerateWhiskeyFlightsJob.perform_now(@menu.id)
 
     flights = WhiskeyFlight.where(menu: @menu)
-    assert flights.count > 0, 'Should have generated at least one flight'
+    assert flights.any?, 'Should have generated at least one flight'
     assert flights.count <= 5, 'Should respect max_whiskey_flights'
 
     flights.each do |flight|
@@ -71,7 +71,7 @@ class Menu::GenerateWhiskeyFlightsJobTest < ActiveSupport::TestCase
       assert flight.narrative.present?, "Flight #{flight.theme_key} should have a narrative"
       assert flight.items.is_a?(Array), "Flight #{flight.theme_key} should have items array"
       assert flight.items.size >= 3, "Flight #{flight.theme_key} should have at least 3 items"
-      assert flight.total_price.to_f > 0, "Flight #{flight.theme_key} should have a total price"
+      assert flight.total_price.to_f.positive?, "Flight #{flight.theme_key} should have a total price"
       assert_equal 'ai', flight.source
       assert_equal 'draft', flight.status
       assert flight.generated_at.present?
@@ -120,7 +120,7 @@ class Menu::GenerateWhiskeyFlightsJobTest < ActiveSupport::TestCase
     Menu::GenerateWhiskeyFlightsJob.perform_now(@menu.id)
 
     valid_ids = @menu.menuitems.pluck(:id).to_set
-    WhiskeyFlight.where(menu: @menu).each do |flight|
+    WhiskeyFlight.where(menu: @menu).find_each do |flight|
       flight.items.each do |item|
         assert valid_ids.include?(item['menuitem_id']),
                "Flight #{flight.theme_key} references invalid menuitem_id #{item['menuitem_id']}"
