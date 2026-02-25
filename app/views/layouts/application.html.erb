@@ -4,6 +4,7 @@
 
   <head>
     <%= render 'shared/head' %>
+    <%= render 'shared/schema_org_json_ld' if @schema_org_json_ld.present? %>
     <%= tag.meta name: 'current-locale', content: I18n.locale %>
     <%= Sentry.get_trace_propagation_meta.html_safe %>
     <%= tag.link rel: "manifest", href: "/manifest.json" %>

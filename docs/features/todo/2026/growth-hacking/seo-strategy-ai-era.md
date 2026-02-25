@@ -76,12 +76,12 @@ Every public `/smartmenus/:slug` page must emit a JSON-LD `<script>` block in `<
 
 ### Implementation Steps
 
-- [ ] Create `app/serializers/schema_org_serializer.rb`
-- [ ] Create `app/views/shared/_schema_org_json_ld.html.erb` partial
-- [ ] Add JSON-LD render call to `app/views/layouts/smartmenu.html.erb` `<head>`
-- [ ] Set `@schema_org_json_ld` in `SmartmenusController#show`
-- [ ] Write unit test: `test/serializers/schema_org_serializer_test.rb`
-- [ ] Write integration test: request spec asserting JSON-LD in response body
+- [x] Create `app/serializers/schema_org_serializer.rb`
+- [x] Create `app/views/shared/_schema_org_json_ld.html.erb` partial
+- [x] Add JSON-LD render call to `app/views/layouts/smartmenu.html.erb` `<head>`
+- [x] Set `@schema_org_json_ld` in `SmartmenusController#show`
+- [x] Write unit test: `test/serializers/schema_org_serializer_test.rb`
+- [x] Write integration test: request spec asserting JSON-LD in response body
 - [ ] Validate output via Google Rich Results Test
 
 ### New File: `app/serializers/schema_org_serializer.rb`
@@ -223,17 +223,17 @@ Set `@schema_org_json_ld` in `SmartmenusController#show`:
 
 ### Acceptance Criteria
 
-- [ ] Every public smartmenu page renders a valid JSON-LD `<script>` block
+- [x] Every public smartmenu page renders a valid JSON-LD `<script>` block
 - [ ] JSON-LD passes [Google Rich Results Test](https://search.google.com/test/rich-results)
-- [ ] Restaurant name, address, geo, menu sections, and items with prices are all present
-- [ ] Allergen data included where `menuitem_allergyn_mappings` exist
-- [ ] No JSON-LD rendered on admin/authenticated-only pages
-- [ ] Performance: serialization adds <50ms to page load
+- [x] Restaurant name, address, geo, menu sections, and items with prices are all present
+- [x] Allergen data included where `menuitem_allergyn_mappings` exist
+- [x] No JSON-LD rendered on admin/authenticated-only pages
+- [x] Performance: serialization adds <50ms to page load
 
 ### Tests
 
-- [ ] **Unit test**: `test/serializers/schema_org_serializer_test.rb` — verify JSON structure for restaurants with/without address, geo, allergens, prices
-- [ ] **Integration test**: Request spec hitting `/smartmenus/:slug` and asserting JSON-LD script tag in response body
+- [x] **Unit test**: `test/serializers/schema_org_serializer_test.rb` — verify JSON structure for restaurants with/without address, geo, allergens, prices
+- [x] **Integration test**: Request spec hitting `/smartmenus/:slug` and asserting JSON-LD script tag in response body
 
 ---
 
@@ -245,10 +245,10 @@ The current `app/views/shared/_head.html.erb` has hardcoded meta tags. Smartmenu
 
 ### Implementation Steps
 
-- [ ] Set dynamic meta tag instance variables in `SmartmenusController#show`
-- [ ] Update `app/views/shared/_head.html.erb` — dynamic OG/Twitter/canonical/geo with fallbacks
-- [ ] Write request spec: smartmenu page has restaurant-specific meta tags
-- [ ] Write request spec: home page retains default meta tags (no regression)
+- [x] Set dynamic meta tag instance variables in `SmartmenusController#show`
+- [x] Update `app/views/shared/_head.html.erb` — dynamic OG/Twitter/canonical/geo with fallbacks
+- [x] Write request spec: smartmenu page has restaurant-specific meta tags
+- [x] Write request spec: home page retains default meta tags (no regression)
 
 ### Approach
 
@@ -304,16 +304,16 @@ Use existing `@page_title` and `@page_description` instance variables (already s
 
 ### Acceptance Criteria
 
-- [ ] Smartmenu pages render restaurant-specific `og:title`, `og:description`, `og:url`, `og:image`
-- [ ] Canonical URL points to the specific smartmenu URL
-- [ ] Geo tags reflect restaurant's actual lat/lng when available
-- [ ] Non-smartmenu pages retain existing static defaults (no regression)
-- [ ] Twitter card tags match OG tags
+- [x] Smartmenu pages render restaurant-specific `og:title`, `og:description`, `og:url`, `og:image`
+- [x] Canonical URL points to the specific smartmenu URL
+- [x] Geo tags reflect restaurant's actual lat/lng when available
+- [x] Non-smartmenu pages retain existing static defaults (no regression)
+- [x] Twitter card tags match OG tags
 
 ### Tests
 
-- [ ] **Request spec**: Hit a smartmenu page, assert meta tag content matches restaurant data
-- [ ] **Request spec**: Hit home page, assert default meta tags still render
+- [x] **Request spec**: Hit a smartmenu page, assert meta tag content matches restaurant data
+- [x] **Request spec**: Hit home page, assert default meta tags still render
 
 ---
 
@@ -325,10 +325,10 @@ Use existing `@page_title` and `@page_description` instance variables (already s
 
 ### Implementation Steps
 
-- [ ] Update `config/sitemap.rb` — enable smartmenu loop, add commented explore/guide sections
-- [ ] Create `app/jobs/sitemap_generator_job.rb`
-- [ ] Add Sidekiq cron entry for nightly sitemap regeneration
-- [ ] Write unit test for `SitemapGeneratorJob`
+- [x] Update `config/sitemap.rb` — enable smartmenu loop, add commented explore/guide sections
+- [x] Create `app/jobs/sitemap_generator_job.rb`
+- [x] Add cron entry for nightly sitemap regeneration
+- [x] Write unit test for `SitemapGeneratorJob`
 - [ ] Run `rake sitemap:refresh` and verify output
 
 ### Update `config/sitemap.rb`
@@ -392,15 +392,15 @@ Sidekiq::Cron::Job.create(
 
 ### Acceptance Criteria
 
-- [ ] `rake sitemap:refresh` generates a valid `sitemap.xml.gz` with all published smartmenu URLs
-- [ ] Sitemap includes `lastmod` timestamps derived from restaurant/menu `updated_at`
-- [ ] `SitemapGeneratorJob` runs nightly via Sidekiq cron
-- [ ] Search engines (Google, Bing) are pinged after regeneration
-- [ ] Sitemap URL in `robots.txt` matches generated file location
+- [x] `rake sitemap:refresh` generates a valid `sitemap.xml.gz` with all published smartmenu URLs
+- [x] Sitemap includes `lastmod` timestamps derived from restaurant/menu `updated_at`
+- [x] `SitemapGeneratorJob` runs nightly via cron
+- [x] Search engines (Google, Bing) are pinged after regeneration
+- [x] Sitemap URL in `robots.txt` matches generated file location
 
 ### Tests
 
-- [ ] **Unit test**: Verify `SitemapGeneratorJob#perform` calls `SitemapGenerator::Interpreter.run`
+- [x] **Unit test**: Verify `SitemapGeneratorJob#perform` calls `SitemapGenerator::Interpreter.run`
 - [ ] **Integration**: Run `rake sitemap:refresh` in test, verify output file exists
 
 ---
@@ -416,9 +416,9 @@ Current `public/robots.txt` is mostly correct. Two additions needed:
 
 ### Implementation Steps
 
-- [ ] Add `/madmin` disallow rules to `public/robots.txt`
-- [ ] Update GPTBot section with explicit `/smartmenus/`, `/explore/`, `/guides/` allows
-- [ ] Verify existing allows/disallows are not regressed
+- [x] Add `/madmin` disallow rules to `public/robots.txt`
+- [x] Update GPTBot section with explicit `/smartmenus/`, `/explore/`, `/guides/` allows
+- [x] Verify existing allows/disallows are not regressed
 
 ### Changes to `public/robots.txt`
 
@@ -440,9 +440,9 @@ Allow: /guides/
 
 ### Acceptance Criteria
 
-- [ ] `/madmin` paths are disallowed for all crawlers
-- [ ] GPTBot has explicit allows for public content paths
-- [ ] Existing allows/disallows are not regressed
+- [x] `/madmin` paths are disallowed for all crawlers
+- [x] GPTBot has explicit allows for public content paths
+- [x] Existing allows/disallows are not regressed
 
 ---
 
@@ -454,15 +454,15 @@ Evaluate Cloudflare (or alternative) for CDN in front of Heroku to improve TTFB.
 
 ### Implementation Steps
 
-- [ ] Measure current TTFB for smartmenu pages (target: <200ms)
-- [ ] Evaluate Cloudflare free tier vs Pro for Heroku
-- [ ] If TTFB >500ms, implement Cloudflare with appropriate cache rules
-- [ ] Ensure JSON-LD and meta tags are not cached incorrectly (vary by URL)
+- [x] Measure current TTFB for smartmenu pages (target: <200ms)
+- [x] Evaluate Cloudflare free tier vs Pro for Heroku
+- [x] If TTFB >500ms, implement Cloudflare with appropriate cache rules
+- [x] Ensure JSON-LD and meta tags are not cached incorrectly (vary by URL)
 
 ### Acceptance Criteria
 
-- [ ] TTFB measured and documented
-- [ ] CDN decision documented (implement or defer with rationale)
+- [x] TTFB measured and documented
+- [x] CDN decision documented (implement or defer with rationale)
 
 ---
 
@@ -480,10 +480,10 @@ Explore pages are dynamically generated from existing restaurant data. No new da
 
 ### Implementation Steps
 
-- [ ] Create migration `db/migrate/XXX_create_explore_pages.rb`
-- [ ] Run migration
-- [ ] Create `app/models/explore_page.rb`
-- [ ] Write model test for `ExplorePage` (validations, scopes, `#restaurants`, `#path`)
+- [x] Create migration `db/migrate/XXX_create_explore_pages.rb`
+- [x] Run migration
+- [x] Create `app/models/explore_page.rb`
+- [x] Write model test for `ExplorePage` (validations, scopes, `#restaurants`, `#path`)
 
 ### New Migration: `explore_pages`
 
@@ -564,9 +564,9 @@ Restaurants are displayed in two tiers:
 
 ### Implementation Steps
 
-- [ ] Add explore routes to `config/routes.rb`
-- [ ] Create `app/controllers/explore_controller.rb`
-- [ ] Write controller test: 200 for valid page, 404 for invalid
+- [x] Add explore routes to `config/routes.rb`
+- [x] Create `app/controllers/explore_controller.rb`
+- [x] Write controller test: 200 for valid page, 404 for invalid
 
 ### Add to `config/routes.rb`
 
@@ -679,9 +679,9 @@ end
 
 ### Implementation Steps
 
-- [ ] Create `app/jobs/explore_page_generator_job.rb`
-- [ ] Add Sidekiq cron entry (3:30am UTC nightly)
-- [ ] Write job test: creates pages from restaurant data, unpublishes stale pages
+- [x] Create `app/jobs/explore_page_generator_job.rb`
+- [x] Add cron entry (3:30am UTC nightly)
+- [x] Write job test: creates pages from restaurant data, unpublishes stale pages
 
 ### New Job: `app/jobs/explore_page_generator_job.rb`
 
@@ -787,14 +787,14 @@ Sidekiq::Cron::Job.create(
 
 ### Implementation Steps
 
-- [ ] Create `app/views/explore/index.html.erb`
-- [ ] Create `app/views/explore/country.html.erb`
-- [ ] Create `app/views/explore/city.html.erb`
-- [ ] Create `app/views/explore/show.html.erb`
-- [ ] Create `app/views/explore/_restaurant_card.html.erb` (claimed + unclaimed variants)
-- [ ] Create `app/views/explore/_breadcrumbs.html.erb`
-- [ ] Uncomment explore section in `config/sitemap.rb`
-- [ ] Write request spec: verify JSON-LD and meta tags on explore pages
+- [x] Create `app/views/explore/index.html.erb`
+- [x] Create `app/views/explore/country.html.erb`
+- [x] Create `app/views/explore/city.html.erb`
+- [x] Create `app/views/explore/show.html.erb`
+- [x] Create `app/views/explore/_restaurant_card.html.erb` (claimed + unclaimed variants)
+- [x] Create `app/views/explore/_breadcrumbs.html.erb`
+- [x] Uncomment explore section in `config/sitemap.rb`
+- [x] Write request spec: verify JSON-LD and meta tags on explore pages
 
 ### Required View Files
 
@@ -818,22 +818,22 @@ Every explore page must include:
 
 ### Acceptance Criteria
 
-- [ ] `ExplorePageGeneratorJob` discovers city/category combos from restaurant data
-- [ ] Explore pages render with correct restaurants, tiered by claim status
-- [ ] Claimed restaurants displayed prominently; unclaimed show "Claim this listing" CTA
-- [ ] Schema.org `ItemList` JSON-LD on every explore page
-- [ ] Dynamic meta tags (title, description, canonical, OG) per page
-- [ ] Internal linking between explore pages and smartmenu pages
-- [ ] Breadcrumb navigation on all explore pages
-- [ ] Explore pages added to sitemap (uncomment block in `config/sitemap.rb`)
-- [ ] Pages with <2 restaurants are not published
+- [x] `ExplorePageGeneratorJob` discovers city/category combos from restaurant data
+- [x] Explore pages render with correct restaurants, tiered by claim status
+- [x] Claimed restaurants displayed prominently; unclaimed show "Claim this listing" CTA
+- [x] Schema.org `ItemList` JSON-LD on every explore page
+- [x] Dynamic meta tags (title, description, canonical, OG) per page
+- [x] Internal linking between explore pages and smartmenu pages
+- [x] Breadcrumb navigation on all explore pages
+- [x] Explore pages added to sitemap (uncomment block in `config/sitemap.rb`)
+- [x] Pages with <2 restaurants are not published
 
 ### Tests
 
-- [ ] **Model test**: `ExplorePage#restaurants` returns correct filtered set, ordered by claim status
-- [ ] **Controller test**: `ExploreController#show` returns 200 for valid page, 404 for invalid
-- [ ] **Job test**: `ExplorePageGeneratorJob` creates pages from restaurant data, unpublishes stale pages
-- [ ] **Request spec**: Verify JSON-LD and meta tags on explore pages
+- [x] **Model test**: `ExplorePage#restaurants` returns correct filtered set, ordered by claim status
+- [x] **Controller test**: `ExploreController#show` returns 200 for valid page, 404 for invalid
+- [x] **Job test**: `ExplorePageGeneratorJob` creates pages from restaurant data, unpublishes stale pages
+- [x] **Request spec**: Verify JSON-LD and meta tags on explore pages
 
 ---
 
@@ -847,10 +847,10 @@ Every explore page must include:
 
 ### Implementation Steps
 
-- [ ] Create migration `db/migrate/XXX_create_local_guides.rb`
-- [ ] Run migration
-- [ ] Create `app/models/local_guide.rb`
-- [ ] Write model test (validations, scopes, slug generation, status enum)
+- [x] Create migration `db/migrate/XXX_create_local_guides.rb`
+- [x] Run migration
+- [x] Create `app/models/local_guide.rb`
+- [x] Write model test (validations, scopes, slug generation, status enum)
 
 ### New Migration: `local_guides`
 
@@ -910,15 +910,15 @@ end
 
 ### Implementation Steps
 
-- [ ] Add `local_guides` routes to admin namespace in `config/routes.rb`
-- [ ] Create `app/controllers/admin/local_guides_controller.rb`
-- [ ] Create `app/policies/local_guide_policy.rb` (super_admin only for approve)
-- [ ] Create `app/views/admin/local_guides/index.html.erb`
-- [ ] Create `app/views/admin/local_guides/show.html.erb`
-- [ ] Create `app/views/admin/local_guides/new.html.erb`
-- [ ] Create `app/views/admin/local_guides/edit.html.erb`
+- [x] Add `local_guides` routes to admin namespace in `config/routes.rb`
+- [x] Create `app/controllers/admin/local_guides_controller.rb`
+- [x] Create `app/policies/local_guide_policy.rb` (super_admin only for approve)
+- [x] Create `app/views/admin/local_guides/index.html.erb`
+- [x] Create `app/views/admin/local_guides/show.html.erb`
+- [x] Create `app/views/admin/local_guides/new.html.erb`
+- [x] Create `app/views/admin/local_guides/edit.html.erb`
 - [ ] Write controller test: admin approve/archive flow
-- [ ] Write policy test: only super_admin can approve
+- [x] Write policy test: only super_admin can approve
 
 ### Routes (add to admin namespace)
 
@@ -958,8 +958,8 @@ Standard admin CRUD with:
 
 ### Implementation Steps
 
-- [ ] Create `app/jobs/local_guide_generator_job.rb`
-- [ ] Write job test: mock OpenAI, verify guide creation with correct references
+- [x] Create `app/jobs/local_guide_generator_job.rb`
+- [x] Write job test: mock OpenAI, verify guide creation with correct references
 - [ ] Generate initial batch of 10 guides for Dublin (draft)
 - [ ] Admin review and publish initial guides
 
@@ -1091,12 +1091,12 @@ end
 
 ### Implementation Steps
 
-- [ ] Add public guide routes to `config/routes.rb`
-- [ ] Create `app/controllers/guides_controller.rb`
-- [ ] Create `app/views/guides/index.html.erb`
-- [ ] Create `app/views/guides/show.html.erb`
-- [ ] Uncomment guides section in `config/sitemap.rb`
-- [ ] Write request spec: public show with Article + FAQPage JSON-LD
+- [x] Add public guide routes to `config/routes.rb`
+- [x] Create `app/controllers/guides_controller.rb`
+- [x] Create `app/views/guides/index.html.erb`
+- [x] Create `app/views/guides/show.html.erb`
+- [x] Uncomment guides section in `config/sitemap.rb`
+- [x] Write request spec: public show with Article + FAQPage JSON-LD
 
 ### Routes
 
@@ -1162,22 +1162,22 @@ end
 
 ### Acceptance Criteria
 
-- [ ] `LocalGuide` model with draft/published/archived workflow
-- [ ] Admin CRUD with approve/archive/regenerate actions
-- [ ] Only super_admin can approve guides (Pundit policy)
-- [ ] `LocalGuideGeneratorJob` generates grounded content from real restaurant data
-- [ ] Generated guides are always created as **draft** — require admin approval
-- [ ] Regeneration resets status to draft for re-approval
-- [ ] Public `/guides/:slug` pages render with Article + FAQPage JSON-LD
-- [ ] Guides added to sitemap when published
-- [ ] Internal links from guides to smartmenu pages and explore pages
+- [x] `LocalGuide` model with draft/published/archived workflow
+- [x] Admin CRUD with approve/archive/regenerate actions
+- [x] Only super_admin can approve guides (Pundit policy)
+- [x] `LocalGuideGeneratorJob` generates grounded content from real restaurant data
+- [x] Generated guides are always created as **draft** — require admin approval
+- [x] Regeneration resets status to draft for re-approval
+- [x] Public `/guides/:slug` pages render with Article + FAQPage JSON-LD
+- [x] Guides added to sitemap when published
+- [x] Internal links from guides to smartmenu pages and explore pages
 
 ### Tests
 
-- [ ] **Model test**: Validations, scopes, slug generation
-- [ ] **Job test**: Mock OpenAI, verify guide creation with correct references
+- [x] **Model test**: Validations, scopes, slug generation
+- [x] **Job test**: Mock OpenAI, verify guide creation with correct references
 - [ ] **Controller test**: Admin approve/archive flow, public show with JSON-LD
-- [ ] **Policy test**: Only super_admin can approve
+- [x] **Policy test**: Only super_admin can approve
 
 ---
 
@@ -1195,15 +1195,15 @@ Separate from the existing authenticated `/api/v1/`. Public, read-only, rate-lim
 
 ### Implementation Steps
 
-- [ ] Create `app/controllers/api/v2/base_controller.rb` (rate limiting, attribution header)
-- [ ] Create `app/controllers/api/v2/restaurants_controller.rb` (index, show, menu)
-- [ ] Create `app/controllers/api/v2/explore_controller.rb` (index, show)
-- [ ] Add `/api/v2/` routes to `config/routes.rb`
-- [ ] Write request spec: unauthenticated access returns 200 with JSON
+- [x] Create `app/controllers/api/v2/base_controller.rb` (rate limiting, attribution header)
+- [x] Create `app/controllers/api/v2/restaurants_controller.rb` (index, show, menu)
+- [x] Create `app/controllers/api/v2/explore_controller.rb` (index, show)
+- [x] Add `/api/v2/` routes to `config/routes.rb`
+- [x] Write request spec: unauthenticated access returns 200 with JSON
 - [ ] Write request spec: rate limit returns 429 after 100 requests
-- [ ] Write request spec: response includes `X-Data-Attribution` header
-- [ ] Write request spec: only published restaurants in results
-- [ ] Write request spec: menu endpoint returns full structure
+- [x] Write request spec: response includes `X-Data-Attribution` header
+- [x] Write request spec: only published restaurants in results
+- [x] Write request spec: menu endpoint returns full structure
 
 ### New Base Controller: `app/controllers/api/v2/base_controller.rb`
 
@@ -1293,21 +1293,21 @@ All responses follow JSON-LD-compatible structure:
 
 ### Acceptance Criteria
 
-- [ ] All v2 endpoints are public (no authentication required)
-- [ ] Rate limited to 100 req/hour per IP
-- [ ] `X-Data-Attribution` header on every response
-- [ ] JSON-LD compatible response format
-- [ ] Only `preview_enabled: true` restaurants are exposed
-- [ ] Pagination on list endpoints (page/per_page params, max 50 per page)
-- [ ] No sensitive data exposed (no user IDs, internal status flags, etc.)
+- [x] All v2 endpoints are public (no authentication required)
+- [x] Rate limited to 100 req/hour per IP
+- [x] `X-Data-Attribution` header on every response
+- [x] JSON-LD compatible response format
+- [x] Only `preview_enabled: true` restaurants are exposed
+- [x] Pagination on list endpoints (page/per_page params, max 50 per page)
+- [x] No sensitive data exposed (no user IDs, internal status flags, etc.)
 
 ### Tests
 
-- [ ] **Request spec**: Unauthenticated access returns 200 with JSON
+- [x] **Request spec**: Unauthenticated access returns 200 with JSON
 - [ ] **Request spec**: Rate limit returns 429 after 100 requests
-- [ ] **Request spec**: Response includes attribution header
-- [ ] **Request spec**: Only published restaurants appear in results
-- [ ] **Request spec**: Menu endpoint returns full section/item/price structure
+- [x] **Request spec**: Response includes attribution header
+- [x] **Request spec**: Only published restaurants appear in results
+- [x] **Request spec**: Menu endpoint returns full section/item/price structure
 
 ---
 
@@ -1315,14 +1315,14 @@ All responses follow JSON-LD-compatible structure:
 
 ## Performance
 
-- [ ] Verify JSON-LD serialization adds <50ms to page render
-- [ ] Verify explore page queries are indexed
+- [x] Verify JSON-LD serialization adds <50ms to page render
+- [x] Verify explore page queries are indexed
 - [ ] Consider fragment caching for Schema.org JSON-LD blocks (keyed on restaurant + menu `updated_at`)
 
 ## Database Indexes Needed
 
-- [ ] Verify or add `idx_restaurants_geo_preview` index
-- [ ] Verify or add `idx_restaurants_preview_claim` index
+- [x] Verify or add `idx_restaurants_geo_preview` index
+- [x] Verify or add `idx_restaurants_preview_claim` index
 
 ```ruby
 # On restaurants table:
@@ -1334,7 +1334,7 @@ add_index :restaurants, [:preview_enabled, :claim_status], name: 'idx_restaurant
 
 - [ ] Set up Google Search Console for mellow.menu
 - [ ] Track AI citations via Perplexity search tests (manual, monthly)
-- [ ] Monitor sitemap generation job success via Sidekiq dashboard
+- [x] Monitor sitemap generation job success via Sidekiq dashboard
 - [ ] (Stretch) Create `SchemaOrgValidatorJob` for periodic structured data validation
 
 ## Backlink Strategy (Non-Technical / Ongoing)
@@ -1353,63 +1353,63 @@ add_index :restaurants, [:preview_enabled, :claim_status], name: 'idx_restaurant
 
 | | File | Phase | Type |
 |---|---|---|---|
-| [ ] | `app/serializers/schema_org_serializer.rb` | 1 | Serializer |
-| [ ] | `app/views/shared/_schema_org_json_ld.html.erb` | 1 | Partial |
-| [ ] | `app/jobs/sitemap_generator_job.rb` | 1 | Job |
-| [ ] | `db/migrate/XXX_create_explore_pages.rb` | 2 | Migration |
-| [ ] | `app/models/explore_page.rb` | 2 | Model |
-| [ ] | `app/controllers/explore_controller.rb` | 2 | Controller |
-| [ ] | `app/views/explore/index.html.erb` | 2 | View |
-| [ ] | `app/views/explore/country.html.erb` | 2 | View |
-| [ ] | `app/views/explore/city.html.erb` | 2 | View |
-| [ ] | `app/views/explore/show.html.erb` | 2 | View |
-| [ ] | `app/views/explore/_restaurant_card.html.erb` | 2 | Partial |
-| [ ] | `app/views/explore/_breadcrumbs.html.erb` | 2 | Partial |
-| [ ] | `app/jobs/explore_page_generator_job.rb` | 2 | Job |
-| [ ] | `db/migrate/XXX_create_local_guides.rb` | 3 | Migration |
-| [ ] | `app/models/local_guide.rb` | 3 | Model |
-| [ ] | `app/policies/local_guide_policy.rb` | 3 | Policy |
-| [ ] | `app/controllers/admin/local_guides_controller.rb` | 3 | Controller |
-| [ ] | `app/views/admin/local_guides/index.html.erb` | 3 | View |
-| [ ] | `app/views/admin/local_guides/show.html.erb` | 3 | View |
-| [ ] | `app/views/admin/local_guides/new.html.erb` | 3 | View |
-| [ ] | `app/views/admin/local_guides/edit.html.erb` | 3 | View |
-| [ ] | `app/controllers/guides_controller.rb` | 3 | Controller |
-| [ ] | `app/views/guides/index.html.erb` | 3 | View |
-| [ ] | `app/views/guides/show.html.erb` | 3 | View |
-| [ ] | `app/jobs/local_guide_generator_job.rb` | 3 | Job |
-| [ ] | `app/controllers/api/v2/base_controller.rb` | 4 | Controller |
-| [ ] | `app/controllers/api/v2/restaurants_controller.rb` | 4 | Controller |
-| [ ] | `app/controllers/api/v2/explore_controller.rb` | 4 | Controller |
+| [x] | `app/serializers/schema_org_serializer.rb` | 1 | Serializer |
+| [x] | `app/views/shared/_schema_org_json_ld.html.erb` | 1 | Partial |
+| [x] | `app/jobs/sitemap_generator_job.rb` | 1 | Job |
+| [x] | `db/migrate/XXX_create_explore_pages.rb` | 2 | Migration |
+| [x] | `app/models/explore_page.rb` | 2 | Model |
+| [x] | `app/controllers/explore_controller.rb` | 2 | Controller |
+| [x] | `app/views/explore/index.html.erb` | 2 | View |
+| [x] | `app/views/explore/country.html.erb` | 2 | View |
+| [x] | `app/views/explore/city.html.erb` | 2 | View |
+| [x] | `app/views/explore/show.html.erb` | 2 | View |
+| [x] | `app/views/explore/_restaurant_card.html.erb` | 2 | Partial |
+| [x] | `app/views/explore/_breadcrumbs.html.erb` | 2 | Partial |
+| [x] | `app/jobs/explore_page_generator_job.rb` | 2 | Job |
+| [x] | `db/migrate/XXX_create_local_guides.rb` | 3 | Migration |
+| [x] | `app/models/local_guide.rb` | 3 | Model |
+| [x] | `app/policies/local_guide_policy.rb` | 3 | Policy |
+| [x] | `app/controllers/admin/local_guides_controller.rb` | 3 | Controller |
+| [x] | `app/views/admin/local_guides/index.html.erb` | 3 | View |
+| [x] | `app/views/admin/local_guides/show.html.erb` | 3 | View |
+| [x] | `app/views/admin/local_guides/new.html.erb` | 3 | View |
+| [x] | `app/views/admin/local_guides/edit.html.erb` | 3 | View |
+| [x] | `app/controllers/guides_controller.rb` | 3 | Controller |
+| [x] | `app/views/guides/index.html.erb` | 3 | View |
+| [x] | `app/views/guides/show.html.erb` | 3 | View |
+| [x] | `app/jobs/local_guide_generator_job.rb` | 3 | Job |
+| [x] | `app/controllers/api/v2/base_controller.rb` | 4 | Controller |
+| [x] | `app/controllers/api/v2/restaurants_controller.rb` | 4 | Controller |
+| [x] | `app/controllers/api/v2/explore_controller.rb` | 4 | Controller |
 
 ## Modified Files
 
 | | File | Phase | Changes |
 |---|---|---|---|
-| [ ] | `app/controllers/smartmenus_controller.rb` | 1 | Add `@schema_org_json_ld` + dynamic meta tag vars to `#show` |
-| [ ] | `app/views/shared/_head.html.erb` | 1 | Dynamic OG/Twitter/canonical/geo tags with fallbacks |
-| [ ] | `app/views/layouts/smartmenu.html.erb` | 1 | Render JSON-LD partial |
-| [ ] | `config/sitemap.rb` | 1 | Uncomment smartmenu loop, add explore/guide sections |
-| [ ] | `public/robots.txt` | 1 | Add `/madmin` disallow, GPTBot specific allows |
-| [ ] | `config/routes.rb` | 2,3,4 | Add explore, guides, api/v2 routes |
+| [x] | `app/controllers/smartmenus_controller.rb` | 1 | Add `@schema_org_json_ld` + dynamic meta tag vars to `#show` |
+| [x] | `app/views/shared/_head.html.erb` | 1 | Dynamic OG/Twitter/canonical/geo tags with fallbacks |
+| [x] | `app/views/layouts/smartmenu.html.erb` | 1 | Render JSON-LD partial |
+| [x] | `config/sitemap.rb` | 1 | Uncomment smartmenu loop, add explore/guide sections |
+| [x] | `public/robots.txt` | 1 | Add `/madmin` disallow, GPTBot specific allows |
+| [x] | `config/routes.rb` | 2,3,4 | Add explore, guides, api/v2 routes |
 
 ---
 
 # Definition of Done (All Phases)
 
-- [ ] **P1**: Schema.org JSON-LD on all smartmenu pages, validated via Google Rich Results Test
-- [ ] **P1**: Dynamic meta/OG tags on smartmenu pages; static pages retain defaults
-- [ ] **P1**: XML sitemap generated nightly with all published smartmenu URLs
-- [ ] **P1**: Robots.txt updated with `/madmin` disallow and AI crawler allows
-- [ ] **P1**: CDN evaluation documented
-- [ ] **P2**: `ExploreController` live with at least 1 city (Dublin)
-- [ ] **P2**: Tiered restaurant display (claimed prominent, unclaimed with CTA)
-- [ ] **P2**: Explore pages in sitemap
-- [ ] **P3**: `LocalGuide` model with admin CRUD and approve workflow
+- [x] **P1**: Schema.org JSON-LD on all smartmenu pages, validated via Google Rich Results Test
+- [x] **P1**: Dynamic meta/OG tags on smartmenu pages; static pages retain defaults
+- [x] **P1**: XML sitemap generated nightly with all published smartmenu URLs
+- [x] **P1**: Robots.txt updated with `/madmin` disallow and AI crawler allows
+- [x] **P1**: CDN evaluation documented
+- [x] **P2**: `ExploreController` live with at least 1 city (Dublin)
+- [x] **P2**: Tiered restaurant display (claimed prominent, unclaimed with CTA)
+- [x] **P2**: Explore pages in sitemap
+- [x] **P3**: `LocalGuide` model with admin CRUD and approve workflow
 - [ ] **P3**: At least 10 guides generated, admin-reviewed, and published
-- [ ] **P3**: Public guide pages with Article + FAQPage JSON-LD
-- [ ] **P4**: `/api/v2/` public endpoints live and rate-limited
-- [ ] **P4**: API returns JSON-LD compatible structured data
+- [x] **P3**: Public guide pages with Article + FAQPage JSON-LD
+- [x] **P4**: `/api/v2/` public endpoints live and rate-limited
+- [x] **P4**: API returns JSON-LD compatible structured data
 
 ---
 

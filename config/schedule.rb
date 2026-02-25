@@ -32,4 +32,14 @@ every 1.day, at: '3:00 am' do
   runner 'MaterializedViewRefreshJob.perform_later(nil, nil, true)' # force_refresh = true
 end
 
+# SEO: Nightly sitemap regeneration (3:00 AM UTC)
+every 1.day, at: '3:00 am' do
+  runner 'SitemapGeneratorJob.perform_later'
+end
+
+# SEO: Nightly explore page refresh (3:30 AM UTC, after sitemap)
+every 1.day, at: '3:30 am' do
+  runner 'ExplorePageGeneratorJob.perform_later'
+end
+
 # Learn more: http://github.com/javan/whenever
