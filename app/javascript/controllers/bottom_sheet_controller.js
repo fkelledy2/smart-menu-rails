@@ -36,11 +36,22 @@ export default class extends Controller {
     this.applyState()
     this.bindTouchEvents()
 
+    // Restore to peek after any Bootstrap modal closes
+    this._onModalHidden = () => {
+      if (this.state === "closed" && this.initialValue !== "closed") {
+        this.setState("peek")
+      }
+    }
+    document.addEventListener("hidden.bs.modal", this._onModalHidden)
+
     console.log("[BottomSheet] connected", { initial: this.state })
   }
 
   disconnect() {
     this.unbindTouchEvents()
+    if (this._onModalHidden) {
+      document.removeEventListener("hidden.bs.modal", this._onModalHidden)
+    }
   }
 
   // --- Public actions ---
