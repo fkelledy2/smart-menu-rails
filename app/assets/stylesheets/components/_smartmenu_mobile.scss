@@ -190,6 +190,30 @@
   }
 }
 
+// List layout mode — staff items (POS-style buttons in grid)
+.menu-layout-list {
+  .menu-item-card {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+    padding: 2px 0;
+
+    .card {
+      border-radius: 0;
+      box-shadow: none;
+      border: none;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .d-grid { gap: 0 !important; }
+
+    .btn-group {
+      min-height: auto !important;
+
+      .btn { min-height: 40px; border-radius: 0 !important; }
+    }
+  }
+}
+
 // ============================================================================
 // 2. STICKY HEADER - Optimized for Touch
 // ============================================================================

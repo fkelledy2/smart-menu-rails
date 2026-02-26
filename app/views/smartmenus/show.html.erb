@@ -1,17 +1,6 @@
 <%= render 'shared/currency' %>
 
 <div data-controller="menu-layout">
-<% if @restaurant.respond_to?(:unclaimed?) && @restaurant.unclaimed? && @restaurant.preview_enabled? %>
-  <div class="alert alert-warning text-center mb-0 rounded-0" role="alert" data-testid="unclaimed-preview-banner">
-    <small>
-      <i class="bi bi-info-circle me-1"></i>
-      This is an auto-generated preview based on publicly available information.
-      <strong><%= link_to 'Claim this restaurant', new_restaurant_claim_request_path(@restaurant) %></strong> to manage and publish the official menu, or
-      <strong><%= link_to 'request removal', new_restaurant_removal_request_path(@restaurant) %></strong>.
-    </small>
-  </div>
-<% end %>
-
 <%# Optional debug output for allergen query/results: ?debug=allergyns (development only) %>
 <% if Rails.env.development? && params[:debug] == 'allergyns' && defined?(@debug_allergyns_info) && @debug_allergyns_info.present? %>
   <div class="container my-2">
