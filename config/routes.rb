@@ -271,6 +271,8 @@ Rails.application.routes.draw do
     end
     resources :tablesettings do
       collection do
+        get :new_bulk_create
+        post :bulk_create
         patch :bulk_update
         patch :reorder
       end

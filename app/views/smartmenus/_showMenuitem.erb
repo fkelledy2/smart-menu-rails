@@ -33,7 +33,7 @@
                                 <div class="col-12">
                                     <h6 class="card-title d-flex align-items-center gap-2"><strong><%= menuitem.name %></strong>
                                       <% if menuitem.respond_to?(:alcoholic?) && menuitem.alcoholic? %>
-                                        <span class="badge bg-danger" title="<%= t('smartmenus.alcohol.flag') %>"><%= t('smartmenus.alcohol.flag') %></span>
+                                        <span class="badge bg-danger" title="<%= t('smartmenus.alcohol.flag') %>"><% if menuitem.wine? %>🍷<% elsif menuitem.whiskey? || menuitem.spirit? || menuitem.other_spirit? || menuitem.liqueur? %>🥃<% else %><%= t('smartmenus.alcohol.flag') %><% end %></span>
                                       <% elsif menuitem.respond_to?(:alcohol_classification) && menuitem.alcohol_classification == 'non_alcoholic' %>
                                         <span class="badge bg-secondary" title="<%= t('smartmenus.alcohol.non_alcoholic') %>"><%= t('smartmenus.alcohol.zero_abv_short') %></span>
                                       <% end %>
@@ -52,7 +52,7 @@
                                 <div class="col-9">
                                     <h6 style='padding-top:5px' class="card-title d-flex align-items-center gap-2"><strong><%= menuitem.name %></strong>
                                       <% if menuitem.respond_to?(:alcoholic?) && menuitem.alcoholic? %>
-                                        <span class="badge bg-danger" title="<%= t('smartmenus.alcohol.flag') %>"><%= t('smartmenus.alcohol.flag') %></span>
+                                        <span class="badge bg-danger" title="<%= t('smartmenus.alcohol.flag') %>"><% if menuitem.wine? %>🍷<% elsif menuitem.whiskey? || menuitem.spirit? || menuitem.other_spirit? || menuitem.liqueur? %>🥃<% else %><%= t('smartmenus.alcohol.flag') %><% end %></span>
                                       <% elsif menuitem.respond_to?(:alcohol_classification) && menuitem.alcohol_classification == 'non_alcoholic' %>
                                         <span class="badge bg-secondary" title="<%= t('smartmenus.alcohol.non_alcoholic') %>"><%= t('smartmenus.alcohol.zero_abv_short') %></span>
                                       <% end %>

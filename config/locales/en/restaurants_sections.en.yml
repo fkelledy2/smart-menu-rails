@@ -466,6 +466,7 @@ en:
         actions: Actions
         add_table: Add Table
         apply: Apply
+        bulk_create: Bulk Create
         archived: Archived
         capacity: Capacity
         confirm_delete: Delete this table?

@@ -22,12 +22,24 @@
       <i class="bi bi-plus-circle"></i>
       <span><%= t('.add_table') %></span>
     <% end %>
+
+    <%= link_to new_bulk_create_restaurant_tablesettings_path(restaurant),
+        class: 'btn btn-outline-primary quick-action-btn',
+        data: { turbo_frame: 'tables_bulk_create' } do %>
+      <i class="bi bi-lightning-charge"></i>
+      <span><%= t('.bulk_create', default: 'Bulk Create') %></span>
+    <% end %>
   </div>
 </div>
 
 <!-- Inline New Table Frame -->
 <%= turbo_frame_tag 'tables_new_tablesetting' do %>
   <!-- New Table form will render here inline -->
+<% end %>
+
+<!-- Inline Bulk Create Frame -->
+<%= turbo_frame_tag 'tables_bulk_create' do %>
+  <!-- Bulk Create form will render here inline -->
 <% end %>
 
 <style>

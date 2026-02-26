@@ -6,7 +6,7 @@
       <div class="d-flex gap-1 align-items-center" role="group" aria-label="<%= t('.allergyns', default: 'Allergens') %>">
         <% if mi.alcoholic? %>
           <span class="badge bg-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<%= [t('smartmenus.alcoholic_tooltip', default: 'Contains alcohol'), mi.alcohol_classification.presence, (mi.abv.present? ? "#{mi.abv}%" : nil)].compact.join(' · ') %>">
-            <%= t('smartmenus.alcoholic', default: 'Alcoholic') %>
+            <% if mi.wine? %>🍷<% elsif mi.whiskey? || mi.spirit? || mi.other_spirit? || mi.liqueur? %>🥃<% else %><%= t('smartmenus.alcoholic', default: 'Alcoholic') %><% end %>
           </span>
         <% end %>
         <% mi.allergyns.each do |allergyn| %>

@@ -14,6 +14,19 @@ en:
       table_setting: Table Setting
       table_settings: Table Settings
       unarchive: Unarchive
+    bulk_create_form:
+      auto_detect_hint: "Tables will be numbered automatically. Next available: %{example}"
+      cancel: Cancel
+      capacity: Capacity
+      count: How many
+      count_hint: Max 200
+      create_tables: Create Tables
+      indoor: Indoor
+      outdoor: Outdoor
+      prefix: Prefix
+      prefix_hint: e.g. T, Table, Booth
+      table_type: Type
+      title: Bulk Create Tables
     new:
       status: 'Status:'
       tablesetting: Table Setting

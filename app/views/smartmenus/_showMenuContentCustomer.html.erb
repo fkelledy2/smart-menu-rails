@@ -1,54 +1,22 @@
 <%# Customer-facing menu content partial
     Uses the shared _menu_section.html.erb for section rendering
 %>
-<div data-controller="menu-search section-tabs">
-  <%# Search bar — client-side filtering by name/description %>
-  <div class="menu-search-bar" data-testid="menu-search-bar">
-    <div class="menu-search-input-wrap">
-      <i class="bi bi-search menu-search-icon"></i>
-      <input type="search"
-             data-menu-search-target="input"
-             data-action="input->menu-search#filter"
-             placeholder="<%= t('smartmenus.search_placeholder', default: 'Search menu…') %>"
-             autocomplete="off"
-             data-testid="menu-search-input">
-      <button type="button"
-              class="menu-search-clear d-none"
-              data-menu-search-target="clear"
-              data-action="click->menu-search#clear"
-              aria-label="<%= t('smartmenus.clear_search', default: 'Clear search') %>"
-              data-testid="menu-search-clear">
-        <i class="bi bi-x-circle"></i>
-      </button>
-    </div>
-  </div>
-
-  <%# Section sticky tabs — auto-generated from section headings %>
-  <nav class="section-tabs" data-section-tabs-target="tabBar" data-testid="section-tabs" aria-label="<%= t('smartmenus.section_navigation', default: 'Menu sections') %>"></nav>
-
-  <div class="row" data-menu-search-target="container" data-section-tabs-target="content">
-    <div class="col-12 col-md-12 col-lg-12 scrollspy-example" data-bs-spy="scroll" data-bs-target="#navbar-example2" data-bs-offset="0" tabindex="0" data-testid="menu-sections-container">
-      <% menu.menusections.sort_by { |s| s.sequence.to_i }.each do |menusection| %>
-        <%= render partial: "smartmenus/menu_section",
-                   locals: {
-                     menusection: menusection,
-                     menu: menu,
-                     order: order,
-                     ordrparticipant: ordrparticipant,
-                     menuparticipant: menuparticipant,
-                     restaurantCurrency: restaurantCurrency,
-                     tablesetting: tablesetting,
-                     view_type: :customer
-                   } %>
-      <% end %>
-      <%= render partial: "smartmenus/showAllergyns", locals: { allergyns: allergyns }  %>
-      <%= render partial: "smartmenus/showCoverCharge", locals: { menu: menu, restaurantCurrency: restaurantCurrency } %>
-    </div>
-  </div>
-
-  <%# Empty state when search has no results %>
-  <div class="menu-search-empty d-none" data-menu-search-target="empty" data-testid="menu-search-empty">
-    <i class="bi bi-search"></i>
-    <p><%= t('smartmenus.no_results', default: 'No items found') %></p>
+<div class="row">
+  <div class="col-12 col-md-12 col-lg-12 scrollspy-example" data-bs-spy="scroll" data-bs-target="#navbar-example2" data-bs-offset="0" tabindex="0" data-testid="menu-sections-container">
+    <% menu.menusections.sort_by { |s| s.sequence.to_i }.each do |menusection| %>
+      <%= render partial: "smartmenus/menu_section",
+                 locals: {
+                   menusection: menusection,
+                   menu: menu,
+                   order: order,
+                   ordrparticipant: ordrparticipant,
+                   menuparticipant: menuparticipant,
+                   restaurantCurrency: restaurantCurrency,
+                   tablesetting: tablesetting,
+                   view_type: :customer
+                 } %>
+    <% end %>
+    <%= render partial: "smartmenus/showAllergyns", locals: { allergyns: allergyns }  %>
+    <%= render partial: "smartmenus/showCoverCharge", locals: { menu: menu, restaurantCurrency: restaurantCurrency } %>
   </div>
 </div>

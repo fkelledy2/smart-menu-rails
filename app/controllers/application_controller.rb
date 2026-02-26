@@ -454,7 +454,7 @@ class ApplicationController < ActionController::Base
   end
 
   # Override authorize to add monitoring and super_admin bypass
-  def authorize(record, query = nil)
+  def authorize(record, query = nil, **options)
     query ||= "#{action_name}?"
 
     if current_user&.super_admin?
@@ -479,7 +479,7 @@ class ApplicationController < ActionController::Base
     end
 
     # Call Pundit's original authorize method to ensure proper tracking
-    result = super
+    result = super(record, query, **options)
 
     # Track the authorization check for monitoring
     AuthorizationMonitoringService.track_authorization_check(

@@ -4,10 +4,10 @@ class TablesettingsController < ApplicationController
   before_action :authenticate_user!, except: %i[index show] # Allow public viewing for customers
   before_action :set_tablesetting, only: %i[show edit update destroy]
 
-  skip_around_action :switch_locale, only: %i[reorder bulk_update]
+  skip_around_action :switch_locale, only: %i[reorder bulk_update bulk_create new_bulk_create]
 
   # Pundit authorization
-  after_action :verify_authorized, except: %i[index show reorder bulk_update]
+  after_action :verify_authorized, except: %i[index show reorder bulk_update bulk_create new_bulk_create]
   after_action :verify_policy_scoped, only: [:index]
 
   # GET /tablesettings or /tablesettings.json
@@ -126,6 +126,79 @@ class TablesettingsController < ApplicationController
                     notice: t('common.flash.deleted', resource: t('activerecord.models.tablesetting'))
       end
       format.json { head :no_content }
+    end
+  end
+
+  # GET /restaurants/:restaurant_id/tablesettings/new_bulk_create
+  def new_bulk_create
+    @restaurant = Restaurant.find(params[:restaurant_id])
+    authorize @restaurant, :update?, policy_class: RestaurantPolicy
+
+    render inline: '<%= turbo_frame_tag "tables_bulk_create" do %><%= render partial: "tablesettings/bulk_create_form", locals: { restaurant: @restaurant } %><% end %>',
+           layout: false
+  end
+
+  # POST /restaurants/:restaurant_id/tablesettings/bulk_create
+  def bulk_create
+    restaurant = Restaurant.find(params[:restaurant_id])
+    authorize restaurant, :update?, policy_class: RestaurantPolicy
+
+    prefix = (params[:prefix].presence || 'T')[0, 1]
+    count  = params[:count].to_i.clamp(1, 200)
+    tabletype = %w[indoor outdoor].include?(params[:tabletype]) ? params[:tabletype] : 'indoor'
+    capacity  = [params[:capacity].to_i, 1].max
+
+    # Auto-detect next start number by scanning existing tables with the same prefix
+    existing_numbers = restaurant.tablesettings
+      .where(archived: false)
+      .where('name LIKE ?', "#{Tablesetting.sanitize_sql_like(prefix)}%")
+      .pluck(:name)
+      .filter_map { |n| n.delete_prefix(prefix).to_i if n.start_with?(prefix) && n.delete_prefix(prefix).match?(/\A\d+\z/) }
+
+    start_number = (existing_numbers.max || 0) + 1
+    max_sequence = restaurant.tablesettings.maximum(:sequence).to_i
+
+    created_count = 0
+    Tablesetting.transaction do
+      count.times do |i|
+        num = start_number + i
+        table = restaurant.tablesettings.create!(
+          name: "#{prefix}#{num}",
+          status: :free,
+          tabletype: tabletype,
+          capacity: capacity,
+          sequence: max_sequence + i + 1,
+        )
+        ensure_smartmenus_for_new_table!(table)
+        created_count += 1
+      end
+    end
+
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: [
+          turbo_stream.replace('tables_bulk_create', ''),
+          turbo_stream.replace('restaurant_content',
+            partial: 'restaurants/sections/tables_2025',
+            locals: { restaurant: restaurant, filter: 'all' }),
+        ]
+      end
+      format.html do
+        redirect_to edit_restaurant_path(restaurant, section: 'tables'),
+                    notice: "#{created_count} tables created (#{prefix}#{start_number}–#{prefix}#{start_number + count - 1})"
+      end
+    end
+  rescue ActiveRecord::RecordInvalid => e
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.replace('tables_bulk_create',
+          partial: 'tablesettings/bulk_create_form',
+          locals: { restaurant: restaurant, error: e.message })
+      end
+      format.html do
+        redirect_to edit_restaurant_path(restaurant, section: 'tables'),
+                    alert: "Bulk create failed: #{e.message}"
+      end
     end
   end
 

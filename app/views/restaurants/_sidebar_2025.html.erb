@@ -126,18 +126,6 @@
       <%= t('.operations') %>
     </div>
 
-    <% if @current_employee && @current_employee.role == 'manager' %>
-      <%= link_to edit_restaurant_path(restaurant, section: 'tables'),
-          class: "sidebar-link #{'active' if current_section == 'tables'} #{disabled_class_for('tables', onboarding_next)}",
-          data: { testid: 'sidebar-tables-link', turbo_frame: 'restaurant_content', turbo_action: 'advance', action: 'click->sidebar#handleLinkClick', **disabled_data_attrs('tables', onboarding_next) } do %>
-        <i class="bi bi-layout-wtf"></i>
-        <span><%= t('.tables') %></span>
-        <% if tables_count > 0 %>
-          <span class="sidebar-link-badge"><%= tables_count %></span>
-        <% end %>
-      <% end %>
-    <% end %>
-
     <%= link_to edit_restaurant_path(restaurant, section: 'staff'),
         class: "sidebar-link #{'active' if current_section == 'staff'} #{disabled_class_for('staff', onboarding_next)}",
         data: { testid: 'sidebar-staff-link', turbo_frame: 'restaurant_content', turbo_action: 'advance', action: 'click->sidebar#handleLinkClick', **disabled_data_attrs('staff', onboarding_next) } do %>
@@ -145,6 +133,16 @@
       <span><%= t('.staff') %></span>
       <% if staff_count > 0 %>
         <span class="sidebar-link-badge"><%= staff_count %></span>
+      <% end %>
+    <% end %>
+
+    <%= link_to edit_restaurant_path(restaurant, section: 'tables'),
+        class: "sidebar-link #{'active' if current_section == 'tables'} #{disabled_class_for('tables', onboarding_next)}",
+        data: { testid: 'sidebar-tables-link', turbo_frame: 'restaurant_content', turbo_action: 'advance', action: 'click->sidebar#handleLinkClick', **disabled_data_attrs('tables', onboarding_next) } do %>
+      <i class="bi bi-layout-wtf"></i>
+      <span><%= t('.tables') %></span>
+      <% if tables_count > 0 %>
+        <span class="sidebar-link-badge"><%= tables_count %></span>
       <% end %>
     <% end %>
 
@@ -181,20 +179,18 @@
       <% end %>
     <% end %>
 
-    <% if @current_employee && @current_employee.role == 'manager' %>
-      <%= link_to edit_restaurant_path(restaurant, section: 'ordering'),
-          class: "sidebar-link #{'active' if current_section == 'ordering'} #{disabled_class_for('ordering', onboarding_next)}",
-          data: { testid: 'sidebar-ordering-link', turbo_frame: 'restaurant_content', turbo_action: 'advance', action: 'click->sidebar#handleLinkClick', **disabled_data_attrs('ordering', onboarding_next) } do %>
-        <i class="bi bi-cart-check"></i>
-        <span><%= t('.ordering') %></span>
-      <% end %>
+    <%= link_to edit_restaurant_path(restaurant, section: 'ordering'),
+        class: "sidebar-link #{'active' if current_section == 'ordering'} #{disabled_class_for('ordering', onboarding_next)}",
+        data: { testid: 'sidebar-ordering-link', turbo_frame: 'restaurant_content', turbo_action: 'advance', action: 'click->sidebar#handleLinkClick', **disabled_data_attrs('ordering', onboarding_next) } do %>
+      <i class="bi bi-cart-check"></i>
+      <span><%= t('.ordering') %></span>
+    <% end %>
 
-      <%= link_to edit_restaurant_path(restaurant, section: 'insights'),
-          class: "sidebar-link sidebar-link-sub #{'active' if current_section == 'insights'} #{disabled_class_for('ordering', onboarding_next)}",
-          data: { testid: 'sidebar-insights-link', turbo_frame: 'restaurant_content', turbo_action: 'advance', action: 'click->sidebar#handleLinkClick', **disabled_data_attrs('ordering', onboarding_next) } do %>
-        <i class="bi bi-stars"></i>
-        <span><%= t('.insights') %></span>
-      <% end %>
+    <%= link_to edit_restaurant_path(restaurant, section: 'insights'),
+        class: "sidebar-link sidebar-link-sub #{'active' if current_section == 'insights'} #{disabled_class_for('ordering', onboarding_next)}",
+        data: { testid: 'sidebar-insights-link', turbo_frame: 'restaurant_content', turbo_action: 'advance', action: 'click->sidebar#handleLinkClick', **disabled_data_attrs('ordering', onboarding_next) } do %>
+      <i class="bi bi-stars"></i>
+      <span><%= t('.insights') %></span>
     <% end %>
 
     <%= link_to edit_restaurant_path(restaurant, section: 'jukebox'),
