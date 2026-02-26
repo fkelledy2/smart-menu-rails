@@ -49,6 +49,7 @@
 
   <%# Scrollable Content (visible in half/full) %>
   <div class="bottom-sheet__content cart-sheet__content" data-bottom-sheet-target="content" data-testid="cart-sheet-content">
+    <div id="cartItemsContainer">
     <% if order %>
       <%# Selected (not yet submitted) items %>
       <% selected_items = order.ordractions.select { |a| a.ordritem&.status == 'opened' && order.ordritems.include?(a.ordritem) } %>
@@ -141,5 +142,6 @@
         <p class="small"><%= t('smartmenus.showModals.add_items_hint', default: 'Tap + on any item to add it') %></p>
       </div>
     <% end %>
+    </div>
   </div>
 </div>

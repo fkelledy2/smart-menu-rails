@@ -215,15 +215,84 @@ export default class extends Controller {
       if (countEl) { countEl.textContent = totalCount; }
 
       const totals = this.state.totals;
+      const symbol = (totals && totals.currency && totals.currency.symbol) || '';
       if (totals) {
-        const symbol = (totals.currency && totals.currency.symbol) || '';
         const gross = Number(totals.gross || 0);
         const formatted = symbol + gross.toFixed(2);
         const totalAmountEl = document.getElementById('cartTotalAmount');
         if (totalAmountEl) { totalAmountEl.textContent = formatted; }
-        const totalValueEl = document.getElementById('cartTotalValue');
-        if (totalValueEl) { totalValueEl.textContent = formatted; }
       }
+
+      // Dynamically re-render cart item rows from state
+      this._renderCartItems(this.state, symbol);
     } catch (_) {}
+  }
+
+  _renderCartItems(state, symbol) {
+    const container = document.getElementById('cartItemsContainer');
+    if (!container) return;
+    const order = state.order || {};
+    const items = Array.isArray(order.items) ? order.items.filter(i => i.status !== 'removed') : [];
+    if (items.length === 0 && !order.id) return; // no order yet — keep server-rendered empty state
+
+    const opened = items.filter(i => i.status === 'opened');
+    const submitted = items.filter(i => ['ordered','preparing','ready','delivered'].includes(i.status));
+    const fmt = (n) => symbol + Number(n || 0).toFixed(2);
+    const totals = state.totals;
+    const flags = state.flags || {};
+
+    let html = '';
+
+    if (opened.length > 0) {
+      html += '<div class="cart-sheet__section-label">Selected</div>';
+      for (const item of opened) {
+        const sizeBit = item.size_name ? ` <span class="text-muted" style="font-size:0.8em;">(${this._esc(item.size_name.replace(/\s*\(.*\)/, ''))})</span>` : '';
+        html += `<div class="cart-sheet__item" data-testid="cart-item-${item.id}">
+          <button type="button" class="cart-sheet__remove removeItemFromOrderButton" data-bs-ordritem_id="${item.id}" aria-label="Remove item" data-testid="remove-cart-item-${item.id}"><i class="bi bi-x-circle"></i></button>
+          <div class="cart-sheet__item-name">${this._esc(item.name)}${sizeBit}</div>
+          <div class="cart-sheet__item-price">${fmt(item.price)}</div>
+        </div>`;
+      }
+    }
+
+    if (submitted.length > 0) {
+      html += '<div class="cart-sheet__section-label cart-sheet__section-label--muted">Submitted</div>';
+      for (const item of submitted) {
+        const sizeBit = item.size_name ? ` <span class="text-muted" style="font-size:0.8em;">(${this._esc(item.size_name.replace(/\s*\(.*\)/, ''))})</span>` : '';
+        html += `<div class="cart-sheet__item cart-sheet__item--submitted">
+          <div class="cart-sheet__status-icon"><i class="bi bi-check-circle-fill text-success"></i></div>
+          <div class="cart-sheet__item-name">${this._esc(item.name)}${sizeBit}</div>
+          <div class="cart-sheet__item-price text-muted">${fmt(item.price)}</div>
+        </div>`;
+      }
+    }
+
+    if (items.length > 0) {
+      const totalFormatted = totals ? fmt(totals.gross) : fmt(0);
+      html += `<div class="cart-sheet__totals" data-testid="cart-totals"><div class="cart-sheet__total-row"><span>Total</span><span class="cart-sheet__total-value" id="cartTotalValue">${totalFormatted}</span></div></div>`;
+      html += '<div class="cart-sheet__actions" data-testid="cart-actions">';
+      if (opened.length > 0) {
+        html += '<button type="button" class="btn-touch-primary w-100 submitOrderButton" id="cartSubmitOrder" data-testid="cart-submit-order-btn"><i class="bi bi-send"></i> Submit order</button>';
+      }
+      html += `<button type="button" class="btn-touch-secondary w-100 mt-2" data-bs-toggle="modal" data-bs-target="#viewOrderModal" data-action="click->bottom-sheet#close"><i class="bi bi-receipt"></i> View full order</button>`;
+      html += '</div>';
+    } else if (order.id) {
+      html += '<div class="text-center text-muted py-4"><i class="bi bi-cart3 fs-1 mb-2 d-block"></i><p>Your cart is empty</p><p class="small">Tap + on any item to add it</p></div>';
+    }
+
+    container.innerHTML = html;
+
+    // If order exists and sheet is closed, open to peek
+    const sheet = document.getElementById('cartBottomSheet');
+    if (sheet && order.id && items.length > 0) {
+      const ctrl = this.application?.getControllerForElementAndIdentifier(sheet, 'bottom-sheet');
+      if (ctrl && ctrl.state === 'closed') { ctrl.setState('peek'); }
+    }
+  }
+
+  _esc(str) {
+    const d = document.createElement('div');
+    d.textContent = str || '';
+    return d.innerHTML;
   }
 }
