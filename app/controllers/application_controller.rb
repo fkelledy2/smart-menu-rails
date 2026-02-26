@@ -21,10 +21,18 @@ class ApplicationController < ActionController::Base
 
   # Redirect to restaurants index after sign in (or back to claim flow if pending)
   def after_sign_in_path_for(resource)
+    if (path = accept_staff_invitation_from_session(resource))
+      return path
+    end
+
     claim_redirect_or(restaurants_path)
   end
 
   def after_sign_up_path_for(resource)
+    if (path = accept_staff_invitation_from_session(resource))
+      return path
+    end
+
     claim_redirect_or(restaurants_path)
   end
 
@@ -506,5 +514,23 @@ class ApplicationController < ActionController::Base
     else
       default_path
     end
+  end
+
+  # Accept a pending staff invitation stored in the session after sign in / sign up
+  def accept_staff_invitation_from_session(user)
+    token = session.delete(:staff_invitation_token)
+    return nil unless token.present?
+
+    invitation = StaffInvitation.find_by(token: token)
+    return nil unless invitation&.acceptable?
+
+    employee = invitation.accept!(user)
+    if employee
+      flash[:notice] = I18n.t('staff_invitations.accepted', restaurant: invitation.restaurant.name)
+      edit_restaurant_path(invitation.restaurant, section: 'staff')
+    end
+  rescue StandardError => e
+    Rails.logger.error("[StaffInvitation] Failed to accept invitation: #{e.message}")
+    nil
   end
 end

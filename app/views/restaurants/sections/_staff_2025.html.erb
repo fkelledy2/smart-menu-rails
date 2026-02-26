@@ -21,11 +21,25 @@
       <i class="bi bi-person-plus"></i>
       <span><%= t('.add_staff') %></span>
     <% end %>
+
+    <%= link_to '#',
+        class: 'btn btn-outline-primary quick-action-btn',
+        id: 'invite_staff_btn',
+        data: { action: 'click->invite-staff#show' } do %>
+      <i class="bi bi-envelope-plus"></i>
+      <span><%= t('.invite_staff', default: 'Invite Staff') %></span>
+    <% end %>
   </div>
 </div>
 
 <%= turbo_frame_tag 'staff_new_employee' do %>
 <% end %>
+
+<div id="staff_invite_form_wrapper" data-controller="invite-staff" style="display: none;">
+  <%= turbo_frame_tag 'staff_invite_form' do %>
+    <%= render partial: 'staff_invitations/invite_form', locals: { restaurant: restaurant } %>
+  <% end %>
+</div>
 
 <style>
   /* Force Quick Actions into two columns on all viewports (including mobile portrait) */
@@ -50,6 +64,47 @@
   </div>
 
 </div>
+
+<% pending_invitations = restaurant.staff_invitations.active.order(created_at: :desc) %>
+<% if pending_invitations.any? %>
+<!-- Pending Invitations -->
+<div class="mb-3 p-3">
+  <h2 class="h5 mb-3">
+    <i class="bi bi-envelope-clock"></i>
+    <%= t('staff_invitations.pending_invitations', default: 'Pending Invitations') %>
+    <span class="badge text-bg-warning ms-2"><%= pending_invitations.size %></span>
+  </h2>
+
+  <div class="table-responsive">
+    <table class="table table-hover align-middle">
+      <thead>
+        <tr>
+          <th><%= t('staff_invitations.email_label', default: 'Email Address') %></th>
+          <th><%= t('staff_invitations.role_label', default: 'Role') %></th>
+          <th><%= t('staff_invitations.expires', default: 'Expires') %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% pending_invitations.each do |inv| %>
+          <tr>
+            <td><%= inv.email %></td>
+            <td>
+              <% badge_class = case inv.role
+                               when 'manager' then 'text-bg-primary'
+                               when 'staff' then 'text-bg-info'
+                               when 'admin' then 'text-bg-danger'
+                               else 'text-bg-secondary'
+                               end %>
+              <span class="badge <%= badge_class %>"><%= inv.role.titleize %></span>
+            </td>
+            <td class="text-muted small"><%= inv.expires_at.strftime('%b %d, %Y') %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<% end %>
 
 <!-- Staff Management -->
 <div class="mb-3 p-3">

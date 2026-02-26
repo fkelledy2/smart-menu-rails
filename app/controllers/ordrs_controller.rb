@@ -44,9 +44,10 @@ end
 class OrdrsController < ApplicationController
   include CachePerformanceMonitoring
   include OrderingGate
+  include CsrfSafeGuestActions
 
   before_action :authenticate_user!, except: %i[show create update] # Allow customers to create/update orders
-  skip_before_action :verify_authenticity_token, only: %i[ack_alcohol]
+  skip_before_action :verify_authenticity_token, only: %i[create update ack_alcohol]
   before_action :set_restaurant
   before_action :set_ordr, only: %i[show edit update destroy analytics ack_alcohol events]
   before_action :set_currency
@@ -540,6 +541,10 @@ class OrdrsController < ApplicationController
   end
 
   private
+
+  def csrf_skipped_action?
+    %w[create update].include?(action_name)
+  end
 
   # Set restaurant from nested route parameter
   def set_restaurant

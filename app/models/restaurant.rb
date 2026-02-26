@@ -12,6 +12,7 @@ class Restaurant < ApplicationRecord
   has_many :restaurant_menus, dependent: :delete_all
   has_many :shared_menus, through: :restaurant_menus, source: :menu
   has_many :employees, -> { reorder(sequence: :asc, id: :asc) }, dependent: :delete_all, counter_cache: :employees_count
+  has_many :staff_invitations, dependent: :delete_all
 
   def alcohol_allowed_now?(now: Time.zone.now)
     return false if respond_to?(:allow_alcohol) && !allow_alcohol

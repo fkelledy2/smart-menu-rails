@@ -1,0 +1,12 @@
+You've been invited to join <%= @restaurant.name %> on Mellow Menu!
+
+<%= @invitation.invited_by.name.presence || @invitation.invited_by.email %> has invited you to join <%= @restaurant.name %> as a <%= @invitation.role.titleize %>.
+
+Accept your invitation here:
+<%= @accept_url %>
+
+If you don't have an account yet, you'll be able to create one.
+
+This invitation expires in 7 days. If you didn't expect this email, you can safely ignore it.
+
+- Mellow Menu

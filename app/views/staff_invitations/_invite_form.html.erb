@@ -1,0 +1,53 @@
+<% restaurant = local_assigns[:restaurant] %>
+<% error = local_assigns[:error] %>
+<% invitation = local_assigns[:invitation] || StaffInvitation.new %>
+
+<div id="staff_invite_form" class="content-card-2025" data-skip-form-manager="true">
+  <h2 class="content-card-title">
+    <i class="bi bi-envelope-plus"></i>
+    <%= t('staff_invitations.invite_title', default: 'Invite Staff Member') %>
+  </h2>
+
+  <% if error.present? %>
+    <div class="alert alert-danger mb-3">
+      <i class="bi bi-exclamation-triangle"></i>
+      <%= error %>
+    </div>
+  <% end %>
+
+  <%= form_with url: restaurant_staff_invitations_path(restaurant), method: :post, data: { turbo_frame: 'staff_invite_form' } do |f| %>
+    <div class="row g-3">
+      <div class="col-12 col-md-6">
+        <label class="form-label fw-semibold" for="invite_email">
+          <i class="bi bi-envelope"></i>
+          <%= t('staff_invitations.email_label', default: 'Email Address') %>
+        </label>
+        <%= f.email_field :email, value: invitation.email, class: 'form-control', id: 'invite_email',
+            placeholder: 'staff@example.com', required: true, name: 'staff_invitation[email]' %>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <label class="form-label fw-semibold" for="invite_role">
+          <i class="bi bi-person-badge"></i>
+          <%= t('staff_invitations.role_label', default: 'Role') %>
+        </label>
+        <%= f.select :role,
+            [
+              [t('staff_invitations.role_staff', default: 'Staff'), 'staff'],
+              [t('staff_invitations.role_manager', default: 'Manager'), 'manager'],
+              [t('staff_invitations.role_admin', default: 'Admin'), 'admin'],
+            ],
+            {},
+            { class: 'form-select', id: 'invite_role', required: true, name: 'staff_invitation[role]' } %>
+      </div>
+    </div>
+
+    <div class="d-flex gap-2 mt-3">
+      <%= f.submit t('staff_invitations.send_invite', default: 'Send Invitation'), class: 'btn btn-primary' %>
+      <%= link_to t('staff_invitations.cancel', default: 'Cancel'),
+          edit_restaurant_path(restaurant, section: 'staff'),
+          class: 'btn btn-outline-secondary',
+          data: { turbo_frame: 'staff_invite_form' } %>
+    </div>
+  <% end %>
+</div>

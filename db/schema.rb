@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_02_25_183232) do
+ActiveRecord::Schema[7.2].define(version: 2026_02_26_150000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "vector"
@@ -1565,6 +1565,24 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_25_183232) do
     t.index ["tablesetting_id"], name: "index_smartmenus_on_tablesetting_id"
   end
 
+  create_table "staff_invitations", force: :cascade do |t|
+    t.bigint "restaurant_id", null: false
+    t.bigint "invited_by_id", null: false
+    t.string "email", null: false
+    t.integer "role", default: 0, null: false
+    t.string "token", null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "accepted_at"
+    t.datetime "expires_at", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["invited_by_id"], name: "index_staff_invitations_on_invited_by_id"
+    t.index ["restaurant_id", "email"], name: "idx_staff_invitations_restaurant_email"
+    t.index ["restaurant_id"], name: "index_staff_invitations_on_restaurant_id"
+    t.index ["status"], name: "index_staff_invitations_on_status"
+    t.index ["token"], name: "index_staff_invitations_on_token", unique: true
+  end
+
   create_table "tablesettings", force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -1859,6 +1877,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_25_183232) do
   add_foreign_key "smartmenus", "menus"
   add_foreign_key "smartmenus", "restaurants"
   add_foreign_key "smartmenus", "tablesettings"
+  add_foreign_key "staff_invitations", "restaurants"
+  add_foreign_key "staff_invitations", "users", column: "invited_by_id"
   add_foreign_key "tablesettings", "restaurants"
   add_foreign_key "taxes", "restaurants"
   add_foreign_key "testimonials", "restaurants"

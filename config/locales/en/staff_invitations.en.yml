@@ -1,0 +1,24 @@
+en:
+  staff_invitations:
+    invite_title: Invite Staff Member
+    email_label: Email Address
+    role_label: Role
+    role_staff: Staff
+    role_manager: Manager
+    role_admin: Admin
+    send_invite: Send Invitation
+    cancel: Cancel
+    sent: "Invitation sent to %{email}"
+    already_invited: This email already has a pending invitation for this restaurant
+    already_staff: This person is already a staff member at this restaurant
+    already_accepted: This invitation has already been accepted. Please sign in.
+    not_found: Invitation not found
+    expired: This invitation has expired or been revoked
+    accept_failed: Unable to accept this invitation. Please try again.
+    accepted: "You've joined %{restaurant} as a staff member!"
+    pending_invitations: Pending Invitations
+    no_pending: No pending invitations
+    invited_on: "Invited %{date}"
+    expires: "Expires %{date}"
+    revoke: Revoke
+    revoked: Invitation revoked

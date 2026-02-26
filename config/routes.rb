@@ -14,6 +14,9 @@ Rails.application.routes.draw do
   get '/privacy', to: 'home#privacy'
   get '/terms', to: 'home#terms'
   get '/offline', to: 'application#offline'
+
+  # Staff invitation accept (public — no auth required)
+  get '/staff_invitations/:token/accept', to: 'staff_invitations#accept', as: :accept_staff_invitation
   
   # ============================================================================
   # HEALTH AND MONITORING
@@ -307,6 +310,9 @@ Rails.application.routes.draw do
     end
     resources :genimages
     
+    # Staff invitations
+    resources :staff_invitations, only: [:create]
+
     # Staff management
     resources :employees do
       collection do
