@@ -9,6 +9,7 @@ module OrderingGate
     return true if current_user&.super_admin?
     return true if restaurant.nil?
     return true if restaurant.ordering_enabled?
+    return true if restaurant.user_id.present?
     return true unless restaurant.respond_to?(:claim_status)
     return true unless restaurant.unclaimed?
 
