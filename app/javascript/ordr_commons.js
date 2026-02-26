@@ -375,7 +375,7 @@ export function initOrderBindings() {
     document.addEventListener('click', (evt) => {
       const target = evt.target instanceof Element ? evt.target : null;
       if (!target) return;
-      const btn = target.closest && target.closest('#confirm-order');
+      const btn = target.closest && (target.closest('#confirm-order') || target.closest('#cartSubmitOrder'));
       if (!btn || btn.hasAttribute('disabled')) return;
       evt.stopPropagation();
       if (evt.stopImmediatePropagation) try { evt.stopImmediatePropagation(); } catch (_) {}
@@ -389,7 +389,17 @@ export function initOrderBindings() {
       const orderId = getCurrentOrderId();
       if (!restaurantId || !orderId) { console.warn('[ConfirmOrder][capture] Missing id; aborting', { restaurantId, orderId }); window.__confirmOrderPosting = false; return; }
       patch(`/restaurants/${restaurantId}/ordrs/` + orderId, { ordr: base })
-        .then(() => hideClosestModal(btn))
+        .then(() => {
+          hideClosestModal(btn);
+          // Close the cart bottom sheet if submit came from there
+          try {
+            const sheet = btn.closest && btn.closest('[data-controller="bottom-sheet"]');
+            if (sheet) {
+              const ctrl = window.Stimulus?.getControllerForElementAndIdentifier?.(sheet, 'bottom-sheet');
+              if (ctrl && typeof ctrl.close === 'function') { ctrl.close(); }
+            }
+          } catch (_) {}
+        })
         .finally(() => setTimeout(() => { window.__confirmOrderPosting = false; }, 500));
     }, true);
   })();

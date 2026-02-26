@@ -207,5 +207,23 @@ export default class extends Controller {
       document.dispatchEvent(new CustomEvent('ordr:updated'));
       document.dispatchEvent(new CustomEvent('ordr:order:updated'));
     } catch (_) {}
+
+    // Sync cart bottom sheet counts and totals with state
+    try {
+      const totalCount = Number(this.state.order?.totalCount || 0);
+      const countEl = document.getElementById('cartItemCount');
+      if (countEl) { countEl.textContent = totalCount; }
+
+      const totals = this.state.totals;
+      if (totals) {
+        const symbol = (totals.currency && totals.currency.symbol) || '';
+        const gross = Number(totals.gross || 0);
+        const formatted = symbol + gross.toFixed(2);
+        const totalAmountEl = document.getElementById('cartTotalAmount');
+        if (totalAmountEl) { totalAmountEl.textContent = formatted; }
+        const totalValueEl = document.getElementById('cartTotalValue');
+        if (totalValueEl) { totalValueEl.textContent = formatted; }
+      }
+    } catch (_) {}
   }
 }

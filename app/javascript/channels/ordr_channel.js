@@ -507,7 +507,7 @@ function refreshOrderJSLogic() {
   // Start Order click is handled centrally in ordr_commons.js (capture-phase).
   // Removed legacy bubbling handler here to avoid duplicate POSTs.
   // Delegated handler so replacements of modal content don't drop the binding
-  $(document).off('click.confirmOrder').on('click.confirmOrder', '#confirm-order:not([disabled])', function () {
+  $(document).off('click.confirmOrder').on('click.confirmOrder', '#confirm-order:not([disabled]), #cartSubmitOrder:not([disabled])', function () {
     if (window.__confirmOrderPosting) { return; }
     window.__confirmOrderPosting = true;
     if ($('#currentEmployee').length) {
