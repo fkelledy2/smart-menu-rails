@@ -95,8 +95,8 @@ class AuthorizationMonitoringService
       return "employee_#{employee.role}"
     end
 
-    # Check if user is a participant in orders
-    if resource.is_a?(Ordr) && resource.ordrparticipants.exists?(user: user)
+    # Check if user is a participant in orders (via employee link)
+    if resource.is_a?(Ordr) && resource.ordrparticipants.joins(:employee).exists?(employees: { user_id: user.id })
       return 'order_participant'
     end
 
