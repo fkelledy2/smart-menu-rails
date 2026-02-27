@@ -3,9 +3,11 @@
     The peek state shows a summary bar; half shows the item list; full adds totals + checkout.
 %>
 <% order = local_assigns[:order] %>
+<% restaurant = local_assigns[:restaurant] %>
 <% restaurantCurrency = local_assigns[:restaurantCurrency] %>
 <% ordrparticipant = local_assigns[:ordrparticipant] %>
 <% menuparticipant = local_assigns[:menuparticipant] %>
+<% cur = restaurantCurrency&.symbol.presence || '' %>
 
 <%# Backdrop %>
 <div class="bottom-sheet-backdrop"
@@ -18,6 +20,9 @@
      data-bottom-sheet-peek-value="72"
      data-bottom-sheet-half-value="55"
      data-bottom-sheet-initial-value="<%= order ? 'peek' : 'closed' %>"
+     data-tip-presets="<%= restaurant&.tips&.sort_by(&:percentage)&.map(&:percentage)&.to_json || '[]' %>"
+     data-currency-symbol="<%= cur %>"
+     data-currency-code="<%= restaurantCurrency&.code || '' %>"
      data-testid="cart-bottom-sheet"
      id="cartBottomSheet">
 
@@ -128,12 +133,72 @@
             <%= t('smartmenus.showModals.submit', default: 'Submit order') %>
           </button>
         <% end %>
-        <button type="button" class="btn-touch-secondary w-100 mt-2"
-                data-bs-toggle="modal" data-bs-target="#viewOrderModal"
-                data-action="click->bottom-sheet#close">
+        <button type="button" class="btn-touch-primary w-100 mt-2" id="cartRequestBill"
+                data-bs-toggle="modal" data-bs-target="#requestBillModal"
+                style="display:none;">
           <i class="bi bi-receipt"></i>
-          <%= t('smartmenus.showModals.view_full_order', default: 'View full order') %>
+          <%= t('smartmenus.showModals.request_bill', default: 'Request Bill') %>
         </button>
+        <button type="button" class="btn-touch-dark w-100 mt-2" id="cartPayOrder"
+                style="display:none;">
+          <i class="bi bi-currency-euro"></i>
+          <%= t('smartmenus.showModals.pay', default: 'Pay') %>
+        </button>
+      </div>
+
+      <%# Inline Pay Section (shown when Pay button is clicked) %>
+      <div id="cartPaySection" style="display:none;" class="cart-sheet__pay-section mt-3">
+        <hr>
+        <h6 class="fw-bold mb-3"><%= t('smartmenus.showModals.payBill', default: 'Pay Bill') %></h6>
+        <% if order %>
+          <div class="bill-line bill-line-header"><span><b><%= t('smartmenus.showModals.item', default: 'Item') %></b></span><span class="bill-amount"><b><%= t('smartmenus.showModals.price', default: 'Price') %></b></span></div>
+          <% if order.covercharge.to_f > 0 %>
+            <div class="bill-line"><span><%= t('smartmenus.showModals.cover_charge', default: 'Cover charge') %></span><span class="bill-amount" id="orderCoverCharge"><%= number_to_currency(order.covercharge, unit: cur) %></span></div>
+          <% end %>
+          <div class="bill-line"><span><%= t('smartmenus.showModals.nett', default: 'Nett') %></span><span class="bill-amount" id="orderNett"><%= number_to_currency(order.nett, unit: cur) %></span></div>
+          <% if order.service.to_f > 0 %>
+            <div class="bill-line"><span><%= t('smartmenus.showModals.service', default: 'Service') %></span><span class="bill-amount" id="orderService"><%= number_to_currency(order.service, unit: cur) %></span></div>
+          <% end %>
+          <% if order.tax.to_f > 0 %>
+            <div class="bill-line"><span><%= t('smartmenus.showModals.tax', default: 'Tax') %></span><span class="bill-amount" id="orderTax"><%= number_to_currency(order.tax, unit: cur) %></span></div>
+          <% end %>
+          <hr>
+          <div class="bill-line bill-line-total"><span><b><%= t('smartmenus.showModals.total', default: 'Total') %></b> <i>(<%= t('smartmenus.showModals.excluding_tip', default: 'excluding tip') %>)</i></span><span class="bill-amount"><b><%= cur %><span id="orderGross"><%= number_to_currency(order.gross, unit: '') %></span></b></span></div>
+
+          <div class="bill-tip-row">
+            <div class="d-flex flex-wrap align-items-center justify-content-end gap-2 mt-3 mb-3">
+              <% restaurant&.tips&.sort_by(&:percentage)&.each do |tip| %>
+                <button type="button" class="btn-touch-secondary btn-touch-sm"><span class="tipPreset"><%= tip.percentage %></span>%</button>
+              <% end %>
+              <input id="tipNumberField" type="number" min="0.00" max="<%= number_to_currency(order.gross, unit: cur) %>" class="form-control form-control-sm text-end" style="width: 80px;" value="0.00">
+            </div>
+          </div>
+          <hr>
+          <div class="bill-line bill-line-total"><span><b><%= t('smartmenus.showModals.total', default: 'Total') %></b> <i>(<%= t('smartmenus.showModals.including_tip', default: 'including tip') %>)</i></span><span class="bill-amount"><b><span id="orderGrandTotal"><%= number_to_currency(order.gross, unit: cur) %></span></b></span></div>
+
+          <div class="d-flex flex-column align-items-center gap-3 mt-4">
+            <div id="wallet-button-container"
+                 data-controller="stripe-wallet"
+                 data-stripe-wallet-open-order-id-value="<%= order&.id %>"
+                 data-stripe-wallet-amount-cents-value="<%= order&.grossInCents %>"
+                 data-stripe-wallet-currency-value="<%= restaurantCurrency&.code %>"></div>
+            <input type="hidden" id="openOrderId" value="<%= order.id %>">
+            <input type="hidden" id="paymentAmount" value="<%= order.grossInCents %>">
+            <input type="hidden" id="paymentCurrency" value="<%= restaurantCurrency&.code %>">
+            <input type="hidden" id="paymentRestaurantName" value="<%= t('smartmenus.showModals.bill_prefix', default: 'Bill:') %> <%= order.restaurant.name %>">
+            <input type="hidden" id="paymentRestaurantId" value="<%= order.restaurant.id %>">
+          </div>
+
+          <div class="d-flex gap-2 mt-3">
+            <button id="cartPayCancel" type="button" class="btn-touch-secondary w-50">
+              <%= t('common.cancel', default: 'Cancel') %>
+            </button>
+            <button id="pay-order-confirm" type="button" class="btn-touch-dark w-50" <%= 'disabled' unless order.gross.to_f > 0 %>>
+              <i class="bi bi-credit-card"></i>
+              <%= t('smartmenus.showModals.confirmPayment', default: 'Confirm Payment') %>
+            </button>
+          </div>
+        <% end %>
       </div>
     <% else %>
       <div class="text-center text-muted py-4">

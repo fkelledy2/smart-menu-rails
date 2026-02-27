@@ -76,6 +76,53 @@ export default class extends Controller {
     this.applyDatasetState();
     this.dispatchState();
 
+    // Delegated click handler for Pay button (works for server-rendered and JS-rendered)
+    this._onPayClick = (e) => {
+      const btn = e.target.closest('#cartPayOrder');
+      if (!btn) return;
+      e.preventDefault();
+      const paySection = document.getElementById('cartPaySection');
+      if (paySection) {
+        // If section is empty, render it now from current state
+        if (!paySection.innerHTML.trim()) {
+          const st = this.state || {};
+          const t = st.totals;
+          const s = (t && t.currency && t.currency.symbol) || '';
+          paySection.innerHTML = this._renderPaySection(t, s, st.flags || {});
+          // Bind Cancel handler on newly created button
+          this._bindCancelHandler(paySection);
+        }
+        paySection.style.display = paySection.style.display === 'none' ? 'block' : 'none';
+      }
+      // Hide the Pay button itself
+      btn.style.display = 'none';
+      const sheet = document.getElementById('cartBottomSheet');
+      if (sheet) {
+        const ctrl = this.application?.getControllerForElementAndIdentifier(sheet, 'bottom-sheet');
+        if (ctrl) { ctrl.setState('full'); }
+      }
+    };
+    document.addEventListener('click', this._onPayClick);
+
+    // Global Cancel handler called via onclick on the Cancel button
+    window.__cartPayCancel = () => {
+      console.debug('[State] Cancel clicked');
+      const paySection = document.getElementById('cartPaySection');
+      if (paySection) { paySection.style.display = 'none'; }
+      // Restore the Pay button and scroll it into view
+      const payBtn = document.getElementById('cartPayOrder');
+      if (payBtn) {
+        payBtn.style.display = 'block';
+        setTimeout(() => payBtn.scrollIntoView({ behavior: 'smooth', block: 'center' }), 150);
+      }
+      const sheet = document.getElementById('cartBottomSheet');
+      if (sheet) {
+        const ctrl = this.application?.getControllerForElementAndIdentifier(sheet, 'bottom-sheet');
+        console.debug('[State] Cancel -> bottom-sheet ctrl:', !!ctrl);
+        if (ctrl) { ctrl.setState('half'); }
+      }
+    };
+
     // Initial JSON fetch to hydrate items/totals on first load
     try {
       const slug = document.body?.dataset?.smartmenuId;
@@ -157,6 +204,8 @@ export default class extends Controller {
   disconnect() {
     if (this.observer) this.observer.disconnect();
     if (this._onStateUpdate) document.removeEventListener('state:update', this._onStateUpdate);
+    if (this._onPayClick) document.removeEventListener('click', this._onPayClick);
+    delete window.__cartPayCancel;
   }
 
   // Build state object from dataset
@@ -225,15 +274,17 @@ export default class extends Controller {
 
       // Dynamically re-render cart item rows from state
       this._renderCartItems(this.state, symbol);
-    } catch (_) {}
+    } catch (e) { console.error('[State] cart sync error', e); }
   }
 
   _renderCartItems(state, symbol) {
     const container = document.getElementById('cartItemsContainer');
     if (!container) return;
     const order = state.order || {};
-    const items = Array.isArray(order.items) ? order.items.filter(i => i.status !== 'removed') : [];
-    if (items.length === 0 && !order.id) return; // no order yet — keep server-rendered empty state
+    // Don't render until items array has been hydrated from JSON (preserve server-rendered ERB)
+    if (!Array.isArray(order.items)) return;
+    const items = order.items.filter(i => i.status !== 'removed');
+    console.debug('[State] _renderCartItems', { itemCount: items.length, orderId: order.id, hasContainer: !!container });
 
     const opened = items.filter(i => i.status === 'opened');
     const submitted = items.filter(i => ['ordered','preparing','ready','delivered'].includes(i.status));
@@ -274,7 +325,17 @@ export default class extends Controller {
       if (opened.length > 0) {
         html += '<button type="button" class="btn-touch-primary w-100 submitOrderButton" id="cartSubmitOrder" data-testid="cart-submit-order-btn"><i class="bi bi-send"></i> Submit order</button>';
       }
-      html += `<button type="button" class="btn-touch-secondary w-100 mt-2" data-bs-toggle="modal" data-bs-target="#viewOrderModal" data-action="click->bottom-sheet#close"><i class="bi bi-receipt"></i> View full order</button>`;
+      const payVisible = flags.payVisible === true;
+      const billVisible = flags.displayRequestBill === true && !payVisible;
+      html += `<button type="button" class="btn-touch-primary w-100 mt-2" id="cartRequestBill" data-bs-toggle="modal" data-bs-target="#requestBillModal" style="display:${billVisible ? 'block' : 'none'};"><i class="bi bi-receipt"></i> Request Bill</button>`;
+      html += `<button type="button" class="btn-touch-dark w-100 mt-2" id="cartPayOrder" style="display:${payVisible ? 'block' : 'none'};"><i class="bi bi-currency-euro"></i> Pay</button>`;
+      html += '</div>';
+
+      // Inline pay section (hidden until Pay button clicked)
+      html += '<div id="cartPaySection" style="display:none;" class="cart-sheet__pay-section mt-3">';
+      if (payVisible && totals) {
+        html += this._renderPaySection(totals, symbol, flags);
+      }
       html += '</div>';
     } else if (order.id) {
       html += '<div class="text-center text-muted py-4"><i class="bi bi-cart3 fs-1 mb-2 d-block"></i><p>Your cart is empty</p><p class="small">Tap + on any item to add it</p></div>';
@@ -282,12 +343,83 @@ export default class extends Controller {
 
     container.innerHTML = html;
 
+    // Bind Cancel button click handler directly after DOM injection
+    this._bindCancelHandler(container);
+
     // If order exists and sheet is closed, open to peek
     const sheet = document.getElementById('cartBottomSheet');
     if (sheet && order.id && items.length > 0) {
       const ctrl = this.application?.getControllerForElementAndIdentifier(sheet, 'bottom-sheet');
       if (ctrl && ctrl.state === 'closed') { ctrl.setState('peek'); }
     }
+  }
+
+  _renderPaySection(totals, symbol, flags) {
+    if (!totals) return '';
+    const fmt = (n) => symbol + Number(n || 0).toFixed(2);
+    const sheet = document.getElementById('cartBottomSheet');
+    let tipPresets = [];
+    try { tipPresets = JSON.parse(sheet?.dataset?.tipPresets || '[]'); } catch (_) {}
+    const grossVal = Number(totals.gross || 0).toFixed(2);
+
+    let h = '<hr>';
+    h += '<h6 class="fw-bold mb-3">Pay Bill</h6>';
+    h += '<div class="bill-line bill-line-header"><span><b>Item</b></span><span class="bill-amount"><b>Price</b></span></div>';
+    if ((totals.covercharge || 0) > 0) {
+      h += `<div class="bill-line"><span>Cover charge</span><span class="bill-amount" id="orderCoverCharge">${fmt(totals.covercharge)}</span></div>`;
+    }
+    h += `<div class="bill-line"><span>Nett</span><span class="bill-amount" id="orderNett">${fmt(totals.nett)}</span></div>`;
+    if ((totals.service || 0) > 0) {
+      h += `<div class="bill-line"><span>Service</span><span class="bill-amount" id="orderService">${fmt(totals.service)}</span></div>`;
+    }
+    if ((totals.tax || 0) > 0) {
+      h += `<div class="bill-line"><span>Tax</span><span class="bill-amount" id="orderTax">${fmt(totals.tax)}</span></div>`;
+    }
+    h += '<hr>';
+    h += `<div class="bill-line bill-line-total"><span><b>Total</b> <i>(excluding tip)</i></span><span class="bill-amount"><b>${symbol}<span id="orderGross">${grossVal}</span></b></span></div>`;
+    // Tip presets
+    h += '<div class="bill-tip-row"><div class="d-flex flex-wrap align-items-center justify-content-end gap-2 mt-3 mb-3">';
+    tipPresets.forEach(pct => {
+      h += `<button type="button" class="btn-touch-secondary btn-touch-sm"><span class="tipPreset">${pct}</span>%</button>`;
+    });
+    h += '<input id="tipNumberField" type="number" min="0.00" class="form-control form-control-sm text-end" style="width:80px" value="0.00">';
+    h += '</div></div>';
+    h += '<hr>';
+    h += `<div class="bill-line bill-line-total"><span><b>Total</b> <i>(including tip)</i></span><span class="bill-amount"><b><span id="orderGrandTotal">${symbol}${grossVal}</span></b></span></div>`;
+    // Stripe wallet + hidden inputs
+    const orderId = this.state?.order?.id || '';
+    const amountCents = Math.round(Number(totals.gross || 0) * 100);
+    const currencyCode = sheet?.dataset?.currencyCode || '';
+    h += '<div class="d-flex flex-column align-items-center gap-3 mt-4">';
+    h += `<div id="wallet-button-container" data-controller="stripe-wallet" data-stripe-wallet-open-order-id-value="${orderId}" data-stripe-wallet-amount-cents-value="${amountCents}" data-stripe-wallet-currency-value="${currencyCode}"></div>`;
+    h += `<input type="hidden" id="openOrderId" value="${orderId}">`;
+    h += `<input type="hidden" id="paymentAmount" value="${amountCents}">`;
+    h += `<input type="hidden" id="paymentCurrency" value="${currencyCode}">`;
+    h += '</div>';
+    // Cancel + Confirm buttons (50/50)
+    const hasPayable = Number(totals.gross || 0) > 0;
+    h += '<div class="d-flex gap-2 mt-3">';
+    h += '<button id="cartPayCancel" type="button" class="btn-touch-secondary w-50">Cancel</button>';
+    h += `<button id="pay-order-confirm" type="button" class="btn-touch-dark w-50" ${hasPayable ? '' : 'disabled'}><i class="bi bi-credit-card"></i> Confirm Payment</button>`;
+    h += '</div>';
+    return h;
+  }
+
+  _bindCancelHandler(parent) {
+    const cancelBtn = parent.querySelector('#cartPayCancel');
+    if (!cancelBtn) return;
+    cancelBtn.addEventListener('click', () => {
+      console.debug('[State] Cancel clicked');
+      const ps = document.getElementById('cartPaySection');
+      if (ps) ps.style.display = 'none';
+      const pb = document.getElementById('cartPayOrder');
+      if (pb) pb.style.display = 'block';
+      const sh = document.getElementById('cartBottomSheet');
+      if (sh) {
+        const ctrl = this.application?.getControllerForElementAndIdentifier(sh, 'bottom-sheet');
+        if (ctrl) { ctrl.setState('half'); }
+      }
+    });
   }
 
   _esc(str) {

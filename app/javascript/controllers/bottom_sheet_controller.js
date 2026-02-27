@@ -76,6 +76,7 @@ export default class extends Controller {
   setState(newState) {
     const oldState = this.state
     this.state = newState
+    console.debug('[BottomSheet] setState', oldState, '->', newState, new Error().stack?.split('\n')[2]?.trim())
     this.applyState()
     this.dispatch("stateChanged", { detail: { from: oldState, to: newState } })
   }
