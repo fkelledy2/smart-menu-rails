@@ -43,7 +43,7 @@
   </div>
 
   <!-- Order Controls -->
-  <div class="header-order-row" id="openOrderContainer" data-controller="order-header" style="visibility:hidden">
+  <div class="header-order-row" id="openOrderContainer" data-controller="order-header" data-order-header-customer-value="<%= !current_user %>" style="visibility:hidden">
     <% if @openOrder %>
       <% if current_user %>
         <%= render partial: "orderStaff", locals: { order: @openOrder, menu: @openOrder.menu, restaurant: @restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant, needs_age_check: @needs_age_check } %>
@@ -67,23 +67,6 @@
              class="menu-search-input" 
              placeholder="<%= t('.search_menu', default: 'Search menu...') %>">
       
-      <% unless current_user %>
-        <% if @ordrparticipant %>
-          <button type="button" 
-                  class="filter-button" 
-                  data-bs-toggle="modal" 
-                  data-bs-restaurant="<%= @restaurant.id %>" 
-                  data-bs-menu="<%= @menu.id %>" 
-                  data-bs-target="#filterOrderModal"
-                  aria-label="<%= t('.filter_allergens', default: 'Filter allergens') %>">
-            <i class="bi bi-filter"></i>
-            <% if @ordrparticipant.allergyns.size > 0 %>
-              <span class="filter-badge"><%= @ordrparticipant.allergyns.size %></span>
-            <% end %>
-          </button>
-        <% end %>
-      <% end %>
-      
       <!-- Layout Toggle -->
       <div class="layout-toggle-group" role="group" aria-label="<%= t('.layout', default: 'Layout') %>">
         <button type="button"
@@ -104,15 +87,20 @@
         </button>
       </div>
 
-      <!-- Allergen Legend Info Button -->
-      <button type="button" 
-              class="filter-button" 
-              data-bs-toggle="modal" 
-              data-bs-target="#allergenLegendModal"
-              aria-label="<%= t('.allergen_key', default: 'Allergen key') %>"
-              title="<%= t('.view_allergen_key', default: 'View allergen key') %>">
-        <i class="bi bi-info-circle"></i>
-      </button>
+      <% unless current_user %>
+        <!-- Combined Allergen Button (Key + Filter) -->
+        <button type="button"
+                class="filter-button"
+                data-bs-toggle="modal"
+                data-bs-target="#allergenModal"
+                aria-label="<%= t('.allergen_key', default: 'Allergen key') %>"
+                title="<%= t('.view_allergen_key', default: 'View allergen key') %>">
+          <i class="bi bi-shield-exclamation"></i>
+          <% if @ordrparticipant && @ordrparticipant.allergyns.size > 0 %>
+            <span class="filter-badge"><%= @ordrparticipant.allergyns.size %></span>
+          <% end %>
+        </button>
+      <% end %>
     </div>
     
     <!-- Section Tabs -->

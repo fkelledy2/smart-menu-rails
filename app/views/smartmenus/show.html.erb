@@ -89,8 +89,8 @@
     <% end %>
 </div>
 
-<%# Allergen Legend Modal - outside cache to always be available %>
-<%= render partial: "smartmenus/allergen_legend_modal", locals: { allergyns: @allergyns } %>
+<%# Combined Allergen Modal (Key + Filter) - outside cache so filter form is always fresh %>
+<%= render partial: "smartmenus/allergen_combined_modal", locals: { allergyns: @allergyns } %>
 
 <%# AI Sommelier — outside cache since it's interactive %>
 <% if show_customer_view && @menu&.menuitems&.drink_items&.exists? %>
@@ -105,14 +105,6 @@
 
 <%# Test-only: ensure staff add buttons are enabled for automation stability %>
 <% if Rails.env.test? %>
-  <%# Customer fallback: always provide a view-order button reachable by tests %>
-  <% if show_customer_view %>
-    <div style="position:fixed; bottom:12px; right:12px; z-index:2147483647;">
-      <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#viewOrderModal" data-testid="view-order-btn">
-        <i class="bi bi-cart"></i> Order
-      </button>
-    </div>
-  <% end %>
   <script>
     (function(){
       function enableStaffButtons(){
@@ -134,22 +126,6 @@
         enableStaffButtons();
         if (--retries <= 0) clearInterval(iv);
       }, 50);
-
-      // Ensure a view-order button exists in customer view for automation flows
-      try {
-        var isCustomer = !!document.querySelector('[data-testid="smartmenu-customer-view"]');
-        if (isCustomer && !document.querySelector('[data-testid="view-order-btn"]')) {
-          var grp = document.querySelector('[data-testid="order-action-buttons"]') || document.body;
-          var btn = document.createElement('button');
-          btn.type = 'button';
-          btn.className = 'btn-touch-secondary btn-touch-sm';
-          btn.setAttribute('data-bs-toggle', 'modal');
-          btn.setAttribute('data-bs-target', '#viewOrderModal');
-          btn.setAttribute('data-testid', 'view-order-btn');
-          btn.innerHTML = '<i class="bi bi-cart"></i> Order';
-          grp.appendChild(btn);
-        }
-      } catch (e) {}
     })();
   </script>
 <% end %>

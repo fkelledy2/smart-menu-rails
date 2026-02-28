@@ -261,6 +261,11 @@ en_US:
   smartmenus:
     alcohol:
       age_check: Age check
+    allergen_combined_modal:
+      title: Allergens
+      filter_description: Tap an allergen to hide menu items that contain it.
+      clear_all: Clear all
+      done: Done
     allergen_legend_modal:
       allergen: Allergen
       allergen_key: Allergen Key

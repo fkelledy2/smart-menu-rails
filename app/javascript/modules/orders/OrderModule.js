@@ -172,7 +172,7 @@ export class OrderModule extends ComponentBase {
     const modalIds = [
       'openOrderModalLabel',
       'addItemToOrderModalLabel',
-      'filterOrderModalLabel',
+      'allergenModalLabel',
       'viewOrderModalLabel',
     ];
 
@@ -605,10 +605,13 @@ export class OrderModule extends ComponentBase {
    * Show filter modal
    */
   showFilterModal() {
-    const modal = this.find('#filterOrderModalLabel');
+    const modal = this.find('#allergenModal');
     if (modal) {
-      const bsModal = new bootstrap.Modal(modal);
+      const bsModal = bootstrap.Modal.getOrCreateInstance(modal);
       bsModal.show();
+      // Switch to the filter tab if it exists
+      const filterTab = modal.querySelector('#allergen-filter-tab');
+      if (filterTab) bootstrap.Tab.getOrCreateInstance(filterTab).show();
     }
   }
 

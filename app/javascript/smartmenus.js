@@ -223,6 +223,7 @@ function initMenuTimeRestrictions() {
         button.classList.add('disabled');
         button.style.opacity = '0.5';
         button.style.cursor = 'not-allowed';
+        button.style.pointerEvents = 'none';
         
         // Add tooltip to explain why it's disabled
         button.setAttribute('title', 'This item is not available at this time');
@@ -235,6 +236,7 @@ function initMenuTimeRestrictions() {
           button.classList.remove('disabled');
           button.style.opacity = '';
           button.style.cursor = '';
+          button.style.pointerEvents = '';
           button.removeAttribute('title');
         }
       }
@@ -256,6 +258,7 @@ function initMenuTimeRestrictions() {
           button.classList.add('disabled');
           button.style.opacity = '0.5';
           button.style.cursor = 'not-allowed';
+          button.style.pointerEvents = 'none';
           button.setAttribute('title', 'This item is not available at this time');
         } else {
           // Only enable button if there's a table selected (check if button has data-bs-ordr_id)
@@ -265,6 +268,7 @@ function initMenuTimeRestrictions() {
             button.classList.remove('disabled');
             button.style.opacity = '';
             button.style.cursor = '';
+            button.style.pointerEvents = '';
             button.removeAttribute('title');
           }
         }

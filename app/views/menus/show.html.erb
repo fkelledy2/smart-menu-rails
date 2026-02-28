@@ -56,7 +56,7 @@
                     <% else %>
                         <% if @ordrparticipant %>
                             <span id="filterMenuSpan">
-                                <button type="button" class="btn btn-sm btn-light position-relative" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#filterOrderModal">
+                                <button type="button" class="btn btn-sm btn-light position-relative" data-bs-toggle="modal" data-bs-restaurant="<%= @menu.restaurant.id %>" data-bs-menu="<%= @menu.id %>" data-bs-target="#allergenModal">
                                     <i class="bi bi-filter"></i>
                                     <% if @ordrparticipant.allergyns.size > 0 %>
                                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">

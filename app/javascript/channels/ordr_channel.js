@@ -163,7 +163,7 @@ function refreshOrderJSLogic() {
     });
   }
   $('#toggleFilters').click(function () {
-    $(':checkbox').prop('checked', this.checked);
+    $('#allergenFilterPane :checkbox:not(#toggleFilters)').prop('checked', this.checked);
   });
   let restaurantCurrencySymbol = '$';
   if ($('#restaurantCurrency').length) {
@@ -302,7 +302,7 @@ function refreshOrderJSLogic() {
         if (qty) qty.value = '1';
         if (pairing) pairing.checked = false;
       } catch (_) {}
-      $('#a2o_ordr_id').text(button.getAttribute('data-bs-ordr_id'));
+      $('#a2o_ordr_id').text(button.getAttribute('data-bs-ordr_id') || (window.__SM_STATE && window.__SM_STATE.order && window.__SM_STATE.order.id ? String(window.__SM_STATE.order.id) : ''));
       $('#a2o_menuitem_id').text(button.getAttribute('data-bs-menuitem_id'));
       $('#a2o_menuitem_name').text(button.getAttribute('data-bs-menuitem_name'));
       $('#a2o_menuitem_price').text(

@@ -3,6 +3,8 @@ import { Controller } from "@hotwired/stimulus";
 // Controls the header CTA area (#openOrderContainer) based on state
 // Listens for state:order and state:changed events and renders appropriate buttons
 export default class extends Controller {
+  static values = { customer: { type: Boolean, default: false } }
+
   connect() {
     this.renderFromState(window.__SM_STATE || this.extractState());
     this._onStateOrder = (e) => this.renderFromState({ order: e.detail });
@@ -60,8 +62,10 @@ export default class extends Controller {
         btn.innerHTML = '<i class="bi bi-plus-circle"></i> Start Order';
         btnGroup.appendChild(btn);
         }
+      } else if (this.customerValue) {
+        // Customer view: bottom sheet handles Order/Bill/Pay — render nothing
       } else {
-        // Minimal customer CTA set: View, Request Bill, Pay
+        // Staff CTA set: View, Request Bill, Pay
         if (!hydrated) {
           const loadingBtn = document.createElement('button');
           loadingBtn.type = 'button';
@@ -75,9 +79,7 @@ export default class extends Controller {
           viewBtn.className = 'btn-touch-secondary btn-touch-sm me-2 position-relative';
           viewBtn.setAttribute('data-bs-toggle', 'modal');
           viewBtn.setAttribute('data-bs-target', '#viewOrderModal');
-          // Icon + label
           viewBtn.innerHTML = '<i class="bi bi-receipt"></i> Order';
-          // Badge with totalCount
           const totalCount = Number((window.__SM_STATE && window.__SM_STATE.order && window.__SM_STATE.order.totalCount) || 0);
           const badge = document.createElement('span');
           badge.className = 'position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger';

@@ -538,11 +538,20 @@ export function initOrderBindings() {
         const $addButtons = $('.addItemToOrder');
         const $tastingButtons = $('.tasting-cta');
         if (enabled) {
-          $addButtons.removeAttr('disabled');
-          $tastingButtons.removeAttr('disabled');
+          $addButtons.removeAttr('disabled').css('pointer-events', '');
+          $tastingButtons.removeAttr('disabled').css('pointer-events', '');
+          // Stamp current order ID onto buttons that were cached without one
+          const stateOrderId = window.__SM_STATE && window.__SM_STATE.order && window.__SM_STATE.order.id;
+          if (stateOrderId) {
+            $addButtons.each(function () {
+              if (!this.getAttribute('data-bs-ordr_id')) {
+                this.setAttribute('data-bs-ordr_id', String(stateOrderId));
+              }
+            });
+          }
         } else {
-          $addButtons.attr('disabled', 'disabled');
-          $tastingButtons.attr('disabled', 'disabled');
+          $addButtons.attr('disabled', 'disabled').css('pointer-events', 'none');
+          $tastingButtons.attr('disabled', 'disabled').css('pointer-events', 'none');
         }
       } catch (_) {}
     };
@@ -688,7 +697,7 @@ export function initOrderBindings() {
 
   // Modal inert toggles for accessibility
   (function bindModalInert() {
-    const ids = ['openOrderModalLabel','addItemToOrderModalLabel','filterOrderModalLabel','viewOrderModalLabel','requestBillModalLabel','payOrderModalLabel'];
+    const ids = ['openOrderModalLabel','addItemToOrderModalLabel','allergenModalLabel','viewOrderModalLabel','requestBillModalLabel','payOrderModalLabel'];
     ids.forEach((id) => {
       const el = document.getElementById(id);
       if (!el || el.__inertBound) return;

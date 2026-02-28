@@ -83,11 +83,11 @@ export function initOrders() {
       document.getElementById('backgroundContent').removeAttribute('inert');
     });
   }
-  if (document.getElementById('filterOrderModalLabel')) {
-    document.getElementById('filterOrderModalLabel').addEventListener('shown.bs.modal', () => {
+  if (document.getElementById('allergenModalLabel')) {
+    document.getElementById('allergenModalLabel').addEventListener('shown.bs.modal', () => {
       document.getElementById('backgroundContent').setAttribute('inert', '');
     });
-    document.getElementById('filterOrderModalLabel').addEventListener('hidden.bs.modal', () => {
+    document.getElementById('allergenModalLabel').addEventListener('hidden.bs.modal', () => {
       document.getElementById('backgroundContent').removeAttribute('inert');
     });
   }
@@ -346,7 +346,7 @@ export function initOrders() {
         // Standard flow: populate from triggering button attributes
         const getAttr = (name) => button.getAttribute(name);
         const priceAttr = getAttr('data-bs-menuitem_price');
-        $('#a2o_ordr_id').text(getAttr('data-bs-ordr_id'));
+        $('#a2o_ordr_id').text(getAttr('data-bs-ordr_id') || (window.__SM_STATE && window.__SM_STATE.order && window.__SM_STATE.order.id ? String(window.__SM_STATE.order.id) : ''));
         $('#a2o_menuitem_id').text(getAttr('data-bs-menuitem_id'));
         $('#a2o_menuitem_name').text(getAttr('data-bs-menuitem_name'));
         if (priceAttr) {

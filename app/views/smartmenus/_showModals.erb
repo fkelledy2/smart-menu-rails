@@ -107,46 +107,7 @@
       </div>
     </div>
 
-    <% if ordrparticipant %>
-    <div class="modal fade" id="filterOrderModal" tabindex="-1" aria-labelledby="filterOrderModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-fullscreen-sm-down">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="filterOrderModalLabel"><%= t(".filterAllergyns") %></h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="<%= t('common.close') %>"></button>
-                </div>
-                <%= form_with(model: [restaurant, ordrparticipant]) do |form| %>
-                    <div class="modal-body">
-                        <div class="form-group row">
-                            <div class="col-8">
-                                <div style="max-height: 60vh; overflow-y: auto; padding-right: 8px;">
-                                    <%= form.collection_check_boxes :allergyn_ids, allergyns, :id, :name, { hide_label: true } do |b| %>
-                                        <div class="form-check">
-                                            <%= b.check_box %>
-                                            <label class="form-check-label">
-                                                <%= b.label %>
-                                            </label>
-                                        </div>
-                                    <% end %>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="float-end form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" id="toggleFilters">
-                                    <label class="form-check-label" for="toggleFilters"><%= t(".noneAll") %></label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer gap-2">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" aria-label="<%= t('common.close') %>"><%= t(".cancel") %></button>
-                        <%= form.submit value: t(".filterBy"), class: 'btn btn-primary' %>
-                    </div>
-                <% end %>
-            </div>
-        </div>
-    </div>
-    <% end %>
+    <%# filterOrderModal has been merged into the combined allergen modal (#allergenModal) %>
     <div class="modal fade" id="viewOrderModal" tabindex="-1" aria-labelledby="viewOrderModalLabel" aria-hidden="true" data-testid="view-order-modal" data-controller="order-totals">
       <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-fullscreen-sm-down">
         <div class="modal-content">
