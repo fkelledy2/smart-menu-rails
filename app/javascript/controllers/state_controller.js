@@ -119,7 +119,7 @@ export default class extends Controller {
       if (sheet) {
         const ctrl = this.application?.getControllerForElementAndIdentifier(sheet, 'bottom-sheet');
         console.debug('[State] Cancel -> bottom-sheet ctrl:', !!ctrl);
-        if (ctrl) { ctrl.setState('half'); }
+        if (ctrl) { ctrl.setState('full'); }
       }
     };
 
@@ -320,7 +320,6 @@ export default class extends Controller {
 
     if (items.length > 0) {
       const totalFormatted = totals ? fmt(totals.gross) : fmt(0);
-      html += `<div class="cart-sheet__totals" data-testid="cart-totals"><div class="cart-sheet__total-row"><span>Total</span><span class="cart-sheet__total-value" id="cartTotalValue">${totalFormatted}</span></div></div>`;
       html += '<div class="cart-sheet__actions" data-testid="cart-actions">';
       if (opened.length > 0) {
         html += '<button type="button" class="btn-touch-primary w-100 submitOrderButton" id="cartSubmitOrder" data-testid="cart-submit-order-btn"><i class="bi bi-send"></i> Submit order</button>';
@@ -339,6 +338,10 @@ export default class extends Controller {
       html += '</div>';
     } else if (order.id) {
       html += '<div class="text-center text-muted py-4"><i class="bi bi-cart3 fs-1 mb-2 d-block"></i><p>Your cart is empty</p><p class="small">Tap + on any item to add it</p></div>';
+    } else {
+      // No order yet — preserve server-rendered start-order section if present
+      const existingStart = container.querySelector('#cartStartOrderSection');
+      if (existingStart) return;
     }
 
     container.innerHTML = html;
@@ -380,7 +383,7 @@ export default class extends Controller {
     // Tip presets
     h += '<div class="bill-tip-row"><div class="d-flex flex-wrap align-items-center justify-content-end gap-2 mt-3 mb-3">';
     tipPresets.forEach(pct => {
-      h += `<button type="button" class="btn-touch-secondary btn-touch-sm"><span class="tipPreset">${pct}</span>%</button>`;
+      h += `<button type="button" class="btn-touch-secondary btn-touch-sm tip-preset-btn"><span class="tipPreset">${pct}%</span></button>`;
     });
     h += '<input id="tipNumberField" type="number" min="0.00" class="form-control form-control-sm text-end" style="width:80px" value="0.00">';
     h += '</div></div>';
@@ -400,7 +403,7 @@ export default class extends Controller {
     const hasPayable = Number(totals.gross || 0) > 0;
     h += '<div class="d-flex gap-2 mt-3">';
     h += '<button id="cartPayCancel" type="button" class="btn-touch-secondary w-50">Cancel</button>';
-    h += `<button id="pay-order-confirm" type="button" class="btn-touch-dark w-50" ${hasPayable ? '' : 'disabled'}><i class="bi bi-credit-card"></i> Confirm Payment</button>`;
+    h += `<button id="pay-order-confirm" type="button" class="btn-touch-dark w-50" ${hasPayable ? '' : 'disabled'}><i class="bi bi-credit-card"></i> Pay</button>`;
     h += '</div>';
     return h;
   }
@@ -417,7 +420,7 @@ export default class extends Controller {
       const sh = document.getElementById('cartBottomSheet');
       if (sh) {
         const ctrl = this.application?.getControllerForElementAndIdentifier(sh, 'bottom-sheet');
-        if (ctrl) { ctrl.setState('half'); }
+        if (ctrl) { ctrl.setState('full'); }
       }
     });
   }

@@ -441,3 +441,13 @@
   text-align: right;
   flex-shrink: 0;
 }
+
+// Ensure Bootstrap modals appear above the cart bottom sheet (z-index 1090)
+// Scoped to smartmenu pages only so admin modals are unaffected
+body[data-smartmenu-id] .modal-backdrop {
+  z-index: 1100 !important;
+}
+
+body[data-smartmenu-id] .modal {
+  z-index: 1105 !important;
+}

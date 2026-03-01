@@ -152,7 +152,6 @@
   font-size: 1rem;
   transition: transform 0.2s ease;
 
-  .bottom-sheet--half &,
   .bottom-sheet--full & {
     transform: rotate(180deg);
   }
@@ -242,6 +241,15 @@
 .cart-sheet__actions {
   margin-top: 16px;
   padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+.cart-sheet__start-order {
+  padding: 8px 0;
+
+  .display-4 {
+    font-weight: 700;
+    color: #111827;
+  }
 }
 
 // ============================================================================

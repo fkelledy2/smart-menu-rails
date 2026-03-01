@@ -36,7 +36,7 @@
     <%= render partial: "smartmenus/showModals", locals: { order: @openOrder, menu: @menu, restaurant: @restaurant, allergyns: @allergyns, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant, restaurantCurrency: @restaurantCurrency, tablesetting: @tablesetting, current_employee: @current_employee } %>
     <%= render partial: "smartmenus/showContext", locals: { order: @openOrder, menu: @menu, restaurant: @restaurant, current_employee: @current_employee, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant, restaurantCurrency: @restaurantCurrency, tablesetting: @tablesetting } %>
     <% unless current_user || @current_employee %>
-      <%= render partial: "smartmenus/cart_bottom_sheet", locals: { order: @openOrder, restaurant: @restaurant, restaurantCurrency: @restaurantCurrency, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant } %>
+      <%= render partial: "smartmenus/cart_bottom_sheet", locals: { order: @openOrder, restaurant: @restaurant, restaurantCurrency: @restaurantCurrency, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant, tablesetting: @tablesetting } %>
     <% end %>
   </body>
 </html>

@@ -265,10 +265,11 @@ class ApplicationManager {
       }
 
       initializeAutoSave() {
-        // Find all forms with data-auto-save attribute
-        const autoSaveForms = this.container.querySelectorAll('form[data-auto-save="true"]');
+        // Find all forms with data-auto-save attribute that haven't been bound yet
+        const autoSaveForms = this.container.querySelectorAll('form[data-auto-save="true"]:not([data-auto-save-bound])');
         
         autoSaveForms.forEach((form) => {
+          form.setAttribute('data-auto-save-bound', 'true');
           const saveDelay = parseInt(form.dataset.autoSaveDelay) || 2000;
           
           const debouncedSave = () => {
@@ -993,8 +994,9 @@ document.addEventListener('turbo:frame-load', (event) => {
     const frame = event.target;
     if (!(frame instanceof Element)) return;
 
-    const newRestaurantEl = frame.querySelector && frame.querySelector('#newRestaurant');
-    if (newRestaurantEl) {
+    // Re-initialize restaurants JS (TomSelect, etc.) for any restaurant/menu content frame
+    if (frame.id === 'restaurant_content' || frame.id === 'menu_content' ||
+        (frame.querySelector && (frame.querySelector('#newRestaurant') || frame.querySelector('#restaurant_address1')))) {
       try {
         initRestaurants();
       } catch (e) {
@@ -1002,12 +1004,15 @@ document.addEventListener('turbo:frame-load', (event) => {
       }
     }
 
-    const addressInput = frame.querySelector && frame.querySelector('#restaurant_address1');
-    if (addressInput) {
+    // Re-initialize auto-save for any new forms loaded via Turbo frame
+    if (frame.querySelector && frame.querySelector('form[data-auto-save="true"]:not([data-auto-save-bound])')) {
       try {
-        initRestaurants();
+        if (window.SmartMenuApp && window.SmartMenuApp.globalFormManager) {
+          window.SmartMenuApp.globalFormManager.refresh();
+          console.log('[SmartMenu] Auto-save re-initialized for turbo:frame-load');
+        }
       } catch (e) {
-        console.warn('[SmartMenu] initRestaurants turbo:frame-load init failed', e);
+        console.warn('[SmartMenu] Auto-save turbo:frame-load init failed', e);
       }
     }
 

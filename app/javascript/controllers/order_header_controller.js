@@ -50,17 +50,31 @@ export default class extends Controller {
         // Only show Start Order if tableId is present (smartmenu tied to a table)
         if (!tableId) {
           // Render nothing (besides optional menu-name span preserved later)
+        } else if (this.customerValue) {
+          // Customer view: open the bottom sheet start-order section
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'btn-touch-primary btn-touch-sm';
+          btn.innerHTML = '<i class="bi bi-plus-circle"></i> Start Order';
+          btn.addEventListener('click', () => {
+            const sheet = document.getElementById('cartBottomSheet');
+            if (sheet) {
+              const ctrl = this.application?.getControllerForElementAndIdentifier(sheet, 'bottom-sheet');
+              if (ctrl) { ctrl.setState('full'); }
+            }
+          });
+          btnGroup.appendChild(btn);
         } else {
-        // Start Order button
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'btn-touch-primary btn-touch-sm';
-        btn.setAttribute('data-bs-toggle', 'modal');
-        btn.setAttribute('data-bs-restaurant', restaurantId || '');
-        btn.setAttribute('data-bs-menu', menuId || '');
-        btn.setAttribute('data-bs-target', '#openOrderModal');
-        btn.innerHTML = '<i class="bi bi-plus-circle"></i> Start Order';
-        btnGroup.appendChild(btn);
+          // Staff view: use the modal
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'btn-touch-primary btn-touch-sm';
+          btn.setAttribute('data-bs-toggle', 'modal');
+          btn.setAttribute('data-bs-restaurant', restaurantId || '');
+          btn.setAttribute('data-bs-menu', menuId || '');
+          btn.setAttribute('data-bs-target', '#openOrderModal');
+          btn.innerHTML = '<i class="bi bi-plus-circle"></i> Start Order';
+          btnGroup.appendChild(btn);
         }
       } else if (this.customerValue) {
         // Customer view: bottom sheet handles Order/Bill/Pay — render nothing

@@ -1,5 +1,7 @@
 <div id="modalsContainer">
 
+    <%# Start Order modal — staff/admin only (customers use the bottom sheet) %>
+    <% if current_user || current_employee %>
     <div class="modal fade" id="openOrderModal" tabindex="-1" aria-labelledby="openOrderModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-fullscreen-sm-down">
             <div class="modal-content">
@@ -47,6 +49,7 @@
             </div>
         </div>
     </div>
+    <% end %>
 
     <div class="modal fade" id="addItemToOrderModal" tabindex="-1" aria-labelledby="addItemToOrderModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-fullscreen-sm-down">
@@ -304,7 +307,7 @@
                     <div class="bill-tip-row">
                       <div class="d-flex flex-wrap align-items-center justify-content-end gap-2 mt-3 mb-3">
                         <% restaurant.tips.sort_by(&:percentage).each do |tip| %>
-                          <button type="button" class="btn-touch-secondary btn-touch-sm"><span class="tipPreset"><%= tip.percentage %></span>%</button>
+                          <button type="button" class="btn-touch-secondary btn-touch-sm tip-preset-btn"><span class="tipPreset"><%= tip.percentage %>%</span></button>
                         <% end %>
                         <input id="tipNumberField" type="number" min="0.00" max="<%= number_to_currency(order.gross, unit: cur) %>" class="form-control form-control-sm text-end" style="width: 80px;" value="0.00">
                       </div>

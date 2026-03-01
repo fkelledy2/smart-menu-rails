@@ -336,10 +336,22 @@ export function initOrderBindings() {
           const addInst = window.bootstrap.Modal.getInstance(addModalEl) || window.bootstrap.Modal.getOrCreateInstance(addModalEl);
           addInst.hide();
         }
-        const openOrderModal = document.getElementById('openOrderModal');
-        if (openOrderModal && window.bootstrap && window.bootstrap.Modal) {
-          const openInst = window.bootstrap.Modal.getInstance(openOrderModal) || window.bootstrap.Modal.getOrCreateInstance(openOrderModal);
-          openInst.show();
+        // Prefer bottom sheet for customers; fall back to modal for staff
+        const sheet = document.getElementById('cartBottomSheet');
+        const startSection = document.getElementById('cartStartOrderSection');
+        if (sheet && startSection) {
+          const app = window.Stimulus || document.querySelector('[data-controller~="bottom-sheet"]')?.__stimulusApplication;
+          let ctrl = null;
+          try { ctrl = Stimulus.getControllerForElementAndIdentifier(sheet, 'bottom-sheet'); } catch (_) {}
+          if (!ctrl) try { ctrl = window.Stimulus?.application?.getControllerForElementAndIdentifier(sheet, 'bottom-sheet'); } catch (_) {}
+          if (ctrl) { ctrl.setState('full'); }
+          else { sheet.style.transform = 'translateY(0)'; }
+        } else {
+          const openOrderModal = document.getElementById('openOrderModal');
+          if (openOrderModal && window.bootstrap && window.bootstrap.Modal) {
+            const openInst = window.bootstrap.Modal.getInstance(openOrderModal) || window.bootstrap.Modal.getOrCreateInstance(openOrderModal);
+            openInst.show();
+          }
         }
         return;
       }
@@ -782,11 +794,13 @@ export function initOrderBindings() {
       }
       post(`/restaurants/${restaurantId}/ordrs`, payload)
         .then(() => {
-          // Hide modal after successful post
+          // Hide modal (staff) or close bottom sheet (customer) after successful post
           const modalEl = document.getElementById('openOrderModal');
           if (modalEl && window.bootstrap && window.bootstrap.Modal) {
-            const inst = window.bootstrap.Modal.getInstance(modalEl) || window.bootstrap.Modal.getOrCreateInstance(modalEl);
-            inst.hide();
+            try {
+              const inst = window.bootstrap.Modal.getInstance(modalEl) || window.bootstrap.Modal.getOrCreateInstance(modalEl);
+              inst.hide();
+            } catch (_) {}
           }
           // Reload page to show the new order context
           window.location.reload();

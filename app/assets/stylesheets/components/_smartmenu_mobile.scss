@@ -532,6 +532,14 @@
   font-size: 0.875rem;
 }
 
+// Tip preset buttons — compact sizing
+.tip-preset-btn.btn-touch-sm {
+  min-height: 28px;
+  min-width: 28px;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+}
+
 // Icon-only variant
 .btn-touch-icon {
   width: 44px;

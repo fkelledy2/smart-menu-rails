@@ -7,7 +7,9 @@
 <% restaurantCurrency = local_assigns[:restaurantCurrency] %>
 <% ordrparticipant = local_assigns[:ordrparticipant] %>
 <% menuparticipant = local_assigns[:menuparticipant] %>
+<% tablesetting = local_assigns[:tablesetting] %>
 <% cur = restaurantCurrency&.symbol.presence || '' %>
+<% has_table = tablesetting.present? %>
 
 <%# Backdrop %>
 <div class="bottom-sheet-backdrop"
@@ -18,8 +20,7 @@
 <div class="bottom-sheet cart-bottom-sheet"
      data-controller="bottom-sheet"
      data-bottom-sheet-peek-value="72"
-     data-bottom-sheet-half-value="55"
-     data-bottom-sheet-initial-value="<%= order ? 'peek' : 'closed' %>"
+     data-bottom-sheet-initial-value="<%= order ? 'peek' : (has_table ? 'peek' : 'closed') %>"
      data-tip-presets="<%= restaurant&.tips&.sort_by(&:percentage)&.map(&:percentage)&.to_json || '[]' %>"
      data-currency-symbol="<%= cur %>"
      data-currency-code="<%= restaurantCurrency&.code || '' %>"
@@ -32,23 +33,21 @@
        data-action="click->bottom-sheet#toggle">
     <div class="bottom-sheet__handle-bar"></div>
     <div class="cart-sheet__summary">
-      <div class="cart-sheet__summary-left">
-        <i class="bi bi-cart3"></i>
-        <span class="cart-sheet__count" id="cartItemCount" data-testid="cart-item-count">
-          <%= order ? order.addedCount.to_i : 0 %>
-        </span>
-        <span class="cart-sheet__label"><%= t('smartmenus.showModals.yourOrder', default: 'Your order') %></span>
-      </div>
-      <div class="cart-sheet__summary-right">
-        <span class="cart-sheet__total" id="cartTotalAmount" data-testid="cart-total-amount">
-          <% if order %>
+      <% if order %>
+        <div class="cart-sheet__summary-left">
+          <i class="bi bi-cart3"></i>
+          <span class="cart-sheet__count" id="cartItemCount" data-testid="cart-item-count">
+            <%= order.addedCount.to_i %>
+          </span>
+          <span class="cart-sheet__label"><%= t('smartmenus.showModals.yourOrder', default: 'Your order') %></span>
+        </div>
+        <div class="cart-sheet__summary-right">
+          <span class="cart-sheet__total" id="cartTotalAmount" data-testid="cart-total-amount">
             <%= number_to_currency(order.runningTotal.to_f, unit: restaurantCurrency&.symbol || '') %>
-          <% else %>
-            <%= number_to_currency(0, unit: restaurantCurrency&.symbol || '') %>
-          <% end %>
-        </span>
-        <i class="bi bi-chevron-up cart-sheet__chevron"></i>
-      </div>
+          </span>
+          <i class="bi bi-chevron-up cart-sheet__chevron"></i>
+        </div>
+      <% end %>
     </div>
   </div>
 
@@ -115,16 +114,6 @@
         <% end %>
       <% end %>
 
-      <%# Totals %>
-      <div class="cart-sheet__totals" data-testid="cart-totals">
-        <div class="cart-sheet__total-row">
-          <span><%= t('smartmenus.showModals.total', default: 'Total') %></span>
-          <span class="cart-sheet__total-value" id="cartTotalValue">
-            <%= number_to_currency(order.runningTotal.to_f, unit: restaurantCurrency&.symbol || '') %>
-          </span>
-        </div>
-      </div>
-
       <%# Action buttons %>
       <div class="cart-sheet__actions" data-testid="cart-actions">
         <% if order.addedCount.to_i > 0 %>
@@ -168,7 +157,7 @@
           <div class="bill-tip-row">
             <div class="d-flex flex-wrap align-items-center justify-content-end gap-2 mt-3 mb-3">
               <% restaurant&.tips&.sort_by(&:percentage)&.each do |tip| %>
-                <button type="button" class="btn-touch-secondary btn-touch-sm"><span class="tipPreset"><%= tip.percentage %></span>%</button>
+                <button type="button" class="btn-touch-secondary btn-touch-sm tip-preset-btn"><span class="tipPreset"><%= tip.percentage %>%</span></button>
               <% end %>
               <input id="tipNumberField" type="number" min="0.00" max="<%= number_to_currency(order.gross, unit: cur) %>" class="form-control form-control-sm text-end" style="width: 80px;" value="0.00">
             </div>
@@ -195,10 +184,56 @@
             </button>
             <button id="pay-order-confirm" type="button" class="btn-touch-dark w-50" <%= 'disabled' unless order.gross.to_f > 0 %>>
               <i class="bi bi-credit-card"></i>
-              <%= t('smartmenus.showModals.confirmPayment', default: 'Confirm Payment') %>
+              <%= t('smartmenus.showModals.confirmPayment', default: 'Pay') %>
             </button>
           </div>
         <% end %>
+      </div>
+    <% elsif has_table %>
+      <%# Start Order — party size selector (replaces the modal for customers) %>
+      <div id="cartStartOrderSection" class="cart-sheet__start-order">
+        <div class="d-flex flex-column gap-3 py-3">
+          <div class="text-center">
+            <div class="fs-4 fw-bold"><%= t('smartmenus.showModals.partySize', default: 'Party Size') %></div>
+          </div>
+
+          <div class="d-flex align-items-center justify-content-center gap-3">
+            <button type="button" class="btn-touch-secondary btn-touch-icon" id="orderCapacityDecrement" disabled>
+              <i class="bi bi-dash"></i>
+            </button>
+            <div class="text-center" style="min-width: 100px;">
+              <div id="orderCapacityValue" class="display-4 mb-0">1</div>
+            </div>
+            <button type="button" class="btn-touch-secondary btn-touch-icon" id="orderCapacityIncrement">
+              <i class="bi bi-plus"></i>
+            </button>
+          </div>
+
+          <input type="hidden" id="orderCapacity" value="1" data-min="1" data-max="<%= tablesetting.capacity %>">
+
+          <div class="d-flex flex-wrap justify-content-center gap-2">
+            <button type="button" class="btn-touch-secondary btn-touch-sm orderCapacityPreset" data-capacity="1">1</button>
+            <% if tablesetting.capacity.to_i >= 2 %>
+              <button type="button" class="btn-touch-secondary btn-touch-sm orderCapacityPreset" data-capacity="2">2</button>
+            <% end %>
+            <% if tablesetting.capacity.to_i >= 4 %>
+              <button type="button" class="btn-touch-secondary btn-touch-sm orderCapacityPreset" data-capacity="4">4</button>
+            <% end %>
+            <% if tablesetting.capacity.to_i >= 6 %>
+              <button type="button" class="btn-touch-secondary btn-touch-sm orderCapacityPreset" data-capacity="6">6</button>
+            <% end %>
+            <button type="button" class="btn-touch-secondary btn-touch-sm orderCapacityPreset" data-capacity="<%= tablesetting.capacity %>">
+              <%= t('smartmenus.showModals.full_capacity', default: 'Full') %> (<%= tablesetting.capacity %>)
+            </button>
+          </div>
+
+          <div class="mt-3">
+            <button id="start-order" type="button" class="btn-touch-primary w-100">
+              <i class="bi bi-play-circle"></i>
+              <%= t('smartmenus.showModals.start', default: 'Start') %>
+            </button>
+          </div>
+        </div>
       </div>
     <% else %>
       <div class="text-center text-muted py-4">

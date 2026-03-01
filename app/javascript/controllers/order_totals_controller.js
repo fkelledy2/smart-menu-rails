@@ -254,7 +254,7 @@ export default class extends Controller {
         try { tipPresets = JSON.parse(this.element.dataset.tipPresets || '[]'); } catch (_) {}
         html += '<div class="bill-tip-row"><div class="d-flex flex-wrap align-items-center justify-content-end gap-2 mt-3 mb-3">';
         tipPresets.forEach(pct => {
-          html += `<button type="button" class="btn-touch-secondary btn-touch-sm"><span class="tipPreset">${pct}</span>%</button>`;
+          html += `<button type="button" class="btn-touch-secondary btn-touch-sm tip-preset-btn"><span class="tipPreset">${pct}%</span></button>`;
         });
         html += '<input id="tipNumberField" type="number" min="0.00" class="form-control form-control-sm text-end" style="width:80px" value="0.00">';
         html += '</div></div>';

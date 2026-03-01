@@ -103,7 +103,7 @@ en:
       add_items_hint: Tap + on any item to add it
       bill_prefix: 'Bill:'
       cancel: Cancel
-      confirmPayment: Confirm Payment
+      confirmPayment: Pay
       cover_charge: Cover Charge
       customiseOrderWithName: Add your name to the order
       empty_cart: Your cart is empty

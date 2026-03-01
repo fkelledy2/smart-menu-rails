@@ -2,13 +2,12 @@ import { Controller } from "@hotwired/stimulus"
 
 /**
  * Bottom Sheet Stimulus Controller
- * A mobile-friendly bottom sheet with peek/half/full snap points.
+ * A mobile-friendly bottom sheet with peek (collapsed) and full (open) states.
  * Supports swipe-to-dismiss and swipe-to-expand gestures.
  *
  * Usage:
  * <div data-controller="bottom-sheet"
  *      data-bottom-sheet-peek-value="64"
- *      data-bottom-sheet-half-value="50"
  *      data-bottom-sheet-initial-value="peek">
  *   <div data-bottom-sheet-target="handle" data-action="click->bottom-sheet#toggle">
  *     ─── Drag handle ───
@@ -58,15 +57,14 @@ export default class extends Controller {
 
   toggle() {
     const transitions = {
-      closed: "peek",
-      peek:   "half",
-      half:   "full",
+      closed: "full",
+      peek:   "full",
       full:   "peek"
     }
     this.setState(transitions[this.state] || "peek")
   }
 
-  open()  { this.setState("half") }
+  open()  { this.setState("full") }
   close() { this.setState("closed") }
   peek()  { this.setState("peek") }
   expand() { this.setState("full") }
@@ -167,11 +165,11 @@ export default class extends Controller {
 
     if (delta > threshold) {
       // Swiped down
-      const downMap = { full: "half", half: "peek", peek: "closed" }
+      const downMap = { full: "peek", peek: "closed" }
       this.setState(downMap[this.state] || "closed")
     } else if (delta < -threshold) {
       // Swiped up
-      const upMap = { closed: "peek", peek: "half", half: "full" }
+      const upMap = { closed: "peek", peek: "full" }
       this.setState(upMap[this.state] || "full")
     } else {
       // Snap back
