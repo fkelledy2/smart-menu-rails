@@ -496,11 +496,14 @@ en:
         view_qr: View QR
         view_qr_code: View QR Code for this table
       wifi_2025:
+        download: Download
         encryption_help: The security protocol used by your WiFi network
         'false': false
         hidden_help: Whether the network name is broadcast publicly
+        'no': 'No'
         password_help: The password customers will need to connect
         password_placeholder: Enter WiFi password
+        print: Print
         select_encryption: Select encryption...
         select_option: Select option...
         ssid_help: The name of your WiFi network that customers will connect to
@@ -509,3 +512,9 @@ en:
         wifi_configuration: WiFi Configuration
         wifi_description: Configure WiFi settings to generate QR codes for customer
           access
+        wifi_qr_description: Customers can scan this QR code with their phone camera
+          to connect to your WiFi network automatically — no typing required.
+        wifi_qr_no_ssid: Enter a WiFi network name above to generate a QR code.
+        wifi_qr_scan_hint: Scan with phone camera to connect
+        wifi_qr_title: WiFi QR Code
+        'yes': 'Yes'

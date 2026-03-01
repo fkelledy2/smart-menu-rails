@@ -11,6 +11,7 @@ en_GB:
     flash:
       restored: Restored
     remove: ''
+    super_admin_only_tooltip: "Visible because you have Super Admin access to this restaurant"
   employees:
     form:
       eid: Id

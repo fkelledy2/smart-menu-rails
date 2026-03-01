@@ -43,7 +43,8 @@ export default class extends Controller {
     if (event.target.type === 'text' || 
         event.target.type === 'textarea' ||
         event.target.type === 'email' ||
-        event.target.type === 'url') {
+        event.target.type === 'url' ||
+        event.target.type === 'password') {
       this.debounceSave()
     }
   }

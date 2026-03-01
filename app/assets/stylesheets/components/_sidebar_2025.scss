@@ -150,6 +150,16 @@
   }
 }
 
+// Super Admin Badge ((*) indicator)
+.sidebar-sa-badge {
+  color: var(--color-warning, #f59e0b);
+  font-size: var(--text-xs);
+  font-weight: var(--font-bold);
+  margin-left: 4px;
+  cursor: help;
+  flex-shrink: 0;
+}
+
 // Sidebar Content Container
 .sidebar-content-container {
   display: flex;

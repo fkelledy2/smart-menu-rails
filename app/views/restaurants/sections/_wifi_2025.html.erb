@@ -16,7 +16,7 @@
     <%= t('.wifi_description') %>
   </p>
 
-  <%= restaurant_form_with(restaurant, auto_save: true) do |form| %>
+  <%= restaurant_form_with(restaurant, auto_save: true, data: { 'wifi-qr-form': true }) do |form| %>
     <div class="row g-4">
       <!-- WiFi SSID -->
       <div class="col-md-6">
@@ -26,7 +26,8 @@
           <% end %>
           <%= form.text_field :wifissid,
               class: 'form-control-2025',
-              placeholder: t('.ssid_placeholder') %>
+              placeholder: t('.ssid_placeholder'),
+              data: { wifi_field: 'ssid' } %>
           <div class="form-help-2025">
             <%= t('.ssid_help') %>
           </div>
@@ -40,8 +41,10 @@
             <%= t('activerecord.attributes.restaurant.wifiPassword') %>
           <% end %>
           <%= form.password_field :wifiPassword,
+              value: restaurant.wifiPassword,
               class: 'form-control-2025',
-              placeholder: t('.password_placeholder') %>
+              placeholder: t('.password_placeholder'),
+              data: { wifi_field: 'password' } %>
           <div class="form-help-2025">
             <%= t('.password_help') %>
           </div>
@@ -57,7 +60,7 @@
           <%= form.select :wifiEncryptionType,
               options_for_select(Restaurant.wifiEncryptionTypes.keys.to_a, form.object.wifiEncryptionType),
               { prompt: t('.select_encryption') },
-              { class: 'form-control-2025', **select_data_attributes(:default) } %>
+              { class: 'form-control-2025', 'data-wifi-field': 'encryption', **select_data_attributes(:default) } %>
           <div class="form-help-2025">
             <%= t('.encryption_help') %>
           </div>
@@ -76,7 +79,7 @@
                 [t('.yes'), true]
               ],
               { prompt: t('.select_option') },
-              { class: 'form-control-2025', **select_data_attributes(:default) } %>
+              { class: 'form-control-2025', 'data-wifi-field': 'hidden', **select_data_attributes(:default) } %>
           <div class="form-help-2025">
             <%= t('.hidden_help') %>
           </div>
@@ -85,3 +88,269 @@
     </div>
   <% end %>
 </div>
+
+<!-- WiFi QR Code -->
+<div class="content-card-2025 mt-4">
+  <h2 class="content-card-title">
+    <i class="bi bi-qr-code"></i>
+    <%= t('.wifi_qr_title') %>
+  </h2>
+
+  <p class="text-muted mb-4">
+    <%= t('.wifi_qr_description') %>
+  </p>
+
+  <div id="wifiQrIcon" class="d-none"><%= image_url('qr-icon.svg') %></div>
+
+  <div class="wifi-qr-wrapper <%= 'd-none' unless restaurant.wifissid.present? %>">
+    <div class="wifi-qr-card">
+      <div class="wifi-qr-meta">
+        <div class="wifi-qr-restaurant-name"><%= restaurant.name %></div>
+        <div class="wifi-qr-network-name" id="wifi-qr-ssid-label"><%= restaurant.wifissid %></div>
+      </div>
+      <div id="wifi-qr-code" class="wifi-qr-canvas"></div>
+      <div class="wifi-qr-hint">
+        <i class="bi bi-phone"></i>
+        <%= t('.wifi_qr_scan_hint') %>
+      </div>
+    </div>
+
+    <div class="wifi-qr-actions mt-3">
+      <button type="button" class="btn btn-outline-secondary btn-sm" onclick="printWifiQrCard()">
+        <i class="bi bi-printer"></i> <%= t('.print') %>
+      </button>
+      <button type="button" class="btn btn-outline-secondary btn-sm" onclick="downloadWifiQr()">
+        <i class="bi bi-download"></i> <%= t('.download') %>
+      </button>
+    </div>
+  </div>
+
+  <div id="wifi-qr-empty-state" class="alert alert-info <%= 'd-none' if restaurant.wifissid.present? %>">
+    <i class="bi bi-info-circle me-2"></i>
+    <%= t('.wifi_qr_no_ssid') %>
+  </div>
+</div>
+
+<style>
+  .wifi-qr-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .wifi-qr-card {
+    background: var(--color-white);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 360px;
+    width: 100%;
+  }
+  .wifi-qr-meta {
+    text-align: center;
+    margin-bottom: var(--space-3);
+    padding-bottom: var(--space-2);
+    border-bottom: 1px solid var(--color-gray-200);
+    width: 100%;
+  }
+  .wifi-qr-restaurant-name {
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    font-size: var(--text-sm);
+    color: var(--color-gray-600);
+  }
+  .wifi-qr-network-name {
+    font-weight: 600;
+    font-size: var(--text-lg);
+    margin-top: 2px;
+  }
+  .wifi-qr-canvas {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+    width: 100%;
+  }
+  .wifi-qr-canvas canvas {
+    max-width: 100%;
+    height: auto;
+  }
+  .wifi-qr-hint {
+    text-align: center;
+    color: var(--color-gray-500);
+    font-size: var(--text-sm);
+    margin-top: var(--space-2);
+  }
+  .wifi-qr-hint i {
+    margin-right: 4px;
+  }
+  .wifi-qr-actions {
+    display: flex;
+    gap: var(--space-2);
+    justify-content: center;
+  }
+
+  @media print {
+    .sidebar-2025, .header-2025, .wifi-qr-actions, .btn, .form-group-2025 { display: none !important; }
+    .wifi-qr-card { border: none; box-shadow: none; }
+  }
+</style>
+
+<script>
+  (function() {
+    let wifiQrInstance = null;
+
+    function buildWifiString() {
+      const ssid = document.querySelector('[data-wifi-field="ssid"]');
+      const password = document.querySelector('[data-wifi-field="password"]');
+      const encryption = document.querySelector('[data-wifi-field="encryption"]');
+      const hidden = document.querySelector('[data-wifi-field="hidden"]');
+
+      const s = (ssid && ssid.value) || '';
+      const p = (password && password.value) || '';
+      const t = (encryption && encryption.value) || 'WPA';
+      const h = (hidden && hidden.value === 'true') ? 'true' : 'false';
+
+      if (!s) return null;
+
+      return 'WIFI:S:' + s + ';T:' + t + ';P:' + p + ';H:' + h + ';;';
+    }
+
+    function renderWifiQr() {
+      const container = document.getElementById('wifi-qr-code');
+      if (!container) return;
+
+      const wifiString = buildWifiString();
+      const emptyState = document.getElementById('wifi-qr-empty-state');
+      const wrapper = container.closest('.wifi-qr-wrapper');
+
+      if (!wifiString) {
+        if (wrapper) wrapper.classList.add('d-none');
+        if (emptyState) emptyState.classList.remove('d-none');
+        return;
+      }
+
+      if (wrapper) wrapper.classList.remove('d-none');
+      if (emptyState) emptyState.classList.add('d-none');
+
+      // Update the SSID label
+      const ssidLabel = document.getElementById('wifi-qr-ssid-label');
+      const ssidInput = document.querySelector('[data-wifi-field="ssid"]');
+      if (ssidLabel && ssidInput) {
+        ssidLabel.textContent = ssidInput.value;
+      }
+
+      const iconEl = document.getElementById('wifiQrIcon');
+      const iconUrl = iconEl ? iconEl.textContent.trim() : '';
+
+      container.innerHTML = '';
+
+      wifiQrInstance = new QRCodeStyling({
+        type: 'canvas',
+        shape: 'square',
+        width: 300,
+        height: 300,
+        data: wifiString,
+        margin: 0,
+        qrOptions: {
+          typeNumber: '0',
+          mode: 'Byte',
+          errorCorrectionLevel: 'Q'
+        },
+        imageOptions: {
+          saveAsBlob: true,
+          hideBackgroundDots: true,
+          imageSize: 0.4,
+          margin: 0
+        },
+        dotsOptions: {
+          type: 'extra-rounded',
+          color: '#000000',
+          roundSize: true
+        },
+        backgroundOptions: {
+          round: 0,
+          color: '#ffffff'
+        },
+        image: iconUrl,
+        cornersSquareOptions: {
+          type: 'extra-rounded',
+          color: '#000000'
+        },
+        cornersDotOptions: {
+          type: '',
+          color: '#000000'
+        }
+      });
+
+      wifiQrInstance.append(container);
+    }
+
+    // Bind live-update to WiFi form fields
+    function bindWifiFieldListeners() {
+      var fields = document.querySelectorAll('[data-wifi-field]');
+      fields.forEach(function(field) {
+        field.addEventListener('input', renderWifiQr);
+        field.addEventListener('change', renderWifiQr);
+      });
+    }
+
+    // Download QR code as PNG
+    window.downloadWifiQr = function() {
+      if (wifiQrInstance) {
+        wifiQrInstance.download({ name: 'wifi-qr-code', extension: 'png' });
+      }
+    };
+
+    // Print just the WiFi QR card
+    window.printWifiQrCard = function() {
+      var card = document.querySelector('.wifi-qr-card');
+      if (!card) { window.print(); return; }
+
+      var clone = card.cloneNode(true);
+      var canvas = card.querySelector('canvas');
+      var cloneCanvas = clone.querySelector('canvas');
+
+      if (canvas && cloneCanvas && cloneCanvas.parentNode) {
+        try {
+          var img = document.createElement('img');
+          img.src = canvas.toDataURL('image/png');
+          img.style.maxWidth = '100%';
+          img.style.height = 'auto';
+          cloneCanvas.parentNode.replaceChild(img, cloneCanvas);
+        } catch(e) {}
+      }
+
+      var iframe = document.createElement('iframe');
+      iframe.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0;visibility:hidden';
+      document.body.appendChild(iframe);
+
+      var doc = iframe.contentDocument || iframe.contentWindow.document;
+      doc.open();
+      doc.write('<!doctype html><html><head><meta charset="utf-8"><title>WiFi QR Code</title><style>body{margin:0;padding:16px;font-family:system-ui,-apple-system,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh}.wifi-qr-card{border:none;text-align:center;max-width:90vw}.wifi-qr-meta{border-bottom:1px solid #000;padding-bottom:6px;margin-bottom:8px;text-align:center}.wifi-qr-restaurant-name,.wifi-qr-network-name{color:#000!important}.wifi-qr-hint{display:none}@page{margin:12mm}</style></head><body></body></html>');
+      doc.close();
+      doc.body.appendChild(clone);
+
+      setTimeout(function() {
+        try { iframe.contentWindow.focus(); iframe.contentWindow.print(); }
+        finally { setTimeout(function() { iframe.remove(); }, 250); }
+      }, 150);
+    };
+
+    // Initialize on DOMContentLoaded and Turbo frame loads
+    function init() {
+      bindWifiFieldListeners();
+      renderWifiQr();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+    document.addEventListener('turbo:frame-load', init);
+  })();
+</script>

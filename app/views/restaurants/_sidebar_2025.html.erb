@@ -36,6 +36,13 @@
   def disabled_data_attrs(section, onboarding_next)
     {}
   end
+
+  # Super-admin visibility: determine if user has natural access or is here only via super_admin bypass
+  is_super_admin = current_user&.super_admin?
+  has_natural_access = (restaurant.user_id == current_user&.id) ||
+                       current_user&.admin_employee_for_restaurant?(restaurant.id)
+  super_admin_only_access = is_super_admin && !has_natural_access
+  sa_badge = super_admin_only_access ? content_tag(:span, '(*)', class: 'sidebar-sa-badge', title: t('common.super_admin_only_tooltip'), data: { bs_toggle: 'tooltip', bs_placement: 'right' }) : nil
 %>
 
 <aside class="sidebar-2025" data-sidebar-target="sidebar" data-testid="restaurant-sidebar">
@@ -59,6 +66,7 @@
         data: { testid: 'sidebar-details-link', turbo_frame: 'restaurant_content', turbo_action: 'advance', action: 'click->sidebar#handleLinkClick', **disabled_data_attrs('details', onboarding_next) } do %>
       <i class="bi bi-info-circle"></i>
       <span><%= t('.details') %></span>
+      <%= sa_badge %>
     <% end %>
 
     <%= link_to edit_restaurant_path(restaurant, section: 'hours'),
@@ -66,6 +74,7 @@
         data: { testid: 'sidebar-hours-link', turbo_frame: 'restaurant_content', turbo_action: 'advance', action: 'click->sidebar#handleLinkClick', **disabled_data_attrs('hours', onboarding_next) } do %>
       <i class="bi bi-calendar-check"></i>
       <span><%= t('.schedule') %></span>
+      <%= sa_badge %>
     <% end %>
 
     <%= link_to edit_restaurant_path(restaurant, section: 'localization'),
@@ -76,6 +85,7 @@
       <% if locales_count > 0 %>
         <span class="sidebar-link-badge"><%= locales_count %></span>
       <% end %>
+      <%= sa_badge %>
     <% end %>
   </div>
 
@@ -92,6 +102,7 @@
       <i class="bi bi-grid-3x3"></i>
       <span><%= t('.all_menus') %></span>
       <span class="sidebar-link-badge"><%= active_menus_count + inactive_menus_count %></span>
+      <%= sa_badge %>
     <% end %>
 
     <%= link_to edit_restaurant_path(restaurant, section: 'allergens'),
@@ -102,6 +113,7 @@
       <% if allergens_count > 0 %>
         <span class="sidebar-link-badge"><%= allergens_count %></span>
       <% end %>
+      <%= sa_badge %>
     <% end %>
 
     <%= link_to edit_restaurant_path(restaurant, section: 'sizes'),
@@ -109,6 +121,7 @@
         data: { testid: 'sidebar-sizes-link', turbo_frame: 'restaurant_content', turbo_action: 'advance', action: 'click->sidebar#handleLinkClick', **disabled_data_attrs('sizes', onboarding_next) } do %>
       <i class="bi bi-rulers"></i>
       <span><%= t('.sizes') %></span>
+      <%= sa_badge %>
     <% end %>
 
     <%= link_to edit_restaurant_path(restaurant, section: 'settings'),
@@ -116,6 +129,7 @@
         data: { testid: 'sidebar-settings-link', turbo_frame: 'restaurant_content', turbo_action: 'advance', action: 'click->sidebar#handleLinkClick', **disabled_data_attrs('settings', onboarding_next) } do %>
       <i class="bi bi-toggles"></i>
       <span><%= t('.settings') %></span>
+      <%= sa_badge %>
     <% end %>
   </div>
 
@@ -134,6 +148,7 @@
       <% if staff_count > 0 %>
         <span class="sidebar-link-badge"><%= staff_count %></span>
       <% end %>
+      <%= sa_badge %>
     <% end %>
 
     <%= link_to edit_restaurant_path(restaurant, section: 'tables'),
@@ -144,6 +159,7 @@
       <% if tables_count > 0 %>
         <span class="sidebar-link-badge"><%= tables_count %></span>
       <% end %>
+      <%= sa_badge %>
     <% end %>
 
     <%= link_to kitchen_dashboard_restaurant_path(restaurant),
@@ -153,6 +169,7 @@
         data: { testid: 'sidebar-kitchen-dashboard-link', turbo: false } do %>
       <i class="bi bi-fire"></i>
       <span><%= t('.kitchen_dashboard') %></span>
+      <%= sa_badge %>
       <i class="bi bi-box-arrow-up-right ms-auto"></i>
     <% end %>
 
@@ -163,6 +180,7 @@
         data: { testid: 'sidebar-bar-dashboard-link', turbo: false } do %>
       <i class="bi bi-cup-straw"></i>
       <span><%= t('.bar_dashboard') %></span>
+      <%= sa_badge %>
       <i class="bi bi-box-arrow-up-right ms-auto"></i>
     <% end %>
 
@@ -177,6 +195,7 @@
       <% if tips_count > 0 %>
         <span class="sidebar-link-badge" title="<%= t('.tips') %>"><%= tips_count %></span>
       <% end %>
+      <%= sa_badge %>
     <% end %>
 
     <%= link_to edit_restaurant_path(restaurant, section: 'ordering'),
@@ -184,6 +203,7 @@
         data: { testid: 'sidebar-ordering-link', turbo_frame: 'restaurant_content', turbo_action: 'advance', action: 'click->sidebar#handleLinkClick', **disabled_data_attrs('ordering', onboarding_next) } do %>
       <i class="bi bi-cart-check"></i>
       <span><%= t('.ordering') %></span>
+      <%= sa_badge %>
     <% end %>
 
     <%= link_to edit_restaurant_path(restaurant, section: 'insights'),
@@ -191,6 +211,7 @@
         data: { testid: 'sidebar-insights-link', turbo_frame: 'restaurant_content', turbo_action: 'advance', action: 'click->sidebar#handleLinkClick', **disabled_data_attrs('ordering', onboarding_next) } do %>
       <i class="bi bi-stars"></i>
       <span><%= t('.insights') %></span>
+      <%= sa_badge %>
     <% end %>
 
     <%= link_to edit_restaurant_path(restaurant, section: 'jukebox'),
@@ -198,6 +219,7 @@
         data: { testid: 'sidebar-jukebox-link', turbo_frame: 'restaurant_content', turbo_action: 'advance', action: 'click->sidebar#handleLinkClick', **disabled_data_attrs('jukebox', onboarding_next) } do %>
       <i class="bi bi-music-note-beamed"></i>
       <span><%= t('.jukebox') %></span>
+      <%= sa_badge %>
     <% end %>
 
     <%= link_to edit_restaurant_path(restaurant, section: 'wifi'),
@@ -205,12 +227,27 @@
         data: { testid: 'sidebar-wifi-link', turbo_frame: 'restaurant_content', turbo_action: 'advance', action: 'click->sidebar#handleLinkClick', **disabled_data_attrs('wifi', onboarding_next) } do %>
       <i class="bi bi-wifi"></i>
       <span><%= t('.wifi') %></span>
+      <%= sa_badge %>
     <% end %>
   </div>
 
-  
+  <% if is_super_admin %>
+  <!-- SUPER ADMIN SECTION -->
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">
+      <i class="bi bi-shield-lock"></i>
+      SUPER ADMIN
+    </div>
 
-  
+    <%= link_to edit_restaurant_path(restaurant, section: 'advanced'),
+        class: "sidebar-link #{'active' if current_section == 'advanced'}",
+        data: { testid: 'sidebar-advanced-link', turbo_frame: 'restaurant_content', turbo_action: 'advance', action: 'click->sidebar#handleLinkClick' } do %>
+      <i class="bi bi-sliders"></i>
+      <span><%= t('.advanced') %></span>
+      <span class="sidebar-sa-badge" title="<%= t('common.super_admin_only_tooltip') %>" data-bs-toggle="tooltip" data-bs-placement="right">(*)</span>
+    <% end %>
+  </div>
+  <% end %>
 </aside>
 
 <!-- Mobile Overlay -->
