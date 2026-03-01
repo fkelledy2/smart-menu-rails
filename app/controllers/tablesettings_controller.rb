@@ -179,8 +179,8 @@ class TablesettingsController < ApplicationController
         render turbo_stream: [
           turbo_stream.replace('tables_bulk_create', ''),
           turbo_stream.replace('restaurant_content',
-            partial: 'restaurants/sections/tables_2025',
-            locals: { restaurant: restaurant, filter: 'all' }),
+                               partial: 'restaurants/sections/tables_2025',
+                               locals: { restaurant: restaurant, filter: 'all' },),
         ]
       end
       format.html do
@@ -192,8 +192,8 @@ class TablesettingsController < ApplicationController
     respond_to do |format|
       format.turbo_stream do
         render turbo_stream: turbo_stream.replace('tables_bulk_create',
-          partial: 'tablesettings/bulk_create_form',
-          locals: { restaurant: restaurant, error: e.message })
+                                                  partial: 'tablesettings/bulk_create_form',
+                                                  locals: { restaurant: restaurant, error: e.message },)
       end
       format.html do
         redirect_to edit_restaurant_path(restaurant, section: 'tables'),

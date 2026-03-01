@@ -36,9 +36,10 @@ class SmartmenuPayCancelTest < ApplicationSystemTestCase
       loop do
         ready = page.evaluate_script(
           "!!document.getElementById('cartPayCancel') && " \
-          "document.getElementById('cartPaySection')?.style?.display === 'block'"
+          "document.getElementById('cartPaySection')?.style?.display === 'block'",
         )
         break if ready
+
         sleep 0.3
       end
     end
@@ -52,16 +53,16 @@ class SmartmenuPayCancelTest < ApplicationSystemTestCase
 
     # ASSERTIONS
     assert_equal 'none', post_cancel['paySectionDisplay'],
-      "Pay section should be hidden after Cancel. State: #{post_cancel}"
+                 "Pay section should be hidden after Cancel. State: #{post_cancel}"
 
     assert_not_equal 'none', post_cancel['payBtnDisplay'],
-      "Pay button should be visible after Cancel. State: #{post_cancel}"
+                     "Pay button should be visible after Cancel. State: #{post_cancel}"
 
     assert_includes post_cancel['sheetClass'].to_s, 'bottom-sheet--half',
-      "Sheet should be in half state after Cancel. State: #{post_cancel}"
+                    "Sheet should be in half state after Cancel. State: #{post_cancel}"
 
     assert_not_includes post_cancel['sheetClass'].to_s, 'bottom-sheet--full',
-      "Sheet should NOT be in full state after Cancel. State: #{post_cancel}"
+                        "Sheet should NOT be in full state after Cancel. State: #{post_cancel}"
   end
 
   test 'Cancel button has event listener bound after Pay click renders pay section' do
@@ -90,6 +91,7 @@ class SmartmenuPayCancelTest < ApplicationSystemTestCase
       loop do
         has_cancel = page.evaluate_script("!!document.getElementById('cartPayCancel') && document.getElementById('cartPaySection')?.style?.display === 'block'")
         break if has_cancel
+
         sleep 0.3
       end
     end
@@ -102,18 +104,18 @@ class SmartmenuPayCancelTest < ApplicationSystemTestCase
     sleep 0.5
 
     # Check if the document-level listener detected the click
-    cancel_detected = page.evaluate_script("window.__cancelClicked")
+    cancel_detected = page.evaluate_script('window.__cancelClicked')
     assert cancel_detected, 'Cancel button click should be detected at document level'
 
     # Check the resulting state
     post_cancel = dump_sheet_state('POST-CANCEL-HANDLER-TEST')
 
     assert_equal 'none', post_cancel['paySectionDisplay'],
-      "Cancel handler should hide pay section. State: #{post_cancel}"
+                 "Cancel handler should hide pay section. State: #{post_cancel}"
     assert_not_equal 'none', post_cancel['payBtnDisplay'],
-      "Cancel handler should restore Pay button. State: #{post_cancel}"
+                     "Cancel handler should restore Pay button. State: #{post_cancel}"
     assert_includes post_cancel['sheetClass'].to_s, 'bottom-sheet--half',
-      "Cancel handler should set sheet to half. State: #{post_cancel}"
+                    "Cancel handler should set sheet to half. State: #{post_cancel}"
   end
 
   private
@@ -128,8 +130,8 @@ class SmartmenuPayCancelTest < ApplicationSystemTestCase
     order = Ordr.where(
       restaurant_id: @restaurant.id,
       tablesetting_id: @table.id,
-      menu_id: @menu.id
-    ).where.not(status: [:paid, :closed]).order(:created_at).last
+      menu_id: @menu.id,
+    ).where.not(status: %i[paid closed]).order(:created_at).last
 
     assert order.present?, 'Order should exist'
     recalc_order_totals!(order)
@@ -145,6 +147,7 @@ class SmartmenuPayCancelTest < ApplicationSystemTestCase
       loop do
         has_pay = page.evaluate_script("!!document.getElementById('cartPayOrder')")
         break if has_pay
+
         sleep 0.5
       end
     end
@@ -158,9 +161,10 @@ class SmartmenuPayCancelTest < ApplicationSystemTestCase
       loop do
         visible = page.evaluate_script(
           "document.getElementById('cartPayOrder')?.style?.display === 'block' || " \
-          "document.getElementById('cartPayOrder')?.offsetParent !== null"
+          "document.getElementById('cartPayOrder')?.offsetParent !== null",
         )
         break if visible
+
         sleep 0.5
       end
     end

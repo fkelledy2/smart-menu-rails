@@ -19,8 +19,8 @@ class StaffInvitationsController < ApplicationController
       respond_to do |format|
         format.turbo_stream do
           render turbo_stream: turbo_stream.replace('staff_invite_form',
-            partial: 'staff_invitations/invite_form',
-            locals: { restaurant: @restaurant, error: I18n.t('staff_invitations.already_invited') })
+                                                    partial: 'staff_invitations/invite_form',
+                                                    locals: { restaurant: @restaurant, error: I18n.t('staff_invitations.already_invited') },)
         end
         format.html { redirect_to edit_restaurant_path(@restaurant, section: 'staff'), alert: I18n.t('staff_invitations.already_invited') }
       end
@@ -29,12 +29,12 @@ class StaffInvitationsController < ApplicationController
 
     # Check if email already belongs to an active employee
     existing_user = User.find_by(email: @invitation.email)
-    if existing_user && @restaurant.employees.where(user: existing_user, archived: false).exists?
+    if existing_user && @restaurant.employees.exists?(user: existing_user, archived: false)
       respond_to do |format|
         format.turbo_stream do
           render turbo_stream: turbo_stream.replace('staff_invite_form',
-            partial: 'staff_invitations/invite_form',
-            locals: { restaurant: @restaurant, error: I18n.t('staff_invitations.already_staff') })
+                                                    partial: 'staff_invitations/invite_form',
+                                                    locals: { restaurant: @restaurant, error: I18n.t('staff_invitations.already_staff') },)
         end
         format.html { redirect_to edit_restaurant_path(@restaurant, section: 'staff'), alert: I18n.t('staff_invitations.already_staff') }
       end
@@ -61,8 +61,8 @@ class StaffInvitationsController < ApplicationController
       respond_to do |format|
         format.turbo_stream do
           render turbo_stream: turbo_stream.replace('staff_invite_form',
-            partial: 'staff_invitations/invite_form',
-            locals: { restaurant: @restaurant, invitation: @invitation, error: @invitation.errors.full_messages.join(', ') })
+                                                    partial: 'staff_invitations/invite_form',
+                                                    locals: { restaurant: @restaurant, invitation: @invitation, error: @invitation.errors.full_messages.join(', ') },)
         end
         format.html { redirect_to edit_restaurant_path(@restaurant, section: 'staff'), alert: @invitation.errors.full_messages.join(', ') }
       end

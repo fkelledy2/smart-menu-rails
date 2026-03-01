@@ -462,7 +462,7 @@ class ApplicationController < ActionController::Base
   end
 
   # Override authorize to add monitoring and super_admin bypass
-  def authorize(record, query = nil, **options)
+  def authorize(record, query = nil, **)
     query ||= "#{action_name}?"
 
     if current_user&.super_admin?
@@ -487,7 +487,7 @@ class ApplicationController < ActionController::Base
     end
 
     # Call Pundit's original authorize method to ensure proper tracking
-    result = super(record, query, **options)
+    result = super
 
     # Track the authorization check for monitoring
     AuthorizationMonitoringService.track_authorization_check(
@@ -519,7 +519,7 @@ class ApplicationController < ActionController::Base
   # Accept a pending staff invitation stored in the session after sign in / sign up
   def accept_staff_invitation_from_session(user)
     token = session.delete(:staff_invitation_token)
-    return nil unless token.present?
+    return nil if token.blank?
 
     invitation = StaffInvitation.find_by(token: token)
     return nil unless invitation&.acceptable?
