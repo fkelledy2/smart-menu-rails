@@ -134,8 +134,7 @@ class TablesettingsController < ApplicationController
     @restaurant = Restaurant.find(params[:restaurant_id])
     authorize @restaurant, :update?, policy_class: RestaurantPolicy
 
-    render inline: '<%= turbo_frame_tag "tables_bulk_create" do %><%= render partial: "tablesettings/bulk_create_form", locals: { restaurant: @restaurant } %><% end %>',
-           layout: false
+    render layout: false
   end
 
   # POST /restaurants/:restaurant_id/tablesettings/bulk_create
