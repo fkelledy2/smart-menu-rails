@@ -15,7 +15,7 @@ Rails.application.config.after_initialize do
   unless Flipper.exist?(:homepage_testimonials)
     Flipper.enable(:homepage_testimonials)
   end
-rescue ActiveRecord::StatementInvalid, ActiveRecord::NoDatabaseError => e
-  # Tables may not exist yet (e.g. during db:create / db:migrate)
+rescue ActiveRecord::ConnectionNotEstablished, ActiveRecord::StatementInvalid, ActiveRecord::NoDatabaseError => e
+  # DB may be unreachable (CI asset precompile), or tables may not exist yet (db:create / db:migrate)
   Rails.logger.warn "[Flipper] Skipping feature flag seeding: #{e.message}"
 end
