@@ -306,11 +306,74 @@
                 <%= form.text_area :image_prompt, class: 'form-control', rows: 2 %>
               </div>
 
-              <!-- Upload -->
-              <div class="menuitem-field">
+              <!-- Upload / Camera Capture -->
+              <div class="menuitem-field" data-controller="camera-capture"
+                   data-camera-capture-file-input-value="#menuitem_image">
                 <%= form.label :image, class: 'form-label' %>
                 <%= form.hidden_field :image, value: form.object.cached_image_data, id: nil %>
-                <%= form.file_field :image, multiple: false, accept: 'image/*;capture=camera', class: 'form-control' %>
+                <div class="d-flex gap-2 align-items-start">
+                  <%= form.file_field :image, multiple: false, accept: 'image/*', class: 'form-control', id: 'menuitem_image' %>
+                  <button type="button" class="btn-2025 btn-2025-secondary btn-2025-md flex-shrink-0"
+                          data-camera-capture-target="openBtn"
+                          data-action="click->camera-capture#open">
+                    <i class="bi bi-camera"></i> <span class="d-none d-sm-inline"><%= t('.take_photo', default: 'Take Photo') %></span>
+                  </button>
+                </div>
+
+                <%# Status message (shown briefly after capture) %>
+                <div class="small text-success mt-1 d-none" data-camera-capture-target="status"></div>
+
+                <%# Fullscreen camera overlay %>
+                <div class="camera-capture-overlay d-none" data-camera-capture-target="overlay">
+                  <div class="camera-capture-overlay__header">
+                    <span class="fw-semibold"><i class="bi bi-camera"></i> <%= t('.take_photo', default: 'Take Photo') %></span>
+                    <button type="button" class="btn-close btn-close-white"
+                            data-action="click->camera-capture#cancel"
+                            aria-label="<%= t('common.close', default: 'Close') %>"></button>
+                  </div>
+
+                  <div class="camera-capture-overlay__body">
+                    <%# Live viewfinder %>
+                    <video data-camera-capture-target="viewfinder"
+                           class="camera-capture-overlay__video"
+                           autoplay playsinline muted></video>
+
+                    <%# Hidden canvas for frame capture %>
+                    <canvas data-camera-capture-target="canvas" class="d-none"></canvas>
+
+                    <%# Preview after capture %>
+                    <div data-camera-capture-target="preview" class="d-none camera-capture-overlay__preview-wrap">
+                      <img data-camera-capture-target="previewImg"
+                           src="" alt="Captured photo"
+                           class="camera-capture-overlay__preview-img" />
+                    </div>
+                  </div>
+
+                  <div class="camera-capture-overlay__footer">
+                    <%# Viewfinder phase buttons %>
+                    <button type="button"
+                            class="btn btn-light btn-lg rounded-circle camera-capture-overlay__shutter"
+                            data-camera-capture-target="captureBtn"
+                            data-action="click->camera-capture#capture"
+                            aria-label="<%= t('.capture', default: 'Capture') %>">
+                      <i class="bi bi-circle-fill"></i>
+                    </button>
+
+                    <%# Preview phase buttons %>
+                    <button type="button"
+                            class="btn btn-outline-light btn-lg d-none"
+                            data-camera-capture-target="retakeBtn"
+                            data-action="click->camera-capture#retake">
+                      <i class="bi bi-arrow-counterclockwise"></i> <%= t('.retake', default: 'Retake') %>
+                    </button>
+                    <button type="button"
+                            class="btn btn-success btn-lg d-none"
+                            data-camera-capture-target="acceptBtn"
+                            data-action="click->camera-capture#accept">
+                      <i class="bi bi-check-lg"></i> <%= t('.use_photo', default: 'Use Photo') %>
+                    </button>
+                  </div>
+                </div>
               </div>
 
               <!-- Remove / AI Generate -->

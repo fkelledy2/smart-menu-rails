@@ -41,6 +41,7 @@ import WhiskeyAmbassadorController from "./whiskey_ambassador_controller"
 import CartBadgeController from "./cart_badge_controller"
 import LazyStripeController from "./lazy_stripe_controller"
 import InviteStaffController from "./invite_staff_controller"
+import CameraCaptureController from "./camera_capture_controller"
 
 application.register("sortable", SortableController)
 application.register("auto-save", AutoSaveController)
@@ -81,5 +82,6 @@ application.register("whiskey-ambassador", WhiskeyAmbassadorController)
 application.register("cart-badge", CartBadgeController)
 application.register("lazy-stripe", LazyStripeController)
 application.register("invite-staff", InviteStaffController)
+application.register("camera-capture", CameraCaptureController)
 
-console.log('[Stimulus] Controllers registered:', ['sortable', 'auto-save', 'menu-import', 'sidebar', 'hello', 'ocr-upload', 'stripe-wallet', 'state', 'order-header', 'order-totals', 'ordering', 'localization-bulk', 'menuitems-bulk', 'menusections-bulk', 'restaurants-bulk', 'discovered-restaurant-deep-dive', 'discovered-restaurant-web-scrape', 'restaurantmenus-bulk', 'discovered-restaurants-bulk', 'password-confirmation-toggle', 'disabled-action', 'userplan-plan-change', 'go-live-progress', 'settings-dependencies', 'bottom-sheet', 'tab-bar', 'menu-layout', 'inline-edit', 'mobile-tab-bar', 'ai-image-generator', 'scrollspy', 'generate-pairings', 'welcome-banner', 'ai-progress', 'whiskey-ambassador', 'cart-badge', 'lazy-stripe', 'invite-staff'])
+console.log('[Stimulus] Controllers registered:', ['sortable', 'auto-save', 'menu-import', 'sidebar', 'hello', 'ocr-upload', 'stripe-wallet', 'state', 'order-header', 'order-totals', 'ordering', 'localization-bulk', 'menuitems-bulk', 'menusections-bulk', 'restaurants-bulk', 'discovered-restaurant-deep-dive', 'discovered-restaurant-web-scrape', 'restaurantmenus-bulk', 'discovered-restaurants-bulk', 'password-confirmation-toggle', 'disabled-action', 'userplan-plan-change', 'go-live-progress', 'settings-dependencies', 'bottom-sheet', 'tab-bar', 'menu-layout', 'inline-edit', 'mobile-tab-bar', 'ai-image-generator', 'scrollspy', 'generate-pairings', 'welcome-banner', 'ai-progress', 'whiskey-ambassador', 'cart-badge', 'lazy-stripe', 'invite-staff', 'camera-capture'])
