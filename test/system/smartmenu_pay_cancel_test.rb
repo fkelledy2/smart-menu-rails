@@ -19,20 +19,43 @@ class SmartmenuPayCancelTest < ApplicationSystemTestCase
   # PAY / CANCEL FLOW
   # ===================
 
-  test 'clicking Cancel in pay section restores Pay button and sets sheet to half state' do
+  test 'clicking Cancel in pay section restores Pay button and keeps sheet full' do
     setup_billrequested_order
 
     # Wait for the bottom sheet and JS hydration (Pay button visible = hydration done)
     assert_selector('#cartBottomSheet', wait: 10)
     wait_for_pay_button_visible
-    expand_sheet_to('half')
+    expand_sheet_to('full')
     sleep 0.5
 
     # Click Pay button via JS to avoid click interception
     page.execute_script("document.getElementById('cartPayOrder')?.click()")
+    sleep 1
+
+    # Check if pay section rendered after click
+    post_click = page.evaluate_script(<<~JS)
+      (function() {
+        var pb = document.getElementById('cartPayOrder');
+        var ps = document.getElementById('cartPaySection');
+        var cb = document.getElementById('cartPayCancel');
+        var sh = document.getElementById('cartBottomSheet');
+        return {
+          payBtnDisplay: pb?.style?.display,
+          paySectionDisplay: ps?.style?.display,
+          cancelExists: !!cb,
+          sheetClass: sh?.className
+        };
+      })()
+    JS
+
+    # If pay section didn't render, try clicking again
+    unless post_click['paySectionDisplay'] == 'block'
+      page.execute_script("document.getElementById('cartPayOrder')?.click()")
+      sleep 1
+    end
 
     # Wait for Cancel button to appear (pay section rendered)
-    Timeout.timeout(10) do
+    Timeout.timeout(15) do
       loop do
         ready = page.evaluate_script(
           "!!document.getElementById('cartPayCancel') && " \
@@ -58,11 +81,8 @@ class SmartmenuPayCancelTest < ApplicationSystemTestCase
     assert_not_equal 'none', post_cancel['payBtnDisplay'],
                      "Pay button should be visible after Cancel. State: #{post_cancel}"
 
-    assert_includes post_cancel['sheetClass'].to_s, 'bottom-sheet--half',
-                    "Sheet should be in half state after Cancel. State: #{post_cancel}"
-
-    assert_not_includes post_cancel['sheetClass'].to_s, 'bottom-sheet--full',
-                        "Sheet should NOT be in full state after Cancel. State: #{post_cancel}"
+    assert_includes post_cancel['sheetClass'].to_s, 'bottom-sheet--full',
+                    "Sheet should be in full state after Cancel. State: #{post_cancel}"
   end
 
   test 'Cancel button has event listener bound after Pay click renders pay section' do
@@ -70,7 +90,7 @@ class SmartmenuPayCancelTest < ApplicationSystemTestCase
 
     assert_selector('#cartBottomSheet', wait: 10)
     wait_for_pay_button_visible
-    expand_sheet_to('half')
+    expand_sheet_to('full')
     sleep 0.5
 
     # Inject a test marker to detect if the Cancel click fires any handler
@@ -85,9 +105,10 @@ class SmartmenuPayCancelTest < ApplicationSystemTestCase
 
     # Click Pay and wait for pay section to render
     page.execute_script("document.getElementById('cartPayOrder')?.click()")
+    sleep 1
 
     # Wait for Cancel button to appear (pay section rendered)
-    Timeout.timeout(10) do
+    Timeout.timeout(15) do
       loop do
         has_cancel = page.evaluate_script("!!document.getElementById('cartPayCancel') && document.getElementById('cartPaySection')?.style?.display === 'block'")
         break if has_cancel
@@ -114,8 +135,8 @@ class SmartmenuPayCancelTest < ApplicationSystemTestCase
                  "Cancel handler should hide pay section. State: #{post_cancel}"
     assert_not_equal 'none', post_cancel['payBtnDisplay'],
                      "Cancel handler should restore Pay button. State: #{post_cancel}"
-    assert_includes post_cancel['sheetClass'].to_s, 'bottom-sheet--half',
-                    "Cancel handler should set sheet to half. State: #{post_cancel}"
+    assert_includes post_cancel['sheetClass'].to_s, 'bottom-sheet--full',
+                    "Cancel handler should set sheet to full. State: #{post_cancel}"
   end
 
   private

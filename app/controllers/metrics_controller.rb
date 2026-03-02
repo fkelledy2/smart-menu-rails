@@ -118,15 +118,6 @@ class MetricsController < ApplicationController
         tSeq += 1
       end
     end
-    #       if Plan.count > 0
-    #           FeaturesPlan.delete_all
-    #           User.all.each do |user|
-    #               user.plan = nil;
-    #               user.save
-    #           end
-    #           Userplan.delete_all
-    #           Plan.delete_all
-    #           Feature.delete_all
     return unless Plan.none?
 
     @feature1 = Feature.new
@@ -242,97 +233,6 @@ class MetricsController < ApplicationController
     @enterprise.favourite = false
     @enterprise.action = 1
     @enterprise.save
-
-    #           @feature1Plan1 = FeaturesPlan.new()
-    #           @feature1Plan1.feature = @feature1
-    #           @feature1Plan1.plan = @trial
-    #           @feature1Plan1.featurePlanNote = "feature1.trial.note"
-    #           @feature1Plan1.status = 0
-    #           @feature1Plan1.save
-    #           @feature1Plan2 = FeaturesPlan.new()
-    #           @feature1Plan2.feature = @feature1
-    #           @feature1Plan2.plan = @pro
-    #           @feature1Plan2.featurePlanNote = "feature1.pro.note"
-    #           @feature1Plan2.status = 0
-    #           @feature1Plan2.save
-    #           @feature1Plan3 = FeaturesPlan.new()
-    #           @feature1Plan3.feature = @feature1
-    #           @feature1Plan3.plan = @enterprise
-    #           @feature1Plan3.featurePlanNote = "feature1.enterprise.note"
-    #           @feature1Plan3.status = 0
-    #           @feature1Plan3.save
-    #
-    #           @feature2Plan1 = FeaturesPlan.new()
-    #           @feature2Plan1.feature = @feature2
-    #           @feature2Plan1.plan = @trial
-    #           @feature2Plan1.featurePlanNote = "feature2.trial.note"
-    #           @feature2Plan1.status = 0
-    #           @feature2Plan1.save
-    #           @feature2Plan2 = FeaturesPlan.new()
-    #           @feature2Plan2.feature = @feature2
-    #           @feature2Plan2.plan = @pro
-    #           @feature2Plan2.featurePlanNote = "feature2.pro.note"
-    #           @feature2Plan2.status = 0
-    #           @feature2Plan2.save
-    #           @feature2Plan3 = FeaturesPlan.new()
-    #           @feature2Plan3.feature = @feature2
-    #           @feature2Plan3.plan = @enterprise
-    #           @feature2Plan3.featurePlanNote = "feature2.enterprise.note"
-    #           @feature2Plan3.status = 0
-    #           @feature2Plan3.save
-    #
-    #           @feature3Plan2 = FeaturesPlan.new()
-    #           @feature3Plan2.feature = @feature3
-    #           @feature3Plan2.plan = @pro
-    #           @feature3Plan2.featurePlanNote = "feature3.pro.note"
-    #           @feature3Plan2.status = 0
-    #           @feature3Plan2.save
-    #           @feature3Plan3 = FeaturesPlan.new()
-    #           @feature3Plan3.feature = @feature3
-    #           @feature3Plan3.plan = @enterprise
-    #           @feature3Plan3.featurePlanNote = "feature3.enterprise.note"
-    #           @feature3Plan3.status = 0
-    #           @feature3Plan3.save
-    #
-    #           @feature4Plan1 = FeaturesPlan.new()
-    #           @feature4Plan1.feature = @feature4
-    #           @feature4Plan1.plan = @trial
-    #           @feature4Plan1.featurePlanNote = "feature4.trial.note"
-    #           @feature4Plan1.status = 0
-    #           @feature4Plan1.save
-    #           @feature4Plan2 = FeaturesPlan.new()
-    #           @feature4Plan2.feature = @feature4
-    #           @feature4Plan2.plan = @pro
-    #           @feature4Plan2.featurePlanNote = "feature4.pro.note"
-    #           @feature4Plan2.status = 0
-    #           @feature4Plan2.save
-    #           @feature4Plan3 = FeaturesPlan.new()
-    #           @feature4Plan3.feature = @feature4
-    #           @feature4Plan3.plan = @enterprise
-    #           @feature4Plan3.featurePlanNote = "feature4.enterprise.note"
-    #           @feature4Plan3.status = 0
-    #           @feature4Plan3.save
-    #
-    #
-    #           @feature5Plan2 = FeaturesPlan.new()
-    #           @feature5Plan2.feature = @feature5
-    #           @feature5Plan2.plan = @pro
-    #           @feature5Plan2.featurePlanNote = "feature5.pro.note"
-    #           @feature5Plan2.status = 0
-    #           @feature5Plan2.save
-    #           @feature5Plan3 = FeaturesPlan.new()
-    #           @feature5Plan3.feature = @feature5
-    #           @feature5Plan3.plan = @enterprise
-    #           @feature5Plan3.featurePlanNote = "feature5.enterprise.note"
-    #           @feature5Plan3.status = 0
-    #           @feature5Plan3.save
-    #
-    #           @feature6Plan3 = FeaturesPlan.new()
-    #           @feature6Plan3.feature = @feature6
-    #           @feature6Plan3.plan = @enterprise
-    #           @feature6Plan3.featurePlanNote = "feature6.enterprise.note"
-    #           @feature6Plan3.status = 0
-    #           @feature6Plan3.save
   end
 
   # Only allow a list of trusted parameters through.

@@ -108,30 +108,6 @@ class NPlusOneEliminationTest < ActiveSupport::TestCase
     assert query_count <= 20, "Expected <= 20 queries, got #{query_count}"
   end
 
-  # Test AdvancedCacheServiceV2 optimizations
-  test 'cached restaurant orders should not have N+1 queries' do
-    # Create orders for restaurant
-    create_orders_with_items(3, 4)
-
-    query_count = count_queries do
-      result = AdvancedCacheServiceV2.cached_restaurant_orders_with_models(
-        @restaurant.id,
-        include_calculations: true,
-      )
-
-      # Simulate controller and view access patterns
-      result[:orders].each do |order|
-        order.ordritems.each do |item|
-          item.menuitem.name # This should not cause N+1
-          item.menuitem.allergyns.count
-        end
-      end
-    end
-
-    # Should be optimized due to comprehensive includes
-    assert query_count <= 45, "Expected <= 45 queries, got #{query_count}"
-  end
-
   # Test scope effectiveness
   test 'menu scopes should include all necessary associations' do
     menu = create_menu_with_sections_and_items

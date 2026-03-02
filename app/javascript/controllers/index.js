@@ -6,8 +6,6 @@ import SortableController from "./sortable_controller"
 import AutoSaveController from "./auto_save_controller"
 import MenuImportController from "./menu_import_controller"
 import SidebarController from "./sidebar_controller"
-import HelloController from "./hello_controller"
-import OcrUploadController from "./ocr_upload_controller"
 import StripeWalletController from "./stripe_wallet_controller"
 import StateController from "./state_controller"
 import OrderHeaderController from "./order_header_controller"
@@ -35,11 +33,8 @@ import AiImageGeneratorController from "./ai_image_generator_controller"
 import ScrollspyController from "./scrollspy_controller"
 import SommelierController from "./sommelier_controller"
 import GeneratePairingsController from "./generate_pairings_controller"
-import WelcomeBannerController from "./welcome_banner_controller"
 import AiProgressController from "./ai_progress_controller"
 import WhiskeyAmbassadorController from "./whiskey_ambassador_controller"
-import CartBadgeController from "./cart_badge_controller"
-import LazyStripeController from "./lazy_stripe_controller"
 import InviteStaffController from "./invite_staff_controller"
 import CameraCaptureController from "./camera_capture_controller"
 
@@ -47,8 +42,6 @@ application.register("sortable", SortableController)
 application.register("auto-save", AutoSaveController)
 application.register("menu-import", MenuImportController)
 application.register("sidebar", SidebarController)
-application.register("hello", HelloController)
-application.register("ocr-upload", OcrUploadController)
 application.register("stripe-wallet", StripeWalletController)
 application.register("state", StateController)
 application.register("order-header", OrderHeaderController)
@@ -76,12 +69,9 @@ application.register("ai-image-generator", AiImageGeneratorController)
 application.register("scrollspy", ScrollspyController)
 application.register("sommelier", SommelierController)
 application.register("generate-pairings", GeneratePairingsController)
-application.register("welcome-banner", WelcomeBannerController)
 application.register("ai-progress", AiProgressController)
 application.register("whiskey-ambassador", WhiskeyAmbassadorController)
-application.register("cart-badge", CartBadgeController)
-application.register("lazy-stripe", LazyStripeController)
 application.register("invite-staff", InviteStaffController)
 application.register("camera-capture", CameraCaptureController)
 
-console.log('[Stimulus] Controllers registered:', ['sortable', 'auto-save', 'menu-import', 'sidebar', 'hello', 'ocr-upload', 'stripe-wallet', 'state', 'order-header', 'order-totals', 'ordering', 'localization-bulk', 'menuitems-bulk', 'menusections-bulk', 'restaurants-bulk', 'discovered-restaurant-deep-dive', 'discovered-restaurant-web-scrape', 'restaurantmenus-bulk', 'discovered-restaurants-bulk', 'password-confirmation-toggle', 'disabled-action', 'userplan-plan-change', 'go-live-progress', 'settings-dependencies', 'bottom-sheet', 'tab-bar', 'menu-layout', 'inline-edit', 'mobile-tab-bar', 'ai-image-generator', 'scrollspy', 'generate-pairings', 'welcome-banner', 'ai-progress', 'whiskey-ambassador', 'cart-badge', 'lazy-stripe', 'invite-staff', 'camera-capture'])
+console.log('[Stimulus] Controllers registered:', ['sortable', 'auto-save', 'menu-import', 'sidebar', 'stripe-wallet', 'state', 'order-header', 'order-totals', 'ordering', 'localization-bulk', 'menuitems-bulk', 'menusections-bulk', 'restaurants-bulk', 'discovered-restaurant-deep-dive', 'discovered-restaurant-web-scrape', 'restaurantmenus-bulk', 'discovered-restaurants-bulk', 'password-confirmation-toggle', 'disabled-action', 'userplan-plan-change', 'go-live-progress', 'settings-dependencies', 'bottom-sheet', 'tab-bar', 'menu-layout', 'inline-edit', 'mobile-tab-bar', 'ai-image-generator', 'scrollspy', 'generate-pairings', 'ai-progress', 'whiskey-ambassador', 'invite-staff', 'camera-capture'])

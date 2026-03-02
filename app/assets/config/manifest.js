@@ -33,12 +33,10 @@
 //= link smartmenus.js
 //= link restaurantlocales.js
 //= link testimonials.js
-//= link controllers/hello_controller.js
 //= link controllers/index.js
 //= link controllers/auto_save_controller.js
 //= link controllers/sidebar_controller.js
 //= link controllers/sortable_controller.js
-//= link controllers/ocr_upload_controller.js
 //= link controllers/stripe_wallet_controller.js
 //= link controllers/state_controller.js
 //= link controllers/order_header_controller.js
