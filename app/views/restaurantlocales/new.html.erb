@@ -30,7 +30,7 @@
 
       <div class="d-flex gap-2">
         <%= link_to edit_restaurant_path(@restaurantlocale.restaurant, section: 'settings'),
-            class: 'btn-2025 btn-2025-ghost btn-2025-md' do %>
+            class: 'btn btn-ghost' do %>
           <i class="bi bi-arrow-left"></i> <%= t('.back', default: 'Back to Settings') %>
         <% end %>
       </div>
@@ -40,7 +40,7 @@
 
 <!-- Form Card (wrapped in Turbo Frame for inline rendering) -->
 <%= turbo_frame_tag 'localization_new_locale' do %>
-  <div class="content-card-2025" data-skip-form-manager="true">
+  <div class="content-card" data-skip-form-manager="true">
     <h2 class="content-card-title">
       <i class="bi bi-globe"></i>
       <%= t('.locale_details', default: 'Language Details') %>

@@ -25,7 +25,7 @@ export default class extends Controller {
     // Fallback: try to find sidebar by class if target not found
     const sidebar = this.hasSidebarTarget 
       ? this.sidebarTarget 
-      : document.querySelector('.sidebar-2025')
+      : document.querySelector('.sidebar-app')
     
     const overlay = this.hasOverlayTarget 
       ? this.overlayTarget 
@@ -54,7 +54,7 @@ export default class extends Controller {
     // Fallback: try to find sidebar by class if target not found
     const sidebar = this.hasSidebarTarget 
       ? this.sidebarTarget 
-      : document.querySelector('.sidebar-2025')
+      : document.querySelector('.sidebar-app')
     
     const overlay = this.hasOverlayTarget 
       ? this.overlayTarget 
@@ -97,7 +97,7 @@ export default class extends Controller {
     // Fallback: try to find sidebar by class if target not found
     const sidebar = this.hasSidebarTarget 
       ? this.sidebarTarget 
-      : document.querySelector('.sidebar-2025')
+      : document.querySelector('.sidebar-app')
     
     console.log("[Sidebar] Sidebar element:", sidebar)
     

@@ -141,26 +141,26 @@
     <%= t('.overview') %>
   </h2>
 
-  <div class="count-panel-2025 count-panel-2025--three">
+  <div class="count-panel count-panel--three">
     <%= link_to edit_restaurant_path(restaurant, section: 'menus'),
-                class: 'count-panel-item-2025 text-decoration-none text-reset d-block',
+                class: 'count-panel-item text-decoration-none text-reset d-block',
                 data: { turbo_frame: 'restaurant_content', turbo_action: 'advance', testid: 'overview-menus-link' } do %>
-      <div class="count-panel-value-2025"><%= restaurant.restaurant_menus.where.not(status: :archived).joins(:menu).where(menus: { archived: false }).count %></div>
-      <div class="count-panel-label-2025"><%= t('.menus') %></div>
+      <div class="count-panel-value"><%= restaurant.restaurant_menus.where.not(status: :archived).joins(:menu).where(menus: { archived: false }).count %></div>
+      <div class="count-panel-label"><%= t('.menus') %></div>
     <% end %>
 
     <%= link_to edit_restaurant_path(restaurant, section: 'tables'),
-                class: 'count-panel-item-2025 text-decoration-none text-reset d-block',
+                class: 'count-panel-item text-decoration-none text-reset d-block',
                 data: { turbo_frame: 'restaurant_content', turbo_action: 'advance', testid: 'overview-tables-link' } do %>
-      <div class="count-panel-value-2025"><%= restaurant.tablesettings.count %></div>
-      <div class="count-panel-label-2025"><%= t('.tables') %></div>
+      <div class="count-panel-value"><%= restaurant.tablesettings.count %></div>
+      <div class="count-panel-label"><%= t('.tables') %></div>
     <% end %>
 
     <%= link_to edit_restaurant_path(restaurant, section: 'staff'),
-                class: 'count-panel-item-2025 text-decoration-none text-reset d-block',
+                class: 'count-panel-item text-decoration-none text-reset d-block',
                 data: { turbo_frame: 'restaurant_content', turbo_action: 'advance', testid: 'overview-staff-link' } do %>
-      <div class="count-panel-value-2025"><%= restaurant.employees.count %></div>
-      <div class="count-panel-label-2025"><%= t('.staff') %></div>
+      <div class="count-panel-value"><%= restaurant.employees.count %></div>
+      <div class="count-panel-label"><%= t('.staff') %></div>
     <% end %>
   </div>
 </div>

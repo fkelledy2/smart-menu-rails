@@ -5,7 +5,7 @@
   </div>
   <div class="col-6 text-end">
   <% restaurant_path = @futureParentRestaurant || current_user.restaurants.first %>
-  <%= link_to new_restaurant_tag_path(restaurant_path), class: 'btn-2025 btn-2025-primary btn-2025-md' do %>
+  <%= link_to new_restaurant_tag_path(restaurant_path), class: 'btn btn-primary' do %>
     <i class="bi bi-plus"></i> <%= t('.tag') %>
   <% end %>
   </div>

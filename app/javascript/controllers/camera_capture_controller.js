@@ -130,14 +130,14 @@ export default class extends Controller {
     }
 
     // Also update the visible image preview on the page if present
-    const existingPreview = document.querySelector(".menuitem-image-preview-2025")
+    const existingPreview = document.querySelector(".menuitem-image-preview")
     const placeholder = document.querySelector(".menuitem-image-placeholder")
     if (existingPreview) {
       existingPreview.src = URL.createObjectURL(this.capturedFile)
     } else if (placeholder) {
       const img = document.createElement("img")
       img.src = URL.createObjectURL(this.capturedFile)
-      img.className = "menuitem-image-preview-2025 mb-3"
+      img.className = "menuitem-image-preview mb-3"
       img.alt = "Captured photo"
       placeholder.replaceWith(img)
     }

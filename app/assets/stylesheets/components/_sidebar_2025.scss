@@ -11,7 +11,7 @@
 }
 
 // Main Sidebar Container
-.sidebar-2025 {
+.sidebar-app {
   width: 260px;
   background: var(--color-white);
   border-right: 1px solid var(--color-gray-200);
@@ -437,7 +437,7 @@
 }
 
 // Content Card (for form sections)
-.content-card-2025 {
+.content-card {
   background: white;
   border-radius: var(--radius-lg);
   padding: var(--space-4); // Standard padding (16px)
@@ -466,15 +466,15 @@
 }
 
 // Scrollbar styling for sidebar
-.sidebar-2025::-webkit-scrollbar {
+.sidebar-app::-webkit-scrollbar {
   width: 6px;
 }
 
-.sidebar-2025::-webkit-scrollbar-track {
+.sidebar-app::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.sidebar-2025::-webkit-scrollbar-thumb {
+.sidebar-app::-webkit-scrollbar-thumb {
   background: var(--color-gray-300);
   border-radius: var(--radius-full);
   
@@ -498,7 +498,7 @@
     left: 0;
     right: 0;
     z-index: 1030;
-    background: var(--color-white);
+    background: #ffffff;
     border-top: 1px solid var(--color-gray-200);
     box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.08);
     padding: var(--space-1) 0;

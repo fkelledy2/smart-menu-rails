@@ -207,16 +207,16 @@ export default class extends Controller {
     if (!indicator) {
       indicator = document.createElement('div')
       indicator.id = 'auto-save-indicator'
-      indicator.className = 'form-autosave-2025'
+      indicator.className = 'form-autosave'
       document.body.appendChild(indicator)
     }
     
     indicator.textContent = text
-    indicator.className = `form-autosave-2025 ${state}`
+    indicator.className = `form-autosave ${state}`
     
     // Hide after 2 seconds
     setTimeout(() => {
-      indicator.className = 'form-autosave-2025'
+      indicator.className = 'form-autosave'
     }, 2000)
   }
   

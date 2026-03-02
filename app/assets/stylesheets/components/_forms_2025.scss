@@ -7,7 +7,7 @@
 // FORM LABELS
 // ============================================
 
-.form-label-2025 {
+.form-label-legacy {
   display: block;
   font-size: var(--text-sm);
   font-weight: var(--font-medium);
@@ -25,7 +25,7 @@
 // FORM CONTROLS
 // ============================================
 
-.form-control-2025 {
+.form-control-legacy {
   display: block;
   width: 100%;
   padding: var(--space-3) var(--space-4);
@@ -77,7 +77,7 @@
   }
 }
 
-.sticky-actions-2025 {
+.sticky-actions {
   position: sticky;
   bottom: 0;
   z-index: var(--z-fixed);
@@ -89,11 +89,11 @@
   padding-bottom: calc(var(--space-3) + env(safe-area-inset-bottom));
 }
 
-.form-with-sticky-actions-2025 {
+.form-with-sticky-actions {
   padding-bottom: calc(var(--space-12) + env(safe-area-inset-bottom));
 }
 
-.form-stack-2025 {
+.form-stack {
   .form-group.row {
     flex-direction: column;
     margin-left: 0;
@@ -128,7 +128,7 @@
   }
 }
 
-.menuitem-image-preview-2025 {
+.menuitem-image-preview {
   display: block;
   width: 100%;
   height: auto;
@@ -138,13 +138,13 @@
 }
 
 // Textarea
-textarea.form-control-2025 {
+textarea.form-control-legacy {
   min-height: 100px;
   resize: vertical;
 }
 
 // Select
-select.form-control-2025 {
+select.form-control-legacy {
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236B7280' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
@@ -156,12 +156,12 @@ select.form-control-2025 {
 // INPUT GROUPS
 // ============================================
 
-.input-group-2025 {
+.input-group-legacy {
   display: flex;
   align-items: stretch;
   width: 100%;
   
-  .form-control-2025 {
+  .form-control-legacy {
     flex: 1;
     border-radius: 0;
     
@@ -214,8 +214,8 @@ select.form-control-2025 {
 // CHECKBOXES & RADIOS
 // ============================================
 
-.checkbox-2025,
-.radio-2025 {
+.checkbox-custom,
+.radio-custom {
   display: flex;
   align-items: flex-start;
   gap: var(--space-3);
@@ -287,7 +287,7 @@ select.form-control-2025 {
 // FORM GROUPS
 // ============================================
 
-.form-group-2025 {
+.form-group-legacy {
   margin-bottom: var(--space-6);
   
   &:last-child {
@@ -299,7 +299,7 @@ select.form-control-2025 {
 // HELP TEXT
 // ============================================
 
-.form-help-2025 {
+.form-text-legacy {
   display: block;
   margin-top: var(--space-1);
   font-size: var(--text-sm);
@@ -311,7 +311,7 @@ select.form-control-2025 {
 // ERROR & SUCCESS MESSAGES
 // ============================================
 
-.form-error-2025 {
+.form-error {
   display: flex;
   align-items: center;
   gap: var(--space-2);
@@ -326,7 +326,7 @@ select.form-control-2025 {
   }
 }
 
-.form-success-2025 {
+.form-success {
   display: flex;
   align-items: center;
   gap: var(--space-2);
@@ -345,7 +345,7 @@ select.form-control-2025 {
 // FORM ACTIONS
 // ============================================
 
-.form-actions-2025 {
+.form-actions {
   display: flex;
   align-items: center;
   gap: var(--space-3);
@@ -366,7 +366,7 @@ select.form-control-2025 {
 // AUTO-SAVE INDICATOR
 // ============================================
 
-.form-autosave-2025 {
+.form-autosave {
   position: fixed;
   top: var(--space-4);
   right: var(--space-4);
@@ -431,19 +431,19 @@ select.form-control-2025 {
 // ============================================
 
 @media (max-width: 768px) {
-  .form-control-2025 {
+  .form-control-legacy {
     font-size: 16px;  // Prevent iOS zoom on focus
   }
   
-  .form-actions-2025 {
+  .form-actions {
     flex-direction: column;
     
-    .btn-2025 {
+    .btn-legacy {
       width: 100%;
     }
   }
   
-  .form-autosave-2025 {
+  .form-autosave {
     top: var(--space-2);
     right: var(--space-2);
     font-size: var(--text-xs);

@@ -12,7 +12,7 @@
   #     { key: :updated_at, label: 'Modified', type: :date }
   #   ],
   #   actions: [
-  #     { label: '+ New Menu', path: new_menu_path, class: 'btn-2025 btn-2025-primary btn-2025-md' }
+  #     { label: '+ New Menu', path: new_menu_path, class: 'btn btn-primary' }
   #   ]
   #
 %>
@@ -28,15 +28,15 @@
   empty_action ||= local_assigns[:empty_action]
 %>
 
-<div class="resource-list-2025">
+<div class="resource-list">
   <!-- Header -->
-  <div class="resource-list-2025-header">
+  <div class="resource-list-header">
     <div>
-      <h2 class="resource-list-2025-title"><%= title %></h2>
-      <p class="resource-list-2025-subtitle"><%= pluralize(items.count, 'item') %></p>
+      <h2 class="resource-list-title"><%= title %></h2>
+      <p class="resource-list-subtitle"><%= pluralize(items.count, 'item') %></p>
     </div>
 
-    <div class="resource-list-2025-actions">
+    <div class="resource-list-actions">
       <% if searchable %>
         <input type="search"
                placeholder="Search <%= title.downcase %>..."
@@ -53,44 +53,44 @@
 
   <!-- Filters (if needed) -->
   <% if local_assigns[:filters] %>
-    <div class="resource-list-2025-filters">
+    <div class="resource-list-filters">
       <%= filters %>
     </div>
   <% end %>
 
   <!-- Table -->
   <% if items.any? %>
-    <div class="resource-list-2025-table">
+    <div class="resource-list-table">
       <!-- Header Row -->
-      <div class="resource-list-2025-row resource-list-2025-header-row">
+      <div class="resource-list-row resource-list-header-row">
         <% if selectable %>
-          <div class="resource-list-2025-cell">
+          <div class="resource-list-cell">
             <input type="checkbox" id="select-all" class="form-check-input">
           </div>
         <% end %>
 
         <% columns.each do |column| %>
-          <div class="resource-list-2025-cell <%= 'resource-list-2025-cell-primary' if column[:primary] %>">
+          <div class="resource-list-cell <%= 'resource-list-cell-primary' if column[:primary] %>">
             <%= column[:label] %>
           </div>
         <% end %>
 
-        <div class="resource-list-2025-cell resource-list-2025-cell-actions">
+        <div class="resource-list-cell resource-list-cell-actions">
           Actions
         </div>
       </div>
 
       <!-- Data Rows -->
       <% items.each do |item| %>
-        <div class="resource-list-2025-row" data-id="<%= item.id %>">
+        <div class="resource-list-row" data-id="<%= item.id %>">
           <% if selectable %>
-            <div class="resource-list-2025-cell">
+            <div class="resource-list-cell">
               <input type="checkbox" value="<%= item.id %>" class="form-check-input item-checkbox">
             </div>
           <% end %>
 
           <% columns.each do |column| %>
-            <div class="resource-list-2025-cell <%= 'resource-list-2025-cell-primary' if column[:primary] %>">
+            <div class="resource-list-cell <%= 'resource-list-cell-primary' if column[:primary] %>">
               <% value = item.send(column[:key]) %>
 
               <% if column[:type] == :badge %>
@@ -100,14 +100,14 @@
               <% elsif column[:type] == :currency %>
                 <%= number_to_currency(value) %>
               <% elsif column[:link] %>
-                <%= link_to value, column[:link].call(item), class: 'resource-list-2025-link' %>
+                <%= link_to value, column[:link].call(item), class: 'resource-list-link' %>
               <% else %>
                 <%= value %>
               <% end %>
             </div>
           <% end %>
 
-          <div class="resource-list-2025-cell resource-list-2025-cell-actions">
+          <div class="resource-list-cell resource-list-cell-actions">
             <% dropdown_items = if local_assigns[:item_actions]
               item_actions.map do |action|
                 {
@@ -135,19 +135,19 @@
     </div>
 
     <!-- Footer -->
-    <div class="resource-list-2025-footer">
+    <div class="resource-list-footer">
       <span class="text-sm text-gray-500">
         Showing <%= items.count %> <%= title.downcase %>
       </span>
     </div>
   <% else %>
     <!-- Empty State -->
-    <div class="resource-list-2025-empty">
-      <div class="resource-list-2025-empty-icon">
+    <div class="resource-list-empty">
+      <div class="resource-list-empty-icon">
         <i class="bi bi-inbox" style="font-size: 48px; color: var(--color-gray-400);"></i>
       </div>
-      <h3 class="resource-list-2025-empty-title"><%= empty_message %></h3>
-      <p class="resource-list-2025-empty-description"><%= empty_description %></p>
+      <h3 class="resource-list-empty-title"><%= empty_message %></h3>
+      <p class="resource-list-empty-description"><%= empty_description %></p>
       <% if empty_action %>
         <%= link_to empty_action[:label], empty_action[:path], class: 'btn btn-primary mt-4' %>
       <% end %>
@@ -156,14 +156,14 @@
 </div>
 
 <style>
-  .resource-list-2025 {
+  .resource-list {
     background: white;
     border: 1px solid var(--color-gray-200);
     border-radius: var(--radius-lg);
     overflow: hidden;
   }
 
-  .resource-list-2025-header {
+  .resource-list-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -174,31 +174,31 @@
     gap: var(--space-4);
   }
 
-  .resource-list-2025-title {
+  .resource-list-title {
     font-size: var(--text-2xl);
     font-weight: var(--font-semibold);
     color: var(--color-gray-900);
     margin: 0;
   }
 
-  .resource-list-2025-subtitle {
+  .resource-list-subtitle {
     font-size: var(--text-sm);
     color: var(--color-gray-500);
     margin: var(--space-1) 0 0 0;
   }
 
-  .resource-list-2025-actions {
+  .resource-list-actions {
     display: flex;
     align-items: center;
     gap: var(--space-3);
   }
 
-  .resource-list-2025-table {
+  .resource-list-table {
     display: flex;
     flex-direction: column;
   }
 
-  .resource-list-2025-row {
+  .resource-list-row {
     display: grid;
     grid-template-columns: 48px 2fr 1fr 120px 80px;
     gap: var(--space-4);
@@ -208,65 +208,65 @@
     transition: background var(--transition-fast);
   }
 
-  .resource-list-2025-row:hover:not(.resource-list-2025-header-row) {
+  .resource-list-row:hover:not(.resource-list-header-row) {
     background-color: var(--color-gray-50);
   }
 
-  .resource-list-2025-header-row {
+  .resource-list-header-row {
     background-color: var(--color-gray-50);
     font-weight: var(--font-medium);
     font-size: var(--text-sm);
     color: var(--color-gray-700);
   }
 
-  .resource-list-2025-cell {
+  .resource-list-cell {
     font-size: var(--text-sm);
     color: var(--color-gray-600);
   }
 
-  .resource-list-2025-cell-primary {
+  .resource-list-cell-primary {
     font-weight: var(--font-medium);
     color: var(--color-gray-900);
     font-size: var(--text-base);
   }
 
-  .resource-list-2025-cell-actions {
+  .resource-list-cell-actions {
     text-align: right;
   }
 
-  .resource-list-2025-link {
+  .resource-list-link {
     color: var(--color-primary);
     text-decoration: none;
   }
 
-  .resource-list-2025-link:hover {
+  .resource-list-link:hover {
     text-decoration: underline;
   }
 
-  .resource-list-2025-footer {
+  .resource-list-footer {
     padding: var(--space-4) var(--space-6);
     background-color: var(--color-gray-50);
     border-top: 1px solid var(--color-gray-200);
   }
 
   /* Empty State */
-  .resource-list-2025-empty {
+  .resource-list-empty {
     padding: var(--space-16) var(--space-6);
     text-align: center;
   }
 
-  .resource-list-2025-empty-icon {
+  .resource-list-empty-icon {
     margin-bottom: var(--space-4);
   }
 
-  .resource-list-2025-empty-title {
+  .resource-list-empty-title {
     font-size: var(--text-xl);
     font-weight: var(--font-semibold);
     color: var(--color-gray-900);
     margin-bottom: var(--space-2);
   }
 
-  .resource-list-2025-empty-description {
+  .resource-list-empty-description {
     font-size: var(--text-base);
     color: var(--color-gray-500);
     max-width: 400px;
@@ -275,27 +275,27 @@
 
   /* Responsive */
   @media (max-width: 768px) {
-    .resource-list-2025-header {
+    .resource-list-header {
       flex-direction: column;
       align-items: stretch;
     }
 
-    .resource-list-2025-actions {
+    .resource-list-actions {
       flex-direction: column;
       width: 100%;
     }
 
-    .resource-list-2025-actions input {
+    .resource-list-actions input {
       width: 100% !important;
     }
 
-    .resource-list-2025-row {
+    .resource-list-row {
       grid-template-columns: 40px 1fr 80px;
       font-size: var(--text-xs);
     }
 
-    .resource-list-2025-cell:nth-child(3),
-    .resource-list-2025-cell:nth-child(4) {
+    .resource-list-cell:nth-child(3),
+    .resource-list-cell:nth-child(4) {
       display: none;
     }
   }

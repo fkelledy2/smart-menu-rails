@@ -4,14 +4,14 @@
     <h1><%= t(".menuSections") %></h1>
   </div>
   <div class="col-6 text-end">
-    <button id="activate-row" class='btn-2025 btn-2025-primary btn-2025-sm' disabled><%= t('common.activate') %></button>
-    <button id="deactivate-row" class='btn-2025 btn-2025-outline-danger btn-2025-sm' disabled><%= t('common.deactivate') %></button>
+    <button id="activate-row" class='btn btn-primary btn-sm' disabled><%= t('common.activate') %></button>
+    <button id="deactivate-row" class='btn btn-outline-danger btn-sm' disabled><%= t('common.deactivate') %></button>
     <% if @menu %>
-      <%= link_to new_restaurant_menu_menusection_path(@menu.restaurant, @menu), class: 'btn-2025 btn-2025-primary btn-2025-md' do %>
+      <%= link_to new_restaurant_menu_menusection_path(@menu.restaurant, @menu), class: 'btn btn-primary' do %>
         <i class="bi bi-plus"></i> <%= t(".menuSection") %>
       <% end %>
     <% else %>
-      <%= link_to '#', class: 'btn-2025 btn-2025-primary btn-2025-md disabled' do %>
+      <%= link_to '#', class: 'btn btn-primary disabled' do %>
         <i class="bi bi-plus"></i> <%= t(".menuSection") %>
       <% end %>
     <% end %>

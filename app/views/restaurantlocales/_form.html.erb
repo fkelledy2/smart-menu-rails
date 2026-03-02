@@ -11,8 +11,8 @@
   <% end %>
 
   <!-- Language/Locale -->
-  <div class="form-group-2025 mb-4">
-    <%= form.label :locale, class: 'form-label-2025' do %>
+  <div class="mb-4 mb-4">
+    <%= form.label :locale, class: 'form-label' do %>
       <%= t('.locale', default: 'Language') %>
       <% unless restaurantlocale.persisted? %>
         <span class="text-danger">*</span>
@@ -22,10 +22,10 @@
     <% if restaurantlocale.persisted? %>
       <!-- Show as read-only display on edit -->
       <%= form.hidden_field :locale %>
-      <div class="form-control-2025 bg-light" style="cursor: not-allowed;">
+      <div class="form-control bg-light" style="cursor: not-allowed;">
         <%= restaurantlocale.language %>
       </div>
-      <div class="form-help-2025">
+      <div class="form-text">
         <%= t('.locale_locked', default: 'Language cannot be changed after creation') %>
       </div>
     <% else %>
@@ -44,18 +44,18 @@
             ['Arabic', 'AR']
           ],
           {},
-          { class: 'form-control-2025',
+          { class: 'form-control',
             required: true,
             data: { skip_tomselect: 'true' } } %>
-      <div class="form-help-2025">
+      <div class="form-text">
         <%= t('.locale_help', default: 'Select the language for translations') %>
       </div>
     <% end %>
   </div>
 
   <!-- Default Language -->
-  <div class="form-group-2025 mb-4">
-    <%= form.label :dfault, class: 'form-label-2025' do %>
+  <div class="mb-4 mb-4">
+    <%= form.label :dfault, class: 'form-label' do %>
       <%= t('.default', default: 'Default Language') %>
     <% end %>
     <div class="form-check form-switch">
@@ -86,18 +86,18 @@
   <div class="d-flex justify-content-end gap-2 pt-3 border-top">
     <% if defined?(turbo_frame_request?) && turbo_frame_request? %>
       <%= link_to edit_restaurant_path(restaurantlocale.restaurant, section: 'localization'),
-          class: 'btn-2025 btn-2025-ghost btn-2025-md',
+          class: 'btn btn-ghost',
           data: { turbo_frame: 'restaurant_content' } do %>
         <%= t('common.cancel', default: 'Cancel') %>
       <% end %>
     <% else %>
       <%= link_to edit_restaurant_path(restaurantlocale.restaurant, section: 'settings'),
-          class: 'btn-2025 btn-2025-ghost btn-2025-md' do %>
+          class: 'btn btn-ghost' do %>
         <%= t('common.cancel', default: 'Cancel') %>
       <% end %>
     <% end %>
 
     <%= form.submit t('common.save', default: 'Save'),
-        class: 'btn-2025 btn-2025-primary btn-2025-md' %>
+        class: 'btn btn-primary' %>
   </div>
 <% end %>

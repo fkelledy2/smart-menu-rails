@@ -1,58 +1,58 @@
 <%= form_with(model: [tablesetting.restaurant, tablesetting]) do |form| %>
-  <div class="form-group-2025 mb-4">
-    <%= form.label :name, class: 'form-label-2025' do %>
+  <div class="mb-4 mb-4">
+    <%= form.label :name, class: 'form-label' do %>
       <%= t('.name', default: 'Name') %>
       <span class="text-danger">*</span>
     <% end %>
     <%= form.text_field :name,
-        class: 'form-control-2025',
+        class: 'form-control',
         required: true %>
-    <div class="form-help-2025">
+    <div class="form-text">
       <%= t('.name_help', default: 'Displayed table name (e.g., Table 1, Patio A)') %>
     </div>
   </div>
 
-  <div class="form-group-2025 mb-4">
-    <%= form.label :capacity, class: 'form-label-2025' do %>
+  <div class="mb-4 mb-4">
+    <%= form.label :capacity, class: 'form-label' do %>
       <%= t('.capacity', default: 'Seats') %>
       <span class="text-danger">*</span>
     <% end %>
     <%= form.number_field :capacity,
-        class: 'form-control-2025',
+        class: 'form-control',
         min: 1,
         required: true %>
   </div>
 
-  <div class="form-group-2025 mb-4">
-    <%= form.label :description, class: 'form-label-2025' do %>
+  <div class="mb-4 mb-4">
+    <%= form.label :description, class: 'form-label' do %>
       <%= t('.description', default: 'Description') %>
     <% end %>
     <%= form.text_area :description,
-        class: 'form-control-2025',
+        class: 'form-control',
         rows: 3 %>
-    <div class="form-help-2025">
+    <div class="form-text">
       <%= t('.description_help', default: 'Optional: Add notes like location or special instructions') %>
     </div>
   </div>
 
-  <div class="form-group-2025 mb-4">
-    <%= form.label :tabletype, class: 'form-label-2025' do %>
+  <div class="mb-4 mb-4">
+    <%= form.label :tabletype, class: 'form-label' do %>
       <%= t('.tabletype', default: 'Table Type') %>
     <% end %>
     <%= form.select :tabletype,
         options_for_select(Tablesetting.tabletypes.keys.to_a, form.object.tabletype),
         {},
-        class: 'form-control-2025' %>
+        class: 'form-control' %>
   </div>
 
-  <div class="form-group-2025 mb-4">
-    <%= form.label :status, class: 'form-label-2025' do %>
+  <div class="mb-4 mb-4">
+    <%= form.label :status, class: 'form-label' do %>
       <%= t('.status', default: 'Status') %>
     <% end %>
     <%= form.select :status,
         options_for_select(Tablesetting.statuses.keys.to_a, form.object.status),
         {},
-        class: 'form-control-2025' %>
+        class: 'form-control' %>
   </div>
 
   <% if @restaurant %>
@@ -78,19 +78,19 @@
   <div class="d-flex justify-content-end gap-2 pt-3 border-top">
     <%= link_to t('common.cancel', default: 'Cancel'),
         edit_restaurant_path(tablesetting.restaurant, section: 'tables'),
-        class: 'btn-2025 btn-2025-ghost btn-2025-md',
+        class: 'btn btn-ghost',
         data: { turbo_frame: 'restaurant_content' } %>
 
     <% if tablesetting.persisted? %>
       <%= link_to t('common.delete'),
           restaurant_tablesetting_path(tablesetting.restaurant, tablesetting),
           method: :delete,
-          class: 'btn-2025 btn-2025-ghost btn-2025-md',
+          class: 'btn btn-ghost',
           data: { confirm: t('common.confirm') } %>
     <% end %>
 
     <%= form.submit t('common.save', default: 'Save'),
-        class: 'btn-2025 btn-2025-primary btn-2025-md',
+        class: 'btn btn-primary',
         disabled: !tablesetting.persisted?,
         data: { disable_until_valid: (!tablesetting.persisted?).to_s } %>
   </div>

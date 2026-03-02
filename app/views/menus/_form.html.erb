@@ -2,11 +2,11 @@
     <div class="row mb-3">
       <div class="col-12">
           <div class="float-end">
-            <div class="btn-group-2025" role="group">
+            <div class="btn-group" role="group">
               <div style='display:none'>
-                  <%= button_to 'Optimise Images', regenerate_images_restaurant_menu_path(@restaurant || @menu.restaurant, @menu), method: :post, class: 'btn-2025 btn-2025-secondary btn-2025-sm', data: { turbo: false, confirm: 'Regenerate WebP derivatives for existing images?' }, title: 'Regenerate WebP derivatives for existing menu item images' %>
+                  <%= button_to 'Optimise Images', regenerate_images_restaurant_menu_path(@restaurant || @menu.restaurant, @menu), method: :post, class: 'btn btn-outline-secondary btn-sm', data: { turbo: false, confirm: 'Regenerate WebP derivatives for existing images?' }, title: 'Regenerate WebP derivatives for existing menu item images' %>
               </div>
-              <%= button_to regenerate_images_restaurant_menu_path(@restaurant || @menu.restaurant, @menu, generate_ai: true), method: :post, class: 'btn-2025 btn-2025-secondary btn-2025-sm', data: { turbo: false }, form: { data: { turbo: false, ai_generate: true, menu_id: @menu.id } }, title: 'Generate new AI images for menu items using DALL-E' do %>
+              <%= button_to regenerate_images_restaurant_menu_path(@restaurant || @menu.restaurant, @menu, generate_ai: true), method: :post, class: 'btn btn-outline-secondary btn-sm', data: { turbo: false }, form: { data: { turbo: false, ai_generate: true, menu_id: @menu.id } }, title: 'Generate new AI images for menu items using DALL-E' do %>
                 <i class="bi bi-stars"></i> Generate Images
               <% end %>
             </div>
@@ -24,11 +24,11 @@
                     <% if menu.id %>
                     <span class="float-end">
                       <% if @menu.smartmenu&.slug %>
-                        <%= link_to smartmenu_path(@menu.smartmenu.slug), class: 'btn-2025 btn-2025-secondary btn-2025-sm', target: '_blank' do %>
+                        <%= link_to smartmenu_path(@menu.smartmenu.slug), class: 'btn btn-outline-secondary btn-sm', target: '_blank' do %>
                           <i class="bi bi-eye-fill"></i> Preview
                         <% end %>
                       <% else %>
-                        <button type="button" class="btn-2025 btn-2025-secondary btn-2025-sm" disabled>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" disabled>
                           <i class="bi bi-eye-fill"></i> Preview
                         </button>
                       <% end %>
@@ -185,9 +185,9 @@
     <div class="col-9">
         <div class="d-flex justify-content-end gap-3">
         <% if menu.persisted? %>
-          <%= link_to t('common.delete'), restaurant_menu_path(menu.restaurant, menu), method: :delete, class: "btn-2025 btn-2025-outline-danger btn-2025-md", data: { confirm: t('common.confirm') } %>
+          <%= link_to t('common.delete'), restaurant_menu_path(menu.restaurant, menu), method: :delete, class: "btn btn-outline-danger", data: { confirm: t('common.confirm') } %>
         <% end %>
-        <%= form.submit value: t('common.save'), class: 'btn-2025 btn-2025-primary btn-2025-md' %>
+        <%= form.submit value: t('common.save'), class: 'btn btn-primary' %>
         </div>
     </div>
   </div>

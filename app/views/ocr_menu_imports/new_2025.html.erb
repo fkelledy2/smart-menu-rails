@@ -43,46 +43,46 @@
       </div>
 
       <!-- Main Upload Card -->
-      <div class="card-2025 mb-4">
+      <div class="card-app mb-4">
         <%= form_with(model: [@restaurant, @ocr_menu_import],
                       local: true,
                       html: { class: 'needs-validation', novalidate: true, id: 'ocr-upload-form', data: { controller: 'ocr-upload' } }) do |f| %>
 
-          <div class="card-2025-body">
+          <div class="card-app-body">
             <!-- Menu Name Input -->
-            <div class="form-group-2025 mb-6">
-              <%= f.label :name, t('.name_label'), class: 'form-label-2025' %>
+            <div class="mb-4 mb-6">
+              <%= f.label :name, t('.name_label'), class: 'form-label' %>
               <%= f.text_field :name,
-                  class: 'form-control-2025',
+                  class: 'form-control',
                   placeholder: t('.name_placeholder'),
                   required: true,
                   data: { ocr_upload_target: 'nameInput' } %>
-              <div class="form-help-2025">
+              <div class="form-text">
                 <%= t('.name_help') %>
               </div>
             </div>
 
             <!-- Drag and Drop Upload Area -->
-            <div class="form-group-2025">
-              <%= f.label :pdf_file, t('.pdf_label'), class: 'form-label-2025' %>
+            <div class="mb-4">
+              <%= f.label :pdf_file, t('.pdf_label'), class: 'form-label' %>
 
               <!-- Drop Zone -->
-              <div class="upload-dropzone-2025"
+              <div class="upload-dropzone"
                    id="dropzone"
                    data-controller="dropzone">
 
                 <!-- Initial State -->
                 <div class="upload-dropzone-content" id="dropzone-default">
-                  <div class="upload-icon-2025">
+                  <div class="upload-icon">
                     <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2">
                       <path d="M24 4L24 32M24 4L14 14M24 4L34 14" stroke-linecap="round" stroke-linejoin="round" />
                       <rect x="8" y="32" width="32" height="10" rx="2" />
                     </svg>
                   </div>
-                  <h3 class="upload-title-2025">
+                  <h3 class="upload-title">
                     <%= t('.drop_title') %>
                   </h3>
-                  <p class="upload-subtitle-2025">
+                  <p class="upload-subtitle">
                     <%= t('.drop_subtitle') %>
                   </p>
                   <label for="pdf-file-input" class="btn btn-primary">
@@ -94,7 +94,7 @@
                       accept: 'application/pdf',
                       required: true,
                       data: { target: 'dropzone.fileInput', ocr_upload_target: 'fileInput' } %>
-                  <p class="upload-hint-2025 mt-3">
+                  <p class="upload-hint mt-3">
                     <%= t('.pdf_hint') %>
                   </p>
                 </div>
@@ -129,7 +129,7 @@
           </div>
 
           <!-- Actions -->
-          <div class="card-2025-footer">
+          <div class="card-app-footer">
             <div class="d-flex justify-content-between align-items-center">
               <div class="text-sm text-gray-500">
                 <i class="bi bi-clock"></i>
@@ -153,52 +153,52 @@
       </div>
 
       <!-- Tips & Best Practices -->
-      <div class="card-2025">
-        <div class="card-2025-header">
-          <h3 class="card-2025-title">
+      <div class="card-app">
+        <div class="card-app-header">
+          <h3 class="card-app-title">
             <i class="bi bi-lightbulb text-warning"></i>
             <%= t('.tips_title') %>
           </h3>
         </div>
-        <div class="card-2025-body">
+        <div class="card-app-body">
           <div class="space-y-4">
-            <div class="tip-item-2025">
-              <div class="tip-icon-2025 bg-success-light">
+            <div class="tip-item">
+              <div class="tip-icon bg-success-light">
                 <i class="bi bi-check-circle text-success"></i>
               </div>
               <div>
-                <h4 class="tip-title-2025">
+                <h4 class="tip-title">
                   <%= t('.tip_quality_title') %>
                 </h4>
-                <p class="tip-text-2025">
+                <p class="tip-text">
                   <%= t('.tip_quality_text') %>
                 </p>
               </div>
             </div>
 
-            <div class="tip-item-2025">
-              <div class="tip-icon-2025 bg-info-light">
+            <div class="tip-item">
+              <div class="tip-icon bg-info-light">
                 <i class="bi bi-layout-text-window text-info"></i>
               </div>
               <div>
-                <h4 class="tip-title-2025">
+                <h4 class="tip-title">
                   <%= t('.tip_format_title') %>
                 </h4>
-                <p class="tip-text-2025">
+                <p class="tip-text">
                   <%= t('.tip_format_text') %>
                 </p>
               </div>
             </div>
 
-            <div class="tip-item-2025">
-              <div class="tip-icon-2025 bg-primary-light">
+            <div class="tip-item">
+              <div class="tip-icon bg-primary-light">
                 <i class="bi bi-translate text-primary"></i>
               </div>
               <div>
-                <h4 class="tip-title-2025">
+                <h4 class="tip-title">
                   <%= t('.tip_language_title') %>
                 </h4>
-                <p class="tip-text-2025">
+                <p class="tip-text">
                   <%= t('.tip_language_text') %>
                 </p>
               </div>
@@ -214,7 +214,7 @@
 <!-- Styles for new components -->
 <style>
   /* Upload Dropzone */
-  .upload-dropzone-2025 {
+  .upload-dropzone {
     border: 2px dashed var(--color-gray-300);
     border-radius: var(--radius-lg);
     padding: var(--space-12);
@@ -224,12 +224,12 @@
     cursor: pointer;
   }
 
-  .upload-dropzone-2025:hover {
+  .upload-dropzone:hover {
     border-color: var(--color-primary);
     background-color: var(--color-primary-light);
   }
 
-  .upload-dropzone-2025.dragover {
+  .upload-dropzone.dragover {
     border-color: var(--color-primary);
     background-color: var(--color-primary-light);
     transform: scale(1.02);
@@ -242,38 +242,38 @@
     gap: var(--space-3);
   }
 
-  .upload-icon-2025 {
+  .upload-icon {
     color: var(--color-gray-400);
     margin-bottom: var(--space-2);
   }
 
-  .upload-title-2025 {
+  .upload-title {
     font-size: var(--text-lg);
     font-weight: var(--font-semibold);
     color: var(--color-gray-900);
     margin: 0;
   }
 
-  .upload-subtitle-2025 {
+  .upload-subtitle {
     font-size: var(--text-sm);
     color: var(--color-gray-500);
     margin: 0;
   }
 
-  .upload-hint-2025 {
+  .upload-hint {
     font-size: var(--text-xs);
     color: var(--color-gray-500);
     margin: 0;
   }
 
   /* Tip Items */
-  .tip-item-2025 {
+  .tip-item {
     display: flex;
     gap: var(--space-4);
     align-items-start;
   }
 
-  .tip-icon-2025 {
+  .tip-icon {
     width: 40px;
     height: 40px;
     border-radius: var(--radius-lg);
@@ -283,14 +283,14 @@
     flex-shrink: 0;
   }
 
-  .tip-title-2025 {
+  .tip-title {
     font-size: var(--text-base);
     font-weight: var(--font-semibold);
     color: var(--color-gray-900);
     margin: 0 0 var(--space-1) 0;
   }
 
-  .tip-text-2025 {
+  .tip-text {
     font-size: var(--text-sm);
     color: var(--color-gray-600);
     margin: 0;

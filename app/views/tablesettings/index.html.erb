@@ -21,12 +21,12 @@
         <% end %>
       <% end %>
 
-      <button id="unarchive-row" class="quick-action-btn btn-2025" disabled>
+      <button id="unarchive-row" class="quick-action-btn btn btn-ghost" disabled>
         <i class="bi bi-arrow-counterclockwise"></i>
         <span><%= t('.unarchive') %></span>
       </button>
 
-      <button id="archive-row" class="quick-action-btn btn-2025" disabled>
+      <button id="archive-row" class="quick-action-btn btn btn-ghost" disabled>
         <i class="bi bi-archive"></i>
         <span><%= t('.archive') %></span>
       </button>
@@ -34,7 +34,7 @@
   </div>
 
   <!-- Overview Card -->
-  <div class="content-card-2025 py-4 mb-4">
+  <div class="content-card py-4 mb-4">
     <h2 class="content-card-title">
       <i class="bi bi-layout-wtf"></i>
       <%= t('.tables_overview', default: 'Tables') %>
@@ -53,7 +53,7 @@
   </div>
 
   <!-- Table Container (Tabulator target) -->
-  <div class="content-card-2025">
+  <div class="content-card">
     <h2 class="content-card-title mb-3">
       <i class="bi bi-list-check"></i>
       <%= t('.table_settings') %>
@@ -99,11 +99,11 @@
                   <div class="card-body">
                     <h2 class="card-title">
                         <% if tablesetting.status == 'occupied' %>
-                            <div class="btn-2025 btn-2025-outline-danger btn-2025-lg">
+                            <div class="btn btn-outline-danger btn-lg">
                                 <h2><%= tablesetting.name %></h2>
                             </div>
                         <% else %>
-                            <%= link_to restaurant_tablesetting_path(@restaurant, tablesetting), class: 'btn-2025 btn-2025-primary btn-2025-lg' do %>
+                            <%= link_to restaurant_tablesetting_path(@restaurant, tablesetting), class: 'btn btn-primary btn-lg' do %>
                                 <h2><%= tablesetting.name %></h2>
                             <% end %>
                         <% end %>

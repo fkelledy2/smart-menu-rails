@@ -6,45 +6,45 @@
   <% end %>
 
   <!-- Name -->
-  <div class="form-group-2025 mb-4">
-    <%= form.label :name, class: 'form-label-2025' do %>
+  <div class="mb-4 mb-4">
+    <%= form.label :name, class: 'form-label' do %>
       <%= t('.name') %>
       <span class="text-danger">*</span>
     <% end %>
     <%= form.text_field :name,
-        class: 'form-control-2025',
+        class: 'form-control',
         placeholder: t('.name_placeholder'),
         required: true %>
-    <div class="form-help-2025">
+    <div class="form-text">
       <%= t('.name_help') %>
     </div>
   </div>
 
   <!-- Tax Type -->
-  <div class="form-group-2025 mb-4">
-    <%= form.label :taxtype, class: 'form-label-2025' do %>
+  <div class="mb-4 mb-4">
+    <%= form.label :taxtype, class: 'form-label' do %>
       <%= t('.tax_type') %>
       <span class="text-danger">*</span>
     <% end %>
     <%= form.select :taxtype,
         options_for_select(Tax.taxtypes.keys.to_a, form.object.taxtype),
         {},
-        class: 'form-control-2025',
+        class: 'form-control',
         required: true %>
-    <div class="form-help-2025">
+    <div class="form-text">
       <%= t('.tax_type_help') %>
     </div>
   </div>
 
   <!-- Tax Percentage -->
-  <div class="form-group-2025 mb-4">
-    <%= form.label :taxpercentage, class: 'form-label-2025' do %>
+  <div class="mb-4 mb-4">
+    <%= form.label :taxpercentage, class: 'form-label' do %>
       <%= t('.tax_percentage') %>
       <span class="text-danger">*</span>
     <% end %>
     <div class="input-group flex-nowrap">
       <%= form.number_field :taxpercentage,
-          class: 'form-control-2025',
+          class: 'form-control',
           placeholder: t('.tax_percentage_placeholder'),
           step: 0.01,
           min: 0,
@@ -52,7 +52,7 @@
           required: true %>
       <span class="input-group-text">%</span>
     </div>
-    <div class="form-help-2025">
+    <div class="form-text">
       <%= t('.tax_percentage_help') %>
     </div>
   </div>
@@ -79,7 +79,7 @@
         <%= link_to restaurant_tax_path(tax.restaurant, tax),
             method: :delete,
             data: { confirm: t('taxes.edit.confirm_delete', default: 'Are you sure?') },
-            class: 'btn-2025 btn-2025-ghost btn-2025-md text-danger' do %>
+            class: 'btn btn-ghost text-danger' do %>
           <i class="bi bi-trash"></i> <%= t('taxes.edit.delete', default: 'Delete') %>
         <% end %>
       <% end %>
@@ -88,19 +88,19 @@
     <div class="d-flex justify-content-end gap-2">
     <% if defined?(turbo_frame_request?) && turbo_frame_request? %>
       <%= link_to edit_restaurant_path(tax.restaurant, section: 'taxes_and_tips'),
-          class: 'btn-2025 btn-2025-ghost btn-2025-md',
+          class: 'btn btn-ghost',
           data: { turbo_frame: 'restaurant_content' } do %>
         <%= t('common.cancel') %>
       <% end %>
     <% else %>
       <%= link_to restaurant_taxes_path(tax.restaurant),
-          class: 'btn-2025 btn-2025-ghost btn-2025-md' do %>
+          class: 'btn btn-ghost' do %>
         <%= t('common.cancel') %>
       <% end %>
     <% end %>
 
     <%= form.submit t('common.save'),
-        class: 'btn-2025 btn-2025-primary btn-2025-md' %>
+        class: 'btn btn-primary' %>
     </div>
   </div>
 <% end %>

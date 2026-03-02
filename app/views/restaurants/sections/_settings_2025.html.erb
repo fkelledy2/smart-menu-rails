@@ -17,7 +17,7 @@
      data-settings-dependencies-mor-enabled-value="<%= restaurant_mor_selected %>">
 
 <div id="restaurant-settings-section"></div>
-<div class="content-card-2025">
+<div class="content-card">
   <h2 class="content-card-title">
     <i class="bi bi-credit-card"></i>
     <%= t('.payments', default: 'Payments') %>
@@ -172,7 +172,7 @@
 <!-- General Settings card removed: status managed via Quick Actions -->
 
 <!-- Feature Toggles -->
-<div class="content-card-2025">
+<div class="content-card">
   <h2 class="content-card-title">
     <i class="bi bi-sliders"></i>
     <%= t('.feature_toggles') %>
@@ -245,7 +245,7 @@
 
             <!-- Days of week -->
             <div class="mb-3">
-              <label class="form-label-2025"><%= t('.allowed_days') %></label>
+              <label class="form-label"><%= t('.allowed_days') %></label>
               <div class="d-flex flex-wrap gap-3" id="alcohol-days">
                 <% days = Array(I18n.t('date.abbr_day_names')) %>
                 <% selected_days = restaurant.alcohol_policy&.allowed_days_of_week || [] %>
@@ -260,7 +260,7 @@
 
             <!-- Time ranges -->
             <div class="mb-3">
-              <label class="form-label-2025"><%= t('.time_ranges') %></label>
+              <label class="form-label"><%= t('.time_ranges') %></label>
               <div id="alcohol-time-ranges" class="d-flex flex-column gap-2">
                 <% (restaurant.alcohol_policy&.allowed_time_ranges || []).each_with_index do |r, idx| %>
                   <div class="input-group" data-range-index="<%= idx %>">
@@ -277,7 +277,7 @@
 
             <!-- Blackout dates -->
             <div class="mb-3">
-              <label class="form-label-2025"><%= t('.blackout_dates') %></label>
+              <label class="form-label"><%= t('.blackout_dates') %></label>
               <input type="text" class="form-control" id="alcohol-blackouts" value="<%= (restaurant.alcohol_policy&.blackout_dates || []).map(&:to_s).join(', ') %>" placeholder="2025-12-25, 2025-01-01" />
             </div>
           </div>

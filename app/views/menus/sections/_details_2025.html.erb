@@ -322,15 +322,15 @@
   <% if read_only %>
     <div class="row g-4">
       <div class="col-md-12">
-        <div class="form-group-2025">
-          <div class="form-label-2025"><%= t('.menu_name') %></div>
+        <div class="mb-4">
+          <div class="form-label"><%= t('.menu_name') %></div>
           <div class="fw-semibold"><%= menu.name %></div>
         </div>
       </div>
 
       <div class="col-md-12">
-        <div class="form-group-2025">
-          <div class="form-label-2025"><%= t('.description') %></div>
+        <div class="mb-4">
+          <div class="form-label"><%= t('.description') %></div>
           <div class="text-muted"><%= menu.description.presence || '-' %></div>
         </div>
       </div>
@@ -339,29 +339,29 @@
     <%= menu_form_with(menu, auto_save: true) do |form| %>
       <div class="row g-4">
         <div class="col-md-12">
-          <div class="form-group-2025">
-            <%= form.label :name, class: 'form-label-2025' do %>
+          <div class="mb-4">
+            <%= form.label :name, class: 'form-label' do %>
               <%= t('.menu_name') %>
             <% end %>
             <%= form.text_field :name,
-                class: 'form-control-2025',
+                class: 'form-control',
                 placeholder: t('.menu_name_placeholder') %>
-            <div class="form-help-2025">
+            <div class="form-text">
               <%= t('.menu_name_help') %>
             </div>
           </div>
         </div>
 
         <div class="col-md-12">
-          <div class="form-group-2025">
-            <%= form.label :description, class: 'form-label-2025' do %>
+          <div class="mb-4">
+            <%= form.label :description, class: 'form-label' do %>
               <%= t('.description') %>
             <% end %>
             <%= form.text_area :description,
-                class: 'form-control-2025',
+                class: 'form-control',
                 rows: 4,
                 placeholder: t('.description_placeholder') %>
-            <div class="form-help-2025">
+            <div class="form-text">
               <%= t('.description_help') %>
             </div>
           </div>

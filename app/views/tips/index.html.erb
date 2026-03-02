@@ -21,13 +21,13 @@
     <div class="d-flex gap-2">
       <% if @futureParentRestaurant %>
         <%= link_to edit_restaurant_path(@futureParentRestaurant, section: 'catalog'),
-            class: 'btn-2025 btn-2025-ghost btn-2025-md' do %>
+            class: 'btn btn-ghost' do %>
           <i class="bi bi-arrow-left"></i> <%= t('.back') %>
         <% end %>
       <% end %>
 
       <%= link_to new_restaurant_tip_path(restaurant),
-          class: 'btn-2025 btn-2025-primary btn-2025-md' do %>
+          class: 'btn btn-primary' do %>
         <i class="bi bi-plus-circle"></i> <%= t('.new_tip') %>
       <% end %>
     </div>
@@ -35,7 +35,7 @@
 </div>
 
 <!-- Tips Table Card -->
-<div class="content-card-2025">
+<div class="content-card">
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h2 class="content-card-title mb-0">
       <i class="bi bi-list-ul"></i>
@@ -44,7 +44,7 @@
 
     <div class="btn-group" role="group">
       <button id="tip-actions" type="button"
-              class="btn-2025 btn-2025-ghost btn-2025-sm dropdown-toggle"
+              class="btn btn-ghost btn-sm dropdown-toggle"
               disabled
               data-bs-toggle="dropdown"
               aria-expanded="false">

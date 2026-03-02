@@ -30,7 +30,7 @@
 
       <div class="d-flex gap-2">
         <%= link_to restaurant_tips_path(@restaurant),
-            class: 'btn-2025 btn-2025-ghost btn-2025-md' do %>
+            class: 'btn btn-ghost' do %>
           <i class="bi bi-x-lg"></i> <%= t('.cancel') %>
         <% end %>
       </div>
@@ -40,7 +40,7 @@
 
 <!-- Form Card -->
 <%= turbo_frame_tag 'tips_new_tip' do %>
-  <div class="content-card-2025" data-skip-form-manager="true">
+  <div class="content-card" data-skip-form-manager="true">
     <h2 class="content-card-title">
       <i class="bi bi-cash-coin"></i>
       <%= t('.tip_details') %>

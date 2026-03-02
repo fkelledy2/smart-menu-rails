@@ -37,8 +37,16 @@
 @import 'utility';
 
 // ============================================
-// 2025 DESIGN SYSTEM
-// Modern, industry-standard components
+// BOOTSTRAP ENHANCEMENTS
+// Touch-friendly sizing, focus rings, btn-ghost
+// Must load AFTER Bootstrap, BEFORE 2025 system
+// ============================================
+@import 'components/bootstrap_enhancements';
+
+// ============================================
+// 2025 DESIGN SYSTEM (deprecated — migrating to Bootstrap)
+// These files will be removed once all views
+// are converted to Bootstrap equivalents.
 // ============================================
 @import 'design_system_2025';
 @import 'components/buttons_2025';

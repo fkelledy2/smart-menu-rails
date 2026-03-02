@@ -1,38 +1,23 @@
 namespace :uiux do
-  desc 'Fail if legacy 2025-only UI classes are present in *_2025.html.erb views'
+  desc 'Fail if legacy -2025 UI classes appear in views or JS'
   task lint: :environment do
-    patterns = [
-      /\bbtn-2025\b/,
-      /\bbadge-2025\b/,
-    ]
-
-    files = Rails.root.glob('app/views/**/*_2025.html.erb/*_2025.html.erb/**/*_2025.html.erb/*_2025.html.erb')
+    legacy_re = /[a-z]+-2025(?:-[a-z]+)*/
+    files = Rails.root.glob('app/views/**/*.html.erb') + Rails.root.glob('app/javascript/**/*.js')
     offenders = {}
-
     files.each do |path|
-      content = File.read(path)
-
-      # Ignore ERB and HTML comments so usage examples don't trip the lint.
-      content = content.gsub(/<%#.*?%>/m, '')
-      content = content.gsub(/<!--.*?-->/m, '')
-
-      # Ignore Ruby comment lines (e.g. usage examples inside `<% %>` blocks).
-      content = content.gsub(/^\s*#.*$/, '')
-      matches = patterns.grep(content).map(&:source)
-      next if matches.empty?
-
-      offenders[path] = matches
+      raw = File.read(path)
+      clean = raw.gsub(/<%#.*?%>/m, '').gsub(/<!--.*?-->/m, '').gsub(%r{//.*$}, '').gsub(/^\s*#.*$/, '')
+      found = clean.scan(legacy_re).uniq
+      offenders[path] = found if found.any?
     end
-
     if offenders.any?
-      message = +"uiux:lint failed. Found legacy 2025-only UI classes in *_2025 views:\n\n"
-      offenders.sort.each do |path, matches|
-        message << "- #{Pathname(path).relative_path_from(Rails.root)}: #{matches.join(', ')}\n"
+      msg = +"uiux:lint FAILED — found legacy -2025 classes:\n\n"
+      offenders.sort_by { |p, _| p.to_s }.each do |path, matches|
+        msg << "  #{Pathname(path).relative_path_from(Rails.root)}: #{matches.join(', ')}\n"
       end
-      message << "\nPlease migrate these to Bootstrap classes (btn btn-*, badge text-bg-*, etc.).\n"
-      abort(message)
+      msg << "\nMigrate to Bootstrap equivalents. See docs/features/todo/2026/design/ui-ux-unified-spec.md\n"
+      abort(msg)
     end
-
-    puts 'uiux:lint passed.'
+    puts 'uiux:lint passed — no legacy -2025 classes found.'
   end
 end

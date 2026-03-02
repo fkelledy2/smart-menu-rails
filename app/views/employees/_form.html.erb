@@ -5,28 +5,28 @@
     <%= form.hidden_field :restaurant_id %>
   <% end %>
 
-  <div class="form-group-2025 mb-4">
-    <%= form.label :name, class: 'form-label-2025' do %>
+  <div class="mb-4 mb-4">
+    <%= form.label :name, class: 'form-label' do %>
       <%= t('.name', default: 'Name') %>
       <span class="text-danger">*</span>
     <% end %>
     <%= form.text_field :name,
-        class: 'form-control-2025',
+        class: 'form-control',
         required: true %>
   </div>
 
-  <div class="form-group-2025 mb-4">
-    <%= form.label :eid, class: 'form-label-2025' do %>
+  <div class="mb-4 mb-4">
+    <%= form.label :eid, class: 'form-label' do %>
       <%= t('.eid', default: 'Id') %>
       <span class="text-danger">*</span>
     <% end %>
     <%= form.text_field :eid,
-        class: 'form-control-2025',
+        class: 'form-control',
         required: true %>
   </div>
 
-  <div class="form-group-2025 mb-4">
-    <%= form.label :user_id, class: 'form-label-2025' do %>
+  <div class="mb-4 mb-4">
+    <%= form.label :user_id, class: 'form-label' do %>
       <%= t('.user', default: 'User') %>
       <span class="text-danger">*</span>
     <% end %>
@@ -35,29 +35,29 @@
         :id,
         :email,
         { prompt: t('.selectUser') },
-        { class: 'form-control-2025', required: true } %>
+        { class: 'form-control', required: true } %>
   </div>
 
-  <div class="form-group-2025 mb-4">
-    <%= form.label :role, class: 'form-label-2025' do %>
+  <div class="mb-4 mb-4">
+    <%= form.label :role, class: 'form-label' do %>
       <%= t('.role', default: 'Role') %>
       <span class="text-danger">*</span>
     <% end %>
     <%= form.select :role,
         options_for_select(Employee.roles.keys.to_a, form.object.role),
         { include_blank: true },
-        class: 'form-control-2025',
+        class: 'form-control',
         required: true %>
   </div>
 
-  <div class="form-group-2025 mb-4">
-    <%= form.label :status, class: 'form-label-2025' do %>
+  <div class="mb-4 mb-4">
+    <%= form.label :status, class: 'form-label' do %>
       <%= t('.status', default: 'Status') %>
     <% end %>
     <%= form.select :status,
         options_for_select(Employee.statuses.keys.to_a, form.object.status),
         {},
-        class: 'form-control-2025' %>
+        class: 'form-control' %>
   </div>
 
   <% if employee.errors.any? %>
@@ -78,23 +78,23 @@
     <% if employee.persisted? %>
       <%= link_to t('common.cancel', default: 'Cancel'),
           edit_restaurant_path(employee.restaurant, section: 'staff'),
-          class: 'btn-2025 btn-2025-ghost btn-2025-md',
+          class: 'btn btn-ghost',
           data: { turbo_frame: 'restaurant_content' } %>
 
       <%= link_to t('common.delete'),
           restaurant_employee_path(employee.restaurant, employee),
           method: :delete,
-          class: 'btn-2025 btn-2025-outline-danger btn-2025-md',
+          class: 'btn btn-outline-danger',
           data: { confirm: t('common.confirm') } %>
     <% else %>
       <%= link_to t('common.cancel', default: 'Cancel'),
           edit_restaurant_path(employee.restaurant, section: 'staff'),
-          class: 'btn-2025 btn-2025-ghost btn-2025-md',
+          class: 'btn btn-ghost',
           data: { turbo_frame: 'restaurant_content' } %>
     <% end %>
 
     <%= form.submit t('common.save', default: 'Save'),
-        class: 'btn-2025 btn-2025-primary btn-2025-md',
+        class: 'btn btn-primary',
         disabled: !employee.persisted?,
         data: { disable_until_valid: (!employee.persisted?).to_s } %>
   </div>

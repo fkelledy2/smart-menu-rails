@@ -6,7 +6,7 @@
   <div class="col-6 text-end">
     <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
       <div class="btn-group" role="group">
-        <button id="restaurant-actions" type="button" class="btn-2025 btn-2025-secondary btn-2025-sm dropdown-toggle" disabled data-bs-toggle="dropdown" aria-expanded="false">
+        <button id="restaurant-actions" type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" disabled data-bs-toggle="dropdown" aria-expanded="false">
           <%= t('common.actions') %>
         </button>
         <ul class="dropdown-menu" aria-labelledby="restaurant-actions">
@@ -15,7 +15,7 @@
         </ul>
       </div>
       <% if @canAddRestaurant == true %>
-        <%= link_to new_restaurant_path, class: 'btn-2025 btn-2025-primary btn-2025-md' do %>
+        <%= link_to new_restaurant_path, class: 'btn btn-primary' do %>
           <i class="bi bi-plus"></i> <%= t(".restaurant") rescue "New Restaurant" %>
         <% end %>
       <% end %>

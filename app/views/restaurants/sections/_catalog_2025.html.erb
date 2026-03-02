@@ -40,14 +40,14 @@
     <div class="catalog-grid">
     </div>
 
-    <div class="count-panel-2025 mt-3">
-      <div class="count-panel-item-2025">
-        <div class="count-panel-value-2025"><%= restaurant.taxes.where(archived: false).where.not(status: :archived).count %></div>
-        <div class="count-panel-label-2025"><%= t('.total_taxes', default: 'Total taxes') %></div>
+    <div class="count-panel mt-3">
+      <div class="count-panel-item">
+        <div class="count-panel-value"><%= restaurant.taxes.where(archived: false).where.not(status: :archived).count %></div>
+        <div class="count-panel-label"><%= t('.total_taxes', default: 'Total taxes') %></div>
       </div>
-      <div class="count-panel-item-2025">
-        <div class="count-panel-value-2025"><%= restaurant.tips.where(archived: false).where.not(status: :archived).count %></div>
-        <div class="count-panel-label-2025"><%= t('.total_tips', default: 'Total tips') %></div>
+      <div class="count-panel-item">
+        <div class="count-panel-value"><%= restaurant.tips.where(archived: false).where.not(status: :archived).count %></div>
+        <div class="count-panel-label"><%= t('.total_tips', default: 'Total tips') %></div>
       </div>
     </div>
 </div>

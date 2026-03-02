@@ -144,7 +144,7 @@ export default class extends Controller {
   updateStatus(text, className) {
     if (this.hasStatusTarget) {
       this.statusTarget.textContent = text
-      this.statusTarget.className = `form-autosave-2025 ${className}`
+      this.statusTarget.className = `form-autosave ${className}`
     }
   }
   
@@ -155,26 +155,26 @@ export default class extends Controller {
     if (!indicator) {
       indicator = document.createElement('div')
       indicator.id = 'auto-save-indicator'
-      indicator.className = 'form-autosave-2025'
+      indicator.className = 'form-autosave'
       document.body.appendChild(indicator)
     }
     
     if (state === 'saving') {
       indicator.textContent = 'Saving...'
-      indicator.className = 'form-autosave-2025 saving'
+      indicator.className = 'form-autosave saving'
     } else if (state === 'saved') {
       indicator.textContent = 'Saved'
-      indicator.className = 'form-autosave-2025 saved'
+      indicator.className = 'form-autosave saved'
     } else if (state === 'error') {
       indicator.textContent = 'Save failed'
-      indicator.className = 'form-autosave-2025 error'
+      indicator.className = 'form-autosave error'
     }
   }
   
   hideIndicator() {
     const indicator = document.getElementById('auto-save-indicator')
     if (indicator) {
-      indicator.className = 'form-autosave-2025'
+      indicator.className = 'form-autosave'
     }
   }
   

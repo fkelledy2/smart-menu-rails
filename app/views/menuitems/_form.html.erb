@@ -32,7 +32,7 @@
     <% end %>
   </div>
 
-  <div class="form-with-sticky-actions-2025" data-menuitem-form-root>
+  <div class="form-with-sticky-actions" data-menuitem-form-root>
     <% if menuitem.errors.any? %>
       <div class="alert alert-danger mb-4">
         <div class="fw-semibold mb-2"><%= t('common.errors') %></div>
@@ -291,7 +291,7 @@
                       end
                     end
                   %>
-                  <%= image_tag image_src, class: 'menuitem-image-preview-2025 mb-3', alt: menuitem.name %>
+                  <%= image_tag image_src, class: 'menuitem-image-preview mb-3', alt: menuitem.name %>
                 <% else %>
                   <div class="menuitem-image-placeholder mb-3">
                     <i class="bi bi-image"></i>
@@ -313,7 +313,7 @@
                 <%= form.hidden_field :image, value: form.object.cached_image_data, id: nil %>
                 <div class="d-flex gap-2 align-items-start">
                   <%= form.file_field :image, multiple: false, accept: 'image/*', class: 'form-control', id: 'menuitem_image' %>
-                  <button type="button" class="btn-2025 btn-2025-secondary btn-2025-md flex-shrink-0"
+                  <button type="button" class="btn btn-outline-secondary flex-shrink-0"
                           data-camera-capture-target="openBtn"
                           data-action="click->camera-capture#open">
                     <i class="bi bi-camera"></i> <span class="d-none d-sm-inline"><%= t('.take_photo', default: 'Take Photo') %></span>
@@ -390,7 +390,7 @@
                     initial_image_url = (menuitem.webp_url(:medium) || menuitem.medium_url || menuitem.image_url)
                   %>
                   <%= link_to '#',
-                      class: 'btn-2025 btn-2025-secondary btn-2025-md',
+                      class: 'btn btn-outline-secondary',
                       data: {
                         turbo: false,
                         action: 'click->ai-image-generator#open',

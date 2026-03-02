@@ -27,7 +27,7 @@
 
     <div class="d-flex gap-2">
       <%= link_to edit_restaurant_path(@menu.restaurant, section: 'menus'),
-          class: 'btn-2025 btn-2025-ghost btn-2025-md' do %>
+          class: 'btn btn-ghost' do %>
         <i class="bi bi-x-lg"></i> <%= t('.cancel', default: 'Cancel') %>
       <% end %>
     </div>
@@ -35,7 +35,7 @@
 </div>
 
 <!-- Form Card -->
-<div class="content-card-2025">
+<div class="content-card">
   <h2 class="content-card-title">
     <i class="bi bi-menu-button-wide"></i>
     <%= t('.menu_details', default: 'Menu Details') %>
