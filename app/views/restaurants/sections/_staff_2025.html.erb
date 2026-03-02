@@ -180,13 +180,13 @@
                     </span>
                   </td>
                   <td class="text-end">
-                    <%= link_to edit_restaurant_employee_path(restaurant, employee),
-                        class: 'd-inline-flex align-items-center justify-content-end text-decoration-none link-secondary',
-                        title: t('.edit'),
-                        aria: { label: t('.edit') },
-                        data: { turbo_frame: 'staff_edit_employee', row_primary_link: true } do %>
-                      <i class="bi bi-chevron-right"></i>
-                    <% end %>
+                    <%= render 'shared/actions_dropdown',
+                        aria_label: t('.actions', default: 'Actions'),
+                        button_class: 'btn btn-sm btn-outline-secondary',
+                        items: [
+                          { label: t('.edit', default: 'Edit'), href: edit_restaurant_employee_path(restaurant, employee), data: { turbo_frame: 'staff_edit_employee' } },
+                          { label: t('.remove', default: 'Remove'), href: restaurant_employee_path(restaurant, employee), method: :delete, class: 'text-danger', data: { turbo_confirm: t('.remove_confirm', default: 'Remove this staff member?') } }
+                        ] %>
                   </td>
                 </tr>
               <% end %>

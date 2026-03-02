@@ -151,6 +151,14 @@
       <% end %>
     </div>
   </div>
+<% else %>
+  <%= render(EmptyStateComponent.new(
+    title: t('.no_sizes', default: 'No sizes'),
+    description: t('.no_sizes_description', default: 'Add sizes to let customers choose portion options for menu items.'),
+    icon: 'bi-rulers',
+    action_text: t('.add_size', default: 'Add Size'),
+    action_url: new_restaurant_size_path(restaurant)
+  )) %>
 <% end %>
 
 <style>

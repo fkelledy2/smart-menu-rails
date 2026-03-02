@@ -15,10 +15,10 @@
     <div>
       <strong>Unclaimed restaurant</strong>
       <% if @restaurant.preview_enabled? %>
-        — <span class="badge bg-success">Preview Live</span>
+        — <span class="badge text-bg-success">Preview Live</span>
         <small class="text-muted">since <%= @restaurant.preview_published_at&.strftime('%b %d, %Y') %></small>
       <% else %>
-        — <span class="badge bg-secondary">Preview Off</span>
+        — <span class="badge text-bg-secondary">Preview Off</span>
       <% end %>
     </div>
     <%= button_to publish_preview_restaurant_path(@restaurant),

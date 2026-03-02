@@ -32,11 +32,11 @@
         <div class="d-flex align-items-center gap-2 flex-wrap mt-2">
           <!-- Status Badge -->
           <% if @menuitem.active? %>
-            <span class="badge bg-success"><i class="bi bi-check-circle"></i> <%= t('.active', default: 'Active') %></span>
+            <span class="badge text-bg-success"><i class="bi bi-check-circle"></i> <%= t('.active', default: 'Active') %></span>
           <% elsif @menuitem.archived? %>
-            <span class="badge bg-danger"><i class="bi bi-archive"></i> <%= t('.archived', default: 'Archived') %></span>
+            <span class="badge text-bg-danger"><i class="bi bi-archive"></i> <%= t('.archived', default: 'Archived') %></span>
           <% else %>
-            <span class="badge bg-warning text-dark"><i class="bi bi-pause-circle"></i> <%= t('.inactive_status', default: 'Inactive') %></span>
+            <span class="badge text-bg-warning"><i class="bi bi-pause-circle"></i> <%= t('.inactive_status', default: 'Inactive') %></span>
           <% end %>
 
           <!-- Itemtype Badge -->
@@ -51,7 +51,7 @@
 
           <!-- Price -->
           <% if @menuitem.price.to_f > 0 %>
-            <span class="badge bg-light text-dark border">
+            <span class="badge text-bg-light border">
               <i class="bi bi-currency-exchange"></i> <%= number_to_currency(@menuitem.price, unit: restaurant.currency || '$') %>
             </span>
           <% end %>

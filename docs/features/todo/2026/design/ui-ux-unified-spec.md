@@ -102,13 +102,42 @@ This document merges the **UI/UX Upgrade Spec** (flow-by-flow redesign) and the 
 #### 4.1a Define & Document UI Standards
 
 - [x] **Button mapping** _(done 2026-03-02)_: 97 usages migrated. See `_bootstrap_enhancements.scss` for `btn-ghost` and touch-friendly sizing.
-- [ ] **Badge mapping**: Replace `badge-2025-*` with Bootstrap `badge text-bg-*`. Define domain status -> Bootstrap variant mapping (e.g., active=success, inactive=secondary, archived=dark, pending=warning).
-- [ ] **Dropdown actions**: Standardise on Bootstrap dropdown with 3-dot trigger for row-level actions. Bulk actions dropdown enables when selections are made.
+- [x] **Badge mapping** _(done 2026-03-02)_: All `badge bg-*` migrated to `badge text-bg-*` across 9 management views. Subtle variants use `bg-*-subtle text-*`. Domain mapping: active=`text-bg-success`, inactive=`text-bg-warning`, archived=`text-bg-danger`, info/metadata=`bg-primary-subtle text-primary` or `bg-secondary-subtle text-secondary`, lock/disabled=`text-bg-warning`, count=`text-bg-secondary`.
+- [x] **Dropdown actions** _(done 2026-03-02)_: All row-level actions in items, sections, staff, and menus tables now use `shared/_actions_dropdown.html.erb` with 3-dot `bi-three-dots` trigger. Each dropdown includes Edit + contextual destructive action (Archive/Remove/Detach). Bulk actions remain as `<select>` dropdowns in table headers.
 - [x] **Form controls** _(done 2026-03-02)_: 29 `form-control-2025`, 35 `form-label-2025`, 33 `form-group-2025`, 22 `form-help-2025` migrated to Bootstrap equivalents.
-- [ ] **Row-level status visualization**: Use `row-status-active`, `row-status-inactive`, `row-status-archived` consistently. Background + badge, not opacity alone.
-- [ ] **Navigation rules**: Document when to use clickable-row vs explicit link vs new-tab. Clickable rows must not interfere with checkboxes, drag handles, or dropdowns.
-- [ ] **Confirmation UX**: Pick one mechanism (Turbo confirm or modal) per context and document.
-- [ ] **Empty states**: Use `EmptyStateComponent` everywhere — illustration + description + primary CTA.
+- [x] **Row-level status visualization** _(done 2026-03-02)_: `row-status-active` (green bg + green dot), `row-status-inactive` (gray bg + gray dot), `row-status-archived` (red bg + red dot). Opacity removed — background + CSS pseudo-element dot indicator only. Defined in `design_system_2025.scss`.
+- [x] **Navigation rules** _(done 2026-03-02)_: Documented below in §4.1d.
+- [x] **Confirmation UX** _(done 2026-03-02)_: Documented below in §4.1d.
+- [x] **Empty states** _(done 2026-03-02)_: `EmptyStateComponent` used in items, sections, menus, staff, tables, allergens, sizes, localization, and versions. Each includes icon + title + description + optional CTA.
+
+#### 4.1d Navigation & Confirmation Rules (documented 2026-03-02)
+
+**Navigation patterns:**
+
+| Context | Pattern | Example |
+|---|---|---|
+| Table row → edit page | `clickable-row` with `data-href` + `data-turbo-frame` | Menus, staff, tables, allergens, localization |
+| Row action (single) | 3-dot `_actions_dropdown` partial | Items, sections, staff, menus |
+| Row action → inline edit | `data-action="click->inline-edit#edit"` on cell | Item name/price in items table |
+| Section → new page | `link_to` with `turbo_frame: '_top'` | Breadcrumb "Back to Items" |
+| Sidebar → section swap | `turbo_frame: 'restaurant_content'` | Restaurant sidebar links |
+| New tab | Never used in management views | — |
+
+**Rules:**
+- Clickable rows must not fire when clicking checkboxes, drag handles, or dropdowns (handled by `clickable_row_controller.js`).
+- Primary row navigation is via `clickable-row`; the 3-dot dropdown provides Edit + destructive action.
+- Inline edit (`inline_edit_controller.js`) takes precedence over clickable-row on editable cells.
+
+**Confirmation patterns:**
+
+| Context | Mechanism | Example |
+|---|---|---|
+| Single-item destructive action | `data-turbo-confirm` on link/button | Archive item, remove staff, detach menu |
+| Bulk destructive action | Bootstrap modal via Stimulus controller | Bulk archive items/sections |
+| Status toggle (reversible) | No confirmation needed | Activate/deactivate menu |
+| Account-level destructive action | Bootstrap modal with explicit confirmation text | Delete restaurant (future) |
+
+**Rule:** `turbo_confirm` is the default for row-level destructive actions. Bootstrap modals are used only when the action affects multiple items or requires extra input (e.g., selecting a status value for bulk update).
 
 #### 4.1b CI Guardrails
 

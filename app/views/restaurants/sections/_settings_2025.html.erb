@@ -238,7 +238,7 @@
           <div class="mt-3">
             <!-- Status preview -->
             <div class="mb-3">
-              <span id="alcohol-policy-status" class="badge <%= restaurant.alcohol_allowed_now? ? 'bg-success' : 'bg-secondary' %>">
+              <span id="alcohol-policy-status" class="badge <%= restaurant.alcohol_allowed_now? ? 'text-bg-success' : 'text-bg-secondary' %>">
                 <%= restaurant.alcohol_allowed_now? ? t('.allowed_now') : t('.blocked_now') %>
               </span>
             </div>

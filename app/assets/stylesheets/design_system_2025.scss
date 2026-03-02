@@ -220,9 +220,38 @@
   }
 }
 
+// Row status dot indicators — colored dot on first cell's left edge
+[class*="row-status-"] > td:first-child,
+[class*="row-status-"] > *:first-child {
+  position: relative;
+}
+[class*="row-status-"] > td:first-child::before,
+[class*="row-status-"] > *:first-child::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  position: absolute;
+  left: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.row-status-active > td:first-child::before,
+.row-status-active > *:first-child::before {
+  background-color: var(--bs-success, #198754);
+}
+.row-status-inactive > td:first-child::before,
+.row-status-inactive > *:first-child::before {
+  background-color: var(--bs-secondary, #6c757d);
+}
+.row-status-archived > td:first-child::before,
+.row-status-archived > *:first-child::before {
+  background-color: var(--bs-danger, #dc3545);
+}
+
 .clickable-row.row-status-inactive {
   background-color: var(--color-gray-50) !important;
-  opacity: 0.8;
 }
 
 .clickable-row.row-status-active {
@@ -264,7 +293,6 @@
 
 .clickable-row.row-status-archived {
   background-color: rgba(239, 68, 68, 0.10) !important;
-  opacity: 0.75;
 }
 
 .table tbody tr.clickable-row.row-status-archived > * {

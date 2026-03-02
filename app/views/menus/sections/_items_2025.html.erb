@@ -114,7 +114,7 @@
                         <i class="bi bi-layout-text-sidebar"></i>
                         <%= section.name %>
                       </strong>
-                      <span class="badge bg-secondary ms-2"><%= t('.items_count', count: section_items.count) %></span>
+                      <span class="badge text-bg-secondary ms-2"><%= t('.items_count', count: section_items.count) %></span>
                       <% if section.tasting_menu? %>
                         <%
                           currency_symbols = {
@@ -127,7 +127,7 @@
                           sym = currency_symbols[restaurant.currency] || restaurant.currency || '$'
                           tasting_amount = (section.tasting_price_cents.to_i / 100.0)
                         %>
-                        <span class="badge bg-warning text-dark ms-2">
+                        <span class="badge text-bg-warning ms-2">
                           <i class="bi bi-award"></i>
                           <%= t('.tasting_menu') %>
                           <% if section.tasting_price_cents.present? %>
@@ -253,13 +253,13 @@
 
                         <% unless read_only %>
                           <div class="mt-1">
-                            <%= link_to edit_restaurant_menu_menusection_menuitem_path(restaurant, menu, section, item),
-                                        class: 'd-inline-flex align-items-center justify-content-end text-decoration-none link-secondary',
-                                        title: t('.edit'),
-                                        aria: { label: t('.edit') },
-                                        data: { turbo_frame: '_top', testid: "edit-item-#{item.id}-btn" } do %>
-                              <i class="bi bi-chevron-right"></i>
-                            <% end %>
+                            <%= render 'shared/actions_dropdown',
+                                aria_label: t('.actions', default: 'Actions'),
+                                button_class: 'btn btn-sm btn-outline-secondary',
+                                items: [
+                                  { label: t('.edit', default: 'Edit'), href: edit_restaurant_menu_menusection_menuitem_path(restaurant, menu, section, item), data: { turbo_frame: '_top', testid: "edit-item-#{item.id}-btn" } },
+                                  { label: t('.archive', default: 'Archive'), href: restaurant_menu_menusection_menuitem_path(restaurant, menu, section, item, menuitem: { status: :archived }), method: :patch, class: 'text-danger', data: { turbo_confirm: t('.archive_single_confirm', default: 'Archive this item?') } }
+                                ] %>
                           </div>
                         <% end %>
                       </td>

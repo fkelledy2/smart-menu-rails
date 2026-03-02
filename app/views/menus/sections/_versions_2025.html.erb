@@ -106,7 +106,12 @@ end %>
   </h3>
 
   <% if versions.empty? %>
-    <p class="text-muted mb-0"><%= t('.no_versions', default: 'No versions yet.') %></p>
+    <%= render(EmptyStateComponent.new(
+      title: t('.no_versions', default: 'No versions yet'),
+      description: t('.no_versions_desc', default: 'Versions are created automatically when you publish changes.'),
+      icon: 'bi-clock-history',
+      compact: true
+    )) %>
   <% else %>
     <div class="d-flex flex-column gap-2">
       <% versions.each do |v| %>
@@ -118,9 +123,9 @@ end %>
                 <div class="d-flex align-items-center gap-2 flex-wrap">
                   <div class="fw-semibold">v<%= v.version_number %></div>
                   <% if is_active %>
-                    <span class="badge bg-success"><%= t('.active_now', default: 'Active now') %></span>
+                    <span class="badge text-bg-success"><%= t('.active_now', default: 'Active now') %></span>
                   <% elsif v.is_active %>
-                    <span class="badge bg-secondary"><%= t('.default_active', default: 'Default active') %></span>
+                    <span class="badge text-bg-secondary"><%= t('.default_active', default: 'Default active') %></span>
                   <% end %>
                 </div>
 

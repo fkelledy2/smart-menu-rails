@@ -32,17 +32,17 @@
         <div class="d-flex align-items-center gap-3 mt-2">
           <!-- Status Badge -->
           <% if @menu.active? %>
-            <span class="badge bg-success">
+            <span class="badge text-bg-success">
               <i class="bi bi-check-circle"></i> <%= t('.active', default: 'Active') %>
             </span>
           <% else %>
-            <span class="badge bg-warning text-dark">
+            <span class="badge text-bg-warning">
               <i class="bi bi-pencil"></i> <%= t('.inactive', default: 'Inactive') %>
             </span>
           <% end %>
 
           <% if read_only %>
-            <span class="badge bg-secondary">
+            <span class="badge text-bg-secondary">
               <i class="bi bi-lock"></i> <%= t('.read_only', default: 'Read-only') %>
             </span>
           <% end %>

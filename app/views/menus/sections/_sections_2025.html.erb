@@ -132,13 +132,13 @@
 									</td>
 									<% unless read_only %>
 										<td class="text-end">
-											<%= link_to edit_restaurant_menu_menusection_path(restaurant, menu, section),
-														class: 'd-inline-flex align-items-center justify-content-end text-decoration-none link-secondary',
-													title: t('.edit'),
-													aria: { label: t('.edit') },
-													data: { turbo_frame: '_top', testid: "edit-menusection-#{section.id}-btn" } do %>
-												<i class="bi bi-chevron-right"></i>
-											<% end %>
+											<%= render 'shared/actions_dropdown',
+													aria_label: t('.actions', default: 'Actions'),
+													button_class: 'btn btn-sm btn-outline-secondary',
+													items: [
+														{ label: t('.edit', default: 'Edit'), href: edit_restaurant_menu_menusection_path(restaurant, menu, section), data: { turbo_frame: '_top', testid: "edit-menusection-#{section.id}-btn" } },
+														{ label: t('.archive', default: 'Archive'), href: restaurant_menu_menusection_path(restaurant, menu, section, menusection: { status: :archived }), method: :patch, class: 'text-danger', data: { turbo_confirm: t('.archive_single_confirm', default: 'Archive this section?') } }
+													] %>
 										</td>
 									<% end %>
 								</tr>

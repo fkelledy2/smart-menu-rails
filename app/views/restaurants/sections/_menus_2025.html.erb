@@ -209,7 +209,7 @@
                 <div class="d-flex align-items-center gap-2 flex-wrap">
                   <div class="fw-semibold"><%= menu.name %></div>
                   <% unless owner_restaurant_id == restaurant.id %>
-                    <span class="badge bg-light text-primary menu-origin-badge">
+                    <span class="badge bg-primary-subtle text-primary menu-origin-badge">
                       <i class="bi bi-link-45deg"></i>
                       <%= t('.shared') %>
                     </span>
@@ -246,23 +246,18 @@
                 </td>
               <% end %>
               <td class="text-end">
-                <div class="d-flex justify-content-end align-items-center gap-2">
-                  <% unless owner_restaurant_id == restaurant.id %>
-                    <%= button_to t('.detach'),
-                        detach_restaurant_menu_path(restaurant, menu),
-                        method: :delete,
-                        form: { data: { turbo_frame: '_top' } },
-                        class: 'btn btn-sm btn-outline-secondary' %>
-                  <% end %>
-
-                  <%= link_to edit_restaurant_menu_path(restaurant, menu),
-                      class: 'd-inline-flex align-items-center justify-content-end text-decoration-none link-secondary',
-                      title: t('.edit'),
-                      aria: { label: t('.edit') },
-                      data: { row_primary_link: true, turbo_frame: '_top' } do %>
-                    <i class="bi bi-chevron-right"></i>
-                  <% end %>
-                </div>
+                <%
+                  menu_actions = [
+                    { label: t('.edit', default: 'Edit'), href: edit_restaurant_menu_path(restaurant, menu), data: { turbo_frame: '_top' } }
+                  ]
+                  unless owner_restaurant_id == restaurant.id
+                    menu_actions << { label: t('.detach', default: 'Detach'), href: detach_restaurant_menu_path(restaurant, menu), method: :delete, class: 'text-danger', data: { turbo_confirm: t('.detach_confirm', default: 'Detach this shared menu?'), turbo_frame: '_top' } }
+                  end
+                %>
+                <%= render 'shared/actions_dropdown',
+                    aria_label: t('.actions', default: 'Actions'),
+                    button_class: 'btn btn-sm btn-outline-secondary',
+                    items: menu_actions %>
               </td>
             </tr>
           <% end %>
@@ -300,7 +295,7 @@
                 <div class="fw-semibold d-flex align-items-center gap-2">
                   <span class="menu-name"><%= menu.name %></span>
                   <% unless owner_restaurant_id == restaurant.id %>
-                    <span class="badge bg-light text-primary menu-origin-badge">
+                    <span class="badge bg-primary-subtle text-primary menu-origin-badge">
                       <i class="bi bi-link-45deg"></i>
                       <%= t('.shared') %>
                     </span>
