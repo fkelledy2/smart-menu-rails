@@ -1,0 +1,25 @@
+---
+en_US:
+  staff_invitations:
+    accept_failed: replace_me
+    accepted: replace_me
+    already_accepted: replace_me
+    already_invited: replace_me
+    already_staff: replace_me
+    cancel: replace_me
+    email_label: replace_me
+    expired: replace_me
+    expires: replace_me
+    invite_title: replace_me
+    invited_on: replace_me
+    no_pending: replace_me
+    not_found: replace_me
+    pending_invitations: replace_me
+    revoke: replace_me
+    revoked: replace_me
+    role_admin: replace_me
+    role_label: replace_me
+    role_manager: replace_me
+    role_staff: replace_me
+    send_invite: replace_me
+    sent: replace_me

@@ -1,6 +1,19 @@
 ---
 en_US:
   tablesettings:
+    bulk_create_form:
+      auto_detect_hint: replace_me
+      cancel: replace_me
+      capacity: replace_me
+      count: replace_me
+      count_hint: replace_me
+      create_tables: replace_me
+      indoor: replace_me
+      outdoor: replace_me
+      prefix: replace_me
+      prefix_hint: replace_me
+      table_type: replace_me
+      title: replace_me
     controller:
       created: ''
       deleted: ''

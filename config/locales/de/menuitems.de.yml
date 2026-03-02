@@ -23,6 +23,7 @@ de:
       alcoholic_help: Prüfen Sie, ob dieser Artikel Alkohol enthält.
       allergens: Allergene
       available_sizes: Verfügbare Größen
+      capture: Erfassen Sie
       classification_beer: Bier
       classification_cocktail: Cocktail
       classification_help: Wählen Sie eine Kategorie. Verwenden Sie non_alcoholic
@@ -42,10 +43,12 @@ de:
       hidden: Versteckt (wird nicht im Smartmenü angezeigt)
       imageSettings: Bildeinstellungen
       no_image: Noch kein Bild
+      retake: Wiederholung
       save: Speichern
       settings: Einstellungen
       sizes_heading: Größen
       sure: Sind Sie sicher?
+      take_photo: Foto aufnehmen
       tasting_carrier: Verwendung als Verkostungsträger
       tasting_carrier_help: Nur ein Träger pro Verkostungsabschnitt. Trägerartikel
         werden automatisch ausgeblendet.
@@ -60,6 +63,7 @@ de:
         Betrag für Zusatzpreise ein.
       'true': wahr
       update: Aktualisieren
+      use_photo: Foto verwenden
       variantPricing: Variante Preisgestaltung
       visibility: Sichtbarkeit
     index:

@@ -179,6 +179,8 @@ en:
         website: Website
         website_help: Your restaurant website
         website_placeholder: https://example.com
+      staff_2025:
+        invite_staff: Invite Staff
     show:
       address: Address
       billing_content: Billing configuration will appear here.

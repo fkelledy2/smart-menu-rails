@@ -110,6 +110,7 @@ en:
       excluding_tip: excl. tip
       filterAllergyns: Filter Allergens
       filterBy: Filter
+      full_capacity: Full
       including_tip: incl. tip
       item: Item
       name_label: 'Name:'
@@ -117,10 +118,15 @@ en:
       noneAll: None / All
       order_aria: Order
       partySize: Party size
+      pay: Pay
       payBill: Pay Bill
       payment_link: Payment Link
       price: Price
       requestBill: Request Bill
+      request_bill: Request Bill
+      request_bill_confirm_body: Once you request the bill, you will no longer be
+        able to add items to your order.
+      request_bill_confirm_title: Are you sure?
       selected: Selected
       service: Service
       start: Start

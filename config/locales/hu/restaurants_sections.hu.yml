@@ -480,6 +480,7 @@ hu:
         add_table: Táblázat hozzáadása
         apply: Alkalmazás
         archived: Archivált
+        bulk_create: Tömeges létrehozása
         capacity: Kapacitás
         confirm_delete: Törölje ezt a táblázatot?
         drag_to_reorder: Húzza átrendezéshez
@@ -508,12 +509,15 @@ hu:
         view_qr: QR megtekintése
         view_qr_code: A táblázat QR-kódjának megtekintése
       wifi_2025:
+        download: Letöltés
         encryption_help: A WiFi hálózat által használt biztonsági protokoll
         'false': ''
         hidden_help: A hálózati név nyilvános sugárzása
+        'no': Nem
         password_help: A jelszó, amelyre az ügyfeleknek a csatlakozáshoz szükségük
           lesz
         password_placeholder: WiFi jelszó megadása
+        print: Nyomtatás
         select_encryption: Válassza ki a titkosítást...
         select_option: Válassza ki a lehetőséget...
         ssid_help: A WiFi hálózat neve, amelyhez az ügyfelek csatlakozni fognak.
@@ -522,3 +526,10 @@ hu:
         wifi_configuration: WiFi konfiguráció
         wifi_description: A WiFi beállítások konfigurálása QR-kódok generálásához
           az ügyfelek számára történő hozzáféréshez
+        wifi_qr_description: Az ügyfelek a telefonjuk kamerájával beolvashatják ezt
+          a QR-kódot, és automatikusan csatlakozhatnak az Ön WiFi hálózatához - nincs
+          szükség gépelésre.
+        wifi_qr_no_ssid: A QR-kód generálásához adja meg a fenti WiFi hálózat nevét.
+        wifi_qr_scan_hint: Szkennelés a telefon kamerájával a csatlakozáshoz
+        wifi_qr_title: WiFi QR-kód
+        'yes': Igen

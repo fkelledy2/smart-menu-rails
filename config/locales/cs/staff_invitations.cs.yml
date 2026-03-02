@@ -1,0 +1,25 @@
+---
+cs:
+  staff_invitations:
+    accept_failed: Nemůže toto pozvání přijmout. Zkuste to prosím znovu.
+    accepted: Nastoupili jste do %{restaurace} jako zaměstnanec!
+    already_accepted: Toto pozvání již bylo přijato. Přihlaste se prosím.
+    already_invited: Na tento e-mail již čeká pozvánka do této restaurace.
+    already_staff: Tato osoba je již zaměstnancem této restaurace.
+    cancel: Zrušit
+    email_label: E-mailová adresa
+    expired: Platnost této pozvánky vypršela nebo byla odvolána
+    expires: Platnost %{date}
+    invite_title: Pozvat zaměstnance
+    invited_on: Pozvánka %{date}
+    no_pending: Žádné nevyřízené pozvánky
+    not_found: Pozvánka nebyla nalezena
+    pending_invitations: Pozvánky čekající na vyřízení
+    revoke: Odvolání
+    revoked: Odvolání pozvání
+    role_admin: Administrace
+    role_label: Role
+    role_manager: Manažer
+    role_staff: Zaměstnanci
+    send_invite: Odeslat pozvánku
+    sent: Pozvánka odeslána na adresu %{email}

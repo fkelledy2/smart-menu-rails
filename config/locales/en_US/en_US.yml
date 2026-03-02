@@ -11,7 +11,8 @@ en_US:
     flash:
       restored: Restored
     remove: ''
-    super_admin_only_tooltip: "Visible because you have Super Admin access to this restaurant"
+    super_admin_only_tooltip: Visible because you have Super Admin access to this
+      restaurant
   employees:
     form:
       eid: Id
@@ -254,19 +255,16 @@ en_US:
           payments.
       tables_2025:
         tables: Tables
-      wifi_2025:
-        'no': 'No'
-        'yes': 'Yes'
     show:
       pdfSettings: ''
   smartmenus:
     alcohol:
       age_check: Age check
     allergen_combined_modal:
-      title: Allergens
-      filter_description: Tap an allergen to hide menu items that contain it.
       clear_all: Clear all
       done: Done
+      filter_description: Tap an allergen to hide menu items that contain it.
+      title: Allergens
     allergen_legend_modal:
       allergen: Allergen
       allergen_key: Allergen Key

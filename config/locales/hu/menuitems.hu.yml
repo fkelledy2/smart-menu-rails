@@ -22,6 +22,7 @@ hu:
       alcoholic_help: Ellenőrizze, hogy ez a termék tartalmaz-e alkoholt.
       allergens: Allergének
       available_sizes: Elérhető méretek
+      capture: Capture
       classification_beer: Sör
       classification_cocktail: Koktél
       classification_help: Válasszon kategóriát. A 0,0%-os változatokhoz használja
@@ -41,10 +42,12 @@ hu:
       hidden: Rejtett (nem jelenik meg az intelligens menüben)
       imageSettings: Kép beállítások
       no_image: Még nincs kép
+      retake: Újrafelvétel
       save: Mentés
       settings: Beállítások
       sizes_heading: Méretek
       sure: Biztos vagy benne?
+      take_photo: Fénykép készítése
       tasting_carrier: Kóstoló hordozóként való felhasználás
       tasting_carrier_help: Kóstolási szakaszonként csak egy fuvarozó. A hordozóelemek
         automatikusan elrejtésre kerülnek.
@@ -58,6 +61,7 @@ hu:
         adjon meg egy összeget a kiegészítő árképzéshez.
       'true': igaz
       update: Frissítés
+      use_photo: Fotó használata
       variantPricing: Változatos árképzés
       visibility: Láthatóság
     index:

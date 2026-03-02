@@ -109,6 +109,7 @@ it:
       excluding_tip: escl. mancia
       filterAllergyns: Filtra allergeni
       filterBy: Filtra
+      full_capacity: Completo
       including_tip: incl. mancia
       item: Articolo
       name_label: 'Nome:'
@@ -116,10 +117,15 @@ it:
       noneAll: Nessuno / Tutti
       order_aria: Ordine
       partySize: Numero di persone
+      pay: Paga
       payBill: Paga conto
       payment_link: Link di pagamento
       price: Prezzo
       requestBill: Richiedi conto
+      request_bill: Richiesta di fattura
+      request_bill_confirm_body: Una volta richiesto il conto, non sarà più possibile
+        aggiungere articoli all'ordine.
+      request_bill_confirm_title: Sei sicuro?
       selected: Selezionati
       service: Servizio
       start: Avvia

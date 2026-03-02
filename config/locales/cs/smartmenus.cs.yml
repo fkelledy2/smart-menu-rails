@@ -109,6 +109,7 @@ cs:
       excluding_tip: bez spropitného
       filterAllergyns: Filtrovat alergeny
       filterBy: Filtr
+      full_capacity: Úplný
       including_tip: včetně spropitného
       item: Položka
       name_label: 'Jméno:'
@@ -116,10 +117,15 @@ cs:
       noneAll: Žádné / Všechny
       order_aria: Objednávka
       partySize: Velikost strany
+      pay: Platit
       payBill: Zaplatit účet
       payment_link: Odkaz na platbu
       price: Cena
       requestBill: Žádat o účet
+      request_bill: Žádost o účet
+      request_bill_confirm_body: Jakmile si vyžádáte účet, nebudete již moci přidávat
+        položky do objednávky.
+      request_bill_confirm_title: Jste si jistý?
       selected: Vybrané stránky
       service: Služba
       start: Zahájit objednávku

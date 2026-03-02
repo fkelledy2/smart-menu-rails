@@ -1,6 +1,20 @@
 ---
 fr:
   tablesettings:
+    bulk_create_form:
+      auto_detect_hint: 'Les tableaux seront numérotés automatiquement. Prochain disponible
+        : %{exemple}'
+      cancel: Annuler
+      capacity: Capacité
+      count: Combien de
+      count_hint: Max 200
+      create_tables: Créer des tableaux
+      indoor: Intérieur
+      outdoor: Extérieur
+      prefix: Préfixe
+      prefix_hint: par exemple T, Table, Stand
+      table_type: Type
+      title: Création de tableaux en masse
     controller:
       created: La création d'une table a été effectuée avec succès.
       deleted: Le paramètre de table a été supprimé avec succès.

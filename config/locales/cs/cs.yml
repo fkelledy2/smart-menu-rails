@@ -11,6 +11,8 @@ cs:
     flash:
       restored: Obnovené stránky
     remove: Odstranění stránky
+    super_admin_only_tooltip: Viditelné, protože máte přístup Super Admin do této
+      restaurace
   employees:
     form:
       eid: Id
@@ -253,14 +255,17 @@ cs:
         stripe_connect_help: Připojte svůj účet Stripe a povolte platby MoR v restauraci.
       tables_2025:
         tables: Tabulky
-      wifi_2025:
-        'no': Ne
-        'yes': Ano
     show:
       pdfSettings: Nastavení PDF
   smartmenus:
     alcohol:
       age_check: Kontrola věku
+    allergen_combined_modal:
+      clear_all: Vymazat vše
+      done: Hotovo
+      filter_description: Klepnutím na alergen skryjete položky nabídky, které ho
+        obsahují.
+      title: Alergeny
     allergen_legend_modal:
       allergen: Alergeny
       allergen_key: Klíč k alergenům

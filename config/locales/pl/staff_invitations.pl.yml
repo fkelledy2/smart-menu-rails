@@ -1,0 +1,26 @@
+---
+pl:
+  staff_invitations:
+    accept_failed: Nie można zaakceptować tego zaproszenia. Spróbuj ponownie.
+    accepted: Dołączyłeś do %{restauracji} jako członek personelu!
+    already_accepted: To zaproszenie zostało już zaakceptowane. Zaloguj się.
+    already_invited: Ta wiadomość e-mail zawiera już oczekujące zaproszenie do tej
+      restauracji
+    already_staff: Ta osoba jest już pracownikiem tej restauracji
+    cancel: Anuluj
+    email_label: Adres e-mail
+    expired: To zaproszenie wygasło lub zostało cofnięte
+    expires: Wygasa %{data}
+    invite_title: Zaproś członka personelu
+    invited_on: Zaproszony %{data}
+    no_pending: Brak oczekujących zaproszeń
+    not_found: Nie znaleziono zaproszenia
+    pending_invitations: Oczekujące zaproszenia
+    revoke: Cofnięcie
+    revoked: Zaproszenie cofnięte
+    role_admin: Administracja
+    role_label: Rola
+    role_manager: Kierownik
+    role_staff: Personel
+    send_invite: Wyślij zaproszenie
+    sent: Zaproszenie wysłane na adres %{email}

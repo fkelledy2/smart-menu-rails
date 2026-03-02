@@ -11,6 +11,7 @@ pt:
     flash:
       restored: Restaurado
     remove: Remover
+    super_admin_only_tooltip: Visível porque tem acesso de Super Admin a este restaurante
   employees:
     form:
       eid: Id
@@ -254,14 +255,17 @@ pt:
           do restaurante.
       tables_2025:
         tables: Tabelas
-      wifi_2025:
-        'no': Não
-        'yes': Sim
     show:
       pdfSettings: Pdfsettings
   smartmenus:
     alcohol:
       age_check: Controlo de idade
+    allergen_combined_modal:
+      clear_all: Limpar tudo
+      done: Feito
+      filter_description: Toque num alergénio para ocultar os itens do menu que o
+        contêm.
+      title: Alergénios
     allergen_legend_modal:
       allergen: Alergénio
       allergen_key: Chave de alergénios

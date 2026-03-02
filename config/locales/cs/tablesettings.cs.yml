@@ -1,6 +1,19 @@
 ---
 cs:
   tablesettings:
+    bulk_create_form:
+      auto_detect_hint: 'Tabulky se očíslují automaticky. Další dostupné: %{příklad}'
+      cancel: Zrušit
+      capacity: Kapacita
+      count: Kolik
+      count_hint: Max. 200
+      create_tables: Vytvořit tabulky
+      indoor: Vnitřní
+      outdoor: Venkovní
+      prefix: Předpona
+      prefix_hint: např. T, Table, Booth
+      table_type: Typ
+      title: Hromadné vytváření tabulek
     controller:
       created: Nastavení tabulky bylo úspěšně vytvořeno.
       deleted: Nastavení tabulky bylo úspěšně odstraněno.

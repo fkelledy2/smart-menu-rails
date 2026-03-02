@@ -471,6 +471,7 @@ cs:
         add_table: Přidat tabulku
         apply: Použít
         archived: Archivováno
+        bulk_create: Hromadné vytvoření
         capacity: Kapacita
         confirm_delete: Smazat tuto tabulku?
         drag_to_reorder: Přetažením změníte pořadí
@@ -499,11 +500,14 @@ cs:
         view_qr: Zobrazit QR
         view_qr_code: Zobrazit kód QR pro tuto tabulku
       wifi_2025:
+        download: Stáhnout
         encryption_help: Protokol zabezpečení používaný sítí WiFi
         'false': ''
         hidden_help: Zda je název sítě vysílán veřejně
+        'no': Ne
         password_help: Heslo, které budou zákazníci potřebovat k připojení
         password_placeholder: Zadejte heslo WiFi
+        print: Tisk
         select_encryption: Vyberte šifrování...
         select_option: Vyberte možnost...
         ssid_help: Název vaší sítě WiFi, ke které se budou zákazníci připojovat.
@@ -512,3 +516,10 @@ cs:
         wifi_configuration: Konfigurace WiFi
         wifi_description: Konfigurace nastavení WiFi pro generování QR kódů pro přístup
           zákazníků
+        wifi_qr_description: Zákazníci mohou tento QR kód naskenovat fotoaparátem
+          svého telefonu a automaticky se připojit k vaší síti Wi-Fi - není třeba
+          nic psát.
+        wifi_qr_no_ssid: Pro vygenerování kódu QR zadejte výše název sítě WiFi.
+        wifi_qr_scan_hint: Skenování pomocí fotoaparátu telefonu pro připojení
+        wifi_qr_title: Kód QR WiFi
+        'yes': Ano

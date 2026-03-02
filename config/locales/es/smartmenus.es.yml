@@ -111,6 +111,7 @@ es:
       excluding_tip: sin propina
       filterAllergyns: Filtrar alérgenos
       filterBy: Filtrar por
+      full_capacity: Completo
       including_tip: incl. propina
       item: Artículo
       name_label: 'Nombre:'
@@ -118,10 +119,15 @@ es:
       noneAll: Ninguno / todos
       order_aria: Pida
       partySize: Tamaño del partido
+      pay: Pagar
       payBill: Pagar la factura
       payment_link: Enlace de pago
       price: Precio
       requestBill: Pedir cuenta
+      request_bill: Solicitar factura
+      request_bill_confirm_body: Una vez que solicite la factura, ya no podrá añadir
+        artículos a su pedido.
+      request_bill_confirm_title: "¿Seguro?"
       selected: Selección
       service: Servicio
       start: Inicio

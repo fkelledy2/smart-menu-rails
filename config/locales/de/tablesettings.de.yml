@@ -1,6 +1,20 @@
 ---
 de:
   tablesettings:
+    bulk_create_form:
+      auto_detect_hint: 'Die Tabellen werden automatisch nummeriert. Als nächstes
+        verfügbar: %{example}'
+      cancel: Abbrechen
+      capacity: Kapazität
+      count: Wie viele
+      count_hint: Maximal 200
+      create_tables: Tabellen erstellen
+      indoor: Innenbereich
+      outdoor: Draußen
+      prefix: Vorsilbe
+      prefix_hint: z.B. T, Tisch, Kabine
+      table_type: Typ
+      title: Bulk-Tabellen erstellen
     controller:
       created: Die Tabelleneinstellung wurde erfolgreich erstellt.
       deleted: Die Tabelleneinstellung wurde erfolgreich gelöscht.

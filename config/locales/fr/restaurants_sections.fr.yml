@@ -486,6 +486,7 @@ fr:
         add_table: Ajouter une table
         apply: Appliquer
         archived: Archivé
+        bulk_create: Création en bloc
         capacity: Capacité
         confirm_delete: Supprimer ce tableau ?
         drag_to_reorder: Faire glisser pour réorganiser
@@ -514,11 +515,14 @@ fr:
         view_qr: Voir QR
         view_qr_code: Voir le code QR pour ce tableau
       wifi_2025:
+        download: Télécharger
         encryption_help: Le protocole de sécurité utilisé par votre réseau WiFi
         'false': ''
         hidden_help: Si le nom du réseau est diffusé publiquement
+        'no': Non
         password_help: Le mot de passe dont les clients auront besoin pour se connecter
         password_placeholder: Saisir le mot de passe WiFi
+        print: Imprimer
         select_encryption: Sélectionner le cryptage...
         select_option: Sélectionner une option...
         ssid_help: Le nom de votre réseau WiFi auquel les clients se connecteront
@@ -527,3 +531,11 @@ fr:
         wifi_configuration: Configuration du WiFi
         wifi_description: Configurer les paramètres WiFi pour générer des codes QR
           pour l'accès des clients
+        wifi_qr_description: Les clients peuvent scanner ce code QR avec l'appareil
+          photo de leur téléphone pour se connecter automatiquement à votre réseau
+          WiFi - aucune saisie n'est nécessaire.
+        wifi_qr_no_ssid: Entrez le nom d'un réseau WiFi ci-dessus pour générer un
+          code QR.
+        wifi_qr_scan_hint: Scanner avec l'appareil photo du téléphone pour se connecter
+        wifi_qr_title: Code QR WiFi
+        'yes': Oui

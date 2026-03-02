@@ -11,6 +11,8 @@ de:
     flash:
       restored: Wiederhergestellt
     remove: entfernen
+    super_admin_only_tooltip: Sichtbar, weil Sie Super-Admin-Zugriff auf dieses Restaurant
+      haben
   employees:
     form:
       eid: Id
@@ -256,14 +258,17 @@ de:
           Restaurants zu ermöglichen.
       tables_2025:
         tables: Tische
-      wifi_2025:
-        'no': Nein
-        'yes': Ja
     show:
       pdfSettings: Pdf-Einstellungen
   smartmenus:
     alcohol:
       age_check: Alterskontrolle
+    allergen_combined_modal:
+      clear_all: Alle löschen
+      done: Erledigt
+      filter_description: Tippen Sie auf ein Allergen, um Menüpunkte auszublenden,
+        die dieses Allergen enthalten.
+      title: Allergene
     allergen_legend_modal:
       allergen: Allergen
       allergen_key: Allergen-Schlüssel

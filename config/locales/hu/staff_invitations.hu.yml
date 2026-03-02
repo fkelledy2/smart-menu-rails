@@ -1,0 +1,26 @@
+---
+hu:
+  staff_invitations:
+    accept_failed: Nem tudja elfogadni ezt a meghívást. Kérjük, próbálja meg újra.
+    accepted: Ön a %{restaurant} munkatársaként csatlakozott!
+    already_accepted: Ezt a meghívást már elfogadták. Kérjük, jelentkezzen be.
+    already_invited: Ez az e-mail már tartalmaz egy függőben lévő meghívót erre az
+      étteremre.
+    already_staff: Ez a személy már az étterem alkalmazottja.
+    cancel: Törölje
+    email_label: E-mail cím
+    expired: Ez a meghívó lejárt vagy visszavonták
+    expires: Lejár %{date}
+    invite_title: Személyzeti tag meghívása
+    invited_on: Meghívott %{date}
+    no_pending: Nincsenek függőben lévő meghívások
+    not_found: Meghívó nem található
+    pending_invitations: Függő meghívások
+    revoke: A  visszavonása.
+    revoked: Visszavont meghívás
+    role_admin: Adminisztráció
+    role_label: Szerep
+    role_manager: Menedzser
+    role_staff: Személyzet
+    send_invite: Meghívó küldése
+    sent: Meghívót küldtünk a %{email} címre

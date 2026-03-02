@@ -474,6 +474,7 @@ pt:
         add_table: Adicionar tabela
         apply: Aplicar
         archived: Arquivado
+        bulk_create: Criar em massa
         capacity: Capacidade
         confirm_delete: Eliminar esta tabela?
         drag_to_reorder: Arrastar para reordenar
@@ -501,11 +502,14 @@ pt:
         view_qr: Ver QR
         view_qr_code: Ver código QR para este quadro
       wifi_2025:
+        download: Descarregar
         encryption_help: O protocolo de segurança utilizado pela sua rede WiFi
         'false': ''
         hidden_help: Se o nome da rede é difundido publicamente
+        'no': Não
         password_help: A palavra-passe de que os clientes necessitam para se ligarem
         password_placeholder: Introduzir a palavra-passe WiFi
+        print: Imprimir
         select_encryption: Selecionar encriptação...
         select_option: Selecionar opção...
         ssid_help: O nome da sua rede WiFi à qual os clientes irão ligar-se
@@ -514,3 +518,12 @@ pt:
         wifi_configuration: Configuração de WiFi
         wifi_description: Configurar as definições de WiFi para gerar códigos QR para
           acesso dos clientes
+        wifi_qr_description: Os clientes podem digitalizar este código QR com a câmara
+          do telemóvel para se ligarem automaticamente à sua rede WiFi - não é necessário
+          escrever.
+        wifi_qr_no_ssid: Introduza o nome de uma rede WiFi acima para gerar um código
+          QR.
+        wifi_qr_scan_hint: Digitalizar com a câmara do telemóvel para estabelecer
+          ligação
+        wifi_qr_title: Código QR WiFi
+        'yes': Sim

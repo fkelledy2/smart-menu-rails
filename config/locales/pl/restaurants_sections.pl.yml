@@ -475,6 +475,7 @@ pl:
         add_table: Dodaj tabelę
         apply: Zastosuj
         archived: Zarchiwizowane
+        bulk_create: Tworzenie zbiorcze
         capacity: Pojemność
         confirm_delete: Usunąć tę tabelę?
         drag_to_reorder: Przeciągnij, aby zmienić kolejność
@@ -503,11 +504,14 @@ pl:
         view_qr: Wyświetl QR
         view_qr_code: Wyświetl kod QR dla tej tabeli
       wifi_2025:
+        download: Pobierz
         encryption_help: Protokół bezpieczeństwa używany przez sieć Wi-Fi
         'false': replace_me
         hidden_help: Czy nazwa sieci jest rozgłaszana publicznie
+        'no': Nie
         password_help: Hasło, którego klienci będą potrzebować do połączenia
         password_placeholder: Wprowadź hasło WiFi
+        print: Drukuj
         select_encryption: Wybierz szyfrowanie...
         select_option: Wybierz opcję...
         ssid_help: Nazwa sieci Wi-Fi, z którą będą łączyć się klienci.
@@ -516,3 +520,10 @@ pl:
         wifi_configuration: Konfiguracja WiFi
         wifi_description: Konfiguracja ustawień WiFi w celu generowania kodów QR dla
           dostępu klientów
+        wifi_qr_description: Klienci mogą zeskanować ten kod QR za pomocą aparatu
+          w telefonie, aby automatycznie połączyć się z siecią Wi-Fi - bez konieczności
+          wpisywania.
+        wifi_qr_no_ssid: Wprowadź nazwę sieci Wi-Fi powyżej, aby wygenerować kod QR.
+        wifi_qr_scan_hint: Skanowanie aparatem telefonu w celu połączenia
+        wifi_qr_title: Kod QR WiFi
+        'yes': Tak

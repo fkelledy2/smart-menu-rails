@@ -1,0 +1,28 @@
+---
+de:
+  staff_invitations:
+    accept_failed: Sie können diese Einladung nicht annehmen. Bitte versuchen Sie
+      es erneut.
+    accepted: Du bist jetzt Mitarbeiter im %{Restaurant}!
+    already_accepted: Diese Einladung ist bereits angenommen worden. Bitte melden
+      Sie sich an.
+    already_invited: Diese E-Mail enthält bereits eine ausstehende Einladung für dieses
+      Restaurant
+    already_staff: Diese Person ist bereits Mitarbeiter in diesem Restaurant
+    cancel: Abbrechen
+    email_label: E-Mail Adresse
+    expired: Diese Einladung ist abgelaufen oder wurde widerrufen
+    expires: Läuft ab %{date}
+    invite_title: Personalmitglied einladen
+    invited_on: Eingeladen %{Datum}
+    no_pending: Keine ausstehenden Einladungen
+    not_found: Einladung nicht gefunden
+    pending_invitations: Ausstehende Einladungen
+    revoke: Widerrufen
+    revoked: Einladung widerrufen
+    role_admin: Administration
+    role_label: Rolle
+    role_manager: Manager
+    role_staff: Personal
+    send_invite: Einladung versenden
+    sent: Einladung gesendet an %{email}

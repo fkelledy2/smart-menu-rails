@@ -22,6 +22,7 @@ cs:
       alcoholic_help: Zkontrolujte, zda tato položka neobsahuje alkohol.
       allergens: Alergeny
       available_sizes: Dostupné velikosti
+      capture: Zachycení
       classification_beer: Pivo
       classification_cocktail: Koktejl
       classification_help: Vyberte kategorii. Pro varianty 0,0 % použijte non_alcoholic.
@@ -40,10 +41,12 @@ cs:
       hidden: Skryté (nezobrazuje se v nabídce smartmenu)
       imageSettings: Nastavení obrázku
       no_image: Zatím bez obrázku
+      retake: Zpětné převzetí
       save: Uložit
       settings: Nastavení
       sizes_heading: Velikosti
       sure: Jste si jistí?
+      take_photo: Vyfotit se
       tasting_carrier: Použití jako degustační nosič
       tasting_carrier_help: V každé degustační části je pouze jeden nosič. Nosiče
         jsou automaticky skryty.
@@ -58,6 +61,7 @@ cs:
         pro příplatkovou cenu.
       'true': Pravda
       update: Aktualizovat
+      use_photo: Použití fotografie
       variantPricing: Varianty cen
       visibility: Viditelnost
     index:

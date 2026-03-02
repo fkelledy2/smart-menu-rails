@@ -22,6 +22,7 @@ en:
       alcoholic_help: Check if this item contains alcohol.
       allergens: Allergens
       available_sizes: Available Sizes
+      capture: Capture
       classification_beer: Beer
       classification_cocktail: Cocktail
       classification_help: Choose a category. Use non_alcoholic for 0.0% variants.
@@ -40,10 +41,12 @@ en:
       hidden: Hidden (not shown on smartmenu)
       imageSettings: Image Settings
       no_image: No image yet
+      retake: Retake
       save: Save
       settings: Settings
       sizes_heading: Sizes
       sure: Are you sure?
+      take_photo: Take Photo
       tasting_carrier: Use as Tasting Carrier
       tasting_carrier_help: Only one carrier per tasting section. Carrier items are
         automatically hidden.
@@ -57,6 +60,7 @@ en:
         pricing.
       'true': 'true'
       update: Update
+      use_photo: Use Photo
       variantPricing: Variant Pricing
       visibility: Visibility
     index:

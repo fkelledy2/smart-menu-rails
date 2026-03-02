@@ -114,6 +114,7 @@ de:
       excluding_tip: ohne Trinkgeld
       filterAllergyns: Allergene filtern
       filterBy: Filtern nach
+      full_capacity: Vollständig
       including_tip: inkl. Trinkgeld
       item: Artikel
       name_label: 'Name:'
@@ -121,10 +122,15 @@ de:
       noneAll: Keine / alle
       order_aria: Bestellung
       partySize: Größe der Partei
+      pay: Bezahlen
       payBill: Rechnung bezahlen
       payment_link: Link zur Bezahlung
       price: Preis
       requestBill: Rechnung anfordern
+      request_bill: Rechnung anfordern
+      request_bill_confirm_body: Sobald Sie die Rechnung anfordern, können Sie Ihrer
+        Bestellung keine weiteren Artikel mehr hinzufügen.
+      request_bill_confirm_title: Sind Sie sicher?
       selected: Ausgewählte
       service: Dienst
       start: Starten

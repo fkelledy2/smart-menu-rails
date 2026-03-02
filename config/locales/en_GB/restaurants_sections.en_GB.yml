@@ -445,6 +445,7 @@ en_GB:
         add_table: ''
         apply: ''
         archived: ''
+        bulk_create: replace_me
         capacity: ''
         confirm_delete: ''
         drag_to_reorder: ''
@@ -471,11 +472,14 @@ en_GB:
         view_qr: ''
         view_qr_code: ''
       wifi_2025:
+        download: replace_me
         encryption_help: ''
         'false': ''
         hidden_help: ''
+        'no': replace_me
         password_help: ''
         password_placeholder: ''
+        print: replace_me
         select_encryption: ''
         select_option: ''
         ssid_help: ''
@@ -483,3 +487,8 @@ en_GB:
         'true': ''
         wifi_configuration: ''
         wifi_description: ''
+        wifi_qr_description: replace_me
+        wifi_qr_no_ssid: replace_me
+        wifi_qr_scan_hint: replace_me
+        wifi_qr_title: replace_me
+        'yes': replace_me

@@ -179,6 +179,8 @@ hu:
         website: Honlap
         website_help: Az Ön éttermi honlapja
         website_placeholder: https://example.com
+      staff_2025:
+        invite_staff: Személyzet meghívása
     show:
       address: Cím
       billing_content: Itt jelenik meg a számlázási konfiguráció.

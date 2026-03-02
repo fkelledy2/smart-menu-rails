@@ -22,6 +22,7 @@ it:
       alcoholic_help: Seleziona se questo articolo contiene alcol.
       allergens: Allergeni
       available_sizes: Taglie disponibili
+      capture: Cattura
       classification_beer: Birra
       classification_cocktail: Cocktail
       classification_help: Scegli una categoria. Usa non_alcoholic per varianti 0,0%.
@@ -40,10 +41,12 @@ it:
       hidden: Nascosto (non mostrato sullo smartmenu)
       imageSettings: Impostazioni immagine
       no_image: Nessuna immagine ancora
+      retake: Ripresa
       save: Salva
       settings: Impostazioni
       sizes_heading: Dimensioni
       sure: Sei sicuro?
+      take_photo: Scattare una foto
       tasting_carrier: Usa come supporto degustazione
       tasting_carrier_help: Solo un supporto per sezione degustazione. Gli articoli
         supporto sono nascosti automaticamente.
@@ -58,6 +61,7 @@ it:
         un sovrapprezzo.
       'true': vero
       update: Aggiorna
+      use_photo: Usa foto
       variantPricing: Prezzi varianti
       visibility: Visibilità
     index:

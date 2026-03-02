@@ -1,6 +1,20 @@
 ---
 hu:
   tablesettings:
+    bulk_create_form:
+      auto_detect_hint: 'A táblázatok automatikusan számozásra kerülnek. Következő
+        elérhető: %{példa}'
+      cancel: Törölje
+      capacity: Kapacitás
+      count: Hány
+      count_hint: Max 200
+      create_tables: Táblák létrehozása
+      indoor: Beltéri
+      outdoor: Kültéri
+      prefix: Előtag
+      prefix_hint: pl. T, Table, Booth
+      table_type: Típus
+      title: Táblák tömeges létrehozása
     controller:
       created: Az asztal beállítása sikeresen létrejött.
       deleted: A táblázat beállítása sikeresen törlődött.

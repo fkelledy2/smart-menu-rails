@@ -22,6 +22,7 @@ pl:
       alcoholic_help: Sprawdź, czy produkt zawiera alkohol.
       allergens: Alergeny
       available_sizes: Dostępne rozmiary
+      capture: Przechwytywanie
       classification_beer: Piwo
       classification_cocktail: Koktajl
       classification_help: Wybierz kategorię. Użyj non_alcoholic dla wariantów 0,0%.
@@ -40,10 +41,12 @@ pl:
       hidden: Ukryty (nie jest wyświetlany w smartmenu)
       imageSettings: Ustawienia obrazu
       no_image: Brak obrazu
+      retake: Retake
       save: Zapisz
       settings: Ustawienia
       sizes_heading: Rozmiary
       sure: Jesteś pewien?
+      take_photo: Zrób zdjęcie
       tasting_carrier: Użyj jako nośnika do degustacji
       tasting_carrier_help: Tylko jeden nośnik na sekcję degustacji. Elementy nośnika
         są automatycznie ukrywane.
@@ -58,6 +61,7 @@ pl:
         dla cen dodatkowych.
       'true': prawda
       update: Aktualizacja
+      use_photo: Użyj zdjęcia
       variantPricing: Ceny wariantów
       visibility: Widoczność
     index:

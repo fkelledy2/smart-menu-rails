@@ -113,6 +113,7 @@ fr:
       excluding_tip: sans pointe
       filterAllergyns: Filtrer les allergènes
       filterBy: Filtrer par
+      full_capacity: Complet
       including_tip: y compris la pointe
       item: Objet
       name_label: 'Nom :'
@@ -120,10 +121,15 @@ fr:
       noneAll: Aucun / tous
       order_aria: Commande
       partySize: Taille du groupe
+      pay: Rémunération
       payBill: Payer la facture
       payment_link: Lien de paiement
       price: Prix
       requestBill: Demander l'addition
+      request_bill: Demande de facture
+      request_bill_confirm_body: Une fois la facture demandée, vous ne pourrez plus
+        ajouter d'articles à votre commande.
+      request_bill_confirm_title: Êtes-vous sûr ?
       selected: Sélectionné
       service: Service
       start: Commencer

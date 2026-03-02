@@ -11,6 +11,8 @@ hu:
     flash:
       restored: Visszaállított
     remove: Távolítsa el a
+    super_admin_only_tooltip: Látható, mert Super Admin hozzáféréssel rendelkezik
+      ehhez az étteremhez.
   employees:
     form:
       eid: Id
@@ -253,14 +255,17 @@ hu:
           engedélyezéséhez.
       tables_2025:
         tables: Táblák
-      wifi_2025:
-        'no': Nem
-        'yes': Igen
     show:
       pdfSettings: Pdfsettings
   smartmenus:
     alcohol:
       age_check: Korellenőrzés
+    allergen_combined_modal:
+      clear_all: Mindent törölni
+      done: Kész
+      filter_description: Érintsen meg egy allergént az azt tartalmazó menüpontok
+        elrejtéséhez.
+      title: Allergének
     allergen_legend_modal:
       allergen: Allergén
       allergen_key: Allergén kulcs

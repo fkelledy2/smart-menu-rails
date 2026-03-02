@@ -11,6 +11,7 @@ es:
     flash:
       restored: Restaurado
     remove: Eliminar
+    super_admin_only_tooltip: Visible porque tienes acceso de Super Admin a este restaurante
   employees:
     form:
       eid: Id
@@ -255,14 +256,17 @@ es:
           de restaurante MoR.
       tables_2025:
         tables: Tablas
-      wifi_2025:
-        'no': 'No'
-        'yes': Sí
     show:
       pdfSettings: Pdfsettings
   smartmenus:
     alcohol:
       age_check: Comprobación de edad
+    allergen_combined_modal:
+      clear_all: Borrar todo
+      done: Hecho
+      filter_description: Pulse sobre un alérgeno para ocultar los elementos del menú
+        que lo contengan.
+      title: Alérgenos
     allergen_legend_modal:
       allergen: Alérgenos
       allergen_key: Clave de alérgenos

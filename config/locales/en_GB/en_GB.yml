@@ -11,7 +11,8 @@ en_GB:
     flash:
       restored: Restored
     remove: ''
-    super_admin_only_tooltip: "Visible because you have Super Admin access to this restaurant"
+    super_admin_only_tooltip: Visible because you have Super Admin access to this
+      restaurant
   employees:
     form:
       eid: Id
@@ -254,14 +255,16 @@ en_GB:
           payments.
       tables_2025:
         tables: Tables
-      wifi_2025:
-        'no': 'No'
-        'yes': 'Yes'
     show:
       pdfSettings: ''
   smartmenus:
     alcohol:
       age_check: Age check
+    allergen_combined_modal:
+      clear_all: replace_me
+      done: replace_me
+      filter_description: replace_me
+      title: replace_me
     allergen_legend_modal:
       allergen: Allergen
       allergen_key: Allergen Key

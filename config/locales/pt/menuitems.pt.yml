@@ -22,6 +22,7 @@ pt:
       alcoholic_help: Verificar se este artigo contém álcool.
       allergens: Alergénios
       available_sizes: Tamanhos disponíveis
+      capture: Captura
       classification_beer: Cerveja
       classification_cocktail: Cocktail
       classification_help: Selecionar uma categoria. Utilizar non_alcoholic para variantes
@@ -41,10 +42,12 @@ pt:
       hidden: Oculto (não é apresentado no menu inteligente)
       imageSettings: Configurações de imagem
       no_image: Nenhuma imagem ainda
+      retake: Retomar
       save: Guardar
       settings: Configurações
       sizes_heading: Tamanhos
       sure: Tem a certeza?
+      take_photo: Tirar fotografia
       tasting_carrier: Utilização como suporte de degustação
       tasting_carrier_help: Apenas um transportador por secção de degustação. Os artigos
         de transporte são automaticamente ocultados.
@@ -59,6 +62,7 @@ pt:
         para preços adicionais.
       'true': verdadeiro
       update: Atualizar
+      use_photo: Utilizar fotografia
       variantPricing: Preços das variantes
       visibility: Visibilidade
     index:

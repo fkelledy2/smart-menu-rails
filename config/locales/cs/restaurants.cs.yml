@@ -179,6 +179,8 @@ cs:
         website: Webové stránky
         website_help: Webové stránky vaší restaurace
         website_placeholder: https://example.com
+      staff_2025:
+        invite_staff: Pozvat zaměstnance
     show:
       address: Adresa
       billing_content: Zde se zobrazí konfigurace fakturace.

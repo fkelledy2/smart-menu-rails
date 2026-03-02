@@ -22,6 +22,7 @@ en_US:
       alcoholic_help: ''
       allergens: replace_me
       available_sizes: replace_me
+      capture: replace_me
       classification_beer: ''
       classification_cocktail: ''
       classification_help: ''
@@ -40,10 +41,12 @@ en_US:
       hidden: ''
       imageSettings: ''
       no_image: ''
+      retake: replace_me
       save: ''
       settings: ''
       sizes_heading: replace_me
       sure: ''
+      take_photo: replace_me
       tasting_carrier: ''
       tasting_carrier_help: ''
       tasting_item_settings: ''
@@ -54,6 +57,7 @@ en_US:
       tasting_supplement_help: ''
       'true': ''
       update: ''
+      use_photo: replace_me
       variantPricing: ''
       visibility: ''
     index:

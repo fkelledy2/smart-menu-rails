@@ -179,6 +179,8 @@ es:
         website: Página web
         website_help: Sitio web de su restaurante
         website_placeholder: https://example.com
+      staff_2025:
+        invite_staff: Invitar al personal
     show:
       address: Dirección
       billing_content: Aquí aparecerá la configuración de facturación.

@@ -1,0 +1,25 @@
+---
+pt:
+  staff_invitations:
+    accept_failed: Não foi possível aceitar este convite. Por favor, tente novamente.
+    accepted: Entrou para %{restaurante} como membro do pessoal!
+    already_accepted: Este convite já foi aceite. Por favor, registe-se.
+    already_invited: Este e-mail já tem um convite pendente para este restaurante
+    already_staff: Esta pessoa já faz parte do pessoal deste restaurante
+    cancel: Cancelar
+    email_label: Endereço de correio eletrónico
+    expired: Este convite expirou ou foi revogado
+    expires: Expira %{data}
+    invite_title: Convidar membro do pessoal
+    invited_on: Convidado %{data}
+    no_pending: Nenhum convite pendente
+    not_found: Convite não encontrado
+    pending_invitations: Convites pendentes
+    revoke: Revogar
+    revoked: Convite revogado
+    role_admin: Administração
+    role_label: Função
+    role_manager: Diretor
+    role_staff: Pessoal
+    send_invite: Enviar convite
+    sent: Convite enviado para %{email}

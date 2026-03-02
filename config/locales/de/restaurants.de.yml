@@ -179,6 +179,8 @@ de:
         website: Website
         website_help: Ihre Restaurant-Website
         website_placeholder: https://example.com
+      staff_2025:
+        invite_staff: Personal einladen
     show:
       address: Adresse
       billing_content: Die Konfiguration für die Rechnungsstellung wird hier angezeigt.

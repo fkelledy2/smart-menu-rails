@@ -112,6 +112,7 @@ pt:
       excluding_tip: excl. ponta
       filterAllergyns: Filtrar alergénios
       filterBy: Filtrar por
+      full_capacity: Completo
       including_tip: incl. ponta
       item: Item
       name_label: 'Nome:'
@@ -119,10 +120,15 @@ pt:
       noneAll: Nenhum / todos
       order_aria: Encomendar
       partySize: Tamanho da festa
+      pay: Pagar
       payBill: Pagar fatura
       payment_link: Ligação de pagamento
       price: Preço
       requestBill: Pedir conta
+      request_bill: Pedir fatura
+      request_bill_confirm_body: Depois de pedir a fatura, deixará de poder acrescentar
+        artigos à sua encomenda.
+      request_bill_confirm_title: Tens a certeza?
       selected: Selecionado
       service: Serviço
       start: Início

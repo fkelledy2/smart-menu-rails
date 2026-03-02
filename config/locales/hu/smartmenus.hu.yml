@@ -111,6 +111,7 @@ hu:
       excluding_tip: borravaló nélkül
       filterAllergyns: Allergének szűrése
       filterBy: Szűrő
+      full_capacity: Teljes
       including_tip: borravalóval együtt
       item: Tétel
       name_label: 'Név:'
@@ -118,10 +119,15 @@ hu:
       noneAll: Egyik sem / Mindegyik
       order_aria: Megrendelés
       partySize: A párt mérete
+      pay: Fizetés
       payBill: Számla kifizetése
       payment_link: Fizetési link
       price: Ár
       requestBill: Számlát kérek
+      request_bill: Számla kérése
+      request_bill_confirm_body: Ha egyszer kéri a számlát, többé nem tud tételeket
+        hozzáadni a megrendeléséhez.
+      request_bill_confirm_title: Biztos vagy benne?
       selected: Kiválasztott
       service: Szolgáltatás
       start: Rendelés indítása

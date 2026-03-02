@@ -109,6 +109,7 @@ pl:
       excluding_tip: bez końcówki
       filterAllergyns: Filtruj alergeny
       filterBy: Filtr
+      full_capacity: Pełny
       including_tip: w tym końcówka
       item: Pozycja
       name_label: 'Imię i nazwisko:'
@@ -116,10 +117,15 @@ pl:
       noneAll: Brak / Wszystkie
       order_aria: Zamówienie
       partySize: Wielkość imprezy
+      pay: Wynagrodzenie
       payBill: Zapłać rachunek
       payment_link: Link do płatności
       price: Cena
       requestBill: Wniosek o rachunek
+      request_bill: Wniosek o rachunek
+      request_bill_confirm_body: Po zażądaniu rachunku nie będzie już można dodawać
+        pozycji do zamówienia.
+      request_bill_confirm_title: Jesteś pewien?
       selected: Wybrane
       service: Usługa
       start: Start

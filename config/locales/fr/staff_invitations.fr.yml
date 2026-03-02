@@ -1,0 +1,25 @@
+---
+fr:
+  staff_invitations:
+    accept_failed: Impossible d'accepter cette invitation. Veuillez réessayer.
+    accepted: Vous avez rejoint %{restaurant} en tant que membre du personnel !
+    already_accepted: Cette invitation a déjà été acceptée. Veuillez vous connecter.
+    already_invited: Cet e-mail contient déjà une invitation en attente pour ce restaurant
+    already_staff: Cette personne fait déjà partie du personnel de ce restaurant
+    cancel: Annuler
+    email_label: Adresse électronique
+    expired: Cette invitation a expiré ou a été révoquée
+    expires: Expire %{date}
+    invite_title: Inviter un membre du personnel
+    invited_on: Invité %{date}
+    no_pending: Pas d'invitations en cours
+    not_found: Invitation non trouvée
+    pending_invitations: Invitations en attente
+    revoke: Révoquer
+    revoked: Invitation révoquée
+    role_admin: Administration
+    role_label: Rôle
+    role_manager: Gestionnaire
+    role_staff: Personnel
+    send_invite: Envoyer l'invitation
+    sent: Invitation envoyée à %{email}

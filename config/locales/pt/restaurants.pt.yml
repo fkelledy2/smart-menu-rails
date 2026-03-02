@@ -179,6 +179,8 @@ pt:
         website: Sítio Web
         website_help: O sítio Web do seu restaurante
         website_placeholder: https://example.com
+      staff_2025:
+        invite_staff: Convidar o pessoal
     show:
       address: Endereço
       billing_content: A configuração da faturação aparecerá aqui.

@@ -1,6 +1,20 @@
 ---
 pt:
   tablesettings:
+    bulk_create_form:
+      auto_detect_hint: 'As tabelas serão numeradas automaticamente. Próximo disponível:
+        %{exemplo}'
+      cancel: Cancelar
+      capacity: Capacidade
+      count: Quantos
+      count_hint: Máximo 200
+      create_tables: Criar tabelas
+      indoor: Interior
+      outdoor: Ao ar livre
+      prefix: Prefixo
+      prefix_hint: e.g. T, Table, Booth
+      table_type: Tipo
+      title: Criar tabelas em massa
     controller:
       created: A configuração da mesa foi criada com sucesso.
       deleted: A definição de tabela foi eliminada com êxito.

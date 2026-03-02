@@ -106,6 +106,7 @@ en_GB:
       excluding_tip: ''
       filterAllergyns: ''
       filterBy: ''
+      full_capacity: replace_me
       including_tip: ''
       item: ''
       name_label: ''
@@ -113,10 +114,14 @@ en_GB:
       noneAll: ''
       order_aria: ''
       partySize: ''
+      pay: replace_me
       payBill: ''
       payment_link: ''
       price: ''
       requestBill: ''
+      request_bill: replace_me
+      request_bill_confirm_body: replace_me
+      request_bill_confirm_title: replace_me
       selected: ''
       service: ''
       start: ''

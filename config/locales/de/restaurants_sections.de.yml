@@ -482,6 +482,7 @@ de:
         add_table: Tabelle hinzufügen
         apply: Bewerbung
         archived: Archiviert
+        bulk_create: Bulk Create
         capacity: Kapazität
         confirm_delete: Diese Tabelle löschen?
         drag_to_reorder: Ziehen zum Neuordnen
@@ -510,11 +511,14 @@ de:
         view_qr: Ansicht QR
         view_qr_code: QR-Code für diese Tabelle anzeigen
       wifi_2025:
+        download: Herunterladen
         encryption_help: Das von Ihrem WiFi-Netzwerk verwendete Sicherheitsprotokoll
         'false': ''
         hidden_help: Ob der Netzname öffentlich bekannt gemacht wird
+        'no': Nein
         password_help: Das Passwort, das Kunden für die Verbindung benötigen
         password_placeholder: WiFi-Passwort eingeben
+        print: Drucken
         select_encryption: Verschlüsselung auswählen...
         select_option: Option auswählen...
         ssid_help: Der Name Ihres WiFi-Netzwerks, mit dem sich die Kunden verbinden
@@ -524,3 +528,11 @@ de:
         wifi_configuration: WiFi-Konfiguration
         wifi_description: Konfigurieren Sie die WiFi-Einstellungen, um QR-Codes für
           den Kundenzugang zu generieren
+        wifi_qr_description: Kunden können diesen QR-Code mit der Kamera ihres Handys
+          scannen, um sich automatisch mit Ihrem WiFi-Netzwerk zu verbinden - kein
+          Tippen erforderlich.
+        wifi_qr_no_ssid: Geben Sie oben den Namen eines WiFi-Netzwerks ein, um einen
+          QR-Code zu erzeugen.
+        wifi_qr_scan_hint: Zum Verbinden mit der Handykamera scannen
+        wifi_qr_title: WiFi-QR-Code
+        'yes': Ja
