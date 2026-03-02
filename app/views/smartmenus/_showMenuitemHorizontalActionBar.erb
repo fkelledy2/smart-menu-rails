@@ -12,7 +12,7 @@
                 <%# Alcoholic indicator badge (similar styling to allergens) %>
                 <% if mi.alcoholic? %>
                   <span class="badge bg-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<%= [t('smartmenus.alcoholic_tooltip', default: 'Contains alcohol'), mi.alcohol_classification.presence, (mi.abv.present? ? "#{mi.abv}%" : nil)].compact.join(' · ') %>">
-                    <% if mi.wine? %>🍷<% elsif mi.whiskey? || mi.spirit? || mi.other_spirit? || mi.liqueur? %>🥃<% else %><%= t('smartmenus.alcoholic', default: 'Alcoholic') %><% end %>
+                    <% if mi.wine? %>🍷<% elsif mi.beer? %>🍺<% elsif mi.cocktail? %>🍹<% elsif mi.whiskey? || mi.spirit? || mi.other_spirit? || mi.liqueur? %>🥃<% else %><%= t('smartmenus.alcoholic', default: 'Alcoholic') %><% end %>
                   </span>
                 <% end %>
 
