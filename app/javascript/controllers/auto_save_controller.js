@@ -29,12 +29,27 @@ export default class extends Controller {
       el.addEventListener('change', this.handleChange.bind(this))
     })
     
+    // Cmd+S / Ctrl+S keyboard shortcut
+    this._handleKeyDown = this._onKeyDown.bind(this)
+    document.addEventListener('keydown', this._handleKeyDown)
+    
     console.log('Auto-save connected', this.urlValue)
   }
   
   disconnect() {
     if (this.timeout) {
       clearTimeout(this.timeout)
+    }
+    if (this._handleKeyDown) {
+      document.removeEventListener('keydown', this._handleKeyDown)
+    }
+  }
+  
+  _onKeyDown(event) {
+    if ((event.metaKey || event.ctrlKey) && event.key === 's') {
+      event.preventDefault()
+      if (this.timeout) clearTimeout(this.timeout)
+      this.save()
     }
   }
   

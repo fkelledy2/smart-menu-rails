@@ -37,6 +37,8 @@ import AiProgressController from "./ai_progress_controller"
 import WhiskeyAmbassadorController from "./whiskey_ambassador_controller"
 import InviteStaffController from "./invite_staff_controller"
 import CameraCaptureController from "./camera_capture_controller"
+import ThemeToggleController from "./theme_toggle_controller"
+import QuickAddController from "./quick_add_controller"
 
 application.register("sortable", SortableController)
 application.register("auto-save", AutoSaveController)
@@ -73,5 +75,7 @@ application.register("ai-progress", AiProgressController)
 application.register("whiskey-ambassador", WhiskeyAmbassadorController)
 application.register("invite-staff", InviteStaffController)
 application.register("camera-capture", CameraCaptureController)
+application.register("theme-toggle", ThemeToggleController)
+application.register("quick-add", QuickAddController)
 
-console.log('[Stimulus] Controllers registered:', ['sortable', 'auto-save', 'menu-import', 'sidebar', 'stripe-wallet', 'state', 'order-header', 'order-totals', 'ordering', 'localization-bulk', 'menuitems-bulk', 'menusections-bulk', 'restaurants-bulk', 'discovered-restaurant-deep-dive', 'discovered-restaurant-web-scrape', 'restaurantmenus-bulk', 'discovered-restaurants-bulk', 'password-confirmation-toggle', 'disabled-action', 'userplan-plan-change', 'go-live-progress', 'settings-dependencies', 'bottom-sheet', 'tab-bar', 'menu-layout', 'inline-edit', 'mobile-tab-bar', 'ai-image-generator', 'scrollspy', 'generate-pairings', 'ai-progress', 'whiskey-ambassador', 'invite-staff', 'camera-capture'])
+console.log('[Stimulus] Controllers registered:', ['sortable', 'auto-save', 'menu-import', 'sidebar', 'stripe-wallet', 'state', 'order-header', 'order-totals', 'ordering', 'localization-bulk', 'menuitems-bulk', 'menusections-bulk', 'restaurants-bulk', 'discovered-restaurant-deep-dive', 'discovered-restaurant-web-scrape', 'restaurantmenus-bulk', 'discovered-restaurants-bulk', 'password-confirmation-toggle', 'disabled-action', 'userplan-plan-change', 'go-live-progress', 'settings-dependencies', 'bottom-sheet', 'tab-bar', 'menu-layout', 'inline-edit', 'mobile-tab-bar', 'ai-image-generator', 'scrollspy', 'generate-pairings', 'ai-progress', 'whiskey-ambassador', 'invite-staff', 'camera-capture', 'theme-toggle', 'quick-add'])

@@ -1,0 +1,51 @@
+<%#
+  Staff View Banner — persistent top bar differentiating staff from customer view.
+  Shows "Staff View — [Table Name]" with table switcher dropdown.
+%>
+<% table_name = tablesetting&.name || t('smartmenus.staff_banner.no_table', default: 'No Table') %>
+
+<div class="staff-banner" data-testid="staff-banner">
+  <div class="staff-banner-inner">
+    <div class="staff-banner-label">
+      <i class="bi bi-person-badge"></i>
+      <span><%= t('smartmenus.staff_banner.title', default: 'Staff View') %></span>
+      <span class="staff-banner-separator">&mdash;</span>
+      <span class="staff-banner-table" data-testid="staff-banner-table-name"><%= table_name %></span>
+    </div>
+
+    <div class="staff-banner-actions">
+      <% if table_smartmenus.present? && table_smartmenus.size > 1 %>
+        <div class="dropdown">
+          <button class="staff-banner-switch-btn" type="button"
+                  data-bs-toggle="dropdown" aria-expanded="false"
+                  data-testid="staff-table-switcher-btn">
+            <i class="bi bi-arrow-left-right"></i>
+            <span class="d-none d-sm-inline"><%= t('smartmenus.staff_banner.switch_table', default: 'Switch') %></span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" style="max-height: 300px; overflow-y: auto;">
+            <% Array(table_smartmenus).each do |sm| %>
+              <% next unless sm.tablesetting %>
+              <li>
+                <%= link_to smartmenu_path(sm.slug),
+                    class: "dropdown-item #{'active' if sm.tablesetting_id == tablesetting&.id}",
+                    data: { turbo: false, testid: "staff-switch-table-#{sm.tablesetting.id}" } do %>
+                  <i class="bi bi-<%= sm.tablesetting_id == tablesetting&.id ? 'check-circle-fill' : 'circle' %> me-1"></i>
+                  <%= sm.tablesetting.name %>
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <% if restaurant.present? %>
+        <%= link_to edit_restaurant_path(restaurant),
+            class: 'staff-banner-dash-btn',
+            data: { turbo: false, testid: 'staff-dashboard-btn' } do %>
+          <i class="bi bi-speedometer2"></i>
+          <span class="d-none d-sm-inline"><%= t('smartmenus.staff_banner.dashboard', default: 'Dashboard') %></span>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>

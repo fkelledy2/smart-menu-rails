@@ -82,6 +82,11 @@
   <%= render 'restaurants/mobile_tab_bar',
       restaurant: @restaurant,
       current_section: @current_section %>
+
+  <!-- Welcome modal on first visit from onboarding -->
+  <% if params[:onboarding].present? %>
+    <%= render 'restaurants/welcome_modal', restaurant: @restaurant %>
+  <% end %>
 </div>
 
 <% content_for :head do %>
@@ -105,7 +110,7 @@
     }
 
     .sidebar-main-content {
-      background: #fff;
+      background: var(--surface-primary);
     }
   </style>
 <% end %>

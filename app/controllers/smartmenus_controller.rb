@@ -106,14 +106,22 @@ class SmartmenusController < ApplicationController
         "sid:#{session.id}",
       ]
 
-      # Enforce private, per-session caching and language variance
-      response.headers['Cache-Control'] = 'private, must-revalidate, max-age=0'
-      response.headers['Vary'] = [response.headers['Vary'], 'Cookie', 'Accept-Language'].compact.join(', ')
+      # Use public caching for menu-only views (no active order/session context).
+      # Keep private caching when order state is present to avoid stale order UI.
+      has_order_context = @openOrder.present? || @ordrparticipant.present?
+
+      if has_order_context
+        response.headers['Cache-Control'] = 'private, must-revalidate, max-age=0'
+        response.headers['Vary'] = [response.headers['Vary'], 'Cookie', 'Accept-Language'].compact.join(', ')
+      else
+        response.headers['Cache-Control'] = 'public, max-age=60, stale-while-revalidate=300'
+        response.headers['Vary'] = [response.headers['Vary'], 'Accept-Language'].compact.join(', ')
+      end
 
       fresh_when(
         etag: etag_parts,
         last_modified: last_modified_candidates.max,
-        public: false,
+        public: !has_order_context,
       )
     end
 

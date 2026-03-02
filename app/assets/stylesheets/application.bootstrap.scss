@@ -55,6 +55,9 @@
 @import 'components/ocr_2025';
 @import 'components/sidebar_2025';
 
+// Dark mode overrides (Priority 6)
+@import 'components/dark_mode';
+
 // Phase 1: Foundation (UI/UX Upgrade 2026)
 @import 'components/bottom_sheet';
 @import 'components/camera_capture';

@@ -1,0 +1,857 @@
+// ============================================
+// DARK MODE — Bootstrap & Component Overrides
+// Applied when [data-theme="dark"] is set on <html>
+// or when prefers-color-scheme: dark (without explicit light)
+// ============================================
+
+// Mixin containing all dark overrides — applied by both
+// the explicit [data-theme="dark"] selector and the
+// prefers-color-scheme media query.
+@mixin dark-mode-overrides {
+  // --- Body ---
+  body {
+    background-color: var(--surface-secondary);
+    color: var(--text-primary);
+  }
+
+  // --- Bootstrap Navbar ---
+  .navbar {
+    background-color: var(--surface-primary) !important;
+    border-bottom-color: var(--border-default) !important;
+  }
+
+  .navbar-light .navbar-brand,
+  .navbar-light .navbar-nav .nav-link {
+    color: var(--text-primary) !important;
+  }
+
+  // --- Cards ---
+  .card {
+    background-color: var(--surface-primary);
+    border-color: var(--border-default);
+    color: var(--text-primary);
+  }
+
+  .card-header {
+    background-color: var(--surface-tertiary);
+    border-bottom-color: var(--border-default);
+    color: var(--text-primary);
+  }
+
+  .card-footer {
+    background-color: var(--surface-tertiary);
+    border-top-color: var(--border-default);
+  }
+
+  // Smartmenu item cards: header/footer match card body
+  .menu-item-card-mobile .card .card-header,
+  .menu-item-card-mobile .card .card-footer {
+    background-color: transparent !important;
+  }
+
+  // --- Tables ---
+  .table {
+    --bs-table-bg: var(--surface-primary);
+    --bs-table-color: var(--text-primary);
+    --bs-table-border-color: var(--border-default);
+    --bs-table-striped-bg: var(--surface-secondary);
+    --bs-table-hover-bg: var(--surface-tertiary);
+    color: var(--text-primary);
+  }
+
+  .table > :not(caption) > * > * {
+    background-color: var(--surface-primary);
+    color: var(--text-primary);
+    border-bottom-color: var(--border-default);
+  }
+
+  .table-hover > tbody > tr:hover > * {
+    background-color: var(--surface-tertiary) !important;
+    color: var(--text-primary);
+  }
+
+  // --- Forms ---
+  .form-control,
+  .form-select {
+    background-color: var(--input-bg);
+    border-color: var(--input-border);
+    color: var(--input-text);
+
+    &:focus {
+      background-color: var(--input-bg);
+      border-color: var(--color-primary);
+      color: var(--input-text);
+    }
+
+    &::placeholder {
+      color: var(--input-placeholder);
+    }
+
+    &:disabled,
+    &[readonly] {
+      background-color: var(--surface-tertiary);
+      color: var(--text-tertiary);
+    }
+  }
+
+  .form-label {
+    color: var(--text-primary);
+  }
+
+  .form-text {
+    color: var(--text-tertiary);
+  }
+
+  .form-check-input {
+    background-color: var(--input-bg);
+    border-color: var(--input-border);
+  }
+
+  .input-group-text {
+    background-color: var(--surface-tertiary);
+    border-color: var(--input-border);
+    color: var(--text-secondary);
+  }
+
+  // --- Modals ---
+  .modal-content {
+    background-color: var(--surface-elevated);
+    border-color: var(--border-default);
+    color: var(--text-primary);
+  }
+
+  .modal-header {
+    border-bottom-color: var(--border-default);
+  }
+
+  .modal-footer {
+    border-top-color: var(--border-default);
+  }
+
+  .btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+  }
+
+  // --- Dropdowns ---
+  .dropdown-menu:not(.dropdown-menu-dark) {
+    background-color: var(--surface-elevated);
+    border-color: var(--border-default);
+    color: var(--text-primary);
+  }
+
+  .dropdown-menu:not(.dropdown-menu-dark) .dropdown-item {
+    color: var(--text-primary);
+
+    &:hover,
+    &:focus {
+      background-color: var(--surface-tertiary);
+      color: var(--text-primary);
+    }
+  }
+
+  .dropdown-divider {
+    border-top-color: var(--border-default);
+  }
+
+  // --- Alerts ---
+  .alert-warning {
+    background-color: var(--color-warning-light);
+    border-color: rgba(251, 191, 36, 0.3);
+    color: var(--color-warning);
+  }
+
+  .alert-info {
+    background-color: var(--color-info-light);
+    border-color: rgba(96, 165, 250, 0.3);
+    color: var(--color-info);
+  }
+
+  .alert-danger {
+    background-color: var(--color-danger-light);
+    border-color: rgba(248, 113, 113, 0.3);
+    color: var(--color-danger);
+  }
+
+  .alert-success {
+    background-color: var(--color-success-light);
+    border-color: rgba(52, 211, 153, 0.3);
+    color: var(--color-success);
+  }
+
+  // --- Badges ---
+  .badge.bg-light {
+    background-color: var(--surface-tertiary) !important;
+    color: var(--text-primary) !important;
+  }
+
+  // --- List Groups ---
+  .list-group-item {
+    background-color: var(--surface-primary);
+    border-color: var(--border-default);
+    color: var(--text-primary);
+  }
+
+  // --- Accordion ---
+  .accordion-item {
+    background-color: var(--surface-primary);
+    border-color: var(--border-default);
+  }
+
+  .accordion-button {
+    background-color: var(--surface-primary);
+    color: var(--text-primary);
+
+    &:not(.collapsed) {
+      background-color: var(--surface-tertiary);
+      color: var(--text-primary);
+    }
+
+    &::after {
+      filter: invert(1);
+    }
+  }
+
+  // --- Breadcrumbs ---
+  .breadcrumb-item + .breadcrumb-item::before {
+    color: var(--text-tertiary);
+  }
+
+  .breadcrumb-item a {
+    color: var(--text-link);
+  }
+
+  // --- Borders / HRs ---
+  hr {
+    border-color: var(--border-default);
+    opacity: 0.5;
+  }
+
+  // --- 2025 Admin Sidebar ---
+  .sidebar-app {
+    background: var(--surface-primary) !important;
+    border-right-color: var(--border-default) !important;
+  }
+
+  .sidebar-2025 {
+    background-color: var(--surface-primary) !important;
+    border-right-color: var(--border-default) !important;
+  }
+
+  .sidebar-section {
+    background: var(--surface-primary) !important;
+    border-bottom-color: var(--border-default) !important;
+  }
+
+  .sidebar-section-header {
+    background: var(--surface-primary) !important;
+    color: var(--text-tertiary) !important;
+  }
+
+  .sidebar-section-title {
+    background: var(--surface-primary) !important;
+    color: var(--text-tertiary) !important;
+  }
+
+  .sidebar-link {
+    background: var(--surface-primary) !important;
+    color: var(--text-secondary) !important;
+
+    &:hover {
+      background: var(--surface-tertiary) !important;
+      color: var(--text-primary) !important;
+    }
+
+    &.active {
+      background: var(--surface-tertiary) !important;
+      color: var(--text-primary) !important;
+      border-left-color: var(--color-primary) !important;
+    }
+  }
+
+  .sidebar-badge {
+    background: var(--surface-tertiary) !important;
+    color: var(--text-secondary) !important;
+  }
+
+  .sidebar-header {
+    background: var(--surface-primary) !important;
+    border-bottom-color: var(--border-default) !important;
+  }
+
+  .sidebar-toggle-btn {
+    background: var(--surface-primary) !important;
+    border-color: var(--border-default) !important;
+    color: var(--text-secondary) !important;
+  }
+
+  .sidebar-section-toggle {
+    color: var(--text-secondary);
+
+    &:hover {
+      color: var(--text-primary);
+    }
+  }
+
+  // --- Sidebar Content Cards ---
+  .quick-actions-card,
+  .overview-stats-card,
+  .content-card {
+    background: var(--surface-primary) !important;
+  }
+
+  .quick-action-btn {
+    background: var(--surface-tertiary) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border-default) !important;
+
+    &:hover:not(.disabled) {
+      background: var(--surface-elevated) !important;
+    }
+  }
+
+  .quick-action-btn-secondary {
+    background: var(--surface-tertiary) !important;
+  }
+
+  // --- 2025 Buttons ---
+  .btn-touch-secondary,
+  .btn-2025-secondary,
+  .btn-2025-outline-danger {
+    background-color: var(--surface-primary) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border-strong) !important;
+  }
+
+  // --- 2025 Form Sections ---
+  .section-form-2025 {
+    background-color: var(--surface-primary);
+    border-color: var(--border-default);
+  }
+
+  .section-header-2025 {
+    color: var(--text-primary);
+    border-bottom-color: var(--border-default);
+  }
+
+  // --- Page Header / Sticky Header ---
+  .sticky-header {
+    background: var(--surface-primary) !important;
+    border-bottom-color: var(--border-default) !important;
+  }
+
+  // --- Container & Layout ---
+  .container-fluid {
+    color: var(--text-primary);
+  }
+
+  .sidebar-main-content {
+    background: var(--surface-primary) !important;
+  }
+
+  .sidebar-content-container {
+    background: var(--surface-secondary);
+  }
+
+  // --- Turbo Frames ---
+  turbo-frame {
+    color: var(--text-primary);
+  }
+
+  // --- Content panels (p-3, p-4 containers inside turbo-frame) ---
+  [data-testid="menus-list-card"],
+  [data-testid="menus-quick-actions"] {
+    background: var(--surface-primary);
+    border-radius: var(--radius-lg, 0.75rem);
+  }
+
+  // --- Headings ---
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--text-primary);
+  }
+
+  .fw-semibold {
+    color: var(--text-primary);
+  }
+
+  // --- Nav tabs ---
+  .nav-tabs {
+    border-bottom-color: var(--border-default);
+
+    .nav-link {
+      color: var(--text-secondary);
+
+      &:hover {
+        border-color: var(--border-default);
+        color: var(--text-primary);
+      }
+
+      &.active {
+        background-color: var(--surface-primary);
+        border-color: var(--border-default) var(--border-default) var(--surface-primary);
+        color: var(--text-primary);
+      }
+    }
+  }
+
+  // --- Bootstrap link helpers ---
+  .link-dark {
+    color: var(--text-primary) !important;
+  }
+
+  .link-secondary {
+    color: var(--text-secondary) !important;
+  }
+
+  // --- Bootstrap btn-outline-secondary (common in admin) ---
+  .btn-outline-secondary {
+    color: var(--text-secondary);
+    border-color: var(--border-strong);
+
+    &:hover {
+      background-color: var(--surface-tertiary);
+      border-color: var(--border-strong);
+      color: var(--text-primary);
+    }
+  }
+
+  // --- Row status classes (menu list) ---
+  .row-status-inactive,
+  .menu-row-muted {
+    td, .fw-semibold, .menu-name {
+      color: var(--text-tertiary) !important;
+    }
+  }
+
+  .row-status-active {
+    td, .fw-semibold, .menu-name {
+      color: var(--text-primary) !important;
+    }
+  }
+
+  // --- Mobile menu cards ---
+  .menu-card-mobile {
+    background: var(--surface-tertiary) !important;
+    border-color: var(--border-default) !important;
+
+    &:hover {
+      border-color: var(--border-strong) !important;
+    }
+  }
+
+  // --- Feature cards (settings, advanced) ---
+  .feature-card {
+    background: var(--surface-primary) !important;
+    border-color: var(--border-default) !important;
+
+    &:hover {
+      border-color: var(--border-strong) !important;
+    }
+  }
+
+  // --- Stats cards ---
+  .stat-card {
+    background: var(--surface-primary);
+    border-color: var(--border-default);
+  }
+
+  // --- Mobile Tab Bar ---
+  .mobile-tab-bar-container {
+    background: var(--surface-primary) !important;
+    border-top-color: var(--border-default) !important;
+  }
+
+  .mobile-tab-item {
+    color: var(--text-tertiary);
+
+    &.active {
+      color: var(--color-primary);
+    }
+  }
+
+  // --- Footer ---
+  footer {
+    background-color: var(--surface-secondary) !important;
+    color: var(--text-secondary);
+    border-top-color: var(--border-default) !important;
+  }
+
+  // --- Smartmenu surfaces (comprehensive) ---
+
+  // Layout wrapper
+  .layout-container {
+    background-color: var(--surface-secondary);
+  }
+
+  .flex-wrapper {
+    background-color: var(--surface-secondary);
+  }
+
+  // Sticky headers
+  .menu-sticky-header,
+  .menu-sticky-header-mobile {
+    background-color: var(--surface-primary) !important;
+  }
+
+  .header-restaurant-row {
+    background-color: var(--surface-primary);
+    color: var(--text-primary);
+  }
+
+  .header-order-row {
+    background-color: var(--surface-primary);
+    border-top-color: var(--border-default);
+  }
+
+  .sections-filter-row {
+    background-color: var(--surface-primary);
+  }
+
+  .menu-search-input {
+    background-color: var(--input-bg) !important;
+    border-color: var(--input-border) !important;
+    color: var(--input-text) !important;
+  }
+
+  .sections-tabs {
+    background-color: var(--surface-primary);
+  }
+
+  .section-tab {
+    color: var(--text-secondary);
+
+    &.active {
+      color: var(--text-primary);
+      border-bottom-color: var(--color-primary);
+    }
+  }
+
+  // Menu container (from _smartmenu.scss)
+  .menu-container {
+    background: var(--surface-primary) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  // Menu navigation
+  .menu-nav {
+    background: var(--surface-primary) !important;
+    border-bottom-color: var(--border-default) !important;
+  }
+
+  .menu-nav-link {
+    background: var(--surface-tertiary);
+    color: var(--text-secondary);
+
+    &:hover,
+    &.active {
+      background: var(--color-primary);
+      color: #fff;
+    }
+  }
+
+  // Menu sections
+  .menu-section {
+    border-bottom-color: var(--border-default);
+  }
+
+  .menu-section-title {
+    color: var(--text-primary) !important;
+  }
+
+  .menu-section-description {
+    color: var(--text-secondary) !important;
+  }
+
+  // Menu items (cards)
+  .menu-item {
+    background: var(--surface-primary) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  }
+
+  .menu-item-title {
+    color: var(--text-primary) !important;
+  }
+
+  .menu-item-description {
+    color: var(--text-secondary) !important;
+  }
+
+  .menu-item-tag {
+    background: var(--surface-tertiary);
+    color: var(--text-secondary);
+  }
+
+  .menu-item-tag.allergen {
+    background: rgba(251, 191, 36, 0.15);
+    color: var(--color-warning);
+  }
+
+  .menu-item-tag.dietary {
+    background: rgba(96, 165, 250, 0.15);
+    color: var(--color-info);
+  }
+
+  // Quantity selector
+  .quantity-btn {
+    background: var(--surface-primary) !important;
+    border-color: var(--border-default) !important;
+    color: var(--text-primary);
+  }
+
+  .quantity-display {
+    color: var(--text-primary);
+  }
+
+  // Cart sidebar
+  .cart-sidebar {
+    background: var(--surface-primary) !important;
+    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.3);
+  }
+
+  // --- Smartmenu mobile components ---
+
+  // Sections nav
+  .menu-sections-nav-mobile {
+    background: var(--surface-primary) !important;
+    border-bottom-color: var(--border-default) !important;
+  }
+
+  // Section tab pills (mobile)
+  .section-tab-pill {
+    background: var(--surface-primary) !important;
+    border-color: var(--border-default) !important;
+    color: var(--text-secondary) !important;
+
+    &.active {
+      color: #fff !important;
+    }
+  }
+
+  // Touch buttons
+  .btn-touch-secondary {
+    background: var(--surface-primary) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border-default) !important;
+  }
+
+  .btn-touch-ghost {
+    color: var(--text-secondary) !important;
+  }
+
+  // Menu item cards (mobile)
+  .menu-item-card {
+    background-color: var(--surface-primary) !important;
+
+    .card {
+      background-color: var(--surface-primary) !important;
+      border-color: var(--border-default) !important;
+    }
+  }
+
+  // Smartmenu section headers
+  .section-header-row {
+    color: var(--text-primary);
+  }
+
+  // Order summary / modals
+  .order-summary,
+  .order-items-list {
+    background: var(--surface-primary);
+    color: var(--text-primary);
+  }
+
+  // Search (mobile)
+  .menu-search-bar input,
+  .menu-search-bar-mobile input {
+    background: var(--input-bg) !important;
+    border-color: var(--input-border) !important;
+    color: var(--input-text) !important;
+  }
+
+  // No results
+  .menu-search-no-results {
+    color: var(--text-tertiary);
+  }
+
+  // Skeleton loading
+  .skeleton-card,
+  .skeleton-shimmer {
+    background: var(--surface-tertiary) !important;
+  }
+
+  // Allergen modal
+  .allergen-modal-content,
+  .allergen-key-item {
+    background: var(--surface-primary);
+    color: var(--text-primary);
+  }
+
+  // Sommelier / Whiskey Ambassador cards
+  .sommelier-card,
+  .whiskey-ambassador-card {
+    background: var(--surface-primary) !important;
+    border-color: var(--border-default) !important;
+    color: var(--text-primary);
+  }
+
+  // Staff banner switch button
+  .staff-banner-switch-btn {
+    background: var(--surface-primary) !important;
+    color: var(--text-primary) !important;
+  }
+
+  // Menu content container
+  #menuContentContainer {
+    color: var(--text-primary);
+  }
+
+  // Smart menu item name, price, description overrides
+  .item-name, .item-title {
+    color: var(--text-primary) !important;
+  }
+
+  .item-price {
+    color: var(--color-primary) !important;
+  }
+
+  .item-description {
+    color: var(--text-secondary) !important;
+  }
+
+  // Smartmenu navbar
+  .smartmenu-navbar {
+    background: var(--surface-primary) !important;
+    border-bottom-color: var(--border-default) !important;
+  }
+
+  // Generic container-fluid inside smartmenu
+  .container-fluid {
+    background-color: transparent;
+  }
+
+  // --- Bottom Sheet ---
+  .bottom-sheet-container {
+    background-color: var(--surface-elevated);
+  }
+
+  .bottom-sheet-handle-bar {
+    background-color: var(--border-strong);
+  }
+
+  // --- Quick-add stepper ---
+  .quick-add-stepper {
+    border-color: var(--border-default);
+    background: var(--surface-tertiary);
+  }
+
+  .quick-add-qty {
+    background: var(--surface-primary);
+    color: var(--text-primary);
+    border-color: var(--border-default);
+  }
+
+  .quick-add-btn {
+    color: var(--text-primary);
+  }
+
+  // --- Staff banner stays as-is (blue gradient, no override needed) ---
+
+  // --- Empty State component ---
+  .empty-state-card {
+    background-color: var(--surface-primary);
+    border-color: var(--border-default);
+    color: var(--text-secondary);
+  }
+
+  // --- Tab Bar ---
+  .mobile-tab-bar {
+    background-color: var(--surface-primary) !important;
+    border-top-color: var(--border-default) !important;
+  }
+
+  // --- Misc hardcoded backgrounds ---
+  .bg-white {
+    background-color: var(--surface-primary) !important;
+  }
+
+  .bg-light {
+    background-color: var(--surface-secondary) !important;
+  }
+
+  .text-muted {
+    color: var(--text-tertiary) !important;
+  }
+
+  .text-dark {
+    color: var(--text-primary) !important;
+  }
+
+  .border {
+    border-color: var(--border-default) !important;
+  }
+
+  .border-bottom {
+    border-bottom-color: var(--border-default) !important;
+  }
+
+  .border-top {
+    border-top-color: var(--border-default) !important;
+  }
+
+  // --- Scrollbar styling ---
+  ::-webkit-scrollbar-track {
+    background: var(--surface-secondary);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--border-strong);
+  }
+
+  // --- Links ---
+  a:not(.btn):not(.nav-link):not(.dropdown-item):not(.list-group-item-action) {
+    color: var(--text-link);
+  }
+}
+
+// Apply via explicit attribute
+:root[data-theme="dark"] {
+  @include dark-mode-overrides;
+}
+
+// Apply via system preference (unless user explicitly chose light)
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    @include dark-mode-overrides;
+  }
+}
+
+// --- Theme toggle button ---
+.theme-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border: none;
+  border-radius: var(--radius-md, 0.5rem);
+  background: transparent;
+  color: inherit;
+  font-size: 1.125rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  padding: 0;
+
+  &:hover {
+    background: rgba(128, 128, 128, 0.15);
+  }
+
+  .theme-icon-light,
+  .theme-icon-dark,
+  .theme-icon-auto {
+    display: none;
+  }
+}
+
+// Show correct icon based on active theme
+:root[data-theme="dark"] .theme-icon-dark { display: inline; }
+:root[data-theme="light"] .theme-icon-light { display: inline; }
+:root:not([data-theme]) .theme-icon-auto { display: inline; }

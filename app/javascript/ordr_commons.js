@@ -362,10 +362,25 @@ export function initOrderBindings() {
       const sizeName = document.getElementById('a2o_size_name')?.textContent?.trim() || null;
       const restaurantId = getRestaurantId();
       if (!ordrId || !menuitemId || !restaurantId) { console.error('[AddItem][capture] Missing data'); return; }
+
+      // Quick-add: respect quantity set by quick_add_controller
+      const qty = Math.max(1, Math.min(99, parseInt(window.__quickAddQty) || 1));
+      window.__quickAddQty = 1;
+
       const ordritem = { ordritem: { ordr_id: ordrId, menuitem_id: menuitemId, status: 0, ordritemprice: price, size_name: sizeName } };
-      post(`/restaurants/${restaurantId}/ordritems`, ordritem)
-        .then(() => hideClosestModal(btn))
-        .catch((e) => console.error('[AddItem][capture] Post failed:', e));
+      if (qty === 1) {
+        post(`/restaurants/${restaurantId}/ordritems`, ordritem)
+          .then(() => hideClosestModal(btn))
+          .catch((e) => console.error('[AddItem][capture] Post failed:', e));
+      } else {
+        (async () => {
+          for (let i = 0; i < qty; i++) {
+            await post(`/restaurants/${restaurantId}/ordritems`, ordritem);
+          }
+        })()
+          .then(() => hideClosestModal(btn))
+          .catch((e) => console.error('[AddItem][capture] Multi-post failed:', e));
+      }
     }, true);
   })();
 

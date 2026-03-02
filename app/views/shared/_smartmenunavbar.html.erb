@@ -14,5 +14,10 @@
     <%= link_to root_path, class: "navbar-brand" do %>
         <%= image_tag "qr-icon.svg", height:'56' %><%= image_tag "logo.png", height:'56' %>
     <% end %>
+    <div class="d-flex align-items-center" data-controller="theme-toggle">
+      <button type="button" class="theme-toggle-btn" data-action="click->theme-toggle#toggle" title="Toggle theme" data-testid="theme-toggle-btn">
+        <i class="bi bi-circle-half" data-theme-toggle-target="icon"></i>
+      </button>
+    </div>
   </div>
 </nav>

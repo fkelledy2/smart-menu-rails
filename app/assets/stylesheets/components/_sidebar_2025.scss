@@ -264,6 +264,21 @@
   }
 }
 
+// Collapsible Section Toggle (Bootstrap collapse)
+.sidebar-section-toggle {
+  cursor: pointer;
+  user-select: none;
+
+  .sidebar-chevron {
+    transition: transform 0.2s ease;
+    font-size: 0.7rem;
+  }
+
+  &[aria-expanded="false"] .sidebar-chevron {
+    transform: rotate(-90deg);
+  }
+}
+
 // Expandable Section
 .sidebar-expandable {
   .sidebar-section-title {

@@ -268,7 +268,7 @@
                     <input type="time" class="form-control" value="<%= format('%02d:%02d', (r['from_min'].to_i/60), (r['from_min'].to_i%60)) %>" />
                     <span class="input-group-text"><%= t('.to') %></span>
                     <input type="time" class="form-control" value="<%= format('%02d:%02d', (r['to_min'].to_i/60), (r['to_min'].to_i%60)) %>" />
-                    <button class="btn btn-outline-danger" type="button" data-remove-range="true"><i class="bi bi-trash"></i></button>
+                    <button class="btn btn-outline-danger" type="button" data-remove-range="true" aria-label="<%= t('common.remove', default: 'Remove') %>"><i class="bi bi-trash"></i></button>
                   </div>
                 <% end %>
               </div>
@@ -391,9 +391,9 @@
                 row.innerHTML = `
                   <span class="input-group-text">from</span>
                   <input type="time" class="form-control" value="00:00" />
-                  <span class="input-group-text">to</span>
+                  <span class="input-group-text">${document.querySelector('[data-i18n-to]')?.textContent || 'to'}</span>
                   <input type="time" class="form-control" value="00:00" />
-                  <button class="btn btn-outline-danger" type="button" data-remove-range="true"><i class="bi bi-trash"></i></button>
+                  <button class="btn btn-outline-danger" type="button" data-remove-range="true" aria-label="Remove"><i class="bi bi-trash"></i></button>
                 `;
                 if (rangesContainer) rangesContainer.appendChild(row);
                 autoSave();
@@ -496,7 +496,7 @@
     flex-direction: column;
     gap: var(--space-3);
     padding: var(--space-4);
-    background: white;
+    background: var(--surface-primary, #fff);
     border: 2px solid var(--color-gray-200);
     border-radius: var(--radius-lg);
     transition: all var(--transition-base);

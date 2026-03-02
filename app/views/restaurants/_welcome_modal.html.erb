@@ -1,0 +1,46 @@
+<%# Welcome modal shown once after onboarding completes.
+    Auto-dismisses after 3 seconds or on click/Escape. %>
+<div id="welcome-modal" class="modal fade" tabindex="-1" aria-labelledby="welcomeModalLabel" aria-hidden="true"
+     data-testid="welcome-modal">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content text-center border-0 shadow-lg">
+      <div class="modal-body py-5 px-4">
+        <div class="mb-3">
+          <i class="bi bi-rocket-takeoff text-primary" style="font-size: 3rem;"></i>
+        </div>
+        <h5 class="fw-semibold mb-2" id="welcomeModalLabel">
+          <%= t('restaurants.welcome_modal.title', default: "Welcome to %{name}!", name: restaurant.name) %>
+        </h5>
+        <p class="text-muted small mb-0">
+          <%= t('restaurants.welcome_modal.body', default: 'Complete the go-live checklist to get your restaurant online.') %>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  var KEY = 'welcome_modal_shown_<%= restaurant.id %>';
+  if (sessionStorage.getItem(KEY)) return;
+
+  document.addEventListener('DOMContentLoaded', init);
+  document.addEventListener('turbo:load', init);
+
+  var fired = false;
+  function init() {
+    if (fired) return;
+    fired = true;
+
+    var el = document.getElementById('welcome-modal');
+    if (!el || !window.bootstrap) return;
+
+    sessionStorage.setItem(KEY, '1');
+    var modal = new bootstrap.Modal(el, { backdrop: true, keyboard: true });
+    modal.show();
+
+    // Auto-dismiss after 3 seconds
+    setTimeout(function() { modal.hide(); }, 3000);
+  }
+})();
+</script>

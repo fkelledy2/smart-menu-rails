@@ -10,9 +10,15 @@
   padding: 12px 2px;
   
   .card {
+    --bs-card-cap-bg: transparent;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    .card-header {
+      background: transparent !important;
+      border-bottom: none;
+    }
     border: 1px solid #e5e5e5;
     overflow: hidden;
     display: flex;
@@ -30,6 +36,7 @@
       padding: 0 !important;
       min-height: 0 !important;
       border-top: none;
+      background: inherit;
       display: flex;
       align-items: stretch;
 
@@ -316,7 +323,7 @@
     .restaurant-name {
       font-size: 1.25rem;
       font-weight: 700;
-      color: #1a1a1a !important;
+      color: var(--text-primary, #1a1a1a) !important;
       flex: 1;
       min-width: 0; // Allow text truncation
       white-space: nowrap;
@@ -327,7 +334,7 @@
       &:hover,
       &:focus,
       &:active {
-        color: #1a1a1a !important;
+        color: var(--text-primary, #1a1a1a) !important;
         text-decoration: none;
       }
     }
@@ -347,7 +354,7 @@
     .menu-name {
       font-size: 1.125rem;
       font-weight: 700;
-      color: #666;
+      color: var(--text-secondary, #666);
       flex: 1;
       min-width: 0;
       white-space: nowrap;
@@ -985,6 +992,197 @@
   transition: transform var(--motion-duration-fast, 100ms) ease;
   &:active {
     transform: scale(0.92);
+  }
+}
+
+// ============================================================================
+// 10. SEARCH FILTERING
+// ============================================================================
+
+// Hidden items/sections during search — CSS class toggle, no DOM removal
+.search-hidden {
+  display: none !important;
+}
+
+.search-section-hidden {
+  display: none !important;
+}
+
+// No results message
+.menu-search-no-results {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #6c757d;
+
+  i {
+    font-size: 2.5rem;
+    display: block;
+    margin-bottom: 0.75rem;
+    opacity: 0.5;
+  }
+}
+
+// ============================================================================
+// 11. LAZY-LOAD SECTIONS
+// ============================================================================
+
+// Sections beyond the first 3 are hidden until revealed by IntersectionObserver
+.lazy-section {
+  display: none;
+}
+
+.lazy-section.lazy-revealed {
+  display: block;
+}
+
+// ============================================================================
+// 12. STAFF VIEW — BANNER & VISUAL DIFFERENTIATION
+// ============================================================================
+
+// Coloured top border for staff view
+[data-testid="smartmenu-staff-view"] {
+  border-top: 3px solid #0d6efd;
+}
+
+// Subtle background tint for staff view content
+.staff-banner ~ #menuContentContainer {
+  background-color: rgba(13, 110, 253, 0.02);
+}
+
+// Persistent staff banner
+.staff-banner {
+  background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+  color: #fff;
+  padding: 0;
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+  font-size: 0.8125rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.staff-banner-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.75rem;
+  max-width: 100%;
+  gap: 0.5rem;
+}
+
+.staff-banner-label {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+
+  i {
+    font-size: 0.875rem;
+    flex-shrink: 0;
+  }
+}
+
+.staff-banner-separator {
+  opacity: 0.6;
+  flex-shrink: 0;
+}
+
+.staff-banner-table {
+  font-weight: 400;
+  opacity: 0.9;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.staff-banner-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  flex-shrink: 0;
+}
+
+// Quick-add quantity stepper
+.quick-add-stepper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin-top: 0.25rem;
+  border-radius: 0.375rem;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  background: #f8f9fa;
+}
+
+.quick-add-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 1.75rem;
+  border: none;
+  background: transparent;
+  color: #212529;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background 0.1s ease;
+  padding: 0;
+
+  &:hover:not(:disabled) {
+    background: rgba(0, 0, 0, 0.08);
+  }
+
+  &:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+}
+
+.quick-add-qty {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.5rem;
+  height: 1.75rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #212529;
+  user-select: none;
+  border-left: 1px solid rgba(0, 0, 0, 0.1);
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+  background: #fff;
+}
+
+.staff-banner-switch-btn,
+.staff-banner-dash-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 0.375rem;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  white-space: nowrap;
+
+  &:hover,
+  &:focus {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    text-decoration: none;
+  }
+
+  i {
+    font-size: 0.75rem;
   }
 }
 

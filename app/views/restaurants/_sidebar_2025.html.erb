@@ -133,13 +133,22 @@
     <% end %>
   </div>
 
-  <!-- OPERATIONS (Tables + Staff) -->
+  <!-- OPERATIONS (Tables + Staff) — collapsible -->
+  <%
+    ops_sections = %w[staff tables taxes_and_tips ordering insights jukebox wifi]
+    ops_expanded = ops_sections.include?(current_section.to_s)
+  %>
   <div class="sidebar-section">
-    <div class="sidebar-section-title">
+    <div class="sidebar-section-title sidebar-section-toggle"
+         data-bs-toggle="collapse" data-bs-target="#sidebar-ops-group"
+         aria-expanded="<%= ops_expanded %>" aria-controls="sidebar-ops-group"
+         role="button">
       <i class="bi bi-gear-wide-connected"></i>
       <%= t('.operations') %>
+      <i class="bi bi-chevron-down ms-auto sidebar-chevron"></i>
     </div>
 
+    <div id="sidebar-ops-group" class="collapse<%= ' show' if ops_expanded %>">
     <%= link_to edit_restaurant_path(restaurant, section: 'staff'),
         class: "sidebar-link #{'active' if current_section == 'staff'} #{disabled_class_for('staff', onboarding_next)}",
         data: { testid: 'sidebar-staff-link', turbo_frame: 'restaurant_content', turbo_action: 'advance', action: 'click->sidebar#handleLinkClick', **disabled_data_attrs('staff', onboarding_next) } do %>
@@ -229,6 +238,7 @@
       <span><%= t('.wifi') %></span>
       <%= sa_badge %>
     <% end %>
+    </div><%# close #sidebar-ops-group collapse %>
   </div>
 
   <% if is_super_admin %>

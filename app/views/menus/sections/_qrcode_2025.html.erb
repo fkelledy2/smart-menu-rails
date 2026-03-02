@@ -91,10 +91,11 @@
   <% end %>
 
   <% if !menu_only && per_table.blank? %>
-    <div class="alert alert-info mt-3">
-      <i class="bi bi-info-circle me-2"></i>
-      <%= t('.no_qr_found') %>
-    </div>
+    <%= render(EmptyStateComponent.new(
+      title: t('.no_qr_found'),
+      icon: 'bi-qr-code',
+      compact: true
+    )) %>
   <% end %>
 
   <style>
@@ -214,7 +215,7 @@
 <style>
   .qr-preview {
     padding: var(--space-6);
-    background: white;
+    background: var(--surface-primary, #fff);
     border: 2px solid var(--color-gray-200);
     border-radius: var(--radius-lg);
     display: flex;

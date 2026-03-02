@@ -73,14 +73,14 @@
                     class="quick-action-btn quick-action-btn-secondary restaurant-status-pill restaurant-status-pill--active w-100"
                     data-testid="restaurant-preview-toggle-btn">
               <i class="bi bi-toggle2-off"></i>
-              <span>Published</span>
+              <span><%= t('restaurants.details.published', default: 'Published') %></span>
             </button>
           <% else %>
             <button type="submit"
                     class="quick-action-btn restaurant-status-pill restaurant-status-pill--inactive w-100"
                     data-testid="restaurant-preview-toggle-btn">
               <i class="bi bi-toggle2-on"></i>
-              <span>Unpublished</span>
+              <span><%= t('restaurants.details.unpublished', default: 'Unpublished') %></span>
             </button>
           <% end %>
         <% end %>

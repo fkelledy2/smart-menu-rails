@@ -65,7 +65,10 @@
       <input type="text" 
              id="menu-item-search" 
              class="menu-search-input" 
-             placeholder="<%= t('.search_menu', default: 'Search menu...') %>">
+             placeholder="<%= t('.search_menu', default: 'Search menu...') %>"
+             data-menu-search-target="input"
+             data-action="input->menu-search#filter"
+             data-testid="menu-search-input">
       
       <!-- Layout Toggle -->
       <div class="layout-toggle-group" role="group" aria-label="<%= t('.layout', default: 'Layout') %>">

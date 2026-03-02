@@ -1,6 +1,6 @@
 <%= render 'shared/currency' %>
 
-<div data-controller="menu-layout">
+<div data-controller="menu-layout menu-search">
 <%# Optional debug output for allergen query/results: ?debug=allergyns (development only) %>
 <% if Rails.env.development? && params[:debug] == 'allergyns' && defined?(@debug_allergyns_info) && @debug_allergyns_info.present? %>
   <div class="container my-2">
@@ -26,6 +26,7 @@
     show_customer_view = @force_customer_view || !current_user
   end
 %>
+
 
 <%# Test-only: disable modal backdrops and transitions to make UI automation reliable %>
 <% if Rails.env.test? %>
@@ -57,7 +58,7 @@
   <% end %>
 <% end %>
 
-<div id="menuContentContainer" data-testid="menu-content-container">
+<div id="menuContentContainer" data-testid="menu-content-container" data-menu-search-target="container">
     <%# Skeleton loading state — hidden once real content paints %>
     <div id="skeletonLoading" data-testid="skeleton-loading">
       <%= render partial: "smartmenus/skeleton_loading" %>
@@ -87,6 +88,13 @@
         <% end %>
         <% end %>
     <% end %>
+
+    <%# No results message for search filtering %>
+    <div class="menu-search-no-results d-none" data-menu-search-target="noResults" data-testid="menu-search-no-results">
+      <i class="bi bi-search"></i>
+      <p class="fw-semibold mb-1"><%= t('smartmenus.search.no_results_title', default: 'No items found') %></p>
+      <p class="small mb-0"><%= t('smartmenus.search.no_results_hint', default: 'Try a different search term') %></p>
+    </div>
 </div>
 
 <%# Combined Allergen Modal (Key + Filter) - outside cache so filter form is always fresh %>

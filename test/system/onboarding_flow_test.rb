@@ -108,6 +108,31 @@ class OnboardingFlowTest < ApplicationSystemTestCase
   end
 
   # ===================
+  # GO-LIVE CHECKLIST & WELCOME MODAL
+  # ===================
+
+  test 'completing onboarding shows go-live checklist on restaurant edit page' do
+    user = create_onboarding_user
+    warden_login(user)
+
+    visit onboarding_path
+
+    fill_in 'user[name]', with: 'Checklist User'
+    fill_in 'onboarding_session[restaurant_name]', with: 'Checklist Kitchen'
+
+    find("[data-testid='onboarding-continue-btn']").click
+
+    # Should redirect to restaurant edit with ?onboarding=true
+    assert_text 'Checklist Kitchen', wait: 5
+
+    # Go-live checklist should be visible
+    assert_selector "[data-testid='onboarding-guidance']", wait: 5
+
+    # Welcome modal should be present in the DOM
+    assert_selector "#welcome-modal", visible: :all
+  end
+
+  # ===================
   # UNAUTHENTICATED ACCESS
   # ===================
 
