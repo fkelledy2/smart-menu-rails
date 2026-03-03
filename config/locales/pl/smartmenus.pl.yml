@@ -76,7 +76,7 @@ pl:
       allergyns: Alergeny
     showCoverCharge:
       covercharge: Opłata za okładkę
-      coverchargeUnit: Jednostka ładowania pokrywy
+      coverchargeUnit: od osoby
     showMenuBanner:
       allergyns: Alergeny
       card_view: Widok karty

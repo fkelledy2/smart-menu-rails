@@ -76,7 +76,7 @@ cs:
       allergyns: Alergeny
     showCoverCharge:
       covercharge: Poplatek za obálku
-      coverchargeUnit: Jednotka krycího náboje
+      coverchargeUnit: na osobu
     showMenuBanner:
       allergyns: Alergeny
       card_view: Zobrazení karty

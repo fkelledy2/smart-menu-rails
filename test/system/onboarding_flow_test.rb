@@ -129,7 +129,7 @@ class OnboardingFlowTest < ApplicationSystemTestCase
     assert_selector "[data-testid='onboarding-guidance']", wait: 5
 
     # Welcome modal should be present in the DOM
-    assert_selector "#welcome-modal", visible: :all
+    assert_selector '#welcome-modal', visible: :all
   end
 
   # ===================

@@ -113,6 +113,41 @@ body:has(.cart-bottom-sheet) {
   width: 100%;
 }
 
+// Start Order button shown in peek bar when no active order
+// Matches btn-touch-primary btn-touch-sm sizing
+.cart-sheet__start-order-btn {
+  margin-left: auto; // push to right
+  min-height: 36px;
+  min-width: 36px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 10px;
+  background: #dc2626;
+  color: #fff;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3);
+
+  i { font-size: 0.9375rem; }
+
+  &:hover { background: #b91c1c; }
+  &:active { background: #991b1b; transform: scale(0.98); }
+}
+
+// Hide Start Order button when sheet is expanded
+.bottom-sheet--full .cart-sheet__start-order-btn,
+.bottom-sheet--half .cart-sheet__start-order-btn {
+  display: none;
+}
+
 .cart-sheet__summary-left {
   display: flex;
   align-items: center;

@@ -77,7 +77,7 @@ en:
       allergyns: Allergens
     showCoverCharge:
       covercharge: Cover Charge
-      coverchargeUnit: Cover Charge Unit
+      coverchargeUnit: per person
     showMenuBanner:
       allergyns: Allergens
       card_view: Card view

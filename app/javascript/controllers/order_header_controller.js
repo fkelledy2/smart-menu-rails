@@ -51,19 +51,7 @@ export default class extends Controller {
         if (!tableId) {
           // Render nothing (besides optional menu-name span preserved later)
         } else if (this.customerValue) {
-          // Customer view: open the bottom sheet start-order section
-          const btn = document.createElement('button');
-          btn.type = 'button';
-          btn.className = 'btn-touch-primary btn-touch-sm';
-          btn.innerHTML = '<i class="bi bi-plus-circle"></i> Start Order';
-          btn.addEventListener('click', () => {
-            const sheet = document.getElementById('cartBottomSheet');
-            if (sheet) {
-              const ctrl = this.application?.getControllerForElementAndIdentifier(sheet, 'bottom-sheet');
-              if (ctrl) { ctrl.setState('full'); }
-            }
-          });
-          btnGroup.appendChild(btn);
+          // Start Order button removed from header — now in bottom sheet peek bar
         } else {
           // Staff view: use the modal
           const btn = document.createElement('button');

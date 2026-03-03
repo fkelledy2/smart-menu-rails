@@ -76,7 +76,7 @@ it:
       allergyns: Allergeni
     showCoverCharge:
       covercharge: Coperto
-      coverchargeUnit: Unità coperto
+      coverchargeUnit: a persona
     showMenuBanner:
       allergyns: Allergeni
       card_view: Vista della carta

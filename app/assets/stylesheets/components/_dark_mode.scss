@@ -489,21 +489,21 @@
   // Sticky headers
   .menu-sticky-header,
   .menu-sticky-header-mobile {
-    background-color: var(--surface-primary) !important;
+    background-color: var(--surface-secondary) !important;
   }
 
   .header-restaurant-row {
-    background-color: var(--surface-primary);
+    background-color: var(--surface-secondary);
     color: var(--text-primary);
   }
 
   .header-order-row {
-    background-color: var(--surface-primary);
+    background-color: var(--surface-secondary);
     border-top-color: var(--border-default);
   }
 
   .sections-filter-row {
-    background-color: var(--surface-primary);
+    background-color: var(--surface-secondary);
   }
 
   .menu-search-input {
@@ -513,7 +513,7 @@
   }
 
   .sections-tabs {
-    background-color: var(--surface-primary);
+    background-color: var(--surface-secondary);
   }
 
   .section-tab {
@@ -527,13 +527,13 @@
 
   // Menu container (from _smartmenu.scss)
   .menu-container {
-    background: var(--surface-primary) !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    background: var(--surface-secondary) !important;
+    box-shadow: none;
   }
 
   // Menu navigation
   .menu-nav {
-    background: var(--surface-primary) !important;
+    background: var(--surface-secondary) !important;
     border-bottom-color: var(--border-default) !important;
   }
 
@@ -563,8 +563,8 @@
 
   // Menu items (cards)
   .menu-item {
-    background: var(--surface-primary) !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    background: var(--surface-secondary) !important;
+    box-shadow: none;
   }
 
   .menu-item-title {
@@ -592,7 +592,7 @@
 
   // Quantity selector
   .quantity-btn {
-    background: var(--surface-primary) !important;
+    background: var(--surface-secondary) !important;
     border-color: var(--border-default) !important;
     color: var(--text-primary);
   }
@@ -603,7 +603,7 @@
 
   // Cart sidebar
   .cart-sidebar {
-    background: var(--surface-primary) !important;
+    background: var(--surface-secondary) !important;
     box-shadow: -4px 0 20px rgba(0, 0, 0, 0.3);
   }
 
@@ -611,13 +611,13 @@
 
   // Sections nav
   .menu-sections-nav-mobile {
-    background: var(--surface-primary) !important;
+    background: var(--surface-secondary) !important;
     border-bottom-color: var(--border-default) !important;
   }
 
   // Section tab pills (mobile)
   .section-tab-pill {
-    background: var(--surface-primary) !important;
+    background: var(--surface-secondary) !important;
     border-color: var(--border-default) !important;
     color: var(--text-secondary) !important;
 
@@ -626,9 +626,65 @@
     }
   }
 
+  // Allergen badges — soft amber for dark mode readability
+  .badge.bg-warning.text-dark {
+    background-color: rgba(251, 191, 36, 0.15) !important;
+    color: #FBBF24 !important;
+    border: 1px solid rgba(251, 191, 36, 0.3);
+  }
+
+  // Section tabs (horizontal scrolling pills)
+  .section-tab {
+    background: transparent !important;
+    border-color: var(--border-strong) !important;
+    color: var(--text-secondary) !important;
+
+    &.active,
+    &:active {
+      background: #dc2626 !important;
+      border-color: #dc2626 !important;
+      color: #fff !important;
+    }
+  }
+
+  // Layout toggle (card/list view switcher)
+  .layout-toggle-group {
+    border-color: var(--border-strong) !important;
+
+    .layout-toggle-btn {
+      background: transparent !important;
+      color: var(--text-secondary) !important;
+      border-color: var(--border-strong) !important;
+
+      &.active {
+        background: #dc2626 !important;
+        color: #fff !important;
+      }
+
+      &:not(.active):hover {
+        background: var(--surface-tertiary) !important;
+      }
+    }
+  }
+
+  // Primary CTA (Add to order / price button) — make it pop in dark mode
+  .btn-touch-primary,
+  .addItemToOrder {
+    background: #ef4444 !important;
+    color: #fff !important;
+    box-shadow: 0 2px 12px rgba(239, 68, 68, 0.4) !important;
+
+    &:disabled,
+    &[disabled] {
+      background: #ef4444 !important;
+      color: #fff !important;
+      opacity: 0.85;
+    }
+  }
+
   // Touch buttons
   .btn-touch-secondary {
-    background: var(--surface-primary) !important;
+    background: var(--surface-secondary) !important;
     color: var(--text-primary) !important;
     border-color: var(--border-default) !important;
   }
@@ -639,11 +695,19 @@
 
   // Menu item cards (mobile)
   .menu-item-card {
-    background-color: var(--surface-primary) !important;
+    background-color: var(--surface-secondary) !important;
 
     .card {
-      background-color: var(--surface-primary) !important;
+      background-color: var(--surface-secondary) !important;
       border-color: var(--border-default) !important;
+    }
+  }
+
+  .menu-item-card-mobile {
+    .card {
+      background-color: var(--surface-secondary) !important;
+      border-color: var(--border-default) !important;
+      box-shadow: none;
     }
   }
 
@@ -655,7 +719,7 @@
   // Order summary / modals
   .order-summary,
   .order-items-list {
-    background: var(--surface-primary);
+    background: var(--surface-secondary);
     color: var(--text-primary);
   }
 
@@ -681,21 +745,21 @@
   // Allergen modal
   .allergen-modal-content,
   .allergen-key-item {
-    background: var(--surface-primary);
+    background: var(--surface-secondary);
     color: var(--text-primary);
   }
 
   // Sommelier / Whiskey Ambassador cards
   .sommelier-card,
   .whiskey-ambassador-card {
-    background: var(--surface-primary) !important;
+    background: var(--surface-secondary) !important;
     border-color: var(--border-default) !important;
     color: var(--text-primary);
   }
 
   // Staff banner switch button
   .staff-banner-switch-btn {
-    background: var(--surface-primary) !important;
+    background: var(--surface-secondary) !important;
     color: var(--text-primary) !important;
   }
 
@@ -719,7 +783,7 @@
 
   // Smartmenu navbar
   .smartmenu-navbar {
-    background: var(--surface-primary) !important;
+    background: var(--surface-secondary) !important;
     border-bottom-color: var(--border-default) !important;
   }
 
@@ -735,6 +799,33 @@
 
   .bottom-sheet-handle-bar {
     background-color: var(--border-strong);
+  }
+
+  // Party size selector text
+  #orderCapacityValue {
+    color: var(--text-primary) !important;
+  }
+
+  .cart-sheet__start-order {
+    color: var(--text-primary);
+  }
+
+  .cart-sheet__summary,
+  .cart-sheet__label,
+  .cart-sheet__summary-left,
+  .cart-sheet__summary-right,
+  .cart-sheet__total {
+    color: var(--text-primary) !important;
+  }
+
+  // btn-touch-dark: invert for dark mode contrast
+  .btn-touch-dark {
+    background: #E5E7EB !important;
+    color: #111827 !important;
+
+    &:hover { background: #D1D5DB !important; }
+    &:active { background: #C0C4CC !important; }
+    &:disabled, &[disabled] { opacity: 0.5; }
   }
 
   // --- Quick-add stepper ---

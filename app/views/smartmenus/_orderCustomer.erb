@@ -32,20 +32,10 @@
                                         </button>
                                 <% end %>
                                 <% if order.status == 'closed' %>
-                                    <% if menu.allowOrdering == true && menu.restaurant.allowOrdering == true %>
-                                        <button type="button" class="btn-touch-primary btn-touch-sm" data-bs-toggle="modal" data-bs-restaurant="<%= restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#openOrderModal">
-                                            <i class="bi bi-plus-circle"></i>
-                                            <%= t(".startOrder") %>
-                                        </button>
-                                    <% end %>
+                                  <%# Start Order button removed — now in bottom sheet %>
                                 <% end %>
                         <% else %>
-                            <% if menu.allowOrdering == true && menu.restaurant.allowOrdering == true %>
-                                <button type="button" class="btn-touch-primary btn-touch-sm" data-bs-toggle="modal" data-bs-restaurant="<%= restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#openOrderModal">
-                                    <i class="bi bi-plus-circle"></i>
-                                    <%= t(".startOrder") %>
-                                </button>
-                            <% end %>
+                          <%# Start Order button removed — now in bottom sheet %>
                         <% end %>
                     <% end %>
         </div>

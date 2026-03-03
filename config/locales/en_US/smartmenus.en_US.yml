@@ -73,7 +73,7 @@ en_US:
       allergyns: ''
     showCoverCharge:
       covercharge: ''
-      coverchargeUnit: ''
+      coverchargeUnit: per person
     showMenuBanner:
       allergyns: ''
       card_view: replace_me
