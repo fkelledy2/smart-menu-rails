@@ -54,6 +54,17 @@ cs:
       status: 'Stav:'
     new:
       menu: Nové menu
+    sections:
+      items_2025:
+        actions: Akce
+        archive: Archiv
+        archive_single_confirm: Archiv
+      sections_2025:
+        actions: Akce
+        archive: Archiv
+        archive_single_confirm: Archiv
+      versions_2025:
+        no_versions_desc: Verze se vytvářejí automaticky při publikování změn.
     show:
       add_to_order: Přidat k objednávce
       allergens: Alergeny

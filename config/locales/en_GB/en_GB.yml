@@ -41,8 +41,17 @@ en_GB:
       menus: Menus
     edit_2025:
       active: Active
+      ai_confirm_start: replace_me
+      ai_credits_warning: replace_me
+      ai_currently_generating: replace_me
+      ai_last_image: replace_me
+      ai_progress_log: replace_me
+      ai_starting: replace_me
+      ai_title: replace_me
       inactive: Inactive
       items: items
+      localize_force: replace_me
+      localize_missing: replace_me
       menus: Menus
       read_only: Read-only
       sections: sections

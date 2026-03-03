@@ -41,8 +41,18 @@ fr:
       menus: Cartes
     edit_2025:
       active: Actif
+      ai_confirm_start: Confirmer et démarrer
+      ai_credits_warning: Cette opération génère de nouvelles images AI pour les éléments
+        de votre menu et peut consommer des crédits API. Poursuivre ?
+      ai_currently_generating: 'Génère actuellement :'
+      ai_last_image: 'Dernière image :'
+      ai_progress_log: Journal de bord
+      ai_starting: Commencer...
+      ai_title: Générer des images d'IA
       inactive: Inactif
       items: articles
+      localize_force: Force Re-translate All
+      localize_missing: Localiser uniquement les personnes manquantes
       menus: Cartes
       read_only: Lecture seule
       sections: sections

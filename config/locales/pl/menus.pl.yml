@@ -54,6 +54,17 @@ pl:
       status: 'Status:'
     new:
       menu: Menu
+    sections:
+      items_2025:
+        actions: Działania
+        archive: Archiwum
+        archive_single_confirm: Archiwum
+      sections_2025:
+        actions: Działania
+        archive: Archiwum
+        archive_single_confirm: Archiwum
+      versions_2025:
+        no_versions_desc: Wersje są tworzone automatycznie po opublikowaniu zmian.
     show:
       add_to_order: Dodaj do zamówienia
       allergens: Alergeny

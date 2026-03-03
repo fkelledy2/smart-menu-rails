@@ -79,8 +79,8 @@
                   </th>
                   <th class="text-end text-nowrap" colspan="3">
                     <div class="d-flex justify-content-end flex-nowrap">
-                      <div class="input-group input-group-sm flex-nowrap" style="min-width: 260px; width: auto;">
-                        <select class="form-select form-select-sm" style="min-width: 0;" data-menuitems-bulk-target="actionSelect" data-action="change->menuitems-bulk#sync">
+                      <div class="input-group input-group-sm flex-nowrap bulk-action-bar">
+                        <select class="form-select form-select-sm" data-menuitems-bulk-target="actionSelect" data-action="change->menuitems-bulk#sync">
                           <option value=""><%= t('.bulk_action', default: 'Bulk action…') %></option>
                           <option value="set_status"><%= t('.bulk_set_status', default: 'Set status') %></option>
                           <option value="set_itemtype"><%= t('.bulk_set_food_type', default: 'Set food type') %></option>
@@ -166,7 +166,7 @@
                       <% end %>
 
                       <% if read_only %>
-                        <td class="w-40px" style="cursor: not-allowed; opacity: 0.55;">
+                        <td class="w-40px pe-none opacity-50">
                           <i class="bi bi-grip-vertical text-muted"></i>
                         </td>
                       <% else %>

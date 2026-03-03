@@ -74,8 +74,13 @@ fr:
       order: Commander
       startOrder: Commencer commande
       takePayment: Payer
+    search:
+      no_results_hint: Essayez un autre terme de recherche
+      no_results_title: Aucun élément trouvé
     search_placeholder: Menu de recherche...
     section_navigation: Rubriques du menu
+    show:
+      startOrder: Ordre de départ
     showAllergyns:
       allergyns: Allergènes
     showCoverCharge:
@@ -150,3 +155,8 @@ fr:
       restaurant: 'Restaurant :'
       slug: 'Limace :'
       tablesetting: 'Mise en place des tables :'
+    staff_banner:
+      dashboard: Tableau de bord
+      no_table: Pas de tableau
+      switch_table: Interrupteur
+      title: Point de vue du personnel

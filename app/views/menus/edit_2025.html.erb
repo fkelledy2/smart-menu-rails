@@ -73,67 +73,6 @@
   </div>
 </div>
 
-<% content_for :head do %>
-  <style>
-    /* Page-specific styles */
-    body {
-      background: var(--color-gray-50);
-    }
-
-    turbo-frame#menu_content {
-      display: block;
-      width: 100%;
-      max-width: none;
-    }
-
-    .text-2xl {
-      font-size: 1.5rem;
-      line-height: 2rem;
-    }
-
-    .text-gray-900 {
-      color: var(--color-gray-900);
-    }
-
-    .text-gray-500 {
-      color: var(--color-gray-500);
-    }
-
-    /* Ensure modal overlays navbar dropdowns */
-    .modal { z-index: 5000 !important; }
-    .modal-backdrop { z-index: 4990 !important; }
-    /* Lower dropdowns on this page so they don't pierce the modal */
-    .navbar .dropdown-menu { z-index: 1500; }
-
-    /* Bottom-sheet modal styles */
-    #aiProgressModal.modal .modal-dialog {
-      margin: 0; /* remove default margins */
-      position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      /* Start off-screen for fade animation */
-      transform: translateY(100%);
-      width: 100%;
-      max-width: 100%;
-    }
-    #aiProgressModal.modal .modal-content {
-      border-top-left-radius: 0.75rem;
-      border-top-right-radius: 0.75rem;
-      border-bottom-left-radius: 0;
-      border-bottom-right-radius: 0;
-      box-shadow: 0 -8px 24px rgba(0,0,0,0.2);
-    }
-    /* Override Bootstrap fade/transform to slide from bottom for this modal only */
-    #aiProgressModal.modal.fade .modal-dialog { transform: translateY(100%); }
-    #aiProgressModal.modal.show .modal-dialog { transform: translateY(0); }
-    /* Make body scrollable if content grows */
-    #aiProgressModal.modal .modal-body {
-      max-height: 60vh;
-      overflow: auto;
-    }
-  </style>
-<% end %>
 
 <!-- AI Image Generation Modal -->
 <div class="modal fade z-index-7000" id="aiProgressModal" tabindex="-1" aria-hidden="true"
@@ -142,43 +81,43 @@
   <div class="modal-dialog ai-bottom-sheet z-index-7001 position-fixed bottom-0 left-0 right-0 m-0 width-full max-width-100">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" data-ai-progress-target="modalTitle">Generate AI Images</h5>
+        <h5 class="modal-title" data-ai-progress-target="modalTitle"><%= t('.ai_title', default: 'Generate AI Images') %></h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <div id="ai-confirm-pane" data-ai-progress-target="confirmPane">
-          <p data-ai-progress-target="confirmText">This will generate new AI images for your menu items and may consume API credits. Proceed?</p>
+          <p data-ai-progress-target="confirmText"><%= t('.ai_credits_warning', default: 'This will generate new AI images for your menu items and may consume API credits. Proceed?') %></p>
           <!-- Localization options (visible only for Translate Menu) -->
-          <div id="localize-options" class="mt-3" style="display: none;" data-ai-progress-target="localizeOptions">
+          <div id="localize-options" class="mt-3 d-none" data-ai-progress-target="localizeOptions">
             <div class="form-check">
               <input class="form-check-input" type="radio" name="localizeMode" id="localize-missing" value="missing" checked>
               <label class="form-check-label" for="localize-missing">
-                Localize Missing Only
+                <%= t('.localize_missing', default: 'Localize Missing Only') %>
               </label>
             </div>
             <div class="form-check mt-2">
               <input class="form-check-input" type="radio" name="localizeMode" id="localize-force" value="force">
               <label class="form-check-label" for="localize-force">
-                Force Re-translate All
+                <%= t('.localize_force', default: 'Force Re-translate All') %>
               </label>
             </div>
           </div>
         </div>
         <div id="ai-progress-pane" class="d-none" data-ai-progress-target="progressPane">
           <div class="mb-2">
-            <div class="small text-muted">Currently generating:</div>
-            <div id="ai-progress-text" class="fw-semibold" data-ai-progress-target="progressText">Starting…</div>
+            <div class="small text-muted"><%= t('.ai_currently_generating', default: 'Currently generating:') %></div>
+            <div id="ai-progress-text" class="fw-semibold" data-ai-progress-target="progressText"><%= t('.ai_starting', default: 'Starting…') %></div>
           </div>
           <div class="progress">
             <div id="ai-progress-bar" class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" data-ai-progress-target="progressBar"></div>
           </div>
-          <div id="ai-progress-log" class="mt-3 d-none" style="max-height: 220px; overflow: auto;" data-ai-progress-target="logWrap">
-            <div class="small text-muted mb-2">Progress log</div>
+          <div id="ai-progress-log" class="mt-3 d-none ai-progress-log-wrap" data-ai-progress-target="logWrap">
+            <div class="small text-muted mb-2"><%= t('.ai_progress_log', default: 'Progress log') %></div>
             <div id="ai-progress-log-items" class="small" data-ai-progress-target="logItems"></div>
           </div>
           <div class="mt-3 d-none" id="ai-preview" data-ai-progress-target="preview">
             <div class="mb-2">
-              <span class="small text-muted me-1">Last Image:</span>
+              <span class="small text-muted me-1"><%= t('.ai_last_image', default: 'Last Image:') %></span>
               <span id="ai-preview-name" class="fw-semibold"></span>
             </div>
             <img id="ai-preview-img" src="" alt="Generated item image" class="img-fluid w-100 rounded border" data-ai-progress-target="previewImg" />
@@ -201,7 +140,7 @@
         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"><%= t('common.cancel', default: 'Cancel') %></button>
         <button type="button" id="ai-confirm-btn" class="btn btn-primary"
                 data-ai-progress-target="confirmBtn"
-                data-action="click->ai-progress#confirm">Confirm & Start</button>
+                data-action="click->ai-progress#confirm"><%= t('.ai_confirm_start', default: 'Confirm & Start') %></button>
       </div>
     </div>
   </div>

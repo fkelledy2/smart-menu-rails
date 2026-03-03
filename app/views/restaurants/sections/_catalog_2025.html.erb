@@ -76,7 +76,7 @@
                 </th>
                 <th class="text-end text-nowrap" colspan="4">
                   <div class="d-flex justify-content-end flex-nowrap">
-                    <div class="input-group input-group-sm flex-nowrap" style="min-width: 260px; width: auto;">
+                    <div class="input-group input-group-sm flex-nowrap bulk-action-bar">
                       <%= f.select :status,
                           [
                             [t('.status_active'), 'active'],
@@ -84,7 +84,7 @@
                             [t('.status_archived'), 'archived'],
                           ],
                           { include_blank: t('.set_status') },
-                          { class: 'form-select form-select-sm', disabled: true, style: 'min-width: 0;', data: { localization_bulk_target: 'statusSelect', action: 'change->localization-bulk#sync' } } %>
+                          { class: 'form-select form-select-sm', disabled: true, data: { localization_bulk_target: 'statusSelect', action: 'change->localization-bulk#sync' } } %>
                       <button type="submit"
                               class="btn btn-primary"
                               title="<%= t('.apply') %>"
@@ -207,7 +207,7 @@
                 </th>
                 <th class="text-end text-nowrap" colspan="3">
                   <div class="d-flex justify-content-end flex-nowrap">
-                    <div class="input-group input-group-sm flex-nowrap" style="min-width: 260px; width: auto;">
+                    <div class="input-group input-group-sm flex-nowrap bulk-action-bar">
                       <%= f.select :status,
                           [
                             [t('.status_active'), 'active'],
@@ -215,7 +215,7 @@
                             [t('.status_archived'), 'archived'],
                           ],
                           { include_blank: t('.set_status') },
-                          { class: 'form-select form-select-sm', disabled: true, style: 'min-width: 0;', data: { localization_bulk_target: 'statusSelect', action: 'change->localization-bulk#sync' } } %>
+                          { class: 'form-select form-select-sm', disabled: true, data: { localization_bulk_target: 'statusSelect', action: 'change->localization-bulk#sync' } } %>
                       <button type="submit"
                               class="btn btn-primary"
                               title="<%= t('.apply') %>"
@@ -334,17 +334,6 @@
 </script>
 
 <style>
-  /* Force Quick Actions into two columns on all viewports (including mobile portrait) */
-  .quick-actions-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--space-3);
-  }
-  .quick-actions-grid .quick-action-btn {
-    width: 100%;
-    justify-content: center;
-  }
-
   .taxes-tips-lists-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));

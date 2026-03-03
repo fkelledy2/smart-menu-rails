@@ -41,8 +41,18 @@ hu:
       menus: Étlapok
     edit_2025:
       active: Aktív
+      ai_confirm_start: Megerősítés és indítás
+      ai_credits_warning: Ez új AI-képeket generál a menüpontokhoz, és API-krediteket
+        használhat fel. Folytassa?
+      ai_currently_generating: 'Jelenleg generál:'
+      ai_last_image: 'Utolsó kép:'
+      ai_progress_log: Haladási napló
+      ai_starting: Kezdődik...
+      ai_title: AI képek generálása
       inactive: Inaktív
       items: tételek
+      localize_force: Újrafordítás kikényszerítése Minden
+      localize_missing: Csak hiányzó lokalizálása
       menus: Étlapok
       read_only: Csak olvasható
       sections: szakaszok

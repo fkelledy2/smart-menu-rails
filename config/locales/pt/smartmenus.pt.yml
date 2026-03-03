@@ -73,8 +73,13 @@ pt:
       order: Pedir
       startOrder: Iniciar pedido
       takePayment: Pagar
+    search:
+      no_results_hint: Experimente um termo de pesquisa diferente
+      no_results_title: Nenhum item encontrado
     search_placeholder: Menu de pesquisa...
     section_navigation: Secções do menu
+    show:
+      startOrder: Ordem de início
     showAllergyns:
       allergyns: Alergénios
     showCoverCharge:
@@ -149,3 +154,8 @@ pt:
       restaurant: 'Restaurante:'
       slug: 'Lesma:'
       tablesetting: 'Colocação de mesas:'
+    staff_banner:
+      dashboard: Painel de controlo
+      no_table: Sem mesa
+      switch_table: Interruptor
+      title: Opinião do pessoal

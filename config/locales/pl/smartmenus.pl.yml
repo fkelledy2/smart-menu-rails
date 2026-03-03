@@ -70,8 +70,13 @@ pl:
       order: Zamówienie
       startOrder: Zamówienie początkowe
       takePayment: Przyjmowanie płatności
+    search:
+      no_results_hint: Wypróbuj inne wyszukiwane hasło
+      no_results_title: Nie znaleziono żadnych elementów
     search_placeholder: Menu wyszukiwania...
     section_navigation: Sekcje menu
+    show:
+      startOrder: Zamówienie początkowe
     showAllergyns:
       allergyns: Alergeny
     showCoverCharge:
@@ -146,3 +151,8 @@ pl:
       restaurant: 'Restauracja:'
       slug: 'Ślimak:'
       tablesetting: 'Ustawienie stołów:'
+    staff_banner:
+      dashboard: Pulpit nawigacyjny
+      no_table: Brak tabeli
+      switch_table: Przełącznik
+      title: Widok z perspektywy personelu

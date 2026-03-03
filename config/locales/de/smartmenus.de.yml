@@ -75,8 +75,13 @@ de:
       order: Bestellen
       startOrder: Bestellung starten
       takePayment: Zahlung
+    search:
+      no_results_hint: Versuchen Sie einen anderen Suchbegriff
+      no_results_title: Keine Artikel gefunden
     search_placeholder: Menü durchsuchen...
     section_navigation: Menüpunkte
+    show:
+      startOrder: Start Bestellung
     showAllergyns:
       allergyns: Allergene
     showCoverCharge:
@@ -151,3 +156,8 @@ de:
       restaurant: 'Restaurant:'
       slug: 'Schnecke:'
       tablesetting: 'Tablesetting:'
+    staff_banner:
+      dashboard: Dashboard
+      no_table: Kein Tisch
+      switch_table: Schalter
+      title: Ansicht des Personals

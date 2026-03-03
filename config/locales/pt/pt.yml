@@ -40,8 +40,18 @@ pt:
       menus: Menus
     edit_2025:
       active: Ativo
+      ai_confirm_start: Confirmar e iniciar
+      ai_credits_warning: Isto irá gerar novas imagens de IA para os seus itens de
+        menu e pode consumir créditos de API. Continuar?
+      ai_currently_generating: 'Atualmente a gerar:'
+      ai_last_image: 'Última imagem:'
+      ai_progress_log: Registo de progresso
+      ai_starting: A começar...
+      ai_title: Gerar imagens de IA
       inactive: Inativo
       items: artigos
+      localize_force: Forçar a retradução de tudo
+      localize_missing: Localizar apenas o que falta
       menus: Menus
       read_only: Só de leitura
       sections: secções

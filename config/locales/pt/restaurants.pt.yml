@@ -5,6 +5,9 @@ pt:
       archived: O restaurante foi arquivado com sucesso.
       created: O restaurante foi criado com sucesso.
       updated: O restaurante foi atualizado com sucesso.
+    details:
+      published: Publicado
+      unpublished: Não publicado
     edit:
       allergynsTab: Alergénios
       employeesTab: Empregados
@@ -149,6 +152,10 @@ pt:
       status: 'Estado:'
       user: 'Utilizador:'
     sections:
+      allergens_2025:
+        no_allergens: Sem alergénios
+        no_allergens_description: Adicionar alergénios para ajudar os clientes com
+          necessidades dietéticas.
       details_2025:
         address: Endereço
         city: Cidade
@@ -179,8 +186,17 @@ pt:
         website: Sítio Web
         website_help: O sítio Web do seu restaurante
         website_placeholder: https://example.com
+      menus_2025:
+        actions: Ações
+        detach_confirm: Separar
+      sizes_2025:
+        no_sizes: Sem tamanhos
+        no_sizes_description: Adicione tamanhos para permitir que os clientes escolham
+          opções de porções para os itens do menu.
       staff_2025:
         invite_staff: Convidar o pessoal
+        remove: Remover
+        remove_confirm: Remover
     show:
       address: Endereço
       billing_content: A configuração da faturação aparecerá aqui.
@@ -266,3 +282,7 @@ pt:
       team: EQUIPA
       tips: Dicas
       wifi: Wi‑Fi
+    welcome_modal:
+      body: Preencha a lista de verificação de ativação para colocar o seu restaurante
+        em linha.
+      title: Bem-vindo a %{nome}!

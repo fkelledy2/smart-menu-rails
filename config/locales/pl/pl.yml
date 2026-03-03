@@ -40,8 +40,18 @@ pl:
       menus: Menu
     edit_2025:
       active: Aktywny
+      ai_confirm_start: Potwierdź i rozpocznij
+      ai_credits_warning: Spowoduje to wygenerowanie nowych obrazów AI dla pozycji
+        menu i może zużywać kredyty API. Kontynuować?
+      ai_currently_generating: 'Obecnie generuje:'
+      ai_last_image: 'Ostatni obraz:'
+      ai_progress_log: Dziennik postępów
+      ai_starting: Rozpoczęcie...
+      ai_title: Generowanie obrazów AI
       inactive: Nieaktywny
       items: pozycje
+      localize_force: Wymuś ponowne przetłumaczenie wszystkiego
+      localize_missing: Zlokalizuj tylko brakujące
       menus: Menu
       read_only: Tylko do odczytu
       sections: sekcje

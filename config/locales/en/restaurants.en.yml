@@ -5,6 +5,9 @@ en:
       archived: Restaurant was successfully archived.
       created: Restaurant was successfully created.
       updated: Restaurant was successfully updated.
+    details:
+      published: Published
+      unpublished: Unpublished
     edit:
       allergynsTab: Allergens
       employeesTab: Employees
@@ -149,6 +152,9 @@ en:
       status: 'Status:'
       user: 'User:'
     sections:
+      allergens_2025:
+        no_allergens: No allergens
+        no_allergens_description: Add allergens to help customers with dietary requirements.
       details_2025:
         address: Address
         city: City
@@ -179,8 +185,17 @@ en:
         website: Website
         website_help: Your restaurant website
         website_placeholder: https://example.com
+      menus_2025:
+        actions: Actions
+        detach_confirm: Detach
+      sizes_2025:
+        no_sizes: No sizes
+        no_sizes_description: Add sizes to let customers choose portion options for
+          menu items.
       staff_2025:
         invite_staff: Invite Staff
+        remove: Remove
+        remove_confirm: Remove
     show:
       address: Address
       billing_content: Billing configuration will appear here.
@@ -266,3 +281,6 @@ en:
       team: TEAM
       tips: Tips
       wifi: WiFi
+    welcome_modal:
+      body: Complete the go-live checklist to get your restaurant online.
+      title: Welcome to %{name}!

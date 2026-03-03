@@ -55,6 +55,18 @@ fr:
       status: 'Statut :'
     new:
       menu: Nouveau menu
+    sections:
+      items_2025:
+        actions: Actions
+        archive: Archives
+        archive_single_confirm: Archives
+      sections_2025:
+        actions: Actions
+        archive: Archives
+        archive_single_confirm: Archives
+      versions_2025:
+        no_versions_desc: Les versions sont créées automatiquement lorsque vous publiez
+          des modifications.
     show:
       add_to_order: Ajouter à la commande
       allergens: Allergènes

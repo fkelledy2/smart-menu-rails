@@ -67,8 +67,13 @@ en_US:
       order: ''
       startOrder: ''
       takePayment: ''
+    search:
+      no_results_hint: replace_me
+      no_results_title: replace_me
     search_placeholder: replace_me
     section_navigation: replace_me
+    show:
+      startOrder: replace_me
     showAllergyns:
       allergyns: ''
     showCoverCharge:
@@ -142,3 +147,8 @@ en_US:
       restaurant: ''
       slug: ''
       tablesetting: ''
+    staff_banner:
+      dashboard: replace_me
+      no_table: replace_me
+      switch_table: replace_me
+      title: replace_me

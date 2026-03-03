@@ -167,3 +167,18 @@ select.form-control {
     min-height: 48px;
   }
 }
+
+// ============================================
+// BULK ACTION BAR — table header controls
+// ============================================
+// Replaces inline style="min-width: 260px; width: auto;"
+// used on .input-group wrappers in table header bulk actions.
+.bulk-action-bar {
+  min-width: 260px;
+  width: auto;
+
+  select,
+  .form-select {
+    min-width: 0;
+  }
+}

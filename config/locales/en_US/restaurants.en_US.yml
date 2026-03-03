@@ -5,6 +5,9 @@ en_US:
       archived: ''
       created: ''
       updated: ''
+    details:
+      published: replace_me
+      unpublished: replace_me
     edit:
       allergynsTab: ''
       employeesTab: ''
@@ -144,6 +147,9 @@ en_US:
       status: ''
       user: ''
     sections:
+      allergens_2025:
+        no_allergens: replace_me
+        no_allergens_description: replace_me
       details_2025:
         address: ''
         city: ''
@@ -174,8 +180,16 @@ en_US:
         website: ''
         website_help: ''
         website_placeholder: ''
+      menus_2025:
+        actions: replace_me
+        detach_confirm: replace_me
+      sizes_2025:
+        no_sizes: replace_me
+        no_sizes_description: replace_me
       staff_2025:
         invite_staff: replace_me
+        remove: replace_me
+        remove_confirm: replace_me
     show:
       address: ''
       billing_content: ''
@@ -261,3 +275,6 @@ en_US:
       team: ''
       tips: ''
       wifi: ''
+    welcome_modal:
+      body: replace_me
+      title: replace_me

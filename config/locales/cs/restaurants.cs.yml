@@ -5,6 +5,9 @@ cs:
       archived: Restaurace byla úspěšně archivována.
       created: Restaurace byla úspěšně vytvořena.
       updated: Restaurace byla úspěšně aktualizována.
+    details:
+      published: Zveřejněno na
+      unpublished: Nepublikované
     edit:
       allergynsTab: Alergeny
       employeesTab: Zaměstnanci
@@ -149,6 +152,10 @@ cs:
       status: 'Stav:'
       user: 'Uživatel:'
     sections:
+      allergens_2025:
+        no_allergens: Žádné alergeny
+        no_allergens_description: Přidejte alergeny, abyste pomohli zákazníkům s dietními
+          požadavky.
       details_2025:
         address: Adresa
         city: Město
@@ -179,8 +186,17 @@ cs:
         website: Webové stránky
         website_help: Webové stránky vaší restaurace
         website_placeholder: https://example.com
+      menus_2025:
+        actions: Akce
+        detach_confirm: Odpojení
+      sizes_2025:
+        no_sizes: Žádné velikosti
+        no_sizes_description: Přidejte velikosti, aby si zákazníci mohli vybrat porce
+          položek menu.
       staff_2025:
         invite_staff: Pozvat zaměstnance
+        remove: Odstranění stránky
+        remove_confirm: Odstranění stránky
     show:
       address: Adresa
       billing_content: Zde se zobrazí konfigurace fakturace.
@@ -266,3 +282,6 @@ cs:
       team: TEAM
       tips: Tipy
       wifi: Wi‑Fi
+    welcome_modal:
+      body: Vyplňte kontrolní seznam pro spuštění online restaurace.
+      title: Vítejte v %{jméno}!

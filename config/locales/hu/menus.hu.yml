@@ -52,6 +52,18 @@ hu:
       status: 'Állapot:'
     new:
       menu: Új menü
+    sections:
+      items_2025:
+        actions: Műveletek
+        archive: Archívum
+        archive_single_confirm: Archívum
+      sections_2025:
+        actions: Műveletek
+        archive: Archívum
+        archive_single_confirm: Archívum
+      versions_2025:
+        no_versions_desc: A verziók automatikusan létrejönnek, amikor közzéteszi a
+          módosításokat.
     show:
       add_to_order: Hozzáadás a megrendeléshez
       allergens: Allergének

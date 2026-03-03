@@ -48,6 +48,17 @@ en_US:
       status: ''
     new:
       menu: ''
+    sections:
+      items_2025:
+        actions: replace_me
+        archive: replace_me
+        archive_single_confirm: replace_me
+      sections_2025:
+        actions: replace_me
+        archive: replace_me
+        archive_single_confirm: replace_me
+      versions_2025:
+        no_versions_desc: replace_me
     show:
       add_to_order: ''
       allergens: ''

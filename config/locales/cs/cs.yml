@@ -42,8 +42,18 @@ cs:
       menus: Jídelní lístky
     edit_2025:
       active: Aktivní
+      ai_confirm_start: Potvrzení a spuštění
+      ai_credits_warning: Tím se vygenerují nové obrázky AI pro položky nabídky a
+        mohou se spotřebovat kredity API. Pokračovat?
+      ai_currently_generating: 'V současné době generuje:'
+      ai_last_image: 'Poslední obrázek:'
+      ai_progress_log: Protokol o pokroku
+      ai_starting: Začínáme...
+      ai_title: Generování obrázků AI
       inactive: Neaktivní
       items: položky
+      localize_force: Vynutit opětovný překlad všeho
+      localize_missing: Lokalizovat pouze chybějící
       menus: Jídelní lístky
       read_only: Pouze pro čtení
       sections: sekce

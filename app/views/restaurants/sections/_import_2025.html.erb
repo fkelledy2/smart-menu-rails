@@ -34,13 +34,13 @@
           <div class="list-group list-group-flush">
             <% discovered_sources.each do |ms| %>
               <div class="list-group-item d-flex align-items-center justify-content-between px-0">
-                <div class="d-flex align-items-center gap-2" style="min-width:0">
+                <div class="d-flex align-items-center gap-2 min-w-0">
                   <% if ms.pdf? %>
                     <i class="bi bi-file-earmark-pdf text-danger"></i>
                   <% else %>
                     <i class="bi bi-globe text-info"></i>
                   <% end %>
-                  <div style="min-width:0">
+                  <div class="min-w-0">
                     <div class="fw-semibold text-truncate">
                       <% if ms.pdf? && ms.latest_file.attached? %>
                         <%= link_to ms.display_name, rails_blob_path(ms.latest_file, disposition: 'inline'), target: '_blank', rel: 'noopener' %>
@@ -50,7 +50,7 @@
                         <%= ms.display_name %>
                       <% end %>
                     </div>
-                    <div class="text-muted" style="font-size:0.7rem">
+                    <div class="text-muted text-xs">
                       <% if ms.pdf? %>
                         PDF
                       <% else %>
@@ -254,7 +254,7 @@
                  data-testid="import-row-<%= import.id %>"
                  data-href="<%= restaurant_ocr_menu_import_path(restaurant, import) %>">
               <div class="d-flex align-items-center gap-2 p-3">
-                <div class="flex-shrink-0" style="width: 24px;">
+                <div class="flex-shrink-0 w-24px">
                   <input type="checkbox"
                          name="ocr_menu_import_ids[]"
                          value="<%= import.id %>"
@@ -263,9 +263,9 @@
                          data-action="change->localization-bulk#sync" />
                 </div>
 
-                <div class="flex-grow-1" style="min-width: 0;">
+                <div class="flex-grow-1 min-w-0">
                   <div class="d-flex align-items-center gap-2">
-                    <span class="fw-semibold text-truncate" style="min-width: 0;"><%= import.name.presence || t('.default_title', id: import.id) %></span>
+                    <span class="fw-semibold text-truncate min-w-0"><%= import.name.presence || t('.default_title', id: import.id) %></span>
                     <% if import.completed? %>
                       <span class="badge text-bg-success flex-shrink-0"><i class="bi bi-check-circle"></i> <%= t('.status_completed') %></span>
                     <% elsif import.failed? %>

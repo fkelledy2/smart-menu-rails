@@ -70,8 +70,13 @@ it:
       order: Ordine
       startOrder: Inizia ordine
       takePayment: Incassa pagamento
+    search:
+      no_results_hint: Provate a utilizzare un termine di ricerca diverso
+      no_results_title: Nessun articolo trovato
     search_placeholder: Menu di ricerca...
     section_navigation: Sezioni del menu
+    show:
+      startOrder: Ordine iniziale
     showAllergyns:
       allergyns: Allergeni
     showCoverCharge:
@@ -146,3 +151,8 @@ it:
       restaurant: 'Ristorante:'
       slug: 'Luma:'
       tablesetting: 'Tavolo:'
+    staff_banner:
+      dashboard: Cruscotto
+      no_table: Nessuna tabella
+      switch_table: Interruttore
+      title: Vista del personale

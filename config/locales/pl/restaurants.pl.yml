@@ -5,6 +5,9 @@ pl:
       archived: Restauracja została pomyślnie zarchiwizowana.
       created: Restauracja została pomyślnie utworzona.
       updated: Restauracja została pomyślnie zaktualizowana.
+    details:
+      published: Opublikowano
+      unpublished: Niepublikowane
     edit:
       allergynsTab: Alergeny
       employeesTab: Pracownicy
@@ -149,6 +152,10 @@ pl:
       status: 'Status:'
       user: 'Użytkownik:'
     sections:
+      allergens_2025:
+        no_allergens: Brak alergenów
+        no_allergens_description: Dodaj alergeny, aby pomóc klientom z wymaganiami
+          dietetycznymi.
       details_2025:
         address: Adres
         city: Miasto
@@ -179,8 +186,17 @@ pl:
         website: Strona internetowa
         website_help: Strona internetowa restauracji
         website_placeholder: https://example.com
+      menus_2025:
+        actions: Działania
+        detach_confirm: Odłącz
+      sizes_2025:
+        no_sizes: Brak rozmiarów
+        no_sizes_description: Dodaj rozmiary, aby umożliwić klientom wybór opcji porcji
+          dla pozycji menu.
       staff_2025:
         invite_staff: Zaproszenie pracowników
+        remove: Usunąć
+        remove_confirm: Usunąć
     show:
       address: Adres
       billing_content: Tutaj pojawi się konfiguracja rozliczeń.
@@ -266,3 +282,6 @@ pl:
       team: ZESPÓŁ
       tips: Wskazówki
       wifi: Wi‑Fi
+    welcome_modal:
+      body: Wypełnij listę kontrolną uruchomienia, aby uruchomić restaurację online.
+      title: Witamy w %{imię}!

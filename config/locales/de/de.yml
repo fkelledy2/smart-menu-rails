@@ -41,8 +41,18 @@ de:
       menus: Speisekarten
     edit_2025:
       active: Aktiv
+      ai_confirm_start: Bestätigen & Starten
+      ai_credits_warning: Dies generiert neue AI-Bilder für Ihre Menüpunkte und kann
+        API-Credits verbrauchen. Weitermachen?
+      ai_currently_generating: 'Derzeit erzeugt:'
+      ai_last_image: 'Letztes Bild:'
+      ai_progress_log: Fortschrittsprotokoll
+      ai_starting: Ab...
+      ai_title: AI-Bilder generieren
       inactive: Inaktiv
       items: Artikel
+      localize_force: Neuübersetzung erzwingen Alle
+      localize_missing: Nur Fehlende lokalisieren
       menus: Speisekarten
       read_only: Schreibgeschützt
       sections: Abschnitte

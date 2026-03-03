@@ -54,6 +54,17 @@ es:
       status: 'Estado:'
     new:
       menu: Nuevo menú
+    sections:
+      items_2025:
+        actions: Acciones
+        archive: Archivo
+        archive_single_confirm: Archivo
+      sections_2025:
+        actions: Acciones
+        archive: Archivo
+        archive_single_confirm: Archivo
+      versions_2025:
+        no_versions_desc: Las versiones se crean automáticamente al publicar los cambios.
     show:
       add_to_order: Añadir al pedido
       allergens: Alérgenos

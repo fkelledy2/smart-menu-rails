@@ -54,6 +54,17 @@ en:
       status: 'Status:'
     new:
       menu: Menu
+    sections:
+      items_2025:
+        actions: Actions
+        archive: Archive
+        archive_single_confirm: Archive
+      sections_2025:
+        actions: Actions
+        archive: Archive
+        archive_single_confirm: Archive
+      versions_2025:
+        no_versions_desc: Versions are created automatically when you publish changes.
     show:
       add_to_order: Add to Order
       allergens: Allergens

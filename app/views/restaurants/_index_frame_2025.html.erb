@@ -33,7 +33,7 @@
 
   <% if restaurants.blank? %>
     <div class="text-center py-5">
-      <i class="bi bi-shop text-muted" style="font-size:2rem;"></i>
+      <i class="bi bi-shop text-muted fs-2"></i>
       <h4 class="mt-2 text-muted"><%= t('.no_restaurants') %></h4>
       <% if q.present? %>
         <p class="text-muted"><%= t('.no_results_for') %> "<%= q %>"</p>
@@ -60,8 +60,8 @@
                 </th>
                 <th class="text-end text-nowrap" colspan="3">
                   <div class="d-flex justify-content-end flex-nowrap">
-                    <div class="input-group input-group-sm flex-nowrap" style="min-width: 260px; width: auto;">
-                      <select class="form-select form-select-sm" style="min-width: 0;" data-restaurants-bulk-target="actionSelect" data-action="change->restaurants-bulk#sync">
+                    <div class="input-group input-group-sm flex-nowrap bulk-action-bar">
+                      <select class="form-select form-select-sm" data-restaurants-bulk-target="actionSelect" data-action="change->restaurants-bulk#sync">
                         <option value=""><%= t('.bulk_action', default: 'Bulk action…') %></option>
                         <option value="set_status"><%= t('.bulk_set_status', default: 'Set status') %></option>
                         <option value="archive"><%= t('.bulk_archive', default: 'Archive') %></option>

@@ -5,6 +5,9 @@ de:
       archived: Das Restaurant wurde erfolgreich archiviert.
       created: Restaurant wurde erfolgreich erstellt.
       updated: Das Restaurant wurde erfolgreich aktualisiert.
+    details:
+      published: Veröffentlicht
+      unpublished: Unveröffentlicht
     edit:
       allergynsTab: Allergene
       employeesTab: Mitarbeiter
@@ -149,6 +152,10 @@ de:
       status: 'Status:'
       user: 'Benutzer:'
     sections:
+      allergens_2025:
+        no_allergens: Keine Allergene
+        no_allergens_description: Fügen Sie Allergene hinzu, um Kunden mit besonderen
+          Ernährungsbedürfnissen zu helfen.
       details_2025:
         address: Adresse
         city: Stadt
@@ -179,8 +186,17 @@ de:
         website: Website
         website_help: Ihre Restaurant-Website
         website_placeholder: https://example.com
+      menus_2025:
+        actions: Aktionen
+        detach_confirm: Trennen Sie
+      sizes_2025:
+        no_sizes: Keine Größen
+        no_sizes_description: Fügen Sie Größen hinzu, um Kunden die Möglichkeit zu
+          geben, Portionsoptionen für Menüpunkte zu wählen.
       staff_2025:
         invite_staff: Personal einladen
+        remove: entfernen
+        remove_confirm: entfernen
     show:
       address: Adresse
       billing_content: Die Konfiguration für die Rechnungsstellung wird hier angezeigt.
@@ -266,3 +282,6 @@ de:
       team: TEAM
       tips: Tipps
       wifi: WLAN
+    welcome_modal:
+      body: Füllen Sie die Checkliste aus, um Ihr Restaurant online zu schalten.
+      title: Willkommen bei %{name}!

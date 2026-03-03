@@ -71,8 +71,13 @@ en:
       order: Order
       startOrder: Start Order
       takePayment: Take Payment
+    search:
+      no_results_hint: Try a different search term
+      no_results_title: No items found
     search_placeholder: Search menu…
     section_navigation: Menu sections
+    show:
+      startOrder: Start Order
     showAllergyns:
       allergyns: Allergens
     showCoverCharge:
@@ -147,3 +152,8 @@ en:
       restaurant: 'Restaurant:'
       slug: 'Slug:'
       tablesetting: 'Tablesetting:'
+    staff_banner:
+      dashboard: Dashboard
+      no_table: No Table
+      switch_table: Switch
+      title: Staff View

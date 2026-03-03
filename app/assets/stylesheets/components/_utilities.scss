@@ -239,13 +239,16 @@
 // Dropdown padding-y custom utility
 .dropdown-padding-y-05 { --bs-dropdown-padding-y: 0.5rem; }
 .dropdown-min-w-0 { --bs-dropdown-min-width: 0em; }
+.min-w-0 { min-width: 0 !important; }
 .min-w-60 { min-width: 60px !important; }
+.min-w-180 { min-width: 180px !important; }
 
 // Additional utility classes for remaining patterns
 .w-60 { width: 60% !important; }
 .w-34 { width: 34% !important; }
 .w-22 { width: 22% !important; }
 .w-36px { width: 36px !important; }
+.w-24px { width: 24px !important; }
 .w-40px { width: 40px !important; }
 .w-140px { width: 140px !important; }
 .max-width-100 { max-width: 100% !important; }

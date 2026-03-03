@@ -41,8 +41,18 @@ it:
       menus: Menù
     edit_2025:
       active: Attivo
+      ai_confirm_start: Confermare e avviare
+      ai_credits_warning: Questa operazione genererà nuove immagini AI per le voci
+        del menu e potrebbe consumare crediti API. Procedere?
+      ai_currently_generating: 'Attualmente sta generando:'
+      ai_last_image: 'Ultima immagine:'
+      ai_progress_log: Diario di avanzamento
+      ai_starting: A partire...
+      ai_title: Generare immagini AI
       inactive: Inattivo
       items: articoli
+      localize_force: Forzare la ritraduzione di tutti
+      localize_missing: Localizzare solo le parti mancanti
       menus: Menù
       read_only: Solo lettura
       sections: sezioni

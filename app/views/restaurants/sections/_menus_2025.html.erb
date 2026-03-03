@@ -73,17 +73,6 @@
 </div>
 
 <style>
-  /* Force Quick Actions into two columns on all viewports (including mobile portrait) */
-  .quick-actions-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--space-3);
-  }
-  .quick-actions-grid .quick-action-btn {
-    width: 100%;
-    justify-content: center;
-  }
-
   .quick-action-btn.disabled {
     opacity: 0.55;
     cursor: not-allowed;
@@ -160,8 +149,8 @@
             </th>
             <th class="text-end text-nowrap" colspan="<%= show_availability_column ? 4 : 3 %>">
               <div class="d-flex justify-content-end flex-nowrap">
-                <div class="input-group input-group-sm flex-nowrap" style="min-width: 260px; width: auto;">
-                  <select class="form-select form-select-sm" style="min-width: 0;" data-restaurantmenus-bulk-target="actionSelect" data-action="change->restaurantmenus-bulk#sync">
+                <div class="input-group input-group-sm flex-nowrap bulk-action-bar">
+                  <select class="form-select form-select-sm" data-restaurantmenus-bulk-target="actionSelect" data-action="change->restaurantmenus-bulk#sync">
                     <option value=""><%= t('.bulk_action', default: 'Bulk action…') %></option>
                     <option value="set_status"><%= t('.bulk_set_status', default: 'Set status') %></option>
                     <% if other_restaurants_for_share.any? %>

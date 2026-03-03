@@ -5,6 +5,9 @@ it:
       archived: Ristorante archiviato con successo.
       created: Ristorante creato con successo.
       updated: Ristorante aggiornato con successo.
+    details:
+      published: Pubblicato
+      unpublished: Non pubblicato
     edit:
       allergynsTab: Allergeni
       employeesTab: Dipendenti
@@ -149,6 +152,10 @@ it:
       status: 'Stato:'
       user: 'Utente:'
     sections:
+      allergens_2025:
+        no_allergens: Nessun allergene
+        no_allergens_description: Aggiungere gli allergeni per aiutare i clienti con
+          esigenze dietetiche.
       details_2025:
         address: Indirizzo
         city: Città
@@ -179,8 +186,17 @@ it:
         website: Sito Web
         website_help: Il sito web del tuo ristorante
         website_placeholder: https://esempio.it
+      menus_2025:
+        actions: Azioni
+        detach_confirm: Staccare
+      sizes_2025:
+        no_sizes: Nessuna dimensione
+        no_sizes_description: Aggiungete le dimensioni per consentire ai clienti di
+          scegliere le porzioni per le voci del menu.
       staff_2025:
         invite_staff: Invitare il personale
+        remove: Rimuovere
+        remove_confirm: Rimuovere
     show:
       address: Indirizzo
       billing_content: La configurazione di fatturazione verrà visualizzata qui.
@@ -266,3 +282,6 @@ it:
       team: SQUADRA
       tips: Mance
       wifi: Wi‑Fi
+    welcome_modal:
+      body: Completate la lista di controllo per la messa online del vostro ristorante.
+      title: Benvenuto a %{nome}!

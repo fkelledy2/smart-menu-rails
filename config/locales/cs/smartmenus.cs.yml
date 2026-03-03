@@ -70,8 +70,13 @@ cs:
       order: Objednávka
       startOrder: Počáteční objednávka
       takePayment: Přijmout platbu
+    search:
+      no_results_hint: Zkuste použít jiný vyhledávací výraz
+      no_results_title: Nebyly nalezeny žádné položky
     search_placeholder: Nabídka vyhledávání...
     section_navigation: Sekce menu
+    show:
+      startOrder: Počáteční objednávka
     showAllergyns:
       allergyns: Alergeny
     showCoverCharge:
@@ -146,3 +151,8 @@ cs:
       restaurant: 'Restaurace:'
       slug: 'Slimák:'
       tablesetting: 'Sestavení tabulek:'
+    staff_banner:
+      dashboard: Přístrojová deska
+      no_table: Žádná tabulka
+      switch_table: Přepínač
+      title: Pohled zaměstnanců

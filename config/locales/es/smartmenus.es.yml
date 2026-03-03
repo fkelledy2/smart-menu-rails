@@ -72,8 +72,13 @@ es:
       order: Pedir
       startOrder: Iniciar pedido
       takePayment: Pagar
+    search:
+      no_results_hint: Pruebe con otro término de búsqueda
+      no_results_title: No se han encontrado artículos
     search_placeholder: Menú de búsqueda...
     section_navigation: Secciones del menú
+    show:
+      startOrder: Orden de inicio
     showAllergyns:
       allergyns: Alérgenos
     showCoverCharge:
@@ -148,3 +153,8 @@ es:
       restaurant: 'Restaurante:'
       slug: 'Babosa:'
       tablesetting: 'Establecimiento de mesas:'
+    staff_banner:
+      dashboard: Cuadro de mandos
+      no_table: Sin mesa
+      switch_table: Interruptor
+      title: Personal

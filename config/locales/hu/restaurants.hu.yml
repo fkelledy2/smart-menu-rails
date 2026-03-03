@@ -5,6 +5,9 @@ hu:
       archived: Az éttermet sikeresen archiváltuk.
       created: Az étterem sikeresen létrejött.
       updated: Az étterem sikeresen frissült.
+    details:
+      published: Megjelent
+      unpublished: Kiadatlan
     edit:
       allergynsTab: Allergének
       employeesTab: Dolgozók
@@ -149,6 +152,10 @@ hu:
       status: 'Állapot:'
       user: 'Felhasználó:'
     sections:
+      allergens_2025:
+        no_allergens: Nincsenek allergének
+        no_allergens_description: Adja hozzá az allergéneket, hogy segítse a diétás
+          igényű ügyfeleket.
       details_2025:
         address: 'Cím:'
         city: Város
@@ -179,8 +186,17 @@ hu:
         website: Honlap
         website_help: Az Ön éttermi honlapja
         website_placeholder: https://example.com
+      menus_2025:
+        actions: Műveletek
+        detach_confirm: Detach
+      sizes_2025:
+        no_sizes: Nincsenek méretek
+        no_sizes_description: Adjon hozzá méreteket, hogy az ügyfelek választhassanak
+          adagolási lehetőségeket a menüpontokhoz.
       staff_2025:
         invite_staff: Személyzet meghívása
+        remove: Távolítsa el a
+        remove_confirm: Távolítsa el a
     show:
       address: Cím
       billing_content: Itt jelenik meg a számlázási konfiguráció.
@@ -266,3 +282,6 @@ hu:
       team: TEAM
       tips: Tippek
       wifi: Wi‑Fi
+    welcome_modal:
+      body: Töltse ki az indulási ellenőrzőlistát, hogy étterme online legyen.
+      title: Üdvözöljük %{név}!

@@ -33,7 +33,7 @@
               class="sidebar-toggle-btn"
               data-action="click->sidebar#toggle"
               aria-label="<%= t('.toggle_navigation', default: 'Toggle navigation') %>">
-        <i class="bi bi-list" style="pointer-events: none;"></i>
+        <i class="bi bi-list pe-none"></i>
       </button>
     </div>
   </div>
@@ -89,28 +89,3 @@
   <% end %>
 </div>
 
-<% content_for :head do %>
-  <style>
-    /* Page-specific styles */
-    body {
-      background: var(--color-gray-50);
-    }
-
-    .text-2xl {
-      font-size: 1.5rem;
-      line-height: 2rem;
-    }
-
-    .text-gray-900 {
-      color: var(--color-gray-900);
-    }
-
-    .text-gray-500 {
-      color: var(--color-gray-500);
-    }
-
-    .sidebar-main-content {
-      background: var(--surface-primary);
-    }
-  </style>
-<% end %>

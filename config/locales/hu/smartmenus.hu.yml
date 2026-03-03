@@ -72,8 +72,13 @@ hu:
       order: Megrendelés
       startOrder: Start sorrend
       takePayment: Fizetés átvétele
+    search:
+      no_results_hint: Próbáljon ki egy másik kereső kifejezést
+      no_results_title: Nem találtunk tárgyakat
     search_placeholder: Keresés menü...
     section_navigation: Menüszekciók
+    show:
+      startOrder: Start sorrend
     showAllergyns:
       allergyns: Allergének
     showCoverCharge:
@@ -148,3 +153,8 @@ hu:
       restaurant: 'Étterem:'
       slug: 'Csiga:'
       tablesetting: 'Asztalok beállítása:'
+    staff_banner:
+      dashboard: Műszerfal
+      no_table: Nincs asztal
+      switch_table: Switch
+      title: Személyzeti nézet
