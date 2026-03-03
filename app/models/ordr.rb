@@ -231,9 +231,12 @@ class Ordr < ApplicationRecord
   def cascade_status_to_items
     # When order status changes, update all child ordritems to match
     # This ensures ordritems always reflect their parent order's status
+    # Skip removed items — their status must not be overwritten
     new_status_value = status
+    removed_value = Ordritem.statuses['removed']
 
     ordritems.each do |item|
+      next if item.status_before_type_cast == removed_value
       # Only update if status is different to avoid unnecessary updates
       if item.status != new_status_value
         item.update_column(:status, Ordritem.statuses[new_status_value])

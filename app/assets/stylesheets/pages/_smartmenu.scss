@@ -451,3 +451,48 @@ body[data-smartmenu-id] .modal-backdrop {
 body[data-smartmenu-id] .modal {
   z-index: 1105 !important;
 }
+
+// ── Brand-red button overrides (smartmenu pages only) ──
+// Unify Bootstrap .btn-primary / .btn-outline-primary with the touch-primary
+// brand red (#dc2626) so every modal confirm button matches the main page CTA.
+body[data-smartmenu-id] {
+  .btn-primary {
+    background-color: #dc2626;
+    border-color: #dc2626;
+    color: #fff;
+
+    &:hover, &:focus {
+      background-color: #b91c1c;
+      border-color: #b91c1c;
+      color: #fff;
+    }
+
+    &:active, &.active {
+      background-color: #991b1b;
+      border-color: #991b1b;
+    }
+
+    &:disabled, &.disabled {
+      background-color: #dc2626;
+      border-color: #dc2626;
+      opacity: 0.55;
+    }
+  }
+
+  .btn-outline-primary {
+    color: #dc2626;
+    border-color: #dc2626;
+
+    &:hover, &:focus {
+      background-color: #dc2626;
+      border-color: #dc2626;
+      color: #fff;
+    }
+
+    &:active, &.active {
+      background-color: #b91c1c;
+      border-color: #b91c1c;
+      color: #fff;
+    }
+  }
+}

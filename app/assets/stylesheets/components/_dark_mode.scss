@@ -25,6 +25,14 @@
     color: var(--text-primary) !important;
   }
 
+  .navbar-toggler {
+    border-color: var(--border-default) !important;
+  }
+
+  .navbar-toggler-icon {
+    filter: invert(1);
+  }
+
   // --- Cards ---
   .card {
     background-color: var(--surface-primary);
@@ -176,6 +184,12 @@
     background-color: var(--color-success-light);
     border-color: rgba(52, 211, 153, 0.3);
     color: var(--color-success);
+  }
+
+  .alert-light {
+    background-color: var(--surface-tertiary) !important;
+    border-color: var(--border-default) !important;
+    color: var(--text-primary) !important;
   }
 
   // --- Badges ---

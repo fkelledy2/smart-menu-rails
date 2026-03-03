@@ -1,4 +1,4 @@
- <div class="col-6 col-md-4 col-lg-4 menu-item-card" data-name="<%= menuitem.name.to_s.downcase %>" data-description="<%= menuitem.description.to_s.downcase %>" data-testid="menu-item-<%= menuitem.id %>" data-controller="quick-add">
+ <div class="col-12 col-sm-6 col-md-4 col-lg-4 menu-item-card" data-name="<%= menuitem.name.to_s.downcase %>" data-description="<%= menuitem.description.to_s.downcase %>" data-testid="menu-item-<%= menuitem.id %>" data-controller="quick-add">
    <div class="card">
        <% if !order || ( order.status != 'billrequested' && order.status != 'closed' ) %>
                             <div class="d-grid gap-2">

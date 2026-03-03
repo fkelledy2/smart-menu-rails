@@ -76,6 +76,66 @@ export default class extends Controller {
     this.applyDatasetState();
     this.dispatchState();
 
+    // Delegated click handler for Remove Item button in bottom sheet cart
+    this._onRemoveItemClick = (e) => {
+      const btn = e.target.closest('.removeItemFromOrderButton');
+      if (!btn) return;
+      // Only handle clicks inside the cart bottom sheet
+      if (!btn.closest('#cartBottomSheet')) return;
+
+      e.preventDefault();
+      e.stopPropagation();
+
+      const ordrItemId = btn.getAttribute('data-bs-ordritem_id');
+      if (!ordrItemId) return;
+
+      // Resolve restaurant id
+      let restaurantId = null;
+      try {
+        const gs = window.__SM_STATE || {};
+        restaurantId = gs.restaurant?.id ? String(gs.restaurant.id).trim() : null;
+      } catch (_) {}
+      if (!restaurantId) {
+        try {
+          const node = document.querySelector('[data-restaurant-id]');
+          restaurantId = node?.dataset?.restaurantId?.trim() || null;
+        } catch (_) {}
+      }
+      if (!restaurantId) { console.warn('[State][RemoveItem] Missing restaurant id'); return; }
+
+      const csrfToken = document.querySelector("meta[name='csrf-token']")?.content || '';
+      const url = `/restaurants/${restaurantId}/ordritems/${ordrItemId}`;
+
+      // Optimistic UI: hide the item row immediately
+      const row = btn.closest('.cart-sheet__item');
+      if (row) row.style.display = 'none';
+
+      fetch(url, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json', 'X-CSRF-Token': csrfToken },
+        body: JSON.stringify({ ordritem: { status: 10, ordritemprice: 0 } }),
+      })
+        .then(r => {
+          if (!r.ok) throw new Error(`PATCH ${r.status}`);
+          return r.json().catch(() => ({}));
+        })
+        .then(data => {
+          // Forward JSON state if present
+          const payload = data?.state || data;
+          if (payload && (payload.order || payload.totals)) {
+            document.dispatchEvent(new CustomEvent('state:update', { detail: payload }));
+          }
+          // Also re-fetch full state for safety
+          this._fetchState();
+        })
+        .catch(err => {
+          console.error('[State][RemoveItem] PATCH failed', err);
+          // Revert optimistic hide
+          if (row) row.style.display = '';
+        });
+    };
+    document.addEventListener('click', this._onRemoveItemClick, true); // capture phase
+
     // Delegated click handler for Pay button (works for server-rendered and JS-rendered)
     this._onPayClick = (e) => {
       const btn = e.target.closest('#cartPayOrder');
@@ -205,6 +265,7 @@ export default class extends Controller {
     if (this.observer) this.observer.disconnect();
     if (this._onStateUpdate) document.removeEventListener('state:update', this._onStateUpdate);
     if (this._onPayClick) document.removeEventListener('click', this._onPayClick);
+    if (this._onRemoveItemClick) document.removeEventListener('click', this._onRemoveItemClick, true);
     delete window.__cartPayCancel;
   }
 
@@ -259,7 +320,7 @@ export default class extends Controller {
 
     // Sync cart bottom sheet counts and totals with state
     try {
-      const totalCount = Number(this.state.order?.totalCount || 0);
+      const totalCount = Number(this.state.order?.totalCount || 0) - Number(this.state.order?.removedCount || 0);
       const countEl = document.getElementById('cartItemCount');
       if (countEl) { countEl.textContent = totalCount; }
 
@@ -327,7 +388,7 @@ export default class extends Controller {
       const payVisible = flags.payVisible === true;
       const billVisible = flags.displayRequestBill === true && !payVisible;
       html += `<button type="button" class="btn-touch-primary w-100 mt-2" id="cartRequestBill" data-bs-toggle="modal" data-bs-target="#requestBillModal" style="display:${billVisible ? 'block' : 'none'};"><i class="bi bi-receipt"></i> Request Bill</button>`;
-      html += `<button type="button" class="btn-touch-dark w-100 mt-2" id="cartPayOrder" style="display:${payVisible ? 'block' : 'none'};"><i class="bi bi-currency-euro"></i> Pay</button>`;
+      html += `<button type="button" class="btn-touch-primary w-100 mt-2" id="cartPayOrder" style="display:${payVisible ? 'block' : 'none'};"><i class="bi bi-currency-euro"></i> Pay</button>`;
       html += '</div>';
 
       // Inline pay section (hidden until Pay button clicked)
@@ -403,7 +464,7 @@ export default class extends Controller {
     const hasPayable = Number(totals.gross || 0) > 0;
     h += '<div class="d-flex gap-2 mt-3">';
     h += '<button id="cartPayCancel" type="button" class="btn-touch-secondary w-50">Cancel</button>';
-    h += `<button id="pay-order-confirm" type="button" class="btn-touch-dark w-50" ${hasPayable ? '' : 'disabled'}><i class="bi bi-credit-card"></i> Pay</button>`;
+    h += `<button id="pay-order-confirm" type="button" class="btn-touch-primary w-50" ${hasPayable ? '' : 'disabled'}><i class="bi bi-credit-card"></i> Pay</button>`;
     h += '</div>';
     return h;
   }
@@ -423,6 +484,22 @@ export default class extends Controller {
         if (ctrl) { ctrl.setState('full'); }
       }
     });
+  }
+
+  _fetchState() {
+    try {
+      const slug = document.body?.dataset?.smartmenuId;
+      if (!slug) return;
+      fetch(`/smartmenus/${encodeURIComponent(slug)}.json?ts=${Date.now()}`, { headers: { Accept: 'application/json', 'Cache-Control': 'no-cache' } })
+        .then(r => r && r.ok ? r.json() : null)
+        .then(payload => {
+          if (payload) {
+            this.applyJsonState(payload);
+            this.dispatchState();
+          }
+        })
+        .catch(() => {});
+    } catch (_) {}
   }
 
   _esc(str) {

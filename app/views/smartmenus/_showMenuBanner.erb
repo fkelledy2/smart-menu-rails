@@ -43,19 +43,11 @@
   </div>
 
   <!-- Order Controls -->
-  <div class="header-order-row" id="openOrderContainer" data-controller="order-header" data-order-header-customer-value="<%= !current_user %>" style="visibility:hidden">
+  <div class="header-order-row" id="openOrderContainer" data-controller="order-header" data-order-header-customer-value="true" style="visibility:hidden">
     <% if @openOrder %>
-      <% if current_user %>
-        <%= render partial: "orderStaff", locals: { order: @openOrder, menu: @openOrder.menu, restaurant: @restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant, needs_age_check: @needs_age_check } %>
-      <% else %>
-        <%= render partial: "orderCustomer", locals: { order: @openOrder, menu: @openOrder.menu, restaurant: @restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant } %>
-      <% end %>
+      <%= render partial: "orderCustomer", locals: { order: @openOrder, menu: @openOrder.menu, restaurant: @restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant } %>
     <% else %>
-      <% if current_user %>
-        <%= render partial: "orderStaff", locals: { order: nil, menu: @menu, restaurant: @restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant, needs_age_check: @needs_age_check } %>
-      <% else %>
-        <%= render partial: "orderCustomer", locals: { order: nil, menu: @menu, restaurant: @restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant } %>
-      <% end %>
+      <%= render partial: "orderCustomer", locals: { order: nil, menu: @menu, restaurant: @restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant } %>
     <% end %>
   </div>
   <!-- Navigation: Search & Sections -->

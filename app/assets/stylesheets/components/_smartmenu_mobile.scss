@@ -1187,6 +1187,31 @@
 }
 
 // Reduce motion support
+// ── Text Logo ──
+.sm-text-logo {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+  color: currentColor;
+  user-select: none;
+
+  &__title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+
+  &__tagline {
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.28em;
+    white-space: nowrap;
+    opacity: 0.7;
+    margin-top: 2px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .section-tab,
   .addItemToOrder,

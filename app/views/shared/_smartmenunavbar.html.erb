@@ -11,8 +11,12 @@
 
 <nav class="p-0 navbar navbar-expand-md navbar-light bg-light">
   <div class="container-fluid mx-auto">
-    <%= link_to root_path, class: "navbar-brand" do %>
-        <%= image_tag "qr-icon.svg", height:'56' %><%= image_tag "logo.png", height:'56' %>
+    <%= link_to root_path, class: "navbar-brand d-flex align-items-center gap-2", style: "text-decoration:none;" do %>
+        <%= image_tag "qr-icon.svg", height:'56' %>
+        <span class="sm-text-logo">
+          <span class="sm-text-logo__title">mellow.menu</span>
+          <span class="sm-text-logo__tagline">menu's only smarter</span>
+        </span>
     <% end %>
     <div class="d-flex align-items-center" data-controller="theme-toggle">
       <button type="button" class="theme-toggle-btn" data-action="click->theme-toggle#toggle" title="Toggle theme" data-testid="theme-toggle-btn">

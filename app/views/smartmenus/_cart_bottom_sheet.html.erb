@@ -135,7 +135,7 @@
           <i class="bi bi-receipt"></i>
           <%= t('smartmenus.showModals.request_bill', default: 'Request Bill') %>
         </button>
-        <button type="button" class="btn-touch-dark w-100 mt-2" id="cartPayOrder"
+        <button type="button" class="btn-touch-primary w-100 mt-2" id="cartPayOrder"
                 style="display:none;">
           <i class="bi bi-currency-euro"></i>
           <%= t('smartmenus.showModals.pay', default: 'Pay') %>
@@ -189,7 +189,7 @@
             <button id="cartPayCancel" type="button" class="btn-touch-secondary w-50">
               <%= t('common.cancel', default: 'Cancel') %>
             </button>
-            <button id="pay-order-confirm" type="button" class="btn-touch-dark w-50" <%= 'disabled' unless order.gross.to_f > 0 %>>
+            <button id="pay-order-confirm" type="button" class="btn-touch-primary w-50" <%= 'disabled' unless order.gross.to_f > 0 %>>
               <i class="bi bi-credit-card"></i>
               <%= t('smartmenus.showModals.confirmPayment', default: 'Pay') %>
             </button>
