@@ -104,6 +104,7 @@ class SmartmenusController < ApplicationController
         @ordrparticipant,
         participant_locale,
         "sid:#{session.id}",
+        "build:#{BUILD_VERSION}",
       ]
 
       # Use public caching for menu-only views (no active order/session context).
