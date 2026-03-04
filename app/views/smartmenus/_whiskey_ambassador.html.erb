@@ -16,8 +16,8 @@
   <%# Floating action button %>
   <button class="wa-fab"
           data-action="click->whiskey-ambassador#open"
-          aria-label="Whiskey Ambassador"
-          title="Whiskey Ambassador">
+          aria-label="<%= t('smartmenus.whiskey_ambassador.fab_aria') %>"
+          title="<%= t('smartmenus.whiskey_ambassador.title') %>">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M17 8h1a4 4 0 0 1 0 8h-1"/>
       <path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z"/>
@@ -25,17 +25,17 @@
       <line x1="10" y1="2" x2="10" y2="4"/>
       <line x1="14" y1="2" x2="14" y2="4"/>
     </svg>
-    <span class="wa-fab-label">Whiskey Guide</span>
+    <span class="wa-fab-label"><%= t('smartmenus.whiskey_ambassador.fab_label') %></span>
     <span class="wa-fab-badge d-none" data-whiskey-ambassador-target="badge">0</span>
   </button>
 
   <%# Quick links %>
   <div class="wa-quick-links">
     <button class="wa-quick-link" data-action="click->whiskey-ambassador#showMyPicks">
-      My Picks <span class="wa-fab-badge d-none" data-whiskey-ambassador-target="badge">0</span>
+      <%= t('smartmenus.whiskey_ambassador.my_picks') %> <span class="wa-fab-badge d-none" data-whiskey-ambassador-target="badge">0</span>
     </button>
-    <button class="wa-quick-link" data-action="click->whiskey-ambassador#openExplore">Explore</button>
-    <button class="wa-quick-link" data-action="click->whiskey-ambassador#showFlights">Flights</button>
+    <button class="wa-quick-link" data-action="click->whiskey-ambassador#openExplore"><%= t('smartmenus.whiskey_ambassador.explore') %></button>
+    <button class="wa-quick-link" data-action="click->whiskey-ambassador#showFlights"><%= t('smartmenus.whiskey_ambassador.flights') %></button>
   </div>
 
   <%# Panel overlay %>
@@ -44,9 +44,9 @@
 
       <%# Header %>
       <div class="wa-header">
-        <h2 class="wa-title">Whiskey Ambassador</h2>
-        <p class="wa-subtitle">Let me guide you to your perfect dram</p>
-        <button class="wa-close" data-action="click->whiskey-ambassador#close" aria-label="Close">
+        <h2 class="wa-title"><%= t('smartmenus.whiskey_ambassador.title') %></h2>
+        <p class="wa-subtitle"><%= t('smartmenus.whiskey_ambassador.subtitle') %></p>
+        <button class="wa-close" data-action="click->whiskey-ambassador#close" aria-label="<%= t('smartmenus.whiskey_ambassador.close') %>">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
       </div>
@@ -54,20 +54,20 @@
       <%# Step 0: Experience level %>
       <div class="wa-step" data-whiskey-ambassador-target="step">
         <div class="wa-step-question">
-          <h3>How would you describe your whiskey experience?</h3>
+          <h3><%= t('smartmenus.whiskey_ambassador.step0_question') %></h3>
         </div>
         <div class="wa-step-options">
           <button class="wa-option-btn" data-action="click->whiskey-ambassador#setExperience" data-value="newcomer">
             <span class="wa-option-icon">🌱</span>
-            <span class="wa-option-text">I'm new to whiskey</span>
+            <span class="wa-option-text"><%= t('smartmenus.whiskey_ambassador.exp_newcomer') %></span>
           </button>
           <button class="wa-option-btn" data-action="click->whiskey-ambassador#setExperience" data-value="casual">
             <span class="wa-option-icon">🥃</span>
-            <span class="wa-option-text">Casual enjoyer</span>
+            <span class="wa-option-text"><%= t('smartmenus.whiskey_ambassador.exp_casual') %></span>
           </button>
           <button class="wa-option-btn" data-action="click->whiskey-ambassador#setExperience" data-value="enthusiast">
             <span class="wa-option-icon">🏆</span>
-            <span class="wa-option-text">Whiskey enthusiast</span>
+            <span class="wa-option-text"><%= t('smartmenus.whiskey_ambassador.exp_enthusiast') %></span>
           </button>
         </div>
       </div>
@@ -75,28 +75,28 @@
       <%# Step 1: Region preference %>
       <div class="wa-step d-none" data-whiskey-ambassador-target="step">
         <div class="wa-step-question">
-          <h3>Which world of whiskey appeals to you?</h3>
+          <h3><%= t('smartmenus.whiskey_ambassador.step1_question') %></h3>
         </div>
         <div class="wa-step-options">
           <button class="wa-option-btn" data-action="click->whiskey-ambassador#setRegion" data-value="scotch">
             <span class="wa-option-icon">🏴󠁧󠁢󠁳󠁣󠁴󠁿</span>
-            <span class="wa-option-text">Scottish</span>
+            <span class="wa-option-text"><%= t('smartmenus.whiskey_ambassador.region_scotch') %></span>
           </button>
           <button class="wa-option-btn" data-action="click->whiskey-ambassador#setRegion" data-value="bourbon_rye">
             <span class="wa-option-icon">🇺🇸</span>
-            <span class="wa-option-text">American</span>
+            <span class="wa-option-text"><%= t('smartmenus.whiskey_ambassador.region_american') %></span>
           </button>
           <button class="wa-option-btn" data-action="click->whiskey-ambassador#setRegion" data-value="irish">
             <span class="wa-option-icon">🇮🇪</span>
-            <span class="wa-option-text">Irish</span>
+            <span class="wa-option-text"><%= t('smartmenus.whiskey_ambassador.region_irish') %></span>
           </button>
           <button class="wa-option-btn" data-action="click->whiskey-ambassador#setRegion" data-value="japanese">
             <span class="wa-option-icon">🇯🇵</span>
-            <span class="wa-option-text">Japanese</span>
+            <span class="wa-option-text"><%= t('smartmenus.whiskey_ambassador.region_japanese') %></span>
           </button>
           <button class="wa-option-btn" data-action="click->whiskey-ambassador#setRegion" data-value="surprise_me">
             <span class="wa-option-icon">🎲</span>
-            <span class="wa-option-text">Surprise me</span>
+            <span class="wa-option-text"><%= t('smartmenus.whiskey_ambassador.region_surprise') %></span>
           </button>
         </div>
       </div>
@@ -104,32 +104,32 @@
       <%# Step 2: Flavor preference %>
       <div class="wa-step d-none" data-whiskey-ambassador-target="step">
         <div class="wa-step-question">
-          <h3>What flavor profile speaks to you?</h3>
+          <h3><%= t('smartmenus.whiskey_ambassador.step2_question') %></h3>
         </div>
         <div class="wa-step-options wa-step-options-grid">
           <button class="wa-option-btn" data-action="click->whiskey-ambassador#setFlavor" data-value="light_delicate">
             <span class="wa-option-icon">🌿</span>
-            <span class="wa-option-text">Light & Delicate</span>
+            <span class="wa-option-text"><%= t('smartmenus.whiskey_ambassador.flavor_light') %></span>
           </button>
           <button class="wa-option-btn" data-action="click->whiskey-ambassador#setFlavor" data-value="fruity_sweet">
             <span class="wa-option-icon">🍯</span>
-            <span class="wa-option-text">Fruity & Sweet</span>
+            <span class="wa-option-text"><%= t('smartmenus.whiskey_ambassador.flavor_fruity') %></span>
           </button>
           <button class="wa-option-btn" data-action="click->whiskey-ambassador#setFlavor" data-value="rich_sherried">
             <span class="wa-option-icon">🍇</span>
-            <span class="wa-option-text">Rich & Sherried</span>
+            <span class="wa-option-text"><%= t('smartmenus.whiskey_ambassador.flavor_rich') %></span>
           </button>
           <button class="wa-option-btn" data-action="click->whiskey-ambassador#setFlavor" data-value="spicy_dry">
             <span class="wa-option-icon">🌶️</span>
-            <span class="wa-option-text">Spicy & Dry</span>
+            <span class="wa-option-text"><%= t('smartmenus.whiskey_ambassador.flavor_spicy') %></span>
           </button>
           <button class="wa-option-btn" data-action="click->whiskey-ambassador#setFlavor" data-value="smoky_coastal">
             <span class="wa-option-icon">🌊</span>
-            <span class="wa-option-text">Smoky & Coastal</span>
+            <span class="wa-option-text"><%= t('smartmenus.whiskey_ambassador.flavor_smoky') %></span>
           </button>
           <button class="wa-option-btn" data-action="click->whiskey-ambassador#setFlavor" data-value="heavily_peated">
             <span class="wa-option-icon">🔥</span>
-            <span class="wa-option-text">Heavily Peated</span>
+            <span class="wa-option-text"><%= t('smartmenus.whiskey_ambassador.flavor_peated') %></span>
           </button>
         </div>
       </div>
@@ -137,20 +137,20 @@
       <%# Step 3: Budget %>
       <div class="wa-step d-none" data-whiskey-ambassador-target="step">
         <div class="wa-step-question">
-          <h3>What's your budget per dram?</h3>
+          <h3><%= t('smartmenus.whiskey_ambassador.step3_question') %></h3>
         </div>
         <div class="wa-step-options">
           <button class="wa-option-btn" data-action="click->whiskey-ambassador#setBudget" data-value="1">
             <span class="wa-option-icon">💰</span>
-            <span class="wa-option-text">Value picks</span>
+            <span class="wa-option-text"><%= t('smartmenus.whiskey_ambassador.budget_low') %></span>
           </button>
           <button class="wa-option-btn" data-action="click->whiskey-ambassador#setBudget" data-value="2">
             <span class="wa-option-icon">💎</span>
-            <span class="wa-option-text">Mid-range</span>
+            <span class="wa-option-text"><%= t('smartmenus.whiskey_ambassador.budget_mid') %></span>
           </button>
           <button class="wa-option-btn" data-action="click->whiskey-ambassador#setBudget" data-value="3">
             <span class="wa-option-icon">👑</span>
-            <span class="wa-option-text">Premium</span>
+            <span class="wa-option-text"><%= t('smartmenus.whiskey_ambassador.budget_high') %></span>
           </button>
         </div>
       </div>
@@ -158,7 +158,7 @@
       <%# Loading spinner %>
       <div class="wa-loading d-none" data-whiskey-ambassador-target="loading">
         <div class="wa-spinner"></div>
-        <p>Finding your perfect dram&hellip;</p>
+        <p><%= t('smartmenus.whiskey_ambassador.loading') %></p>
       </div>
 
       <%# Results container — populated by JS %>

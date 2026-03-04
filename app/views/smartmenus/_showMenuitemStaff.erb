@@ -1,82 +1,86 @@
  <div class="col-12 col-sm-6 col-md-4 col-lg-4 menu-item-card" data-name="<%= menuitem.name.to_s.downcase %>" data-description="<%= menuitem.description.to_s.downcase %>" data-testid="menu-item-<%= menuitem.id %>" data-controller="quick-add">
-   <div class="card">
-       <% if !order || ( order.status != 'billrequested' && order.status != 'closed' ) %>
-                            <div class="d-grid gap-2">
-                                <div class="btn-group min-h-100">
-                                    <button type="button" class="addItemToOrder btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
-                                                data-bs-menusection_from_offset="<%= menuitem.menusection.fromOffset %>"
-                                                data-bs-menusection_to_offset="<%= menuitem.menusection.toOffset %>"
-                                                data-bs-ordr_id="<%= order&.id %>"
-                                                data-bs-menuitem_id="<%= menuitem.id %>"
-                                                data-bs-menuitem_name="<%= menuitem.name %>"
-                                                data-bs-menuitem_price="<%= menuitem.price %>"
-                                                data-bs-menuitem_description="<%= menuitem.description %>"
-                                                data-bs-menuitem_image="<%= menuitem.optimised_modal_url %>"
-                                                data-action="click->quick-add#storeQty"
-                                                data-testid="add-item-btn-<%= menuitem.id %>">
-                                                    <%= menuitem.name %>
-                                    </button>
-                                    <% if menuitem.menuitem_size_mappings.any? %>
-                                        <button type="button" class="addItemToOrder btn btn btn-sm btn-dark dropdown-toggle dropdown-toggle-split max-w-50px" data-bs-toggle="dropdown" aria-expanded="false"
-                                                            data-bs-menusection_from_offset="<%= menuitem.menusection.fromOffset %>"
-                                                            data-bs-menusection_to_offset="<%= menuitem.menusection.toOffset %>">
-                                            <span class="visually-hidden">Toggle Dropdown</span>
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                            <% menuitem.menuitem_size_mappings.each do |menuitemsize| %>
-                                                <li>
-                                                    <a class="dropdown-item" href="#">
-                                                        <button type="button" class="addItemToOrder pos-rel bottom-neg-12 br-8-0-8-0 btn-reset" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
-                                                            data-bs-menusection_from_offset="<%= menuitem.menusection.fromOffset %>"
-                                                            data-bs-menusection_to_offset="<%= menuitem.menusection.toOffset %>"
-                                                            data-bs-ordr_id="<%= order&.id %>"
-                                                            data-bs-menuitem_id="<%= menuitem.id %>"
-                                                            data-bs-menuitem_name="<%= menuitem.name %>"
-                                                            data-bs-menuitem_price="<%= menuitemsize.price %>"
-                                                            data-bs-menuitem_description="<%= menuitem.description %> (<%= menuitemsize.size.name %>)"
-                                                            data-bs-menuitem_image="<%= menuitem.optimised_modal_url %>">
-                                                                <i class="bi bi-plus"></i> <%= menuitemsize.size.name %>
-                                                        </button>
-                                                    </a>
-                                                </li>
-                                            <% end %>
-                                        </ul>
-                                    <% end %>
-                                </div>
-                                <div class="quick-add-stepper" data-testid="quick-add-stepper-<%= menuitem.id %>">
-                                  <button type="button" class="quick-add-btn" data-action="click->quick-add#decrement" data-quick-add-target="decrement" disabled data-testid="quick-add-decrement-<%= menuitem.id %>">
-                                    <i class="bi bi-dash"></i>
-                                  </button>
-                                  <span class="quick-add-qty" data-quick-add-target="qty">1</span>
-                                  <button type="button" class="quick-add-btn" data-action="click->quick-add#increment" data-testid="quick-add-increment-<%= menuitem.id %>">
-                                    <i class="bi bi-plus"></i>
-                                  </button>
-                                </div>
-                            </div>
-        <% else %>
-                    <div class="d-grid gap-2">
-                        <div style="min-height:100px" class="btn-group">
-                            <button class="btn btn-sm btn-dark" disabled>
-                                <%= menuitem.name %>
-                            </button>
-                            <% if menuitem.menuitem_size_mappings.any? %>
-                                <button class="btn btn btn-sm btn-dark dropdown-toggle dropdown-toggle-split max-w-50px" data-bs-toggle="dropdown" aria-expanded="false" disabled>
-                                    <span class="visually-hidden">Toggle Dropdown</span>
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <% menuitem.menuitem_size_mappings.each do |menuitemsize| %>
-                                        <li>
-                                            <a class="dropdown-item" href="#">
-                                                <button class="btn-reset" disabled>
-                                                    <i class="bi bi-plus"></i> <%= menuitemsize.size.name %>
-                                                </button>
-                                            </a>
-                                        </li>
-                                    <% end %>
-                                </ul>
-                            <% end %>
-                        </div>
-                    </div>
-        <% end %>
-    </div>
+   <% if !order || ( order.status != 'billrequested' && order.status != 'closed' ) %>
+     <div class="staff-item-row">
+       <div class="staff-item-name">
+         <div class="btn-group">
+           <button type="button" class="addItemToOrder btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
+               data-bs-menusection_from_offset="<%= menuitem.menusection.fromOffset %>"
+               data-bs-menusection_to_offset="<%= menuitem.menusection.toOffset %>"
+               data-bs-ordr_id="<%= order&.id %>"
+               data-bs-menuitem_id="<%= menuitem.id %>"
+               data-bs-menuitem_name="<%= menuitem.name %>"
+               data-bs-menuitem_price="<%= menuitem.price %>"
+               data-bs-menuitem_description="<%= menuitem.description %>"
+               data-bs-menuitem_image="<%= menuitem.optimised_modal_url %>"
+               data-action="click->quick-add#storeQty"
+               data-testid="add-item-btn-<%= menuitem.id %>">
+                 <%= menuitem.name %>
+           </button>
+           <% if menuitem.menuitem_size_mappings.any? %>
+             <button type="button" class="addItemToOrder btn btn-sm btn-dark dropdown-toggle dropdown-toggle-split max-w-50px" data-bs-toggle="dropdown" aria-expanded="false"
+                 data-bs-menusection_from_offset="<%= menuitem.menusection.fromOffset %>"
+                 data-bs-menusection_to_offset="<%= menuitem.menusection.toOffset %>">
+               <span class="visually-hidden">Toggle Dropdown</span>
+             </button>
+             <ul class="dropdown-menu">
+               <% menuitem.menuitem_size_mappings.each do |menuitemsize| %>
+                 <li>
+                   <a class="dropdown-item" href="#">
+                     <button type="button" class="addItemToOrder btn-reset" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
+                         data-bs-menusection_from_offset="<%= menuitem.menusection.fromOffset %>"
+                         data-bs-menusection_to_offset="<%= menuitem.menusection.toOffset %>"
+                         data-bs-ordr_id="<%= order&.id %>"
+                         data-bs-menuitem_id="<%= menuitem.id %>"
+                         data-bs-menuitem_name="<%= menuitem.name %>"
+                         data-bs-menuitem_price="<%= menuitemsize.price %>"
+                         data-bs-menuitem_description="<%= menuitem.description %> (<%= menuitemsize.size.name %>)"
+                         data-bs-menuitem_image="<%= menuitem.optimised_modal_url %>">
+                           <i class="bi bi-plus"></i> <%= menuitemsize.size.name %>
+                     </button>
+                   </a>
+                 </li>
+               <% end %>
+             </ul>
+           <% end %>
+         </div>
+       </div>
+       <div class="staff-item-stepper">
+         <div class="quick-add-stepper quick-add-stepper-vertical" data-testid="quick-add-stepper-<%= menuitem.id %>">
+           <button type="button" class="quick-add-btn" data-action="click->quick-add#increment" data-testid="quick-add-increment-<%= menuitem.id %>">
+             <i class="bi bi-plus"></i>
+           </button>
+           <span class="quick-add-qty" data-quick-add-target="qty">1</span>
+           <button type="button" class="quick-add-btn" data-action="click->quick-add#decrement" data-quick-add-target="decrement" disabled data-testid="quick-add-decrement-<%= menuitem.id %>">
+             <i class="bi bi-dash"></i>
+           </button>
+         </div>
+       </div>
+     </div>
+   <% else %>
+     <div class="staff-item-row staff-item-row-disabled">
+       <div class="staff-item-name">
+         <div class="btn-group">
+           <button class="btn btn-sm btn-dark" disabled>
+             <%= menuitem.name %>
+           </button>
+           <% if menuitem.menuitem_size_mappings.any? %>
+             <button class="btn btn-sm btn-dark dropdown-toggle dropdown-toggle-split max-w-50px" data-bs-toggle="dropdown" aria-expanded="false" disabled>
+               <span class="visually-hidden">Toggle Dropdown</span>
+             </button>
+             <ul class="dropdown-menu">
+               <% menuitem.menuitem_size_mappings.each do |menuitemsize| %>
+                 <li>
+                   <a class="dropdown-item" href="#">
+                     <button class="btn-reset" disabled>
+                       <i class="bi bi-plus"></i> <%= menuitemsize.size.name %>
+                     </button>
+                   </a>
+                 </li>
+               <% end %>
+             </ul>
+           <% end %>
+         </div>
+       </div>
+     </div>
+   <% end %>
  </div>

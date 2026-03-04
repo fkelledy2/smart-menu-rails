@@ -6,10 +6,10 @@
             <%= t(".table") %>
         <% end %>
     </button>
-    <ul class="dropdown-menu dropdown-menu-dark z-index-1000 dropdown-padding-y-05 table-dropdown-menu" style="max-height: 400px; overflow-y: auto;">
-        <li class="dropdown-search" style="position: sticky; top: 0; z-index: 1; background-color: var(--bs-dropdown-bg); border-bottom: 1px solid var(--bs-dropdown-divider-bg);">
+    <ul class="dropdown-menu dropdown-menu-dark z-index-1000 dropdown-padding-y-05 table-dropdown-menu dropdown-menu-scrollable">
+        <li class="dropdown-search dropdown-search-sticky">
             <div class="px-3 py-2">
-                <input id="table-selector-search" type="text" class="form-control form-control-sm bg-dark text-white border-secondary" style="background-color: var(--bs-dropdown-bg); color: var(--bs-dropdown-color); border-color: var(--bs-dropdown-divider-bg); --bs-secondary-color: #ffffff;" placeholder="<%= t('smartmenus.find_table', default: 'Find table') %>" aria-label="Search tables">
+                <input id="table-selector-search" type="text" class="form-control form-control-sm bg-dark text-white border-secondary"  placeholder="<%= t('smartmenus.find_table', default: 'Find table') %>" aria-label="Search tables">
             </div>
         </li>
         <% Array(table_smartmenus).each do |smartmenu| %>

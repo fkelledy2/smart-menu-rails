@@ -696,6 +696,14 @@
     }
   }
 
+  .quick-add-stepper-vertical {
+    background: #ef4444 !important;
+
+    .quick-add-qty {
+      background: rgba(0, 0, 0, 0.15) !important;
+    }
+  }
+
   // Touch buttons
   .btn-touch-secondary {
     background: var(--surface-secondary) !important;
@@ -707,13 +715,18 @@
     color: var(--text-secondary) !important;
   }
 
-  // Menu item cards (mobile)
+  // Menu item cards (staff)
   .menu-item-card {
     background-color: var(--surface-secondary) !important;
 
     .card {
       background-color: var(--surface-secondary) !important;
       border-color: var(--border-default) !important;
+    }
+
+    .staff-item-row {
+      background-color: var(--surface-secondary);
+      border-color: var(--border-default);
     }
   }
 

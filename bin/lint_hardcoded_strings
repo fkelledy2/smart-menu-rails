@@ -1,0 +1,114 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Heuristic scan for hardcoded user-facing strings in ERB templates.
+#
+# Usage:
+#   bin/lint_hardcoded_strings                  # scan all views
+#   bin/lint_hardcoded_strings app/views/devise  # scan specific directory
+#   bin/lint_hardcoded_strings --strict          # exit 1 on any finding (for CI)
+#
+# This is intentionally conservative — it flags likely candidates rather than
+# trying to parse ERB perfectly. False positives are expected; the goal is to
+# catch regressions where new hardcoded strings slip in.
+
+require "pathname"
+
+SCAN_ROOT = ARGV.reject { |a| a.start_with?("--") }.first || "app/views"
+STRICT    = ARGV.include?("--strict")
+
+# Directories / files to skip entirely
+SKIP_DIRS = %w[
+  app/views/layouts
+  app/views/madmin
+  app/views/admin
+  app/views/shared/_performance
+].freeze
+
+# Patterns that indicate a hardcoded user-facing string
+# Each entry: [regex, description]
+PATTERNS = [
+  # HTML tag content with literal English words (>= 2 words, not inside ERB tags)
+  [/>([A-Z][a-z]+(?:\s+[a-z]+){1,})</,           "Literal multi-word text in HTML tag"],
+
+  # Common hardcoded button / link labels
+  [/\b(?:submit|button).*["']([A-Z][A-Za-z ]{3,})["']/i, "Hardcoded button/submit label"],
+
+  # Placeholder with literal English
+  [/placeholder:\s*["']([A-Z][A-Za-z ]{3,})["']/,  "Hardcoded placeholder"],
+  [/placeholder=["']([A-Z][A-Za-z ]{3,})["']/,     "Hardcoded placeholder (HTML attr)"],
+
+  # Title / aria-label with literal English
+  [/title=["']([A-Z][A-Za-z ]{3,})["']/,            "Hardcoded title attribute"],
+  [/aria-label=["']([A-Z][A-Za-z ]{3,})["']/,       "Hardcoded aria-label"],
+
+  # Label tag with literal text (not inside ERB)
+  [/<label[^>]*>([A-Z][A-Za-z ]{3,})<\/label>/,     "Hardcoded <label> text"],
+
+  # <h1>–<h6> with literal text
+  [/<h[1-6][^>]*>([A-Z][A-Za-z ]{3,})<\/h[1-6]>/,   "Hardcoded heading text"],
+
+  # <p> with literal text (short paragraphs)
+  [/<p[^>]*>([A-Z][A-Za-z ]{3,})<\/p>/,              "Hardcoded <p> text"],
+
+  # link_to with a literal string first argument (not t(...))
+  [/link_to\s+["']([A-Z][A-Za-z ]{3,})["']/,         "Hardcoded link_to label"],
+].freeze
+
+# Lines matching these are false positives — skip them
+FALSE_POSITIVE_RX = [
+  /<%/,           # ERB tag on the same line (likely dynamic)
+  /\bt\(/,        # Already uses t() helper
+  /<!--/,         # HTML comment
+  /<%#/,          # ERB comment
+  /class="/,      # CSS class string (not user-facing)
+  /data-/,        # Data attribute
+  /testid/,       # Test ID
+  /TODO|FIXME/,   # Dev comments
+  /type=["']button["']/,  # HTML button type attribute
+].freeze
+
+findings = []
+
+Dir.glob("#{SCAN_ROOT}/**/*.erb").sort.each do |file|
+  next if SKIP_DIRS.any? { |d| file.start_with?(d) }
+
+  File.readlines(file, encoding: "utf-8").each_with_index do |line, idx|
+    PATTERNS.each do |rx, desc|
+      next unless line.match?(rx)
+
+      # Check for false positives on the same line
+      next if FALSE_POSITIVE_RX.any? { |fp| line.match?(fp) }
+
+      match = line.match(rx)
+      matched_text = match ? match[1] : line.strip
+
+      findings << {
+        file: file,
+        line: idx + 1,
+        desc: desc,
+        text: matched_text.to_s.strip[0..60]
+      }
+    end
+  end
+end
+
+if findings.empty?
+  puts "✅ No hardcoded strings detected."
+  exit 0
+else
+  puts "⚠️  Found #{findings.size} potential hardcoded string(s):\n\n"
+  findings.each do |f|
+    puts "  #{f[:file]}:#{f[:line]}"
+    puts "    #{f[:desc]}: \"#{f[:text]}\""
+    puts
+  end
+
+  if STRICT
+    puts "CI mode: failing because #{findings.size} finding(s) detected."
+    exit 1
+  else
+    puts "Run with --strict to fail on findings (for CI)."
+    exit 0
+  end
+end

@@ -5,7 +5,7 @@
                  ordrparticipant: (defined?(ordrparticipant) ? ordrparticipant : nil),
                  menuparticipant: (defined?(menuparticipant) ? menuparticipant : nil) } %>
 <% else %>
-<div class="card-footer text-muted" style="padding: 12px; padding-right: 0px; min-height: 56px;">
+<div class="card-footer text-muted card-footer-action-bar">
     <div class="d-flex justify-content-between align-items-center">
         <div class="allergen-badges <%= 'has-many' if mi.allergyns.size >= 5 %>">
             <div class="d-flex gap-1 align-items-center" role="group" aria-label="<%= t('.allergyns') %>">
@@ -26,7 +26,7 @@
         </div>
             <div class="d-flex gap-0" role="group" aria-label="<%= t('.order') %>">
                                     <% if ordrparticipant && ordrparticipant.preferredlocale %>
-                        <button type="button" class="addItemToOrder btn-touch-primary" style="position:relative; bottom:-12px; border-radius: 8px 0 8px 0px;" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal" disabled
+                        <button type="button" class="addItemToOrder btn-touch-primary" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal" disabled
                                             data-bs-menusection_from_offset="<%= mi.menusection.fromOffset %>"
                                             data-bs-menusection_to_offset="<%= mi.menusection.toOffset %>"
                                             data-bs-ordr_id="<%= order&.id %>"
@@ -41,7 +41,7 @@
                         </button>
                                     <% else %>
                                         <% if menuparticipant && menuparticipant.preferredlocale %>
-                            <button type="button" class="addItemToOrder btn-touch-primary" style="position:relative; bottom:-12px; border-radius: 8px 0 8px 0px;" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal" disabled
+                            <button type="button" class="addItemToOrder btn-touch-primary" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal" disabled
                                                 data-bs-menusection_from_offset="<%= mi.menusection.fromOffset %>"
                                                 data-bs-menusection_to_offset="<%= mi.menusection.toOffset %>"
                                                 data-bs-ordr_id="<%= order&.id %>"
@@ -55,7 +55,7 @@
                             <%= number_to_currency(mi.price, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %>
                         </button>
                                         <% else %>
-                            <button type="button" class="addItemToOrder btn-touch-primary" style="position:relative; bottom:-12px; border-radius: 8px 0 8px 0px;" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal" disabled
+                            <button type="button" class="addItemToOrder btn-touch-primary" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal" disabled
                                                 data-bs-menusection_from_offset="<%= mi.menusection.fromOffset %>"
                                                 data-bs-menusection_to_offset="<%= mi.menusection.toOffset %>"
                                                 data-bs-ordr_id="<%= order&.id %>"

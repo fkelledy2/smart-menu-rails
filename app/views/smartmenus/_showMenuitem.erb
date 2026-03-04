@@ -1,4 +1,4 @@
-    <div style="padding-top:20px" class="col-12 col-md-6 col-lg-4">
+    <div class="col-12 col-md-6 col-lg-4 pt-3">
         <div class="card">
             <% if @menu.displayImages == true && @menu.restaurant.displayImages == true %>
                 <% if menuitem.image %>
@@ -38,7 +38,7 @@
                                         <span class="badge bg-secondary" title="<%= t('smartmenus.alcohol.non_alcoholic') %>"><%= t('smartmenus.alcohol.zero_abv_short') %></span>
                                       <% end %>
                                     </h6>
-                                    <span style="position:relative;top:-100px" class="float-end">
+                                    <span class="float-end allergen-float">
                                         <div class="btn-group" role="group" aria-label="<%= t('.allergyns') %>">
                                             <% menuitem.allergyns.each do |allergyn| %>
                                                 <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<%= allergyn.name %>">

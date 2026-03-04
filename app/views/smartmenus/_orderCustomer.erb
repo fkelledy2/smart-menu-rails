@@ -12,7 +12,7 @@
               </button>
             <% else %>
               <% if ordrparticipant && ordrparticipant.name %>
-                <button type="button" class="btn-touch-dark btn-touch-sm" data-bs-toggle="modal" data-bs-target="#addNameToParticipantModal" style="max-width: 120px; overflow: hidden; text-overflow: ellipsis;" data-testid="edit-customer-name-btn">
+                <button type="button" class="btn-touch-dark btn-touch-sm participant-name-btn" data-bs-toggle="modal" data-bs-target="#addNameToParticipantModal" data-testid="edit-customer-name-btn">
                   <%= ordrparticipant.name %>
                 </button>
               <% end %>

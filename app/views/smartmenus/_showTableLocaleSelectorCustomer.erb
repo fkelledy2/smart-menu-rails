@@ -8,7 +8,7 @@
                 <%= t(".table") %>
             <% end %>
         </button>
-        <ul class="dropdown-menu dropdown-menu-dark z-index-1000 dropdown-padding-y-05 table-dropdown-menu" style="max-height: 400px; overflow-y: auto;">
+        <ul class="dropdown-menu dropdown-menu-dark z-index-1000 dropdown-padding-y-05 table-dropdown-menu dropdown-menu-scrollable">
             <% Array(table_smartmenus).each do |smartmenu| %>
                 <% if smartmenu.tablesetting && smartmenu.tablesetting.status == 'free' %>
                     <li>

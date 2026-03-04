@@ -22,7 +22,7 @@ class SidebarMobileTest < ApplicationSystemTestCase
     assert_selector('[data-controller="sidebar"]')
 
     # Verify sidebar is hidden initially on mobile
-    assert_selector('.sidebar-2025', visible: false)
+    assert_selector('.sidebar-app', visible: false)
 
     # Find and click the toggle button
     toggle_button = find('.sidebar-toggle-btn', visible: true)
@@ -32,7 +32,7 @@ class SidebarMobileTest < ApplicationSystemTestCase
     sleep 0.5
 
     # Verify sidebar is now visible
-    assert_selector('.sidebar-2025.open', visible: true)
+    assert_selector('.sidebar-app.open', visible: true)
 
     # Verify overlay is active
     assert_selector('.sidebar-overlay.active', visible: true)
@@ -49,7 +49,7 @@ class SidebarMobileTest < ApplicationSystemTestCase
     sleep 0.5
 
     # Verify sidebar is hidden again
-    assert_no_selector('.sidebar-2025.open')
+    assert_no_selector('.sidebar-app.open')
 
     # Verify overlay is inactive
     assert_no_selector('.sidebar-overlay.active')
@@ -69,7 +69,7 @@ class SidebarMobileTest < ApplicationSystemTestCase
     sleep 0.5
 
     # Verify sidebar is open
-    assert_selector('.sidebar-2025.open', visible: true)
+    assert_selector('.sidebar-app.open', visible: true)
 
     # Click close button in sidebar header
     within('.sidebar-header') do
@@ -79,7 +79,7 @@ class SidebarMobileTest < ApplicationSystemTestCase
     sleep 0.5
 
     # Verify sidebar is closed
-    assert_no_selector('.sidebar-2025.open')
+    assert_no_selector('.sidebar-app.open')
   end
 
   test 'sidebar navigation links work' do
@@ -106,7 +106,7 @@ class SidebarMobileTest < ApplicationSystemTestCase
     # On mobile, sidebar should close after clicking link
     # (based on handleLinkClick method)
     sleep 0.5
-    assert_no_selector('.sidebar-2025.open')
+    assert_no_selector('.sidebar-app.open')
   end
 
   test 'sidebar debounce prevents rapid toggles' do
@@ -129,7 +129,7 @@ class SidebarMobileTest < ApplicationSystemTestCase
     sleep 0.5
 
     # Sidebar should be open (not toggled multiple times)
-    assert_selector('.sidebar-2025.open', visible: true)
+    assert_selector('.sidebar-app.open', visible: true)
 
     # Should not have closed immediately
     assert_selector('.sidebar-overlay.active', visible: true)
@@ -145,7 +145,7 @@ class SidebarMobileTest < ApplicationSystemTestCase
     find('.sidebar-toggle-btn').click
     sleep 0.5
 
-    assert_selector('.sidebar-2025.open', visible: true)
+    assert_selector('.sidebar-app.open', visible: true)
 
     # Resize to desktop
     page.driver.browser.manage.window.resize_to(1024, 768)
@@ -154,7 +154,7 @@ class SidebarMobileTest < ApplicationSystemTestCase
     sleep 0.5
 
     # Sidebar should close on desktop resize
-    assert_no_selector('.sidebar-2025.open')
+    assert_no_selector('.sidebar-app.open')
   end
 
   private

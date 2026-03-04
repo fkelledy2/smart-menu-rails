@@ -83,11 +83,18 @@ en:
     showCoverCharge:
       covercharge: Cover Charge
       coverchargeUnit: per person
+    showImage:
+      no_image: No Image
     showMenuBanner:
       allergyns: Allergens
+      auto_generated_preview: Auto-generated preview
+      based_on_public_info: Based on publicly available information.
       card_view: Card view
+      claim_restaurant: Claim this restaurant
       layout: Layout
       list_view: List view
+      more: More
+      request_removal: Request removal
     showMenuContentCustomer:
       search_placeholder: Search menu items...
     showMenuitem:
@@ -105,6 +112,8 @@ en:
     showModals:
       add: Add
       addToOrder: Add to Order
+      decrease: Decrease
+      increase: Increase
       add_items_hint: Tap + on any item to add it
       bill_prefix: 'Bill:'
       cancel: Cancel
@@ -119,6 +128,7 @@ en:
       including_tip: incl. tip
       item: Item
       name_label: 'Name:'
+      pairing: Pairing
       nett: Nett
       noneAll: None / All
       order_aria: Order
@@ -147,6 +157,79 @@ en:
       table: Table
     showTableLocaleSelectorStaff:
       table: Table
+    sommelier:
+      fab_label: Help me choose
+      fab_aria: Help me choose a drink
+      title: AI Sommelier
+      subtitle: Let me help you find the perfect drink
+      close: Close
+      step0_question: What are you in the mood for?
+      step0_subtitle: Let me guide you to the perfect drink
+      mode_spirits: Whiskey & Spirits
+      mode_wine: Wine
+      step1_question: Do you enjoy smoky flavors?
+      step1_subtitle: Think campfire, peat, charred wood
+      smoky_yes: Yes, love it
+      smoky_no: Not for me
+      step2_question: What's your taste preference?
+      step2_subtitle: Pick the one that speaks to you most
+      taste_sweet: Sweet & Rich
+      taste_dry: Dry & Crisp
+      taste_spicy: Bold & Spicy
+      step3_question: What's your budget?
+      step3_subtitle: We'll find the best value for you
+      budget_low: Budget-friendly
+      budget_mid: Mid-range
+      budget_high: Premium
+      step4_question: What type of wine?
+      step4_subtitle: Choose your preferred style
+      wine_red: Red
+      wine_white: White
+      wine_rose: Rosé
+      wine_sparkling: Sparkling
+      wine_surprise: Surprise me
+      step5_question: How do you like your wine?
+      step5_subtitle: Pick the style that appeals most
+      wine_light: Light & Crisp
+      wine_fruity: Fruity & Balanced
+      wine_bold: Bold & Full
+      step6_question: What's your budget?
+      step6_subtitle: We'll find the perfect bottle for you
+      wine_budget_low: House selection
+      wine_budget_mid: Mid-range
+      wine_budget_high: Premium
+      loading: Finding your perfect match&hellip;
+    whiskey_ambassador:
+      fab_label: Whiskey Guide
+      fab_aria: Whiskey Ambassador
+      title: Whiskey Ambassador
+      subtitle: Let me guide you to your perfect dram
+      close: Close
+      my_picks: My Picks
+      explore: Explore
+      flights: Flights
+      step0_question: How would you describe your whiskey experience?
+      exp_newcomer: I'm new to whiskey
+      exp_casual: Casual enjoyer
+      exp_enthusiast: Whiskey enthusiast
+      step1_question: Which world of whiskey appeals to you?
+      region_scotch: Scottish
+      region_american: American
+      region_irish: Irish
+      region_japanese: Japanese
+      region_surprise: Surprise me
+      step2_question: What flavor profile speaks to you?
+      flavor_light: Light & Delicate
+      flavor_fruity: Fruity & Sweet
+      flavor_rich: Rich & Sherried
+      flavor_spicy: Spicy & Dry
+      flavor_smoky: Smoky & Coastal
+      flavor_peated: Heavily Peated
+      step3_question: What's your budget per dram?
+      budget_low: Value picks
+      budget_mid: Mid-range
+      budget_high: Premium
+      loading: Finding your perfect dram&hellip;
     smartmenu:
       menu: 'Menu:'
       restaurant: 'Restaurant:'

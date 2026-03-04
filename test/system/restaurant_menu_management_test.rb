@@ -29,24 +29,23 @@ class RestaurantMenuManagementTest < ApplicationSystemTestCase
     # Verify sidebar exists
     assert_testid('restaurant-sidebar')
 
-    # Restaurant section
+    # Restaurant section (always visible)
     assert_testid('sidebar-details-link')
     assert_testid('sidebar-hours-link')
     assert_testid('sidebar-localization-link')
 
-    # Menus section
+    # Menus section (always visible)
     assert_testid('sidebar-menus-link')
     assert_testid('sidebar-allergens-link')
     assert_testid('sidebar-sizes-link')
-
-    # Team section
-    assert_testid('sidebar-staff-link')
-
-    # Financials section
-    assert_testid('sidebar-taxes-tips-link')
-
-    # Setup section
     assert_testid('sidebar-settings-link')
+
+    # Operations section (inside collapsible accordion — expand it first)
+    find('.sidebar-section-toggle', text: I18n.t('restaurants.sidebar_2025.operations', default: 'Operations')).click
+    sleep 0.3
+
+    assert_testid('sidebar-staff-link')
+    assert_testid('sidebar-taxes-tips-link')
     assert_testid('sidebar-jukebox-link')
   end
 

@@ -124,21 +124,21 @@ class MenuSectionSwitchingTest < ApplicationSystemTestCase
     assert_text 'Starters', wait: 5
 
     # Sidebar should still be present (turbo frame only updates content area)
-    assert_selector '.sidebar-2025'
+    assert_selector '.sidebar-app'
 
     # Navigate to items
     find('.sidebar-link', text: 'Items').click
     assert_text 'Caesar Salad', wait: 5
 
     # Sidebar still present
-    assert_selector '.sidebar-2025'
+    assert_selector '.sidebar-app'
 
     # Navigate back to details
     find('.sidebar-link', text: 'Details').click
     sleep 1
 
     # Sidebar still present
-    assert_selector '.sidebar-2025'
+    assert_selector '.sidebar-app'
   end
 
   test 'direct URL to sections tab renders sections' do
@@ -193,7 +193,11 @@ class MenuSectionSwitchingTest < ApplicationSystemTestCase
   test 'section edit links navigate to section edit page' do
     visit edit_restaurant_menu_path(@restaurant, @menu, section: 'sections')
 
-    find("[data-testid='edit-menusection-#{@section1.id}-btn']").click
+    # Open the actions dropdown for the first section, then click Edit
+    within("tr[data-sortable-id='#{@section1.id}']") do
+      find('[data-bs-toggle="dropdown"]').click
+      find("[data-testid='edit-menusection-#{@section1.id}-btn']").click
+    end
 
     assert_current_path edit_restaurant_menu_menusection_path(@restaurant, @menu, @section1), ignore_query: true
   end
@@ -305,7 +309,11 @@ class MenuSectionSwitchingTest < ApplicationSystemTestCase
   test 'item edit links navigate to item edit page' do
     visit edit_restaurant_menu_path(@restaurant, @menu, section: 'items')
 
-    find("[data-testid='edit-item-#{@item1.id}-btn']").click
+    # Open the actions dropdown for the first item, then click Edit
+    within("[data-testid='menu-item-#{@item1.id}']") do
+      find('[data-bs-toggle="dropdown"]').click
+      find("[data-testid='edit-item-#{@item1.id}-btn']").click
+    end
 
     assert_current_path edit_restaurant_menu_menusection_menuitem_path(
       @restaurant, @menu, @section1, @item1,
@@ -337,7 +345,7 @@ class MenuSectionSwitchingTest < ApplicationSystemTestCase
     visit edit_restaurant_menu_path(@restaurant, @menu)
 
     # Sidebar should show badge counts
-    within '.sidebar-2025' do
+    within '.sidebar-app' do
       sections_link = find('.sidebar-link', text: 'Sections')
       assert_includes sections_link.text, '2'
 

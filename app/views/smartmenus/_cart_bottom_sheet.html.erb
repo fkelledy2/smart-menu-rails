@@ -83,7 +83,7 @@
                 <%= ordraction.ordritem.menuitem.name %>
               <% end %>
               <% if ordraction.ordritem.size_name.present? %>
-                <span class="text-muted" style="font-size: 0.8em;">(<%= ordraction.ordritem.size_name.sub(/\s*\(.*\)/, '') %>)</span>
+                <span class="text-muted size-name-label">(<%= ordraction.ordritem.size_name.sub(/\s*\(.*\)/, '') %>)</span>
               <% end %>
             </div>
             <div class="cart-sheet__item-price">
@@ -111,7 +111,7 @@
                 <%= ordraction.ordritem.menuitem.name %>
               <% end %>
               <% if ordraction.ordritem.size_name.present? %>
-                <span class="text-muted" style="font-size: 0.8em;">(<%= ordraction.ordritem.size_name.sub(/\s*\(.*\)/, '') %>)</span>
+                <span class="text-muted size-name-label">(<%= ordraction.ordritem.size_name.sub(/\s*\(.*\)/, '') %>)</span>
               <% end %>
             </div>
             <div class="cart-sheet__item-price text-muted">
@@ -166,7 +166,7 @@
               <% restaurant&.tips&.sort_by(&:percentage)&.each do |tip| %>
                 <button type="button" class="btn-touch-secondary btn-touch-sm tip-preset-btn"><span class="tipPreset"><%= tip.percentage %>%</span></button>
               <% end %>
-              <input id="tipNumberField" type="number" min="0.00" max="<%= number_to_currency(order.gross, unit: cur) %>" class="form-control form-control-sm text-end" style="width: 80px;" value="0.00">
+              <input id="tipNumberField" type="number" min="0.00" max="<%= number_to_currency(order.gross, unit: cur) %>" class="form-control form-control-sm text-end tip-number-input" value="0.00">
             </div>
           </div>
           <hr>
@@ -208,7 +208,7 @@
             <button type="button" class="btn-touch-secondary btn-touch-icon" id="orderCapacityDecrement" disabled>
               <i class="bi bi-dash"></i>
             </button>
-            <div class="text-center" style="min-width: 100px;">
+            <div class="text-center order-capacity-value">
               <div id="orderCapacityValue" class="display-4 mb-0">1</div>
             </div>
             <button type="button" class="btn-touch-secondary btn-touch-icon" id="orderCapacityIncrement">

@@ -18,7 +18,7 @@
 
                             <div class="d-flex align-items-center justify-content-center gap-3">
                                 <button type="button" class="btn btn-outline-secondary btn-lg" id="orderCapacityDecrement">-</button>
-                                <div class="text-center" style="min-width: 120px;">
+                                <div class="text-center order-capacity-value">
                                     <div id="orderCapacityValue" class="display-4 mb-0">1</div>
                                 </div>
                                 <button type="button" class="btn btn-outline-secondary btn-lg" id="orderCapacityIncrement">+</button>
@@ -76,31 +76,31 @@
                             </div>
                         </div>
                     </div>
-                    <div style="margin-top:20px;"></div>
+                    <div class="mt-3"></div>
             <% end %>
             <span style="display:none" id="a2o_ordr_id"></span>
             <span style="display:none" id="a2o_menuitem_id"></span>
             <span style="display:none" id="a2o_size_name"></span>
-            <div style="padding-left:15px;padding-right:15px;" class="row">
+            <div class="row px-3">
                 <div class="col-12">
                     <span class="h4" id="a2o_menuitem_name"></span>
                 </div>
             </div>
-            <div style="padding-left:15px;padding-right:15px;" class="row">
+            <div class="row px-3">
                 <div class="col-12">
                     <span id="a2o_menuitem_description"></span>
                 </div>
             </div>
-            <div style="padding-left:15px;padding-right:15px;" class="row mt-2" id="a2o_tasting_controls" hidden>
+            <div class="row px-3 mt-2" id="a2o_tasting_controls" hidden>
               <div class="col-12 d-flex align-items-center gap-2 flex-wrap">
-                <div class="input-group input-group-sm" style="width: 140px;">
-                  <button class="btn btn-outline-secondary" type="button" id="a2o_tasting_qty_decr" aria-label="Decrease">-</button>
+                <div class="input-group input-group-sm tasting-qty-group">
+                  <button class="btn btn-outline-secondary" type="button" id="a2o_tasting_qty_decr" aria-label="<%= t('.decrease') %>">-</button>
                   <input type="number" class="form-control text-center" id="a2o_tasting_qty" value="1" min="1">
-                  <button class="btn btn-outline-secondary" type="button" id="a2o_tasting_qty_incr" aria-label="Increase">+</button>
+                  <button class="btn btn-outline-secondary" type="button" id="a2o_tasting_qty_incr" aria-label="<%= t('.increase') %>">+</button>
                 </div>
                 <div class="form-check form-check-inline" id="a2o_tasting_pairing_wrap" hidden>
                   <input class="form-check-input" type="checkbox" id="a2o_tasting_pairing">
-                  <label class="form-check-label" for="a2o_tasting_pairing">Pairing</label>
+                  <label class="form-check-label" for="a2o_tasting_pairing"><%= t('.pairing') %></label>
                 </div>
               </div>
             </div>
@@ -142,7 +142,7 @@
                     </div>
                     <% order.ordractions.each do |ordraction| %>
                         <% if ordraction.ordritem && ordraction.ordritem.status == 'opened' && ordraction.ordritem.in?(order.ordritems) %>
-                            <div id="ordritem_<%= ordraction.ordritem.id %>" style="margin-top:5px" class="row" data-testid="order-item-<%= ordraction.ordritem.id %>">
+                            <div id="ordritem_<%= ordraction.ordritem.id %>" class="row ordr-item-row" data-testid="order-item-<%= ordraction.ordritem.id %>">
                                 <div class="col-8">
                                     <div class="d-flex w-100 overflow-hidden">
                                         <p class="text-truncate">
@@ -162,7 +162,7 @@
                                                 <% end %>
                                             <% end %>
                                             <% if ordraction.ordritem.size_name.present? %>
-                                              <span class="text-muted" style="font-size: 0.8em;">(<%= ordraction.ordritem.size_name.sub(/\s*\(.*\)/, '') %>)</span>
+                                              <span class="text-muted size-name-label">(<%= ordraction.ordritem.size_name.sub(/\s*\(.*\)/, '') %>)</span>
                                             <% end %>
                                         </p>
                                     </div>
@@ -194,7 +194,7 @@
                     </div>
                     <% order.ordractions.each do |ordraction| %>
                         <% if ordraction.ordritem && (ordraction.ordritem.status == 'ordered' || ordraction.ordritem.status == 'preparing' || ordraction.ordritem.status == 'ready'  || ordraction.ordritem.status == 'delivered') && ordraction.ordritem.in?(order.ordritems) %>
-                            <div id="ordritem_<%= ordraction.ordritem.id %>" style="margin-top:5px" class="row">
+                            <div id="ordritem_<%= ordraction.ordritem.id %>" class="row ordr-item-row">
                                 <div class="col-8">
                                     <div class="d-flex w-100 overflow-hidden">
                                         <p class="text-muted text-truncate">
@@ -211,7 +211,7 @@
                                                 <% end %>
                                             <% end %>
                                             <% if ordraction.ordritem.size_name.present? %>
-                                              <span class="text-muted" style="font-size: 0.8em;">(<%= ordraction.ordritem.size_name.sub(/\s*\(.*\)/, '') %>)</span>
+                                              <span class="text-muted size-name-label">(<%= ordraction.ordritem.size_name.sub(/\s*\(.*\)/, '') %>)</span>
                                             <% end %>
                                         </p>
                                     </div>
@@ -309,7 +309,7 @@
                         <% restaurant.tips.sort_by(&:percentage).each do |tip| %>
                           <button type="button" class="btn-touch-secondary btn-touch-sm tip-preset-btn"><span class="tipPreset"><%= tip.percentage %>%</span></button>
                         <% end %>
-                        <input id="tipNumberField" type="number" min="0.00" max="<%= number_to_currency(order.gross, unit: cur) %>" class="form-control form-control-sm text-end" style="width: 80px;" value="0.00">
+                        <input id="tipNumberField" type="number" min="0.00" max="<%= number_to_currency(order.gross, unit: cur) %>" class="form-control form-control-sm text-end tip-number-input" value="0.00">
                       </div>
                     </div>
                     <hr>

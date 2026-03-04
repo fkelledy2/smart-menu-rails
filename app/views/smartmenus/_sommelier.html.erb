@@ -34,12 +34,12 @@
   <%# Floating action button — "Help me choose" %>
   <button class="sommelier-fab"
           data-action="click->sommelier#open"
-          aria-label="Help me choose a drink"
-          title="AI Sommelier">
+          aria-label="<%= t('smartmenus.sommelier.fab_aria') %>"
+          title="<%= t('smartmenus.sommelier.title') %>">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M8 2h8l-2 7h4l-7 11 1-7H8l2-7z"/>
     </svg>
-    <span class="sommelier-fab-label">Help me choose</span>
+    <span class="sommelier-fab-label"><%= t('smartmenus.sommelier.fab_label') %></span>
   </button>
 
   <%# Panel overlay %>
@@ -48,9 +48,9 @@
 
       <%# Header %>
       <div class="sommelier-header">
-        <h2 class="sommelier-title">AI Sommelier</h2>
-        <p class="sommelier-subtitle">Let me help you find the perfect drink</p>
-        <button class="sommelier-close" data-action="click->sommelier#close" aria-label="Close">
+        <h2 class="sommelier-title"><%= t('smartmenus.sommelier.title') %></h2>
+        <p class="sommelier-subtitle"><%= t('smartmenus.sommelier.subtitle') %></p>
+        <button class="sommelier-close" data-action="click->sommelier#close" aria-label="<%= t('smartmenus.sommelier.close') %>">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
       </div>
@@ -61,17 +61,17 @@
       <%# Step 0: Mode selection — Whiskey/Spirits or Wine %>
       <div class="sommelier-step" data-sommelier-target="step">
         <div class="sommelier-step-question">
-          <h3>What are you in the mood for?</h3>
-          <p>Let me guide you to the perfect drink</p>
+          <h3><%= t('smartmenus.sommelier.step0_question') %></h3>
+          <p><%= t('smartmenus.sommelier.step0_subtitle') %></p>
         </div>
         <div class="sommelier-step-options">
           <button class="sommelier-option-btn" data-action="click->sommelier#setMode" data-value="spirits">
             <span class="sommelier-option-icon">🥃</span>
-            <span class="sommelier-option-text">Whiskey & Spirits</span>
+            <span class="sommelier-option-text"><%= t('smartmenus.sommelier.mode_spirits') %></span>
           </button>
           <button class="sommelier-option-btn" data-action="click->sommelier#setMode" data-value="wine">
             <span class="sommelier-option-icon">🍷</span>
-            <span class="sommelier-option-text">Wine</span>
+            <span class="sommelier-option-text"><%= t('smartmenus.sommelier.mode_wine') %></span>
           </button>
         </div>
       </div>
@@ -81,17 +81,17 @@
       <%# Step 1: Smoky preference %>
       <div class="sommelier-step d-none" data-sommelier-target="step" data-flow="spirits">
         <div class="sommelier-step-question">
-          <h3>Do you enjoy smoky flavors?</h3>
-          <p>Think campfire, peat, charred wood</p>
+          <h3><%= t('smartmenus.sommelier.step1_question') %></h3>
+          <p><%= t('smartmenus.sommelier.step1_subtitle') %></p>
         </div>
         <div class="sommelier-step-options">
           <button class="sommelier-option-btn" data-action="click->sommelier#setSmoky" data-value="true">
             <span class="sommelier-option-icon">🔥</span>
-            <span class="sommelier-option-text">Yes, love it</span>
+            <span class="sommelier-option-text"><%= t('smartmenus.sommelier.smoky_yes') %></span>
           </button>
           <button class="sommelier-option-btn" data-action="click->sommelier#setSmoky" data-value="false">
             <span class="sommelier-option-icon">🌿</span>
-            <span class="sommelier-option-text">Not for me</span>
+            <span class="sommelier-option-text"><%= t('smartmenus.sommelier.smoky_no') %></span>
           </button>
         </div>
       </div>
@@ -99,21 +99,21 @@
       <%# Step 2: Taste preference (spirits) %>
       <div class="sommelier-step d-none" data-sommelier-target="step" data-flow="spirits">
         <div class="sommelier-step-question">
-          <h3>What's your taste preference?</h3>
-          <p>Pick the one that speaks to you most</p>
+          <h3><%= t('smartmenus.sommelier.step2_question') %></h3>
+          <p><%= t('smartmenus.sommelier.step2_subtitle') %></p>
         </div>
         <div class="sommelier-step-options sommelier-step-options-3">
           <button class="sommelier-option-btn" data-action="click->sommelier#setTaste" data-value="sweet">
             <span class="sommelier-option-icon">🍯</span>
-            <span class="sommelier-option-text">Sweet & Rich</span>
+            <span class="sommelier-option-text"><%= t('smartmenus.sommelier.taste_sweet') %></span>
           </button>
           <button class="sommelier-option-btn" data-action="click->sommelier#setTaste" data-value="dry">
             <span class="sommelier-option-icon">🍋</span>
-            <span class="sommelier-option-text">Dry & Crisp</span>
+            <span class="sommelier-option-text"><%= t('smartmenus.sommelier.taste_dry') %></span>
           </button>
           <button class="sommelier-option-btn" data-action="click->sommelier#setTaste" data-value="spicy">
             <span class="sommelier-option-icon">🌶️</span>
-            <span class="sommelier-option-text">Bold & Spicy</span>
+            <span class="sommelier-option-text"><%= t('smartmenus.sommelier.taste_spicy') %></span>
           </button>
         </div>
       </div>
@@ -121,21 +121,21 @@
       <%# Step 3: Budget preference (spirits) %>
       <div class="sommelier-step d-none" data-sommelier-target="step" data-flow="spirits">
         <div class="sommelier-step-question">
-          <h3>What's your budget?</h3>
-          <p>We'll find the best value for you</p>
+          <h3><%= t('smartmenus.sommelier.step3_question') %></h3>
+          <p><%= t('smartmenus.sommelier.step3_subtitle') %></p>
         </div>
         <div class="sommelier-step-options sommelier-step-options-3">
           <button class="sommelier-option-btn" data-action="click->sommelier#setBudget" data-value="1">
             <span class="sommelier-option-icon">💰</span>
-            <span class="sommelier-option-text">Budget-friendly</span>
+            <span class="sommelier-option-text"><%= t('smartmenus.sommelier.budget_low') %></span>
           </button>
           <button class="sommelier-option-btn" data-action="click->sommelier#setBudget" data-value="2">
             <span class="sommelier-option-icon">💎</span>
-            <span class="sommelier-option-text">Mid-range</span>
+            <span class="sommelier-option-text"><%= t('smartmenus.sommelier.budget_mid') %></span>
           </button>
           <button class="sommelier-option-btn" data-action="click->sommelier#setBudget" data-value="3">
             <span class="sommelier-option-icon">👑</span>
-            <span class="sommelier-option-text">Premium</span>
+            <span class="sommelier-option-text"><%= t('smartmenus.sommelier.budget_high') %></span>
           </button>
         </div>
       </div>
@@ -145,31 +145,31 @@
       <%# Step 4: Wine color %>
       <div class="sommelier-step d-none" data-sommelier-target="step" data-flow="wine">
         <div class="sommelier-step-question">
-          <h3>What type of wine?</h3>
-          <p>Choose your preferred style</p>
+          <h3><%= t('smartmenus.sommelier.step4_question') %></h3>
+          <p><%= t('smartmenus.sommelier.step4_subtitle') %></p>
         </div>
         <div class="sommelier-step-options sommelier-step-options-3">
           <button class="sommelier-option-btn" data-action="click->sommelier#setWineColor" data-value="red">
             <span class="sommelier-option-icon">🍷</span>
-            <span class="sommelier-option-text">Red</span>
+            <span class="sommelier-option-text"><%= t('smartmenus.sommelier.wine_red') %></span>
           </button>
           <button class="sommelier-option-btn" data-action="click->sommelier#setWineColor" data-value="white">
             <span class="sommelier-option-icon">🥂</span>
-            <span class="sommelier-option-text">White</span>
+            <span class="sommelier-option-text"><%= t('smartmenus.sommelier.wine_white') %></span>
           </button>
           <button class="sommelier-option-btn" data-action="click->sommelier#setWineColor" data-value="rosé">
             <span class="sommelier-option-icon">🌸</span>
-            <span class="sommelier-option-text">Rosé</span>
+            <span class="sommelier-option-text"><%= t('smartmenus.sommelier.wine_rose') %></span>
           </button>
         </div>
-        <div class="sommelier-step-options mt-2" style="justify-content: center;">
+        <div class="sommelier-step-options mt-2 justify-content-center">
           <button class="sommelier-option-btn sommelier-option-btn-sm" data-action="click->sommelier#setWineColor" data-value="sparkling">
             <span class="sommelier-option-icon">✨</span>
-            <span class="sommelier-option-text">Sparkling</span>
+            <span class="sommelier-option-text"><%= t('smartmenus.sommelier.wine_sparkling') %></span>
           </button>
           <button class="sommelier-option-btn sommelier-option-btn-sm" data-action="click->sommelier#setWineColor" data-value="no_preference">
             <span class="sommelier-option-icon">🎲</span>
-            <span class="sommelier-option-text">Surprise me</span>
+            <span class="sommelier-option-text"><%= t('smartmenus.sommelier.wine_surprise') %></span>
           </button>
         </div>
       </div>
@@ -177,21 +177,21 @@
       <%# Step 5: Wine body + taste %>
       <div class="sommelier-step d-none" data-sommelier-target="step" data-flow="wine">
         <div class="sommelier-step-question">
-          <h3>How do you like your wine?</h3>
-          <p>Pick the style that appeals most</p>
+          <h3><%= t('smartmenus.sommelier.step5_question') %></h3>
+          <p><%= t('smartmenus.sommelier.step5_subtitle') %></p>
         </div>
         <div class="sommelier-step-options sommelier-step-options-3">
           <button class="sommelier-option-btn" data-action="click->sommelier#setWineStyle" data-body="light" data-taste="dry">
             <span class="sommelier-option-icon">💧</span>
-            <span class="sommelier-option-text">Light & Crisp</span>
+            <span class="sommelier-option-text"><%= t('smartmenus.sommelier.wine_light') %></span>
           </button>
           <button class="sommelier-option-btn" data-action="click->sommelier#setWineStyle" data-body="medium" data-taste="fruity">
             <span class="sommelier-option-icon">🍇</span>
-            <span class="sommelier-option-text">Fruity & Balanced</span>
+            <span class="sommelier-option-text"><%= t('smartmenus.sommelier.wine_fruity') %></span>
           </button>
           <button class="sommelier-option-btn" data-action="click->sommelier#setWineStyle" data-body="full" data-taste="dry">
             <span class="sommelier-option-icon">🏔️</span>
-            <span class="sommelier-option-text">Bold & Full</span>
+            <span class="sommelier-option-text"><%= t('smartmenus.sommelier.wine_bold') %></span>
           </button>
         </div>
       </div>
@@ -199,21 +199,21 @@
       <%# Step 6: Budget (wine) %>
       <div class="sommelier-step d-none" data-sommelier-target="step" data-flow="wine">
         <div class="sommelier-step-question">
-          <h3>What's your budget?</h3>
-          <p>We'll find the perfect bottle for you</p>
+          <h3><%= t('smartmenus.sommelier.step6_question') %></h3>
+          <p><%= t('smartmenus.sommelier.step6_subtitle') %></p>
         </div>
         <div class="sommelier-step-options sommelier-step-options-3">
           <button class="sommelier-option-btn" data-action="click->sommelier#setWineBudget" data-value="1">
             <span class="sommelier-option-icon">💰</span>
-            <span class="sommelier-option-text">House selection</span>
+            <span class="sommelier-option-text"><%= t('smartmenus.sommelier.wine_budget_low') %></span>
           </button>
           <button class="sommelier-option-btn" data-action="click->sommelier#setWineBudget" data-value="2">
             <span class="sommelier-option-icon">💎</span>
-            <span class="sommelier-option-text">Mid-range</span>
+            <span class="sommelier-option-text"><%= t('smartmenus.sommelier.wine_budget_mid') %></span>
           </button>
           <button class="sommelier-option-btn" data-action="click->sommelier#setWineBudget" data-value="3">
             <span class="sommelier-option-icon">👑</span>
-            <span class="sommelier-option-text">Premium</span>
+            <span class="sommelier-option-text"><%= t('smartmenus.sommelier.wine_budget_high') %></span>
           </button>
         </div>
       </div>
@@ -221,7 +221,7 @@
       <%# Loading spinner %>
       <div class="sommelier-loading d-none" data-sommelier-target="loading">
         <div class="sommelier-spinner"></div>
-        <p>Finding your perfect match&hellip;</p>
+        <p><%= t('smartmenus.sommelier.loading') %></p>
       </div>
 
       <%# Results container — populated by JS %>

@@ -5,7 +5,7 @@
       <!-- Header Section -->
       <div class="text-center mb-4">
         <h1 class="pb-2 border-bottom d-inline-block"><%= t(".signUp") %></h1>
-        <p class="text-muted mt-3">Create your account.</p>
+        <p class="text-muted mt-3"><%= t(".create_your_account") %></p>
       </div>
 
       <!-- Sign Up Card -->
@@ -18,7 +18,7 @@
             <!-- Full Name Field -->
             <div class="mb-3">
               <label for="user_name" class="visually-hidden">
-                Full Name
+                <%= t(".fullName") %>
               </label>
               <%= f.text_field :name,
                   autofocus: true,
@@ -31,7 +31,7 @@
             <!-- Email Field -->
             <div class="mb-3">
               <label for="user_email" class="visually-hidden">
-                Email Address
+                <%= t(".emailAddress") %>
               </label>
               <%= f.email_field :email,
                   autofocus: false,
@@ -44,7 +44,7 @@
             <!-- Password Field -->
             <div class="mb-3">
               <label for="user_password" class="visually-hidden">
-                Password
+                <%= t(".password") %>
               </label>
               <%= f.password_field :password,
                   autocomplete: "off",
@@ -52,13 +52,13 @@
                   class: 'form-control form-control-lg',
                   id: 'user_password',
                   data: { testid: 'signup-password-input' } %>
-              <div class="form-text small">Minimum 6 characters</div>
+              <div class="form-text small"><%= t(".minimum_characters") %></div>
             </div>
 
             <!-- Confirm Password Field -->
             <div class="mb-3">
               <label for="user_password_confirmation" class="visually-hidden">
-                Confirm Password
+                <%= t(".confirmPassword") %>
               </label>
               <%= f.password_field :password_confirmation,
                   autocomplete: "off",
@@ -70,14 +70,14 @@
 
             <!-- Submit Button -->
             <div class="d-grid mb-3">
-              <%= f.submit "Create Account", class: "btn btn-danger btn-lg", data: { testid: 'signup-submit-btn' } %>
+              <%= f.submit t(".create_account"), class: "btn btn-danger btn-lg", data: { testid: 'signup-submit-btn' } %>
             </div>
           <% end %>
 
           <!-- Divider -->
           <div class="text-center">
-            <span class="text-muted">Already have an account?</span>
-            <%= link_to "Sign in", new_user_session_path, class: "text-decoration-none fw-semibold", data: { testid: 'login-link' } %>
+            <span class="text-muted"><%= t(".already_have_account") %></span>
+            <%= link_to t(".sign_in"), new_user_session_path, class: "text-decoration-none fw-semibold", data: { testid: 'login-link' } %>
           </div>
       </div>
 

@@ -22,7 +22,7 @@
             <i class="bi bi-arrow-left-right"></i>
             <span class="d-none d-sm-inline"><%= t('smartmenus.staff_banner.switch_table', default: 'Switch') %></span>
           </button>
-          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" style="max-height: 300px; overflow-y: auto;">
+          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark dropdown-menu-scrollable-sm">
             <% Array(table_smartmenus).each do |sm| %>
               <% next unless sm.tablesetting %>
               <li>

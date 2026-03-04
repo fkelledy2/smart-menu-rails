@@ -160,16 +160,20 @@ class MenuItemsTest < ApplicationSystemTestCase
   test 'edit buttons are present for each item' do
     visit edit_restaurant_menu_path(@restaurant, @menu, section: 'items')
 
-    # Verify edit buttons exist
-    assert_testid("edit-item-#{@item1.id}-btn")
-    assert_testid("edit-item-#{@item2.id}-btn")
-    assert_testid("edit-item-#{@item3.id}-btn")
+    # Verify edit buttons exist inside action dropdowns (hidden until opened)
+    assert_selector("[data-testid='edit-item-#{@item1.id}-btn']", visible: :all)
+    assert_selector("[data-testid='edit-item-#{@item2.id}-btn']", visible: :all)
+    assert_selector("[data-testid='edit-item-#{@item3.id}-btn']", visible: :all)
   end
 
   test 'clicking edit button navigates to item edit page' do
     visit edit_restaurant_menu_path(@restaurant, @menu, section: 'items')
 
-    click_testid("edit-item-#{@item1.id}-btn")
+    # Open the actions dropdown for the first item, then click Edit
+    within("[data-testid='menu-item-#{@item1.id}']") do
+      find('[data-bs-toggle="dropdown"]').click
+      find("[data-testid='edit-item-#{@item1.id}-btn']").click
+    end
 
     # Should navigate to edit page
     assert_current_path edit_restaurant_menu_menusection_menuitem_path(

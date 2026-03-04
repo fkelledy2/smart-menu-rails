@@ -1,16 +1,14 @@
 <% if src.present? %>
   <%= image_tag src,
       title: alt,
-      class: "float-left img-fluid",
+      class: "float-left img-fluid smartmenu-image-placeholder",
       onload: "fadeIn(this)",
-      style: "border-top-left-radius: 5px;",
       srcset: (defined?(srcset) && srcset.present?) ? srcset : nil,
       sizes: (defined?(sizes) && sizes.present?) ? sizes : nil,
       loading: (defined?(loading) ? loading : 'lazy')
   %>
 <% else %>
-  <div class="float-left img-fluid d-flex align-items-center justify-content-center bg-light" 
-       style="border-top-left-radius: 5px; width: 100%; height: 100%; min-height: 100px;">
-    <span class="text-muted">No Image</span>
+  <div class="float-left img-fluid d-flex align-items-center justify-content-center bg-light smartmenu-image-placeholder">
+    <span class="text-muted"><%= t('smartmenus.showImage.no_image') %></span>
   </div>
 <% end %>

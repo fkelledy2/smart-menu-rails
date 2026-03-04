@@ -564,9 +564,11 @@ export function initOrderBindings() {
         const enabled = !!(window.__SM_STATE && window.__SM_STATE.flags && window.__SM_STATE.flags.menuItemsEnabled === true);
         const $addButtons = $('.addItemToOrder');
         const $tastingButtons = $('.tasting-cta');
+        const $stepperButtons = $('.quick-add-stepper-vertical .quick-add-btn');
         if (enabled) {
           $addButtons.removeAttr('disabled').css('pointer-events', '');
           $tastingButtons.removeAttr('disabled').css('pointer-events', '');
+          $stepperButtons.removeAttr('disabled').css('pointer-events', '');
           // Stamp current order ID onto buttons that were cached without one
           const stateOrderId = window.__SM_STATE && window.__SM_STATE.order && window.__SM_STATE.order.id;
           if (stateOrderId) {
@@ -579,6 +581,7 @@ export function initOrderBindings() {
         } else {
           $addButtons.attr('disabled', 'disabled').css('pointer-events', 'none');
           $tastingButtons.attr('disabled', 'disabled').css('pointer-events', 'none');
+          $stepperButtons.attr('disabled', 'disabled').css('pointer-events', 'none');
         }
       } catch (_) {}
     };
