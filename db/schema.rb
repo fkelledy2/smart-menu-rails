@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_03_04_220000) do
+ActiveRecord::Schema[7.2].define(version: 2026_03_04_224700) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "vector"
@@ -1282,7 +1282,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_04_220000) do
   create_table "provider_accounts", force: :cascade do |t|
     t.bigint "restaurant_id", null: false
     t.integer "provider", default: 0, null: false
-    t.string "provider_account_id", null: false
+    t.string "provider_account_id"
     t.string "account_type"
     t.string "country"
     t.string "currency"
@@ -1291,6 +1291,13 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_04_220000) do
     t.boolean "payouts_enabled", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "access_token_ciphertext"
+    t.text "refresh_token_ciphertext"
+    t.datetime "token_expires_at"
+    t.string "environment", default: "production", null: false
+    t.text "scopes"
+    t.datetime "connected_at"
+    t.datetime "disconnected_at"
     t.index ["provider", "provider_account_id"], name: "index_provider_accounts_on_provider_and_provider_account_id", unique: true
     t.index ["restaurant_id", "provider"], name: "index_provider_accounts_on_restaurant_id_and_provider"
     t.index ["restaurant_id"], name: "index_provider_accounts_on_restaurant_id"

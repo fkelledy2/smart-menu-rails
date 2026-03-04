@@ -116,21 +116,25 @@ add_column :restaurants, :platform_fee_percent, :decimal, precision: 5, scale: 2
 add_column :restaurants, :platform_fee_fixed_cents, :integer
 ```
 
-#### `provider_accounts` — token storage + environment
+#### `provider_accounts` — token storage + environment ✅ DONE
+
+> **Completed:** Migration `20260304224700_add_square_fields_to_provider_accounts`
+> added encrypted token columns, environment, scopes, and lifecycle timestamps.
+> `ProviderAccount` model updated with `encrypts :access_token, :refresh_token`,
+> `square: 1` enum, environment validation, and token expiry helpers.
+> Rails ActiveRecord Encryption configured via `config/initializers/active_record_encryption.rb`
+> using env vars (`ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY`, etc.).
 
 ```ruby
-# Extend provider enum in model: square: 1
-
-add_column :provider_accounts, :environment, :string, default: 'production'
 add_column :provider_accounts, :access_token_ciphertext, :text
 add_column :provider_accounts, :refresh_token_ciphertext, :text
 add_column :provider_accounts, :token_expires_at, :datetime
+add_column :provider_accounts, :environment, :string, default: 'production', null: false
 add_column :provider_accounts, :scopes, :text
 add_column :provider_accounts, :connected_at, :datetime
 add_column :provider_accounts, :disconnected_at, :datetime
+change_column_null :provider_accounts, :provider_account_id, true
 ```
-
-> **Encryption:** Use Rails 7 `encrypts` (ActiveRecord Encryption) for `access_token` and `refresh_token`. The `_ciphertext` suffix follows the column naming convention for `encrypts :access_token, deterministic: false`.
 
 #### `payment_attempts` — idempotency + tips
 
