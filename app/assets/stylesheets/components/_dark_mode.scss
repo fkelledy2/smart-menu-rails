@@ -869,6 +869,10 @@
 
   .quick-add-btn {
     color: var(--text-primary);
+
+    &:disabled {
+      color: var(--text-muted, #6c757d);
+    }
   }
 
   // --- Staff banner stays as-is (blue gradient, no override needed) ---
