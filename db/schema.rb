@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_02_26_150000) do
+ActiveRecord::Schema[7.2].define(version: 2026_03_04_220000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "vector"
@@ -900,14 +900,20 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_26_150000) do
     t.integer "amount_cents", null: false
     t.string "currency", null: false
     t.integer "status", default: 0, null: false
-    t.string "stripe_checkout_session_id"
-    t.string "stripe_payment_intent_id"
+    t.string "provider_checkout_session_id"
+    t.string "provider_payment_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "provider", default: 0, null: false
+    t.string "idempotency_key"
+    t.integer "tip_cents", default: 0, null: false
+    t.string "payer_ref"
+    t.index ["idempotency_key"], name: "index_ordr_split_payments_on_idempotency_key", unique: true, where: "(idempotency_key IS NOT NULL)"
     t.index ["ordr_id"], name: "index_ordr_split_payments_on_ordr_id"
     t.index ["ordrparticipant_id"], name: "index_ordr_split_payments_on_ordrparticipant_id"
-    t.index ["stripe_checkout_session_id"], name: "index_ordr_split_payments_on_stripe_checkout_session_id", unique: true
-    t.index ["stripe_payment_intent_id"], name: "index_ordr_split_payments_on_stripe_payment_intent_id"
+    t.index ["provider", "provider_payment_id"], name: "index_ordr_split_payments_on_provider_and_payment_id", unique: true, where: "(provider_payment_id IS NOT NULL)"
+    t.index ["provider_checkout_session_id"], name: "index_ordr_split_payments_on_provider_checkout_session_id", unique: true
+    t.index ["provider_payment_id"], name: "index_ordr_split_payments_on_provider_payment_id"
   end
 
   create_table "ordr_station_tickets", force: :cascade do |t|

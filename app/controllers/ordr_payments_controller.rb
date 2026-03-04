@@ -216,8 +216,9 @@ class OrdrPaymentsController < ApplicationController
 
     split_payment&.update!(
       status: :pending,
-      stripe_checkout_session_id: session.id.to_s,
-      stripe_payment_intent_id: session.payment_intent.to_s.presence,
+      provider: :stripe,
+      provider_checkout_session_id: session.id.to_s,
+      provider_payment_id: session.payment_intent.to_s.presence,
     )
 
     render json: { ok: true, checkout_session_id: session.id.to_s, checkout_url: session.url.to_s }, status: :ok

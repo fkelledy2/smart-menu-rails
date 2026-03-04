@@ -81,8 +81,9 @@ RSpec.describe 'OrdrPayments' do
 
       sp.reload
       expect(sp.status).to eq('pending')
-      expect(sp.stripe_checkout_session_id).to eq('cs_test_123')
-      expect(sp.stripe_payment_intent_id).to eq('pi_test_123')
+      expect(sp.provider_checkout_session_id).to eq('cs_test_123')
+      expect(sp.provider_payment_id).to eq('pi_test_123')
+      expect(sp.provider).to eq('stripe')
     end
   end
 end

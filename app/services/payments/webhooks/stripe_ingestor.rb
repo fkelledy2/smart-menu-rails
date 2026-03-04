@@ -385,8 +385,8 @@ module Payments
         updates = {
           status: OrdrSplitPayment.statuses['succeeded'],
         }
-        updates[:stripe_checkout_session_id] = checkout_session_id if checkout_session_id.present?
-        updates[:stripe_payment_intent_id] = payment_intent_id if payment_intent_id.present?
+        updates[:provider_checkout_session_id] = checkout_session_id if checkout_session_id.present?
+        updates[:provider_payment_id] = payment_intent_id if payment_intent_id.present?
 
         sp.update!(updates)
       end
