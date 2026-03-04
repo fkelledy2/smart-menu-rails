@@ -1023,13 +1023,20 @@
 // 11. LAZY-LOAD SECTIONS
 // ============================================================================
 
-// Sections beyond the first 3 are hidden until revealed by IntersectionObserver
+// Sections beyond the first 3 are hidden until revealed by IntersectionObserver.
+// NOTE: display:none breaks IntersectionObserver (elements have no layout).
+// Use content-visibility where supported for real render savings, with an
+// opacity fade-in fallback that keeps elements in the layout flow.
 .lazy-section {
-  display: none;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 500px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .lazy-section.lazy-revealed {
-  display: block;
+  content-visibility: visible;
+  opacity: 1;
 }
 
 // ============================================================================
