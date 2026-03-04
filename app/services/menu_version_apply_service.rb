@@ -30,13 +30,24 @@ class MenuVersionApplyService
 
     sections_by_id = Array(menu.menusections).index_by { |s| s.id.to_i }
 
+    snapshot_ids = Set.new
     ordered_sections = section_snapshots.filter_map do |ss|
-      s = sections_by_id[ss['id'].to_i]
+      sid = ss['id'].to_i
+      snapshot_ids << sid
+      s = sections_by_id[sid]
       next unless s
 
       apply_section_attributes!(s, ss)
       apply_items!(s, Array(ss['menuitems']))
       s
+    end
+
+    # Append sections that exist in the DB but were added after the snapshot
+    sections_by_id.each do |id, s|
+      next if snapshot_ids.include?(id)
+
+      apply_items!(s, []) # no snapshot items — keeps all DB items as-is
+      ordered_sections << s
     end
 
     menu.association(:menusections).target = ordered_sections
@@ -64,12 +75,20 @@ class MenuVersionApplyService
 
     items_by_id = Array(section.menuitems).index_by { |item| item.id.to_i }
 
+    snapshot_ids = Set.new
     ordered_items = item_snapshots.filter_map do |is|
-      item = items_by_id[is['id'].to_i]
+      sid = is['id'].to_i
+      snapshot_ids << sid
+      item = items_by_id[sid]
       next unless item
 
       apply_item_attributes!(item, is)
       item
+    end
+
+    # Append items that exist in the DB but were added after the snapshot
+    items_by_id.each do |id, item|
+      ordered_items << item unless snapshot_ids.include?(id)
     end
 
     section.association(:menuitems).target = ordered_items
