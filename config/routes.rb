@@ -192,6 +192,7 @@ Rails.application.routes.draw do
     post 'subscriptions/start', to: 'subscriptions#start'
     post 'subscriptions/portal', to: 'subscriptions#portal'
     post 'webhooks/stripe', to: 'webhooks#stripe'
+    post 'webhooks/square', to: 'square_webhooks#receive'
   end
   
   # ============================================================================
@@ -366,6 +367,13 @@ Rails.application.routes.draw do
       post 'stripe_connect/start', to: 'stripe_connect#start'
       get 'stripe_connect/return', to: 'stripe_connect#return'
       post 'stripe_connect/refresh', to: 'stripe_connect#refresh'
+
+      get 'square/connect', to: 'square_connect#connect', as: :square_connect
+      get 'square/callback', to: 'square_connect#callback', as: :square_callback
+      delete 'square/disconnect', to: 'square_connect#disconnect', as: :square_disconnect
+      get 'square/locations', to: 'square_connect#locations', as: :square_locations
+      patch 'square/location', to: 'square_connect#update_location', as: :square_update_location
+
       resource :payment_profile, only: [:update]
     end
     

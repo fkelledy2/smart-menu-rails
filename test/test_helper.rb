@@ -17,6 +17,10 @@ require 'rails/test_help'
 ActiveJob::Base.queue_adapter = :test
 require 'minitest/mock'
 
+# Sidekiq fake mode: perform_async stores jobs in memory instead of hitting Redis
+require 'sidekiq/testing'
+Sidekiq::Testing.fake!
+
 # Disable ActionCable in tests for speed
 ActionCable.server.config.disable_request_forgery_protection = true
 

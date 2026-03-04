@@ -5,6 +5,7 @@ class PaymentRefund < ApplicationRecord
 
   enum :provider, {
     stripe: 0,
+    square: 1,
   }
 
   enum :status, {

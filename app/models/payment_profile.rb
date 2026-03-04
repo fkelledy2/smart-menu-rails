@@ -8,6 +8,7 @@ class PaymentProfile < ApplicationRecord
 
   enum :primary_provider, {
     stripe: 0,
+    square: 1,
   }
 
   validates :merchant_model, presence: true

@@ -6,6 +6,7 @@ class PaymentAttempt < ApplicationRecord
 
   enum :provider, {
     stripe: 0,
+    square: 1,
   }
 
   enum :status, {
@@ -33,4 +34,5 @@ class PaymentAttempt < ApplicationRecord
   validates :status, presence: true
   validates :charge_pattern, presence: true
   validates :merchant_model, presence: true
+  validates :idempotency_key, uniqueness: true, allow_nil: true
 end

@@ -1,6 +1,7 @@
 class LedgerEvent < ApplicationRecord
   enum :provider, {
     stripe: 0,
+    square: 1,
   }
 
   enum :entity_type, {

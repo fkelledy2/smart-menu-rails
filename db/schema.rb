@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_03_04_220000) do
+ActiveRecord::Schema[7.2].define(version: 2026_03_05_080000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "vector"
@@ -1172,6 +1172,10 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_04_220000) do
     t.integer "provider_fee_cents"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "idempotency_key"
+    t.integer "tip_cents", default: 0, null: false
+    t.string "provider_checkout_url"
+    t.index ["idempotency_key"], name: "index_payment_attempts_on_idempotency_key", unique: true, where: "(idempotency_key IS NOT NULL)"
     t.index ["ordr_id", "created_at"], name: "index_payment_attempts_on_ordr_id_and_created_at"
     t.index ["ordr_id"], name: "index_payment_attempts_on_ordr_id"
     t.index ["provider", "provider_payment_id"], name: "index_payment_attempts_on_provider_and_provider_payment_id", unique: true, where: "(provider_payment_id IS NOT NULL)"
@@ -1282,7 +1286,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_04_220000) do
   create_table "provider_accounts", force: :cascade do |t|
     t.bigint "restaurant_id", null: false
     t.integer "provider", default: 0, null: false
-    t.string "provider_account_id", null: false
+    t.string "provider_account_id"
     t.string "account_type"
     t.string "country"
     t.string "currency"
@@ -1291,6 +1295,13 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_04_220000) do
     t.boolean "payouts_enabled", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "access_token"
+    t.text "refresh_token"
+    t.datetime "token_expires_at"
+    t.string "environment", default: "production", null: false
+    t.text "scopes"
+    t.datetime "connected_at"
+    t.datetime "disconnected_at"
     t.index ["provider", "provider_account_id"], name: "index_provider_accounts_on_provider_and_provider_account_id", unique: true
     t.index ["restaurant_id", "provider"], name: "index_provider_accounts_on_restaurant_id_and_provider"
     t.index ["restaurant_id"], name: "index_provider_accounts_on_restaurant_id"
@@ -1488,6 +1499,16 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_04_220000) do
     t.boolean "payments_enabled", default: false, null: false
     t.boolean "whiskey_ambassador_enabled", default: false, null: false
     t.integer "max_whiskey_flights", default: 5, null: false
+    t.string "payment_provider", default: "stripe"
+    t.integer "payment_provider_status", default: 0, null: false
+    t.integer "square_checkout_mode", default: 0, null: false
+    t.string "square_location_id"
+    t.string "square_merchant_id"
+    t.string "square_application_id"
+    t.datetime "square_oauth_revoked_at"
+    t.integer "platform_fee_type", default: 0, null: false
+    t.decimal "platform_fee_percent", precision: 5, scale: 2
+    t.integer "platform_fee_fixed_cents"
     t.index ["archived_by_id"], name: "index_restaurants_on_archived_by_id"
     t.index ["city", "country", "preview_enabled"], name: "idx_restaurants_geo_preview"
     t.index ["claim_status"], name: "index_restaurants_on_claim_status"

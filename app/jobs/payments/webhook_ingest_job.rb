@@ -14,6 +14,13 @@ class Payments::WebhookIngestJob < ApplicationJob
         occurred_at: occurred_at,
         payload: payload,
       )
+    when 'square'
+      Payments::Webhooks::SquareIngestor.new.ingest!(
+        provider_event_id: provider_event_id,
+        provider_event_type: provider_event_type,
+        occurred_at: occurred_at,
+        payload: payload,
+      )
     else
       raise ArgumentError, "Unsupported provider: #{provider}"
     end

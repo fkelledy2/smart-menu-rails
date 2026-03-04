@@ -100,6 +100,39 @@ class Restaurant < ApplicationRecord
     provisioned_by_system: 1,
   }, prefix: :provisioned
 
+  enum :payment_provider_status, {
+    disconnected: 0,
+    connected: 10,
+    degraded: 20,
+  }, prefix: :provider
+
+  enum :square_checkout_mode, {
+    inline: 0,
+    hosted: 10,
+  }, prefix: :square
+
+  enum :platform_fee_type, {
+    none: 0,
+    percent: 10,
+    fixed: 20,
+    percent_plus_fixed: 30,
+  }, prefix: :fee
+
+  def square_provider?  = payment_provider == 'square'
+  def stripe_provider?  = payment_provider == 'stripe'
+  def square_connected? = square_provider? && provider_connected?
+
+  def compute_platform_fee_cents(amount_cents)
+    case platform_fee_type
+    when 'none'              then 0
+    when 'percent'           then (amount_cents * (platform_fee_percent.to_d / 100)).ceil
+    when 'fixed'             then platform_fee_fixed_cents.to_i
+    when 'percent_plus_fixed'
+      (amount_cents * (platform_fee_percent.to_d / 100)).ceil + platform_fee_fixed_cents.to_i
+    else 0
+    end
+  end
+
   def spotifyAuthUrl
     "/auth/spotify?restaurant_id=#{id}"
   end
