@@ -11,12 +11,7 @@
 <% cur = restaurantCurrency&.symbol.presence || '' %>
 <% has_table = tablesetting.present? %>
 
-<%# Backdrop %>
-<div class="bottom-sheet-backdrop"
-     data-bottom-sheet-target="backdrop"
-     data-action="click->bottom-sheet#close"></div>
-
-<%# Bottom Sheet %>
+<%# Bottom Sheet — backdrop must be inside the controller element for Stimulus targets to work %>
 <div class="bottom-sheet cart-bottom-sheet"
      data-controller="bottom-sheet"
      data-bottom-sheet-peek-value="72"
@@ -26,6 +21,11 @@
      data-currency-code="<%= restaurantCurrency&.code || '' %>"
      data-testid="cart-bottom-sheet"
      id="cartBottomSheet">
+
+  <%# Backdrop (inside controller scope so Stimulus can target it) %>
+  <div class="bottom-sheet-backdrop"
+       data-bottom-sheet-target="backdrop"
+       data-action="click->bottom-sheet#close"></div>
 
   <%# Drag Handle + Summary Bar (always visible in peek) %>
   <div class="bottom-sheet__handle cart-sheet__peek-bar"

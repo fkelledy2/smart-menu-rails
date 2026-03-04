@@ -67,10 +67,12 @@
 }
 
 // Backdrop overlay
+// When inside the bottom-sheet controller element, uses z-index: -1 to sit behind
+// the sheet's content but still cover the viewport (position: fixed; inset: 0).
 .bottom-sheet-backdrop {
   position: fixed;
   inset: 0;
-  z-index: var(--z-bottom-sheet-backdrop, 1075);
+  z-index: -1;
   background: rgba(0, 0, 0, 0.4);
   opacity: 0;
   pointer-events: none;

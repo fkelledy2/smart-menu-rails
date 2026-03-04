@@ -400,11 +400,12 @@ export default class extends Controller {
     } else if (order.id) {
       html += '<div class="text-center text-muted py-4"><i class="bi bi-cart3 fs-1 mb-2 d-block"></i><p>Your cart is empty</p><p class="small">Tap + on any item to add it</p></div>';
     } else {
-      // No order yet — preserve server-rendered start-order section if present
-      const existingStart = container.querySelector('#cartStartOrderSection');
-      if (existingStart) return;
+      // No order yet — always preserve server-rendered start-order section
+      return;
     }
 
+    // Safety: never wipe container with empty html when server content exists
+    if (!html && container.children.length > 0) return;
     container.innerHTML = html;
 
     // Bind Cancel button click handler directly after DOM injection

@@ -382,6 +382,12 @@ class OrdrsController < ApplicationController
         return # Return early to prevent double render
       end
     end
+  rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved => e
+    Rails.logger.error("[OrdrsController#create] Transaction failed: #{e.class}: #{e.message}")
+    respond_to do |format|
+      format.html { redirect_back_or_to root_path, alert: t('common.flash.error', default: 'Could not start order. Please try again.') }
+      format.json { render json: { error: 'order_creation_failed', message: e.message }, status: :unprocessable_entity }
+    end
   end
 
   # PATCH/PUT /ordrs/1 or /ordrs/1.json

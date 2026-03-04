@@ -632,7 +632,7 @@ export function initOrderBindings() {
   }
 
   // Tip presets and manual change (delegated so modal content replacement doesn't drop bindings)
-  $(document).off('click.tipPreset.core').on('click.tipPreset.core', '.tipPreset', function () {
+  try { $(document).off('click.tipPreset.core').on('click.tipPreset.core', '.tipPreset', function () {
     const presetTipPercentage = parseFloat($(this).text());
     const gross = resolveGrossForTipCalc();
     if (!Number.isFinite(gross) || gross <= 0) return;
@@ -657,9 +657,11 @@ export function initOrderBindings() {
     .on('shown.bs.modal.payOrderTip', '#payOrderModal', function () {
       recalcTipAndTotals();
     });
+  } catch (e) { console.warn('[ordr_commons] Tip/payment bindings failed (non-fatal):', e); }
 
   // Start Order modal: party size selector (no typing)
   (function bindOrderCapacityUi() {
+    try {
     function clamp(n, min, max) {
       const nn = Number.isFinite(n) ? n : parseInt(String(n || ''), 10);
       const safe = Number.isFinite(nn) ? nn : min;
@@ -723,6 +725,7 @@ export function initOrderBindings() {
         setCapacity(min);
       });
     }
+    } catch (e) { console.warn('[ordr_commons] Order capacity UI bindings failed (non-fatal):', e); }
   })();
 
   // Modal inert toggles for accessibility
@@ -737,6 +740,7 @@ export function initOrderBindings() {
     });
   })();
 
+  try {
   // Add name to participant
   $(document).off('click.addNameToParticipant.core').on('click.addNameToParticipant.core', '#addNameToParticipantButton', function (event) {
     const modal = document.getElementById('addNameToParticipantModal');
@@ -775,6 +779,7 @@ export function initOrderBindings() {
     $('#confirm-order').click();
     return true;
   });
+  } catch (e) { console.warn('[ordr_commons] Participant/locale/remove bindings failed (non-fatal):', e); }
 
   // Add item to order (standard flow)
   // Removed legacy bubbling handler; capture-phase handler above owns this reliably
@@ -796,7 +801,9 @@ export function initOrderBindings() {
       evt.preventDefault();
 
       btn.setAttribute('disabled', 'disabled');
-      const ordercapacity = document.getElementById('orderCapacity')?.value || 1;
+      // Find orderCapacity relative to button context (handles duplicate IDs when modal + bottom sheet coexist)
+      const container = btn.closest('.modal-content') || btn.closest('#cartStartOrderSection') || document;
+      const ordercapacity = (container.querySelector('#orderCapacity') || container.querySelector('[name="orderCapacity"]'))?.value || 1;
       const restaurantId = getRestaurantId();
       const tablesettingId = getCurrentTableId();
       const menuId = getCurrentMenuId();
@@ -810,9 +817,10 @@ export function initOrderBindings() {
       if (document.getElementById('currentEmployee')) {
         payload.ordr.employee_id = document.getElementById('currentEmployee').textContent;
       }
+      console.info('[StartOrder] POST /restaurants/' + restaurantId + '/ordrs', payload);
       post(`/restaurants/${restaurantId}/ordrs`, payload)
         .then(() => {
-          // Hide modal (staff) or close bottom sheet (customer) after successful post
+          // Hide modal (staff) after successful post
           const modalEl = document.getElementById('openOrderModal');
           if (modalEl && window.bootstrap && window.bootstrap.Modal) {
             try {
@@ -820,11 +828,20 @@ export function initOrderBindings() {
               inst.hide();
             } catch (_) {}
           }
+          // Close bottom sheet (customer) after successful post
+          try {
+            const sheet = document.getElementById('cartBottomSheet');
+            if (sheet) {
+              const ctrl = window.Stimulus?.getControllerForElementAndIdentifier?.(sheet, 'bottom-sheet');
+              if (ctrl) ctrl.setState('peek');
+            }
+          } catch (_) {}
           // Reload page to show the new order context
           window.location.reload();
         })
         .catch((err) => {
           console.error('[StartOrder] Failed to create order:', err);
+          try { alert('Could not start order. Please try again.'); } catch (_) {}
         })
         .finally(() => {
           btn.removeAttribute('disabled');
