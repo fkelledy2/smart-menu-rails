@@ -166,6 +166,102 @@
         </div>
       </div>
     </div>
+
+    <%# ── Square Connect ─────────────────────────────────────────── %>
+    <% square_account = restaurant.provider_accounts.find { |a| a.provider.to_s == 'square' } || restaurant.provider_accounts.where(provider: :square).first %>
+    <% square_connected = square_account&.status.to_s == 'enabled' %>
+    <div class="col-12">
+      <div class="feature-card">
+        <div class="feature-card-icon bg-dark">
+          <i class="bi bi-shop"></i>
+        </div>
+        <div class="feature-card-content">
+          <h5 class="feature-card-title">Square Connect</h5>
+          <p class="feature-card-description">
+            Connect your Square account to accept payments via Square.
+          </p>
+
+          <% if flash[:square_connect_error].present? %>
+            <div class="alert alert-warning py-2 px-3 mb-2">
+              <%= flash[:square_connect_error] %>
+            </div>
+          <% end %>
+
+          <% if square_connected %>
+            <p class="text-muted small mb-1">
+              <span class="text-success"><i class="bi bi-check-circle"></i> Connected</span>
+              <% if restaurant.square_merchant_id.present? %>
+                <span class="ms-2 text-muted">Merchant: <%= restaurant.square_merchant_id %></span>
+              <% end %>
+            </p>
+
+            <% if restaurant.square_location_id.present? %>
+              <p class="text-muted small mb-1">
+                <i class="bi bi-geo-alt"></i> Location: <%= restaurant.square_location_id %>
+              </p>
+            <% end %>
+
+            <div class="mt-2 d-flex gap-2 flex-wrap">
+              <% if restaurant.respond_to?(:square_location_id) %>
+                <%= link_to 'Change Location',
+                  restaurant_payments_square_locations_path(restaurant),
+                  class: 'btn btn-outline-secondary btn-sm',
+                  data: { turbo: false } %>
+              <% end %>
+
+              <%= button_to 'Disconnect Square',
+                restaurant_payments_square_disconnect_path(restaurant),
+                method: :delete,
+                class: 'btn btn-outline-danger btn-sm',
+                data: {
+                  turbo: false,
+                  confirm: 'Disconnecting will prevent new Square payments. Are you sure?',
+                } %>
+            </div>
+
+            <%# Checkout mode selector %>
+            <div class="mt-3 pt-3 border-top">
+              <div class="small fw-semibold mb-2">Checkout Mode</div>
+              <%= restaurant_form_with(restaurant, auto_save: true) do |form| %>
+                <div class="d-flex gap-3">
+                  <div class="form-check">
+                    <%= form.radio_button :square_checkout_mode, 'inline',
+                      class: 'form-check-input', id: 'square_checkout_inline',
+                      checked: restaurant.square_inline? || !restaurant.square_hosted? %>
+                    <%= form.label :square_checkout_mode, 'Inline (card on page)',
+                      for: 'square_checkout_inline', class: 'form-check-label small' %>
+                  </div>
+                  <div class="form-check">
+                    <%= form.radio_button :square_checkout_mode, 'hosted',
+                      class: 'form-check-input', id: 'square_checkout_hosted',
+                      checked: restaurant.square_hosted? %>
+                    <%= form.label :square_checkout_mode, 'Hosted (Square payment link)',
+                      for: 'square_checkout_hosted', class: 'form-check-label small' %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% elsif square_account.present? %>
+            <p class="text-muted small mb-0">
+              <span class="text-muted"><i class="bi bi-hourglass-split"></i> <%= square_account.status.to_s.humanize %></span>
+            </p>
+          <% else %>
+            <p class="text-muted small mb-0">
+              <span class="text-muted"><i class="bi bi-x-circle"></i> Not connected</span>
+            </p>
+          <% end %>
+        </div>
+        <div class="feature-card-toggle">
+          <% unless square_connected %>
+            <%= button_to 'Connect Square',
+              restaurant_payments_square_connect_path(restaurant),
+              method: :post,
+              class: 'btn btn-outline-secondary btn-sm',
+              data: { turbo: false } %>
+          <% end %>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 

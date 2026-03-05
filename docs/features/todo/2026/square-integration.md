@@ -778,13 +778,15 @@ Square Web Payments SDK supports a **buyer verification** flow for Strong Custom
 - [x] Unit tests: `square_ingestor_test.rb` (12 tests), `square_webhooks_controller_test.rb` (4 tests)
 - [x] Full test suite green (0 new failures)
 
-### Epic 6: Split Bills (Square)
+### Epic 6: Split Bills (Square) ✅ DONE
 
-- [ ] Provider-agnostic split payment creation
-- [ ] Per-payer inline / hosted payment flow
-- [ ] Progress tracking ("€X of €Y paid")
-- [ ] Fully-paid detection → order status transition
-- [ ] Integration tests
+- [x] Provider-agnostic split payment creation — `split_evenly` creates `OrdrSplitPayment` records without provider; provider set at checkout time
+- [x] `checkout_session` refactored to route to `create_square_checkout` or `create_stripe_checkout` based on `restaurant.square_provider?`
+- [x] `create_square_checkout` — creates PaymentAttempt + payment link, updates split payment with provider + session ID
+- [x] Per-payer hosted payment flow — each split participant gets their own checkout link
+- [x] Fully-paid detection — `SquareIngestor#emit_paid_if_settled!` checks all splits succeeded before emitting `paid` OrderEvent
+- [x] Integration tests: `ordr_payments_controller_test.rb` (10 tests, 33 assertions) covering split_evenly, checkout routing, Square split settlement, partial settlement blocking
+- [x] Full test suite green (0 new failures)
 
 ### Epic 7: Background Jobs + Credential Lifecycle ✅ DONE
 

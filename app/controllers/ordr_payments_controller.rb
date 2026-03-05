@@ -5,7 +5,7 @@ class OrdrPaymentsController < ApplicationController
   require 'digest'
 
   skip_before_action :verify_authenticity_token,
-                     only: %i[request_bill split_evenly checkout_session]
+                     only: %i[request_bill split_evenly checkout_session create_inline_payment]
 
   before_action :set_restaurant
   before_action :set_ordr
@@ -130,31 +130,6 @@ class OrdrPaymentsController < ApplicationController
       return
     end
 
-    if Stripe.api_key.blank?
-      key = begin
-        Rails.application.credentials.stripe_secret_key
-      rescue StandardError
-        nil
-      end
-      if key.blank?
-        key = begin
-          Rails.application.credentials.dig(:stripe, :secret_key) ||
-            Rails.application.credentials.dig(:stripe, :api_key)
-        rescue StandardError
-          nil
-        end
-      end
-      key = ENV.fetch('STRIPE_SECRET_KEY', nil) if key.blank?
-
-      if key.present?
-        Stripe.api_key = key
-      else
-        Rails.logger.warn('[StripeCheckout] Stripe.api_key blank and no STRIPE_SECRET_KEY / credentials key found')
-        render json: { ok: false, error: 'Stripe is not configured' }, status: :service_unavailable
-        return
-      end
-    end
-
     currency = @ordr.restaurant.currency.presence || 'USD'
 
     split_payment = nil
@@ -179,6 +154,162 @@ class OrdrPaymentsController < ApplicationController
 
     success_url = params[:success_url].presence || root_url
     cancel_url = params[:cancel_url].presence || root_url
+
+    if @ordr.restaurant.square_provider?
+      create_square_checkout(split_payment: split_payment, amount_cents: amount_cents, currency: currency,
+                             success_url: success_url, cancel_url: cancel_url)
+    else
+      create_stripe_checkout(split_payment: split_payment, amount_cents: amount_cents, currency: currency,
+                             success_url: success_url, cancel_url: cancel_url)
+    end
+  end
+
+  def create_inline_payment
+    authorize @ordr, :update?
+
+    if @ordr.status.to_s != 'billrequested'
+      render json: { ok: false, error: 'Order must be billrequested to pay' }, status: :unprocessable_content
+      return
+    end
+
+    source_id = params[:source_id]
+    if source_id.blank?
+      render json: { ok: false, error: 'source_id is required' }, status: :unprocessable_content
+      return
+    end
+
+    restaurant = @ordr.restaurant
+    unless restaurant.square_provider?
+      render json: { ok: false, error: 'Square is not enabled for this restaurant' }, status: :unprocessable_content
+      return
+    end
+
+    currency = restaurant.currency.presence || 'USD'
+    requested_amount = params[:amount_cents].to_i
+    amount_cents = requested_amount.positive? ? requested_amount : total_amount_cents(@ordr)
+    tip_cents = params[:tip_cents].to_i
+
+    if amount_cents <= 0
+      render json: { ok: false, error: 'Order total is zero' }, status: :unprocessable_content
+      return
+    end
+
+    adapter = Payments::Providers::SquareAdapter.new(restaurant: restaurant)
+
+    pa = PaymentAttempt.create!(
+      ordr: @ordr,
+      restaurant: restaurant,
+      provider: :square,
+      amount_cents: amount_cents + tip_cents,
+      currency: currency,
+      status: :requires_action,
+      charge_pattern: :direct,
+      merchant_model: :restaurant_mor,
+      idempotency_key: SecureRandom.uuid,
+    )
+
+    result = adapter.create_payment!(
+      payment_attempt: pa,
+      ordr: @ordr,
+      source_id: source_id,
+      amount_cents: amount_cents,
+      tip_cents: tip_cents,
+      currency: currency,
+      verification_token: params[:verification_token],
+    )
+
+    pa.update!(
+      status: :succeeded,
+      provider_payment_id: result[:payment_id],
+    )
+
+    Rails.logger.info(
+      "[SquareInline] Payment succeeded (ordr_id=#{@ordr.id} pa_id=#{pa.id} payment_id=#{result[:payment_id]})",
+    )
+
+    render json: { ok: true, status: 'succeeded', payment_id: result[:payment_id] }, status: :ok
+  rescue Payments::Providers::SquareHttpClient::SquareApiError => e
+    Rails.logger.error("[SquareInline] Failed: #{e.class}: #{e.message}")
+    pa&.update(status: :failed) if pa&.persisted?
+    render json: { ok: false, error: 'Payment failed' }, status: :unprocessable_content
+  rescue StandardError => e
+    Rails.logger.error("[SquareInline] Unexpected: #{e.class}: #{e.message}")
+    pa&.update(status: :failed) if pa&.persisted?
+    render json: { ok: false, error: 'Payment failed' }, status: :service_unavailable
+  end
+
+  private
+
+  def csrf_skipped_action?
+    %w[request_bill split_evenly checkout_session create_inline_payment].include?(action_name)
+  end
+
+  def set_restaurant
+    @restaurant = Restaurant.find(params[:restaurant_id]) if params[:restaurant_id]
+  end
+
+  def set_ordr
+    @ordr = Ordr.find(params[:id])
+
+    return unless @restaurant && @ordr.restaurant_id != @restaurant.id
+
+    skip_authorization
+    render json: { ok: false, error: 'Order not found for restaurant' }, status: :not_found
+    nil
+  end
+
+  def customer_participants(ordr)
+    # One participant per sessionid
+    p = ordr.ordrparticipants.where(role: Ordrparticipant.roles['customer'])
+    p = p.order(:id).to_a
+    seen = {}
+    p.select do |x|
+      sid = x.sessionid.to_s
+      next false if sid.blank? || seen[sid]
+
+      seen[sid] = true
+    end
+  end
+
+  def total_amount_cents(ordr)
+    cents = ((ordr.gross.to_f - ordr.tip.to_f) * 100.0).round
+    return cents if cents.positive?
+
+    # Fallback to ordritems total
+    (ordr.ordritems.sum(:ordritemprice).to_f * 100.0).round
+  end
+
+  def compute_even_split(total_cents, n)
+    base = total_cents / n
+    remainder = total_cents % n
+    (0...n).map { |i| base + (i < remainder ? 1 : 0) }
+  end
+
+  def create_stripe_checkout(split_payment:, amount_cents:, currency:, success_url:, cancel_url:)
+    if Stripe.api_key.blank?
+      key = begin
+        Rails.application.credentials.stripe_secret_key
+      rescue StandardError
+        nil
+      end
+      if key.blank?
+        key = begin
+          Rails.application.credentials.dig(:stripe, :secret_key) ||
+            Rails.application.credentials.dig(:stripe, :api_key)
+        rescue StandardError
+          nil
+        end
+      end
+      key = ENV.fetch('STRIPE_SECRET_KEY', nil) if key.blank?
+
+      if key.present?
+        Stripe.api_key = key
+      else
+        Rails.logger.warn('[StripeCheckout] Stripe.api_key blank and no STRIPE_SECRET_KEY / credentials key found')
+        render json: { ok: false, error: 'Stripe is not configured' }, status: :service_unavailable
+        return
+      end
+    end
 
     metadata = {
       order_id: @ordr.id,
@@ -224,51 +355,46 @@ class OrdrPaymentsController < ApplicationController
     render json: { ok: true, checkout_session_id: session.id.to_s, checkout_url: session.url.to_s }, status: :ok
   end
 
-  private
+  def create_square_checkout(split_payment:, amount_cents:, currency:, success_url:, cancel_url:)
+    adapter = Payments::Providers::SquareAdapter.new(restaurant: @ordr.restaurant)
 
-  def csrf_skipped_action?
-    %w[request_bill split_evenly checkout_session].include?(action_name)
-  end
+    pa = PaymentAttempt.create!(
+      ordr: @ordr,
+      restaurant: @ordr.restaurant,
+      provider: :square,
+      amount_cents: amount_cents,
+      currency: currency,
+      status: :requires_action,
+      charge_pattern: :direct,
+      merchant_model: :restaurant_mor,
+      idempotency_key: SecureRandom.uuid,
+    )
 
-  def set_restaurant
-    @restaurant = Restaurant.find(params[:restaurant_id]) if params[:restaurant_id]
-  end
+    result = adapter.create_checkout_session!(
+      payment_attempt: pa,
+      ordr: @ordr,
+      amount_cents: amount_cents,
+      currency: currency,
+      success_url: success_url,
+      cancel_url: cancel_url,
+    )
 
-  def set_ordr
-    @ordr = Ordr.find(params[:id])
+    split_payment&.update!(
+      status: :pending,
+      provider: :square,
+      provider_checkout_session_id: result[:checkout_session_id],
+      idempotency_key: pa.idempotency_key,
+    )
 
-    return unless @restaurant && @ordr.restaurant_id != @restaurant.id
+    Rails.logger.info(
+      "[SquareCheckout] Created checkout (ordr_id=#{@ordr.id} split_payment_id=#{split_payment&.id} link_id=#{result[:checkout_session_id]})",
+    )
 
-    skip_authorization
-    render json: { ok: false, error: 'Order not found for restaurant' }, status: :not_found
-    nil
-  end
-
-  def customer_participants(ordr)
-    # One participant per sessionid
-    p = ordr.ordrparticipants.where(role: Ordrparticipant.roles['customer'])
-    p = p.order(:id).to_a
-    seen = {}
-    p.select do |x|
-      sid = x.sessionid.to_s
-      next false if sid.blank? || seen[sid]
-
-      seen[sid] = true
-    end
-  end
-
-  def total_amount_cents(ordr)
-    cents = ((ordr.gross.to_f - ordr.tip.to_f) * 100.0).round
-    return cents if cents.positive?
-
-    # Fallback to ordritems total
-    (ordr.ordritems.sum(:ordritemprice).to_f * 100.0).round
-  end
-
-  def compute_even_split(total_cents, n)
-    base = total_cents / n
-    remainder = total_cents % n
-    (0...n).map { |i| base + (i < remainder ? 1 : 0) }
+    render json: { ok: true, checkout_session_id: result[:checkout_session_id], checkout_url: result[:checkout_url] }, status: :ok
+  rescue StandardError => e
+    Rails.logger.error("[SquareCheckout] Failed: #{e.class}: #{e.message}")
+    pa&.update(status: :failed) if pa&.persisted?
+    render json: { ok: false, error: 'Square checkout failed' }, status: :service_unavailable
   end
 
   def broadcast_state(ordr)

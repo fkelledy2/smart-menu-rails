@@ -339,6 +339,7 @@ Rails.application.routes.draw do
         post :request_bill, to: 'ordr_payments#request_bill'
         post :split_evenly, to: 'ordr_payments#split_evenly'
         post 'payments/checkout_session', to: 'ordr_payments#checkout_session'
+        post 'payments/inline', to: 'ordr_payments#create_inline_payment'
       end
     end
     resources :ordr_station_tickets, only: [:update]
