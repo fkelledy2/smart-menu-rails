@@ -173,11 +173,20 @@
           <div class="bill-line bill-line-total"><span><b><%= t('smartmenus.showModals.total', default: 'Total') %></b> <i>(<%= t('smartmenus.showModals.including_tip', default: 'including tip') %>)</i></span><span class="bill-amount"><b><span id="orderGrandTotal"><%= number_to_currency(order.gross, unit: cur) %></span></b></span></div>
 
           <div class="d-flex flex-column align-items-center gap-3 mt-4">
-            <div id="wallet-button-container"
-                 data-controller="stripe-wallet"
-                 data-stripe-wallet-open-order-id-value="<%= order&.id %>"
-                 data-stripe-wallet-amount-cents-value="<%= order&.grossInCents %>"
-                 data-stripe-wallet-currency-value="<%= restaurantCurrency&.code %>"></div>
+            <% if restaurant&.square_provider? && restaurant&.square_inline? %>
+              <%# Square inline card form — tokenize on page %>
+              <%= render partial: 'smartmenus/square_inline_payment',
+                         locals: { order: order, restaurant: restaurant, restaurantCurrency: restaurantCurrency } %>
+            <% else %>
+              <%# Stripe wallet (Apple Pay / Google Pay) or Square hosted — redirect flow %>
+              <% unless restaurant&.square_provider? %>
+                <div id="wallet-button-container"
+                     data-controller="stripe-wallet"
+                     data-stripe-wallet-open-order-id-value="<%= order&.id %>"
+                     data-stripe-wallet-amount-cents-value="<%= order&.grossInCents %>"
+                     data-stripe-wallet-currency-value="<%= restaurantCurrency&.code %>"></div>
+              <% end %>
+            <% end %>
             <input type="hidden" id="openOrderId" value="<%= order.id %>">
             <input type="hidden" id="paymentAmount" value="<%= order.grossInCents %>">
             <input type="hidden" id="paymentCurrency" value="<%= restaurantCurrency&.code %>">
@@ -189,10 +198,22 @@
             <button id="cartPayCancel" type="button" class="btn-touch-secondary w-50">
               <%= t('common.cancel', default: 'Cancel') %>
             </button>
-            <button id="pay-order-confirm" type="button" class="btn-touch-primary w-50" <%= 'disabled' unless order.gross.to_f > 0 %>>
-              <i class="bi bi-credit-card"></i>
-              <%= t('smartmenus.showModals.confirmPayment', default: 'Pay') %>
-            </button>
+            <% if restaurant&.square_provider? && restaurant&.square_inline? %>
+              <%# Square inline: the submit triggers the Stimulus controller's pay() action %>
+              <button id="pay-order-confirm" type="button"
+                      class="btn-touch-primary w-50"
+                      data-action="click->square-payment#pay"
+                      <%= 'disabled' unless order.gross.to_f > 0 %>>
+                <i class="bi bi-credit-card"></i>
+                <%= t('smartmenus.showModals.confirmPayment', default: 'Pay') %>
+              </button>
+            <% else %>
+              <%# Stripe / Square hosted: redirect to checkout URL %>
+              <button id="pay-order-confirm" type="button" class="btn-touch-primary w-50" <%= 'disabled' unless order.gross.to_f > 0 %>>
+                <i class="bi bi-credit-card"></i>
+                <%= t('smartmenus.showModals.confirmPayment', default: 'Pay') %>
+              </button>
+            <% end %>
           </div>
         <% end %>
       </div>

@@ -1,0 +1,42 @@
+<%# Square inline payment form — renders the square-payment Stimulus controller %>
+<%# Locals: order, restaurant, restaurantCurrency %>
+<% sq_app_id  = restaurant.square_application_id.presence || SquareConfig.app_id %>
+<% sq_loc_id  = restaurant.square_location_id %>
+<% sq_sandbox = SquareConfig.sandbox? %>
+<% amount_cents = order.grossInCents.to_i %>
+<% currency_code = restaurantCurrency&.code.presence || restaurant.currency.presence || 'EUR' %>
+
+<div id="square-payment-container"
+     data-controller="square-payment"
+     data-square-payment-application-id-value="<%= sq_app_id %>"
+     data-square-payment-location-id-value="<%= sq_loc_id %>"
+     data-square-payment-order-id-value="<%= order.id %>"
+     data-square-payment-currency-value="<%= currency_code %>"
+     data-square-payment-amount-cents-value="<%= amount_cents %>"
+     data-square-payment-sandbox-value="<%= sq_sandbox %>"
+     data-square-payment-payment-url-value="<%= payments_inline_restaurant_ordr_path(restaurant, order) %>">
+
+  <%# Card input rendered by Square SDK %>
+  <div data-square-payment-target="cardContainer" class="mb-3" style="min-height:90px;"></div>
+
+  <%# Apple Pay (hidden until SDK confirms availability) %>
+  <div data-square-payment-target="applePayContainer" class="d-none mb-2"></div>
+
+  <%# Google Pay (hidden until SDK confirms availability) %>
+  <div data-square-payment-target="googlePayContainer" class="d-none mb-2"></div>
+
+  <%# Tip input target — the Stimulus controller reads #tipNumberField by default,
+      but we also expose this target for direct wiring %>
+  <input type="hidden" data-square-payment-target="tipInput" value="0">
+
+  <%# Error message %>
+  <div data-square-payment-target="errorMessage"
+       class="d-none alert alert-danger py-2 px-3 small mt-2"></div>
+
+  <%# Processing overlay %>
+  <div data-square-payment-target="processingOverlay"
+       class="d-none text-center py-3">
+    <div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div>
+    <span class="small text-muted">Processing payment…</span>
+  </div>
+</div>

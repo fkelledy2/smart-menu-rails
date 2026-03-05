@@ -315,7 +315,14 @@
                     <hr>
                     <div class="bill-line bill-line-total"><span><b><%= t('.total') %></b> <i>(<%= t('.including_tip') %>)</i></span><span class="bill-amount"><b><span id="orderGrandTotal"><%= number_to_currency(order.gross, unit: cur) %></span></b></span></div>
                     <div class="d-flex flex-column align-items-center gap-3 mt-4">
-                      <div id="wallet-button-container" data-controller="stripe-wallet" data-stripe-wallet-open-order-id-value="<%= order&.id %>" data-stripe-wallet-amount-cents-value="<%= order&.grossInCents %>" data-stripe-wallet-currency-value="<%= restaurantCurrency.code %>"></div>
+                      <% if restaurant&.square_provider? && restaurant&.square_inline? %>
+                        <%= render partial: 'smartmenus/square_inline_payment',
+                                   locals: { order: order, restaurant: restaurant, restaurantCurrency: restaurantCurrency } %>
+                      <% else %>
+                        <% unless restaurant&.square_provider? %>
+                          <div id="wallet-button-container" data-controller="stripe-wallet" data-stripe-wallet-open-order-id-value="<%= order&.id %>" data-stripe-wallet-amount-cents-value="<%= order&.grossInCents %>" data-stripe-wallet-currency-value="<%= restaurantCurrency.code %>"></div>
+                        <% end %>
+                      <% end %>
                       <input type="hidden" id="openOrderId" value="<%= order.id %>">
                       <input type="hidden" id="paymentAmount" value="<%= order.grossInCents %>">
                       <input type="hidden" id="paymentCurrency" value="<%= restaurantCurrency.code %>">

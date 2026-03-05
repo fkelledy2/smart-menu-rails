@@ -208,9 +208,14 @@ export default class extends Controller {
   // ── Server Submission ──────────────────────────────────────────────
 
   async #submitPayment(sourceId, verificationToken) {
-    const tipCents = this.hasTipInputTarget
+    let tipCents = this.hasTipInputTarget
       ? parseInt(this.tipInputTarget.value || "0", 10)
       : 0
+    // Fall back to the shared tip input on the pay section
+    if (!tipCents) {
+      const tipField = document.getElementById("tipNumberField")
+      if (tipField) tipCents = Math.round(parseFloat(tipField.value || "0") * 100)
+    }
 
     const url = this.paymentUrlValue ||
       `/smartmenu/orders/${this.orderIdValue}/payments`
@@ -247,9 +252,14 @@ export default class extends Controller {
   // ── UI Helpers ─────────────────────────────────────────────────────
 
   #setProcessing(active) {
-    if (this.hasSubmitButtonTarget) {
-      this.submitButtonTarget.disabled = active
-      this.submitButtonTarget.textContent = active ? "Processing…" : "Pay"
+    const btn = this.hasSubmitButtonTarget
+      ? this.submitButtonTarget
+      : document.getElementById("pay-order-confirm")
+    if (btn) {
+      btn.disabled = active
+      btn.innerHTML = active
+        ? 'Processing…'
+        : '<i class="bi bi-credit-card"></i> Pay'
     }
     if (this.hasProcessingOverlayTarget) {
       this.processingOverlayTarget.classList.toggle("d-none", !active)
@@ -272,11 +282,14 @@ export default class extends Controller {
 
   #showSuccess() {
     this.#setProcessing(false)
-    if (this.hasSubmitButtonTarget) {
-      this.submitButtonTarget.textContent = "Paid ✓"
-      this.submitButtonTarget.disabled = true
-      this.submitButtonTarget.classList.remove("btn-primary")
-      this.submitButtonTarget.classList.add("btn-success")
+    const btn = this.hasSubmitButtonTarget
+      ? this.submitButtonTarget
+      : document.getElementById("pay-order-confirm")
+    if (btn) {
+      btn.textContent = "Paid ✓"
+      btn.disabled = true
+      btn.classList.remove("btn-primary", "btn-touch-primary")
+      btn.classList.add("btn-success")
     }
     // Dispatch custom event for other controllers to react
     this.element.dispatchEvent(

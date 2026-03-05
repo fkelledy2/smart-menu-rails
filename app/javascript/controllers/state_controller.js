@@ -451,12 +451,40 @@ export default class extends Controller {
     h += '</div></div>';
     h += '<hr>';
     h += `<div class="bill-line bill-line-total"><span><b>Total</b> <i>(including tip)</i></span><span class="bill-amount"><b><span id="orderGrandTotal">${symbol}${grossVal}</span></b></span></div>`;
-    // Stripe wallet + hidden inputs
+    // Payment provider detection + hidden inputs
+    const provider = (document.body.dataset.paymentProvider || 'stripe').toLowerCase();
     const orderId = this.state?.order?.id || '';
+    const restaurantId = document.body.dataset.restaurantId || '';
     const amountCents = Math.round(Number(totals.gross || 0) * 100);
     const currencyCode = sheet?.dataset?.currencyCode || '';
     h += '<div class="d-flex flex-column align-items-center gap-3 mt-4">';
-    h += `<div id="wallet-button-container" data-controller="stripe-wallet" data-stripe-wallet-open-order-id-value="${orderId}" data-stripe-wallet-amount-cents-value="${amountCents}" data-stripe-wallet-currency-value="${currencyCode}"></div>`;
+    if (provider === 'square-inline') {
+      // Square inline card form — rendered by square-payment Stimulus controller
+      const sqAppId = document.querySelector('meta[name="square-application-id"]')?.content || '';
+      const sqLocId = document.querySelector('meta[name="square-location-id"]')?.content || '';
+      const sqSandbox = document.querySelector('meta[name="square-sandbox"]')?.content || 'true';
+      const payUrl = `/restaurants/${restaurantId}/ordrs/${orderId}/payments/inline`;
+      h += `<div id="square-payment-container" data-controller="square-payment"`;
+      h += ` data-square-payment-application-id-value="${sqAppId}"`;
+      h += ` data-square-payment-location-id-value="${sqLocId}"`;
+      h += ` data-square-payment-order-id-value="${orderId}"`;
+      h += ` data-square-payment-currency-value="${currencyCode}"`;
+      h += ` data-square-payment-amount-cents-value="${amountCents}"`;
+      h += ` data-square-payment-sandbox-value="${sqSandbox}"`;
+      h += ` data-square-payment-payment-url-value="${payUrl}">`;
+      h += '<div data-square-payment-target="cardContainer" class="mb-3" style="min-height:90px;"></div>';
+      h += '<div data-square-payment-target="applePayContainer" class="d-none mb-2"></div>';
+      h += '<div data-square-payment-target="googlePayContainer" class="d-none mb-2"></div>';
+      h += '<input type="hidden" data-square-payment-target="tipInput" value="0">';
+      h += '<div data-square-payment-target="errorMessage" class="d-none alert alert-danger py-2 px-3 small mt-2"></div>';
+      h += '<div data-square-payment-target="processingOverlay" class="d-none text-center py-3">';
+      h += '<div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div>';
+      h += '<span class="small text-muted">Processing payment…</span></div>';
+      h += '</div>';
+    } else if (provider !== 'square-hosted') {
+      // Stripe wallet (Apple Pay / Google Pay)
+      h += `<div id="wallet-button-container" data-controller="stripe-wallet" data-stripe-wallet-open-order-id-value="${orderId}" data-stripe-wallet-amount-cents-value="${amountCents}" data-stripe-wallet-currency-value="${currencyCode}"></div>`;
+    }
     h += `<input type="hidden" id="openOrderId" value="${orderId}">`;
     h += `<input type="hidden" id="paymentAmount" value="${amountCents}">`;
     h += `<input type="hidden" id="paymentCurrency" value="${currencyCode}">`;
@@ -465,7 +493,11 @@ export default class extends Controller {
     const hasPayable = Number(totals.gross || 0) > 0;
     h += '<div class="d-flex gap-2 mt-3">';
     h += '<button id="cartPayCancel" type="button" class="btn-touch-secondary w-50">Cancel</button>';
-    h += `<button id="pay-order-confirm" type="button" class="btn-touch-primary w-50" ${hasPayable ? '' : 'disabled'}><i class="bi bi-credit-card"></i> Pay</button>`;
+    if (provider === 'square-inline') {
+      h += `<button id="pay-order-confirm" type="button" class="btn-touch-primary w-50" data-action="click->square-payment#pay" ${hasPayable ? '' : 'disabled'}><i class="bi bi-credit-card"></i> Pay</button>`;
+    } else {
+      h += `<button id="pay-order-confirm" type="button" class="btn-touch-primary w-50" ${hasPayable ? '' : 'disabled'}><i class="bi bi-credit-card"></i> Pay</button>`;
+    }
     h += '</div>';
     return h;
   }

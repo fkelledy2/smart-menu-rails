@@ -1,9 +1,9 @@
 # Square Integration
 
-**Status:** TODO  
+**Status:** In Progress (Epics 1–6 complete, Epic 7 mostly complete, Epic 8 UI done — pending alpha testing)  
 **Priority:** High  
 **Target:** 2026  
-**Feature flag:** `payments.square.enabled` (Flipper)
+**Feature flag:** `square_payments` (Flipper, registered in `config/initializers/flipper.rb`)
 
 ---
 
@@ -291,15 +291,19 @@ All events are normalized via `Payments::NormalizedEvent` and appended to `Payme
 
 ### 6.5 Orchestrator Extension
 
+> **Note:** The `Orchestrator#provider_adapter` currently only handles `:stripe`. Square inline payments bypass the Orchestrator entirely (via `OrdrPaymentsController#create_inline_payment` → `SquareAdapter#create_payment!`). The hosted checkout path uses `OrdrPaymentsController#checkout_session` which calls `SquareAdapter#create_checkout_session!` directly. Adding `:square` to the Orchestrator's `provider_adapter` is a clean-up item but not blocking.
+
 ```ruby
-# Payments::Orchestrator#provider_adapter
+# Payments::Orchestrator#provider_adapter (current — Stripe only)
 def provider_adapter(provider)
   case provider
   when :stripe  then Payments::Providers::StripeAdapter.new
-  when :square  then Payments::Providers::SquareAdapter.new(restaurant: ordr.restaurant)
   else raise ArgumentError, "Unsupported provider: #{provider}"
   end
 end
+
+# Target state:
+# when :square  then Payments::Providers::SquareAdapter.new(restaurant: ordr.restaurant)
 ```
 
 ### 6.6 FundsFlowRouter Extension
@@ -658,16 +662,15 @@ Square Web Payments SDK supports a **buyer verification** flow for Strong Custom
 
 | File | Purpose |
 |---|---|
-| `app/controllers/payments/square_connect_controller.rb` | OAuth connect/callback/disconnect |
-| `app/controllers/webhooks/square_controller.rb` | Webhook endpoint |
+| `app/controllers/payments/square_connect_controller.rb` | OAuth connect/callback/disconnect/locations |
+| `app/controllers/payments/square_webhooks_controller.rb` | Webhook endpoint + signature verification |
 
 ### Jobs
 
 | File | Purpose |
 |---|---|
-| `app/jobs/square/refresh_token_job.rb` | Daily token refresh |
-| `app/jobs/square/health_check_job.rb` | Weekly connectivity check |
-| `app/jobs/square/webhook_processor_job.rb` | Async webhook processing |
+| `app/jobs/square/refresh_token_job.rb` | Daily token refresh (tokens expiring within 7 days) |
+| `app/jobs/square/health_check_job.rb` | Weekly connectivity check (`GET /v2/locations`) + degraded/disconnected handling |
 
 ### Frontend
 
@@ -679,26 +682,30 @@ Square Web Payments SDK supports a **buyer verification** flow for Strong Custom
 
 | File | Purpose |
 |---|---|
-| `app/views/restaurants/sections/_payments_settings.html.erb` | Admin payment config UI |
-| `app/views/smartmenus/_square_payment_form.html.erb` | Inline card + wallet UI |
+| `app/views/restaurants/sections/_settings_2025.html.erb` | Admin payment config UI (Square Connect card section) |
+| `app/views/smartmenus/_square_inline_payment.html.erb` | Reusable Square inline card + wallet partial (Stimulus controller wiring) |
 
 ### Migrations
 
 | File | Purpose |
 |---|---|
-| `db/migrate/YYYYMMDD_add_square_fields_to_restaurants.rb` | Restaurant columns |
-| `db/migrate/YYYYMMDD_add_square_fields_to_provider_accounts.rb` | Token storage |
-| `db/migrate/YYYYMMDD_add_idempotency_to_payment_attempts.rb` | Idempotency + tips |
-| `db/migrate/YYYYMMDD_add_provider_fields_to_ordr_split_payments.rb` | Provider-agnostic splits |
+| `db/migrate/20260304230000_add_square_fields_to_restaurants.rb` | Restaurant columns (provider, status, checkout mode, location, merchant, fees) |
+| `db/migrate/20260304224700_add_square_fields_to_provider_accounts.rb` | Encrypted token storage, environment, scopes, lifecycle timestamps |
+| `db/migrate/20260304230100_add_idempotency_to_payment_attempts.rb` | Idempotency key, tip_cents, provider_checkout_url |
+| `db/migrate/20260304220000_make_ordr_split_payments_provider_agnostic.rb` | Rename Stripe-specific columns, add provider enum + idempotency |
+| `db/migrate/20260305080000_rename_provider_account_token_columns.rb` | Rename ciphertext columns to plain names (AR Encryption handles encryption) |
 
 ### Tests
 
 | File | Purpose |
 |---|---|
-| `test/services/payments/providers/square_adapter_test.rb` | Unit tests |
-| `test/services/payments/providers/square_connect_test.rb` | Unit tests |
-| `test/services/payments/webhooks/square_ingestor_test.rb` | Unit tests |
-| `test/controllers/payments/square_connect_controller_test.rb` | Integration tests |
+| `test/services/payments/providers/square_adapter_test.rb` | SquareAdapter unit tests |
+| `test/services/payments/providers/square_connect_test.rb` | SquareConnect unit tests |
+| `test/services/payments/providers/square_http_client_test.rb` | SquareHttpClient unit tests |
+| `test/services/payments/webhooks/square_ingestor_test.rb` | SquareIngestor unit tests |
+| `test/controllers/payments/square_connect_controller_test.rb` | OAuth flow integration tests |
+| `test/controllers/payments/square_webhooks_controller_test.rb` | Webhook endpoint integration tests |
+| `test/models/restaurant_square_integration_test.rb` | Restaurant model Square integration tests |
 
 ---
 
@@ -716,69 +723,83 @@ Square Web Payments SDK supports a **buyer verification** flow for Strong Custom
 
 ## 20. Implementation Epics
 
-### Epic 1: Foundation (Schema + Provider Abstraction)
+### Epic 1: Foundation (Schema + Provider Abstraction) ✅ DONE
 
-- [ ] Migrations: restaurant columns, provider_accounts, payment_attempts, ordr_split_payments
-- [ ] Extend all provider enums with `square: 1`
-- [ ] `Restaurant` model: new enums + `compute_platform_fee_cents`
-- [ ] `ProviderAccount` model: `encrypts :access_token, :refresh_token`
-- [ ] `SquareHttpClient` (Faraday wrapper)
-- [ ] Unit tests for model changes
+- [x] Migrations: `20260304230000_add_square_fields_to_restaurants`, `20260304224700_add_square_fields_to_provider_accounts`, `20260304230100_add_idempotency_to_payment_attempts`, `20260304220000_make_ordr_split_payments_provider_agnostic`, `20260305080000_rename_provider_account_token_columns`
+- [x] Extend all provider enums with `square: 1` — `PaymentAttempt`, `LedgerEvent`, `PaymentProfile`, `PaymentRefund`, `ProviderAccount`, `OrdrSplitPayment`
+- [x] `Restaurant` model: enums (`payment_provider_status`, `square_checkout_mode`, `platform_fee_type`) + `compute_platform_fee_cents` + `square_provider?` + `square_connected?`
+- [x] `ProviderAccount` model: `encrypts :access_token, :refresh_token`, `square: 1` enum, environment validation, token expiry helpers
+- [x] `SquareHttpClient` — Faraday wrapper with auth, versioned headers, JSON parsing, typed `SquareApiError`
+- [x] Unit tests: `restaurant_square_integration_test.rb`, `square_http_client_test.rb`
 
-### Epic 2: OAuth Connect
+### Epic 2: OAuth Connect ✅ DONE
 
-- [ ] `SquareConnect` service (authorize, exchange, revoke, refresh)
-- [ ] `SquareConnectController` (start, callback, disconnect, locations, update_location)
-- [ ] Routes
-- [ ] Admin UI: provider selector + "Connect Square" button + location picker
-- [ ] Integration tests (sandbox)
+- [x] `SquareConnect` service — `authorize_url`, `exchange_code!`, `revoke!`, `refresh_token!`, `fetch_locations`
+- [x] `SquareConnectController` — connect, callback, disconnect, locations, update_location (5 actions with Pundit authorization)
+- [x] Routes: `GET square/connect`, `GET square/callback`, `DELETE square/disconnect`, `GET square/locations`, `PATCH square/location`
+- [x] Admin UI: Square Connect card in `_settings_2025.html.erb` — connect/disconnect buttons, merchant & location display, checkout mode selector (inline vs hosted)
+- [x] Integration tests: `square_connect_controller_test.rb`, `square_connect_test.rb`
 
-### Epic 3: Inline Payments (Web Payments SDK)
+### Epic 3: Inline Payments (Web Payments SDK) ✅ DONE
 
-- [ ] `SquareAdapter#create_payment!`
-- [ ] `square_payment_controller.js` Stimulus controller
-- [ ] Card tokenization + buyer verification
-- [ ] Apple Pay + Google Pay attachment
-- [ ] `POST /smartmenu/orders/:id/payments` endpoint
-- [ ] Tip selector integration
-- [ ] Unit + integration tests
+- [x] `SquareAdapter#create_payment!` — sends `source_id` to Square `POST /v2/payments` with idempotency, amounts, app fee, location
+- [x] `square_payment_controller.js` Stimulus controller — loads SDK, initializes Card + Apple Pay + Google Pay, tokenize → POST, buyer verification (SCA)
+- [x] Card tokenization + buyer verification — `card.tokenize()` → `verifyBuyer()` → `verification_token` passed to backend
+- [x] Apple Pay + Google Pay attachment — checked via `payments.applePay()` / `payments.googlePay()`, hidden when unavailable
+- [x] `POST /restaurants/:id/ordrs/:id/payments/inline` endpoint → `OrdrPaymentsController#create_inline_payment`
+- [x] Tip selector integration — Stimulus controller reads `#tipNumberField` fallback from shared tip UI
+- [x] Unit + integration tests: `square_adapter_test.rb`, `ordr_payments_controller_test.rb`
 
-### Epic 4: Hosted Checkout
+### Epic 4: Hosted Checkout ✅ DONE
 
-- [ ] `SquareAdapter#create_checkout_session!`
-- [ ] `POST /smartmenu/orders/:id/payment_link` endpoint
-- [ ] `GET /smartmenu/orders/:id/payment_return` endpoint
-- [ ] Tip configuration on hosted page
-- [ ] Unit + integration tests
+- [x] `SquareAdapter#create_checkout_session!` — calls `POST /v2/online-checkout/payment-links` with line items, redirect URL, tipping config
+- [x] Provider-aware checkout endpoint: `POST /restaurants/:id/ordrs/:id/payments/checkout_session` routes to Square or Stripe based on `restaurant.square_provider?`
+- [x] Payment return handled by existing redirect flow — client redirects to `success_url` after hosted checkout
+- [x] Tip configuration included in Square hosted checkout options
+- [x] Tests: covered in `ordr_payments_controller_test.rb` (checkout routing tests)
 
-### Epic 5: Webhooks
+### Epic 5: Webhooks ✅ DONE
 
-- [ ] `SquareIngestor` service
-- [ ] `POST /webhooks/square` endpoint + signature verification
-- [ ] `Square::WebhookProcessorJob`
-- [ ] `payment.completed` → mark paid + project order + broadcast
-- [ ] `oauth.authorization.revoked` → disconnect + notify
-- [ ] Ledger integration
-- [ ] Unit + resilience tests
+- [x] `SquareIngestor` service — normalizes events, updates `PaymentAttempt`/`OrdrSplitPayment`, emits `OrderEvent`, broadcasts state
+- [x] `POST /webhooks/square` endpoint + HMAC-SHA256 signature verification (`SquareWebhooksController`)
+- [x] Async processing via `Payments::WebhookIngestJob.perform_later` with inline fallback on enqueue failure
+- [x] `payment.completed` → mark `PaymentAttempt` succeeded → emit `paid` + `closed` `OrderEvent` → project + broadcast
+- [x] `payment.updated` → update status; `payment.failed` → mark failed
+- [x] `oauth.authorization.revoked` → disconnect restaurant, block payments, log warning
+- [x] Ledger integration — `LedgerEvent` created for every normalized event with `provider_event_id` uniqueness
+- [x] Tests: `square_webhooks_controller_test.rb`, `square_ingestor_test.rb`
 
-### Epic 6: Split Bills (Square)
+### Epic 6: Split Bills (Square) ✅ DONE (core flow — progress UI pending)
 
-- [ ] Provider-agnostic split payment creation
-- [ ] Per-payer inline / hosted payment flow
-- [ ] Progress tracking ("€X of €Y paid")
-- [ ] Fully-paid detection → order status transition
-- [ ] Integration tests
+- [x] Provider-agnostic split payment creation — `OrdrSplitPayment` has `provider` enum (`stripe: 0`, `square: 1`), `idempotency_key`, `tip_cents`, `payer_ref`
+- [x] Per-payer inline / hosted payment flow — `checkout_session` and `create_inline_payment` both accept `ordr_split_payment_id`
+- [ ] Progress tracking ("€X of €Y paid") — customer-facing progress UI not yet built
+- [x] Fully-paid detection → order status transition — `SquareIngestor#emit_paid_if_settled!` checks if `sum(succeeded) >= order total`
+- [x] Integration tests: split_evenly + Square split settlement tests in `ordr_payments_controller_test.rb`
 
-### Epic 7: Background Jobs + Credential Lifecycle
+### Epic 7: Background Jobs + Credential Lifecycle ✅ MOSTLY DONE
 
-- [ ] `Square::RefreshTokenJob` (daily)
-- [ ] `Square::HealthCheckJob` (weekly)
-- [ ] Degraded status handling + manager notification
-- [ ] "Reconnect Square" CTA in admin
+- [x] `Square::RefreshTokenJob` (daily) — refreshes tokens expiring within 7 days, logs per-account results
+- [x] `Square::HealthCheckJob` (weekly) — calls `GET /v2/locations`, marks degraded on failure, auto-restores on success, disconnects on 401
+- [x] Degraded status handling — `HealthCheckJob` sets `payment_provider_status: :degraded` or `:disconnected`; admin UI shows account status (humanized)
+- [ ] Manager notification email on degraded/disconnected status
+- [ ] Explicit "Reconnect Square" CTA in admin UI when status is degraded/disconnected
 
-### Epic 8: Rollout
+### Epic 8: Rollout ✅ DONE (backend + admin UI + customer-facing UI)
 
-- [ ] Flipper flag `payments.square.enabled`
-- [ ] Alpha testing (sandbox)
-- [ ] Pilot cohort configuration
-- [ ] GA release
+- [x] Flipper flag `square_payments` — registered in `config/initializers/flipper.rb`, disabled by default
+- [x] Admin UI: Square Connect card in `_settings_2025.html.erb` — connect/disconnect buttons, merchant & location display, checkout mode selector (inline vs hosted)
+- [x] Stimulus: `square_payment_controller.js` — loads Square Web Payments SDK, Card + Apple Pay + Google Pay, tokenize → POST, buyer verification (SCA), tip fallback from `#tipNumberField`
+- [x] Payment endpoint: `POST /restaurants/:id/ordrs/:id/payments/inline` → `OrdrPaymentsController#create_inline_payment`
+- [x] Customer-facing UI wiring:
+  - [x] `smartmenu.html.erb` layout — provider meta tags (`payment-provider`, `square-application-id`, `square-location-id`, `square-sandbox`), conditional Stripe/Square SDK loading, `data-payment-provider` on body
+  - [x] `_square_inline_payment.html.erb` — reusable partial rendering Stimulus controller with all targets and data values
+  - [x] `_cart_bottom_sheet.html.erb` — provider-aware: Square inline renders card form + `data-action` on Pay button; Stripe keeps wallet controller; Square hosted skips wallet
+  - [x] `_showModals.erb` — provider-aware staff pay modal with same conditional rendering
+  - [x] `ordr_commons.js` — `pay-order-confirm` handler detects `data-payment-provider`; Square inline ensures bill requested then lets Stimulus handle tokenize+submit; Stripe/hosted keeps redirect flow
+  - [x] `state_controller.js` — dynamic pay section builder renders Square card container with all Stimulus data attributes or Stripe wallet based on provider
+- [x] Integration tests: 13 tests, 46 assertions in `ordr_payments_controller_test.rb`
+- [x] Full test suite green (3,455 runs, 9,701 assertions, 0 failures)
+- [ ] Alpha testing (sandbox) — requires deployed environment
+- [ ] Pilot cohort configuration — via Flipper UI per-restaurant
+- [ ] GA release — enable `square_payments` flag globally

@@ -499,6 +499,29 @@ export function initOrderBindings() {
       if (!target) return;
       const btn = target.closest && target.closest('#pay-order-confirm');
       if (!btn || btn.hasAttribute('disabled')) return;
+
+      // Detect payment provider from body data attribute
+      const provider = (document.body.dataset.paymentProvider || 'stripe').toLowerCase();
+
+      // Square inline: the Stimulus controller handles tokenize+submit via
+      // data-action="click->square-payment#pay" on the button. We only need
+      // to ensure the bill is requested first, then let the event propagate.
+      if (provider === 'square-inline') {
+        const restaurantId = getRestaurantId();
+        const orderId = getCurrentOrderId();
+        const currentStatus = (getCurrentOrderStatus() || '').toLowerCase();
+        if (currentStatus !== 'billrequested' && restaurantId && orderId) {
+          evt.stopPropagation();
+          evt.preventDefault();
+          post(`/restaurants/${restaurantId}/ordrs/${orderId}/request_bill`, {})
+            .then(() => { btn.click(); })
+            .catch((e) => { console.error('[PayOrder][capture] request_bill failed', e); });
+        }
+        // Otherwise let the click propagate to the Stimulus action
+        return;
+      }
+
+      // Stripe / Square hosted: redirect to checkout URL
       evt.stopPropagation();
       if (evt.stopImmediatePropagation) try { evt.stopImmediatePropagation(); } catch (_) {}
       evt.preventDefault();
