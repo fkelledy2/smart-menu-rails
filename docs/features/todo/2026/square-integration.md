@@ -136,14 +136,7 @@ add_column :provider_accounts, :disconnected_at, :datetime
 change_column_null :provider_accounts, :provider_account_id, true
 ```
 
-> **Fix:** Migration `20260305080000_rename_provider_account_token_columns` renamed
-> `access_token_ciphertext` → `access_token` and `refresh_token_ciphertext` → `refresh_token`
-> because Rails `encrypts :access_token` expects column named `access_token` (the `_ciphertext`
-> suffix is a Lockbox/attr_encrypted convention, not Rails built-in encryption).
-
-#### `payment_attempts` — idempotency + tips ✅ DONE
-
-> **Completed:** Migration `20260304230100_add_idempotency_to_payment_attempts`
+#### `payment_attempts` — idempotency + tips
 
 ```ruby
 # Extend provider enum in model: square: 1
@@ -723,80 +716,65 @@ Square Web Payments SDK supports a **buyer verification** flow for Strong Custom
 
 ## 20. Implementation Epics
 
-### Epic 1: Foundation (Schema + Provider Abstraction) ✅ DONE
+### Epic 1: Foundation (Schema + Provider Abstraction)
 
-- [x] Migrations: `20260304220000` ordr_split_payments, `20260304224700` provider_accounts, `20260304230000` restaurants, `20260304230100` payment_attempts
-- [x] Extend all provider enums with `square: 1` — PaymentAttempt, PaymentProfile, PaymentRefund, LedgerEvent, ProviderAccount, OrdrSplitPayment
-- [x] `Restaurant` model: `payment_provider_status`, `square_checkout_mode`, `platform_fee_type` enums + `compute_platform_fee_cents` + provider helpers
-- [x] `ProviderAccount` model: `encrypts :access_token, :refresh_token` + token expiry helpers
-- [x] `SquareHttpClient` (HTTParty wrapper — Faraday not in Gemfile) + `SquareApiError`
-- [x] `BaseAdapter`: added `create_payment!` + `refresh_credentials!` interface methods
-- [x] `SquareConfig` initializer (`config/initializers/square.rb`) — env-aware config module
-- [x] `ActiveRecord Encryption` initializer (`config/initializers/active_record_encryption.rb`)
-- [x] Unit tests: `restaurant_square_integration_test.rb` (18 tests), `square_http_client_test.rb` (7 tests)
-- [x] Full test suite green (0 failures, 1 pre-existing Redis error)
+- [ ] Migrations: restaurant columns, provider_accounts, payment_attempts, ordr_split_payments
+- [ ] Extend all provider enums with `square: 1`
+- [ ] `Restaurant` model: new enums + `compute_platform_fee_cents`
+- [ ] `ProviderAccount` model: `encrypts :access_token, :refresh_token`
+- [ ] `SquareHttpClient` (Faraday wrapper)
+- [ ] Unit tests for model changes
 
-### Epic 2: OAuth Connect ✅ DONE
+### Epic 2: OAuth Connect
 
-- [x] `SquareConnect` service — `authorize_url`, `exchange_code!`, `revoke!`, `refresh_token!`, `fetch_locations`
-- [x] `SquareConnectController` — `connect`, `callback`, `disconnect`, `locations`, `update_location`
-- [x] Routes: 5 Square OAuth routes under `/restaurants/:id/payments/square/`
-- [ ] Admin UI: provider selector + "Connect Square" button + location picker (deferred to Epic 8 rollout)
-- [x] Unit tests: `square_connect_test.rb` (6 tests), `square_connect_controller_test.rb` (8 tests)
-- [x] Full test suite green (0 new failures)
+- [ ] `SquareConnect` service (authorize, exchange, revoke, refresh)
+- [ ] `SquareConnectController` (start, callback, disconnect, locations, update_location)
+- [ ] Routes
+- [ ] Admin UI: provider selector + "Connect Square" button + location picker
+- [ ] Integration tests (sandbox)
 
-### Epic 3: Inline Payments (Web Payments SDK) ✅ DONE (backend)
+### Epic 3: Inline Payments (Web Payments SDK)
 
-- [x] `SquareAdapter#create_payment!` — sends card nonce/token to Square Payments API with idempotency, tip, platform fee
-- [x] `SquareAdapter#refresh_credentials!` — delegates to SquareConnect
-- [x] Platform fee computation integrated into payment body
-- [x] Buyer verification token support (passed through when available)
-- [ ] `square_payment_controller.js` Stimulus controller (deferred — frontend, Epic 8)
-- [ ] Card tokenization + buyer verification (deferred — frontend, Epic 8)
-- [ ] Apple Pay + Google Pay attachment (deferred — frontend, Epic 8)
-- [ ] `POST /smartmenu/orders/:id/payments` endpoint (deferred — requires frontend integration)
-- [x] Unit tests: `square_adapter_test.rb` (10 tests, 30 assertions)
-- [x] Full test suite green (0 new failures)
+- [ ] `SquareAdapter#create_payment!`
+- [ ] `square_payment_controller.js` Stimulus controller
+- [ ] Card tokenization + buyer verification
+- [ ] Apple Pay + Google Pay attachment
+- [ ] `POST /smartmenu/orders/:id/payments` endpoint
+- [ ] Tip selector integration
+- [ ] Unit + integration tests
 
-### Epic 4: Hosted Checkout ✅ DONE (backend)
+### Epic 4: Hosted Checkout
 
-- [x] `SquareAdapter#create_checkout_session!` — creates Square payment link with quick_pay, tipping, platform fee
-- [x] Unit tests for checkout session creation in `square_adapter_test.rb`
-- [ ] `POST /smartmenu/orders/:id/payment_link` endpoint (deferred — requires frontend wiring)
-- [ ] `GET /smartmenu/orders/:id/payment_return` endpoint (deferred — requires frontend wiring)
-- [ ] Tip configuration on hosted page (allow_tipping: true already set)
+- [ ] `SquareAdapter#create_checkout_session!`
+- [ ] `POST /smartmenu/orders/:id/payment_link` endpoint
+- [ ] `GET /smartmenu/orders/:id/payment_return` endpoint
+- [ ] Tip configuration on hosted page
+- [ ] Unit + integration tests
 
-### Epic 5: Webhooks ✅ DONE
+### Epic 5: Webhooks
 
-- [x] `SquareIngestor` service — handles `payment.completed`, `payment.updated`, `payment.failed`, `refund.*`, `oauth.authorization.revoked`
-- [x] `SquareWebhooksController` — `POST /payments/webhooks/square` with HMAC-SHA256 signature verification
-- [x] `WebhookIngestJob` — updated to route `square` provider to `SquareIngestor`
-- [x] Ledger integration via `Payments::NormalizedEvent` + `Payments::Ledger.append!`
-- [x] `payment.completed` → mark paid + project order + broadcast (mirrors StripeIngestor)
-- [x] `oauth.authorization.revoked` → disconnect restaurant + disable provider account
-- [x] Split payment settlement tracking (emit_paid_if_settled! / emit_closed_if_paid!)
-- [x] Unit tests: `square_ingestor_test.rb` (12 tests), `square_webhooks_controller_test.rb` (4 tests)
-- [x] Full test suite green (0 new failures)
+- [ ] `SquareIngestor` service
+- [ ] `POST /webhooks/square` endpoint + signature verification
+- [ ] `Square::WebhookProcessorJob`
+- [ ] `payment.completed` → mark paid + project order + broadcast
+- [ ] `oauth.authorization.revoked` → disconnect + notify
+- [ ] Ledger integration
+- [ ] Unit + resilience tests
 
-### Epic 6: Split Bills (Square) ✅ DONE
+### Epic 6: Split Bills (Square)
 
-- [x] Provider-agnostic split payment creation — `split_evenly` creates `OrdrSplitPayment` records without provider; provider set at checkout time
-- [x] `checkout_session` refactored to route to `create_square_checkout` or `create_stripe_checkout` based on `restaurant.square_provider?`
-- [x] `create_square_checkout` — creates PaymentAttempt + payment link, updates split payment with provider + session ID
-- [x] Per-payer hosted payment flow — each split participant gets their own checkout link
-- [x] Fully-paid detection — `SquareIngestor#emit_paid_if_settled!` checks all splits succeeded before emitting `paid` OrderEvent
-- [x] Integration tests: `ordr_payments_controller_test.rb` (10 tests, 33 assertions) covering split_evenly, checkout routing, Square split settlement, partial settlement blocking
-- [x] Full test suite green (0 new failures)
+- [ ] Provider-agnostic split payment creation
+- [ ] Per-payer inline / hosted payment flow
+- [ ] Progress tracking ("€X of €Y paid")
+- [ ] Fully-paid detection → order status transition
+- [ ] Integration tests
 
-### Epic 7: Background Jobs + Credential Lifecycle ✅ DONE
+### Epic 7: Background Jobs + Credential Lifecycle
 
-- [x] `Square::RefreshTokenJob` — refreshes tokens expiring within 7 days, runs daily
-- [x] `Square::HealthCheckJob` — verifies connection via Locations API, marks degraded/disconnected on failure
-- [x] Degraded status handling: 401 → disconnected + disabled; 5xx → degraded; recovery → reconnected
-- [ ] Manager notification on disconnect (deferred — requires notification system wiring)
-- [ ] "Reconnect Square" CTA in admin (deferred — frontend, Epic 8)
-- [x] Unit tests: `refresh_token_job_test.rb` (4 tests), `health_check_job_test.rb` (5 tests)
-- [x] Full test suite green (0 new failures)
+- [ ] `Square::RefreshTokenJob` (daily)
+- [ ] `Square::HealthCheckJob` (weekly)
+- [ ] Degraded status handling + manager notification
+- [ ] "Reconnect Square" CTA in admin
 
 ### Epic 8: Rollout
 
