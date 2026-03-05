@@ -15,6 +15,11 @@ Rails.application.config.after_initialize do
   unless Flipper.exist?(:homepage_testimonials)
     Flipper.enable(:homepage_testimonials)
   end
+
+  # Square payments — disabled by default; enable per-restaurant via Flipper UI.
+  unless Flipper.exist?(:square_payments)
+    Flipper.add(:square_payments)
+  end
 rescue ActiveRecord::ConnectionNotEstablished, ActiveRecord::StatementInvalid, ActiveRecord::NoDatabaseError => e
   # DB may be unreachable (CI asset precompile), or tables may not exist yet (db:create / db:migrate)
   Rails.logger.warn "[Flipper] Skipping feature flag seeding: #{e.message}"
