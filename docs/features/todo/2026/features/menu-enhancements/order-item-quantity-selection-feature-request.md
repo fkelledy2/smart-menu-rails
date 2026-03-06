@@ -16,7 +16,7 @@
 
 ### **Primary User Stories**
 - [ ] **As a customer**, I want to select quantity when adding menu items so I can order multiple of the same item quickly
-- [ ] **As a server**, I want to input quantities for customer orders so I can take orders more efficiently
+- [x] **As a server**, I want to input quantities for customer orders so I can take orders more efficiently ✅ *Staff view: `quick_add_controller.js` stepper on `_showMenuitemStaff.erb`*
 - [ ] **As a customer**, I want to modify quantities in my cart so I can adjust my order before confirming
 - [ ] **As a manager**, I want to see quantity-based analytics so I can understand popular item volumes
 - [ ] **As kitchen staff**, I want to see clear quantities on orders so I can prepare the correct amounts
@@ -24,30 +24,30 @@
 ### **Functional Requirements**
 
 #### **Core Functionality**
-- [ ] **Quantity Input**: Number input field (1-99) when adding items to order
-- [ ] **Default Quantity**: Default to 1, but allow easy modification
-- [ ] **Quantity Validation**: Prevent invalid quantities (0, negative, excessive)
-- [ ] **Cart Management**: Update quantities in cart without removing/re-adding items
-- [ ] **Price Calculation**: Automatically calculate total price based on quantity
-- [ ] **Inventory Awareness**: Check availability for requested quantities
+- [x] **Quantity Input**: Number input field (1-99) when adding items to order ✅ *Staff view only — `quick_add_controller.js` stepper (1-99 range). Customer view still has single-add button.*
+- [x] **Default Quantity**: Default to 1, but allow easy modification ✅ *Staff stepper defaults to 1, resets after add.*
+- [ ] **Quantity Validation**: Prevent invalid quantities (0, negative, excessive) ⚠️ *Client-side only (JS clamping). No server-side `quantity` column or model validation — staff flow loops N POST requests creating N separate `ordritem` rows.*
+- [ ] **Cart Management**: Update quantities in cart without removing/re-adding items ❌ *Not implemented. Cart (`_cart_bottom_sheet.html.erb`) lists items 1:1 with individual remove buttons. No qty grouping or inline qty modification.*
+- [ ] **Price Calculation**: Automatically calculate total price based on quantity ❌ *No line-level qty × price — each `ordritem` has its own `ordritemprice`. Totals work correctly because N rows sum naturally.*
+- [ ] **Inventory Awareness**: Check availability for requested quantities ❌ *Not implemented.*
 
 #### **User Interface Requirements**
 - [ ] **Menu Item Selection**
-  - [ ] Quantity selector prominently displayed
-  - [ ] Plus/minus buttons for easy adjustment
-  - [ ] Direct number input for large quantities
-  - [ ] Visual feedback for quantity changes
+  - [x] Quantity selector prominently displayed ✅ *Staff view only — vertical stepper beside each item in `_showMenuitemStaff.erb`*
+  - [x] Plus/minus buttons for easy adjustment ✅ *Staff view — `quick-add#increment` / `quick-add#decrement` actions*
+  - [ ] Direct number input for large quantities ❌ *Stepper only, no direct numeric input*
+  - [x] Visual feedback for quantity changes ✅ *Staff view — qty badge updates, decrement disables at 1*
 
 - [ ] **Shopping Cart Display**
-  - [ ] Clear quantity display for each item
-  - [ ] Easy quantity modification in cart
-  - [ ] Subtotal calculation per item line
-  - [ ] Total order calculation
+  - [ ] Clear quantity display for each item ❌ *Items shown 1:1, no grouping by menuitem. "2× Carbonara" not displayed.*
+  - [ ] Easy quantity modification in cart ❌ *Only remove button per item, no +/- in cart.*
+  - [ ] Subtotal calculation per item line ❌ *Each row shows its own price, no qty × unit_price line.*
+  - [x] Total order calculation ✅ *Works correctly — sum of all `ordritemprice` values.*
 
 - [ ] **Order Confirmation**
-  - [ ] Quantity clearly shown in order summary
-  - [ ] Line-item pricing with quantities
-  - [ ] Final total calculation
+  - [ ] Quantity clearly shown in order summary ❌ *Items listed individually, not grouped.*
+  - [ ] Line-item pricing with quantities ❌
+  - [x] Final total calculation ✅ *Gross total works correctly via sum of individual items.*
 
 ## 🏗️ **Technical Implementation**
 
@@ -629,16 +629,146 @@ end
 - Reporting dashboard updates
 - Business intelligence integration
 
+---
+
+## 🔍 **Implementation Status Review** (2026-03-06)
+
+### What Has Been Completed
+
+| Area | Status | Notes |
+|---|---|---|
+| **Staff quantity stepper UI** | ✅ Done | `quick_add_controller.js` Stimulus controller with +/- buttons (1-99 range) |
+| **Staff menu item wiring** | ✅ Done | `_showMenuitemStaff.erb` — each item card has `data-controller="quick-add"` with vertical stepper |
+| **Staff add-item flow** | ✅ Done | `ordr_commons.js` reads `window.__quickAddQty` and loops N POST calls to `/restaurants/:id/ordritems` |
+| **Stepper CSS (light + dark)** | ✅ Done | `_smartmenu_mobile.scss` + `_dark_mode.scss` — both horizontal and vertical stepper variants |
+| **Order total calculation** | ✅ Done | Works correctly — each `ordritem` row has its own price, sum = gross total |
+
+### What Has NOT Been Completed
+
+| Area | Status | Blocker / Notes |
+|---|---|---|
+| **Database `quantity` column** | ❌ Not done | `ordritems` has no `quantity` field. Staff flow creates N separate rows instead. |
+| **Model validations** | ❌ Not done | `Ordritem` model has no quantity attribute, no `unit_price` field |
+| **Customer view quantity selector** | ❌ Not done | `_showMenuitem.erb` has a plain `+` button, no stepper. The add-item modal (`_modal_footer_add_item.erb`) has no quantity controls. |
+| **Cart quantity display** | ❌ Not done | `_cart_bottom_sheet.html.erb` lists items 1:1 — no grouping by menuitem, no "2× Carbonara" display |
+| **Cart quantity modification** | ❌ Not done | Only individual remove buttons, no +/- adjustment in cart |
+| **Kitchen/station qty grouping** | ❌ Not done | Kitchen/station dashboards show items individually |
+| **Quantity-based analytics** | ❌ Not done | No `OrderAnalytics` class, no quantity reporting |
+| **Inventory qty checks** | ❌ Not done | No validation against available stock |
+| **API endpoint for qty update** | ❌ Not done | No `update_quantity` action on `OrderItemsController` |
+
+### Current Architecture (How Staff Qty Works Today)
+
+```
+ Staff taps +/- stepper  →  quick_add_controller.js stores qty in window.__quickAddQty
+ Staff taps item name    →  storeQty() fires, modal opens
+ Staff confirms in modal →  ordr_commons.js reads __quickAddQty
+                         →  loops N times: POST /restaurants/:id/ordritems
+                         →  creates N separate ordritem rows (each with line_key UUID)
+```
+
+This is a **presentation-layer-only** implementation. The backend has no concept of quantity — it just receives N individual create requests.
+
+---
+
+## 📋 **Closing Plan**
+
+### Decision: Schema-first vs. Presentation-only
+
+Two approaches exist to close out this feature:
+
+**Option A — Schema-first (Recommended):** Add a `quantity` column to `ordritems`, consolidate duplicate rows, and build proper cart grouping. This is the approach described in the original spec.
+
+**Option B — Presentation-only:** Keep 1-row-per-unit in the DB but group items visually in the cart and kitchen views. Simpler DB-wise, but loses the ability to do proper qty-based analytics and makes cart modification harder.
+
+### Recommended Plan (Option A)
+
+#### Phase 1: Backend Foundation (3-4 days)
+
+1. **Migration**: Add `quantity` (integer, default 1, not null) to `ordritems`
+   - Backfill existing rows with `quantity: 1`
+   - Add check constraint `quantity > 0 AND quantity <= 99`
+   - Reference: `db/schema.rb` → `ordritems` table (DATA_MODEL.md §3.4)
+
+2. **Model updates** on `Ordritem` (`app/models/ordritem.rb`):
+   - Add `validates :quantity, numericality: { greater_than: 0, less_than_or_equal_to: 99, only_integer: true }`
+   - Add `total_price` method: `ordritemprice * quantity`
+   - Add `increase_quantity(n)` / `decrease_quantity(n)` methods
+
+3. **Controller updates** on `OrdritemsController` (`app/controllers/ordritems_controller.rb`):
+   - Accept `quantity` in strong params
+   - Add `update_quantity` action
+   - On create: if matching `ordritem` (same `menuitem_id`, `size_name`, status `opened`) exists, increment its quantity instead of creating a new row
+
+4. **Update `ordr_commons.js`** staff add-item flow:
+   - Instead of looping N POST calls, send a single POST with `quantity: N`
+   - Update `__quickAddQty` handling accordingly
+
+5. **Update order total calculations** in `Ordr` model:
+   - `runningTotal` / `nett` should respect `quantity * ordritemprice`
+   - Reference: SERVICE_MAP.md §5.7 — `OrderEventProjector`
+
+#### Phase 2: Customer View (3-4 days)
+
+6. **Add quantity selector to customer add-item modal**:
+   - Add +/- stepper to `_modal_footer_add_item.erb` (or inside modal body)
+   - Wire to the existing `addItemToOrderButton` click handler in `ordr_commons.js`
+   - Reuse `quick_add_controller.js` or create a simpler inline stepper
+   - Reference: `_showMenuitem.erb`, `_showMenuitemHorizontal.html.erb`
+
+7. **Cart quantity display and modification** in `_cart_bottom_sheet.html.erb`:
+   - Group items by `menuitem_id` + `size_name` in the "Selected" section
+   - Show "2× Carbonara" format with qty badge
+   - Add +/- buttons per grouped line → call `PATCH /ordritems/:id` with new quantity
+   - Update `state_controller.js` dynamic cart rendering to match
+
+8. **Cart total display**:
+   - Show unit price × qty = line total per grouped row
+   - Reference: `order_totals_controller.js` (SERVICE_MAP.md §8)
+
+#### Phase 3: Kitchen & Integration (2-3 days)
+
+9. **Kitchen/station dashboard qty display**:
+   - Group duplicate items and show "×2" badge on tickets
+   - Reference: `kitchen_dashboard.js`, `station_dashboard.js`, `OrdrStationTicketService` (SERVICE_MAP.md §5.7)
+
+10. **ActionCable broadcast updates**:
+    - Ensure `OrdrChannel` / `KitchenChannel` payloads include quantity
+    - Reference: ARCHITECTURE.md §4.3, SERVICE_MAP.md §3
+
+11. **Tests**:
+    - Model tests: quantity validation, `total_price`, `increase/decrease_quantity`
+    - Controller tests: create with qty, update_quantity, merge duplicate items
+    - System tests: staff stepper → single POST with qty, customer modal qty
+
+#### Phase 4: Analytics & Polish (2-3 days)
+
+12. **Quantity-based analytics**:
+    - Add to `dw_orders_mv` materialized view
+    - Popular quantities, high-qty orders, avg qty per item
+    - Reference: DATA_MODEL.md §3.12, SERVICE_MAP.md §6.5
+
+13. **Inventory awareness** (if `inventoryTracking` enabled):
+    - Validate requested qty against `Inventory` stock on create
+    - Reference: DATA_MODEL.md — `inventories` table
+
+14. **Polish**:
+    - Accessibility (aria labels on stepper)
+    - Mobile responsiveness
+    - Animation/feedback for qty changes
+
+### Estimated Total: 10-14 days
+
 ## 💰 **Business Value**
 
 ### **User Experience Benefits**
-- [ ] **Faster Ordering** - Reduce clicks from 6 to 2 for multiple items
-- [ ] **Reduced Friction** - Eliminate repetitive item selection
+- [x] **Faster Ordering** - Reduce clicks from 6 to 2 for multiple items ✅ *Staff view only*
+- [x] **Reduced Friction** - Eliminate repetitive item selection ✅ *Staff view only*
 - [ ] **Clear Pricing** - Transparent quantity-based pricing
 - [ ] **Better Cart Management** - Easy quantity adjustments
 
 ### **Operational Benefits**
-- [ ] **Improved Efficiency** - Servers can take orders faster
+- [x] **Improved Efficiency** - Servers can take orders faster ✅ *Staff stepper implemented*
 - [ ] **Better Analytics** - Understand quantity preferences
 - [ ] **Inventory Management** - Track high-quantity items
 - [ ] **Revenue Insights** - Identify bulk ordering patterns
@@ -652,20 +782,20 @@ end
 ## 📋 **Acceptance Criteria**
 
 ### **Functional Requirements**
-- [ ] Users can select quantity (1-99) when adding items
-- [ ] Quantity defaults to 1 but is easily adjustable
+- [x] Users can select quantity (1-99) when adding items ✅ *Staff view only*
+- [x] Quantity defaults to 1 but is easily adjustable ✅ *Staff view only*
 - [ ] Cart shows quantities and line totals clearly
 - [ ] Quantities can be modified in cart
-- [ ] Total price updates automatically
-- [ ] Invalid quantities are prevented
+- [x] Total price updates automatically ✅ *Sum of individual rows works*
+- [ ] Invalid quantities are prevented ❌ *No server-side validation*
 - [ ] Inventory limits are respected
 
 ### **User Experience Requirements**
-- [ ] Quantity selector is intuitive and accessible
-- [ ] Plus/minus buttons work smoothly
+- [x] Quantity selector is intuitive and accessible ✅ *Staff view only*
+- [x] Plus/minus buttons work smoothly ✅ *Staff view only*
 - [ ] Direct number input is supported
-- [ ] Visual feedback for quantity changes
-- [ ] Mobile-responsive design
-- [ ] Fast response times (<500ms)
+- [x] Visual feedback for quantity changes ✅ *Staff view only*
+- [x] Mobile-responsive design ✅ *Staff stepper is responsive*
+- [x] Fast response times (<500ms) ✅ *Stepper is instant, POST is fast*
 
 This feature will significantly improve the ordering experience for both customers and employees by eliminating the need to add items individually when ordering multiple quantities of the same item.
