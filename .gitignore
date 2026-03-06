@@ -46,5 +46,8 @@ coverage
 
 /config/credentials/test.key
 
+# Archived documentation (historical session artifacts, not needed in repo)
+/docs/_archive
+
 # macOS
 .DS_Store

@@ -92,8 +92,23 @@ Deployed on Heroku. PostgreSQL + Redis + Memcached.
 - Completed: `docs/features/done/`
 - In progress: `docs/features/in-progress/`
 
+## Key Route Nesting (check `config/routes.rb` for full list)
+- `resources :restaurants do` — top-level container for most resources:
+  - `resources :menus do` → `resources :menusections do` → `resources :menuitems`
+  - `resources :ordrs` (not orders)
+  - `resources :ordritems`, `resources :ordritemnotes`, `resources :ordrparticipants`, `resources :ordractions`
+  - `resources :tablesettings`, `resources :employees`, `resources :allergyns`
+  - `resources :taxes`, `resources :sizes`, `resources :tips`, `resources :tags`
+  - `resources :inventories`, `resources :genimages`, `resources :tracks`
+- `resources :smartmenus` — customer-facing menu (not nested under restaurants)
+- `namespace :admin` — admin controllers (discovered_restaurants, city_crawls, local_guides, etc.)
+- `namespace :api` → `namespace :v1` / `namespace :v2` — JSON API endpoints
+- Path helpers: `restaurant_menu_path(@restaurant, @menu)`, `restaurant_ordr_path(@restaurant, @ordr)`, etc.
+- `menu_form_with` helper must explicitly set `url:` — auto-generated URLs don't work with nested menus
+
 ## Common Pitfalls
 - Precompiled assets in `public/assets/` override live source files in dev — delete if JS changes aren't picked up
 - API controllers must `skip_before_action` web callbacks (set_current_employee, set_permissions, etc.)
 - `Menu` model conflicts with `Menu::` namespace for jobs — use `class Menu::MyJob` not `module Menu; class MyJob`
 - Routes use non-RESTful names in places: check `config/routes.rb` before assuming path helpers
+- AdvancedCacheService returns Hash objects, not ActiveRecord models — extract IDs and re-query with `.where(id:)` when views need model methods

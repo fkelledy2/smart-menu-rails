@@ -24,6 +24,35 @@ SCHEMA = ROOT.join("db", "schema.rb")
 
 TIMESTAMP = Time.now.utc.strftime("%Y-%m-%d %H:%M UTC")
 
+# Tables that get full column/index detail in DATA_MODEL.md.
+# All other tables only appear in the summary table.
+CORE_TABLES = %w[
+  restaurants
+  users
+  employees
+  menus
+  menusections
+  menuitems
+  menuavailabilities
+  menuitem_allergyn_mappings
+  ordrs
+  ordritems
+  ordritemnotes
+  ordrparticipants
+  ordractions
+  tablesettings
+  allergyns
+  taxes
+  sizes
+  tips
+  tags
+  plans
+  userplans
+  inventories
+  payments
+  ledger_events
+].freeze
+
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
@@ -377,7 +406,10 @@ module Generators
 
     fk_lines = schema.foreign_keys.map { |fk| "| `#{fk[:from]}` | `#{fk[:to]}` |" }.join("\n")
 
-    detail_sections = schema.tables.map do |t|
+    core = schema.tables.select { |t| CORE_TABLES.include?(t.name) }
+    other_names = schema.tables.reject { |t| CORE_TABLES.include?(t.name) }.map(&:name)
+
+    detail_sections = core.map do |t|
       cols = t.columns.map do |c|
         opts = c.options.to_s.strip
         opts = opts.empty? ? "—" : opts.gsub("|", "\\|")
@@ -431,9 +463,18 @@ module Generators
 
       ---
 
-      ## 4. Table Details
+      ## 4. Core Table Details (#{core.size} tables)
+
+      > Only core domain tables are detailed below. For full column listings of
+      > all #{schema.tables.size} tables, inspect `db/schema.rb` directly.
 
       #{detail_sections}
+
+      ---
+
+      ## 5. Other Tables (summary only)
+
+      #{other_names.map { |n| "`#{n}`" }.join(", ")}
     MD
   end
 
