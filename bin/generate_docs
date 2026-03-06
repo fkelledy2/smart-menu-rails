@@ -1,0 +1,628 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# bin/generate_docs
+# -----------------
+# Regenerates the three documentation artefacts in /docs:
+#   1. ARCHITECTURE.md  — application architecture overview
+#   2. DATA_MODEL.md    — database schema documentation
+#   3. SERVICE_MAP.md   — services exposed by the application
+#
+# Usage:
+#   bin/generate_docs          # regenerate all three
+#   bin/generate_docs arch     # only ARCHITECTURE.md
+#   bin/generate_docs data     # only DATA_MODEL.md
+#   bin/generate_docs services # only SERVICE_MAP.md
+
+require "pathname"
+require "time"
+require "set"
+
+ROOT  = Pathname.new(File.expand_path("..", __dir__))
+DOCS  = ROOT.join("docs")
+SCHEMA = ROOT.join("db", "schema.rb")
+
+TIMESTAMP = Time.now.utc.strftime("%Y-%m-%d %H:%M UTC")
+
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
+
+def count_files(dir, pattern = "*.rb")
+  Dir.glob(ROOT.join(dir, "**", pattern)).size
+end
+
+def list_files(dir, pattern = "*.rb")
+  Dir.glob(ROOT.join(dir, "**", pattern)).sort.map { |f| Pathname.new(f) }
+end
+
+def basename_no_ext(path)
+  File.basename(path, File.extname(path))
+end
+
+def classify(filename)
+  basename_no_ext(filename).split("_").map(&:capitalize).join
+end
+
+def relative(path)
+  path.to_s.sub("#{ROOT}/", "")
+end
+
+# ---------------------------------------------------------------------------
+# Schema parser — extracts tables, columns, indexes, foreign keys
+# ---------------------------------------------------------------------------
+
+class SchemaParser
+  Table = Struct.new(:name, :id_type, :columns, :indexes, :options, keyword_init: true)
+  Column = Struct.new(:name, :type, :options, keyword_init: true)
+
+  attr_reader :tables, :foreign_keys, :version, :extensions
+
+  def initialize(path)
+    @tables = []
+    @foreign_keys = []
+    @version = nil
+    @extensions = []
+    parse(File.read(path))
+  end
+
+  private
+
+  def parse(src)
+    current_table = nil
+
+    src.each_line do |line|
+      line = line.strip
+
+      if line =~ /ActiveRecord::Schema\[[\d.]+\]\.define\(version:\s*(\d+_\d+_\d+_\d+)\)/
+        @version = $1
+      elsif line =~ /enable_extension\s+"(.+?)"/
+        @extensions << $1
+      elsif line =~ /create_table\s+"(\w+)"(.*)do/
+        opts = $2.strip
+        id_type = opts.include?("id: :serial") ? "serial" : "bigint"
+        current_table = Table.new(name: $1, id_type: id_type, columns: [], indexes: [], options: opts)
+      elsif current_table && line =~ /^t\.(\w+)\s+"(\w+)"(.*)$/
+        col_type = $1
+        col_name = $2
+        col_opts = $3.strip.chomp(",")
+        next if col_type == "index" # index lines start with t.index
+        current_table.columns << Column.new(name: col_name, type: col_type, options: col_opts)
+      elsif current_table && line =~ /^t\.index\s+/
+        current_table.indexes << line
+      elsif current_table && line == "end"
+        @tables << current_table
+        current_table = nil
+      elsif line =~ /add_foreign_key\s+"(\w+)",\s+"(\w+)"/
+        @foreign_keys << { from: $1, to: $2, detail: line }
+      end
+    end
+  end
+end
+
+# ---------------------------------------------------------------------------
+# Generators
+# ---------------------------------------------------------------------------
+
+module Generators
+  module_function
+
+  # -------------------------------------------------------------------------
+  # ARCHITECTURE.md
+  # -------------------------------------------------------------------------
+  def architecture
+    gemfile = File.read(ROOT.join("Gemfile"))
+
+    ruby_version  = gemfile[/ruby\s+'(.+?)'/, 1] || "?"
+    rails_version = gemfile[/gem\s+'rails',\s*'~>\s*([\d.]+)'/, 1] || "?"
+
+    model_count       = count_files("app/models")
+    controller_count  = count_files("app/controllers")
+    service_count     = count_files("app/services")
+    job_count         = count_files("app/jobs")
+    channel_count     = count_files("app/channels") - count_files("app/channels/application_cable")
+    policy_count      = count_files("app/policies")
+    view_count        = count_files("app/views", "*.erb")
+    stimulus_count    = count_files("app/javascript/controllers") - 2 # minus application.js + index.js
+    middleware_count   = count_files("app/middleware")
+    api_v1_count      = count_files("app/controllers/api/v1") - 1 # minus base
+    api_v2_count      = count_files("app/controllers/api/v2") - 1 # minus base
+    admin_count       = count_files("app/controllers/admin")
+    payment_ctrl_count = count_files("app/controllers/payments") - 1 # minus base
+
+    schema = SchemaParser.new(SCHEMA)
+    table_count = schema.tables.size
+
+    <<~MD
+      # Architecture Overview
+
+      > **Auto-generated** by `bin/generate_docs` on #{TIMESTAMP}
+
+      ---
+
+      ## 1. Technology Stack
+
+      | Layer | Technology | Version |
+      |---|---|---|
+      | **Language** | Ruby | #{ruby_version} |
+      | **Framework** | Ruby on Rails | #{rails_version} |
+      | **Database** | PostgreSQL | 14+ (with `pgvector` extension) |
+      | **Cache** | Memcached (Dalli) + Redis | Dalli 3.x, Redis for Sidekiq/ActionCable |
+      | **Background Jobs** | Sidekiq | 7.x |
+      | **WebSockets** | ActionCable | Redis adapter |
+      | **Web Server** | Puma | 7.x |
+      | **JS Bundling** | esbuild + importmap-rails | — |
+      | **CSS Bundling** | cssbundling-rails (Sass + PostCSS) | — |
+      | **Frontend** | Hotwire (Turbo + Stimulus) | — |
+      | **Auth** | Devise + OmniAuth | Google, Apple, Spotify |
+      | **Authorization** | Pundit | 2.x |
+      | **Feature Flags** | Flipper (ActiveRecord backend) | 1.3.x |
+      | **Payments** | Stripe + Square | Stripe 13.x, Square REST v2 |
+      | **File Uploads** | Shrine + Active Storage | — |
+      | **Search** | PostgreSQL full-text + pgvector | — |
+      | **AI / ML** | OpenAI (GPT-4o, DALL-E, Whisper) | ruby-openai gem |
+      | **Vision OCR** | Google Cloud Vision | 2.x |
+      | **Translation** | DeepL API | — |
+      | **Monitoring** | Sentry | 5.12.x |
+
+      ---
+
+      ## 2. High-Level Architecture
+
+      ```
+      ┌─────────────────────────────────────────────────────────────────┐
+      │                        CLIENTS                                  │
+      │  Browser (Turbo/Stimulus)  │  Mobile (PWA)  │  API consumers   │
+      └────────────┬───────────────┴────────┬───────┴────────┬─────────┘
+                   │ HTTPS                  │ WSS            │ JSON
+                   ▼                        ▼                ▼
+      ┌─────────────────────────────────────────────────────────────────┐
+      │                     Heroku / Puma                                │
+      │  ┌──────────────┐  ┌──────────────┐  ┌────────────────────────┐ │
+      │  │ Web (MVC)    │  │ ActionCable  │  │ API v1 / v2 (JSON)    │ │
+      │  │ Controllers  │  │ Channels     │  │ BaseController         │ │
+      │  └──────┬───────┘  └──────┬───────┘  └───────────┬────────────┘ │
+      │         │                 │                      │              │
+      │  ┌──────▼─────────────────▼──────────────────────▼────────────┐ │
+      │  │              Service Layer (app/services/)                 │ │
+      │  │  Payments │ Menu Discovery │ Beverage Intelligence │ etc.  │ │
+      │  └──────┬─────────────────────────────────────────────────────┘ │
+      │         │                                                       │
+      │  ┌──────▼─────────────────────────────────────────────────────┐ │
+      │  │              Models (app/models/) + Policies (Pundit)      │ │
+      │  └──────┬─────────────────────────────────────────────────────┘ │
+      └─────────┼───────────────────────────────────────────────────────┘
+                │
+          ┌─────▼──────┐   ┌───────────┐   ┌────────────┐   ┌──────────┐
+          │ PostgreSQL │   │   Redis   │   │ Memcached  │   │  S3/CDN  │
+          │ (primary + │   │ (Sidekiq  │   │ (Identity  │   │ (Shrine  │
+          │  replica)  │   │  + Cable) │   │  Cache)    │   │  uploads)│
+          └────────────┘   └───────────┘   └────────────┘   └──────────┘
+      ```
+
+      ---
+
+      ## 3. Codebase Statistics
+
+      | Component | Count |
+      |---|---|
+      | **Models** | #{model_count} |
+      | **Controllers** (total) | #{controller_count} |
+      | — Admin controllers | #{admin_count} |
+      | — API v1 endpoints | #{api_v1_count} |
+      | — API v2 endpoints | #{api_v2_count} |
+      | — Payment controllers | #{payment_ctrl_count} |
+      | **Service objects** | #{service_count} |
+      | **Background jobs** | #{job_count} |
+      | **Pundit policies** | #{policy_count} |
+      | **ActionCable channels** | #{channel_count} |
+      | **Stimulus controllers** | #{stimulus_count} |
+      | **ERB views** | #{view_count} |
+      | **Rack middleware** | #{middleware_count} |
+      | **Database tables** | #{table_count} |
+
+      ---
+
+      ## 4. Directory Structure
+
+      ```
+      app/
+      ├── assets/             # Stylesheets (SCSS), static images
+      ├── channels/           # ActionCable channels (#{channel_count})
+      ├── components/         # ViewComponent classes
+      ├── controllers/        # MVC controllers
+      │   ├── admin/          #   Admin-only controllers (#{admin_count})
+      │   ├── api/v1/         #   REST API v1 (#{api_v1_count} endpoints)
+      │   ├── api/v2/         #   REST API v2 (#{api_v2_count} endpoints)
+      │   ├── payments/       #   Payment-specific controllers (#{payment_ctrl_count})
+      │   └── concerns/       #   Shared controller concerns
+      ├── helpers/            # View helpers
+      ├── javascript/         # JS source (esbuild entry points + Stimulus)
+      │   ├── controllers/    #   Stimulus controllers (#{stimulus_count})
+      │   ├── channels/       #   ActionCable JS subscribers
+      │   ├── modules/        #   Shared JS modules
+      │   └── utils/          #   JS utility functions
+      ├── jobs/               # Sidekiq background jobs (#{job_count})
+      ├── mailers/            # ActionMailer classes
+      ├── middleware/          # Rack middleware (#{middleware_count})
+      ├── models/             # ActiveRecord models (#{model_count})
+      ├── policies/           # Pundit authorization policies (#{policy_count})
+      ├── services/           # Business logic service objects (#{service_count})
+      │   ├── beverage_intelligence/  # Flavor profiling, pairing engine
+      │   ├── google_places/          # Places API integration
+      │   ├── menu_discovery/         # Web scraping, menu extraction
+      │   └── payments/               # Payment orchestration
+      └── views/              # ERB templates (#{view_count})
+      config/
+      ├── database.yml        # Multi-database (primary + replica)
+      ├── routes.rb           # All route definitions
+      ├── initializers/       # Rails initializers
+      └── locales/            # I18n translation files
+      db/
+      ├── schema.rb           # Current schema (#{table_count} tables)
+      └── migrate/            # All migrations
+      ```
+
+      ---
+
+      ## 5. Request Flow
+
+      ### 5.1 Web Request (HTML)
+
+      1. **Puma** accepts HTTP request
+      2. **Rack middleware** stack: `RackAttack` → `MetricsMiddleware` → `RequestLoggingMiddleware`
+      3. **Router** dispatches to controller
+      4. **ApplicationController** runs `before_action` chain: `authenticate_user!` → `set_current_employee` → `set_permissions` → `switch_locale`
+      5. **Controller** action calls service objects, queries models
+      6. **Pundit** `authorize` checks policy
+      7. **View** renders ERB with Turbo Frames/Streams
+
+      ### 5.2 API Request (JSON)
+
+      1. Request hits `/api/v1/...` or `/api/v2/...`
+      2. `Api::V1::BaseController` skips web-specific callbacks
+      3. JWT authentication via `JwtService`
+      4. JSON response via `jbuilder` or `render json:`
+
+      ### 5.3 WebSocket (ActionCable)
+
+      1. Client connects via `ws://` / `wss://`
+      2. **Redis** adapter manages pub/sub
+      3. Server-side broadcasts triggered by model callbacks or service objects
+
+      ### 5.4 Background Job
+
+      1. Controller or service enqueues job via `MyJob.perform_later`
+      2. **Sidekiq** picks job from **Redis** queue
+      3. Job executes and persists results / broadcasts via ActionCable
+
+      ---
+
+      ## 6. Payment Architecture
+
+      Dual-provider payment system supporting **Stripe** and **Square**.
+
+      ```
+                          ┌─────────────────┐
+                          │  Orchestrator   │
+                          └───────┬─────────┘
+                      ┌───────────┴───────────┐
+                      ▼                       ▼
+          ┌───────────────────┐   ┌───────────────────┐
+          │  StripeAdapter    │   │  SquareAdapter     │
+          └───────────────────┘   └───────────────────┘
+                      │                       │
+                      ▼                       ▼
+          ┌───────────────────┐   ┌───────────────────┐
+          │ StripeIngestor    │   │ SquareIngestor     │
+          │ (webhooks)        │   │ (webhooks)         │
+          └───────────────────┘   └───────────────────┘
+      ```
+
+      ---
+
+      ## 7. Authentication & Authorization
+
+      | Concern | Solution |
+      |---|---|---|
+      | **User auth** | Devise (email/password, confirmable, lockable) |
+      | **Social auth** | OmniAuth (Google, Apple, Spotify) |
+      | **Admin impersonation** | Pretender gem + `ImpersonationAudit` |
+      | **Authorization** | Pundit policies (#{policy_count} policy classes) |
+      | **API auth** | JWT tokens via `JwtService` |
+      | **Feature flags** | Flipper (per-user, per-restaurant toggles) |
+
+      ---
+
+      ## 8. External Integrations
+
+      | Service | Purpose |
+      |---|---|
+      | **Stripe** | SaaS subscriptions + customer payments |
+      | **Square** | Customer payments (inline + hosted) |
+      | **OpenAI** | Menu polishing, image gen, price inference |
+      | **Google Cloud Vision** | Menu OCR from photos/PDFs |
+      | **Google Places** | Restaurant discovery, address resolution |
+      | **DeepL** | Menu translation (40+ languages) |
+      | **Spotify** | Restaurant playlist sync |
+      | **Segment** | Product analytics |
+      | **Sentry** | Error tracking |
+      | **AWS S3** | File storage (Shrine uploads) |
+
+      ---
+
+      ## 9. Caching Strategy
+
+      | Layer | Technology | Purpose |
+      |---|---|---|
+      | **L1** | Memcached (Dalli) | Model-level IdentityCache |
+      | **L2** | Redis | Query result caching |
+      | **L3** | Rails cache (Memcached) | View fragment caching |
+      | **Warming** | `CacheWarmingJob` | Predictive warming |
+      | **Invalidation** | `CacheInvalidationJob` | Dependency-graph-aware |
+    MD
+  end
+
+  # -------------------------------------------------------------------------
+  # DATA_MODEL.md
+  # -------------------------------------------------------------------------
+  def data_model
+    schema = SchemaParser.new(SCHEMA)
+
+    table_lines = schema.tables.map do |t|
+      col_count = t.columns.size
+      idx_count = t.indexes.size
+      "| `#{t.name}` | #{col_count} | #{idx_count} | #{t.id_type} |"
+    end.join("\n")
+
+    fk_lines = schema.foreign_keys.map { |fk| "| `#{fk[:from]}` | `#{fk[:to]}` |" }.join("\n")
+
+    detail_sections = schema.tables.map do |t|
+      cols = t.columns.map do |c|
+        opts = c.options.to_s.strip
+        opts = opts.empty? ? "—" : opts.gsub("|", "\\|")
+        "| `#{c.name}` | #{c.type} | #{opts} |"
+      end.join("\n")
+
+      indexes = t.indexes.map { |i| "- `#{i.gsub("`", "'")}`" }.join("\n")
+      idx_section = t.indexes.empty? ? "" : "\n**Indexes:**\n#{indexes}\n"
+
+      <<~SECTION
+        ### `#{t.name}`
+
+        | Column | Type | Options |
+        |---|---|---|
+        #{cols}
+        #{idx_section}
+      SECTION
+    end.join("\n---\n\n")
+
+    <<~MD
+      # Data Model
+
+      > **Auto-generated** by `bin/generate_docs` on #{TIMESTAMP}
+
+      ---
+
+      ## 1. Database Overview
+
+      | Property | Value |
+      |---|---|
+      | **Engine** | PostgreSQL 14+ |
+      | **Extensions** | #{schema.extensions.map { |e| "`#{e}`" }.join(", ")} |
+      | **Total Tables** | #{schema.tables.size} |
+      | **Schema Version** | `#{schema.version}` |
+
+      ---
+
+      ## 2. Table Summary
+
+      | Table | Columns | Indexes | PK Type |
+      |---|---|---|---|
+      #{table_lines}
+
+      ---
+
+      ## 3. Foreign Keys
+
+      | From | To |
+      |---|---|
+      #{fk_lines}
+
+      ---
+
+      ## 4. Table Details
+
+      #{detail_sections}
+    MD
+  end
+
+  # -------------------------------------------------------------------------
+  # SERVICE_MAP.md
+  # -------------------------------------------------------------------------
+  def service_map
+    # Collect controllers
+    web_controllers = list_files("app/controllers", "*.rb")
+      .reject { |f| f.to_s.include?("/concerns/") }
+      .reject { |f| f.to_s.include?("/api/") }
+      .reject { |f| f.to_s.include?("/admin/") }
+      .reject { |f| f.to_s.include?("/payments/") }
+      .reject { |f| f.to_s.include?("/madmin/") }
+      .reject { |f| f.to_s.include?("/users/") }
+      .reject { |f| basename_no_ext(f) == "application_controller" }
+      .map { |f| "| `#{classify(f)}` | `#{relative(f)}` |" }
+
+    admin_controllers = list_files("app/controllers/admin", "*.rb")
+      .map { |f| "| `Admin::#{classify(f)}` | `#{relative(f)}` |" }
+
+    api_v1_controllers = list_files("app/controllers/api/v1", "*.rb")
+      .reject { |f| basename_no_ext(f) == "base_controller" }
+      .map { |f| "| `Api::V1::#{classify(f)}` | `#{relative(f)}` |" }
+
+    api_v2_controllers = list_files("app/controllers/api/v2", "*.rb")
+      .reject { |f| basename_no_ext(f) == "base_controller" }
+      .map { |f| "| `Api::V2::#{classify(f)}` | `#{relative(f)}` |" }
+
+    payment_controllers = list_files("app/controllers/payments", "*.rb")
+      .reject { |f| basename_no_ext(f) == "base_controller" }
+      .map { |f| "| `Payments::#{classify(f)}` | `#{relative(f)}` |" }
+
+    # Collect services
+    services = list_files("app/services", "*.rb").map do |f|
+      rel = relative(f)
+      # Build namespaced class name from path
+      parts = rel.sub("app/services/", "").sub(".rb", "").split("/")
+      class_name = parts.map { |p| p.split("_").map(&:capitalize).join }.join("::")
+      "| `#{class_name}` | `#{rel}` |"
+    end
+
+    # Collect jobs
+    jobs = list_files("app/jobs", "*.rb")
+      .reject { |f| basename_no_ext(f) == "application_job" }
+      .map do |f|
+        rel = relative(f)
+        parts = rel.sub("app/jobs/", "").sub(".rb", "").split("/")
+        class_name = parts.map { |p| p.split("_").map(&:capitalize).join }.join("::")
+        "| `#{class_name}` | `#{rel}` |"
+      end
+
+    # Collect channels
+    channels = list_files("app/channels", "*.rb")
+      .reject { |f| f.to_s.include?("application_cable") }
+      .map { |f| "| `#{classify(f)}` | `#{relative(f)}` |" }
+
+    # Collect Stimulus controllers
+    stimulus = list_files("app/javascript/controllers", "*.js")
+      .reject { |f| %w[application index].include?(basename_no_ext(f)) }
+      .map { |f| "| `#{basename_no_ext(f)}` | `#{relative(f)}` |" }
+
+    # Collect middleware
+    middleware = list_files("app/middleware", "*.rb")
+      .map { |f| "| `#{classify(f)}` | `#{relative(f)}` |" }
+
+    # Collect JS channels
+    js_channels = list_files("app/javascript/channels", "*.js")
+      .map { |f| "| `#{basename_no_ext(f)}` | `#{relative(f)}` |" }
+
+    <<~MD
+      # Service Map
+
+      > **Auto-generated** by `bin/generate_docs` on #{TIMESTAMP}
+
+      ---
+
+      ## 1. Web Controllers (HTML)
+
+      | Class | File |
+      |---|---|
+      #{web_controllers.join("\n")}
+
+      ---
+
+      ## 2. Admin Controllers
+
+      | Class | File |
+      |---|---|
+      #{admin_controllers.join("\n")}
+
+      ---
+
+      ## 3. REST API v1
+
+      | Class | File |
+      |---|---|
+      #{api_v1_controllers.join("\n")}
+
+      ---
+
+      ## 4. REST API v2
+
+      | Class | File |
+      |---|---|
+      #{api_v2_controllers.join("\n")}
+
+      ---
+
+      ## 5. Payment Controllers
+
+      | Class | File |
+      |---|---|
+      #{payment_controllers.join("\n")}
+
+      ---
+
+      ## 6. Service Objects (#{services.size})
+
+      | Class | File |
+      |---|---|
+      #{services.join("\n")}
+
+      ---
+
+      ## 7. Background Jobs (#{jobs.size})
+
+      | Class | File |
+      |---|---|
+      #{jobs.join("\n")}
+
+      ---
+
+      ## 8. ActionCable Channels
+
+      | Class | File |
+      |---|---|
+      #{channels.join("\n")}
+
+      ---
+
+      ## 9. Stimulus Controllers (#{stimulus.size})
+
+      | Controller | File |
+      |---|---|
+      #{stimulus.join("\n")}
+
+      ---
+
+      ## 10. ActionCable JS Channels
+
+      | Module | File |
+      |---|---|
+      #{js_channels.join("\n")}
+
+      ---
+
+      ## 11. Rack Middleware
+
+      | Class | File |
+      |---|---|
+      #{middleware.join("\n")}
+    MD
+  end
+end
+
+# ---------------------------------------------------------------------------
+# Main
+# ---------------------------------------------------------------------------
+
+targets = ARGV.empty? ? %w[arch data services] : ARGV
+
+targets.each do |t|
+  case t.downcase
+  when "arch", "architecture"
+    path = DOCS.join("ARCHITECTURE.md")
+    File.write(path, Generators.architecture)
+    puts "✓ #{path.relative_path_from(ROOT)}"
+  when "data", "data_model"
+    path = DOCS.join("DATA_MODEL.md")
+    File.write(path, Generators.data_model)
+    puts "✓ #{path.relative_path_from(ROOT)}"
+  when "services", "service_map"
+    path = DOCS.join("SERVICE_MAP.md")
+    File.write(path, Generators.service_map)
+    puts "✓ #{path.relative_path_from(ROOT)}"
+  else
+    warn "Unknown target: #{t}  (valid: arch, data, services)"
+  end
+end
+
+puts "\nDone. #{targets.size} doc(s) regenerated at #{TIMESTAMP}"
