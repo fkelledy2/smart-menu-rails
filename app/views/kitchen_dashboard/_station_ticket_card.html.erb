@@ -19,7 +19,11 @@
       <% ticket.ordritems.each do |item| %>
         <% next if item.menuitem.blank? %>
         <li>
+          <% if item.quantity > 1 %><span class="badge bg-primary me-1"><%= item.quantity %>×</span><% end %>
           <%= item.menuitem.name %>
+          <% if item.size_name.present? %>
+            <span class="text-muted small">(<%= item.size_name.sub(/\s*\(.*\)/, '') %>)</span>
+          <% end %>
           <% if item.ordritemnotes.any? %>
             <div class="text-muted small">
               <i class="bi bi-sticky"></i> <%= item.ordritemnotes.map(&:note).join(', ') %>

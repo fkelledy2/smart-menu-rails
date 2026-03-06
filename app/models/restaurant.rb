@@ -307,8 +307,8 @@ class Restaurant < ApplicationRecord
 
     self.class.cached_query(cache_key, cache_type: :analytics) do
       query = ordrs.unscope(:order).select('ordrs.*,
-                            COUNT(ordritems.id) as item_count,
-                            SUM(ordritems.ordritemprice) as items_total')
+                            SUM(ordritems.quantity) as item_count,
+                            SUM(ordritems.ordritemprice * ordritems.quantity) as items_total')
         .joins(:ordritems)
         .group('ordrs.id')
 

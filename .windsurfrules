@@ -112,3 +112,26 @@ Deployed on Heroku. PostgreSQL + Redis + Memcached.
 - `Menu` model conflicts with `Menu::` namespace for jobs — use `class Menu::MyJob` not `module Menu; class MyJob`
 - Routes use non-RESTful names in places: check `config/routes.rb` before assuming path helpers
 - AdvancedCacheService returns Hash objects, not ActiveRecord models — extract IDs and re-query with `.where(id:)` when views need model methods
+
+## Indexing Exclusions
+- Exclude high-churn, generated, cache, dependency, and runtime directories from editor/agent indexing where supported:
+  - `.git/`
+  - `node_modules/`
+  - `tmp/`
+  - `log/`
+  - `coverage/`
+  - `storage/`
+  - `public/assets/`
+  - `public/packs/`
+  - `public/packs-test/`
+  - `vendor/bundle/`
+  - `vendor/cache/`
+  - `.idea/`
+  - `.snapshots/`
+  - `backup/`
+- Also avoid indexing large generated artifacts when present:
+  - `*.log`
+  - `*.pid`
+  - `*.tmp`
+  - `coverage/**`
+  - `tmp/**`

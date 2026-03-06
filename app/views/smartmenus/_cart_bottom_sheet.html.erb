@@ -62,60 +62,65 @@
   <div class="bottom-sheet__content cart-sheet__content" data-bottom-sheet-target="content" data-testid="cart-sheet-content">
     <div id="cartItemsContainer">
     <% if order %>
-      <%# Selected (not yet submitted) items %>
-      <% selected_items = order.ordractions.select { |a| a.ordritem&.status == 'opened' && order.ordritems.include?(a.ordritem) } %>
-      <% if selected_items.any? %>
+      <%# Selected (not yet submitted) items — deduplicated by ordritem %>
+      <% selected_ordritems = order.ordritems.select { |i| i.status == 'opened' } %>
+      <% if selected_ordritems.any? %>
         <div class="cart-sheet__section-label"><%= t('smartmenus.showModals.selected', default: 'Selected') %></div>
-        <% selected_items.each do |ordraction| %>
-          <div class="cart-sheet__item" data-testid="cart-item-<%= ordraction.ordritem.id %>">
+        <% selected_ordritems.each do |item| %>
+          <div class="cart-sheet__item" data-testid="cart-item-<%= item.id %>">
             <button type="button" class="cart-sheet__remove removeItemFromOrderButton"
-                    data-bs-ordritem_id="<%= ordraction.ordritem.id %>"
+                    data-bs-ordritem_id="<%= item.id %>"
                     aria-label="<%= t('smartmenus.showModals.remove_item', default: 'Remove') %>"
-                    data-testid="remove-cart-item-<%= ordraction.ordritem.id %>">
+                    data-testid="remove-cart-item-<%= item.id %>">
               <i class="bi bi-x-circle"></i>
             </button>
             <div class="cart-sheet__item-name">
-              <% if ordrparticipant&.preferredlocale %>
-                <%= ordraction.ordritem.menuitem.localised_name(ordrparticipant.preferredlocale) %>
-              <% elsif menuparticipant&.preferredlocale %>
-                <%= ordraction.ordritem.menuitem.localised_name(menuparticipant.preferredlocale) %>
-              <% else %>
-                <%= ordraction.ordritem.menuitem.name %>
-              <% end %>
-              <% if ordraction.ordritem.size_name.present? %>
-                <span class="text-muted size-name-label">(<%= ordraction.ordritem.size_name.sub(/\s*\(.*\)/, '') %>)</span>
+              <% locale = ordrparticipant&.preferredlocale || menuparticipant&.preferredlocale %>
+              <% if item.quantity > 1 %><span class="cart-sheet__qty-badge"><%= item.quantity %>×</span><% end %>
+              <%= locale ? item.menuitem.localised_name(locale) : item.menuitem.name %>
+              <% if item.size_name.present? %>
+                <span class="text-muted size-name-label">(<%= item.size_name.sub(/\s*\(.*\)/, '') %>)</span>
               <% end %>
             </div>
+            <div class="cart-sheet__qty-controls">
+              <button type="button" class="cart-sheet__qty-btn cartQtyDecr"
+                      data-ordritem-id="<%= item.id %>"
+                      aria-label="<%= t('smartmenus.showModals.decrease_qty', default: 'Decrease quantity') %>">
+                <i class="bi bi-dash-circle"></i>
+              </button>
+              <span class="cart-sheet__qty-value"><%= item.quantity %></span>
+              <button type="button" class="cart-sheet__qty-btn cartQtyIncr"
+                      data-ordritem-id="<%= item.id %>"
+                      aria-label="<%= t('smartmenus.showModals.increase_qty', default: 'Increase quantity') %>">
+                <i class="bi bi-plus-circle"></i>
+              </button>
+            </div>
             <div class="cart-sheet__item-price">
-              <%= number_to_currency(ordraction.ordritem.ordritemprice, unit: restaurantCurrency&.symbol || '') %>
+              <%= number_to_currency(item.total_price, unit: restaurantCurrency&.symbol || '') %>
             </div>
           </div>
         <% end %>
       <% end %>
 
-      <%# Submitted items %>
-      <% submitted_items = order.ordractions.select { |a| a.ordritem && %w[ordered preparing ready delivered].include?(a.ordritem.status) && order.ordritems.include?(a.ordritem) } %>
-      <% if submitted_items.any? %>
+      <%# Submitted items — deduplicated by ordritem %>
+      <% submitted_ordritems = order.ordritems.select { |i| %w[ordered preparing ready delivered].include?(i.status) } %>
+      <% if submitted_ordritems.any? %>
         <div class="cart-sheet__section-label cart-sheet__section-label--muted"><%= t('smartmenus.showModals.submitted', default: 'Submitted') %></div>
-        <% submitted_items.each do |ordraction| %>
+        <% submitted_ordritems.each do |item| %>
           <div class="cart-sheet__item cart-sheet__item--submitted">
             <div class="cart-sheet__status-icon">
               <i class="bi bi-check-circle-fill text-success"></i>
             </div>
             <div class="cart-sheet__item-name">
-              <% if ordrparticipant&.preferredlocale %>
-                <%= ordraction.ordritem.menuitem.localised_name(ordrparticipant.preferredlocale) %>
-              <% elsif menuparticipant&.preferredlocale %>
-                <%= ordraction.ordritem.menuitem.localised_name(menuparticipant.preferredlocale) %>
-              <% else %>
-                <%= ordraction.ordritem.menuitem.name %>
-              <% end %>
-              <% if ordraction.ordritem.size_name.present? %>
-                <span class="text-muted size-name-label">(<%= ordraction.ordritem.size_name.sub(/\s*\(.*\)/, '') %>)</span>
+              <% locale = ordrparticipant&.preferredlocale || menuparticipant&.preferredlocale %>
+              <% if item.quantity > 1 %><span class="cart-sheet__qty-badge"><%= item.quantity %>×</span><% end %>
+              <%= locale ? item.menuitem.localised_name(locale) : item.menuitem.name %>
+              <% if item.size_name.present? %>
+                <span class="text-muted size-name-label">(<%= item.size_name.sub(/\s*\(.*\)/, '') %>)</span>
               <% end %>
             </div>
             <div class="cart-sheet__item-price text-muted">
-              <%= number_to_currency(ordraction.ordritem.menuitem.price, unit: restaurantCurrency&.symbol || '') %>
+              <%= number_to_currency(item.total_price, unit: restaurantCurrency&.symbol || '') %>
             </div>
           </div>
         <% end %>
@@ -261,7 +266,8 @@
                     data-testid="cancel-start-order-btn">
               <%= t('common.cancel', default: 'Cancel') %>
             </button>
-            <button id="start-order" type="button" class="btn-touch-primary w-50">
+            <button id="start-order" type="button" class="btn-touch-primary w-50"
+                    data-action="click->bottom-sheet#startOrder">
               <i class="bi bi-play-circle"></i>
               <%= t('smartmenus.showModals.start', default: 'Start') %>
             </button>

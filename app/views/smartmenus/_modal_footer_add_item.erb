@@ -1,7 +1,18 @@
-<div class="modal-footer gap-2">
-  <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" aria-label="<%= t('common.close') %>"><%= t('smartmenus.showModals.cancel') %></button>
-  <button id="addItemToOrderButton" type="button" class="btn btn-primary">
-    <i class="bi bi-plus" aria-hidden="true"></i>
-    <%= restaurantCurrency.symbol ? restaurantCurrency.symbol : "" %><span id="a2o_menuitem_price"></span>
-  </button>
+<div class="modal-footer flex-column" id="a2o_footer">
+  <div class="d-flex align-items-center justify-content-center gap-2 w-100 mb-2" id="a2o_qty_controls">
+    <button type="button" class="btn btn-outline-secondary btn-sm" id="a2o_qty_decr" aria-label="<%= t('smartmenus.showModals.decrease_qty', default: 'Decrease quantity') %>">
+      <i class="bi bi-dash" aria-hidden="true"></i>
+    </button>
+    <span class="fw-bold fs-5" id="a2o_qty_display" style="min-width: 2rem; text-align: center;">1</span>
+    <button type="button" class="btn btn-outline-secondary btn-sm" id="a2o_qty_incr" aria-label="<%= t('smartmenus.showModals.increase_qty', default: 'Increase quantity') %>">
+      <i class="bi bi-plus" aria-hidden="true"></i>
+    </button>
+  </div>
+  <div class="d-flex gap-2 w-100">
+    <button type="button" class="btn btn-outline-secondary flex-fill" data-bs-dismiss="modal" aria-label="<%= t('common.close') %>"><%= t('smartmenus.showModals.cancel') %></button>
+    <button id="addItemToOrderButton" type="button" class="btn btn-primary flex-fill">
+      <i class="bi bi-plus" aria-hidden="true"></i>
+      <%= restaurantCurrency.symbol ? restaurantCurrency.symbol : "" %><span id="a2o_menuitem_price"></span>
+    </button>
+  </div>
 </div>

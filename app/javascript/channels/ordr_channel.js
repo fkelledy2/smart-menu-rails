@@ -305,9 +305,8 @@ function refreshOrderJSLogic() {
       $('#a2o_ordr_id').text(button.getAttribute('data-bs-ordr_id') || (window.__SM_STATE && window.__SM_STATE.order && window.__SM_STATE.order.id ? String(window.__SM_STATE.order.id) : ''));
       $('#a2o_menuitem_id').text(button.getAttribute('data-bs-menuitem_id'));
       $('#a2o_menuitem_name').text(button.getAttribute('data-bs-menuitem_name'));
-      $('#a2o_menuitem_price').text(
-        parseFloat(button.getAttribute('data-bs-menuitem_price')).toFixed(2)
-      );
+      const unitPrice = parseFloat(button.getAttribute('data-bs-menuitem_price')).toFixed(2);
+      $('#a2o_menuitem_price').text(unitPrice).attr('data-unit-price', unitPrice);
       $('#a2o_menuitem_description').text(button.getAttribute('data-bs-menuitem_description'));
       try {
         const imageElement = addItemToOrderModal.querySelector('#a2o_menuitem_image');

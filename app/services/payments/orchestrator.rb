@@ -16,7 +16,7 @@ module Payments
 
       amount_cents = ((ordr.gross.to_f - ordr.tip.to_f) * 100.0).round
       if amount_cents <= 0
-        amount_cents = (ordr.ordritems.sum(:ordritemprice).to_f * 100.0).round
+        amount_cents = (ordr.ordritems.sum('ordritemprice * quantity').to_f * 100.0).round
       end
 
       charge_pattern = Payments::FundsFlowRouter.charge_pattern_for(

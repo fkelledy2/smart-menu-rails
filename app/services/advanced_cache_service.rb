@@ -1433,8 +1433,8 @@ class AdvancedCacheService
           all_ordritems = orders.flat_map { |o| o.respond_to?(:fetch_ordritems) ? o.fetch_ordritems : o.ordritems }
           item_orders = all_ordritems.select { |oi| oi.menuitem_id == item.id }
 
-          total_quantity = item_orders.count # Assume quantity 1 per order item
-          total_revenue = item_orders.sum { |oi| oi.respond_to?(:ordritemprice) ? (oi.ordritemprice || 0) : 0 }
+          total_quantity = item_orders.sum { |oi| oi.respond_to?(:quantity) ? (oi.quantity || 1) : 1 }
+          total_revenue = item_orders.sum { |oi| (oi.respond_to?(:ordritemprice) ? (oi.ordritemprice || 0) : 0) * (oi.respond_to?(:quantity) ? (oi.quantity || 1) : 1) }
 
           item_stats[item.id] = {
             name: item.name,

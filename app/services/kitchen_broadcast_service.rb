@@ -160,8 +160,8 @@ class KitchenBroadcastService
         status: order.status,
         ordered_at: order.orderedAt,
         table: order.tablesetting&.name,
-        items_count: order.ordritems.count,
-        total: order.ordritems.sum(:ordritemprice),
+        items_count: order.ordritems.sum(:quantity),
+        total: order.ordritems.sum('ordritemprice * quantity'),
         created_at: order.created_at,
       }
     end

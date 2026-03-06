@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import { post, getCurrentTableId, getCurrentMenuId, getRestaurantId } from "../ordr_commons"
 
 /**
  * Bottom Sheet Stimulus Controller
@@ -68,6 +69,55 @@ export default class extends Controller {
   close() { this.setState("closed") }
   peek()  { this.setState("peek") }
   expand() { this.setState("full") }
+
+  startOrder(event) {
+    event.preventDefault()
+    event.stopPropagation()
+
+    const btn = event.currentTarget
+    if (btn.hasAttribute("disabled")) return
+
+    const container = btn.closest("#cartStartOrderSection") || this.element
+    const orderCapacity = (container.querySelector("#orderCapacity") || container.querySelector('[name="orderCapacity"]'))?.value || 1
+    const restaurantId = getRestaurantId()
+    const tablesettingId = getCurrentTableId()
+    const menuId = getCurrentMenuId()
+
+    if (!restaurantId || !tablesettingId || !menuId) {
+      alert("Please select a table before starting an order.")
+      return
+    }
+
+    btn.setAttribute("disabled", "disabled")
+
+    const payload = {
+      ordr: {
+        tablesetting_id: tablesettingId,
+        restaurant_id: restaurantId,
+        menu_id: menuId,
+        ordercapacity: orderCapacity,
+        status: 0,
+      },
+    }
+
+    const currentEmployee = document.getElementById("currentEmployee")
+    if (currentEmployee?.textContent) {
+      payload.ordr.employee_id = currentEmployee.textContent
+    }
+
+    post(`/restaurants/${restaurantId}/ordrs`, payload)
+      .then(() => {
+        this.setState("peek")
+        window.location.reload()
+      })
+      .catch((err) => {
+        console.error("[BottomSheet] Failed to create order:", err)
+        alert("Could not start order. Please try again.")
+      })
+      .finally(() => {
+        btn.removeAttribute("disabled")
+      })
+  }
 
   // --- State management ---
 

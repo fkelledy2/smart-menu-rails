@@ -311,6 +311,48 @@ export function initOrderBindings() {
 
   // Header CTA visibility is managed by Stimulus state controller
 
+  // Customer modal quantity stepper
+  (function bindModalQtyStepper() {
+    if (window.__modalQtyStepperBound) return;
+    window.__modalQtyStepperBound = true;
+
+    let modalQty = 1;
+    function updateModalQtyDisplay() {
+      const display = document.getElementById('a2o_qty_display');
+      if (display) display.textContent = modalQty;
+      const decrBtn = document.getElementById('a2o_qty_decr');
+      if (decrBtn) decrBtn.disabled = modalQty <= 1;
+      window.__quickAddQty = modalQty;
+      // Update the add button price to show total
+      const priceEl = document.getElementById('a2o_menuitem_price');
+      if (priceEl && priceEl.dataset.unitPrice) {
+        const total = (parseFloat(priceEl.dataset.unitPrice) * modalQty).toFixed(2);
+        priceEl.textContent = total;
+      }
+    }
+
+    document.addEventListener('click', (evt) => {
+      const target = evt.target instanceof Element ? evt.target : null;
+      if (!target) return;
+      if (target.closest('#a2o_qty_incr')) {
+        evt.preventDefault(); evt.stopPropagation();
+        if (modalQty < 99) { modalQty++; updateModalQtyDisplay(); }
+      } else if (target.closest('#a2o_qty_decr')) {
+        evt.preventDefault(); evt.stopPropagation();
+        if (modalQty > 1) { modalQty--; updateModalQtyDisplay(); }
+      }
+    }, true);
+
+    // Reset qty when the add-item modal opens
+    const addModal = document.getElementById('addItemToOrderModal');
+    if (addModal) {
+      addModal.addEventListener('show.bs.modal', () => {
+        modalQty = 1;
+        updateModalQtyDisplay();
+      });
+    }
+  })();
+
   // Add Item to Order capture (non-tasting only)
   (function bindAddItemCapture() {
     if (window.__addItemCaptureBound) return;
@@ -358,7 +400,8 @@ export function initOrderBindings() {
 
       const ordrId = document.getElementById('a2o_ordr_id')?.textContent?.trim() || currentOrderId;
       const menuitemId = document.getElementById('a2o_menuitem_id')?.textContent?.trim();
-      const price = document.getElementById('a2o_menuitem_price')?.textContent?.trim();
+      const priceEl = document.getElementById('a2o_menuitem_price');
+      const price = priceEl?.dataset?.unitPrice || priceEl?.textContent?.trim();
       const sizeName = document.getElementById('a2o_size_name')?.textContent?.trim() || null;
       const restaurantId = getRestaurantId();
       if (!ordrId || !menuitemId || !restaurantId) { console.error('[AddItem][capture] Missing data'); return; }
@@ -367,20 +410,10 @@ export function initOrderBindings() {
       const qty = Math.max(1, Math.min(99, parseInt(window.__quickAddQty) || 1));
       window.__quickAddQty = 1;
 
-      const ordritem = { ordritem: { ordr_id: ordrId, menuitem_id: menuitemId, status: 0, ordritemprice: price, size_name: sizeName } };
-      if (qty === 1) {
-        post(`/restaurants/${restaurantId}/ordritems`, ordritem)
-          .then(() => hideClosestModal(btn))
-          .catch((e) => console.error('[AddItem][capture] Post failed:', e));
-      } else {
-        (async () => {
-          for (let i = 0; i < qty; i++) {
-            await post(`/restaurants/${restaurantId}/ordritems`, ordritem);
-          }
-        })()
-          .then(() => hideClosestModal(btn))
-          .catch((e) => console.error('[AddItem][capture] Multi-post failed:', e));
-      }
+      const ordritem = { ordritem: { ordr_id: ordrId, menuitem_id: menuitemId, status: 0, ordritemprice: price, size_name: sizeName, quantity: qty } };
+      post(`/restaurants/${restaurantId}/ordritems`, ordritem)
+        .then(() => hideClosestModal(btn))
+        .catch((e) => console.error('[AddItem][capture] Post failed:', e));
     }, true);
   })();
 
@@ -394,6 +427,38 @@ export function initOrderBindings() {
       }
     } catch (_) {}
   }
+
+  // Cart quantity +/- buttons
+  (function bindCartQtyButtons() {
+    if (window.__cartQtyButtonsBound) return;
+    window.__cartQtyButtonsBound = true;
+    document.addEventListener('click', (evt) => {
+      const target = evt.target instanceof Element ? evt.target : null;
+      if (!target) return;
+      const incrBtn = target.closest && target.closest('.cartQtyIncr');
+      const decrBtn = target.closest && target.closest('.cartQtyDecr');
+      if (!incrBtn && !decrBtn) return;
+      evt.preventDefault(); evt.stopPropagation();
+
+      const btn = incrBtn || decrBtn;
+      const ordritemId = btn.dataset.ordritemId;
+      const restaurantId = getRestaurantId();
+      if (!ordritemId || !restaurantId) return;
+
+      const qtyEl = btn.closest('.cart-sheet__item')?.querySelector('.cart-sheet__qty-value');
+      const currentQty = parseInt(qtyEl?.textContent || '1');
+
+      if (decrBtn && currentQty <= 1) {
+        // Remove the item entirely
+        patch(`/restaurants/${restaurantId}/ordritems/${ordritemId}`, { ordritem: { status: 10 } })
+          .catch((e) => console.error('[CartQty] Remove failed:', e));
+      } else {
+        const newQty = incrBtn ? Math.min(currentQty + 1, 99) : Math.max(currentQty - 1, 1);
+        patch(`/restaurants/${restaurantId}/ordritems/${ordritemId}`, { ordritem: { quantity: newQty } })
+          .catch((e) => console.error('[CartQty] Update failed:', e));
+      }
+    }, true);
+  })();
 
   // Confirm Order capture
   (function bindConfirmOrderCapture() {

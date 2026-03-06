@@ -87,7 +87,12 @@ export default class extends Controller {
     const tick = async () => {
       try {
         const res = await fetch(this.progressUrlValue, { headers: { Accept: 'application/json' }, credentials: 'same-origin' });
-        if (!res.ok) return;
+        if (!res.ok) {
+          if (res.status === 401 || res.status === 403 || res.status === 404) {
+            this.stopProgressPolling();
+          }
+          return;
+        }
         const data = await res.json();
         this.applyProgress(data);
 

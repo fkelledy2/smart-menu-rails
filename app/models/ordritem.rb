@@ -24,6 +24,29 @@ class Ordritem < ApplicationRecord
   before_validation :ensure_line_key, on: :create
 
   validates :line_key, presence: true
+  validates :quantity, numericality: { greater_than: 0, less_than_or_equal_to: 99, only_integer: true }
+
+  def total_price
+    (ordritemprice || 0.0) * (quantity || 1)
+  end
+
+  def increase_quantity(amount = 1)
+    self.quantity = [quantity + amount, 99].min
+    save
+  end
+
+  def decrease_quantity(amount = 1)
+    new_qty = quantity - amount
+    if new_qty <= 0
+      self.status = :removed
+      self.ordritemprice = 0.0
+      self.quantity = 1
+      save
+    else
+      self.quantity = new_qty
+      save
+    end
+  end
 
   # IdentityCache configuration
   cache_index :id

@@ -276,7 +276,7 @@ class OrdrPaymentsController < ApplicationController
     return cents if cents.positive?
 
     # Fallback to ordritems total
-    (ordr.ordritems.sum(:ordritemprice).to_f * 100.0).round
+    (ordr.ordritems.sum('ordritemprice * quantity').to_f * 100.0).round
   end
 
   def compute_even_split(total_cents, n)

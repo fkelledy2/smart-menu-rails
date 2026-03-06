@@ -64,10 +64,11 @@ class OrderEventProjector
       menuitem_id = event.payload['menuitem_id'] || event.payload[:menuitem_id]
       price = event.payload['ordritemprice'] || event.payload[:ordritemprice]
       size_name = event.payload['size_name'] || event.payload[:size_name]
+      qty = (event.payload['qty'] || event.payload[:qty] || 1).to_i.clamp(1, 99)
       return if line_key.blank? || menuitem_id.blank?
 
-      existing = Ordritem.find_by(ordr_id: ordr.id, line_key: line_key.to_s)
-      return if existing
+      existing_by_key = Ordritem.find_by(ordr_id: ordr.id, line_key: line_key.to_s)
+      return if existing_by_key
 
       ordritemprice = begin
         price.present? ? price.to_f : Menuitem.find_by(id: menuitem_id)&.price.to_f
@@ -75,14 +76,27 @@ class OrderEventProjector
         0.0
       end
 
-      Ordritem.create!(
-        ordr: ordr,
+      mergeable = Ordritem.find_by(
+        ordr_id: ordr.id,
         menuitem_id: menuitem_id,
-        ordritemprice: ordritemprice || 0.0,
-        status: :opened,
-        line_key: line_key.to_s,
         size_name: size_name.presence,
+        status: Ordritem.statuses['opened'],
       )
+
+      if mergeable
+        new_qty = [mergeable.quantity + qty, 99].min
+        mergeable.update!(quantity: new_qty)
+      else
+        Ordritem.create!(
+          ordr: ordr,
+          menuitem_id: menuitem_id,
+          ordritemprice: ordritemprice || 0.0,
+          status: :opened,
+          line_key: line_key.to_s,
+          size_name: size_name.presence,
+          quantity: qty,
+        )
+      end
 
     else
       # Unknown events are ignored for projection in v1.

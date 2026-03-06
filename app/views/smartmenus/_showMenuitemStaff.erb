@@ -44,17 +44,6 @@
            <% end %>
          </div>
        </div>
-       <div class="staff-item-stepper">
-         <div class="quick-add-stepper quick-add-stepper-vertical" data-testid="quick-add-stepper-<%= menuitem.id %>">
-           <button type="button" class="quick-add-btn" data-action="click->quick-add#increment" data-testid="quick-add-increment-<%= menuitem.id %>">
-             <i class="bi bi-plus"></i>
-           </button>
-           <span class="quick-add-qty" data-quick-add-target="qty">1</span>
-           <button type="button" class="quick-add-btn" data-action="click->quick-add#decrement" data-quick-add-target="decrement" disabled data-testid="quick-add-decrement-<%= menuitem.id %>">
-             <i class="bi bi-dash"></i>
-           </button>
-         </div>
-       </div>
      </div>
    <% else %>
      <div class="staff-item-row staff-item-row-disabled">

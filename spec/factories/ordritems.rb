@@ -5,5 +5,6 @@ FactoryBot.define do
 
     ordritemprice { 10.0 }
     status { :opened }
+    quantity { 1 }
   end
 end

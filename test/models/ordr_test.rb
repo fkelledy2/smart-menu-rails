@@ -307,6 +307,21 @@ class OrdrTest < ActiveSupport::TestCase
     assert_equal 46.50, ordr.runningTotal
   end
 
+  test 'runningTotal should respect quantity' do
+    ordr = Ordr.create!(
+      restaurant: @restaurant,
+      menu: @menu,
+      tablesetting: @tablesetting,
+      gross: 0.0,
+    )
+    menuitem = menuitems(:one)
+
+    ordr.ordritems.create!(menuitem: menuitem, status: :opened, ordritemprice: 10.00, quantity: 2)
+    ordr.ordritems.create!(menuitem: menuitem, status: :ordered, ordritemprice: 5.00, quantity: 3)
+
+    assert_in_delta 35.00, ordr.runningTotal, 0.001
+  end
+
   test 'runningTotal should return 0 for order with no items' do
     # Create a new order without items
     ordr = Ordr.create!(

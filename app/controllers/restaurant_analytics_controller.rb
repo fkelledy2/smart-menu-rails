@@ -61,7 +61,7 @@ class RestaurantAnalyticsController < ApplicationController
       .joins('LEFT JOIN menus ON menus.id = ordrs.menu_id')
       .where(ordrs: { id: scope.select(:id) })
       .group('ordritems.menuitem_id', 'menuitems.name', 'menus.id', 'menus.name')
-      .select('ordritems.menuitem_id AS item_id, COALESCE(menuitems.name, \'Item\') AS item_name, COUNT(*) AS qty, COALESCE(SUM(ordritems.ordritemprice),0) AS revenue, menus.id AS menu_id, menus.name AS menu_name')
+      .select('ordritems.menuitem_id AS item_id, COALESCE(menuitems.name, \'Item\') AS item_name, COALESCE(SUM(ordritems.quantity),0) AS qty, COALESCE(SUM(ordritems.ordritemprice * ordritems.quantity),0) AS revenue, menus.id AS menu_id, menus.name AS menu_name')
       .order(revenue: :desc, qty: :desc)
       .limit(12)
     data = rows.map { |r| { item_id: r.item_id, item_name: r.item_name, qty: r.qty.to_i, revenue: r.revenue.to_f, menu_id: r.menu_id, menu_name: r.menu_name } }

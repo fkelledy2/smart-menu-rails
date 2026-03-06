@@ -350,7 +350,8 @@ export function initOrders() {
         $('#a2o_menuitem_id').text(getAttr('data-bs-menuitem_id'));
         $('#a2o_menuitem_name').text(getAttr('data-bs-menuitem_name'));
         if (priceAttr) {
-          $('#a2o_menuitem_price').text(parseFloat(priceAttr).toFixed(2));
+          const unitPrice = parseFloat(priceAttr).toFixed(2);
+          $('#a2o_menuitem_price').text(unitPrice).attr('data-unit-price', unitPrice);
         }
         $('#a2o_menuitem_description').text(getAttr('data-bs-menuitem_description'));
         // Wine size name (from wine size pill selector)

@@ -205,6 +205,131 @@ class OrdritemTest < ActiveSupport::TestCase
     assert_equal original_menuitem.id, @ordritem.menuitem_id
   end
 
+  # === QUANTITY TESTS ===
+
+  test 'should default quantity to 1' do
+    ordritem = Ordritem.create!(
+      ordr: @ordr,
+      menuitem: @menuitem,
+      status: :opened,
+      ordritemprice: 10.0,
+    )
+    assert_equal 1, ordritem.quantity
+  end
+
+  test 'should accept valid quantity' do
+    ordritem = Ordritem.new(
+      ordr: @ordr,
+      menuitem: @menuitem,
+      status: :opened,
+      ordritemprice: 10.0,
+      quantity: 5,
+    )
+    assert ordritem.valid?
+  end
+
+  test 'should reject quantity of 0' do
+    ordritem = Ordritem.new(
+      ordr: @ordr,
+      menuitem: @menuitem,
+      status: :opened,
+      ordritemprice: 10.0,
+      quantity: 0,
+    )
+    assert_not ordritem.valid?
+    assert ordritem.errors[:quantity].any?
+  end
+
+  test 'should reject quantity over 99' do
+    ordritem = Ordritem.new(
+      ordr: @ordr,
+      menuitem: @menuitem,
+      status: :opened,
+      ordritemprice: 10.0,
+      quantity: 100,
+    )
+    assert_not ordritem.valid?
+    assert ordritem.errors[:quantity].any?
+  end
+
+  test 'should reject non-integer quantity' do
+    ordritem = Ordritem.new(
+      ordr: @ordr,
+      menuitem: @menuitem,
+      status: :opened,
+      ordritemprice: 10.0,
+      quantity: 2.5,
+    )
+    assert_not ordritem.valid?
+    assert ordritem.errors[:quantity].any?
+  end
+
+  test 'total_price should multiply price by quantity' do
+    ordritem = Ordritem.new(ordritemprice: 10.50, quantity: 3)
+    assert_in_delta 31.50, ordritem.total_price, 0.001
+  end
+
+  test 'total_price should handle quantity of 1' do
+    ordritem = Ordritem.new(ordritemprice: 15.0, quantity: 1)
+    assert_in_delta 15.0, ordritem.total_price, 0.001
+  end
+
+  test 'total_price should handle nil price' do
+    ordritem = Ordritem.new(ordritemprice: nil, quantity: 3)
+    assert_in_delta 0.0, ordritem.total_price, 0.001
+  end
+
+  test 'increase_quantity should add to current quantity' do
+    ordritem = Ordritem.create!(
+      ordr: @ordr,
+      menuitem: @menuitem,
+      status: :opened,
+      ordritemprice: 10.0,
+      quantity: 2,
+    )
+    ordritem.increase_quantity(3)
+    assert_equal 5, ordritem.reload.quantity
+  end
+
+  test 'increase_quantity should cap at 99' do
+    ordritem = Ordritem.create!(
+      ordr: @ordr,
+      menuitem: @menuitem,
+      status: :opened,
+      ordritemprice: 10.0,
+      quantity: 95,
+    )
+    ordritem.increase_quantity(10)
+    assert_equal 99, ordritem.reload.quantity
+  end
+
+  test 'decrease_quantity should subtract from current quantity' do
+    ordritem = Ordritem.create!(
+      ordr: @ordr,
+      menuitem: @menuitem,
+      status: :opened,
+      ordritemprice: 10.0,
+      quantity: 5,
+    )
+    ordritem.decrease_quantity(2)
+    assert_equal 3, ordritem.reload.quantity
+  end
+
+  test 'decrease_quantity to zero should mark as removed' do
+    ordritem = Ordritem.create!(
+      ordr: @ordr,
+      menuitem: @menuitem,
+      status: :opened,
+      ordritemprice: 10.0,
+      quantity: 1,
+    )
+    ordritem.decrease_quantity(1)
+    ordritem.reload
+    assert ordritem.removed?
+    assert_equal 0.0, ordritem.ordritemprice
+    assert_equal 1, ordritem.quantity
+  end
+
   # Status value tests
   test 'should have correct enum values' do
     assert_equal 0, Ordritem.statuses[:opened]

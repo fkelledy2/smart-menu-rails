@@ -43,6 +43,35 @@ class AlcoholOrderEventsFlowTest < ActionDispatch::IntegrationTest
     assert_in_delta 12.5, evt.abv.to_f, 0.01 if evt.abv
   end
 
+  test 'rejects create when requested quantity exceeds available inventory' do
+    @order.menu.update!(inventoryTracking: true)
+    inventory = @menuitem.inventory || Inventory.create!(
+      menuitem: @menuitem,
+      startinginventory: 2,
+      currentinventory: 2,
+      resethour: 0,
+      status: :active,
+    )
+    inventory.update!(startinginventory: 2, currentinventory: 2, resethour: 0, status: :active)
+
+    assert_no_difference -> { Ordritem.count } do
+      post restaurant_ordritems_url(@restaurant), params: {
+        ordritem: {
+          ordr_id: @order.id,
+          menuitem_id: @menuitem.id,
+          ordritemprice: 9.99,
+          status: 'opened',
+          quantity: 3,
+        },
+      }, as: :json
+    end
+
+    assert_response :unprocessable_content
+    body = JSON.parse(@response.body)
+    assert_equal 'insufficient_inventory', body['error']
+    assert_equal inventory.currentinventory, body['available']
+  end
+
   test 'ack_alcohol marks unacknowledged events as acknowledged' do
     # Create two events (unacknowledged)
     2.times do

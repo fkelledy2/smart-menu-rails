@@ -86,6 +86,7 @@ class SmartmenuState
         menuitem_id: item.menuitem_id,
         name: name.to_s,
         price: price.to_f,
+        quantity: item.try(:quantity) || 1,
         status: item.status.to_s,
         size_name: item.try(:size_name),
       }
@@ -138,7 +139,7 @@ class SmartmenuState
     if gross <= 0
       begin
         items_total = if order.respond_to?(:ordritems)
-                        order.ordritems.sum(:ordritemprice).to_f
+                        order.ordritems.sum('ordritemprice * quantity').to_f
                       else
                         0.0
                       end

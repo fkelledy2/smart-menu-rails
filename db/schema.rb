@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_03_05_080000) do
+ActiveRecord::Schema[7.2].define(version: 2026_03_06_154839) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "vector"
@@ -440,6 +440,10 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_05_080000) do
     t.index ["menuitem_id"], name: "index_menu_item_product_links_on_menuitem_id"
     t.index ["product_id"], name: "index_menu_item_product_links_on_product_id"
   end
+
+# Could not dump table "menu_item_search_documents" because of following StandardError
+#   Unknown type 'vector(384)' for column 'embedding'
+
 
   create_table "menu_items", force: :cascade do |t|
     t.string "name"
@@ -958,15 +962,19 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_05_080000) do
     t.bigint "ordr_station_ticket_id"
     t.string "line_key", null: false
     t.string "size_name"
+    t.integer "quantity", default: 1, null: false
     t.index ["created_at"], name: "index_ordritems_on_created_at"
     t.index ["menuitem_id", "status"], name: "index_ordritems_on_menuitem_status"
     t.index ["menuitem_id"], name: "index_ordritems_on_menuitem_id"
     t.index ["ordr_id", "created_at"], name: "index_ordritems_on_ordr_created_at"
     t.index ["ordr_id", "line_key"], name: "index_ordritems_on_ordr_id_and_line_key", unique: true
+    t.index ["ordr_id", "menuitem_id", "size_name", "status"], name: "index_ordritems_on_merge_lookup"
     t.index ["ordr_id", "status"], name: "index_ordritems_on_ordr_status"
     t.index ["ordr_id"], name: "index_ordritems_on_ordr_id"
     t.index ["ordr_station_ticket_id"], name: "index_ordritems_on_ordr_station_ticket_id"
     t.index ["status"], name: "index_ordritems_on_status"
+    t.check_constraint "quantity <= 99", name: "ordritems_quantity_max"
+    t.check_constraint "quantity > 0", name: "ordritems_quantity_positive"
   end
 
   create_table "ordrparticipant_allergyn_filters", force: :cascade do |t|

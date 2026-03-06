@@ -182,7 +182,7 @@ class Ordr < ApplicationRecord
   end
 
   def runningTotal
-    ordritems.pluck('ordritemprice').sum
+    ordritems.sum('ordritemprice * quantity')
   end
 
   def orderedCount

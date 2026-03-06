@@ -358,11 +358,19 @@ export default class extends Controller {
     if (opened.length > 0) {
       html += '<div class="cart-sheet__section-label">Selected</div>';
       for (const item of opened) {
+        const qty = Math.max(1, parseInt(item.quantity) || 1);
+        const lineTotal = Number(item.price || 0) * qty;
         const sizeBit = item.size_name ? ` <span class="text-muted" style="font-size:0.8em;">(${this._esc(item.size_name.replace(/\s*\(.*\)/, ''))})</span>` : '';
+        const qtyBadge = qty > 1 ? `<span class="cart-sheet__qty-badge">${qty}×</span>` : '';
         html += `<div class="cart-sheet__item" data-testid="cart-item-${item.id}">
           <button type="button" class="cart-sheet__remove removeItemFromOrderButton" data-bs-ordritem_id="${item.id}" aria-label="Remove item" data-testid="remove-cart-item-${item.id}"><i class="bi bi-x-circle"></i></button>
-          <div class="cart-sheet__item-name">${this._esc(item.name)}${sizeBit}</div>
-          <div class="cart-sheet__item-price">${fmt(item.price)}</div>
+          <div class="cart-sheet__item-name">${qtyBadge}${this._esc(item.name)}${sizeBit}</div>
+          <div class="cart-sheet__qty-controls">
+            <button type="button" class="cart-sheet__qty-btn cartQtyDecr" data-ordritem-id="${item.id}" aria-label="Decrease quantity"><i class="bi bi-dash-circle"></i></button>
+            <span class="cart-sheet__qty-value">${qty}</span>
+            <button type="button" class="cart-sheet__qty-btn cartQtyIncr" data-ordritem-id="${item.id}" aria-label="Increase quantity"><i class="bi bi-plus-circle"></i></button>
+          </div>
+          <div class="cart-sheet__item-price">${fmt(lineTotal)}</div>
         </div>`;
       }
     }
@@ -370,11 +378,14 @@ export default class extends Controller {
     if (submitted.length > 0) {
       html += '<div class="cart-sheet__section-label cart-sheet__section-label--muted">Submitted</div>';
       for (const item of submitted) {
+        const qty = Math.max(1, parseInt(item.quantity) || 1);
+        const lineTotal = Number(item.price || 0) * qty;
         const sizeBit = item.size_name ? ` <span class="text-muted" style="font-size:0.8em;">(${this._esc(item.size_name.replace(/\s*\(.*\)/, ''))})</span>` : '';
+        const qtyBadge = qty > 1 ? `<span class="cart-sheet__qty-badge">${qty}×</span>` : '';
         html += `<div class="cart-sheet__item cart-sheet__item--submitted">
           <div class="cart-sheet__status-icon"><i class="bi bi-check-circle-fill text-success"></i></div>
-          <div class="cart-sheet__item-name">${this._esc(item.name)}${sizeBit}</div>
-          <div class="cart-sheet__item-price text-muted">${fmt(item.price)}</div>
+          <div class="cart-sheet__item-name">${qtyBadge}${this._esc(item.name)}${sizeBit}</div>
+          <div class="cart-sheet__item-price text-muted">${fmt(lineTotal)}</div>
         </div>`;
       }
     }

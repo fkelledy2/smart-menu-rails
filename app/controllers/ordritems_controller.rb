@@ -96,6 +96,23 @@ class OrdritemsController < ApplicationController
     # Always authorize - policy handles public vs private access
     authorize Ordritem.new(ordritem_params)
 
+    requested_qty = (ordritem_params[:quantity] || 1).to_i.clamp(1, 99)
+    menuitem = Menuitem.find_by(id: ordritem_params[:menuitem_id])
+    if @ordr.menu&.inventoryTracking && menuitem&.inventory&.active?
+      available_inventory = menuitem.inventory.currentinventory.to_i
+      if available_inventory < requested_qty
+        respond_to do |format|
+          format.html do
+            redirect_back_or_to(root_path, alert: "Only #{available_inventory} item(s) available")
+          end
+          format.json do
+            render json: { error: 'insufficient_inventory', available: available_inventory }, status: :unprocessable_content
+          end
+        end
+        return
+      end
+    end
+
     respond_to do |format|
       ActiveRecord::Base.transaction do
         begin
@@ -115,11 +132,17 @@ class OrdritemsController < ApplicationController
               menuitem_id: ordritem_params[:menuitem_id],
               ordritemprice: ordritem_params[:ordritemprice],
               size_name: ordritem_params[:size_name],
-              qty: 1,
+              qty: requested_qty,
             },
           )
           OrderEventProjector.project!(@ordr.id)
-          @ordritem = Ordritem.find_by!(ordr_id: @ordr.id, line_key: line_key)
+          @ordritem = Ordritem.find_by(ordr_id: @ordr.id, line_key: line_key) ||
+                      Ordritem.find_by!(
+                        ordr_id: @ordr.id,
+                        menuitem_id: ordritem_params[:menuitem_id],
+                        size_name: ordritem_params[:size_name].presence,
+                        status: :opened,
+                      )
         rescue StandardError => e
           Rails.logger.error "Error creating order item (event-first): #{e.message}"
           format.html do
@@ -150,7 +173,7 @@ class OrdritemsController < ApplicationController
           rescue StandardError => e
             Rails.logger.warn("[AlcoholOrderEvent] failed to create event: #{e.class}: #{e.message}")
           end
-          adjust_inventory(@ordritem.menuitem&.inventory, -1)
+          adjust_inventory(@ordritem.menuitem&.inventory, -@ordritem.quantity)
           @ordrparticipant = find_or_create_participant(@ordritem.ordr)
           Ordraction.create!(ordrparticipant: @ordrparticipant, ordr: @ordritem.ordr, ordritem: @ordritem, action: 2)
           update_ordr(@ordritem.ordr)
@@ -374,6 +397,6 @@ class OrdritemsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def ordritem_params
-    params.require(:ordritem).permit(:ordr_id, :menuitem_id, :ordritemprice, :status, :size_name)
+    params.require(:ordritem).permit(:ordr_id, :menuitem_id, :ordritemprice, :status, :size_name, :quantity)
   end
 end
