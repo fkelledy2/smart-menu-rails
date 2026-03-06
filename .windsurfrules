@@ -68,6 +68,11 @@ Deployed on Heroku. PostgreSQL + Redis + Memcached.
 - `docs/DATA_MODEL.md` — full database schema with relationships
 - `docs/SERVICE_MAP.md` — all controllers, services, jobs, channels
 
+### How to use these docs
+- **Before starting** any new feature or bug fix, read the relevant reference doc(s) to understand the current architecture, data model, and service layout.
+- **After completing** work that adds/removes/renames models, controllers, services, jobs, channels, database tables, or columns, update the affected doc(s) to reflect the changes. Keep updates minimal and consistent with existing format.
+- If changes are extensive (e.g., new tables, new service namespaces), prefer running `bin/generate_docs` to regenerate all three docs rather than manually editing.
+
 ## Testing
 - Minitest (primary): `bin/rails test` — unit + integration tests
 - RSpec: `bundle exec rspec` — request specs, service specs
