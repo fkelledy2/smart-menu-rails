@@ -120,6 +120,7 @@
           </div>
           <div class="modal-body" data-testid="order-modal-body">
             <% if order %>
+                <% currency_unit = restaurantCurrency&.symbol || "" %>
                 <div class="row">
                     <div class="col-8">
                     </div>
@@ -152,6 +153,7 @@
                                                 data-testid="remove-order-item-<%= ordraction.ordritem.id %>-btn">
                                                 <i class="bi bi-trash"></i>
                                             </button>
+                                            <% if ordraction.ordritem.quantity.to_i > 1 %><span class="cart-sheet__qty-badge"><%= ordraction.ordritem.quantity %>×</span><% end %>
                                             <% if ordrparticipant && ordrparticipant.preferredlocale %>
                                                 <%= ordraction.ordritem.menuitem.localised_name(ordrparticipant.preferredlocale) %>
                                             <% else %>
@@ -176,7 +178,7 @@
                                 </div>
                                 <div class="col-2">
                                     <span class="float-end">
-                                        <%= number_to_currency(ordraction.ordritem.ordritemprice, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %>
+                                        <%= number_to_currency(ordraction.ordritem.total_price, unit: currency_unit) %>
                                     </span>
                                 </div>
                             </div>
@@ -201,6 +203,7 @@
                                             <button type="button" class="btn-touch-dark btn-touch-icon btn-touch-sm" disabled>
                                                 <i class="bi bi-arrow-right-circle-fill"></i>
                                             </button>
+                                            <% if ordraction.ordritem.quantity.to_i > 1 %><span class="cart-sheet__qty-badge"><%= ordraction.ordritem.quantity %>×</span><% end %>
                                             <% if ordrparticipant && ordrparticipant.preferredlocale %>
                                                 <%= ordraction.ordritem.menuitem.localised_name(ordrparticipant.preferredlocale) %>
                                             <% else %>
@@ -225,7 +228,7 @@
                                 </div>
                                 <div class="col-2">
                                     <span class="text-muted float-end">
-                                        <%= number_to_currency(ordraction.ordritem.menuitem.price, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %>
+                                        <%= number_to_currency(ordraction.ordritem.total_price, unit: currency_unit) %>
                                     </span>
                                 </div>
                             </div>
@@ -241,11 +244,11 @@
                     </div>
                     <div class="col-2">
                         <% order_total = begin
-                          order.ordritems.sum { |it| it.ordritemprice.to_f }
+                          order.ordritems.sum(&:total_price)
                         rescue StandardError
                           order.nett
                         end %>
-                        <span class="float-end" data-testid="order-total-amount"><b><%= number_to_currency(order_total, unit: restaurantCurrency.symbol ? restaurantCurrency.symbol : "") %></b></span>
+                        <span class="float-end" data-testid="order-total-amount"><b><%= number_to_currency(order_total, unit: currency_unit) %></b></span>
                     </div>
                 </div>
             <% end %>

@@ -72,6 +72,72 @@ class AlcoholOrderEventsFlowTest < ActionDispatch::IntegrationTest
     assert_equal inventory.currentinventory, body['available']
   end
 
+  test 'rejects quantity increase when requested delta exceeds available inventory' do
+    @order.menu.update!(inventoryTracking: true)
+    inventory = @menuitem.inventory || Inventory.create!(
+      menuitem: @menuitem,
+      startinginventory: 5,
+      currentinventory: 5,
+      resethour: 0,
+      status: :active,
+    )
+    inventory.update!(startinginventory: 5, currentinventory: 1, resethour: 0, status: :active)
+
+    ordritem = Ordritem.create!(
+      ordr: @order,
+      menuitem: @menuitem,
+      status: :opened,
+      ordritemprice: 9.99,
+      quantity: 2,
+      line_key: SecureRandom.uuid,
+    )
+
+    assert_no_changes -> { ordritem.reload.quantity } do
+      patch restaurant_ordritem_url(@restaurant, ordritem), params: {
+        ordritem: {
+          quantity: 4,
+        },
+      }, as: :json
+    end
+
+    assert_response :unprocessable_content
+    body = JSON.parse(@response.body)
+    assert_equal 'insufficient_inventory', body['error']
+    assert_equal 1, body['available']
+    assert_equal 2, body['requested_increase']
+  end
+
+  test 'increasing quantity decrements inventory by delta only' do
+    @order.menu.update!(inventoryTracking: true)
+    inventory = @menuitem.inventory || Inventory.create!(
+      menuitem: @menuitem,
+      startinginventory: 10,
+      currentinventory: 10,
+      resethour: 0,
+      status: :active,
+    )
+    inventory.update!(startinginventory: 10, currentinventory: 4, resethour: 0, status: :active)
+
+    ordritem = Ordritem.create!(
+      ordr: @order,
+      menuitem: @menuitem,
+      status: :opened,
+      ordritemprice: 9.99,
+      quantity: 2,
+      line_key: SecureRandom.uuid,
+    )
+
+    patch restaurant_ordritem_url(@restaurant, ordritem), params: {
+      ordritem: {
+        quantity: 4,
+      },
+    }, as: :json
+
+    assert_response :success
+    assert_equal 4, ordritem.reload.quantity
+    assert_equal 2, inventory.reload.currentinventory
+  end
+
   test 'ack_alcohol marks unacknowledged events as acknowledged' do
     # Create two events (unacknowledged)
     2.times do

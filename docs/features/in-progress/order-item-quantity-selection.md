@@ -43,31 +43,29 @@ The specification below reflects the **current implementation state** and the **
 | Customer quantity selection in add-item modal | ✅ Done | `ordr_commons.js` provides modal +/- quantity controls with default `1` and max `99`. |
 | Add-to-order request carries quantity | ✅ Done | `ordr_commons.js` posts a single `ordritem` payload with `quantity`. |
 | Size-aware quantity flow | ✅ Done | Quantity works with `size_name` and sized items. |
-| Cart quantity controls | ✅ Done | `_cart_bottom_sheet.html.erb` includes +/- controls; `ordr_commons.js` patches quantity or removes item when decrementing from `1`. |
+| Cart quantity controls | ✅ Done | `_cart_bottom_sheet.html.erb` includes +/- controls; `ordr_commons.js` patches quantity or removes item when decrementing from `1`. |@@
 | Cart quantity display | ✅ Done | Cart shows quantity badge and line total using `item.total_price`. |
 | State payload includes quantity | ✅ Done | `SmartmenuState` includes `quantity` and `size_name` per order item. |
 | Totals respect quantity | ✅ Done | `SmartmenuState.totals_for` and cart rendering use `ordritemprice * quantity`. |
 | Inventory validation on create | ✅ Done | Requested quantity is checked against `Inventory.currentinventory` when inventory tracking is enabled. |
+| Inventory-aware updates on cart increment | ✅ Done | `OrdritemsController#update` now clamps quantity to `1..99`, rejects increases that exceed available stock, and adjusts inventory by quantity delta. |
+| Legacy order modal quantity totals | ✅ Done | `viewOrderModal` now shows quantity badges and uses `Ordritem#total_price` for line totals and the total row. |
+| Quantity grouping/merging of duplicate lines on create | ✅ Done | `OrderEventProjector` merges identical `opened` items with the same `menuitem` and `size_name` into one row and clamps merged quantity at `99`. |
 
 ## 3.2 Partially Completed
 
 | Area | Status | Notes |
 |---|---|---|
 | Staff UX polish | 🟡 Partial | Staff stepper exists, but the older documentation around looping multiple POSTs is no longer correct. Current spec should reflect the single-post quantity flow. |
-| Order summary modal quantity display | 🟡 Partial | `size_name` is shown, but the legacy `viewOrderModal` still lists rows individually and total calculation there still uses a simplified sum path. |
-| Submitted-order quantity presentation | 🟡 Partial | Bottom-sheet submitted items show quantity, but older modal-based views are not fully aligned. |
 | Kitchen/station quantity display | 🟡 Partial / unverified | This spec does not yet mark kitchen/dashboard grouping as complete. Existing consumer-facing flows are ahead of back-of-house presentation. |
 
 ## 3.3 Not Yet Completed
 
 | Area | Status | Notes |
 |---|---|---|
-| Quantity grouping/merging of duplicate lines on create | ❌ Not done | Current create path still creates/updates order lines event-first, but this spec does not yet confirm duplicate open-line merge semantics for identical items. |
 | Dedicated quantity update domain event | ❌ Not done | Cart quantity PATCH currently updates the record directly rather than going through an explicit order event type. |
-| Full parity in legacy order modal | ❌ Not done | `viewOrderModal` still renders older row-by-row presentation and should be aligned with cart behavior. |
 | Kitchen/station ticket quantity UX | ❌ Not done | Back-of-house display changes are still outstanding. |
 | Quantity-based analytics | ❌ Not done | Analytics/reporting work remains open. |
-| Inventory-aware updates on cart increment | ❌ Not done / not confirmed | Create is inventory-aware; PATCH quantity increase should be reviewed and hardened to enforce the same limit. |
 | Direct numeric input for customer/staff quantity | ❌ Not done | Current UX is stepper-based rather than free numeric entry. |
 
 ---
@@ -112,6 +110,8 @@ The backend now:
 - computes `Ordritem#total_price`
 - includes quantity in smartmenu state JSON
 - uses quantity-aware totals for order/cart rendering
+- validates PATCH quantity increases against available inventory when stock tracking is enabled
+- adjusts inventory by quantity delta when quantity changes
 
 ---
 
@@ -162,22 +162,10 @@ Relevant backend files already participating in this feature:
 
 ## 6.1 Backend Hardening
 
-- Add quantity-aware validation on cart quantity increase / PATCH flows
-- Confirm whether duplicate identical `opened` lines should merge automatically
-- If merge semantics are desired, define exact uniqueness key:
-  - `ordr_id`
-  - `menuitem_id`
-  - `size_name`
-  - any note/customisation discriminator
 - Decide whether quantity changes should emit explicit domain events instead of direct AR updates
 
 ## 6.2 UX Consistency
 
-- Align legacy `viewOrderModal` with bottom-sheet quantity UX
-- Ensure all order summaries display:
-  - quantity badge
-  - line total
-  - size label where relevant
 - Consider whether to add direct numeric input in addition to steppers
 
 ## 6.3 Back-of-House Consistency
@@ -202,9 +190,8 @@ Relevant backend files already participating in this feature:
 
 ## Phase 1 — Close Functional Gaps
 
-- Harden PATCH quantity validation against stock and bounds
-- Align all summary views with cart quantity behavior
-- Confirm duplicate-line merge strategy
+- Decide whether quantity changes should emit explicit domain events instead of direct AR updates
+- Extend quantity parity to kitchen/station surfaces
 
 ## Phase 2 — Back-of-House Visibility
 
@@ -236,7 +223,7 @@ Relevant backend files already participating in this feature:
 - [x] Cart quantity can be incremented and decremented
 - [x] Order totals respect quantity
 - [x] Quantity is represented in smartmenu state payloads
-- [ ] Quantity changes are fully validated on all update paths
+- [x] Quantity changes are fully validated on all update paths
 - [ ] Kitchen/station displays show quantity clearly
 - [ ] Reporting includes quantity-aware analytics
 
@@ -245,7 +232,7 @@ Relevant backend files already participating in this feature:
 - [x] Stepper controls are responsive and easy to use
 - [x] Quantity changes produce visible feedback
 - [x] Cart line totals update from quantity-aware pricing
-- [ ] All legacy order summary surfaces are aligned with the new quantity model
+- [x] All legacy order summary surfaces are aligned with the new quantity model
 - [ ] Direct numeric input is supported if still considered necessary
 
 ---

@@ -240,22 +240,47 @@ class OrdritemsController < ApplicationController
             format.json { render json: { error: e.message }, status: :internal_server_error }
             raise ActiveRecord::Rollback
           end
-        elsif @ordritem.update(ordritem_params)
-          # If menuitem_id changed, adjust old/new inventory
-          if old_ordritem.menuitem_id != @ordritem.menuitem_id
-            adjust_inventory(old_ordritem.menuitem&.inventory, 1)
-            adjust_inventory(@ordritem.menuitem&.inventory, -1)
-          end
-          update_ordr(@ordritem.ordr)
-          participant = find_or_create_participant(@ordritem.ordr)
-          broadcast_state(@ordritem.ordr, @ordritem.ordr.tablesetting, participant)
-          format.json do
-            render :show, status: :ok,
-                          location: restaurant_ordritem_url(@restaurant || @ordritem.ordr.restaurant, @ordritem)
-          end
         else
-          format.html { render :edit, status: :unprocessable_content }
-          format.json { render json: @ordritem.errors, status: :unprocessable_content }
+          if ordritem_params.key?(:quantity)
+            requested_quantity = ordritem_params[:quantity].to_i.clamp(1, 99)
+            quantity_delta = requested_quantity - @ordritem.quantity.to_i
+            if quantity_delta.positive? && @ordritem.ordr.menu&.inventoryTracking && @ordritem.menuitem&.inventory&.active?
+              available_inventory = @ordritem.menuitem.inventory.currentinventory.to_i
+              if available_inventory < quantity_delta
+                format.json do
+                  render json: {
+                    error: 'insufficient_inventory',
+                    available: available_inventory,
+                    requested_increase: quantity_delta,
+                  }, status: :unprocessable_content
+                end
+                raise ActiveRecord::Rollback
+              end
+            end
+          end
+
+          sanitized_params = ordritem_params.to_h
+          sanitized_params['quantity'] = ordritem_params[:quantity].to_i.clamp(1, 99) if ordritem_params.key?(:quantity)
+
+          if @ordritem.update(sanitized_params)
+            # If menuitem_id changed, adjust old/new inventory
+            if old_ordritem.menuitem_id != @ordritem.menuitem_id
+              adjust_inventory(old_ordritem.menuitem&.inventory, old_ordritem.quantity.to_i)
+              adjust_inventory(@ordritem.menuitem&.inventory, -@ordritem.quantity.to_i)
+            elsif old_ordritem.quantity.to_i != @ordritem.quantity.to_i
+              adjust_inventory(@ordritem.menuitem&.inventory, old_ordritem.quantity.to_i - @ordritem.quantity.to_i)
+            end
+            update_ordr(@ordritem.ordr)
+            participant = find_or_create_participant(@ordritem.ordr)
+            broadcast_state(@ordritem.ordr, @ordritem.ordr.tablesetting, participant)
+            format.json do
+              render :show, status: :ok,
+                            location: restaurant_ordritem_url(@restaurant || @ordritem.ordr.restaurant, @ordritem)
+            end
+          else
+            format.html { render :edit, status: :unprocessable_content }
+            format.json { render json: @ordritem.errors, status: :unprocessable_content }
+          end
         end
       end
     end
