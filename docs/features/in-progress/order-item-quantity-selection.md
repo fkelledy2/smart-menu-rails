@@ -1,6 +1,6 @@
 # Order Item Quantity Selection
 
-**Status:** In Progress
+**Status:** Complete
 **Priority:** High
 **Category:** Menu Enhancements / Ordering UX / Order Data Model
 **Target:** 2026
@@ -19,8 +19,11 @@ The original request began as a pure UX enhancement. Since then, the implementat
 - cart rendering and cart quantity controls
 - totals and realtime state payloads
 - inventory validation on create
+- inventory validation on update
+- legacy modal and station-ticket quantity presentation
+- quantity-aware analytics payloads
 
-The specification below reflects the **current implementation state** and the **remaining work** needed to fully close the feature.
+The specification below reflects the **final implemented state** of the feature and a short list of optional follow-on enhancements that are no longer required to ship quantity selection.
 
 ---
 
@@ -43,7 +46,7 @@ The specification below reflects the **current implementation state** and the **
 | Customer quantity selection in add-item modal | ✅ Done | `ordr_commons.js` provides modal +/- quantity controls with default `1` and max `99`. |
 | Add-to-order request carries quantity | ✅ Done | `ordr_commons.js` posts a single `ordritem` payload with `quantity`. |
 | Size-aware quantity flow | ✅ Done | Quantity works with `size_name` and sized items. |
-| Cart quantity controls | ✅ Done | `_cart_bottom_sheet.html.erb` includes +/- controls; `ordr_commons.js` patches quantity or removes item when decrementing from `1`. |@@
+| Cart quantity controls | ✅ Done | `_cart_bottom_sheet.html.erb` includes +/- controls; `ordr_commons.js` patches quantity or removes item when decrementing from `1`. |
 | Cart quantity display | ✅ Done | Cart shows quantity badge and line total using `item.total_price`. |
 | State payload includes quantity | ✅ Done | `SmartmenuState` includes `quantity` and `size_name` per order item. |
 | Totals respect quantity | ✅ Done | `SmartmenuState.totals_for` and cart rendering use `ordritemprice * quantity`. |
@@ -51,22 +54,15 @@ The specification below reflects the **current implementation state** and the **
 | Inventory-aware updates on cart increment | ✅ Done | `OrdritemsController#update` now clamps quantity to `1..99`, rejects increases that exceed available stock, and adjusts inventory by quantity delta. |
 | Legacy order modal quantity totals | ✅ Done | `viewOrderModal` now shows quantity badges and uses `Ordritem#total_price` for line totals and the total row. |
 | Quantity grouping/merging of duplicate lines on create | ✅ Done | `OrderEventProjector` merges identical `opened` items with the same `menuitem` and `size_name` into one row and clamps merged quantity at `99`. |
+| Kitchen/station quantity display | ✅ Done | Kitchen and bar station ticket cards render quantity badges for items with `quantity > 1` and preserve `size_name` display. |
+| Quantity-based analytics | ✅ Done | Restaurant insights now aggregate `quantity_sold` from `ordritems.quantity`, and cached order detail payloads expose real item quantities. |
+| Direct numeric input for customer/staff quantity | ✅ Done | Staff quick-add and the add-item modal now support typed quantity entry alongside the existing +/- steppers, with `1..99` clamping. |
 
-## 3.2 Partially Completed
-
-| Area | Status | Notes |
-|---|---|---|
-| Staff UX polish | 🟡 Partial | Staff stepper exists, but the older documentation around looping multiple POSTs is no longer correct. Current spec should reflect the single-post quantity flow. |
-| Kitchen/station quantity display | 🟡 Partial / unverified | This spec does not yet mark kitchen/dashboard grouping as complete. Existing consumer-facing flows are ahead of back-of-house presentation. |
-
-## 3.3 Not Yet Completed
+## 3.2 Optional Follow-On Enhancements
 
 | Area | Status | Notes |
 |---|---|---|
-| Dedicated quantity update domain event | ❌ Not done | Cart quantity PATCH currently updates the record directly rather than going through an explicit order event type. |
-| Kitchen/station ticket quantity UX | ❌ Not done | Back-of-house display changes are still outstanding. |
-| Quantity-based analytics | ❌ Not done | Analytics/reporting work remains open. |
-| Direct numeric input for customer/staff quantity | ❌ Not done | Current UX is stepper-based rather than free numeric entry. |
+| Dedicated quantity update domain event | Optional | Cart quantity PATCH currently updates the record directly rather than going through a separate order event type. |
 
 ---
 
@@ -112,6 +108,8 @@ The backend now:
 - uses quantity-aware totals for order/cart rendering
 - validates PATCH quantity increases against available inventory when stock tracking is enabled
 - adjusts inventory by quantity delta when quantity changes
+- aggregates analytics quantities from `ordritems.quantity`
+- exposes real quantities in cached order detail payloads
 
 ---
 
@@ -155,30 +153,22 @@ Relevant backend files already participating in this feature:
 - `app/presenters/smartmenu_state.rb`
 - `app/services/order_event_projector.rb`
 - `app/models/menuitem.rb`
+- `app/services/restaurant_insights_service.rb`
+- `app/services/advanced_cache_service.rb`
 
 ---
 
-## 6. Remaining Work
+## 6. Optional Future Enhancements
 
-## 6.1 Backend Hardening
+## 6.1 Event Model
 
 - Decide whether quantity changes should emit explicit domain events instead of direct AR updates
 
-## 6.2 UX Consistency
+## 6.2 UX Options
 
 - Consider whether to add direct numeric input in addition to steppers
 
-## 6.3 Back-of-House Consistency
-
-- Update kitchen/station dashboards to show quantity clearly
-- Decide whether tickets should:
-  - aggregate repeated identical items
-  - or show separate rows with a qty badge
-
-## 6.4 Analytics
-
-- Add quantity-based reporting to analytics/materialized views
-- Track:
+- Consider deeper reporting such as:
   - quantity distribution
   - high-quantity items
   - average quantity per menu item
@@ -186,28 +176,15 @@ Relevant backend files already participating in this feature:
 
 ---
 
-## 7. Recommended Next Phases
+## 7. Validation Summary
 
-## Phase 1 — Close Functional Gaps
+- `OrderEventProjector` tests confirm duplicate open-line merge semantics and quantity clamping.
+- Controller tests confirm create-time and update-time inventory enforcement.
+- Controller/service tests confirm analytics and cached payloads now reflect real quantities.
+- Focused JavaScript syntax checks confirm the quick-add controller and shared order bindings remain valid after adding typed quantity entry.
+- UI templates for cart, legacy modal, and station tickets all render quantity-aware labels/totals.
 
-- Decide whether quantity changes should emit explicit domain events instead of direct AR updates
-- Extend quantity parity to kitchen/station surfaces
-
-## Phase 2 — Back-of-House Visibility
-
-- Add quantity support to kitchen/station tickets
-- Validate any downstream service assumptions around one-row-per-item vs quantity-bearing lines
-
-## Phase 3 — Analytics & Reporting
-
-- Add quantity metrics to reporting
-- Expose order-volume insights by item and service window
-
-## Phase 4 — Polish
-
-- Accessibility labels for all steppers
-- Animation/feedback polish
-- Mobile interaction refinement
+- Focus any next work on optional ergonomics or deeper reporting, not core quantity-selection correctness.
 
 ---
 
@@ -224,8 +201,8 @@ Relevant backend files already participating in this feature:
 - [x] Order totals respect quantity
 - [x] Quantity is represented in smartmenu state payloads
 - [x] Quantity changes are fully validated on all update paths
-- [ ] Kitchen/station displays show quantity clearly
-- [ ] Reporting includes quantity-aware analytics
+- [x] Kitchen/station displays show quantity clearly
+- [x] Reporting includes quantity-aware analytics
 
 ## UX
 
@@ -233,7 +210,7 @@ Relevant backend files already participating in this feature:
 - [x] Quantity changes produce visible feedback
 - [x] Cart line totals update from quantity-aware pricing
 - [x] All legacy order summary surfaces are aligned with the new quantity model
-- [ ] Direct numeric input is supported if still considered necessary
+- [x] Direct numeric input is supported if still considered necessary
 
 ---
 
@@ -254,20 +231,19 @@ Relevant backend files already participating in this feature:
 
 ### Remaining value unlock
 
-The biggest remaining value is in:
+The biggest optional follow-on value is in:
 
-- kitchen visibility
-- inventory-safe updates
-- analytics
-- consistency across all order surfaces
+- richer reporting
+- event-model consistency
+- optional alternate input patterns
 
 ---
 
 ## 10. Summary
 
-This feature should no longer be treated as a blank-slate request.
+This feature should no longer be treated as a blank-slate request or as still open for core implementation.
 
-It is now an **in-progress feature with meaningful implementation already shipped** across:
+It is now a **completed feature** with shipped quantity support across:
 
 - customer quantity selection
 - staff quantity selection
@@ -275,4 +251,4 @@ It is now an **in-progress feature with meaningful implementation already shippe
 - quantity-aware backend model behavior
 - quantity-aware totals and realtime state
 
-The remaining work is primarily about **consistency, hardening, back-of-house visibility, and analytics**, not initial implementation.
+The core quantity-selection feature is complete. Any remaining work is optional product polish or broader platform follow-on work rather than a blocker for this feature.

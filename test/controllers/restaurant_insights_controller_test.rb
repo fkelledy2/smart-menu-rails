@@ -18,6 +18,51 @@ class RestaurantInsightsControllerTest < ActionDispatch::IntegrationTest
     assert json.key?('top_performers')
   end
 
+  test 'top performers json reports quantity_sold from ordritem quantity' do
+    menuitem = Menuitem.create!(
+      name: "Quantity Test #{SecureRandom.hex(4)}",
+      description: 'Quantity aggregation test item',
+      status: :active,
+      sequence: 999,
+      calories: 100,
+      price: 12.50,
+      itemtype: :food,
+      menusection: menusections(:one),
+    )
+
+    order = Ordr.create!(
+      restaurant: @restaurant,
+      menu: menus(:one),
+      tablesetting: tablesettings(:one),
+      status: :ordered,
+      orderedAt: Time.current,
+      nett: 0,
+      tip: 0,
+      service: 0,
+      tax: 0,
+      gross: 0,
+    )
+
+    Ordritem.create!(
+      ordr: order,
+      menuitem: menuitem,
+      status: :ordered,
+      ordritemprice: 12.50,
+      quantity: 4,
+      line_key: SecureRandom.uuid,
+    )
+
+    Rails.cache.clear
+
+    get "/restaurants/#{@restaurant.id}/insights/top_performers.json"
+    assert_response :success
+
+    item = response.parsed_body.fetch('top_performers').find { |row| row['menuitem_name'] == menuitem.name }
+    assert_not_nil item
+    assert_equal 4, item['quantity_sold'].to_i
+    assert_equal 1, item['orders_with_item_count'].to_i
+  end
+
   test 'should get slow movers json' do
     get "/restaurants/#{@restaurant.id}/insights/slow_movers.json"
     assert_response :success

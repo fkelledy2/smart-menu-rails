@@ -21,7 +21,7 @@ class RestaurantInsightsService
           'ordritems.menuitem_id AS menuitem_id',
           'menuitems.name AS menuitem_name',
           'COUNT(DISTINCT ordritems.ordr_id) AS orders_with_item_count',
-          'COUNT(*) AS quantity_sold',
+          'COALESCE(SUM(ordritems.quantity), 0) AS quantity_sold',
         )
         .order(Arel.sql('orders_with_item_count DESC, quantity_sold DESC, ordritems.menuitem_id ASC'))
 
@@ -55,7 +55,7 @@ class RestaurantInsightsService
           'ordritems.menuitem_id AS menuitem_id',
           'menuitems.name AS menuitem_name',
           'COUNT(DISTINCT ordritems.ordr_id) AS orders_with_item_count',
-          'COUNT(*) AS quantity_sold',
+          'COALESCE(SUM(ordritems.quantity), 0) AS quantity_sold',
         )
         .order(Arel.sql('orders_with_item_count ASC, quantity_sold ASC, ordritems.menuitem_id ASC'))
 

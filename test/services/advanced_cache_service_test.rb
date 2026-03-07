@@ -183,6 +183,24 @@ class AdvancedCacheServiceTest < ActiveSupport::TestCase
     assert result[:totals].present?
   end
 
+  test 'should cache order details with real item quantities' do
+    ordritem = @ordr.ordritems.first || Ordritem.create!(
+      ordr: @ordr,
+      menuitem: menuitems(:burger),
+      status: :opened,
+      ordritemprice: 15.99,
+      quantity: 3,
+      line_key: SecureRandom.uuid,
+    )
+    ordritem.update!(quantity: 3)
+
+    result = AdvancedCacheService.cached_order_with_details(@ordr.id)
+
+    cached_item = result[:items].find { |item| item[:id] == ordritem.id }
+    assert_not_nil cached_item
+    assert_equal 3, cached_item[:quantity]
+  end
+
   # Menu performance tests
   test 'should cache menu performance' do
     result = AdvancedCacheService.cached_menu_performance(@menu.id)

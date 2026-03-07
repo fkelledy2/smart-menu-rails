@@ -317,9 +317,17 @@ export function initOrderBindings() {
     window.__modalQtyStepperBound = true;
 
     let modalQty = 1;
+    function clampModalQty(value) {
+      const parsed = parseInt(String(value || '1'), 10);
+      if (Number.isNaN(parsed)) return 1;
+      return Math.max(1, Math.min(99, parsed));
+    }
+
     function updateModalQtyDisplay() {
       const display = document.getElementById('a2o_qty_display');
       if (display) display.textContent = modalQty;
+      const input = document.getElementById('a2o_qty_input');
+      if (input) input.value = modalQty;
       const decrBtn = document.getElementById('a2o_qty_decr');
       if (decrBtn) decrBtn.disabled = modalQty <= 1;
       window.__quickAddQty = modalQty;
@@ -341,6 +349,20 @@ export function initOrderBindings() {
         evt.preventDefault(); evt.stopPropagation();
         if (modalQty > 1) { modalQty--; updateModalQtyDisplay(); }
       }
+    }, true);
+
+    document.addEventListener('input', (evt) => {
+      const target = evt.target instanceof Element ? evt.target : null;
+      if (!target || !target.matches('#a2o_qty_input')) return;
+      modalQty = clampModalQty(target.value);
+      updateModalQtyDisplay();
+    }, true);
+
+    document.addEventListener('change', (evt) => {
+      const target = evt.target instanceof Element ? evt.target : null;
+      if (!target || !target.matches('#a2o_qty_input')) return;
+      modalQty = clampModalQty(target.value);
+      updateModalQtyDisplay();
     }, true);
 
     // Reset qty when the add-item modal opens

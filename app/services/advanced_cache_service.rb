@@ -572,7 +572,7 @@ class AdvancedCacheService
             {
               id: item.id,
               name: item.menuitem&.name || 'Unknown Item',
-              quantity: 1, # Ordritem doesn't have quantity field, assume 1
+              quantity: item.respond_to?(:quantity) ? (item.quantity || 1) : 1,
               price: item.respond_to?(:ordritemprice) ? item.ordritemprice || 0 : 0,
               status: item.status,
             }
