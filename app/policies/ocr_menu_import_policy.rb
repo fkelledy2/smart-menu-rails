@@ -4,6 +4,7 @@ class OcrMenuImportPolicy < ApplicationPolicy
   def update? = owner?
   def destroy? = owner?
   def process_pdf? = owner?
+  def cancel_processing? = owner?
   def confirm_import? = owner?
   def polish? = owner?
   def polish_progress? = owner?

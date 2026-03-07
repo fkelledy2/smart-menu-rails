@@ -755,7 +755,14 @@ export default class extends Controller {
         const u = new URL(this.polishProgressUrlValue, window.location.origin);
         u.searchParams.set('job_id', jobId);
         const res = await fetch(u.toString(), { headers: { Accept: 'application/json' }, credentials: 'same-origin' });
-        if (!res.ok) return;
+        if (!res.ok) {
+          if (res.status === 401 || res.status === 403 || res.status === 404) {
+            btn.disabled = false;
+            btn.innerHTML = originalHtml;
+            return;
+          }
+          return;
+        }
         const data = await res.json();
         const status = String(data.status || 'running');
         const msg = data.message || '';

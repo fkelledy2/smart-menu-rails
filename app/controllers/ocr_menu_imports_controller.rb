@@ -1,13 +1,15 @@
 class OcrMenuImportsController < ApplicationController
   include Pundit::Authorization
 
+  require 'sidekiq/api'
+
   skip_before_action :set_current_employee, only: %i[reorder_sections reorder_items]
   skip_before_action :set_permissions, only: %i[reorder_sections reorder_items]
   skip_before_action :redirect_to_onboarding_if_needed, only: %i[reorder_sections reorder_items]
   skip_forgery_protection only: %i[reorder_sections reorder_items]
   before_action :set_restaurant
   before_action :set_ocr_menu_import,
-                only: %i[show edit update destroy process_pdf progress confirm_import reorder_sections reorder_items toggle_section_confirmation
+                only: %i[show edit update destroy process_pdf cancel_processing progress confirm_import reorder_sections reorder_items toggle_section_confirmation
                          toggle_all_confirmation polish polish_progress set_section_price]
   before_action :authorize_import,
                 only: %i[show edit update destroy process_pdf progress confirm_import reorder_sections reorder_items toggle_section_confirmation
@@ -351,6 +353,23 @@ class OcrMenuImportsController < ApplicationController
     end
   end
 
+  def cancel_processing
+    authorize @ocr_menu_import, :cancel_processing?
+
+    removed_jobs = remove_pending_processing_jobs(@ocr_menu_import.id)
+    metadata = (@ocr_menu_import.metadata || {}).merge('cancel_requested' => true, 'cancel_requested_at' => Time.current.iso8601, 'phase' => 'cancelled')
+
+    if @ocr_menu_import.respond_to?(:may_fail?) && @ocr_menu_import.may_fail?
+      @ocr_menu_import.update!(metadata: metadata)
+      @ocr_menu_import.fail!('Cancelled manually')
+    else
+      @ocr_menu_import.update!(metadata: metadata, error_message: 'Cancelled manually', failed_at: (@ocr_menu_import.failed_at || Time.current))
+    end
+
+    redirect_to restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import),
+                notice: "Import cancelled#{removed_jobs.positive? ? " (removed #{removed_jobs} queued job#{'s' unless removed_jobs == 1})" : ''}"
+  end
+
   # POST /restaurants/:restaurant_id/ocr_menu_imports/:id/confirm_import
   def confirm_import
     unless @ocr_menu_import.completed?
@@ -499,6 +518,31 @@ class OcrMenuImportsController < ApplicationController
   end
 
   private
+
+  def remove_pending_processing_jobs(import_id)
+    removed = 0
+
+    [Sidekiq::Queue.new('default'), Sidekiq::RetrySet.new, Sidekiq::ScheduledSet.new].each do |set|
+      set.each do |job|
+        payload = job.item
+        wrapped = payload['wrapped']
+        args = payload['args']
+        active_job_payload = args.is_a?(Array) ? args.last : nil
+        job_args = active_job_payload.is_a?(Hash) ? active_job_payload['arguments'] : nil
+        matches = (wrapped == 'PdfMenuExtractionJob' && (job_args == [import_id] || job_args == [import_id.to_s])) ||
+                  (payload['class'] == 'PdfMenuExtractionJob' && (args == [import_id] || args == [import_id.to_s]))
+        next unless matches
+
+        job.delete
+        removed += 1
+      end
+    end
+
+    removed
+  rescue StandardError => e
+    Rails.logger.warn("[OcrMenuImportsController] Failed to remove pending OCR jobs for import ##{import_id}: #{e.class}: #{e.message}")
+    0
+  end
 
   def set_restaurant
     @restaurant = Restaurant.find(params[:restaurant_id])

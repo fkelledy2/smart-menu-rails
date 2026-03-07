@@ -37,6 +37,12 @@ class PdfMenuExtractionJob < ApplicationJob
         Rails.logger.warn "PdfMenuExtractionJob: Cannot complete OcrMenuImport ##{ocr_menu_import.id} from state '#{ocr_menu_import.status}'"
       end
     rescue StandardError => e
+      metadata = ocr_menu_import.metadata || {}
+      if e.is_a?(PdfMenuProcessor::ProcessingError) && e.message.include?('Cancelled manually') && ocr_menu_import.failed? && metadata['cancel_requested']
+        Rails.logger.info "PdfMenuExtractionJob: OcrMenuImport ##{ocr_menu_import.id} cancelled manually"
+        return
+      end
+
       Rails.logger.error "Error in PdfMenuExtractionJob: #{e.message}\n#{e.backtrace.join("\n")}"
 
       # Handle case where record might have been deleted during processing

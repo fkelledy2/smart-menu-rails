@@ -464,6 +464,7 @@ Rails.application.routes.draw do
       end
       member do
         post :process_pdf
+        post :cancel_processing
         post :confirm_import
         get :progress
         post :polish

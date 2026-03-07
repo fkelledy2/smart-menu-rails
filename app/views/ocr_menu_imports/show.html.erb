@@ -69,6 +69,14 @@
           <i class="bi bi-gear me-1" aria-hidden="true"></i> <%= t('.process_pdf') %>
         <% end %>
       <% end %>
+      <% if @ocr_menu_import.processing? || @ocr_menu_import.pending? %>
+        <%= button_to cancel_processing_restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import),
+            method: :post,
+            class: 'btn btn-outline-danger btn-sm',
+            form: { data: { turbo_confirm: 'Cancel this OCR import and stop any queued processing for it?' } } do %>
+          <i class="bi bi-stop-circle me-1" aria-hidden="true"></i> Kill Current Job
+        <% end %>
+      <% end %>
     </div>
   </div>
 
