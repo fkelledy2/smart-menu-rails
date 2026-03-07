@@ -63,9 +63,9 @@
 				<%= hidden_field_tag :operation, '', data: { menusections_bulk_target: 'operation' } %>
 				<%= hidden_field_tag :value, '', data: { menusections_bulk_target: 'value' } %>
 				<!-- Sections Table -->
-				<div class="table-responsive">
+				<div class="table-responsive menu-edit-scroll-region" data-testid="menu-sections-table">
 					<table class="table table-hover">
-						<thead>
+						<thead class="menu-edit-sticky-head">
 							<tr>
 								<% if read_only %>
 									<th class="w-40px"></th>
@@ -192,6 +192,24 @@
 </div>
 
 <style>
+  [data-testid="menu-sections-table"].table-responsive {
+    max-height: calc(100vh - 260px);
+    overflow-y: auto;
+    overflow-x: auto;
+  }
+
+  [data-testid="menu-sections-table"] .table {
+    margin-bottom: 0;
+  }
+
+  [data-testid="menu-sections-table"] .menu-edit-sticky-head th {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    background: var(--surface-primary, #fff);
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+  }
+
   /* Section drag handle styles */
   .section-handle {
     cursor: grab;
@@ -216,5 +234,11 @@
   .sortable-fallback {
     opacity: 0.85;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  @media (max-width: 768px) {
+    [data-testid="menu-sections-table"].table-responsive {
+      max-height: calc(100vh - 220px);
+    }
   }
 </style>

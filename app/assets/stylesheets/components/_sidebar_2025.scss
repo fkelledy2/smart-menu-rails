@@ -173,6 +173,7 @@
 // Main Content Area (next to sidebar)
 .sidebar-main-content {
   flex: 1;
+  min-height: 0;
   min-width: 0; // Prevent flex item from overflowing
   padding: 0; // No padding - maximizes content width
   background: transparent; // No background - let page background show through

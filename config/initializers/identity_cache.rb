@@ -1,6 +1,42 @@
 # Configure IdentityCache with optimized settings
 IdentityCache.cache_backend = Rails.cache
 
+class IdentityCacheFilteredLogger
+  def initialize(logger)
+    @logger = logger
+  end
+
+  def debug(*args, &block)
+    @logger.debug(*args, &block)
+  end
+
+  def warn(*args, &block)
+    @logger.warn(*args, &block)
+  end
+
+  def info(*args, &block)
+    @logger.info(*args, &block)
+  end
+
+  def error(*args, &block)
+    message = args.first
+    message = block.call if message.nil? && block
+    return true if message.to_s.include?('[IdentityCache] delete failed for IDC:')
+
+    @logger.error(message)
+  end
+
+  def respond_to_missing?(method_name, include_private = false)
+    @logger.respond_to?(method_name, include_private) || super
+  end
+
+  def method_missing(method_name, *args, &block)
+    return @logger.public_send(method_name, *args, &block) if @logger.respond_to?(method_name)
+
+    super
+  end
+end
+
 # Set the logger and silence delete warnings in development
 if Rails.env.development? || Rails.env.test?
   # Use a null logger for development to silence delete warnings
@@ -10,7 +46,7 @@ if Rails.env.development? || Rails.env.test?
   IdentityCache.logger = dev_null
 else
   # Use Rails logger in other environments
-  IdentityCache.logger = Rails.logger
+  IdentityCache.logger = IdentityCacheFilteredLogger.new(Rails.logger)
 end
 
 # Enhanced IdentityCache configuration for performance

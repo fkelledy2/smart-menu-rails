@@ -65,9 +65,9 @@
         <%= hidden_field_tag :value, '', data: { menuitems_bulk_target: 'value' } %>
 
         <!-- Items Table -->
-        <div class="table-responsive" data-testid="menu-items-table">
+        <div class="table-responsive menu-edit-scroll-region" data-testid="menu-items-table">
           <table class="table table-hover">
-            <thead>
+            <thead class="menu-edit-sticky-head">
               <tr>
                 <% if read_only %>
                   <th class="w-40px"></th>
@@ -339,10 +339,22 @@
 <style>
   [data-testid="menu-items-table"].table-responsive {
     width: 100%;
+    max-height: calc(100vh - 260px);
+    overflow-y: auto;
+    overflow-x: auto;
   }
 
   [data-testid="menu-items-table"] .table {
     width: 100%;
+    margin-bottom: 0;
+  }
+
+  [data-testid="menu-items-table"] .menu-edit-sticky-head th {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    background: var(--surface-primary, #fff);
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
   }
 
   /* Inline edit visual hint */
@@ -468,6 +480,10 @@
 
   /* Mobile/Tablet responsive adjustments */
   @media (max-width: 768px) {
+    [data-testid="menu-items-table"].table-responsive {
+      max-height: calc(100vh - 220px);
+    }
+
     .item-image-tooltip {
       /* Reposition to center on mobile */
       left: 50%;
