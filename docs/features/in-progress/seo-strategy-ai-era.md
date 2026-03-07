@@ -12,7 +12,7 @@
 
 **Target Release**: 2026
 
-**Status**: Development-Ready
+**Status**: In Progress — Mostly Implemented
 
 ## 🥅 Overall Goals
 
@@ -321,7 +321,7 @@ Use existing `@page_title` and `@page_description` instance variables (already s
 
 ### Overview
 
-`config/sitemap.rb` exists using the `sitemap_generator` gem but only has 3 static URLs and the dynamic smartmenu loop is commented out. Enable it and add all public page types.
+`config/sitemap.rb` now includes static pages, published smartmenus, explore pages, and published local guides. The remaining gap here is focused verification of generated output rather than initial implementation.
 
 ### Implementation Steps
 
@@ -1176,7 +1176,8 @@ end
 
 - [x] **Model test**: Validations, scopes, slug generation
 - [x] **Job test**: Mock OpenAI, verify guide creation with correct references
-- [ ] **Controller test**: Admin approve/archive flow, public show with JSON-LD
+- [ ] **Controller test**: Admin approve/archive flow
+- [x] **Public integration test**: Guide show with JSON-LD
 - [x] **Policy test**: Only super_admin can approve
 
 ---
@@ -1395,9 +1396,9 @@ add_index :restaurants, [:preview_enabled, :claim_status], name: 'idx_restaurant
 
 ---
 
-# Definition of Done (All Phases)
+# Definition of Done (Current Close-Out View)
 
-- [x] **P1**: Schema.org JSON-LD on all smartmenu pages, validated via Google Rich Results Test
+- [ ] **P1**: Schema.org JSON-LD on all smartmenu pages, validated via Google Rich Results Test
 - [x] **P1**: Dynamic meta/OG tags on smartmenu pages; static pages retain defaults
 - [x] **P1**: XML sitemap generated nightly with all published smartmenu URLs
 - [x] **P1**: Robots.txt updated with `/madmin` disallow and AI crawler allows
@@ -1410,6 +1411,15 @@ add_index :restaurants, [:preview_enabled, :claim_status], name: 'idx_restaurant
 - [x] **P3**: Public guide pages with Article + FAQPage JSON-LD
 - [x] **P4**: `/api/v2/` public endpoints live and rate-limited
 - [x] **P4**: API returns JSON-LD compatible structured data
+
+## Actual Remaining Work
+
+- [ ] Run sitemap generation end-to-end and verify artifact output
+- [ ] Add admin local guide approve/archive controller coverage
+- [ ] Add API v2 rate-limit regression coverage (`429` after threshold)
+- [ ] Validate smartmenu JSON-LD in Google Rich Results Test
+- [ ] Set up Google Search Console
+- [ ] Generate and publish the initial 10 local guides
 
 ---
 
@@ -1427,4 +1437,4 @@ add_index :restaurants, [:preview_enabled, :claim_status], name: 'idx_restaurant
 
 **Updated**: February 13, 2026
 
-**Status**: Development-Ready — Begin Phase 1
+**Status**: In Progress — Core implementation shipped; remaining work is focused verification, a small amount of controller/API test coverage, and initial guide rollout.

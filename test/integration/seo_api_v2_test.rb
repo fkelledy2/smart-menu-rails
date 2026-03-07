@@ -6,6 +6,11 @@ class SeoApiV2Test < ActionDispatch::IntegrationTest
   setup do
     @restaurant = restaurants(:one)
     @restaurant.update_columns(preview_enabled: true)
+    Rails.cache.delete(rate_limit_cache_key)
+  end
+
+  teardown do
+    Rails.cache.delete(rate_limit_cache_key)
   end
 
   # ── Restaurants index ────────────────────────────────────────────────────
@@ -103,5 +108,23 @@ class SeoApiV2Test < ActionDispatch::IntegrationTest
   test 'no authentication required for v2 endpoints' do
     get '/api/v2/restaurants'
     assert_response :success
+  end
+
+  test 'rate limit returns 429 after 100 requests' do
+    100.times do
+      get '/api/v2/restaurants', as: :json
+      assert_response :success
+    end
+
+    get '/api/v2/restaurants', as: :json
+
+    assert_response :too_many_requests
+    assert_match(/Rate limit exceeded/, response.parsed_body['error'])
+  end
+
+  private
+
+  def rate_limit_cache_key
+    'api_v2:127.0.0.1'
   end
 end
