@@ -93,73 +93,7 @@ class OcrMenuImportsController < ApplicationController
 
   # GET /restaurants/:restaurant_id/ocr_menu_imports/:id/progress
   def progress
-    meta = (@ocr_menu_import.metadata || {}).with_indifferent_access
-    phase = meta[:phase].presence || (@ocr_menu_import.processing? ? 'processing' : @ocr_menu_import.status)
-
-    total_pages = @ocr_menu_import.total_pages
-    processed_pages = @ocr_menu_import.processed_pages
-
-    sections_total = meta[:sections_total].to_i
-    sections_processed = meta[:sections_processed].to_i
-    items_total = meta[:items_total].to_i
-    items_processed = meta[:items_processed].to_i
-
-    page_percent = begin
-      if total_pages.to_i.positive?
-        (processed_pages.to_f / total_pages * 100.0)
-      else
-        0.0
-      end
-    rescue StandardError
-      0.0
-    end
-
-    parse_denom = (if items_total.positive?
-                     items_total
-                   else
-                     (sections_total.positive? ? sections_total : 0)
-                   end)
-    parse_num = (items_total.positive? ? items_processed : sections_processed)
-    parse_percent = begin
-      if parse_denom.to_i.positive?
-        (parse_num.to_f / parse_denom * 100.0)
-      else
-        0.0
-      end
-    rescue StandardError
-      0.0
-    end
-
-    overall = if @ocr_menu_import.completed?
-                100.0
-              elsif @ocr_menu_import.failed?
-                0.0
-              else
-                # Weight pages heavily, then parsing/saving
-                (page_percent * 0.7) + (parse_percent * 0.3)
-              end
-
-    render json: {
-      id: @ocr_menu_import.id,
-      status: @ocr_menu_import.status,
-      phase: phase,
-      percent: overall.round(2),
-      pages: {
-        processed: processed_pages,
-        total: total_pages,
-        percent: page_percent.round(2),
-      },
-      parsing: {
-        sections_processed: sections_processed,
-        sections_total: sections_total,
-        items_processed: items_processed,
-        items_total: items_total,
-        percent: parse_percent.round(2),
-      },
-      error_message: @ocr_menu_import.error_message,
-      completed_at: @ocr_menu_import.completed_at,
-      updated_at: @ocr_menu_import.updated_at,
-    }
+    render json: @ocr_menu_import.progress_payload
   end
 
   # POST /restaurants/:restaurant_id/ocr_menu_imports/:id/polish

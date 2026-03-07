@@ -2,6 +2,8 @@ class OcrMenuImport < ApplicationRecord
   include AASM
   include IdentityCache
 
+  after_commit :broadcast_progress_update, on: [:create, :update]
+
   # Associations
   belongs_to :restaurant
   belongs_to :menu, optional: true
@@ -73,6 +75,75 @@ class OcrMenuImport < ApplicationRecord
     return 0 if total_pages.blank? || total_pages.zero?
 
     (processed_pages.to_f / total_pages * 100).round(2)
+  end
+
+  def progress_payload
+    meta = (metadata || {}).with_indifferent_access
+    current_phase = meta[:phase].presence || (processing? ? 'processing' : status)
+
+    total_pages_value = total_pages
+    processed_pages_value = processed_pages
+
+    sections_total = meta[:sections_total].to_i
+    sections_processed = meta[:sections_processed].to_i
+    items_total = meta[:items_total].to_i
+    items_processed = meta[:items_processed].to_i
+
+    page_percent = begin
+      if total_pages_value.to_i.positive?
+        (processed_pages_value.to_f / total_pages_value * 100.0)
+      else
+        0.0
+      end
+    rescue StandardError
+      0.0
+    end
+
+    parse_denom = if items_total.positive?
+                    items_total
+                  else
+                    (sections_total.positive? ? sections_total : 0)
+                  end
+    parse_num = items_total.positive? ? items_processed : sections_processed
+    parse_percent = begin
+      if parse_denom.to_i.positive?
+        (parse_num.to_f / parse_denom * 100.0)
+      else
+        0.0
+      end
+    rescue StandardError
+      0.0
+    end
+
+    overall = if completed?
+                100.0
+              elsif failed?
+                0.0
+              else
+                (page_percent * 0.7) + (parse_percent * 0.3)
+              end
+
+    {
+      id: id,
+      status: status,
+      phase: current_phase,
+      percent: overall.round(2),
+      pages: {
+        processed: processed_pages_value,
+        total: total_pages_value,
+        percent: page_percent.round(2),
+      },
+      parsing: {
+        sections_processed: sections_processed,
+        sections_total: sections_total,
+        items_processed: items_processed,
+        items_total: items_total,
+        percent: parse_percent.round(2),
+      },
+      error_message: error_message,
+      completed_at: completed_at,
+      updated_at: updated_at,
+    }
   end
 
   def process_pdf_async
@@ -169,5 +240,13 @@ class OcrMenuImport < ApplicationRecord
       end
     end
     true
+  end
+
+  private
+
+  def broadcast_progress_update
+    OcrMenuImportBroadcastService.broadcast_progress(self)
+  rescue StandardError => e
+    Rails.logger.warn("[OcrMenuImport] progress broadcast failed for ##{id}: #{e.class}: #{e.message}")
   end
 end

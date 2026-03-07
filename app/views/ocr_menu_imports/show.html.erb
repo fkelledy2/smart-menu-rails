@@ -23,7 +23,7 @@
     <%= render 'restaurants/sidebar_2025', restaurant: @restaurant, current_section: 'import' %>
 
     <div class="sidebar-main-content">
-      <div class="py-4 px-3 px-md-4" data-controller="menu-import" data-menu-import-progress-url-value="<%= progress_restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import) %>" data-menu-import-polish-url-value="<%= polish_restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import) %>" data-menu-import-polish-progress-url-value="<%= polish_progress_restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import) %>" data-menu-import-status-value="<%= @ocr_menu_import.status %>">
+      <div class="py-4 px-3 px-md-4" data-controller="menu-import" data-menu-import-progress-url-value="<%= progress_restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import) %>" data-menu-import-polish-url-value="<%= polish_restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import) %>" data-menu-import-polish-progress-url-value="<%= polish_progress_restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import) %>" data-menu-import-status-value="<%= @ocr_menu_import.status %>" data-menu-import-restaurant-id-value="<%= @restaurant.id %>" data-menu-import-import-id-value="<%= @ocr_menu_import.id %>">
         <div class="mb-3 d-flex justify-content-end">
           <%= link_to edit_restaurant_path(@restaurant, section: 'import'),
               class: 'btn btn-outline-secondary',

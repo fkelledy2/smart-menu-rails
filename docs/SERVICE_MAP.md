@@ -180,6 +180,7 @@
 | `MaterializedViewService` | `app/services/materialized_view_service.rb` |
 | `MemoryMonitoringService` | `app/services/memory_monitoring_service.rb` |
 | `MenuBroadcastService` | `app/services/menu_broadcast_service.rb` |
+| `OcrMenuImportBroadcastService` | `app/services/ocr_menu_import_broadcast_service.rb` |
 | `MenuDiscovery::PdfDownloader` | `app/services/menu_discovery/pdf_downloader.rb` |
 | `MenuDiscovery::RestaurantDescriptionGenerator` | `app/services/menu_discovery/restaurant_description_generator.rb` |
 | `MenuDiscovery::RestaurantImageProfileGenerator` | `app/services/menu_discovery/restaurant_image_profile_generator.rb` |
@@ -293,6 +294,7 @@
 |---|---|
 | `KitchenChannel` | `app/channels/kitchen_channel.rb` |
 | `MenuEditingChannel` | `app/channels/menu_editing_channel.rb` |
+| `OcrMenuImportChannel` | `app/channels/ocr_menu_import_channel.rb` |
 | `OrdrChannel` | `app/channels/ordr_channel.rb` |
 | `PresenceChannel` | `app/channels/presence_channel.rb` |
 | `StationChannel` | `app/channels/station_channel.rb` |

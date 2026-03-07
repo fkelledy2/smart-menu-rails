@@ -1,6 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
 import { DirectUpload } from '@rails/activestorage';
 import { Modal } from 'bootstrap';
+import consumer from '../channels/consumer';
 
 export default class extends Controller {
   static targets = [
@@ -39,6 +40,8 @@ export default class extends Controller {
   ];
 
   static values = {
+    restaurantId: Number,
+    importId: Number,
     progressUrl: String,
     polishUrl: String,
     polishProgressUrl: String,
@@ -66,54 +69,56 @@ export default class extends Controller {
     // Section-level pricing buttons
     this.element.addEventListener('click', this.handleSectionPriceClick.bind(this));
 
-    this.progressTimer = null;
-    this.startProgressPolling();
+    this.progressSubscription = null;
+    this.subscribeToProgressChannel();
   }
 
   disconnect() {
     // Clean up event listeners
     document.removeEventListener('keydown', this.handleKeyDown.bind(this));
-    this.stopProgressPolling();
+    this.unsubscribeFromProgressChannel();
   }
 
-  startProgressPolling() {
-    if (!this.hasProgressUrlValue) return;
-    if (this.progressTimer) return;
-
+  subscribeToProgressChannel() {
+    if (this.progressSubscription) return;
     const currentStatus = (this.hasStatusValue ? this.statusValue : '').toLowerCase();
-    const shouldPoll = currentStatus === 'processing' || currentStatus === 'pending';
-    if (!shouldPoll) return;
+    const shouldSubscribe = currentStatus === 'processing' || currentStatus === 'pending';
+    if (!shouldSubscribe) return;
+    if (!this.hasRestaurantIdValue || !this.hasImportIdValue) return;
 
-    const tick = async () => {
-      try {
-        const res = await fetch(this.progressUrlValue, { headers: { Accept: 'application/json' }, credentials: 'same-origin' });
-        if (!res.ok) {
-          if (res.status === 401 || res.status === 403 || res.status === 404) {
-            this.stopProgressPolling();
+    this.progressSubscription = consumer.subscriptions.create(
+      {
+        channel: 'OcrMenuImportChannel',
+        restaurant_id: this.restaurantIdValue,
+        import_id: this.importIdValue,
+      },
+      {
+        received: (data) => {
+          const payload = data && (data.progress || data);
+          if (!payload) return;
+
+          this.applyProgress(payload);
+
+          if (payload.status === 'completed') {
+            this.onImportCompleted();
+            return;
           }
-          return;
-        }
-        const data = await res.json();
-        this.applyProgress(data);
 
-        if (data.status === 'completed') {
-          this.onImportCompleted();
-        }
-        if (data.status === 'failed') {
-          this.stopProgressPolling();
-        }
-      } catch (_) {
-      }
-    };
-
-    tick();
-    this.progressTimer = window.setInterval(tick, 2000);
+          if (payload.status === 'failed') {
+            this.unsubscribeFromProgressChannel();
+          }
+        },
+        rejected: () => {
+          this.unsubscribeFromProgressChannel();
+        },
+      },
+    );
   }
 
-  stopProgressPolling() {
-    if (this.progressTimer) {
-      window.clearInterval(this.progressTimer);
-      this.progressTimer = null;
+  unsubscribeFromProgressChannel() {
+    if (this.progressSubscription) {
+      this.progressSubscription.unsubscribe();
+      this.progressSubscription = null;
     }
   }
 
@@ -163,7 +168,7 @@ export default class extends Controller {
   }
 
   onImportCompleted() {
-    this.stopProgressPolling();
+    this.unsubscribeFromProgressChannel();
 
     try {
       if (this.confirmModal) this.confirmModal.hide();
