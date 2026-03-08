@@ -1,137 +1,118 @@
-# Smart Menu — Project Rules for Cascade
+# Smart Menu — Cascade Core Rules
 
 ## Identity
-SaaS restaurant management platform. Multi-tenant (one User → many Restaurants).
-Deployed on Heroku. PostgreSQL + Redis + Memcached.
+Multi-tenant SaaS restaurant management platform.
+One User can belong to many Restaurants.
+Deployment target: Heroku.
+Core infra: PostgreSQL, Redis, Memcached.
 
-## Tech Stack
+## Stack
 - Ruby 3.3.10, Rails 7.2.2, PostgreSQL 14+
-- Hotwire (Turbo + Stimulus), importmap-rails + esbuild, SCSS (cssbundling-rails)
-- Devise + OmniAuth (Google/Apple/Spotify), Pundit authorization, Flipper feature flags
-- Sidekiq 7 (Redis), ActionCable (Redis), Memcached (Dalli/IdentityCache)
-- Payments: Stripe 13.x + Square REST v2 (dual-provider)
-- AI: OpenAI (GPT-4o, DALL-E), Google Cloud Vision (OCR), DeepL (translation)
-- File uploads: Shrine + Active Storage, AWS S3
-- Monitoring: Sentry 5.12
+- Hotwire (Turbo + Stimulus), importmap-rails + esbuild, SCSS
+- Devise, OmniAuth, Pundit, Flipper
+- Sidekiq 7, ActionCable, Redis
+- Memcached via Dalli / IdentityCache
+- Stripe + Square
+- OpenAI, Google Cloud Vision, DeepL
+- Shrine + Active Storage, AWS S3
+- Sentry
 
-## CRITICAL Naming Conventions (non-standard — do NOT guess standard Rails names)
-- `Ordr` not Order — model, table `ordrs`, controller `OrdrsController`
-- `Ordritem` not OrderItem — model, table `ordritems`, controller `OrdritemsController`
-- `Ordritemnote` — table `ordritemnotes`
-- `Ordrparticipant` — table `ordrparticipants`
-- `Ordraction` — table `ordractions`
-- `Menusection` not MenuSection — model, table `menusections`
-- `Menuitem` not MenuItem — model, table `menuitems`
-- `Menuparticipant` — table `menuparticipants`
-- `Tablesetting` not Table — model, table `tablesettings`
-- `Allergyn` not Allergen — model, table `allergyns`
-- Price field on ordritem: `ordritemprice` (not `price` or `unit_price`)
-- Status fields use integer enums (e.g., `opened: 0, ordered: 20, paid: 35`)
+## Canonical Non-Standard Names
+Do not guess standard Rails names.
 
-## Key Directories
-- `app/javascript/controllers/` — 41 Stimulus controllers (auto-discovered via importmap)
-- `app/javascript/modules/` — shared JS modules (menus/, orders/)
-- `app/javascript/ordrs.js` — staff order management JS
-- `app/javascript/ordr_commons.js` — shared order functions (customer + staff)
-- `app/services/` — 83 service objects (payments/, beverage_intelligence/, menu_discovery/, google_places/)
-- `app/jobs/` — 53 Sidekiq jobs (menu/, payments/, cache/)
-- `app/policies/` — 48 Pundit policies
-- `app/views/smartmenus/` — customer-facing menu views (partials prefixed _show*)
-- `app/views/restaurants/` — admin/staff restaurant management views
+- Order => `Ordr` / table `ordrs` / controller `OrdrsController`
+- OrderItem => `Ordritem` / table `ordritems` / controller `OrdritemsController`
+- OrderItemNote => `Ordritemnote` / table `ordritemnotes`
+- OrderParticipant => `Ordrparticipant` / table `ordrparticipants`
+- OrderAction => `Ordraction` / table `ordractions`
+- MenuSection => `Menusection` / table `menusections`
+- MenuItem => `Menuitem` / table `menuitems`
+- MenuParticipant => `Menuparticipant` / table `menuparticipants`
+- Table => `Tablesetting` / table `tablesettings`
+- Allergen => `Allergyn` / table `allergyns`
 
-## Smartmenu Views (customer-facing)
-- `_showMenuContentStaff.html.erb` — staff menu view (uses `_showMenuitemStaff.erb`)
-- `_showMenuContentCustomer.html.erb` — customer menu view (uses `_menu_section.html.erb`)
-- `_showMenuitem.erb` — customer menu item card (card layout with image)
-- `_showMenuitemHorizontal.html.erb` — customer menu item (horizontal layout)
-- `_showMenuitemStaff.erb` — staff menu item (compact row with quick-add stepper)
-- `_cart_bottom_sheet.html.erb` — customer cart (bottom sheet with peek/half/full states)
-- `_showModals.erb` — shared modals (add-item, view-order, pay, etc.)
-- `show.html.erb` — main smartmenu page (renders staff OR customer view based on role)
+Additional invariants:
+- `Ordritem` price field is `ordritemprice`
+- Status fields use integer enums
 
-## Key Stimulus Controllers
-- `state_controller.js` — central state manager (order, totals, restaurant context)
-- `order_totals_controller.js` — order total calculations and display
-- `bottom_sheet_controller.js` — cart bottom sheet (peek/half/full snap points)
-- `quick_add_controller.js` — staff quantity stepper (+/- buttons)
-- `ordering_controller.js` — order lifecycle management
-- `square_payment_controller.js` — Square Web Payments SDK integration
+## Source of Truth
+- Routes and path helpers: `config/routes.rb`
+- Schema, tables, columns: `db/schema.rb`
+- Runtime behavior: code over docs if they disagree
+- Smart Menu visible state: `app/presenters/smartmenu_state.rb`
+- Order lifecycle/projected status: `app/services/order_event_projector.rb`
+- Payment settlement truth: webhook ingestors + payment records
 
-## Database (105 tables)
-- Schema: `db/schema.rb`
-- Key tables: `ordrs`, `ordritems`, `ordractions`, `ordrparticipants`, `menus`, `menusections`, `menuitems`, `tablesettings`, `restaurants`, `users`, `employees`
-- Materialized views: `dw_orders_mv` (analytics)
-- Each ordritem is one row per unit (no quantity column yet)
+## Context Discipline
+- Do not scan the whole project unless required.
+- Read only files directly relevant to the task.
+- For small/local fixes: inspect code first.
+- For multi-file work: start from the entry point and expand outward.
+- Prefer targeted search over broad directory reads.
+- Use docs only when necessary.
 
-## Reference Docs (auto-generated by bin/generate_docs)
-- `docs/ARCHITECTURE.md` — system architecture, tech stack, request flow
-- `docs/DATA_MODEL.md` — full database schema with relationships
-- `docs/SERVICE_MAP.md` — all controllers, services, jobs, channels
+## Key Entry Points
+- Customer Smart Menu: `app/views/smartmenus/show.html.erb`
+- Shared customer order JS: `app/javascript/ordr_commons.js`
+- State management: `app/javascript/controllers/state_controller.js`
+- Staff ordering: `app/javascript/ordrs.js`
+- Order item flow: `app/controllers/ordritems_controller.rb`
+- Payments: `app/controllers/ordr_payments_controller.rb`
+- Realtime state: `app/presenters/smartmenu_state.rb`
+- Order projection: `app/services/order_event_projector.rb`
 
-### How to use these docs
-- **Before starting** any new feature or bug fix, read the relevant reference doc(s) to understand the current architecture, data model, and service layout.
-- **After completing** work that adds/removes/renames models, controllers, services, jobs, channels, database tables, or columns, update the affected doc(s) to reflect the changes. Keep updates minimal and consistent with existing format.
-- If changes are extensive (e.g., new tables, new service namespaces), prefer running `bin/generate_docs` to regenerate all three docs rather than manually editing.
-
-## Testing
-- Minitest (primary): `bin/rails test` — unit + integration tests
-- RSpec: `bundle exec rspec` — request specs, service specs
-- System tests: `bin/rails test:system` (Playwright driver)
-- Factory Bot for test data
+## Retrieval Discipline
+- For routes/helpers: use `config/routes.rb`
+- For schema work: use `db/schema.rb`
+- For ownership/call sites: use `docs/SERVICE_MAP.md`
+- For data model clarification: use `docs/DATA_MODEL.md`
+- For broader architecture: use `docs/ARCHITECTURE.md`
+- Read the minimum relevant reference only
 
 ## Code Style
-- Do NOT add/remove comments or documentation unless asked
-- Follow existing patterns — check nearby files before creating new ones
-- Stimulus controllers: kebab-case filenames, auto-registered via importmap
-- ERB partials: underscore prefix, use locals (not instance vars where possible)
-- Services: plain Ruby classes in app/services/, called from controllers/jobs
-- Background jobs: app/jobs/, enqueue with `.perform_later`
+- Follow existing local patterns before introducing new ones
+- Do not add or remove comments/docs unless asked
+- Stimulus controllers use kebab-case filenames
+- ERB partials use underscore prefix and locals where possible
+- Services are plain Ruby classes in `app/services/`
+- Jobs live in `app/jobs/` and enqueue with `.perform_later`
 
-## Feature Specs Location
-- Active specs: `docs/features/todo/2026/`
-- Completed: `docs/features/done/`
-- In progress: `docs/features/in-progress/`
+## Testing
+- Prefer focused tests first
+- Minitest: `bin/rails test`
+- RSpec: `bundle exec rspec`
+- System tests: `bin/rails test:system`
 
-## Key Route Nesting (check `config/routes.rb` for full list)
-- `resources :restaurants do` — top-level container for most resources:
-  - `resources :menus do` → `resources :menusections do` → `resources :menuitems`
-  - `resources :ordrs` (not orders)
-  - `resources :ordritems`, `resources :ordritemnotes`, `resources :ordrparticipants`, `resources :ordractions`
-  - `resources :tablesettings`, `resources :employees`, `resources :allergyns`
-  - `resources :taxes`, `resources :sizes`, `resources :tips`, `resources :tags`
-  - `resources :inventories`, `resources :genimages`, `resources :tracks`
-- `resources :smartmenus` — customer-facing menu (not nested under restaurants)
-- `namespace :admin` — admin controllers (discovered_restaurants, city_crawls, local_guides, etc.)
-- `namespace :api` → `namespace :v1` / `namespace :v2` — JSON API endpoints
-- Path helpers: `restaurant_menu_path(@restaurant, @menu)`, `restaurant_ordr_path(@restaurant, @ordr)`, etc.
-- `menu_form_with` helper must explicitly set `url:` — auto-generated URLs don't work with nested menus
-
-## Common Pitfalls
-- Precompiled assets in `public/assets/` override live source files in dev — delete if JS changes aren't picked up
-- API controllers must `skip_before_action` web callbacks (set_current_employee, set_permissions, etc.)
-- `Menu` model conflicts with `Menu::` namespace for jobs — use `class Menu::MyJob` not `module Menu; class MyJob`
-- Routes use non-RESTful names in places: check `config/routes.rb` before assuming path helpers
-- AdvancedCacheService returns Hash objects, not ActiveRecord models — extract IDs and re-query with `.where(id:)` when views need model methods
+## Pitfalls
+- Precompiled assets in `public/assets/` can override live source files in dev
+- API controllers may need to skip web callbacks
+- `Menu` conflicts with `Menu::` namespace; use `class Menu::MyJob`
+- Do not assume path helpers; verify in `config/routes.rb`
+- `AdvancedCacheService` returns Hashes, not AR models
 
 ## Indexing Exclusions
-- Exclude high-churn, generated, cache, dependency, and runtime directories from editor/agent indexing where supported:
-  - `.git/`
-  - `node_modules/`
-  - `tmp/`
-  - `log/`
-  - `coverage/`
-  - `storage/`
-  - `public/assets/`
-  - `public/packs/`
-  - `public/packs-test/`
-  - `vendor/bundle/`
-  - `vendor/cache/`
-  - `.idea/`
-  - `.snapshots/`
-  - `backup/`
-- Also avoid indexing large generated artifacts when present:
-  - `*.log`
-  - `*.pid`
-  - `*.tmp`
-  - `coverage/**`
-  - `tmp/**`
+Do not index or read unless task-specific:
+- `.git/`
+- `node_modules/`
+- `tmp/`
+- `log/`
+- `coverage/`
+- `storage/`
+- `public/assets/`
+- `public/packs/`
+- `public/packs-test/`
+- `vendor/bundle/`
+- `vendor/cache/`
+- `.bundle/`
+- `.idea/`
+- `.snapshots/`
+- `backup/`
+- `db/migrate/`
+- `.sass-cache/`
+
+Also exclude:
+- `*.log`
+- `*.pid`
+- `*.tmp`
+- `coverage/**`
+- `tmp/**`
