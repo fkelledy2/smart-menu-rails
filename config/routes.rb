@@ -338,6 +338,8 @@ Rails.application.routes.draw do
 
         post :request_bill, to: 'ordr_payments#request_bill'
         post :split_evenly, to: 'ordr_payments#split_evenly'
+        get :split_plan, to: 'ordr_payments#split_plan'
+        patch :split_plan, to: 'ordr_payments#split_plan'
         post 'payments/checkout_session', to: 'ordr_payments#checkout_session'
         post 'payments/inline', to: 'ordr_payments#create_inline_payment'
       end

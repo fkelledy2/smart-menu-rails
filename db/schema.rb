@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_03_06_154839) do
+ActiveRecord::Schema[7.2].define(version: 2026_03_08_084502) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "vector"
@@ -894,6 +894,19 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_06_154839) do
     t.index ["ordr_id"], name: "index_order_events_on_ordr_id"
   end
 
+  create_table "ordr_split_item_assignments", force: :cascade do |t|
+    t.bigint "ordr_split_plan_id", null: false
+    t.bigint "ordr_split_payment_id", null: false
+    t.bigint "ordritem_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ordr_split_payment_id", "ordritem_id"], name: "idx_split_item_assignments_on_payment_and_item", unique: true
+    t.index ["ordr_split_payment_id"], name: "index_ordr_split_item_assignments_on_ordr_split_payment_id"
+    t.index ["ordr_split_plan_id", "ordritem_id"], name: "idx_split_item_assignments_on_plan_and_item", unique: true
+    t.index ["ordr_split_plan_id"], name: "index_ordr_split_item_assignments_on_ordr_split_plan_id"
+    t.index ["ordritem_id"], name: "index_ordr_split_item_assignments_on_ordritem_id"
+  end
+
   create_table "ordr_split_payments", force: :cascade do |t|
     t.bigint "ordr_id", null: false
     t.bigint "ordrparticipant_id"
@@ -908,12 +921,39 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_06_154839) do
     t.string "idempotency_key"
     t.integer "tip_cents", default: 0, null: false
     t.string "payer_ref"
+    t.bigint "ordr_split_plan_id"
+    t.integer "split_method"
+    t.integer "position"
+    t.integer "base_amount_cents", default: 0, null: false
+    t.integer "tax_amount_cents", default: 0, null: false
+    t.integer "tip_amount_cents", default: 0, null: false
+    t.integer "service_charge_amount_cents", default: 0, null: false
+    t.integer "percentage_basis_points"
+    t.datetime "locked_at"
     t.index ["idempotency_key"], name: "index_ordr_split_payments_on_idempotency_key", unique: true, where: "(idempotency_key IS NOT NULL)"
     t.index ["ordr_id"], name: "index_ordr_split_payments_on_ordr_id"
+    t.index ["ordr_split_plan_id", "position"], name: "index_ordr_split_payments_on_ordr_split_plan_id_and_position", unique: true
+    t.index ["ordr_split_plan_id"], name: "index_ordr_split_payments_on_ordr_split_plan_id"
     t.index ["ordrparticipant_id"], name: "index_ordr_split_payments_on_ordrparticipant_id"
     t.index ["provider", "provider_payment_id"], name: "index_ordr_split_payments_on_provider_and_payment_id", unique: true, where: "(provider_payment_id IS NOT NULL)"
     t.index ["provider_checkout_session_id"], name: "index_ordr_split_payments_on_provider_checkout_session_id", unique: true
     t.index ["provider_payment_id"], name: "index_ordr_split_payments_on_provider_payment_id"
+  end
+
+  create_table "ordr_split_plans", force: :cascade do |t|
+    t.bigint "ordr_id", null: false
+    t.integer "split_method", default: 0, null: false
+    t.integer "plan_status", default: 0, null: false
+    t.integer "participant_count", default: 0, null: false
+    t.datetime "frozen_at"
+    t.bigint "created_by_user_id"
+    t.bigint "updated_by_user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_by_user_id"], name: "index_ordr_split_plans_on_created_by_user_id"
+    t.index ["ordr_id"], name: "index_ordr_split_plans_on_ordr_id", unique: true
+    t.index ["plan_status"], name: "index_ordr_split_plans_on_plan_status"
+    t.index ["updated_by_user_id"], name: "index_ordr_split_plans_on_updated_by_user_id"
   end
 
   create_table "ordr_station_tickets", force: :cascade do |t|
@@ -1853,8 +1893,15 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_06_154839) do
   add_foreign_key "onboarding_sessions", "restaurants"
   add_foreign_key "onboarding_sessions", "users"
   add_foreign_key "order_events", "ordrs"
+  add_foreign_key "ordr_split_item_assignments", "ordr_split_payments"
+  add_foreign_key "ordr_split_item_assignments", "ordr_split_plans"
+  add_foreign_key "ordr_split_item_assignments", "ordritems"
+  add_foreign_key "ordr_split_payments", "ordr_split_plans"
   add_foreign_key "ordr_split_payments", "ordrparticipants"
   add_foreign_key "ordr_split_payments", "ordrs"
+  add_foreign_key "ordr_split_plans", "ordrs"
+  add_foreign_key "ordr_split_plans", "users", column: "created_by_user_id"
+  add_foreign_key "ordr_split_plans", "users", column: "updated_by_user_id"
   add_foreign_key "ordr_station_tickets", "ordrs"
   add_foreign_key "ordr_station_tickets", "restaurants"
   add_foreign_key "ordractions", "ordritems"

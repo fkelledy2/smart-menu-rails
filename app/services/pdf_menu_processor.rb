@@ -56,13 +56,11 @@ class PdfMenuProcessor
     return unless @ocr_menu_import.pdf_file.attached?
 
     begin
-      raise_if_cancelled!
       @ocr_menu_import.update!(metadata: (@ocr_menu_import.metadata || {}).merge('phase' => 'extracting_pages'))
       # Extract text from PDF (handles text-based and image-based PDFs)
       pdf_text = extract_text_from_pdf
 
       begin
-        raise_if_cancelled!
         if @ocr_menu_import.respond_to?(:source_locale) && @ocr_menu_import.source_locale.to_s.strip == ''
           detected = detect_source_locale(pdf_text)
           if detected.present?
@@ -75,14 +73,12 @@ class PdfMenuProcessor
       end
 
       # Parse menu structure using ChatGPT (text-based first, then vision fallback)
-      raise_if_cancelled!
       @ocr_menu_import.update!(metadata: (@ocr_menu_import.metadata || {}).merge('phase' => 'parsing_menu'))
       menu_data = parse_menu_with_chatgpt(pdf_text)
 
       # If text-based parsing found no sections, try vision-based parsing
       # (handles multi-column layouts, decorative PDFs, etc.)
       if Array(menu_data[:sections]).empty? && @ocr_menu_import.pdf_file.attached?
-        raise_if_cancelled!
         Rails.logger.info 'PdfMenuProcessor: text-based parsing found 0 sections; retrying with vision-based parsing'
         @ocr_menu_import.update!(metadata: (@ocr_menu_import.metadata || {}).merge('phase' => 'parsing_menu_vision'))
         vision_data = parse_menu_with_vision
@@ -90,11 +86,9 @@ class PdfMenuProcessor
       end
 
       # Save parsed data to the database
-      raise_if_cancelled!
       @ocr_menu_import.update!(metadata: (@ocr_menu_import.metadata || {}).merge('phase' => 'saving_menu'))
       save_menu_structure(menu_data, source_text: pdf_text)
 
-      raise_if_cancelled!
       @ocr_menu_import.update!(metadata: (@ocr_menu_import.metadata || {}).merge('phase' => 'completed'))
 
       true
@@ -156,7 +150,6 @@ class PdfMenuProcessor
       extracted_text = []
       empty_text_pages = 0
       reader.pages.each_with_index do |page, _idx|
-        raise_if_cancelled!
         page_text = (page.text || '').to_s.strip
         if page_text.blank? || page_text.gsub(/\s+/, '').length < 10
           empty_text_pages += 1
@@ -167,7 +160,6 @@ class PdfMenuProcessor
       if empty_text_pages < (total_pages * 0.6).ceil
         # Treat as text-based PDF
         extracted_text.each_with_index do |t, idx|
-          raise_if_cancelled!
           text_pages << t
           @ocr_menu_import.update!(processed_pages: idx + 1)
           @ocr_menu_import.update!(metadata: (@ocr_menu_import.metadata || {}).merge('phase' => 'extracting_pages', 'pages_total' => total_pages, 'pages_processed' => (idx + 1)))
@@ -216,7 +208,6 @@ class PdfMenuProcessor
       Dir[File.join(dir, 'page-*.png')].sort_by do |p|
         p[/page-(\d+)\.png/, 1].to_i
       end.each do |image_path|
-        raise_if_cancelled!
         response = image_annotator.text_detection image: image_path
         annotation = response.responses.first
         page_text = annotation&.text_annotations&.first&.description.to_s
@@ -242,7 +233,6 @@ class PdfMenuProcessor
       return { sections: [] }
     end
 
-    raise_if_cancelled!
     venue_context = build_venue_context
     prompt = <<~PROMPT
       You are given the full text content of a #{venue_context[:label]} menu, potentially with page breaks.
@@ -332,7 +322,6 @@ class PdfMenuProcessor
   def parse_menu_with_vision
     return { sections: [] } unless @ocr_menu_import.pdf_file.attached?
 
-    raise_if_cancelled!
     api_key = Rails.application.credentials.openai_api_key
     if api_key.blank?
       Rails.logger.warn 'PdfMenuProcessor: openai_api_key missing; vision parsing skipped'
@@ -358,7 +347,6 @@ class PdfMenuProcessor
         return { sections: [] }
       end
 
-      raise_if_cancelled!
       venue_context = build_venue_context
 
       # Build vision message with page images
@@ -418,7 +406,6 @@ class PdfMenuProcessor
       begin
         attempts += 1
         Timeout.timeout(wall_clock_limit, Net::ReadTimeout, "Vision call exceeded #{wall_clock_limit}s") do
-          raise_if_cancelled!
           response = client.chat(parameters: {
             model: vision_model,
             temperature: 0,
@@ -550,7 +537,6 @@ class PdfMenuProcessor
                                                   request_timeout: timeout_seconds,)
     begin
       attempts += 1
-      raise_if_cancelled!
       # Some models support response_format json_object; skip if it raises an error
       parameters = {
         model: model,
@@ -612,13 +598,11 @@ class PdfMenuProcessor
     items_total = sections.sum { |s| Array(s[:items]).size }
     @ocr_menu_import.update!(metadata: (@ocr_menu_import.metadata || {}).merge('phase' => 'saving_menu', 'sections_total' => sections_total, 'sections_processed' => 0, 'items_total' => items_total, 'items_processed' => 0))
 
-    raise_if_cancelled!
     normalized_source_text = normalize_allergen_source_text(source_text)
 
     OcrMenuImport.transaction do
       items_processed = 0
       sections.each_with_index do |section_data, section_index|
-        raise_if_cancelled!
         section = @ocr_menu_import.ocr_menu_sections.create!(
           name: section_data[:name],
           description: section_data[:description],
@@ -627,7 +611,6 @@ class PdfMenuProcessor
         )
 
         Array(section_data[:items]).each_with_index do |item_data, item_index|
-          raise_if_cancelled!
           item_metadata = {}
           # Store wine size prices in metadata if present
           if item_data[:size_prices].is_a?(Hash)
@@ -747,12 +730,5 @@ class PdfMenuProcessor
 
       normalized_source_text.match?(/\b#{Regexp.escape(token)}\b/)
     end
-  end
-
-  def raise_if_cancelled!
-    @ocr_menu_import.reload
-    return unless @ocr_menu_import.failed? && (@ocr_menu_import.metadata || {})['cancel_requested']
-
-    raise ProcessingError, 'Cancelled manually'
   end
 end

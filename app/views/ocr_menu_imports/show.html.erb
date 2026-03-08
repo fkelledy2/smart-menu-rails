@@ -23,7 +23,7 @@
     <%= render 'restaurants/sidebar_2025', restaurant: @restaurant, current_section: 'import' %>
 
     <div class="sidebar-main-content">
-      <div class="py-4 px-3 px-md-4" data-controller="menu-import" data-menu-import-progress-url-value="<%= progress_restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import) %>" data-menu-import-polish-url-value="<%= polish_restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import) %>" data-menu-import-polish-progress-url-value="<%= polish_progress_restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import) %>" data-menu-import-status-value="<%= @ocr_menu_import.status %>" data-menu-import-restaurant-id-value="<%= @restaurant.id %>" data-menu-import-import-id-value="<%= @ocr_menu_import.id %>">
+      <div class="py-4 px-3 px-md-4" data-controller="menu-import" data-menu-import-progress-url-value="<%= progress_restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import) %>" data-menu-import-polish-url-value="<%= polish_restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import) %>" data-menu-import-polish-progress-url-value="<%= polish_progress_restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import) %>" data-menu-import-status-value="<%= @ocr_menu_import.status %>">
         <div class="mb-3 d-flex justify-content-end">
           <%= link_to edit_restaurant_path(@restaurant, section: 'import'),
               class: 'btn btn-outline-secondary',
@@ -67,14 +67,6 @@
             class: 'btn btn-primary btn-sm',
             form: { data: { turbo_confirm: t('.process_confirm') } } do %>
           <i class="bi bi-gear me-1" aria-hidden="true"></i> <%= t('.process_pdf') %>
-        <% end %>
-      <% end %>
-      <% if @ocr_menu_import.processing? || @ocr_menu_import.pending? %>
-        <%= button_to cancel_processing_restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import),
-            method: :post,
-            class: 'btn btn-outline-danger btn-sm',
-            form: { data: { turbo_confirm: 'Cancel this OCR import and stop any queued processing for it?' } } do %>
-          <i class="bi bi-stop-circle me-1" aria-hidden="true"></i> Kill Current Job
         <% end %>
       <% end %>
     </div>

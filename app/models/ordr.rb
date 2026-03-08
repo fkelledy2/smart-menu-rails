@@ -51,7 +51,9 @@ class Ordr < ApplicationRecord
   has_many :ordrparticipants, -> { reorder(id: :asc) }, dependent: :destroy, counter_cache: :ordrparticipants_count
   has_many :ordractions, -> { reorder(id: :asc) }, dependent: :destroy
   has_many :ordr_station_tickets, -> { reorder(id: :asc) }, dependent: :destroy
+  has_one :ordr_split_plan, dependent: :destroy
   has_many :ordr_split_payments, dependent: :destroy
+  has_many :ordr_split_item_assignments, through: :ordr_split_plan
   has_many :payment_attempts, dependent: :delete_all
   has_many :payment_refunds, dependent: :delete_all
 

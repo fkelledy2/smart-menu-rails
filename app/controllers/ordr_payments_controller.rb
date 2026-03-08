@@ -5,7 +5,7 @@ class OrdrPaymentsController < ApplicationController
   require 'digest'
 
   skip_before_action :verify_authenticity_token,
-                     only: %i[request_bill split_evenly checkout_session create_inline_payment]
+                     only: %i[request_bill split_evenly split_plan checkout_session create_inline_payment]
 
   before_action :set_restaurant
   before_action :set_ordr
@@ -68,7 +68,7 @@ class OrdrPaymentsController < ApplicationController
   end
 
   def split_evenly
-    authorize @ordr, :update?
+    return unless authorize_split_access!
 
     if @ordr.status.to_s != 'billrequested'
       render json: { ok: false, error: 'Order must be billrequested to split' }, status: :unprocessable_content
@@ -76,42 +76,29 @@ class OrdrPaymentsController < ApplicationController
     end
 
     participants = customer_participants(@ordr)
-    n = participants.length
-
-    if n < 2
+    if participants.length < 2
       render json: { ok: false, error: 'Need at least 2 participants to split evenly' }, status: :unprocessable_content
       return
     end
 
-    currency = @ordr.restaurant.currency.presence || 'USD'
-    total_cents = total_amount_cents(@ordr)
+    result = Payments::SplitPlanUpsertService.new(
+      ordr: @ordr,
+      actor: current_user,
+      split_method: :equal,
+      participant_ids: participants.map(&:id),
+    ).call
 
-    if total_cents <= 0
-      render json: { ok: false, error: 'Order total is zero' }, status: :unprocessable_content
+    unless result.success?
+      render json: { ok: false, error: result.errors.to_sentence }, status: :unprocessable_content
       return
-    end
-
-    shares = compute_even_split(total_cents, n)
-
-    @ordr.ordr_split_payments.delete_all
-
-    created = []
-    participants.each_with_index do |p, idx|
-      sp = @ordr.ordr_split_payments.create!(
-        ordrparticipant: p,
-        amount_cents: shares[idx],
-        currency: currency,
-        status: :requires_payment,
-      )
-      created << sp
     end
 
     render json: {
       ok: true,
       order_id: @ordr.id,
-      total_cents: total_cents,
-      currency: currency,
-      split_payments: created.map do |sp|
+      total_cents: result.plan.total_allocated_cents,
+      currency: @ordr.restaurant.currency.presence || 'USD',
+      split_payments: result.plan.ordr_split_payments.order(:position).map do |sp|
         {
           id: sp.id,
           ordrparticipant_id: sp.ordrparticipant_id,
@@ -122,8 +109,35 @@ class OrdrPaymentsController < ApplicationController
     }, status: :ok
   end
 
+  def split_plan
+    return unless authorize_split_access!
+
+    if request.get?
+      plan = @ordr.ordr_split_plan
+      render json: { ok: true, order_id: @ordr.id, split_plan: plan ? split_plan_payload(plan)[:split_plan] : nil }, status: :ok
+      return
+    end
+
+    result = Payments::SplitPlanUpsertService.new(
+      ordr: @ordr,
+      actor: current_user,
+      split_method: params[:split_method],
+      participant_ids: Array(params[:participant_ids]),
+      custom_amounts_cents: params[:custom_amounts_cents] || {},
+      percentage_basis_points: params[:percentage_basis_points] || {},
+      item_assignments: params[:item_assignments] || {},
+    ).call
+
+    unless result.success?
+      render json: { ok: false, error: result.errors.to_sentence }, status: :unprocessable_content
+      return
+    end
+
+    render json: split_plan_payload(result.plan), status: :ok
+  end
+
   def checkout_session
-    authorize @ordr, :update?
+    return unless authorize_split_access!
 
     if @ordr.status.to_s != 'billrequested'
       render json: { ok: false, error: 'Order must be billrequested to pay' }, status: :unprocessable_content
@@ -139,6 +153,18 @@ class OrdrPaymentsController < ApplicationController
         render json: { ok: false, error: 'Split payment not found' }, status: :not_found
         return
       end
+
+      if split_payment.ordrparticipant_id.present? && current_user.blank? && split_payment.ordrparticipant&.sessionid.to_s != safe_session_id
+        render json: { ok: false, error: 'You can only pay your own assigned share' }, status: :forbidden
+        return
+      end
+
+      unless split_payment.pay_ready? || split_payment.pending?
+        render json: { ok: false, error: 'Split payment is not payable' }, status: :unprocessable_content
+        return
+      end
+
+      split_payment.ordr_split_plan&.freeze! if split_payment.ordr_split_plan && !split_payment.ordr_split_plan.split_frozen?
     end
 
     requested_amount_cents = params[:amount_cents].to_i
@@ -241,7 +267,34 @@ class OrdrPaymentsController < ApplicationController
   private
 
   def csrf_skipped_action?
-    %w[request_bill split_evenly checkout_session create_inline_payment].include?(action_name)
+    %w[request_bill split_evenly split_plan checkout_session create_inline_payment].include?(action_name)
+  end
+
+  def safe_session_id
+    session.id.to_s.presence || (session[:sid] ||= SecureRandom.uuid).to_s
+  end
+
+  def current_customer_participant
+    @current_customer_participant ||= @ordr.ordrparticipants.find_by(
+      role: Ordrparticipant.roles['customer'],
+      sessionid: safe_session_id,
+    )
+  end
+
+  def authorize_split_access!
+    if current_user.present?
+      authorize @ordr, :update?
+      return true
+    end
+
+    if current_customer_participant.present?
+      skip_authorization
+      return true
+    end
+
+    skip_authorization
+    render json: { ok: false, error: 'Not authorized for this split plan' }, status: :forbidden
+    false
   end
 
   def set_restaurant
@@ -283,6 +336,38 @@ class OrdrPaymentsController < ApplicationController
     base = total_cents / n
     remainder = total_cents % n
     (0...n).map { |i| base + (i < remainder ? 1 : 0) }
+  end
+
+  def split_plan_payload(plan)
+    plan.reload
+
+    {
+      ok: true,
+      order_id: @ordr.id,
+      split_plan: {
+        id: plan.id,
+        split_method: plan.split_method,
+        plan_status: plan.plan_status,
+        frozen_at: plan.frozen_at,
+        participant_count: plan.participant_count,
+        total_amount_cents: plan.total_allocated_cents,
+        shares: plan.ordr_split_payments.order(:position).map do |sp|
+          {
+            id: sp.id,
+            ordrparticipant_id: sp.ordrparticipant_id,
+            amount_cents: sp.amount_cents,
+            base_amount_cents: sp.base_amount_cents,
+            tax_amount_cents: sp.tax_amount_cents,
+            tip_amount_cents: sp.tip_amount_cents,
+            service_charge_amount_cents: sp.service_charge_amount_cents,
+            percentage_basis_points: sp.percentage_basis_points,
+            status: sp.status,
+            locked_at: sp.locked_at,
+            item_ids: sp.ordr_split_item_assignments.order(:id).pluck(:ordritem_id),
+          }
+        end,
+      },
+    }
   end
 
   def create_stripe_checkout(split_payment:, amount_cents:, currency:, success_url:, cancel_url:)
