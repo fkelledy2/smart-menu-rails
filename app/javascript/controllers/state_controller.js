@@ -164,6 +164,34 @@ export default class extends Controller {
     };
     document.addEventListener('click', this._onPayClick);
 
+    // Delegated click handler for Split Bill button
+    this._onSplitBillClick = (e) => {
+      const btn = e.target.closest('#cartSplitBill');
+      if (!btn) return;
+      console.log('[State] Split Bill clicked');
+      e.preventDefault();
+      const splitSection = document.getElementById('cartSplitBillSection');
+      const paySection = document.getElementById('cartPaySection');
+      console.log('[State] Split section found:', !!splitSection);
+      if (splitSection) {
+        splitSection.style.display = 'block';
+      }
+      if (paySection) {
+        paySection.style.display = 'none';
+      }
+      // Hide the payment buttons
+      const paymentButtons = document.getElementById('cartPaymentButtons');
+      if (paymentButtons) {
+        paymentButtons.style.display = 'none';
+      }
+      const sheet = document.getElementById('cartBottomSheet');
+      if (sheet) {
+        const ctrl = this.application?.getControllerForElementAndIdentifier(sheet, 'bottom-sheet');
+        if (ctrl) { ctrl.setState('full'); }
+      }
+    };
+    document.addEventListener('click', this._onSplitBillClick);
+
     // Global Cancel handler called via onclick on the Cancel button
     window.__cartPayCancel = () => {
       console.debug('[State] Cancel clicked');
@@ -265,6 +293,7 @@ export default class extends Controller {
     if (this.observer) this.observer.disconnect();
     if (this._onStateUpdate) document.removeEventListener('state:update', this._onStateUpdate);
     if (this._onPayClick) document.removeEventListener('click', this._onPayClick);
+    if (this._onSplitBillClick) document.removeEventListener('click', this._onSplitBillClick);
     if (this._onRemoveItemClick) document.removeEventListener('click', this._onRemoveItemClick, true);
     delete window.__cartPayCancel;
   }
@@ -399,7 +428,10 @@ export default class extends Controller {
       const payVisible = flags.payVisible === true;
       const billVisible = flags.displayRequestBill === true && !payVisible;
       html += `<button type="button" class="btn-touch-primary w-100 mt-2" id="cartRequestBill" data-bs-toggle="modal" data-bs-target="#requestBillModal" style="display:${billVisible ? 'block' : 'none'};"><i class="bi bi-receipt"></i> Request Bill</button>`;
-      html += `<button type="button" class="btn-touch-primary w-100 mt-2" id="cartPayOrder" style="display:${payVisible ? 'block' : 'none'};"><i class="bi bi-currency-euro"></i> Pay</button>`;
+      html += `<div class="d-flex gap-2 mt-2" id="cartPaymentButtons" style="display:${payVisible ? 'flex' : 'none'};">`;
+      html += `<button type="button" class="btn-touch-secondary w-50" id="cartSplitBill"><i class="bi bi-people"></i> Split Bill</button>`;
+      html += `<button type="button" class="btn-touch-primary w-50" id="cartPayOrder"><i class="bi bi-currency-euro"></i> Pay</button>`;
+      html += `</div>`;
       html += '</div>';
 
       // Inline pay section (hidden until Pay button clicked)
@@ -408,6 +440,32 @@ export default class extends Controller {
         html += this._renderPaySection(totals, symbol, flags);
       }
       html += '</div>';
+      
+      // Split bill section (hidden until Split Bill button clicked)
+      html += '<div id="cartSplitBillSection" style="display:none;" class="cart-sheet__split-section mt-3">';
+      html += '<div data-controller="split-bill" ';
+      html += `data-split-bill-order-id-value="${order.id || ''}" `;
+      html += `data-split-bill-restaurant-id-value="${this.state?.restaurant?.id || ''}" `;
+      html += `data-split-bill-participant-id-value="${this.state?.participants?.orderParticipantId || ''}" `;
+      html += `data-split-bill-currency-symbol-value="${symbol}" `;
+      html += `data-split-bill-currency-code-value="${totals?.currency?.code || ''}">`;
+      html += '<hr><h6 class="fw-bold mb-3">Split Bill</h6>';
+      html += '<div data-split-bill-target="loading" class="text-center py-4" style="display:none;"><div class="spinner-border text-primary"></div></div>';
+      html += '<div data-split-bill-target="error" class="alert alert-danger" style="display:none;"><i class="bi bi-exclamation-triangle"></i> <span data-split-bill-target="errorMessage"></span></div>';
+      html += '<div data-split-bill-target="methodSelector">';
+      html += '<div data-split-bill-target="participantsList"></div>';
+      html += '<div data-split-bill-target="equalPreview" style="display:none;"><span data-split-bill-target="equalAmount"></span></div>';
+      html += '<div data-split-bill-target="customInputs" style="display:none;"><div data-split-bill-target="customAmountsList"></div><div data-split-bill-target="customTotal"></div></div>';
+      html += '<div data-split-bill-target="itemInputs" style="display:none;"><div data-split-bill-target="itemAssignmentsList"></div></div>';
+      html += '<button data-split-bill-target="createButton" class="btn btn-primary mt-3" style="display:none;">Create Split Plan</button>';
+      html += '</div>';
+      html += '<div data-split-bill-target="planView" style="display:none;">';
+      html += '<div data-split-bill-target="planStatus"></div>';
+      html += '<div data-split-bill-target="planDetails"></div>';
+      html += '<div data-split-bill-target="myShareAmount"></div>';
+      html += '<button data-split-bill-target="payShareButton" class="btn btn-primary mt-3" style="display:none;">Pay My Share</button>';
+      html += '</div>';
+      html += '</div></div>';
     } else if (order.id) {
       html += '<div class="text-center text-muted py-4"><i class="bi bi-cart3 fs-1 mb-2 d-block"></i><p>Your cart is empty</p><p class="small">Tap + on any item to add it</p></div>';
     } else {

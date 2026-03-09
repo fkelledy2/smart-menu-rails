@@ -348,7 +348,7 @@ Rails.application.routes.draw do
     resources :alcohol_order_events, only: [:index]
     resources :ordritems
     resources :ordritemnotes
-    resources :ordrparticipants
+    resources :ordrparticipants, only: [:index, :show, :create, :update, :destroy]
     resources :ordractions
     
     # Music/Entertainment

@@ -1,0 +1,131 @@
+// Split Bill Section Styles
+.cart-sheet__split-section {
+  padding: 0 1rem;
+}
+
+.split-participants-list {
+  max-height: 200px;
+  overflow-y: auto;
+  padding: 0.5rem;
+  background: #f8f9fa;
+  border-radius: 0.5rem;
+  
+  .form-check {
+    padding: 0.5rem;
+    margin-bottom: 0.25rem;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.split-preview {
+  .card {
+    border: 2px solid #0d6efd;
+    background: #f0f7ff;
+  }
+}
+
+.split-custom-inputs,
+.split-item-inputs {
+  .input-group {
+    .input-group-text {
+      background: #f8f9fa;
+      border-color: #dee2e6;
+      font-size: 0.875rem;
+    }
+    
+    input {
+      font-size: 0.875rem;
+    }
+  }
+  
+  .card {
+    border-color: #dee2e6;
+    
+    .card-body {
+      background: #fff;
+    }
+  }
+}
+
+.split-item-inputs {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+// Button styles for split bill
+.btn-touch-secondary {
+  background: #6c757d;
+  color: white;
+  border: none;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  
+  &:hover, &:active {
+    background: #5a6268;
+    color: white;
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.btn-touch-sm {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+}
+
+.btn-touch-icon {
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+// Split bill specific alerts
+.split-custom-inputs .alert,
+.split-item-inputs .alert {
+  font-size: 0.875rem;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+// Plan view card
+.cart-sheet__split-section .card {
+  .badge {
+    font-size: 0.75rem;
+    padding: 0.35rem 0.65rem;
+    text-transform: uppercase;
+  }
+}
+
+// Loading and error states
+.cart-sheet__split-section {
+  .spinner-border {
+    width: 3rem;
+    height: 3rem;
+  }
+  
+  .alert {
+    margin-bottom: 1rem;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 576px) {
+  .split-participants-list {
+    max-height: 150px;
+  }
+  
+  .split-item-inputs {
+    max-height: 250px;
+  }
+}

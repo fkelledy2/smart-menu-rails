@@ -32,6 +32,7 @@ class SmartmenuState
         orderParticipantId: ordrparticipant&.id&.to_s,
         menuParticipantId: menuparticipant&.id&.to_s,
       },
+      splitPlan: split_plan_payload(open_order, ordrparticipant),
     }
   end
 
@@ -121,6 +122,30 @@ class SmartmenuState
       billrequestedCount: billrequested_count,
       paidCount: paid_count,
       closedCount: closed_count,
+    }
+  end
+
+  def self.split_plan_payload(order, ordrparticipant)
+    return nil unless order
+
+    plan = order.ordr_split_plan
+    return nil unless plan
+
+    my_share = plan.ordr_split_payments.find_by(ordrparticipant: ordrparticipant) if ordrparticipant
+
+    {
+      id: plan.id.to_s,
+      splitMethod: plan.split_method.to_s,
+      planStatus: plan.plan_status.to_s,
+      participantCount: plan.participant_count,
+      frozen: plan.split_frozen?,
+      allSettled: plan.all_shares_settled?,
+      myShare: my_share ? {
+        id: my_share.id.to_s,
+        amountCents: my_share.amount_cents,
+        status: my_share.status.to_s,
+        canPay: my_share.pay_ready?,
+      } : nil,
     }
   end
 

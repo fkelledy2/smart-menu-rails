@@ -10,7 +10,12 @@ class OrdrparticipantsController < ApplicationController
 
   # GET /ordrparticipants or /ordrparticipants.json
   def index
-    @ordrparticipants = policy_scope(Ordrparticipant)
+    if params[:ordr_id]
+      ordr = @restaurant.ordrs.find(params[:ordr_id])
+      @ordrparticipants = ordr.ordrparticipants
+    else
+      @ordrparticipants = policy_scope(Ordrparticipant)
+    end
   end
 
   # GET /ordrparticipants/1 or /ordrparticipants/1.json

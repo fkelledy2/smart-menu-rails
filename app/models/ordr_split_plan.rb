@@ -52,6 +52,22 @@ class OrdrSplitPlan < ApplicationRecord
     ordr_split_payments.sum(:amount_cents)
   end
 
+  def update_status_from_settlement!
+    return if plan_status_completed? || plan_status_canceled?
+
+    if all_shares_settled?
+      update!(plan_status: :completed)
+    elsif any_share_failed?
+      update!(plan_status: :failed)
+    elsif any_share_in_flight?
+      freeze! unless split_frozen?
+    end
+  end
+
+  def any_share_failed?
+    ordr_split_payments.any?(&:failed?)
+  end
+
   private
 
   def ordr_in_payable_state

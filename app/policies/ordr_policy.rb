@@ -4,9 +4,10 @@ class OrdrPolicy < ApplicationPolicy
   end
 
   def show?
-    # Allow access for owners and employees only
-    return false if user.id.nil? # Deny anonymous users
+    # Allow anonymous customers to view orders (for Smart Menu)
+    return true if user.id.nil?
 
+    # Allow access for owners and employees
     owner? || authorized_employee?
   end
 

@@ -10,3 +10,21 @@ one:
   line_key: ordritem-one-line
   created_at: <%= 1.day.ago %>
   updated_at: <%= 1.day.ago %>
+
+two:
+  ordr: one
+  menuitem: fries
+  status: 0  # opened
+  ordritemprice: 5.99
+  line_key: ordritem-two-line
+  created_at: <%= 1.day.ago %>
+  updated_at: <%= 1.day.ago %>
+
+three:
+  ordr: one
+  menuitem: soda
+  status: 0  # opened
+  ordritemprice: 2.99
+  line_key: ordritem-three-line
+  created_at: <%= 1.day.ago %>
+  updated_at: <%= 1.day.ago %>

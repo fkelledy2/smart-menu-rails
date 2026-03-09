@@ -140,11 +140,16 @@
           <i class="bi bi-receipt"></i>
           <%= t('smartmenus.showModals.request_bill', default: 'Request Bill') %>
         </button>
-        <button type="button" class="btn-touch-primary w-100 mt-2" id="cartPayOrder"
-                style="display:none;">
-          <i class="bi bi-currency-euro"></i>
-          <%= t('smartmenus.showModals.pay', default: 'Pay') %>
-        </button>
+        <div class="d-flex gap-2 mt-2" id="cartPaymentButtons" style="display:none;">
+          <button type="button" class="btn-touch-secondary w-50" id="cartSplitBill">
+            <i class="bi bi-people"></i>
+            <%= t('smartmenus.showModals.split_bill', default: 'Split Bill') %>
+          </button>
+          <button type="button" class="btn-touch-primary w-50" id="cartPayOrder">
+            <i class="bi bi-currency-euro"></i>
+            <%= t('smartmenus.showModals.pay', default: 'Pay') %>
+          </button>
+        </div>
       </div>
 
       <%# Inline Pay Section (shown when Pay button is clicked) %>
@@ -222,6 +227,10 @@
           </div>
         <% end %>
       </div>
+
+      <%# Split Bill Section (shown when Split Bill button is clicked) %>
+      <%= render partial: 'smartmenus/split_bill_section',
+                 locals: { order: order, restaurant: restaurant, restaurantCurrency: restaurantCurrency, ordrparticipant: ordrparticipant } %>
     <% elsif has_table %>
       <%# Start Order — party size selector (replaces the modal for customers) %>
       <div id="cartStartOrderSection" class="cart-sheet__start-order">

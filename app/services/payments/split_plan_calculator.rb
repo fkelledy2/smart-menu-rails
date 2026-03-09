@@ -19,6 +19,10 @@ module Payments
       return Result.new(errors: ['Order must be billrequested to split']) unless @ordr.billrequested?
       return Result.new(errors: ['Need at least 1 participant']) if @participants.empty?
 
+      active_participants = @ordr.ordrparticipants.where(role: Ordrparticipant.roles['customer']).where.not(sessionid: [nil, ''])
+      inactive_participant_ids = @participants.pluck(:id) - active_participants.pluck(:id)
+      return Result.new(errors: ['Only active order participants can be included in split plans']) if inactive_participant_ids.any?
+
       case @split_method
       when 'equal'
         build_equal_split

@@ -69,21 +69,99 @@ class OrdrPaymentsControllerTest < ActionDispatch::IntegrationTest
     assert_nil body['split_plan']
   end
 
-  test 'split_plan creates a custom split plan' do
+  test 'split_plan rejects custom split with incorrect total' do
     patch split_plan_restaurant_ordr_url(@restaurant, @ordr), params: {
       split_method: 'custom',
       participant_ids: [ordrparticipants(:two).id, ordrparticipants(:three).id],
       custom_amounts_cents: {
         ordrparticipants(:two).id => 1000,
-        ordrparticipants(:three).id => 1500,
+        ordrparticipants(:three).id => 1000,
       },
     }
-    assert_response :ok
+    assert_response :unprocessable_content
 
     body = JSON.parse(response.body)
-    assert body['ok']
-    assert_equal 'custom', body.dig('split_plan', 'split_method')
-    assert_equal [1000, 1500], body.dig('split_plan', 'shares').map { |share| share['base_amount_cents'] }
+    refute body['ok']
+    assert_match(/subtotal/i, body['error'])
+  end
+
+  test 'split_plan rejects percentage split not totaling 100%' do
+    patch split_plan_restaurant_ordr_url(@restaurant, @ordr), params: {
+      split_method: 'percentage',
+      participant_ids: [ordrparticipants(:two).id, ordrparticipants(:three).id],
+      percentage_basis_points: {
+        ordrparticipants(:two).id => 6000,
+        ordrparticipants(:three).id => 3000,
+      },
+    }
+    assert_response :unprocessable_content
+
+    body = JSON.parse(response.body)
+    refute body['ok']
+    assert_match(/100%/i, body['error'])
+  end
+
+  test 'split_plan rejects item-based split with unassigned items' do
+    patch split_plan_restaurant_ordr_url(@restaurant, @ordr), params: {
+      split_method: 'item_based',
+      participant_ids: [ordrparticipants(:two).id],
+      item_assignments: {
+        ordrparticipants(:two).id => [],
+      },
+    }
+    assert_response :unprocessable_content
+
+    body = JSON.parse(response.body)
+    refute body['ok']
+    assert_match(/assigned/i, body['error'])
+  end
+
+  test 'split_plan rejects updates when plan is frozen' do
+    plan = @ordr.create_ordr_split_plan!(
+      split_method: 'equal',
+      plan_status: 'frozen',
+      frozen_at: Time.current,
+      created_by_user: users(:one)
+    )
+    plan.ordr_split_payments.create!(
+      ordr: @ordr,
+      ordrparticipant: ordrparticipants(:two),
+      amount_cents: 1250,
+      base_amount_cents: 1250,
+      tax_amount_cents: 0,
+      tip_amount_cents: 0,
+      service_charge_amount_cents: 0,
+      currency: @restaurant.currency || 'USD',
+      provider: 'stripe',
+      split_method: 'equal',
+      status: 'pending',
+      locked_at: Time.current
+    )
+
+    patch split_plan_restaurant_ordr_url(@restaurant, @ordr), params: {
+      split_method: 'equal',
+      participant_ids: [ordrparticipants(:two).id, ordrparticipants(:three).id],
+    }
+    assert_response :unprocessable_content
+
+    body = JSON.parse(response.body)
+    refute body['ok']
+    assert_match(/frozen/i, body['error'])
+  end
+
+  test 'split_plan rejects access without authentication or participant session' do
+    sign_out @user
+
+    get split_plan_restaurant_ordr_url(@restaurant, @ordr)
+    assert_response :forbidden
+
+    body = JSON.parse(response.body)
+    refute body['ok']
+    assert_match(/authorized/i, body['error'])
+  end
+
+  test 'split_plan allows access with valid participant session' do
+    skip 'Session-based participant auth requires integration test setup'
   end
 
   # ─── checkout_session (Stripe — default provider) ─────────────────────

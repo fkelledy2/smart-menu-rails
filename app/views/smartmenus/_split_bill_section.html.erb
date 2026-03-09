@@ -1,0 +1,150 @@
+<%# Split Bill Section — shown when Split Bill button is clicked %>
+<% order = local_assigns[:order] %>
+<% restaurant = local_assigns[:restaurant] %>
+<% restaurantCurrency = local_assigns[:restaurantCurrency] %>
+<% ordrparticipant = local_assigns[:ordrparticipant] %>
+<% cur = restaurantCurrency&.symbol.presence || '' %>
+
+<div id="cartSplitBillSection" style="display:none;" class="cart-sheet__split-section mt-3"
+     data-controller="split-bill"
+     data-split-bill-order-id-value="<%= order&.id %>"
+     data-split-bill-restaurant-id-value="<%= restaurant&.id %>"
+     data-split-bill-participant-id-value="<%= ordrparticipant&.id %>"
+     data-split-bill-currency-symbol-value="<%= cur %>"
+     data-split-bill-currency-code-value="<%= restaurantCurrency&.code %>">
+  
+  <hr>
+  <h6 class="fw-bold mb-3"><%= t('smartmenus.split_bill.title', default: 'Split Bill') %></h6>
+
+  <%# Loading state %>
+  <div data-split-bill-target="loading" class="text-center py-4" style="display:none;">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <%# Error state %>
+  <div data-split-bill-target="error" class="alert alert-danger" role="alert" style="display:none;">
+    <i class="bi bi-exclamation-triangle"></i>
+    <span data-split-bill-target="errorMessage"></span>
+  </div>
+
+  <%# Split method selector %>
+  <div data-split-bill-target="methodSelector">
+    <div class="mb-3">
+      <label class="form-label fw-bold"><%= t('smartmenus.split_bill.method', default: 'Split Method') %></label>
+      <div class="btn-group w-100" role="group">
+        <input type="radio" class="btn-check" name="splitMethod" id="splitMethodEqual" value="equal" checked
+               data-action="change->split-bill#methodChanged">
+        <label class="btn btn-outline-primary" for="splitMethodEqual">
+          <i class="bi bi-people"></i> <%= t('smartmenus.split_bill.equal', default: 'Equal') %>
+        </label>
+
+        <input type="radio" class="btn-check" name="splitMethod" id="splitMethodCustom" value="custom"
+               data-action="change->split-bill#methodChanged">
+        <label class="btn btn-outline-primary" for="splitMethodCustom">
+          <i class="bi bi-calculator"></i> <%= t('smartmenus.split_bill.custom', default: 'Custom') %>
+        </label>
+
+        <input type="radio" class="btn-check" name="splitMethod" id="splitMethodItem" value="item_based"
+               data-action="change->split-bill#methodChanged">
+        <label class="btn btn-outline-primary" for="splitMethodItem">
+          <i class="bi bi-list-check"></i> <%= t('smartmenus.split_bill.by_item', default: 'By Item') %>
+        </label>
+      </div>
+    </div>
+
+    <%# Participants list %>
+    <div class="mb-3">
+      <label class="form-label fw-bold"><%= t('smartmenus.split_bill.participants', default: 'Participants') %></label>
+      <div data-split-bill-target="participantsList" class="split-participants-list">
+        <%# Populated dynamically %>
+      </div>
+    </div>
+
+    <%# Equal split preview %>
+    <div data-split-bill-target="equalPreview" class="split-preview mb-3">
+      <div class="card">
+        <div class="card-body">
+          <h6 class="card-subtitle mb-2 text-muted"><%= t('smartmenus.split_bill.your_share', default: 'Your Share') %></h6>
+          <div class="d-flex justify-content-between align-items-center">
+            <span class="fs-5"><%= t('smartmenus.split_bill.amount_per_person', default: 'Amount per person') %></span>
+            <span class="fs-4 fw-bold" data-split-bill-target="equalAmount"><%= cur %>0.00</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%# Custom split inputs %>
+    <div data-split-bill-target="customInputs" class="split-custom-inputs mb-3" style="display:none;">
+      <div class="alert alert-info">
+        <i class="bi bi-info-circle"></i>
+        <%= t('smartmenus.split_bill.custom_hint', default: 'Enter custom amounts for each participant. Total must equal bill amount.') %>
+      </div>
+      <div data-split-bill-target="customAmountsList">
+        <%# Populated dynamically %>
+      </div>
+      <div class="d-flex justify-content-between align-items-center mt-2 p-2 bg-light rounded">
+        <span class="fw-bold"><%= t('smartmenus.split_bill.total', default: 'Total') %></span>
+        <span class="fw-bold" data-split-bill-target="customTotal"><%= cur %>0.00</span>
+      </div>
+    </div>
+
+    <%# Item-based split %>
+    <div data-split-bill-target="itemInputs" class="split-item-inputs mb-3" style="display:none;">
+      <div class="alert alert-info">
+        <i class="bi bi-info-circle"></i>
+        <%= t('smartmenus.split_bill.item_hint', default: 'Assign items to participants. All items must be assigned.') %>
+      </div>
+      <div data-split-bill-target="itemAssignmentsList">
+        <%# Populated dynamically %>
+      </div>
+    </div>
+
+    <%# Action buttons %>
+    <div class="d-flex gap-2 mt-3">
+      <button type="button" class="btn-touch-secondary w-50"
+              data-action="click->split-bill#cancel">
+        <%= t('common.cancel', default: 'Cancel') %>
+      </button>
+      <button type="button" class="btn-touch-primary w-50"
+              data-action="click->split-bill#createPlan"
+              data-split-bill-target="createButton">
+        <i class="bi bi-check-circle"></i>
+        <%= t('smartmenus.split_bill.create_plan', default: 'Create Split') %>
+      </button>
+    </div>
+  </div>
+
+  <%# Frozen/existing plan view %>
+  <div data-split-bill-target="planView" style="display:none;">
+    <div class="card mb-3">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h6 class="card-subtitle text-muted mb-0"><%= t('smartmenus.split_bill.split_plan', default: 'Split Plan') %></h6>
+          <span class="badge bg-info" data-split-bill-target="planStatus"></span>
+        </div>
+        <div class="d-flex justify-content-between align-items-center">
+          <span class="fs-5"><%= t('smartmenus.split_bill.your_share', default: 'Your Share') %></span>
+          <span class="fs-4 fw-bold" data-split-bill-target="myShareAmount"><%= cur %>0.00</span>
+        </div>
+        <div class="mt-2 text-muted small">
+          <span data-split-bill-target="planDetails"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex gap-2">
+      <button type="button" class="btn-touch-secondary w-50"
+              data-action="click->split-bill#cancel">
+        <%= t('common.back', default: 'Back') %>
+      </button>
+      <button type="button" class="btn-touch-primary w-50"
+              data-action="click->split-bill#payMyShare"
+              data-split-bill-target="payShareButton">
+        <i class="bi bi-credit-card"></i>
+        <%= t('smartmenus.split_bill.pay_my_share', default: 'Pay My Share') %>
+      </button>
+    </div>
+  </div>
+</div>

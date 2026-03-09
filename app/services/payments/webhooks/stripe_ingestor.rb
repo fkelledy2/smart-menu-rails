@@ -389,6 +389,7 @@ module Payments
         updates[:provider_payment_id] = payment_intent_id if payment_intent_id.present?
 
         sp.update!(updates)
+        sp.ordr_split_plan&.update_status_from_settlement!
       end
 
       def emit_paid_if_settled!(ordr:, idempotency_key:, external_ref:)
