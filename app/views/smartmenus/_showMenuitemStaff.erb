@@ -2,12 +2,6 @@
    <% if !order || ( order.status != 'billrequested' && order.status != 'closed' ) %>
      <div class="staff-item-row">
        <div class="staff-item-name">
-         <div class="d-flex align-items-center gap-2 mb-2">
-           <button type="button" class="btn btn-outline-secondary btn-sm" data-action="click->quick-add#decrement" data-quick-add-target="decrement" aria-label="Decrease quantity">-</button>
-           <input type="number" class="form-control form-control-sm text-center" value="1" min="1" max="99" step="1" inputmode="numeric" data-action="input->quick-add#syncInput change->quick-add#syncInput" data-quick-add-target="input" style="max-width: 5rem;">
-           <span class="fw-semibold" data-quick-add-target="qty">1</span>
-           <button type="button" class="btn btn-outline-secondary btn-sm" data-action="click->quick-add#increment" aria-label="Increase quantity">+</button>
-         </div>
          <div class="btn-group">
            <button type="button" class="addItemToOrder btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-target="#addItemToOrderModal"
                data-bs-menusection_from_offset="<%= menuitem.menusection.fromOffset %>"
@@ -55,12 +49,6 @@
    <% else %>
      <div class="staff-item-row staff-item-row-disabled">
        <div class="staff-item-name">
-         <div class="d-flex align-items-center gap-2 mb-2">
-           <button type="button" class="btn btn-outline-secondary btn-sm" disabled aria-label="Decrease quantity">-</button>
-           <input type="number" class="form-control form-control-sm text-center" value="1" min="1" max="99" step="1" inputmode="numeric" disabled style="max-width: 5rem;">
-           <span class="fw-semibold">1</span>
-           <button type="button" class="btn btn-outline-secondary btn-sm" disabled aria-label="Increase quantity">+</button>
-         </div>
          <div class="btn-group">
            <button class="btn btn-sm btn-dark" disabled>
              <%= menuitem.name %>
