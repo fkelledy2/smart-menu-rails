@@ -1,0 +1,11 @@
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-12">
+      <h2>Order Notes</h2>
+      
+      <%= render partial: 'order_notes_section', locals: { order: @order, restaurant: @restaurant } %>
+      
+      <%= link_to 'Back to Order', restaurant_ordr_path(@restaurant, @order), class: 'btn btn-secondary mt-3' %>
+    </div>
+  </div>
+</div>

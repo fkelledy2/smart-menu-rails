@@ -9,6 +9,6 @@ class CreateFeaturesPlans < ActiveRecord::Migration[7.1]
       t.timestamps
     end
     # Optionally add a unique index to prevent duplicate entries
-    add_index :features_plans, [:plan_id, :feature_id], unique: true
+    add_index :features_plans, %i[plan_id feature_id], unique: true
   end
 end

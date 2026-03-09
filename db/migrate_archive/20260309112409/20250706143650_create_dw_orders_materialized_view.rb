@@ -1,6 +1,6 @@
 class CreateDwOrdersMaterializedView < ActiveRecord::Migration[7.1]
   def up
-    execute <<-SQL
+    execute <<~SQL.squish
       CREATE MATERIALIZED VIEW dw_orders_mv AS
       SELECT
         o.id AS order_id,
@@ -51,7 +51,7 @@ class CreateDwOrdersMaterializedView < ActiveRecord::Migration[7.1]
   end
 
   def down
-    execute <<-SQL
+    execute <<~SQL.squish
       DROP MATERIALIZED VIEW IF EXISTS dw_orders_mv;
     SQL
   end

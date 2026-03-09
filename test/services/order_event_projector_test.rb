@@ -9,7 +9,7 @@ class OrderEventProjectorTest < ActiveSupport::TestCase
   # === item_added with quantity ===
 
   test 'item_added creates ordritem with quantity from payload' do
-    event = OrderEvent.emit!(
+    OrderEvent.emit!(
       ordr: @ordr,
       event_type: 'item_added',
       entity_type: 'Ordritem',
@@ -32,7 +32,7 @@ class OrderEventProjectorTest < ActiveSupport::TestCase
   end
 
   test 'item_added defaults quantity to 1 when qty absent' do
-    event = OrderEvent.emit!(
+    OrderEvent.emit!(
       ordr: @ordr,
       event_type: 'item_added',
       entity_type: 'Ordritem',
@@ -61,7 +61,7 @@ class OrderEventProjectorTest < ActiveSupport::TestCase
       size_name: nil,
     )
 
-    event = OrderEvent.emit!(
+    OrderEvent.emit!(
       ordr: @ordr,
       event_type: 'item_added',
       entity_type: 'Ordritem',
@@ -92,7 +92,7 @@ class OrderEventProjectorTest < ActiveSupport::TestCase
       size_name: 'Small',
     )
 
-    event = OrderEvent.emit!(
+    OrderEvent.emit!(
       ordr: @ordr,
       event_type: 'item_added',
       entity_type: 'Ordritem',
@@ -123,7 +123,7 @@ class OrderEventProjectorTest < ActiveSupport::TestCase
       size_name: nil,
     )
 
-    event = OrderEvent.emit!(
+    OrderEvent.emit!(
       ordr: @ordr,
       event_type: 'item_added',
       entity_type: 'Ordritem',
@@ -152,7 +152,7 @@ class OrderEventProjectorTest < ActiveSupport::TestCase
       size_name: nil,
     )
 
-    event = OrderEvent.emit!(
+    OrderEvent.emit!(
       ordr: @ordr,
       event_type: 'item_added',
       entity_type: 'Ordritem',

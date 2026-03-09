@@ -183,10 +183,10 @@ class OrdrPaymentsController < ApplicationController
 
     if @ordr.restaurant.square_provider?
       create_square_checkout(split_payment: split_payment, amount_cents: amount_cents, currency: currency,
-                             success_url: success_url, cancel_url: cancel_url)
+                             success_url: success_url, cancel_url: cancel_url,)
     else
       create_stripe_checkout(split_payment: split_payment, amount_cents: amount_cents, currency: currency,
-                             success_url: success_url, cancel_url: cancel_url)
+                             success_url: success_url, cancel_url: cancel_url,)
     end
   end
 
@@ -275,7 +275,9 @@ class OrdrPaymentsController < ApplicationController
   end
 
   def current_customer_participant
-    @current_customer_participant ||= @ordr.ordrparticipants.find_by(
+    return @current_customer_participant if defined?(@current_customer_participant)
+
+    @current_customer_participant = @ordr.ordrparticipants.find_by(
       role: Ordrparticipant.roles['customer'],
       sessionid: safe_session_id,
     )

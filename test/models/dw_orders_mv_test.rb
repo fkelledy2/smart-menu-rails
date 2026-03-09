@@ -55,6 +55,9 @@ class DwOrdersMvTest < ActiveSupport::TestCase
     SQL
 
     ActiveRecord::Base.connection.execute(sql)
+    
+    # Populate the materialized view
+    ActiveRecord::Base.connection.execute('REFRESH MATERIALIZED VIEW dw_orders_mv')
   end
 
   def table_exists?

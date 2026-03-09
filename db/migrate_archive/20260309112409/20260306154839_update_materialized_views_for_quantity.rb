@@ -17,26 +17,26 @@ class UpdateMaterializedViewsForQuantity < ActiveRecord::Migration[7.2]
   private
 
   def drop_views
-    execute "DROP MATERIALIZED VIEW IF EXISTS system_analytics_mv CASCADE;"
-    execute "DROP MATERIALIZED VIEW IF EXISTS menu_performance_mv CASCADE;"
-    execute "DROP MATERIALIZED VIEW IF EXISTS restaurant_analytics_mv CASCADE;"
-    execute "DROP MATERIALIZED VIEW IF EXISTS dw_orders_mv CASCADE;"
+    execute 'DROP MATERIALIZED VIEW IF EXISTS system_analytics_mv CASCADE;'
+    execute 'DROP MATERIALIZED VIEW IF EXISTS menu_performance_mv CASCADE;'
+    execute 'DROP MATERIALIZED VIEW IF EXISTS restaurant_analytics_mv CASCADE;'
+    execute 'DROP MATERIALIZED VIEW IF EXISTS dw_orders_mv CASCADE;'
   end
 
   def create_indexes
-    execute "CREATE INDEX idx_restaurant_analytics_restaurant_date ON restaurant_analytics_mv (restaurant_id, date);"
-    execute "CREATE INDEX idx_restaurant_analytics_restaurant_month ON restaurant_analytics_mv (restaurant_id, month);"
-    execute "CREATE INDEX idx_restaurant_analytics_date ON restaurant_analytics_mv (date);"
-    execute "CREATE INDEX idx_menu_performance_restaurant_date ON menu_performance_mv (restaurant_id, date);"
-    execute "CREATE INDEX idx_menu_performance_restaurant_month ON menu_performance_mv (restaurant_id, month);"
-    execute "CREATE INDEX idx_menu_performance_popularity ON menu_performance_mv (restaurant_id, month, popularity_rank);"
-    execute "CREATE INDEX idx_menu_performance_revenue ON menu_performance_mv (restaurant_id, month, revenue_rank);"
-    execute "CREATE INDEX idx_system_analytics_date ON system_analytics_mv (date);"
-    execute "CREATE INDEX idx_system_analytics_month ON system_analytics_mv (month);"
+    execute 'CREATE INDEX idx_restaurant_analytics_restaurant_date ON restaurant_analytics_mv (restaurant_id, date);'
+    execute 'CREATE INDEX idx_restaurant_analytics_restaurant_month ON restaurant_analytics_mv (restaurant_id, month);'
+    execute 'CREATE INDEX idx_restaurant_analytics_date ON restaurant_analytics_mv (date);'
+    execute 'CREATE INDEX idx_menu_performance_restaurant_date ON menu_performance_mv (restaurant_id, date);'
+    execute 'CREATE INDEX idx_menu_performance_restaurant_month ON menu_performance_mv (restaurant_id, month);'
+    execute 'CREATE INDEX idx_menu_performance_popularity ON menu_performance_mv (restaurant_id, month, popularity_rank);'
+    execute 'CREATE INDEX idx_menu_performance_revenue ON menu_performance_mv (restaurant_id, month, revenue_rank);'
+    execute 'CREATE INDEX idx_system_analytics_date ON system_analytics_mv (date);'
+    execute 'CREATE INDEX idx_system_analytics_month ON system_analytics_mv (month);'
   end
 
   def create_restaurant_analytics_mv
-    execute <<~SQL
+    execute <<~SQL.squish
       CREATE MATERIALIZED VIEW restaurant_analytics_mv AS
       SELECT r.id AS restaurant_id,
              r.name AS restaurant_name,
@@ -70,7 +70,7 @@ class UpdateMaterializedViewsForQuantity < ActiveRecord::Migration[7.2]
   end
 
   def create_menu_performance_mv
-    execute <<~SQL
+    execute <<~SQL.squish
       CREATE MATERIALIZED VIEW menu_performance_mv AS
       SELECT r.id AS restaurant_id,
              m.id AS menu_id,
@@ -100,7 +100,7 @@ class UpdateMaterializedViewsForQuantity < ActiveRecord::Migration[7.2]
   end
 
   def create_system_analytics_mv
-    execute <<~SQL
+    execute <<~SQL.squish
       CREATE MATERIALIZED VIEW system_analytics_mv AS
       SELECT DATE_TRUNC('day', created_at) AS date,
              DATE_TRUNC('week', created_at) AS week,
@@ -137,7 +137,7 @@ class UpdateMaterializedViewsForQuantity < ActiveRecord::Migration[7.2]
   end
 
   def create_dw_orders_mv
-    execute <<~SQL
+    execute <<~SQL.squish
       CREATE MATERIALIZED VIEW dw_orders_mv AS
       SELECT o.id AS order_id,
              o."orderedAt" AS ordered_at,
@@ -183,8 +183,8 @@ class UpdateMaterializedViewsForQuantity < ActiveRecord::Migration[7.2]
   end
 
   def recreate_original_restaurant_analytics_views
-    execute File.read(Rails.root.join('db/migrate/20251015205345_create_restaurant_analytics_materialized_views.rb')).match(/execute <<-SQL\n(.*)\n    SQL/m)[1]
-    execute File.read(Rails.root.join('db/migrate/20251015205345_create_restaurant_analytics_materialized_views.rb')).scan(/execute add_index_sql/m).any? ? <<~SQL : ''
+    execute Rails.root.join('db', 'migrate', '20251015205345_create_restaurant_analytics_materialized_views.rb', '20251015205345_create_restaurant_analytics_materialized_views.rb').read.match(/execute <<-SQL\n(.*)\n    SQL/m)[1]
+    execute Rails.root.join('db', 'migrate', '20251015205345_create_restaurant_analytics_materialized_views.rb', '20251015205345_create_restaurant_analytics_materialized_views.rb').read.scan(/execute add_index_sql/m).any? ? <<~SQL.squish : ''
       CREATE INDEX idx_restaurant_analytics_restaurant_date ON restaurant_analytics_mv (restaurant_id, date);
       CREATE INDEX idx_restaurant_analytics_restaurant_month ON restaurant_analytics_mv (restaurant_id, month);
       CREATE INDEX idx_restaurant_analytics_date ON restaurant_analytics_mv (date);
@@ -198,7 +198,7 @@ class UpdateMaterializedViewsForQuantity < ActiveRecord::Migration[7.2]
   end
 
   def recreate_original_dw_orders_mv
-    execute <<~SQL
+    execute <<~SQL.squish
       CREATE MATERIALIZED VIEW dw_orders_mv AS
       SELECT o.id AS order_id,
              o."orderedAt" AS ordered_at,

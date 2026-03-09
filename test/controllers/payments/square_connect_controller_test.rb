@@ -80,7 +80,7 @@ class Payments::SquareConnectControllerTest < ActionDispatch::IntegrationTest
     headers['X-CSRF-Token'] = csrf if csrf.present?
 
     # Stub the HTTP call inside SquareConnect#revoke!
-    HTTParty.stub :post, ->(*_args, **_opts) {
+    HTTParty.stub :post, lambda { |*_args, **_opts|
       OpenStruct.new(success?: true, code: 200, parsed_response: { 'success' => true })
     } do
       delete restaurant_payments_square_disconnect_path(@restaurant), headers: headers

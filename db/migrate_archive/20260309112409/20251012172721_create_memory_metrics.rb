@@ -10,8 +10,8 @@ class CreateMemoryMetrics < ActiveRecord::Migration[7.2]
 
       t.timestamps
     end
-    
+
     add_index :memory_metrics, [:timestamp]
-    add_index :memory_metrics, [:rss_memory, :timestamp]
+    add_index :memory_metrics, %i[rss_memory timestamp]
   end
 end

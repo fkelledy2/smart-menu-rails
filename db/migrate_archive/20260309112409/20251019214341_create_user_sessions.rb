@@ -11,10 +11,10 @@ class CreateUserSessions < ActiveRecord::Migration[7.2]
 
       t.timestamps
     end
-    
+
     add_index :user_sessions, :session_id, unique: true
-    add_index :user_sessions, [:resource_type, :resource_id]
-    add_index :user_sessions, [:user_id, :status]
+    add_index :user_sessions, %i[resource_type resource_id]
+    add_index :user_sessions, %i[user_id status]
     add_index :user_sessions, :last_activity_at
   end
 end

@@ -7,6 +7,7 @@ class Employee < ApplicationRecord
   belongs_to :user
   belongs_to :restaurant
   has_many :ordrs, dependent: :destroy
+  has_many :ordrnotes, dependent: :destroy
 
   # IdentityCache configuration
   cache_index :id

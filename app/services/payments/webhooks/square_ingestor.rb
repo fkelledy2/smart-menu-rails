@@ -18,7 +18,7 @@ module Payments
         entity_type = normalized_entity_type(provider_event_type)
         event_type = normalized_event_type(provider_event_type)
 
-        obj = payload.dig('data', 'object') || payload.dig('data') || {}
+        obj = payload.dig('data', 'object') || payload['data'] || {}
 
         payment_attempt = payment_attempt_for_payload(obj) if entity_type == :payment_attempt
         payment_refund = payment_refund_for_payload(obj) if entity_type == :refund
@@ -90,7 +90,7 @@ module Payments
 
       def amount_cents_for_payload(obj)
         payment = obj['payment'] || obj
-        money = payment.dig('amount_money') || payment.dig('total_money')
+        money = payment['amount_money'] || payment['total_money']
         money&.fetch('amount', nil)&.to_i
       rescue StandardError
         nil
@@ -98,7 +98,7 @@ module Payments
 
       def currency_for_payload(obj)
         payment = obj['payment'] || obj
-        money = payment.dig('amount_money') || payment.dig('total_money')
+        money = payment['amount_money'] || payment['total_money']
         c = money&.fetch('currency', nil)
         c&.to_s&.upcase
       rescue StandardError
@@ -122,7 +122,7 @@ module Payments
         return attempt if attempt
 
         # Try by idempotency_key
-        idem_key = payment['idempotency_key'] || payment.dig('reference_id')
+        idem_key = payment['idempotency_key'] || payment['reference_id']
         return nil if idem_key.blank?
 
         PaymentAttempt.find_by(idempotency_key: idem_key)

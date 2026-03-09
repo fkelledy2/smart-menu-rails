@@ -17,7 +17,7 @@ class CreatePaymentRefunds < ActiveRecord::Migration[7.2]
       t.timestamps
     end
 
-    add_index :payment_refunds, %i[provider provider_refund_id], unique: true, where: "provider_refund_id IS NOT NULL"
+    add_index :payment_refunds, %i[provider provider_refund_id], unique: true, where: 'provider_refund_id IS NOT NULL'
     add_index :payment_refunds, %i[payment_attempt_id created_at]
   end
 end

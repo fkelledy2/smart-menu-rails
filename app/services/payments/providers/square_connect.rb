@@ -35,8 +35,8 @@ module Payments
         merchant_id = response['merchant_id']
         access_token = response['access_token']
         refresh_token = response['refresh_token']
-        expires_at = response['expires_at'].present? ? Time.parse(response['expires_at']) : nil
-        short_lived = response['short_lived'] || false
+        expires_at = response['expires_at'].present? ? Time.zone.parse(response['expires_at']) : nil
+        response['short_lived'] || false
 
         # Ensure payment profile exists
         PaymentProfile.find_or_create_by!(restaurant: @restaurant) do |p|
@@ -90,7 +90,7 @@ module Payments
           oauth_post('/revoke', {
             client_id: SquareConfig.client_id,
             access_token: account.access_token,
-          }, auth: "Client #{SquareConfig.client_secret}")
+          }, auth: "Client #{SquareConfig.client_secret}",)
         rescue StandardError => e
           Rails.logger.warn("[SquareConnect] revoke failed restaurant_id=#{@restaurant.id}: #{e.message}")
         end
@@ -122,7 +122,7 @@ module Payments
         account.update!(
           access_token: response['access_token'],
           refresh_token: response['refresh_token'],
-          token_expires_at: response['expires_at'].present? ? Time.parse(response['expires_at']) : nil,
+          token_expires_at: response['expires_at'].present? ? Time.zone.parse(response['expires_at']) : nil,
         )
 
         account

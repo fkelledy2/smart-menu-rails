@@ -33,6 +33,7 @@ class SmartmenuState
         menuParticipantId: menuparticipant&.id&.to_s,
       },
       splitPlan: split_plan_payload(open_order, ordrparticipant),
+      notes: customer_notes_payload(open_order),
     }
   end
 
@@ -126,14 +127,14 @@ class SmartmenuState
   end
 
   # Split Plan WebSocket Payload
-  # 
+  #
   # Generates the split plan data included in SmartmenuState broadcasts.
   # This enables realtime updates to the customer split bill UI when:
   # - Another participant creates/modifies the split plan
   # - Staff updates the split plan
   # - Payment status changes (share becomes pending/succeeded)
   # - Plan becomes frozen (after first payment initiated)
-  # 
+  #
   # Consumed by: app/javascript/controllers/split_bill_controller.js
   # via 'state:update' event listener
   def self.split_plan_payload(order, ordrparticipant)
@@ -151,13 +152,44 @@ class SmartmenuState
       participantCount: plan.participant_count,
       frozen: plan.split_frozen?,
       allSettled: plan.all_shares_settled?,
-      myShare: my_share ? {
-        id: my_share.id.to_s,
-        amountCents: my_share.amount_cents,
-        status: my_share.status.to_s,
-        canPay: my_share.pay_ready?,
-      } : nil,
+      myShare: if my_share
+                 {
+                   id: my_share.id.to_s,
+                   amountCents: my_share.amount_cents,
+                   status: my_share.status.to_s,
+                   canPay: my_share.pay_ready?,
+                 }
+               else
+                 nil
+               end,
     }
+  end
+
+  # Customer Notes WebSocket Payload
+  #
+  # Generates customer-visible notes for Smart Menu display.
+  # Only includes notes where visible_to_customers is true and not expired.
+  #
+  # Consumed by: Smart Menu frontend (if implemented)
+  def self.customer_notes_payload(order)
+    return [] unless order
+
+    notes = begin
+      order.ordrnotes.for_customers.active.by_priority
+    rescue StandardError
+      []
+    end
+
+    notes.map do |note|
+      {
+        id: note.id.to_s,
+        category: note.category.to_s,
+        priority: note.priority.to_s,
+        content: note.content.to_s,
+        categoryIcon: note.category_icon,
+        createdAt: note.created_at.iso8601,
+      }
+    end
   end
 
   def self.totals_for(order, restaurant)

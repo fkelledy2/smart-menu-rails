@@ -13,7 +13,7 @@ class CreateOcrMenuSections < ActiveRecord::Migration[7.1]
 
       t.timestamps
     end
-    
+
     add_index :ocr_menu_sections, :sequence
     add_index :ocr_menu_sections, :is_confirmed
   end

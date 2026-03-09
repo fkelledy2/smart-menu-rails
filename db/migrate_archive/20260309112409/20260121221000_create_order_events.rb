@@ -17,7 +17,7 @@ class CreateOrderEvents < ActiveRecord::Migration[7.2]
     add_index :order_events, %i[ordr_id sequence], unique: true
     add_index :order_events, %i[ordr_id created_at id]
     add_index :order_events, %i[ordr_id idempotency_key], unique: true,
-                                                        where: 'idempotency_key IS NOT NULL',
-                                                        name: 'index_order_events_on_ordr_id_and_idempotency_key'
+                                                          where: 'idempotency_key IS NOT NULL',
+                                                          name: 'index_order_events_on_ordr_id_and_idempotency_key'
   end
 end

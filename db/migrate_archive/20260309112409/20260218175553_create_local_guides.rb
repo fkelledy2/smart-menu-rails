@@ -20,7 +20,7 @@ class CreateLocalGuides < ActiveRecord::Migration[7.2]
 
     add_index :local_guides, :slug, unique: true
     add_index :local_guides, :status
-    add_index :local_guides, [:city, :category]
+    add_index :local_guides, %i[city category]
     add_index :local_guides, :approved_by_user_id
   end
 end

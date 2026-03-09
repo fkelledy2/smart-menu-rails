@@ -27,29 +27,29 @@ class CreateMenuItemSearchDocuments < ActiveRecord::Migration[7.1]
       t.timestamps
     end
 
-    add_index :menu_item_search_documents, [:menu_id, :locale]
-    add_index :menu_item_search_documents, [:menu_id, :menuitem_id, :locale], unique: true, name: 'idx_menu_item_search_docs_unique'
+    add_index :menu_item_search_documents, %i[menu_id locale]
+    add_index :menu_item_search_documents, %i[menu_id menuitem_id locale], unique: true, name: 'idx_menu_item_search_docs_unique'
     add_index :menu_item_search_documents, :restaurant_id
 
-    execute <<~SQL
+    execute <<~SQL.squish
       ALTER TABLE menu_item_search_documents
       ADD COLUMN document_tsv tsvector
       GENERATED ALWAYS AS (to_tsvector('simple', coalesce(document_text, ''))) STORED;
     SQL
 
-    execute <<~SQL
+    execute <<~SQL.squish
       CREATE INDEX idx_menu_item_search_docs_tsv
       ON menu_item_search_documents
       USING gin (document_tsv);
     SQL
 
-    if vector_enabled
-      execute <<~SQL
-        CREATE INDEX idx_menu_item_search_docs_embedding_ivfflat
-        ON menu_item_search_documents
-        USING ivfflat (embedding vector_cosine_ops)
-        WITH (lists = 50);
-      SQL
-    end
+    return unless vector_enabled
+
+    execute <<~SQL.squish
+      CREATE INDEX idx_menu_item_search_docs_embedding_ivfflat
+      ON menu_item_search_documents
+      USING ivfflat (embedding vector_cosine_ops)
+      WITH (lists = 50);
+    SQL
   end
 end

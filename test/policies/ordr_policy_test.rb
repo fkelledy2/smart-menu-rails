@@ -39,9 +39,9 @@ class OrdrPolicyTest < ActiveSupport::TestCase
 
   # === SHOW TESTS (Customer Access) ===
 
-  test 'should deny anonymous customer from viewing order' do
+  test 'should allow anonymous customer to view order for Smart Menu' do
     policy = OrdrPolicy.new(nil, @ordr)
-    assert_not policy.show?, 'Anonymous customers cannot view orders (ApplicationPolicy creates User.new)'
+    assert policy.show?, 'Anonymous customers can view orders for Smart Menu (ApplicationPolicy creates User.new)'
   end
 
   test 'should allow owner to view order' do
@@ -199,7 +199,7 @@ class OrdrPolicyTest < ActiveSupport::TestCase
   test 'should differentiate between customer and staff permissions' do
     # Anonymous user permissions (ApplicationPolicy creates User.new)
     customer_policy = OrdrPolicy.new(nil, @ordr)
-    assert_not customer_policy.show?, 'Anonymous users cannot view orders (no ownership)'
+    assert customer_policy.show?, 'Anonymous users can view orders for Smart Menu'
     assert customer_policy.new?, 'Anonymous users should be able to create new orders'
     assert customer_policy.create?, 'Anonymous users should be able to create orders'
     assert customer_policy.update?, 'Anonymous users should be able to update orders in smartmenu context'
@@ -235,8 +235,8 @@ class OrdrPolicyTest < ActiveSupport::TestCase
     anonymous_policy = OrdrPolicy.new(nil, @ordr)
     authenticated_policy = OrdrPolicy.new(@other_user, @ordr)
 
-    # Both anonymous and authenticated non-owners should have limited access
-    assert_not anonymous_policy.show?, 'Anonymous users should not have access (no ownership)'
+    # Anonymous users have access for Smart Menu, authenticated non-owners do not
+    assert anonymous_policy.show?, 'Anonymous users have access for Smart Menu'
     assert_not authenticated_policy.show?, 'Authenticated non-owners should not have access'
 
     assert anonymous_policy.new?, 'Anonymous users should be able to create orders'

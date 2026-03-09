@@ -16,7 +16,7 @@ class CreateExplorePages < ActiveRecord::Migration[7.2]
       t.timestamps
     end
 
-    add_index :explore_pages, [:country_slug, :city_slug, :category_slug],
+    add_index :explore_pages, %i[country_slug city_slug category_slug],
               unique: true, name: 'idx_explore_pages_unique_path'
     add_index :explore_pages, :published
     add_index :explore_pages, :restaurant_count

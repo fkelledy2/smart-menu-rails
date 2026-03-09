@@ -13,10 +13,10 @@ class CreatePerformanceMetrics < ActiveRecord::Migration[7.2]
 
       t.timestamps
     end
-    
-    add_index :performance_metrics, [:endpoint, :timestamp]
+
+    add_index :performance_metrics, %i[endpoint timestamp]
     add_index :performance_metrics, [:timestamp]
     add_index :performance_metrics, [:response_time]
-    add_index :performance_metrics, [:status_code, :timestamp]
+    add_index :performance_metrics, %i[status_code timestamp]
   end
 end

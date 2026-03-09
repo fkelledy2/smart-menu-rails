@@ -6,6 +6,6 @@ class AddHiddenAndCarrierToMenuitems < ActiveRecord::Migration[7.0]
     end
 
     add_index :menuitems, :hidden
-    add_index :menuitems, [:menusection_id, :tasting_carrier], name: 'index_menuitems_on_section_and_carrier'
+    add_index :menuitems, %i[menusection_id tasting_carrier], name: 'index_menuitems_on_section_and_carrier'
   end
 end

@@ -183,7 +183,7 @@ class SmartmenuLocaleSwitchingTest < ApplicationSystemTestCase
   def wait_until_locale_persisted(timeout: 5, &block)
     Timeout.timeout(timeout) do
       loop do
-        break if block.call
+        break if yield
 
         sleep 0.02
       end

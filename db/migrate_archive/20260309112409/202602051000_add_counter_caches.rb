@@ -40,7 +40,7 @@ class AddCounterCaches < ActiveRecord::Migration[7.2]
     # This avoids issues with uninitialized counter_cache associations
 
     # Backfill restaurants.menus_count
-    execute <<~SQL
+    execute <<~SQL.squish
       UPDATE restaurants r
       SET menus_count = sub.count
       FROM (
@@ -52,7 +52,7 @@ class AddCounterCaches < ActiveRecord::Migration[7.2]
     SQL
 
     # Backfill restaurants.employees_count
-    execute <<~SQL
+    execute <<~SQL.squish
       UPDATE restaurants r
       SET employees_count = sub.count
       FROM (
@@ -64,7 +64,7 @@ class AddCounterCaches < ActiveRecord::Migration[7.2]
     SQL
 
     # Backfill restaurants.ordrs_count
-    execute <<~SQL
+    execute <<~SQL.squish
       UPDATE restaurants r
       SET ordrs_count = sub.count
       FROM (
@@ -76,7 +76,7 @@ class AddCounterCaches < ActiveRecord::Migration[7.2]
     SQL
 
     # Backfill restaurants.tablesettings_count
-    execute <<~SQL
+    execute <<~SQL.squish
       UPDATE restaurants r
       SET tablesettings_count = sub.count
       FROM (
@@ -88,7 +88,7 @@ class AddCounterCaches < ActiveRecord::Migration[7.2]
     SQL
 
     # Backfill restaurants.ocr_menu_imports_count
-    execute <<~SQL
+    execute <<~SQL.squish
       UPDATE restaurants r
       SET ocr_menu_imports_count = sub.count
       FROM (
@@ -100,7 +100,7 @@ class AddCounterCaches < ActiveRecord::Migration[7.2]
     SQL
 
     # Backfill menus.menuitems_count (via menusections)
-    execute <<~SQL
+    execute <<~SQL.squish
       UPDATE menus m
       SET menuitems_count = sub.count
       FROM (
@@ -113,7 +113,7 @@ class AddCounterCaches < ActiveRecord::Migration[7.2]
     SQL
 
     # Backfill menus.menusections_count
-    execute <<~SQL
+    execute <<~SQL.squish
       UPDATE menus m
       SET menusections_count = sub.count
       FROM (
@@ -125,7 +125,7 @@ class AddCounterCaches < ActiveRecord::Migration[7.2]
     SQL
 
     # Backfill menusections.menuitems_count
-    execute <<~SQL
+    execute <<~SQL.squish
       UPDATE menusections ms
       SET menuitems_count = sub.count
       FROM (
@@ -137,7 +137,7 @@ class AddCounterCaches < ActiveRecord::Migration[7.2]
     SQL
 
     # Backfill ordrs.ordritems_count
-    execute <<~SQL
+    execute <<~SQL.squish
       UPDATE ordrs o
       SET ordritems_count = sub.count
       FROM (
@@ -149,7 +149,7 @@ class AddCounterCaches < ActiveRecord::Migration[7.2]
     SQL
 
     # Backfill ordrs.ordrparticipants_count
-    execute <<~SQL
+    execute <<~SQL.squish
       UPDATE ordrs o
       SET ordrparticipants_count = sub.count
       FROM (
@@ -161,7 +161,7 @@ class AddCounterCaches < ActiveRecord::Migration[7.2]
     SQL
 
     # Backfill menuitems.ordritems_count
-    execute <<~SQL
+    execute <<~SQL.squish
       UPDATE menuitems mi
       SET ordritems_count = sub.count
       FROM (
@@ -173,7 +173,7 @@ class AddCounterCaches < ActiveRecord::Migration[7.2]
     SQL
 
     # Backfill users.restaurants_count
-    execute <<~SQL
+    execute <<~SQL.squish
       UPDATE users u
       SET restaurants_count = sub.count
       FROM (
@@ -185,7 +185,7 @@ class AddCounterCaches < ActiveRecord::Migration[7.2]
     SQL
 
     # Backfill users.employees_count
-    execute <<~SQL
+    execute <<~SQL.squish
       UPDATE users u
       SET employees_count = sub.count
       FROM (

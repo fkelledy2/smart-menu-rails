@@ -49,7 +49,7 @@ module Square
 
     test 'marks restaurant degraded on non-401 API error' do
       error = Payments::Providers::SquareHttpClient::SquareApiError.new(
-        'Server error', status_code: 500, errors: [], category: 'API_ERROR'
+        'Server error', status_code: 500, errors: [], category: 'API_ERROR',
       )
 
       fake_client = Minitest::Mock.new
@@ -69,7 +69,7 @@ module Square
 
     test 'marks restaurant disconnected on 401 error' do
       error = Payments::Providers::SquareHttpClient::SquareApiError.new(
-        'Unauthorized', status_code: 401, errors: [], category: 'AUTHENTICATION_ERROR'
+        'Unauthorized', status_code: 401, errors: [], category: 'AUTHENTICATION_ERROR',
       )
 
       fake_client = Minitest::Mock.new
@@ -90,7 +90,7 @@ module Square
 
     test 'continues processing on unexpected errors' do
       # Stub to raise a generic error
-      Payments::Providers::SquareHttpClient.stub :new, ->(*_args, **_opts) {
+      Payments::Providers::SquareHttpClient.stub :new, lambda { |*_args, **_opts|
         raise StandardError, 'unexpected'
       } do
         assert_nothing_raised { HealthCheckJob.perform_now }

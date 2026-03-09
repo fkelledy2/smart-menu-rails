@@ -19,7 +19,7 @@ class CreateOcrMenuItems < ActiveRecord::Migration[7.1]
 
       t.timestamps
     end
-    
+
     add_index :ocr_menu_items, :sequence
     add_index :ocr_menu_items, :is_confirmed
     add_index :ocr_menu_items, :is_vegetarian

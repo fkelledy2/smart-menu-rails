@@ -4,7 +4,7 @@ class AddOrdrStationTicketToOrdritems < ActiveRecord::Migration[7.2]
     add_index :ordritems, :ordr_station_ticket_id
     add_foreign_key :ordritems, :ordr_station_tickets
 
-    execute <<~SQL
+    execute <<~SQL.squish
       UPDATE ordritems
       SET ordr_station_ticket_id = tickets.id
       FROM ordr_station_tickets tickets, menuitems
@@ -18,7 +18,7 @@ class AddOrdrStationTicketToOrdritems < ActiveRecord::Migration[7.2]
         )
     SQL
 
-    execute <<~SQL
+    execute <<~SQL.squish
       UPDATE ordr_station_tickets
       SET submitted_at = COALESCE(submitted_at, created_at)
       WHERE submitted_at IS NULL

@@ -2,7 +2,7 @@ class OcrMenuImport < ApplicationRecord
   include AASM
   include IdentityCache
 
-  after_commit :broadcast_progress_update, on: [:create, :update]
+  after_commit :broadcast_progress_update, on: %i[create update]
 
   # Associations
   belongs_to :restaurant

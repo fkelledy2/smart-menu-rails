@@ -1,7 +1,7 @@
 class AddSuperAdminToUsers < ActiveRecord::Migration[7.2]
   def change
     add_column :users, :super_admin, :boolean, default: false, null: false
-    add_index :users, [:admin, :super_admin]
+    add_index :users, %i[admin super_admin]
 
     reversible do |dir|
       dir.up do

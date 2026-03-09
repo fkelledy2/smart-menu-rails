@@ -14,7 +14,7 @@ class CreateWhiskeyFlights < ActiveRecord::Migration[7.1]
       t.timestamps
     end
 
-    add_index :whiskey_flights, [:menu_id, :theme_key], unique: true
+    add_index :whiskey_flights, %i[menu_id theme_key], unique: true
     add_index :whiskey_flights, :status
   end
 end

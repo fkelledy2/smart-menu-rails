@@ -16,10 +16,10 @@ class MakeOrdrSplitPaymentsProviderAgnostic < ActiveRecord::Migration[7.2]
 
     # Indexes (rename_column auto-renames existing indexes in Postgres)
     add_index :ordr_split_payments, :idempotency_key, unique: true,
-              where: "idempotency_key IS NOT NULL",
-              name: "index_ordr_split_payments_on_idempotency_key"
-    add_index :ordr_split_payments, [:provider, :provider_payment_id], unique: true,
-              where: "provider_payment_id IS NOT NULL",
-              name: "index_ordr_split_payments_on_provider_and_payment_id"
+                                                      where: 'idempotency_key IS NOT NULL',
+                                                      name: 'index_ordr_split_payments_on_idempotency_key'
+    add_index :ordr_split_payments, %i[provider provider_payment_id], unique: true,
+                                                                      where: 'provider_payment_id IS NOT NULL',
+                                                                      name: 'index_ordr_split_payments_on_provider_and_payment_id'
   end
 end

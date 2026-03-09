@@ -25,7 +25,7 @@ class OrdrPaymentsControllerTest < ActionDispatch::IntegrationTest
     post split_evenly_restaurant_ordr_url(@restaurant, @ordr)
     assert_response :unprocessable_content
 
-    body = JSON.parse(response.body)
+    body = response.parsed_body
     assert_equal false, body['ok']
     assert_match(/billrequested/, body['error'])
   end
@@ -38,7 +38,7 @@ class OrdrPaymentsControllerTest < ActionDispatch::IntegrationTest
     post split_evenly_restaurant_ordr_url(@restaurant, @ordr)
     assert_response :unprocessable_content
 
-    body = JSON.parse(response.body)
+    body = response.parsed_body
     assert_match(/2 participants/, body['error'])
   end
 
@@ -49,7 +49,7 @@ class OrdrPaymentsControllerTest < ActionDispatch::IntegrationTest
     post split_evenly_restaurant_ordr_url(@restaurant, @ordr)
     assert_response :ok
 
-    body = JSON.parse(response.body)
+    body = response.parsed_body
     assert body['ok']
     assert_equal @ordr.id, body['order_id']
     assert body['split_payments'].is_a?(Array)
@@ -64,7 +64,7 @@ class OrdrPaymentsControllerTest < ActionDispatch::IntegrationTest
     get split_plan_restaurant_ordr_url(@restaurant, @ordr)
     assert_response :ok
 
-    body = JSON.parse(response.body)
+    body = response.parsed_body
     assert body['ok']
     assert_nil body['split_plan']
   end
@@ -80,8 +80,8 @@ class OrdrPaymentsControllerTest < ActionDispatch::IntegrationTest
     }
     assert_response :unprocessable_content
 
-    body = JSON.parse(response.body)
-    refute body['ok']
+    body = response.parsed_body
+    assert_not body['ok']
     assert_match(/subtotal/i, body['error'])
   end
 
@@ -96,8 +96,8 @@ class OrdrPaymentsControllerTest < ActionDispatch::IntegrationTest
     }
     assert_response :unprocessable_content
 
-    body = JSON.parse(response.body)
-    refute body['ok']
+    body = response.parsed_body
+    assert_not body['ok']
     assert_match(/100%/i, body['error'])
   end
 
@@ -111,8 +111,8 @@ class OrdrPaymentsControllerTest < ActionDispatch::IntegrationTest
     }
     assert_response :unprocessable_content
 
-    body = JSON.parse(response.body)
-    refute body['ok']
+    body = response.parsed_body
+    assert_not body['ok']
     assert_match(/assigned/i, body['error'])
   end
 
@@ -121,7 +121,7 @@ class OrdrPaymentsControllerTest < ActionDispatch::IntegrationTest
       split_method: 'equal',
       plan_status: 'frozen',
       frozen_at: Time.current,
-      created_by_user: users(:one)
+      created_by_user: users(:one),
     )
     plan.ordr_split_payments.create!(
       ordr: @ordr,
@@ -135,7 +135,7 @@ class OrdrPaymentsControllerTest < ActionDispatch::IntegrationTest
       provider: 'stripe',
       split_method: 'equal',
       status: 'pending',
-      locked_at: Time.current
+      locked_at: Time.current,
     )
 
     patch split_plan_restaurant_ordr_url(@restaurant, @ordr), params: {
@@ -144,8 +144,8 @@ class OrdrPaymentsControllerTest < ActionDispatch::IntegrationTest
     }
     assert_response :unprocessable_content
 
-    body = JSON.parse(response.body)
-    refute body['ok']
+    body = response.parsed_body
+    assert_not body['ok']
     assert_match(/frozen/i, body['error'])
   end
 
@@ -155,8 +155,8 @@ class OrdrPaymentsControllerTest < ActionDispatch::IntegrationTest
     get split_plan_restaurant_ordr_url(@restaurant, @ordr)
     assert_response :forbidden
 
-    body = JSON.parse(response.body)
-    refute body['ok']
+    body = response.parsed_body
+    assert_not body['ok']
     assert_match(/authorized/i, body['error'])
   end
 
@@ -180,7 +180,7 @@ class OrdrPaymentsControllerTest < ActionDispatch::IntegrationTest
     post payments_checkout_session_restaurant_ordr_url(@restaurant, @ordr)
     assert_response :unprocessable_content
 
-    body = JSON.parse(response.body)
+    body = response.parsed_body
     assert_match(/zero/, body['error'])
   end
 
@@ -228,7 +228,7 @@ class OrdrPaymentsControllerTest < ActionDispatch::IntegrationTest
            params: { success_url: 'https://example.com/success', cancel_url: 'https://example.com/cancel' }
       assert_response :ok
 
-      body = JSON.parse(response.body)
+      body = response.parsed_body
       assert body['ok']
       assert_equal 'sq_link_split_1', body['checkout_session_id']
       assert_equal 'https://square.link/u/test', body['checkout_url']
@@ -282,7 +282,7 @@ class OrdrPaymentsControllerTest < ActionDispatch::IntegrationTest
            }
       assert_response :ok
 
-      body = JSON.parse(response.body)
+      body = response.parsed_body
       assert body['ok']
 
       sp.reload
@@ -297,7 +297,7 @@ class OrdrPaymentsControllerTest < ActionDispatch::IntegrationTest
   test 'SquareIngestor marks split payment succeeded and emits paid when all settled' do
     @ordr.update!(status: 'billrequested', gross: 20.00)
 
-    sp1 = @ordr.ordr_split_payments.create!(
+    @ordr.ordr_split_payments.create!(
       amount_cents: 1000, currency: 'EUR', status: :succeeded,
       ordrparticipant: ordrparticipants(:two),
     )
@@ -359,7 +359,7 @@ class OrdrPaymentsControllerTest < ActionDispatch::IntegrationTest
   test 'SquareIngestor does NOT emit paid when some splits still pending' do
     @ordr.update!(status: 'billrequested', gross: 20.00)
 
-    sp1 = @ordr.ordr_split_payments.create!(
+    @ordr.ordr_split_payments.create!(
       amount_cents: 1000, currency: 'EUR', status: :requires_payment,
       ordrparticipant: ordrparticipants(:two),
     )
@@ -368,7 +368,7 @@ class OrdrPaymentsControllerTest < ActionDispatch::IntegrationTest
       ordrparticipant: ordrparticipants(:three),
     )
 
-    pa = PaymentAttempt.create!(
+    PaymentAttempt.create!(
       ordr: @ordr,
       restaurant: @restaurant,
       provider: :square,
@@ -422,7 +422,7 @@ class OrdrPaymentsControllerTest < ActionDispatch::IntegrationTest
     post payments_inline_restaurant_ordr_url(@restaurant, @ordr), params: {}
     assert_response :unprocessable_content
 
-    body = JSON.parse(response.body)
+    body = response.parsed_body
     assert_match(/source_id/, body['error'])
   end
 
@@ -433,7 +433,7 @@ class OrdrPaymentsControllerTest < ActionDispatch::IntegrationTest
          params: { source_id: 'cnon-test' }
     assert_response :unprocessable_content
 
-    body = JSON.parse(response.body)
+    body = response.parsed_body
     assert_match(/Square is not enabled/, body['error'])
   end
 
@@ -473,7 +473,7 @@ class OrdrPaymentsControllerTest < ActionDispatch::IntegrationTest
            params: { source_id: 'cnon-test-nonce', tip_cents: 200 }
       assert_response :ok
 
-      body = JSON.parse(response.body)
+      body = response.parsed_body
       assert body['ok']
       assert_equal 'succeeded', body['status']
       assert_equal 'sq_pay_inline_1', body['payment_id']

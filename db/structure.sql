@@ -2610,6 +2610,45 @@ ALTER SEQUENCE public.ordritems_id_seq OWNED BY public.ordritems.id;
 
 
 --
+-- Name: ordrnotes; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ordrnotes (
+    id bigint NOT NULL,
+    ordr_id bigint NOT NULL,
+    employee_id bigint NOT NULL,
+    content text NOT NULL,
+    category integer DEFAULT 0 NOT NULL,
+    priority integer DEFAULT 1 NOT NULL,
+    visible_to_kitchen boolean DEFAULT true,
+    visible_to_servers boolean DEFAULT true,
+    visible_to_customers boolean DEFAULT false,
+    expires_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: ordrnotes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.ordrnotes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ordrnotes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.ordrnotes_id_seq OWNED BY public.ordrnotes.id;
+
+
+--
 -- Name: ordrparticipant_allergyn_filters; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -4839,6 +4878,13 @@ ALTER TABLE ONLY public.ordritems ALTER COLUMN id SET DEFAULT nextval('public.or
 
 
 --
+-- Name: ordrnotes id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ordrnotes ALTER COLUMN id SET DEFAULT nextval('public.ordrnotes_id_seq'::regclass);
+
+
+--
 -- Name: ordrparticipant_allergyn_filters id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -5656,6 +5702,14 @@ ALTER TABLE ONLY public.ordritemnotes
 
 ALTER TABLE ONLY public.ordritems
     ADD CONSTRAINT ordritems_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ordrnotes ordrnotes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ordrnotes
+    ADD CONSTRAINT ordrnotes_pkey PRIMARY KEY (id);
 
 
 --
@@ -7763,6 +7817,34 @@ CREATE INDEX index_ordritems_on_status ON public.ordritems USING btree (status);
 
 
 --
+-- Name: index_ordrnotes_on_category_and_priority; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ordrnotes_on_category_and_priority ON public.ordrnotes USING btree (category, priority);
+
+
+--
+-- Name: index_ordrnotes_on_employee_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ordrnotes_on_employee_id ON public.ordrnotes USING btree (employee_id);
+
+
+--
+-- Name: index_ordrnotes_on_ordr_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ordrnotes_on_ordr_id ON public.ordrnotes USING btree (ordr_id);
+
+
+--
+-- Name: index_ordrnotes_on_ordr_id_and_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ordrnotes_on_ordr_id_and_created_at ON public.ordrnotes USING btree (ordr_id, created_at);
+
+
+--
 -- Name: index_ordrparticipant_allergyn_filters_on_allergyn_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -8877,6 +8959,14 @@ ALTER TABLE ONLY public.similar_product_recommendations
 
 
 --
+-- Name: ordrnotes fk_rails_1828436f4a; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ordrnotes
+    ADD CONSTRAINT fk_rails_1828436f4a FOREIGN KEY (employee_id) REFERENCES public.employees(id);
+
+
+--
 -- Name: ocr_menu_items fk_rails_19883c5eee; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -9258,6 +9348,14 @@ ALTER TABLE ONLY public.ordrs
 
 ALTER TABLE ONLY public.ocr_menu_items
     ADD CONSTRAINT fk_rails_713e4767df FOREIGN KEY (menuitem_id) REFERENCES public.menuitems(id);
+
+
+--
+-- Name: ordrnotes fk_rails_715c81f2e4; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ordrnotes
+    ADD CONSTRAINT fk_rails_715c81f2e4 FOREIGN KEY (ordr_id) REFERENCES public.ordrs(id);
 
 
 --
@@ -9955,6 +10053,7 @@ ALTER TABLE ONLY public.voice_commands
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260309184831'),
 ('20260308084502'),
 ('20260308084501'),
 ('20260308084500'),

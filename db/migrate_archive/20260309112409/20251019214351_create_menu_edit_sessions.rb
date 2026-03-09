@@ -10,8 +10,8 @@ class CreateMenuEditSessions < ActiveRecord::Migration[7.2]
 
       t.timestamps
     end
-    
-    add_index :menu_edit_sessions, [:menu_id, :user_id], unique: true
+
+    add_index :menu_edit_sessions, %i[menu_id user_id], unique: true
     add_index :menu_edit_sessions, :session_id
     add_index :menu_edit_sessions, :last_activity_at
   end

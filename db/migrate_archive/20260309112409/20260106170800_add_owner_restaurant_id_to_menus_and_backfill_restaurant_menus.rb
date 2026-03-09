@@ -5,7 +5,7 @@ class AddOwnerRestaurantIdToMenusAndBackfillRestaurantMenus < ActiveRecord::Migr
     add_reference :menus, :owner_restaurant, foreign_key: { to_table: :restaurants }, index: true
 
     say_with_time 'Backfilling menus.owner_restaurant_id from menus.restaurant_id' do
-      execute <<~SQL
+      execute <<~SQL.squish
         UPDATE menus
         SET owner_restaurant_id = restaurant_id
         WHERE owner_restaurant_id IS NULL
@@ -13,7 +13,7 @@ class AddOwnerRestaurantIdToMenusAndBackfillRestaurantMenus < ActiveRecord::Migr
     end
 
     say_with_time 'Backfilling restaurant_menus attachments for existing menus' do
-      execute <<~SQL
+      execute <<~SQL.squish
         INSERT INTO restaurant_menus
           (restaurant_id, menu_id, sequence, status, availability_override_enabled, availability_state, created_at, updated_at)
         SELECT

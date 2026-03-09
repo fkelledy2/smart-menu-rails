@@ -1,0 +1,148 @@
+<div class="modal fade" id="addNoteModal" tabindex="-1" aria-labelledby="addNoteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <%= form_with model: [restaurant, order, Ordrnote.new],
+                    local: true, 
+                    class: "modal-form",
+                    id: "addNoteForm" do |form| %>
+        <div class="modal-header">
+          <h5 class="modal-title" id="addNoteModalLabel">
+            <i class="bi bi-plus-circle"></i> Add Order Note
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+          <div class="mb-3">
+            <%= form.label :category, class: "form-label fw-bold" %>
+            <%= form.select :category,
+                options_for_select([
+                  ['🚨 Dietary Restrictions (Allergies, Medical)', 'dietary'],
+                  ['👨‍🍳 Preparation Instructions (Cooking, Modifications)', 'preparation'],
+                  ['⏰ Timing Instructions (Rush, Delays)', 'timing'],
+                  ['💬 Customer Service (Special Occasions, Preferences)', 'customer_service'],
+                  ['🔧 Operational Notes (Staff Coordination, Equipment)', 'operational']
+                ]),
+                { prompt: 'Select note type...' },
+                { class: "form-select", required: true } %>
+            <div class="form-text">Choose the category that best describes this note</div>
+          </div>
+
+          <div class="mb-3">
+            <%= form.label :priority, class: "form-label fw-bold" %>
+            <%= form.select :priority,
+                options_for_select([
+                  ['Low Priority', 'low'],
+                  ['Medium Priority', 'medium'],
+                  ['High Priority', 'high'],
+                  ['🚨 Urgent (Immediate Attention Required)', 'urgent']
+                ], 'medium'),
+                {},
+                { class: "form-select", required: true } %>
+            <div class="form-text">Urgent notes will be highlighted prominently</div>
+          </div>
+
+          <div class="mb-3">
+            <%= form.label :content, "Note Content", class: "form-label fw-bold" %>
+            <%= form.text_area :content,
+                class: "form-control",
+                rows: 4,
+                maxlength: 500,
+                placeholder: "Enter special instructions, dietary restrictions, or other important notes...",
+                required: true %>
+            <div class="form-text">
+              <span id="charCount">0</span>/500 characters
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-bold">Visibility</label>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-check">
+                  <%= form.check_box :visible_to_kitchen, 
+                      { checked: true, class: "form-check-input" }, 
+                      true, false %>
+                  <%= form.label :visible_to_kitchen, class: "form-check-label" do %>
+                    <i class="bi bi-eye"></i> Kitchen
+                  <% end %>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-check">
+                  <%= form.check_box :visible_to_servers, 
+                      { checked: true, class: "form-check-input" }, 
+                      true, false %>
+                  <%= form.label :visible_to_servers, class: "form-check-label" do %>
+                    <i class="bi bi-eye"></i> Servers
+                  <% end %>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-check">
+                  <%= form.check_box :visible_to_customers, 
+                      { class: "form-check-input" }, 
+                      true, false %>
+                  <%= form.label :visible_to_customers, class: "form-check-label" do %>
+                    <i class="bi bi-eye"></i> Customers
+                  <% end %>
+                </div>
+              </div>
+            </div>
+            <div class="form-text">Control who can see this note</div>
+          </div>
+
+          <div class="mb-3">
+            <%= form.label :expires_at, "Auto-Expire (Optional)", class: "form-label fw-bold" %>
+            <%= form.datetime_local_field :expires_at, 
+                class: "form-control",
+                min: Time.current.strftime("%Y-%m-%dT%H:%M") %>
+            <div class="form-text">Note will automatically hide after this time</div>
+          </div>
+
+          <div class="alert alert-info mb-0">
+            <i class="bi bi-info-circle"></i>
+            <strong>Quick Templates:</strong>
+            <div class="btn-group-vertical btn-group-sm w-100 mt-2" role="group">
+              <button type="button" class="btn btn-outline-secondary text-start" 
+                      onclick="document.getElementById('ordrnote_content').value='Customer has severe nut allergy - NO NUTS in any items'; document.getElementById('ordrnote_category').value='dietary'; document.getElementById('ordrnote_priority').value='urgent';">
+                🚨 Severe Allergy Alert
+              </button>
+              <button type="button" class="btn btn-outline-secondary text-start"
+                      onclick="document.getElementById('ordrnote_content').value='Rush order - needed ASAP'; document.getElementById('ordrnote_category').value='timing'; document.getElementById('ordrnote_priority').value='high';">
+                ⏰ Rush Order
+              </button>
+              <button type="button" class="btn btn-outline-secondary text-start"
+                      onclick="document.getElementById('ordrnote_content').value='Birthday celebration - please add candle to dessert'; document.getElementById('ordrnote_category').value='customer_service'; document.getElementById('ordrnote_priority').value='medium';">
+                🎂 Birthday Celebration
+              </button>
+              <button type="button" class="btn btn-outline-secondary text-start"
+                      onclick="document.getElementById('ordrnote_content').value='Customer prefers well-done'; document.getElementById('ordrnote_category').value='preparation'; document.getElementById('ordrnote_priority').value='medium';">
+                👨‍🍳 Cooking Preference
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <%= form.submit "Add Note", class: "btn btn-primary" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Character counter
+  document.addEventListener('DOMContentLoaded', function() {
+    const contentField = document.getElementById('ordrnote_content');
+    const charCount = document.getElementById('charCount');
+    
+    if (contentField && charCount) {
+      contentField.addEventListener('input', function() {
+        charCount.textContent = this.value.length;
+      });
+    }
+  });
+</script>

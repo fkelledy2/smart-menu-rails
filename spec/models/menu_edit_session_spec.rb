@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe MenuEditSession, type: :model do
+RSpec.describe MenuEditSession do
   it 'belongs to a menu and a user' do
     session = described_class.reflect_on_association(:menu)
     user = described_class.reflect_on_association(:user)

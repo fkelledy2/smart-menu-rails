@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe PushSubscription, type: :model do
+RSpec.describe PushSubscription do
   let(:user) { create(:user) }
 
   it 'validates required fields' do

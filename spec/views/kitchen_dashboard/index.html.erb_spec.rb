@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'kitchen_dashboard/index.html.erb', type: :view do
+RSpec.describe 'kitchen_dashboard/index.html.erb' do
   it 'renders the metrics and empty states' do
     assign(:restaurant, build_stubbed(:restaurant, id: 123))
     assign(:metrics, { total_pending: 2, total_preparing: 3, total_ready: 1, orders_today: 7 })

@@ -75,7 +75,7 @@ class Payments::SquareConnectController < ApplicationController
     authorize @restaurant, :update?
 
     account = ProviderAccount.find_by(restaurant: @restaurant, provider: :square)
-    unless account&.access_token.present?
+    if account&.access_token.blank?
       redirect_to edit_restaurant_path(@restaurant, section: 'settings'),
                   alert: 'Square is not connected.'
       return

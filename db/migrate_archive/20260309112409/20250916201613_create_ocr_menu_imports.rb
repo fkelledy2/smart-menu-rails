@@ -14,7 +14,7 @@ class CreateOcrMenuImports < ActiveRecord::Migration[7.1]
 
       t.timestamps
     end
-    
+
     add_index :ocr_menu_imports, :status
   end
 end

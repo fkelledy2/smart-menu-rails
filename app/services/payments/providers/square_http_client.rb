@@ -19,9 +19,11 @@ module Payments
       def initialize(access_token:, environment: nil)
         @access_token = access_token
         @environment = environment || SquareConfig.environment
-        @base_url = @environment == 'sandbox' \
-          ? 'https://connect.squareupsandbox.com/v2' \
-          : 'https://connect.squareup.com/v2'
+        @base_url = if @environment == 'sandbox'
+                      'https://connect.squareupsandbox.com/v2'
+                    else
+                      'https://connect.squareup.com/v2'
+                    end
       end
 
       def get(path, query: {})
@@ -65,7 +67,7 @@ module Payments
         parsed = response.parsed_response
         return parsed if response.success?
 
-        errors = parsed.is_a?(Hash) ? parsed.dig('errors') || [] : []
+        errors = parsed.is_a?(Hash) ? parsed['errors'] || [] : []
         first = errors.first || {}
         raise SquareApiError.new(
           first['detail'] || "Square API error (#{response.code})",

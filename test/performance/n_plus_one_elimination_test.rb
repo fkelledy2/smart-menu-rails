@@ -139,11 +139,11 @@ class NPlusOneEliminationTest < ActiveSupport::TestCase
     query_count = count_queries do
       result.each do |order|
         order.restaurant.name
-        order.tablesetting.name
-        order.menu.name
+        order.tablesetting&.name
+        order.menu&.name
         order.ordritems.each do |item|
-          item.menuitem.name
-          item.menuitem.allergyns.count
+          item.menuitem&.name
+          item.menuitem&.allergyns&.count
         end
       end
     end
@@ -185,14 +185,14 @@ class NPlusOneEliminationTest < ActiveSupport::TestCase
     # Measure old approach
     old_time = Benchmark.realtime do
       Ordr.where(restaurant: @restaurant).find_each do |order|
-        order.ordritems.each { |item| item.menuitem.name }
+        order.ordritems.each { |item| item.menuitem&.name }
       end
     end
 
     # Measure new approach
     new_time = Benchmark.realtime do
       Ordr.for_restaurant_dashboard(@restaurant.id).each do |order|
-        order.ordritems.each { |item| item.menuitem.name }
+        order.ordritems.each { |item| item.menuitem&.name }
       end
     end
 

@@ -54,7 +54,7 @@ class CreateGlobalPaymentsTables < ActiveRecord::Migration[7.2]
 
     add_index :payment_attempts, %i[ordr_id created_at]
     add_index :payment_attempts, %i[restaurant_id created_at]
-    add_index :payment_attempts, %i[provider provider_payment_id], unique: true, where: "provider_payment_id IS NOT NULL"
+    add_index :payment_attempts, %i[provider provider_payment_id], unique: true, where: 'provider_payment_id IS NOT NULL'
 
     create_table :ledger_events do |t|
       t.integer :entity_type, null: false, default: 0

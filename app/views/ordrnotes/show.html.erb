@@ -1,0 +1,14 @@
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-12">
+      <h2>Order Note</h2>
+      
+      <%= render partial: 'note_card', locals: { note: @ordrnote, restaurant: @restaurant, order: @order } %>
+      
+      <div class="mt-3">
+        <%= link_to 'Edit', edit_restaurant_ordr_ordrnote_path(@restaurant, @order, @ordrnote), class: 'btn btn-primary' if policy(@ordrnote).update? %>
+        <%= link_to 'Back to Order', restaurant_ordr_path(@restaurant, @order), class: 'btn btn-secondary' %>
+      </div>
+    </div>
+  </div>
+</div>

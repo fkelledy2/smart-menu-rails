@@ -9,8 +9,8 @@ class CreatePushSubscriptions < ActiveRecord::Migration[7.2]
 
       t.timestamps
     end
-    
+
     add_index :push_subscriptions, :endpoint, unique: true
-    add_index :push_subscriptions, [:user_id, :active]
+    add_index :push_subscriptions, %i[user_id active]
   end
 end

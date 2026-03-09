@@ -9,7 +9,7 @@ class CreateHeroImages < ActiveRecord::Migration[7.2]
 
       t.timestamps
     end
-    
+
     add_index :hero_images, :status
     add_index :hero_images, :sequence
   end

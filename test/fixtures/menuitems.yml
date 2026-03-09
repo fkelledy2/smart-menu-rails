@@ -102,3 +102,24 @@ ice_cream:
   price: 5.99
   itemtype: food
   menusection: desserts_section
+
+# Items for ordritem fixtures
+fries:
+  name: French Fries
+  description: Crispy golden french fries
+  status: 1
+  sequence: 1
+  calories: 320
+  price: 5.99
+  itemtype: food
+  menusection: mains_section
+
+soda:
+  name: Soft Drink
+  description: Refreshing soft drink
+  status: 1
+  sequence: 1
+  calories: 150
+  price: 2.99
+  itemtype: drink
+  menusection: desserts_section

@@ -8,6 +8,7 @@ class AddLineKeyToOrdritems < ActiveRecord::Migration[7.2]
     Ordritem.find_in_batches(batch_size: 1000) do |batch|
       batch.each do |it|
         next if it.line_key.present?
+
         it.update_column(:line_key, SecureRandom.uuid)
       end
     end

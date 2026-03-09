@@ -29,8 +29,8 @@ module Payments
           note: "Order #{ordr.id}",
         }
 
-        body[:tip_money] = { amount: tip_cents, currency: currency.to_s.upcase } if tip_cents > 0
-        body[:app_fee_money] = { amount: fee_cents, currency: currency.to_s.upcase } if fee_cents > 0
+        body[:tip_money] = { amount: tip_cents, currency: currency.to_s.upcase } if tip_cents.positive?
+        body[:app_fee_money] = { amount: fee_cents, currency: currency.to_s.upcase } if fee_cents.positive?
         body[:verification_token] = verification_token if verification_token.present?
 
         client = http_client(account)
@@ -73,7 +73,7 @@ module Payments
           },
         }
 
-        body[:checkout_options][:app_fee_money] = { amount: fee_cents, currency: currency.to_s.upcase } if fee_cents > 0
+        body[:checkout_options][:app_fee_money] = { amount: fee_cents, currency: currency.to_s.upcase } if fee_cents.positive?
 
         client = http_client(account)
         result = client.post('/online-checkout/payment-links', body: body)
@@ -103,7 +103,7 @@ module Payments
         body = {
           idempotency_key: SecureRandom.uuid,
           payment_id: payment_id,
-          reason: "Full refund for order",
+          reason: 'Full refund for order',
         }
 
         client = http_client(account)

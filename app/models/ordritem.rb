@@ -41,11 +41,10 @@ class Ordritem < ApplicationRecord
       self.status = :removed
       self.ordritemprice = 0.0
       self.quantity = 1
-      save
     else
       self.quantity = new_qty
-      save
     end
+    save
   end
 
   # IdentityCache configuration

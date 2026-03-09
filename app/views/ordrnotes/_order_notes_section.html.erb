@@ -1,0 +1,42 @@
+<div class="order-notes-section card mb-3" 
+     data-controller="order-notes" 
+     data-order-notes-order-id-value="<%= order.id %>"
+     data-order-notes-restaurant-id-value="<%= restaurant.id %>">
+  <div class="card-header bg-light">
+    <div class="d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">
+        <i class="bi bi-sticky"></i> Order Notes & Instructions
+        <% if order.urgent_notes.any? %>
+          <span class="badge bg-danger ms-2">
+            <%= order.urgent_notes.count %> Urgent
+          </span>
+        <% end %>
+      </h5>
+      <button type="button" 
+              class="btn btn-sm btn-primary" 
+              data-bs-toggle="modal" 
+              data-bs-target="#addNoteModal">
+        <i class="bi bi-plus-circle"></i> Add Note
+      </button>
+    </div>
+  </div>
+
+  <div class="card-body">
+    <% if order.active_ordrnotes.any? %>
+      <div class="notes-list" data-order-notes-target="notesList">
+        <% order.active_ordrnotes.each do |note| %>
+          <%= render partial: 'ordrnotes/note_card', 
+                     locals: { note: note, restaurant: restaurant, order: order } %>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="text-center text-muted py-4" data-order-notes-target="emptyState">
+        <i class="bi bi-sticky" style="font-size: 3rem;"></i>
+        <p class="mt-2">No notes added yet. Click "Add Note" to create one.</p>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<%= render partial: 'ordrnotes/add_note_modal', 
+           locals: { restaurant: restaurant, order: order } %>

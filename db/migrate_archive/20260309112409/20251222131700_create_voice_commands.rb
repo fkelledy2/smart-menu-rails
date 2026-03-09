@@ -13,7 +13,7 @@ class CreateVoiceCommands < ActiveRecord::Migration[7.2]
       t.timestamps
     end
 
-    add_index :voice_commands, [:smartmenu_id, :session_id, :created_at]
+    add_index :voice_commands, %i[smartmenu_id session_id created_at]
     add_index :voice_commands, :status
   end
 end

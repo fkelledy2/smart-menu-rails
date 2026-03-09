@@ -297,11 +297,11 @@ class OcrMenuImportsController < ApplicationController
       @ocr_menu_import.update!(metadata: metadata)
       @ocr_menu_import.fail!('Cancelled manually')
     else
-      @ocr_menu_import.update!(metadata: metadata, error_message: 'Cancelled manually', failed_at: (@ocr_menu_import.failed_at || Time.current))
+      @ocr_menu_import.update!(metadata: metadata, error_message: 'Cancelled manually', failed_at: @ocr_menu_import.failed_at || Time.current)
     end
 
     redirect_to restaurant_ocr_menu_import_path(@restaurant, @ocr_menu_import),
-                notice: "Import cancelled#{removed_jobs.positive? ? " (removed #{removed_jobs} queued job#{'s' unless removed_jobs == 1})" : ''}"
+                notice: "Import cancelled#{" (removed #{removed_jobs} queued job#{'s' unless removed_jobs == 1})" if removed_jobs.positive?}"
   end
 
   # POST /restaurants/:restaurant_id/ocr_menu_imports/:id/confirm_import
@@ -463,8 +463,8 @@ class OcrMenuImportsController < ApplicationController
         args = payload['args']
         active_job_payload = args.is_a?(Array) ? args.last : nil
         job_args = active_job_payload.is_a?(Hash) ? active_job_payload['arguments'] : nil
-        matches = (wrapped == 'PdfMenuExtractionJob' && (job_args == [import_id] || job_args == [import_id.to_s])) ||
-                  (payload['class'] == 'PdfMenuExtractionJob' && (args == [import_id] || args == [import_id.to_s]))
+        matches = (wrapped == 'PdfMenuExtractionJob' && [[import_id], [import_id.to_s]].include?(job_args)) ||
+                  (payload['class'] == 'PdfMenuExtractionJob' && [[import_id], [import_id.to_s]].include?(args))
         next unless matches
 
         job.delete

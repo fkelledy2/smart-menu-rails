@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe UserSession, type: :model do
+RSpec.describe UserSession do
   let(:user) { create(:user) }
 
   it 'validates session_id and allowed status values' do

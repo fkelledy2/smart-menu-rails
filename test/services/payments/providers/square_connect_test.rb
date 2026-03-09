@@ -52,10 +52,10 @@ module Payments
 
         # Stub oauth_post for token exchange
         call_count = 0
-        @service.stub(:oauth_post, ->(_path, _body, **_opts) {
+        @service.stub(:oauth_post, lambda { |_path, _body, **_opts|
           call_count += 1
           fake_token_response
-        }) do
+        },) do
           # Stub fetch_locations
           @service.stub(:fetch_locations, fake_locations_response['locations']) do
             result = @service.exchange_code!(code: 'auth-code-xyz', redirect_uri: 'https://example.com/cb')

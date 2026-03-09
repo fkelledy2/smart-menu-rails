@@ -40,6 +40,7 @@ import CameraCaptureController from "./camera_capture_controller"
 import ThemeToggleController from "./theme_toggle_controller"
 import QuickAddController from "./quick_add_controller"
 import SplitBillController from "./split_bill_controller"
+import OrderNotesController from "./order_notes_controller"
 
 application.register("sortable", SortableController)
 application.register("auto-save", AutoSaveController)
@@ -79,5 +80,6 @@ application.register("camera-capture", CameraCaptureController)
 application.register("theme-toggle", ThemeToggleController)
 application.register("quick-add", QuickAddController)
 application.register("split-bill", SplitBillController)
+application.register("order-notes", OrderNotesController)
 
-console.log('[Stimulus] Controllers registered:', ['sortable', 'auto-save', 'menu-import', 'sidebar', 'stripe-wallet', 'state', 'order-header', 'order-totals', 'ordering', 'localization-bulk', 'menuitems-bulk', 'menusections-bulk', 'restaurants-bulk', 'discovered-restaurant-deep-dive', 'discovered-restaurant-web-scrape', 'restaurantmenus-bulk', 'discovered-restaurants-bulk', 'password-confirmation-toggle', 'disabled-action', 'userplan-plan-change', 'go-live-progress', 'settings-dependencies', 'bottom-sheet', 'tab-bar', 'menu-layout', 'inline-edit', 'mobile-tab-bar', 'ai-image-generator', 'scrollspy', 'generate-pairings', 'ai-progress', 'whiskey-ambassador', 'invite-staff', 'camera-capture', 'theme-toggle', 'quick-add', 'split-bill'])
+console.log('[Stimulus] Controllers registered:', ['sortable', 'auto-save', 'menu-import', 'sidebar', 'stripe-wallet', 'state', 'order-header', 'order-totals', 'ordering', 'localization-bulk', 'menuitems-bulk', 'menusections-bulk', 'restaurants-bulk', 'discovered-restaurant-deep-dive', 'discovered-restaurant-web-scrape', 'restaurantmenus-bulk', 'discovered-restaurants-bulk', 'password-confirmation-toggle', 'disabled-action', 'userplan-plan-change', 'go-live-progress', 'settings-dependencies', 'bottom-sheet', 'tab-bar', 'menu-layout', 'inline-edit', 'mobile-tab-bar', 'ai-image-generator', 'scrollspy', 'generate-pairings', 'ai-progress', 'whiskey-ambassador', 'invite-staff', 'camera-capture', 'theme-toggle', 'quick-add', 'split-bill', 'order-notes'])

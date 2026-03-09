@@ -11,8 +11,8 @@ class CreateResourceLocks < ActiveRecord::Migration[7.2]
 
       t.timestamps
     end
-    
-    add_index :resource_locks, [:resource_type, :resource_id, :field_name], 
+
+    add_index :resource_locks, %i[resource_type resource_id field_name],
               unique: true, name: 'index_resource_locks_on_resource_and_field'
     add_index :resource_locks, :expires_at
     add_index :resource_locks, :session_id

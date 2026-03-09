@@ -93,8 +93,8 @@ gem 'active_model_serializers'
 gem 'analytics-ruby', '~> 2.4.0', require: 'segment/analytics'
 gem 'aws-sdk-s3', require: false
 gem 'bullet', group: %i[development test]
-gem 'country_select', '~> 8.0'
 gem 'cityhash'
+gem 'country_select', '~> 8.0'
 gem 'cssbundling-rails'
 gem 'currencies'
 gem 'currency_select'

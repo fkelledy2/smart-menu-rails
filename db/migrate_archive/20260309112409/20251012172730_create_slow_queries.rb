@@ -9,8 +9,8 @@ class CreateSlowQueries < ActiveRecord::Migration[7.2]
 
       t.timestamps
     end
-    
-    add_index :slow_queries, [:duration, :timestamp]
+
+    add_index :slow_queries, %i[duration timestamp]
     add_index :slow_queries, [:timestamp]
   end
 end

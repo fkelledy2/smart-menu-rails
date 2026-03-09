@@ -9,7 +9,7 @@ class CreateOnboardingSessions < ActiveRecord::Migration[7.1]
 
       t.timestamps
     end
-    
+
     add_index :onboarding_sessions, :status
     add_index :onboarding_sessions, :created_at
   end

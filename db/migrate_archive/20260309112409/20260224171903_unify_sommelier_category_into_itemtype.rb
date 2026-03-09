@@ -5,16 +5,16 @@ class UnifySommelierCategoryIntoItemtype < ActiveRecord::Migration[7.2]
   # Existing itemtype enum: food=0, beverage=1, wine=2, spirit=3 (was "spirits")
   # New values:             beer=4, cider=5, cocktail=6, liqueur=7, whiskey=8, non_alcoholic=9, other_spirit=10
   CATEGORY_TO_ITEMTYPE = {
-    'wine'          => 2,
-    'spirit'        => 3,
-    'beer'          => 4,
-    'cider'         => 5,
-    'cocktail'      => 6,
-    'liqueur'       => 7,
-    'whiskey'       => 8,
+    'wine' => 2,
+    'spirit' => 3,
+    'beer' => 4,
+    'cider' => 5,
+    'cocktail' => 6,
+    'liqueur' => 7,
+    'whiskey' => 8,
     'non_alcoholic' => 9,
-    'other_spirit'  => 10,
-    'food'          => 0,
+    'other_spirit' => 10,
+    'food' => 0,
   }.freeze
 
   def up

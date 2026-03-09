@@ -124,3 +124,8 @@
 
 <%# Split Bill Status Section %>
 <%= render partial: 'ordrs/split_bill_status', locals: { ordr: @ordr } %>
+
+<div class="spacing-md"></div>
+
+<%# Order Notes Section %>
+<%= render partial: 'ordrnotes/order_notes_section', locals: { order: @ordr, restaurant: @ordr.restaurant } %>

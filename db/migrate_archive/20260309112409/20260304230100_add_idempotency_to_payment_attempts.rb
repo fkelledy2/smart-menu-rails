@@ -7,7 +7,7 @@ class AddIdempotencyToPaymentAttempts < ActiveRecord::Migration[7.2]
     add_column :payment_attempts, :provider_checkout_url, :string
 
     add_index :payment_attempts, :idempotency_key, unique: true,
-              where: "idempotency_key IS NOT NULL",
-              name: "index_payment_attempts_on_idempotency_key"
+                                                   where: 'idempotency_key IS NOT NULL',
+                                                   name: 'index_payment_attempts_on_idempotency_key'
   end
 end

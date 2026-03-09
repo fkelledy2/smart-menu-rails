@@ -22,9 +22,9 @@ class AddPerformanceIndexes < ActiveRecord::Migration[7.1]
       add_index_if_not_exists :ordrs, :status
       add_index_if_not_exists :ordrs, :archived
       add_index_if_not_exists :ordrs, :created_at
-      
+
       # Composite index for common query patterns
-      add_index_if_not_exists :ordrs, [:restaurant_id, :status, :created_at], name: 'index_ordrs_on_restaurant_status_created'
+      add_index_if_not_exists :ordrs, %i[restaurant_id status created_at], name: 'index_ordrs_on_restaurant_status_created'
     end
 
     # Indexes for order items (ordritems table)
@@ -36,31 +36,31 @@ class AddPerformanceIndexes < ActiveRecord::Migration[7.1]
 
     # Indexes for polymorphic associations
     if table_exists?(:notifications)
-      add_index_if_not_exists :notifications, [:recipient_type, :recipient_id]
+      add_index_if_not_exists :notifications, %i[recipient_type recipient_id]
     end
 
     # Indexes for join tables
     if table_exists?(:features_plans)
-      add_index_if_not_exists :features_plans, [:plan_id, :feature_id], unique: true
+      add_index_if_not_exists :features_plans, %i[plan_id feature_id], unique: true
     end
-    
+
     if table_exists?(:menuavailabilities)
-      add_index_if_not_exists :menuavailabilities, [:menu_id, :dayofweek], unique: true, name: 'index_menuavailabilities_on_menu_and_dayofweek'
+      add_index_if_not_exists :menuavailabilities, %i[menu_id dayofweek], unique: true, name: 'index_menuavailabilities_on_menu_and_dayofweek'
     end
-    
+
     if table_exists?(:menusectionlocales)
-      add_index_if_not_exists :menusectionlocales, [:menusection_id, :locale], unique: true, name: 'index_menusectionlocales_on_menusection_and_locale'
+      add_index_if_not_exists :menusectionlocales, %i[menusection_id locale], unique: true, name: 'index_menusectionlocales_on_menusection_and_locale'
     end
 
     # Basic indexes for menu and menuitem tables
     if table_exists?(:menus)
       add_index_if_not_exists :menus, :restaurant_id
     end
-    
+
     if table_exists?(:menuitems)
       add_index_if_not_exists :menuitems, :menusection_id
     end
-    
+
     # Expression index for case-insensitive search (if using PostgreSQL)
     if table_exists?(:menuitems) && !index_name_exists?(:menuitems, 'index_menuitems_on_lower_name')
       execute 'CREATE INDEX index_menuitems_on_lower_name ON menuitems (lower(name) varchar_pattern_ops)'
@@ -87,18 +87,18 @@ class AddPerformanceIndexes < ActiveRecord::Migration[7.1]
     remove_index_if_exists :ordrs, :status
     remove_index_if_exists :ordrs, :archived
     remove_index_if_exists :ordrs, :created_at
-    
+
     remove_index_if_exists :ordrs, name: 'index_ordrs_on_restaurant_status_created'
     remove_index_if_exists :ordritems, :ordr_id
     remove_index_if_exists :ordritems, :menuitem_id
     remove_index_if_exists :ordritems, :status
-    remove_index_if_exists :notifications, column: [:recipient_type, :recipient_id]
-    remove_index_if_exists :features_plans, column: [:plan_id, :feature_id]
+    remove_index_if_exists :notifications, column: %i[recipient_type recipient_id]
+    remove_index_if_exists :features_plans, column: %i[plan_id feature_id]
     remove_index_if_exists :menuavailabilities, name: 'index_menuavailabilities_on_menu_and_dayofweek'
     remove_index_if_exists :menusectionlocales, name: 'index_menusectionlocales_on_menusection_and_locale'
     remove_index_if_exists :menus, name: 'index_menus_on_restaurant_id_not_archived'
     remove_index_if_exists :menuitems, name: 'index_menuitems_on_menusection_id_not_archived'
-    
+
     if index_name_exists?(:menuitems, 'index_menuitems_on_lower_name')
       remove_index :menuitems, name: 'index_menuitems_on_lower_name'
     end
@@ -109,7 +109,7 @@ class AddPerformanceIndexes < ActiveRecord::Migration[7.1]
   def add_index_if_not_exists(table, columns, **options)
     # Convert single column to array for consistent handling
     column_names = Array(columns)
-    
+
     # Skip if any of the columns don't exist in the table
     unless column_names.all? { |col| column_exists?(table, col) }
       Rails.logger.warn "Skipping index on #{table}.#{column_names.join(',')} - column(s) not found"
@@ -118,24 +118,24 @@ class AddPerformanceIndexes < ActiveRecord::Migration[7.1]
 
     index_name = options[:name] || "index_#{table}_on_#{column_names.join('_and_')}"
 
-    unless index_name_exists?(table, index_name)
+    if index_name_exists?(table, index_name)
+      false
+    else
       add_index(table, columns, **options)
       true
-    else
-      false
     end
   end
-  
+
   def column_exists?(table, column_name)
-    return true if column_name.is_a?(Array)  # Skip array columns check for now
-    
+    return true if column_name.is_a?(Array) # Skip array columns check for now
+
     connection = ActiveRecord::Base.connection
     table_name = connection.quote_table_name(table)
     column_name = column_name.to_s
-    
+
     # Check if the column exists in the table
     connection.column_exists?(table_name, column_name)
-  rescue => e
+  rescue StandardError => e
     Rails.logger.warn "Error checking if column #{column_name} exists in #{table}: #{e.message}"
     false
   end
@@ -153,7 +153,7 @@ class AddPerformanceIndexes < ActiveRecord::Migration[7.1]
 
     # Convert symbol to string for comparison
     index_name = index_name.to_s if index_name
-    
+
     # Check if index exists by name
     if index_name && index_name_exists?(table, index_name)
       remove_index(table, name: index_name)

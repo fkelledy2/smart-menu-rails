@@ -12,6 +12,6 @@ class ExtendOrdrSplitPaymentsForSplitPlans < ActiveRecord::Migration[7.2]
       t.datetime :locked_at
     end
 
-    add_index :ordr_split_payments, [:ordr_split_plan_id, :position], unique: true
+    add_index :ordr_split_payments, %i[ordr_split_plan_id position], unique: true
   end
 end

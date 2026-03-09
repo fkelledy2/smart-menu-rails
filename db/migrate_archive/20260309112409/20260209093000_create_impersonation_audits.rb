@@ -18,7 +18,7 @@ class CreateImpersonationAudits < ActiveRecord::Migration[7.2]
     end
 
     add_index :impersonation_audits, :expires_at
-    add_index :impersonation_audits, [:admin_user_id, :started_at]
-    add_index :impersonation_audits, [:impersonated_user_id, :started_at]
+    add_index :impersonation_audits, %i[admin_user_id started_at]
+    add_index :impersonation_audits, %i[impersonated_user_id started_at]
   end
 end

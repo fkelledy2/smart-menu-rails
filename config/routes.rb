@@ -343,6 +343,8 @@ Rails.application.routes.draw do
         post 'payments/checkout_session', to: 'ordr_payments#checkout_session'
         post 'payments/inline', to: 'ordr_payments#create_inline_payment'
       end
+      
+      resources :ordrnotes
     end
     resources :ordr_station_tickets, only: [:update]
     resources :alcohol_order_events, only: [:index]

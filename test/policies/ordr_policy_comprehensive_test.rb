@@ -46,7 +46,7 @@ class OrdrPolicyComprehensiveTest < ActiveSupport::TestCase
 
   test 'should allow public access to orders' do
     policy = OrdrPolicy.new(nil, @ordr)
-    assert_not policy.show?, 'Anonymous users should not view orders'
+    assert policy.show?, 'Anonymous users can view orders for Smart Menu'
     assert policy.new?, 'Anonymous users should create orders'
     assert policy.create?, 'Anonymous users should create orders'
     assert policy.update?, 'Anonymous users should be able to update orders in smartmenu context'
@@ -141,7 +141,7 @@ class OrdrPolicyComprehensiveTest < ActiveSupport::TestCase
       employee_manager: true,
       employee_staff: true,
       customer: false,
-      anonymous: false,
+      anonymous: true, # Anonymous users can view orders for Smart Menu
     }
 
     expected_results.each do |role, expected|

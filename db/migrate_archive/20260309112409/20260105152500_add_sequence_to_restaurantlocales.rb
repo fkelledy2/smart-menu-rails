@@ -2,7 +2,7 @@ class AddSequenceToRestaurantlocales < ActiveRecord::Migration[7.1]
   def up
     add_column :restaurantlocales, :sequence, :integer
 
-    execute <<~SQL
+    execute <<~SQL.squish
       UPDATE restaurantlocales rl
       SET sequence = s.rn - 1
       FROM (

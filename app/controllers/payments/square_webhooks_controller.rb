@@ -25,7 +25,7 @@ class Payments::SquareWebhooksController < ApplicationController
     event_id = parsed['event_id'].to_s
     event_type = parsed['type'].to_s
     occurred_at = begin
-      Time.parse(parsed['created_at'])
+      Time.zone.parse(parsed['created_at'])
     rescue StandardError
       Time.current
     end
@@ -70,7 +70,7 @@ class Payments::SquareWebhooksController < ApplicationController
 
   def verify_signature(payload, signature)
     key = SquareConfig.webhook_signature_key
-    unless key.present?
+    if key.blank?
       Rails.logger.error('[SquareWebhook] SQUARE_WEBHOOK_SIGNATURE_KEY not configured')
       return false
     end

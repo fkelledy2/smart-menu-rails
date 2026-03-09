@@ -13,7 +13,7 @@ class CreateStaffInvitations < ActiveRecord::Migration[7.1]
     end
 
     add_index :staff_invitations, :token, unique: true
-    add_index :staff_invitations, [:restaurant_id, :email], name: 'idx_staff_invitations_restaurant_email'
+    add_index :staff_invitations, %i[restaurant_id email], name: 'idx_staff_invitations_restaurant_email'
     add_index :staff_invitations, :status
   end
 end

@@ -5,12 +5,12 @@ class OrdrSplitPlanTest < ActiveSupport::TestCase
     @restaurant = restaurants(:one)
     @ordr = ordrs(:one)
     @ordr.update!(status: 'billrequested', gross: 25.00, tip: 0)
-    
+
     @plan = @ordr.create_ordr_split_plan!(
       split_method: 'equal',
       plan_status: 'validated',
       created_by_user: users(:one),
-      participant_count: 2
+      participant_count: 2,
     )
   end
 
@@ -26,9 +26,9 @@ class OrdrSplitPlanTest < ActiveSupport::TestCase
       currency: @restaurant.currency || 'USD',
       provider: 'stripe',
       split_method: 'equal',
-      status: 'succeeded'
+      status: 'succeeded',
     )
-    
+
     @plan.ordr_split_payments.create!(
       ordr: @ordr,
       ordrparticipant: ordrparticipants(:three),
@@ -40,11 +40,11 @@ class OrdrSplitPlanTest < ActiveSupport::TestCase
       currency: @restaurant.currency || 'USD',
       provider: 'stripe',
       split_method: 'equal',
-      status: 'succeeded'
+      status: 'succeeded',
     )
-    
+
     @plan.update_status_from_settlement!
-    
+
     assert_equal 'completed', @plan.plan_status
   end
 
@@ -60,11 +60,11 @@ class OrdrSplitPlanTest < ActiveSupport::TestCase
       currency: @restaurant.currency || 'USD',
       provider: 'stripe',
       split_method: 'equal',
-      status: 'failed'
+      status: 'failed',
     )
-    
+
     @plan.update_status_from_settlement!
-    
+
     assert_equal 'failed', @plan.plan_status
   end
 
@@ -80,28 +80,28 @@ class OrdrSplitPlanTest < ActiveSupport::TestCase
       currency: @restaurant.currency || 'USD',
       provider: 'stripe',
       split_method: 'equal',
-      status: 'pending'
+      status: 'pending',
     )
-    
+
     @plan.update_status_from_settlement!
-    
+
     assert_equal 'frozen', @plan.plan_status
     assert @plan.split_frozen?
   end
 
   test 'update_status_from_settlement does not change completed plan' do
     @plan.update!(plan_status: 'completed')
-    
+
     @plan.update_status_from_settlement!
-    
+
     assert_equal 'completed', @plan.plan_status
   end
 
   test 'update_status_from_settlement does not change canceled plan' do
     @plan.update!(plan_status: 'canceled')
-    
+
     @plan.update_status_from_settlement!
-    
+
     assert_equal 'canceled', @plan.plan_status
   end
 end

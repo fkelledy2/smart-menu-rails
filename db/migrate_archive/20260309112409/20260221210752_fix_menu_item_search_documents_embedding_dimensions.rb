@@ -2,27 +2,27 @@ class FixMenuItemSearchDocumentsEmbeddingDimensions < ActiveRecord::Migration[7.
   def up
     # The ML service returns 384-dimensional vectors, but the column was created as vector(1024).
     # Drop the ivfflat index, alter the column, then recreate the index.
-    execute <<~SQL
+    execute <<~SQL.squish
       DROP INDEX IF EXISTS idx_menu_item_search_docs_embedding_ivfflat;
     SQL
 
-    execute <<~SQL
+    execute <<~SQL.squish
       ALTER TABLE menu_item_search_documents
       ALTER COLUMN embedding TYPE vector(384)
       USING NULL;
     SQL
 
     # Clear stale embeddings so they are regenerated with correct dimensions
-    execute <<~SQL
+    execute <<~SQL.squish
       UPDATE menu_item_search_documents SET embedding = NULL;
     SQL
 
     # Delete all rows so the job re-indexes with correct dimensions
-    execute <<~SQL
+    execute <<~SQL.squish
       DELETE FROM menu_item_search_documents;
     SQL
 
-    execute <<~SQL
+    execute <<~SQL.squish
       CREATE INDEX idx_menu_item_search_docs_embedding_ivfflat
       ON menu_item_search_documents
       USING ivfflat (embedding vector_cosine_ops)
@@ -33,21 +33,21 @@ class FixMenuItemSearchDocumentsEmbeddingDimensions < ActiveRecord::Migration[7.
   end
 
   def down
-    execute <<~SQL
+    execute <<~SQL.squish
       DROP INDEX IF EXISTS idx_menu_item_search_docs_embedding_ivfflat;
     SQL
 
-    execute <<~SQL
+    execute <<~SQL.squish
       ALTER TABLE menu_item_search_documents
       ALTER COLUMN embedding TYPE vector(1024)
       USING NULL;
     SQL
 
-    execute <<~SQL
+    execute <<~SQL.squish
       DELETE FROM menu_item_search_documents;
     SQL
 
-    execute <<~SQL
+    execute <<~SQL.squish
       CREATE INDEX idx_menu_item_search_docs_embedding_ivfflat
       ON menu_item_search_documents
       USING ivfflat (embedding vector_cosine_ops)
