@@ -5,6 +5,7 @@ RSpec.describe 'OrdrPayments' do
   let(:menu) { create(:menu, restaurant: restaurant) }
   let(:tablesetting) { create(:tablesetting, restaurant: restaurant) }
   let(:ordr) { create(:ordr, restaurant: restaurant, menu: menu, tablesetting: tablesetting, gross: 10.0, status: :opened) }
+  let(:user) { restaurant.user }
 
   around do |example|
     prev = Stripe.api_key
@@ -12,6 +13,10 @@ RSpec.describe 'OrdrPayments' do
     example.run
   ensure
     Stripe.api_key = prev
+  end
+
+  before do
+    sign_in user
   end
 
   describe 'POST /restaurants/:restaurant_id/ordrs/:id/request_bill' do

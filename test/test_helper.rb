@@ -12,6 +12,7 @@ ENV['RAILS_LOG_LEVEL'] = 'error' # Reduce logging overhead
 
 require_relative '../config/environment'
 require 'rails/test_help'
+require 'rake'
 
 # Use test adapter for Active Job in tests
 ActiveJob::Base.queue_adapter = :test
@@ -23,6 +24,17 @@ Sidekiq::Testing.fake!
 
 # Disable ActionCable in tests for speed
 ActionCable.server.config.disable_request_forgery_protection = true
+
+module TestRakeTasks
+  module_function
+
+  def ensure_loaded!
+    return if @loaded
+
+    Rails.application.load_tasks
+    @loaded = true
+  end
+end
 
 module ActiveSupport
   class TestCase
@@ -42,6 +54,10 @@ module ActiveSupport
     include Devise::Test::IntegrationHelpers
     include Warden::Test::Helpers
     include ActionDispatch::TestProcess::FixtureFile
+
+    def ensure_rake_tasks_loaded
+      TestRakeTasks.ensure_loaded!
+    end
 
     def log_in(user)
       if defined?(ActionDispatch::SystemTestCase) && is_a?(ActionDispatch::SystemTestCase)

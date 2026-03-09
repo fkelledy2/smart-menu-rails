@@ -5,12 +5,9 @@ require 'test_helper'
 class SmartmenuPerformanceTest < ActiveSupport::TestCase
   # Test that SmartMenu show action doesn't have N+1 queries
   test 'smartmenu show action has no N+1 queries' do
-    # Skip if no test data available
-    smartmenu = Smartmenu.includes(menu: :restaurant).first
-    skip 'No smartmenu test data available' unless smartmenu
-
+    smartmenu = smartmenus(:one)
     menu = smartmenu.menu
-    skip 'Smartmenu has no menu' unless menu
+    assert menu.present?, 'Expected smartmenu fixture to have a menu'
 
     # Simulate what the controller does
     queries_count = count_queries do
@@ -56,11 +53,9 @@ class SmartmenuPerformanceTest < ActiveSupport::TestCase
   end
 
   test 'smartmenu show loads efficiently' do
-    smartmenu = Smartmenu.includes(menu: :restaurant).first
-    skip 'No smartmenu test data available' unless smartmenu
-
+    smartmenu = smartmenus(:one)
     menu = smartmenu.menu
-    skip 'Smartmenu has no menu' unless menu
+    assert menu.present?, 'Expected smartmenu fixture to have a menu'
 
     # Measure load time
     start_time = Time.zone.now

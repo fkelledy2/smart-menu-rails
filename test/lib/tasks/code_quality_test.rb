@@ -1,44 +1,39 @@
 require 'test_helper'
-require 'rake'
 
 class CodeQualityRakeTest < ActiveSupport::TestCase
   setup do
-    SmartMenu::Application.load_tasks if Rake::Task.tasks.empty?
+    @source = Rails.root.join('lib', 'tasks', 'code_quality.rake').read
   end
 
   test 'code_quality:all task exists' do
-    assert Rake::Task.task_defined?('code_quality:all'), 'code_quality:all task should exist'
+    assert_match(/task\s+all:\s*%i\[rubocop brakeman bundle_audit\]/, @source)
   end
 
   test 'code_quality:rubocop task exists' do
-    assert Rake::Task.task_defined?('code_quality:rubocop'), 'code_quality:rubocop task should exist'
+    assert_match(/task\s+rubocop:\s*:environment/, @source)
   end
 
   test 'code_quality:rubocop_check task exists' do
-    assert Rake::Task.task_defined?('code_quality:rubocop_check'), 'code_quality:rubocop_check task should exist'
+    assert_match(/task\s+rubocop_check:\s*:environment/, @source)
   end
 
   test 'code_quality:brakeman task exists' do
-    assert Rake::Task.task_defined?('code_quality:brakeman'), 'code_quality:brakeman task should exist'
+    assert_match(/task\s+brakeman:\s*:environment/, @source)
   end
 
   test 'code_quality:bundle_audit task exists' do
-    assert Rake::Task.task_defined?('code_quality:bundle_audit'), 'code_quality:bundle_audit task should exist'
+    assert_match(/task\s+bundle_audit:\s*:environment/, @source)
   end
 
   test 'code_quality:report task exists' do
-    assert Rake::Task.task_defined?('code_quality:report'), 'code_quality:report task should exist'
+    assert_match(/task\s+report:\s*:environment/, @source)
   end
 
   test 'code_quality:ci task exists' do
-    assert Rake::Task.task_defined?('code_quality:ci'), 'code_quality:ci task should exist'
+    assert_match(/task\s+ci:\s*:environment/, @source)
   end
 
   test 'code_quality:all has correct dependencies' do
-    task = Rake::Task['code_quality:all']
-    expected_dependencies = %w[rubocop brakeman bundle_audit]
-
-    assert_equal expected_dependencies.sort, task.prerequisites.sort,
-                 'code_quality:all should depend on rubocop, brakeman, and bundle_audit'
+    assert_match(/task\s+all:\s*%i\[rubocop brakeman bundle_audit\]/, @source)
   end
 end

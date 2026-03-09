@@ -1,9 +1,10 @@
 require 'test_helper'
 
 class DwOrdersMvTest < ActiveSupport::TestCase
+  self.use_transactional_tests = false
+
   def setup
-    # Skip all tests if materialized view doesn't exist
-    skip 'Materialized view dw_orders_mv does not exist in test database' unless table_exists?
+    create_test_materialized_view unless table_exists?
   end
 
   test 'uses correct table name' do
@@ -42,6 +43,19 @@ class DwOrdersMvTest < ActiveSupport::TestCase
   end
 
   private
+
+  def create_test_materialized_view
+    sql = <<~SQL.squish
+      CREATE MATERIALIZED VIEW IF NOT EXISTS dw_orders_mv AS
+      SELECT
+        1::bigint AS ordr_id,
+        1::bigint AS restaurant_id,
+        CURRENT_DATE AS ordered_on,
+        0.0::numeric AS gross;
+    SQL
+
+    ActiveRecord::Base.connection.execute(sql)
+  end
 
   def table_exists?
     ActiveRecord::Base.connection.table_exists?('dw_orders_mv')

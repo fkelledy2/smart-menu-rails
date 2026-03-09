@@ -114,20 +114,19 @@ class L2CacheableTest < ActiveSupport::TestCase
   end
 
   test 'clear_model_l2_cache is called after commit' do
-    # Create a new restaurant
     restaurant = Restaurant.new(
       name: 'Test Restaurant',
       user: users(:one),
       status: 'active',
     )
 
-    # Mock the cache clearing
-    Restaurant.expects(:clear_l2_cache).at_least_once
+    clear_l2_cache_called = false
 
-    restaurant.save!
-  rescue NoMethodError
-    # Skip if mocha not available
-    skip 'Mocha not available for mocking'
+    Restaurant.stub(:clear_l2_cache, -> { clear_l2_cache_called = true }) do
+      restaurant.save!
+    end
+
+    assert clear_l2_cache_called, 'Expected clear_l2_cache to be called after commit'
   end
 
   test 'L2CacheableRelation loads records from cache' do
@@ -150,8 +149,6 @@ class L2CacheableTest < ActiveSupport::TestCase
   end
 
   test 'cached queries work with complex joins' do
-    skip 'Requires menus and ordrs associations' unless @restaurant.menus.any?
-
     result = Restaurant.cached_query('complex_join') do
       Restaurant.joins(:menus)
         .select('restaurants.*, COUNT(menus.id) as menu_count')

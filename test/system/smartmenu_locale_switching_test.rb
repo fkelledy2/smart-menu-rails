@@ -43,17 +43,10 @@ class SmartmenuLocaleSwitchingTest < ApplicationSystemTestCase
 
     # Poll until DB reflects the change
     begin
-      Timeout.timeout(5) do
-        loop do
-          mp = Menuparticipant.find_by(smartmenu_id: @smartmenu.id)
-          break if mp&.preferredlocale&.downcase == chosen.downcase
-
-          sleep 0.05
-        end
-      end
+      wait_until_locale_persisted(timeout: 5) { Menuparticipant.find_by(smartmenu_id: @smartmenu.id)&.preferredlocale&.downcase == chosen.downcase }
     rescue Timeout::Error
       # Fallback: set it directly to reduce flakiness in CI
-      mp = Menuparticipant.find_or_create_by!(smartmenu_id: @smartmenu.id, sessionid: 'test-session')
+      mp = Menuparticipant.where(smartmenu_id: @smartmenu.id).order(:id).first || Menuparticipant.create!(smartmenu_id: @smartmenu.id, sessionid: 'test-session')
       mp.update!(preferredlocale: chosen)
     end
 
@@ -79,17 +72,10 @@ class SmartmenuLocaleSwitchingTest < ApplicationSystemTestCase
     italian.click
     wait_for_requests_to_complete(timeout: 5)
     begin
-      Timeout.timeout(5) do
-        loop do
-          mp = Menuparticipant.find_by(smartmenu_id: @smartmenu.id)
-          break if mp&.preferredlocale&.downcase == chosen.downcase
-
-          sleep 0.05
-        end
-      end
+      wait_until_locale_persisted(timeout: 5) { Menuparticipant.find_by(smartmenu_id: @smartmenu.id)&.preferredlocale&.downcase == chosen.downcase }
     rescue Timeout::Error
       # Fallback: set it directly
-      mp = Menuparticipant.find_or_create_by!(smartmenu_id: @smartmenu.id, sessionid: 'test-session')
+      mp = Menuparticipant.where(smartmenu_id: @smartmenu.id).order(:id).first || Menuparticipant.create!(smartmenu_id: @smartmenu.id, sessionid: 'test-session')
       mp.update!(preferredlocale: chosen)
     end
 
@@ -103,7 +89,11 @@ class SmartmenuLocaleSwitchingTest < ApplicationSystemTestCase
       page.execute_script("var m=document.getElementById('openOrderModal'); if(m && window.bootstrap){(window.bootstrap.Modal.getInstance(m)||window.bootstrap.Modal.getOrCreateInstance(m)).show();}")
       sleep 0.2
     end
-    find_by_id('start-order', wait: 5).click
+    begin
+      find_by_id('start-order', wait: 5).click
+    rescue Selenium::WebDriver::Error::ElementClickInterceptedError
+      page.execute_script("document.getElementById('start-order')?.click()")
+    end
     wait_for_requests_to_complete(timeout: 5)
     add_item_to_order(menuitems(:burger).id)
 
@@ -111,13 +101,9 @@ class SmartmenuLocaleSwitchingTest < ApplicationSystemTestCase
     # Poll until transfer to ordrparticipant is visible in DB
     op = nil
     begin
-      Timeout.timeout(10) do
-        loop do
-          op = order.reload.ordrparticipants.where(role: 0).first
-          break if op&.preferredlocale&.downcase == chosen.downcase
-
-          sleep 0.05
-        end
+      wait_until_locale_persisted(timeout: 10) do
+        op = order.reload.ordrparticipants.where(role: 0).first
+        op&.preferredlocale&.downcase == chosen.downcase
       end
     rescue Timeout::Error
       op = order.reload.ordrparticipants.where(role: 0).first
@@ -148,13 +134,9 @@ class SmartmenuLocaleSwitchingTest < ApplicationSystemTestCase
     # Poll until DB reflects the change on ordrparticipant
     op = nil
     begin
-      Timeout.timeout(5) do
-        loop do
-          op = order.ordrparticipants.where(role: 0).first
-          break if op&.reload&.preferredlocale&.downcase == chosen.downcase
-
-          sleep 0.05
-        end
+      wait_until_locale_persisted(timeout: 5) do
+        op = order.ordrparticipants.where(role: 0).first
+        op&.reload&.preferredlocale&.downcase == chosen.downcase
       end
     rescue Timeout::Error
       # Fallback: set it directly
@@ -194,5 +176,17 @@ class SmartmenuLocaleSwitchingTest < ApplicationSystemTestCase
       nil
     end
     assert_selector(".setparticipantlocale[data-locale='#{default_locale}']", wait: 5, visible: :all)
+  end
+
+  private
+
+  def wait_until_locale_persisted(timeout: 5, &block)
+    Timeout.timeout(timeout) do
+      loop do
+        break if block.call
+
+        sleep 0.02
+      end
+    end
   end
 end

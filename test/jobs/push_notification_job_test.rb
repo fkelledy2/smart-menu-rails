@@ -1,6 +1,17 @@
 require 'test_helper'
 
 class PushNotificationJobTest < ActiveJob::TestCase
+  module WebPushTestDouble
+    class InvalidSubscription < StandardError; end
+    class ExpiredSubscription < StandardError; end
+
+    class << self
+      def payload_send(*)
+        true
+      end
+    end
+  end
+
   def setup
     @user = users(:one)
     @subscription = PushSubscription.create!(
@@ -15,12 +26,15 @@ class PushNotificationJobTest < ActiveJob::TestCase
       body: 'Test message',
       data: { test: true },
     }
+    @webpush_const_defined = defined?(WebPush)
+    Object.const_set(:WebPush, WebPushTestDouble) unless @webpush_const_defined
+  end
+
+  def teardown
+    Object.send(:remove_const, :WebPush) unless @webpush_const_defined
   end
 
   test 'should perform job successfully' do
-    # Skip if WebPush is not available
-    skip 'WebPush gem not available' unless defined?(WebPush)
-
     # Mock WebPush to avoid actual API calls
     WebPush.stub(:payload_send, true) do
       assert_nothing_raised do
@@ -44,8 +58,6 @@ class PushNotificationJobTest < ActiveJob::TestCase
   end
 
   test 'should deactivate subscription on InvalidSubscription error' do
-    skip 'WebPush gem not available' unless defined?(WebPush)
-
     WebPush.stub(:payload_send, ->(*) { raise WebPush::InvalidSubscription, 'Invalid' }) do
       PushNotificationJob.new.perform(@subscription.id, @payload)
     end
@@ -54,8 +66,6 @@ class PushNotificationJobTest < ActiveJob::TestCase
   end
 
   test 'should deactivate subscription on ExpiredSubscription error' do
-    skip 'WebPush gem not available' unless defined?(WebPush)
-
     WebPush.stub(:payload_send, ->(*) { raise WebPush::ExpiredSubscription, 'Expired' }) do
       PushNotificationJob.new.perform(@subscription.id, @payload)
     end
@@ -64,8 +74,6 @@ class PushNotificationJobTest < ActiveJob::TestCase
   end
 
   test 'should log error on other exceptions' do
-    skip 'WebPush gem not available' unless defined?(WebPush)
-
     # In test environment, errors are re-raised
     WebPush.stub(:payload_send, ->(*) { raise StandardError, 'Test error' }) do
       assert_raises(StandardError) do
@@ -78,8 +86,6 @@ class PushNotificationJobTest < ActiveJob::TestCase
   end
 
   test 'should use VAPID configuration from environment' do
-    skip 'WebPush gem not available' unless defined?(WebPush)
-
     # Test that VAPID config is properly formatted
     job = PushNotificationJob.new
     vapid_config = job.send(:vapid_config)

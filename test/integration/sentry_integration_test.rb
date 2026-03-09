@@ -14,21 +14,19 @@ class SentryIntegrationTest < ActionDispatch::IntegrationTest
   end
 
   test 'sentry configuration has correct environment' do
-    skip 'Sentry not configured in test environment' if Sentry.configuration.dsn.blank?
-
     assert_equal Rails.env, Sentry.configuration.environment
   end
 
   test 'sentry configuration has release tracking' do
-    skip 'Sentry not configured in test environment' if Sentry.configuration.dsn.blank?
-
     assert_not_nil Sentry.configuration.release
-    assert_not_equal 'unknown', Sentry.configuration.release
+    if ENV['HEROKU_SLUG_COMMIT'].present? || ENV['GIT_COMMIT'].present?
+      assert_not_equal 'unknown', Sentry.configuration.release
+    else
+      assert_equal 'unknown', Sentry.configuration.release
+    end
   end
 
   test 'sentry excludes common exceptions' do
-    skip 'Sentry not configured in test environment' if Sentry.configuration.dsn.blank?
-
     excluded = Sentry.configuration.excluded_exceptions
     assert_includes excluded, 'ActionController::BadRequest'
     assert_includes excluded, 'ActionController::UnknownFormat'

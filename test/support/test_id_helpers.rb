@@ -328,17 +328,45 @@ module TestIdHelpers
     sleep 0.2
   end
 
+  def wait_for_script_condition(script, timeout: 5)
+    result = page.evaluate_async_script(<<~JS, timeout * 1000)
+      const timeoutMs = arguments[0];
+      const done = arguments[1];
+      const startedAt = Date.now();
+
+      const predicate = () => {
+        try {
+          return !!(#{script});
+        } catch (error) {
+          return false;
+        }
+      };
+
+      const check = () => {
+        if (predicate()) {
+          done(true);
+          return;
+        }
+
+        if ((Date.now() - startedAt) >= timeoutMs) {
+          done(false);
+          return;
+        }
+
+        window.setTimeout(check, 25);
+      };
+
+      check();
+    JS
+
+    raise Timeout::Error, "Condition not met within #{timeout} seconds" unless result
+
+    true
+  end
+
   # Wait for all pending fetch/AJAX requests to complete
   def wait_for_requests_to_complete(timeout: 5)
-    Timeout.timeout(timeout) do
-      loop do
-        # Check if jQuery has pending AJAX requests
-        pending = page.evaluate_script('typeof jQuery !== "undefined" && jQuery.active || 0')
-        break if pending.zero?
-
-        sleep 0.05
-      end
-    end
+    wait_for_script_condition('(typeof jQuery === "undefined") || ((jQuery.active || 0) === 0)', timeout: timeout)
   rescue Timeout::Error
     # Continue if timeout
   end
@@ -368,14 +396,8 @@ module TestIdHelpers
 
   # Wait for a specific element to have content (not empty)
   def wait_for_element_content(selector, timeout: 5)
-    Timeout.timeout(timeout) do
-      loop do
-        content = page.evaluate_script("document.querySelector('#{selector}')?.textContent?.trim()")
-        break if content.present?
-
-        sleep 0.05
-      end
-    end
+    escaped_selector = selector.to_json
+    wait_for_script_condition("(function() { const node = document.querySelector(#{escaped_selector}); return !!(node && node.textContent && node.textContent.trim().length > 0); })()", timeout: timeout)
   rescue Timeout::Error
     # Continue if timeout
   end

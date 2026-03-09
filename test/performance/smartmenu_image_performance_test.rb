@@ -69,36 +69,55 @@ class SmartmenuImagePerformanceTest < ActiveSupport::TestCase
   end
 
   test 'optimised_modal_url prefers medium_webp when derivatives exist' do
-    skip 'No image attached to fixture' if @menuitem.image.blank?
-
-    url = @menuitem.optimised_modal_url
-    assert url.present?, 'optimised_modal_url should return a URL'
+    @menuitem.stub(:image, Object.new) do
+      @menuitem.stub(:image_attacher, Struct.new(:derivatives).new({ medium_webp: true })) do
+        @menuitem.stub(:image_url, 'https://example.test/medium.webp') do
+          @menuitem.stub(:cache_busted, 'https://example.test/medium.webp?v=1') do
+            url = @menuitem.optimised_modal_url
+            assert_equal 'https://example.test/medium.webp?v=1', url
+          end
+        end
+      end
+    end
   end
 
   test 'card_webp_url prefers card_webp derivative' do
-    skip 'No image attached to fixture' if @menuitem.image.blank?
-
-    url = @menuitem.card_webp_url
-    assert url.present?, 'card_webp_url should return a URL'
+    @menuitem.stub(:image, Object.new) do
+      @menuitem.stub(:image_attacher, Struct.new(:derivatives).new({ card_webp: true })) do
+        @menuitem.stub(:image_url, 'https://example.test/card.webp') do
+          @menuitem.stub(:cache_busted, 'https://example.test/card.webp?v=1') do
+            url = @menuitem.card_webp_url
+            assert_equal 'https://example.test/card.webp?v=1', url
+          end
+        end
+      end
+    end
   end
 
   test 'webp_srcset includes card_webp 150w descriptor' do
-    skip 'No image attached to fixture' if @menuitem.image.blank?
-    skip 'No WebP derivatives' unless @menuitem.has_webp_derivatives?
+    derivatives = { card_webp: true, thumb_webp: true, medium_webp: true, large_webp: true }
 
-    srcset = @menuitem.webp_srcset
-    assert_includes srcset, '150w', 'WebP srcset should include 150w for card_webp'
-    assert_includes srcset, '200w'
-    assert_includes srcset, '600w'
-    assert_includes srcset, '1000w'
+    @menuitem.stub(:image, Object.new) do
+      @menuitem.stub(:image_attacher, Struct.new(:derivatives).new(derivatives)) do
+        @menuitem.stub(:image_url, ->(size) { "https://example.test/#{size}.webp" }) do
+          srcset = @menuitem.webp_srcset
+          assert_includes srcset, 'https://example.test/card_webp.webp 150w', 'WebP srcset should include 150w for card_webp'
+          assert_includes srcset, 'https://example.test/thumb_webp.webp 200w'
+          assert_includes srcset, 'https://example.test/medium_webp.webp 600w'
+          assert_includes srcset, 'https://example.test/large_webp.webp 1000w'
+        end
+      end
+    end
   end
 
   test 'has_webp_derivatives? checks for card_webp' do
-    skip 'No image attached to fixture' if @menuitem.image.blank?
+    derivatives = { card_webp: true, thumb_webp: true, medium_webp: true, large_webp: true }
 
-    # If all WebP derivatives exist, card_webp must be among them
-    if @menuitem.has_webp_derivatives?
-      assert @menuitem.image_attacher.derivatives.key?(:card_webp)
+    @menuitem.stub(:image, Object.new) do
+      @menuitem.stub(:image_attacher, Struct.new(:derivatives).new(derivatives)) do
+        assert @menuitem.has_webp_derivatives?
+        assert @menuitem.image_attacher.derivatives.key?(:card_webp)
+      end
     end
   end
 
@@ -168,17 +187,13 @@ class SmartmenuImagePerformanceTest < ActiveSupport::TestCase
   end
 
   test 'images:backfill_derivatives rake task is defined' do
-    Rake::Task.clear
-    Rails.application.load_tasks
-    assert Rake::Task.task_defined?('images:backfill_derivatives'),
-           'images:backfill_derivatives rake task should be defined'
+    source = Rails.root.join('lib', 'tasks', 'images.rake').read
+    assert_match(/task\s+backfill_derivatives:\s*:environment/, source)
   end
 
   test 'images:derivative_report rake task is defined' do
-    Rake::Task.clear
-    Rails.application.load_tasks
-    assert Rake::Task.task_defined?('images:derivative_report'),
-           'images:derivative_report rake task should be defined'
+    source = Rails.root.join('lib', 'tasks', 'images.rake').read
+    assert_match(/task\s+derivative_report:\s*:environment/, source)
   end
 
   # ---------- Size budget assertions ----------

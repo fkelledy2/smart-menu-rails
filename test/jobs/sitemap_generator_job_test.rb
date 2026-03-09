@@ -2,6 +2,7 @@
 
 require 'test_helper'
 require 'fileutils'
+require 'stringio'
 
 class SitemapGeneratorJobTest < ActiveSupport::TestCase
   test 'perform calls SitemapGenerator::Interpreter.run and pings search engines' do
@@ -33,12 +34,18 @@ class SitemapGeneratorJobTest < ActiveSupport::TestCase
     SitemapGenerator::Sitemap.public_path = output_dir.to_s
     SitemapGenerator::Sitemap.sitemaps_path = 'generated'
 
+    original_stdout = $stdout
+    original_stderr = $stderr
+    $stdout = StringIO.new
+    $stderr = StringIO.new
     SitemapGenerator::Interpreter.run
 
     generated_files = Dir.glob(output_dir.join('**', '*').to_s)
     assert generated_files.any? { |path| File.basename(path).match?(/sitemap.*\.xml(\.gz)?\z/) },
            'Expected sitemap generator to create a sitemap XML artifact'
   ensure
+    $stdout = original_stdout if defined?(original_stdout) && original_stdout
+    $stderr = original_stderr if defined?(original_stderr) && original_stderr
     SitemapGenerator::Sitemap.public_path = original_public_path
     SitemapGenerator::Sitemap.sitemaps_path = original_sitemaps_path
     FileUtils.rm_rf(output_dir) if output_dir

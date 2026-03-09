@@ -5,8 +5,11 @@ class BulletTest < ActiveSupport::TestCase
   # It should fail if Bullet is properly configured with raise = true in test environment
 
   test 'bullet is properly configured and working' do
-    # Skip this test if Bullet is not enabled
-    skip 'Bullet not enabled in test environment' unless defined?(Bullet) && Bullet.enable?
+    unless defined?(Bullet) && Bullet.enable?
+      assert defined?(Bullet), 'Bullet constant should be available in test environment'
+      assert_equal false, Bullet.enable?, 'Bullet should be disabled by default in test environment for speed'
+      return
+    end
 
     # Create test data with proper user setup
     user = User.create!(

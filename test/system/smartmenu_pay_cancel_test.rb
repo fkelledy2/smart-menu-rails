@@ -55,17 +55,7 @@ class SmartmenuPayCancelTest < ApplicationSystemTestCase
     end
 
     # Wait for Cancel button to appear (pay section rendered)
-    Timeout.timeout(15) do
-      loop do
-        ready = page.evaluate_script(
-          "!!document.getElementById('cartPayCancel') && " \
-          "document.getElementById('cartPaySection')?.style?.display === 'block'",
-        )
-        break if ready
-
-        sleep 0.3
-      end
-    end
+    wait_for_script_condition("!!document.getElementById('cartPayCancel') && document.getElementById('cartPaySection')?.style?.display === 'block'", timeout: 15)
 
     # Click Cancel button via JS
     page.execute_script("document.getElementById('cartPayCancel')?.click()")
@@ -108,14 +98,7 @@ class SmartmenuPayCancelTest < ApplicationSystemTestCase
     sleep 1
 
     # Wait for Cancel button to appear (pay section rendered)
-    Timeout.timeout(15) do
-      loop do
-        has_cancel = page.evaluate_script("!!document.getElementById('cartPayCancel') && document.getElementById('cartPaySection')?.style?.display === 'block'")
-        break if has_cancel
-
-        sleep 0.3
-      end
-    end
+    wait_for_script_condition("!!document.getElementById('cartPayCancel') && document.getElementById('cartPaySection')?.style?.display === 'block'", timeout: 15)
 
     has_cancel = page.evaluate_script("!!document.getElementById('cartPayCancel')")
     assert has_cancel, 'Cancel button should exist after Pay click'
@@ -164,31 +147,14 @@ class SmartmenuPayCancelTest < ApplicationSystemTestCase
 
   def wait_for_hydration
     # Wait for state controller to hydrate (Pay button should exist in DOM)
-    Timeout.timeout(15) do
-      loop do
-        has_pay = page.evaluate_script("!!document.getElementById('cartPayOrder')")
-        break if has_pay
-
-        sleep 0.5
-      end
-    end
+    wait_for_script_condition('!!document.getElementById("cartPayOrder")', timeout: 15)
   rescue Timeout::Error
     flunk 'Hydration timeout: #cartPayOrder never appeared in DOM'
   end
 
   def wait_for_pay_button_visible
     # Wait for JS hydration to make Pay button visible (display: block)
-    Timeout.timeout(15) do
-      loop do
-        visible = page.evaluate_script(
-          "document.getElementById('cartPayOrder')?.style?.display === 'block' || " \
-          "document.getElementById('cartPayOrder')?.offsetParent !== null",
-        )
-        break if visible
-
-        sleep 0.5
-      end
-    end
+    wait_for_script_condition("document.getElementById('cartPayOrder')?.style?.display === 'block' || document.getElementById('cartPayOrder')?.offsetParent !== null", timeout: 15)
   rescue Timeout::Error
     debug = page.evaluate_script("JSON.stringify({exists: !!document.getElementById('cartPayOrder'), display: document.getElementById('cartPayOrder')?.style?.display})")
     flunk "Pay button never became visible. Debug: #{debug}"
