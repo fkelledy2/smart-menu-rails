@@ -60,6 +60,32 @@ class OrdrPaymentsControllerTest < ActionDispatch::IntegrationTest
     assert_equal body['total_cents'], total
   end
 
+  test 'split_plan returns nil when no plan exists yet' do
+    get split_plan_restaurant_ordr_url(@restaurant, @ordr)
+    assert_response :ok
+
+    body = JSON.parse(response.body)
+    assert body['ok']
+    assert_nil body['split_plan']
+  end
+
+  test 'split_plan creates a custom split plan' do
+    patch split_plan_restaurant_ordr_url(@restaurant, @ordr), params: {
+      split_method: 'custom',
+      participant_ids: [ordrparticipants(:two).id, ordrparticipants(:three).id],
+      custom_amounts_cents: {
+        ordrparticipants(:two).id => 1000,
+        ordrparticipants(:three).id => 1500,
+      },
+    }
+    assert_response :ok
+
+    body = JSON.parse(response.body)
+    assert body['ok']
+    assert_equal 'custom', body.dig('split_plan', 'split_method')
+    assert_equal [1000, 1500], body.dig('split_plan', 'shares').map { |share| share['base_amount_cents'] }
+  end
+
   # ─── checkout_session (Stripe — default provider) ─────────────────────
 
   test 'checkout_session rejects non-billrequested order' do
