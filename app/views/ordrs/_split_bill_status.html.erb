@@ -1,0 +1,139 @@
+<% if ordr.ordr_split_plan.present? %>
+  <div class="card mb-3">
+    <div class="card-header bg-info text-white">
+      <h5 class="mb-0">
+        <i class="bi bi-people"></i> Split Bill Status
+      </h5>
+    </div>
+    <div class="card-body">
+      <% plan = ordr.ordr_split_plan %>
+      
+      <div class="row mb-3">
+        <div class="col-md-3">
+          <strong>Split Method:</strong>
+        </div>
+        <div class="col-md-9">
+          <span class="badge bg-primary"><%= plan.split_method.to_s.titleize %></span>
+        </div>
+      </div>
+      
+      <div class="row mb-3">
+        <div class="col-md-3">
+          <strong>Plan Status:</strong>
+        </div>
+        <div class="col-md-9">
+          <% status_class = case plan.plan_status
+                            when 'completed' then 'success'
+                            when 'frozen' then 'warning'
+                            when 'failed' then 'danger'
+                            when 'canceled' then 'secondary'
+                            else 'info'
+                            end %>
+          <span class="badge bg-<%= status_class %>"><%= plan.plan_status.to_s.titleize %></span>
+          <% if plan.split_frozen? %>
+            <span class="badge bg-warning ms-2">
+              <i class="bi bi-lock"></i> Frozen
+            </span>
+          <% end %>
+        </div>
+      </div>
+      
+      <div class="row mb-3">
+        <div class="col-md-3">
+          <strong>Participants:</strong>
+        </div>
+        <div class="col-md-9">
+          <%= plan.participant_count %> participants
+        </div>
+      </div>
+      
+      <% if plan.ordr_split_payments.any? %>
+        <hr>
+        <h6 class="mb-3">Payment Shares</h6>
+        
+        <div class="table-responsive">
+          <table class="table table-sm table-hover">
+            <thead>
+              <tr>
+                <th>Participant</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Provider</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% plan.ordr_split_payments.each do |share| %>
+                <tr>
+                  <td>
+                    <% if share.ordrparticipant.present? %>
+                      Participant #<%= share.ordrparticipant.id %>
+                      <% if share.ordrparticipant.sessionid.present? %>
+                        <small class="text-muted">(Session: <%= share.ordrparticipant.sessionid[0..7] %>...)</small>
+                      <% end %>
+                    <% else %>
+                      <span class="text-muted">Unknown</span>
+                    <% end %>
+                  </td>
+                  <td>
+                    <strong><%= number_to_currency(share.amount_cents / 100.0, unit: ordr.restaurant.currency_symbol) %></strong>
+                  </td>
+                  <td>
+                    <% status_class = case share.status
+                                      when 'succeeded' then 'success'
+                                      when 'pending' then 'warning'
+                                      when 'failed' then 'danger'
+                                      when 'refunded' then 'secondary'
+                                      when 'canceled' then 'secondary'
+                                      else 'info'
+                                      end %>
+                    <span class="badge bg-<%= status_class %>"><%= share.status.to_s.titleize %></span>
+                  </td>
+                  <td>
+                    <% if share.payment.present? %>
+                      <span class="badge bg-light text-dark">
+                        <i class="bi bi-<%= share.payment.provider == 'stripe' ? 'credit-card' : 'square' %>"></i>
+                        <%= share.payment.provider.to_s.titleize %>
+                      </span>
+                    <% else %>
+                      <span class="text-muted">-</span>
+                    <% end %>
+                  </td>
+                  <td>
+                    <% if share.payment.present? && share.payment.provider_payment_id.present? %>
+                      <small class="text-muted font-monospace">
+                        <%= share.payment.provider_payment_id[0..15] %>...
+                      </small>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+            <tfoot>
+              <tr class="table-light">
+                <td><strong>Total</strong></td>
+                <td>
+                  <strong><%= number_to_currency(plan.ordr_split_payments.sum(:amount_cents) / 100.0, unit: ordr.restaurant.currency_symbol) %></strong>
+                </td>
+                <td colspan="3">
+                  <% settled_count = plan.ordr_split_payments.where(status: 'succeeded').count %>
+                  <% total_count = plan.ordr_split_payments.count %>
+                  <span class="badge bg-<%= settled_count == total_count ? 'success' : 'warning' %>">
+                    <%= settled_count %>/<%= total_count %> Settled
+                  </span>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      <% end %>
+      
+      <% if plan.frozen_at.present? %>
+        <hr>
+        <small class="text-muted">
+          <i class="bi bi-clock"></i> Frozen at <%= l(plan.frozen_at, format: :long) %>
+        </small>
+      <% end %>
+    </div>
+  </div>
+<% end %>

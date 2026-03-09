@@ -10,9 +10,9 @@
 
 ## 🚦 **Current Delivery Status**
 
-- **Implemented now**: persisted `OrdrSplitPlan` + `OrdrSplitPayment` foundation, equal/custom/percentage/item-based calculation service, proportional tax/tip/service allocation, split-plan read/upsert endpoints, share-specific Stripe/Square checkout support, webhook-driven share settlement, and order-level paid detection after all shares succeed.
-- **Partially implemented**: staff-oriented equal split flow is live via the existing order payments controller; canonical split-plan APIs exist but the customer-facing Smart Menu split UI and richer staff progress/status UX are still incomplete.
-- **Still pending**: polished Smart Menu entry points, realtime customer progress UI, participant-facing management UX, receipt/reference UX, and broader end-to-end/system coverage.
+- **Implemented now**: persisted `OrdrSplitPlan` + `OrdrSplitPayment` foundation, equal/custom/percentage/item-based calculation service, proportional tax/tip/service allocation, split-plan read/upsert endpoints, share-specific Stripe/Square checkout support, webhook-driven share settlement, order-level paid detection after all shares succeed, **customer-facing Smart Menu split bill UI** with all four split methods (equal/custom/percentage/item-based), participant selection, realtime WebSocket updates, comprehensive validation, and pay-my-share flow, plus **staff-facing split bill status display** with participant payment tracking.
+- **Fully functional**: customer and staff UX for split bill creation, monitoring, and payment; realtime updates via WebSocket; comprehensive error handling and validation.
+- **Still pending**: receipt/reference UX for completed split payments, advanced refund workflows, and expanded automated test coverage.
 
 ## 🎯 **User Story**
 
@@ -78,16 +78,25 @@
 ### **3. UX Requirements**
 
 #### **3.1 Customer Smart Menu flow**
-- [ ] Add a customer-facing split bill entry point in the Smart Menu payment/bill flow
-- [ ] Show all active participants and clearly identify the current participant
-- [ ] Provide a method switcher for equal, custom, percentage, and item-based splits
-- [ ] Show realtime recalculation of per-participant subtota- [ ] Show realtime recalculation of per-participant subtota- [ ] Show reail- [ ] Show realtime recalculation of per-particizen, replace editing controls with read-only status and pay-share actions
+- [x] Add a customer-facing split bill entry point in the Smart Menu payment/bill flow
+- [x] Show all active participants and clearly identify the current participant
+- [x] Provide a method switcher for equal, custom, percentage, and item-based splits
+- [x] Show realtime recalculation of per-participant subtotals as amounts are entered
+- [x] When the plan is frozen, replace editing controls with read-only status and pay-share actions
+- [x] Percentage split method UI with validation that total equals 100%
+- [x] Realtime WebSocket updates when other participants modify the split plan
+- [x] Comprehensive client-side validation with detailed error messages
+- [x] Visual feedback for valid/invalid totals (green/red highlighting)
 
 #### **3.2 Staff flow**
 - [x] Extend the existing staff bill/payment backend instead of creating a parallel payment subsystem
 - [x] Preserve the current equal split capability while moving it onto the shared split-plan model/API
-- [ ] Show participant payment statuses (`requires_payment`, `pending`, `succeeded`, `failed`, refunded/canceled where supported`) in the main staff UI
-- [ ] Show clear validation/progress state before staff initiates - [ ] Show clear validati### **4. Payment Processing Requirements**
+- [x] Show participant payment statuses (`requires_payment`, `pending`, `succeeded`, `failed`, refunded/canceled where supported`) in the main staff UI
+- [x] Display split plan details including method, status, frozen state, and participant count
+- [x] Show per-share payment details with provider information and settlement status
+- [x] Display total settled vs. pending shares for quick status overview
+
+### **4. Payment Processing Requirements**
 
 #### **4.1 Share-level payment execution**
 - [x] Each participant share maps to a payment record that can be processed independently
@@ -139,9 +148,16 @@
 - [ ] Customer-safe routes exist at the controller level, but the Smart Menu UI is not yet wired up to them
 
 #### **Frontend work**
-- [ ] Implement a shared UI/state contract so staff and customer flows consume the same split-plan payload shape
-- [ ] Prefer Stimulus + existing Smart Menu JS patterns over a new frontend stack
-- [ ] Reflect split-plan status through existing realtime order state/broadcast architecture
+- [x] Implement customer-facing split bill UI using Stimulus controller pattern
+- [x] Integrate split bill entry point into Smart Menu cart bottom sheet
+- [x] Use existing Smart Menu JS patterns and state controller for cart updates
+- [x] Create split bill Stimulus controller with participant loading, method switching, and plan creation
+- [x] Add percentage split method UI with real-time validation
+- [x] Implement comprehensive client-side validation with detailed error messages
+- [x] Wire split-plan status into SmartmenuState WebSocket broadcasts
+- [x] Add realtime split plan update listener to customer UI
+- [x] Create staff-facing split bill status partial for order view
+- [ ] Implement a shared UI/state contract so staff and customer flows consume the same split-plan payload shape (partial - customer uses WebSocket, staff uses page render)
 
 ## 🧪 **Required Test Checklist**
 
@@ -197,11 +213,37 @@ lble
 - [ ] Expand automated coverage for custom, percentage, and item-based flows
 - [ ] Harden participant-eligibility rules and freeze/error edge cases
 - [ ] Add explicit lifecycle transitions where needed (`completed`, `failed`, `canceled`)
-- [ ] Confirm idempotency/retry coverage across Stripe and Square se- [ ] Confirm idempotency/retry coverage across Stripe and Square se- [ ] Confirm idempotency/retry coverage across Stripe and Squareaff and customer status presen- [ ] Confirm idempotency/retry coverage acrossnt p- [ ] Confirm idempotency/retry coverage acr r- [ ] Confirm idempotency/retry coverage across Stripe and Squst- [ ] Confirm idempotency/retr split across participants using equal, custom, percentage, and item-based methods at the backend/service level
-- [x] Staff and active participants can configure the split before the pl- [x] Staff and active participants can configure the split bse- [x] Staff and active participants can configure the split beforeit - [x] Staff and active participants can conf af- [x] Staff and active participants can configure the split before the pl-  the existing provider integrations
-- [x] The split plan becomes read-only after any share enters payment processing or succeeds
-- [x] The `Ordr` becomes paid only- [x] The `Ordr` becomes paid only- [x] The `Ordr` becomes paid only- [x] The `Ordr` becomes paid only- [x] The `Ordr` becomes paid only- [x] The `Ordr` becomes paid only- [x] The `Ordr` becomes paid only- [x] The `Ordr` becomes paid only- [x] The `Ordr` becomes paid only- [x] The `Ordr` becomes paid only- [x] The `Ordr` becomes paid only- [x] The `Ordr` becomes paid only- [x] The `Ordr` becomes paid only- [x] The `Ordr` becomes paid only- [x] The `Ordr` becomes paid only- [x] The `Ordr` becomes paid only- [x] The `Ordr` becomlit templates for common party scenarios
-- [ ] Advanced refund workflows for partially-settled split plans
+- [ ] Confirm idempotency/retry coverage across Stripe and Square settlement flows
+
+### **Phase 3: Customer-facing Smart Menu UI** ✅ **COMPLETED**
+- [x] Add Split Bill button to Smart Menu cart bottom sheet alongside Pay button
+- [x] Create split bill Stimulus controller for UI logic and API integration
+- [x] Implement participant selection with current participant identification
+- [x] Build method switcher UI (equal, custom, item-based)
+- [x] Add realtime per-participant subtotal recalculation for custom splits
+- [x] Implement frozen state UI with read-only plan view and pay-my-share action
+- [x] Integrate with existing order JSON endpoint for participant/item loading
+- [x] Wire up split plan creation API calls
+- [x] Add CSS styling for split bill components
+- [x] Update Pundit policy to allow anonymous customers to view orders
+
+### **Phase 4: Staff UX and monitoring** ✅ **COMPLETED**
+- [x] Display participant payment statuses in staff order view
+- [x] Show split plan details (method, status, frozen state, participant count)
+- [x] Display per-share payment details with provider information
+- [x] Show settlement progress (settled vs. pending shares)
+- [x] Create comprehensive split bill status partial for staff order view
+- [ ] Add staff override/cancel actions for split plans (deferred - not critical for MVP)
+
+### **Phase 5: Realtime and polish** ✅ **COMPLETED**
+- [x] Wire split-plan status into SmartmenuState WebSocket broadcasts
+- [x] Add realtime updates when other participants modify the split plan
+- [x] Implement percentage split method UI with validation
+- [x] Add comprehensive client-side validation with detailed error messages
+- [x] Visual feedback for valid/invalid totals (green/red highlighting)
+- [ ] Add receipt/reference UX for completed split payments (deferred - future enhancement)
+- [ ] Create split templates for common party scenarios (deferred - future enhancement)
+- [ ] Advanced refund workflows for partially-settled split plans (deferred - future enhancement)
 
 ---
 

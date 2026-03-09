@@ -6,6 +6,7 @@ export default class extends Controller {
     "methodSelector", "planView",
     "participantsList", "equalPreview", "equalAmount",
     "customInputs", "customAmountsList", "customTotal",
+    "percentageInputs", "percentageAmountsList", "percentageTotal",
     "itemInputs", "itemAssignmentsList",
     "createButton", "payShareButton",
     "planStatus", "planDetails", "myShareAmount"
@@ -26,7 +27,50 @@ export default class extends Controller {
     this.orderTotal = 0
     this.existingPlan = null
     
+    // Listen for realtime state updates
+    this._onStateUpdate = this.handleStateUpdate.bind(this)
+    document.addEventListener('state:update', this._onStateUpdate)
+    
     this.loadParticipantsAndPlan()
+  }
+
+  disconnect() {
+    if (this._onStateUpdate) {
+      document.removeEventListener('state:update', this._onStateUpdate)
+    }
+  }
+
+  handleStateUpdate(event) {
+    const state = event.detail || {}
+    const splitPlan = state.splitPlan
+    
+    if (!splitPlan) {
+      // Split plan was removed/cleared
+      if (this.existingPlan) {
+        console.log('[SplitBill] Plan removed, refreshing UI')
+        this.existingPlan = null
+        this.renderParticipants()
+      }
+      return
+    }
+    
+    // Check if plan changed
+    const planChanged = !this.existingPlan || 
+                       this.existingPlan.id !== splitPlan.id ||
+                       this.existingPlan.planStatus !== splitPlan.planStatus ||
+                       this.existingPlan.frozen !== splitPlan.frozen
+    
+    if (planChanged) {
+      console.log('[SplitBill] Plan updated via WebSocket, refreshing UI')
+      this.existingPlan = splitPlan
+      
+      if (splitPlan.frozen) {
+        this.showExistingPlan()
+      } else {
+        this.renderParticipants()
+        this.updatePreview()
+      }
+    }
   }
 
   async loadParticipantsAndPlan() {
@@ -113,6 +157,7 @@ export default class extends Controller {
     // Hide all previews first
     this.equalPreviewTarget.style.display = 'none'
     this.customInputsTarget.style.display = 'none'
+    this.percentageInputsTarget.style.display = 'none'
     this.itemInputsTarget.style.display = 'none'
     
     if (selectedParticipants.length === 0) {
@@ -128,6 +173,9 @@ export default class extends Controller {
         break
       case 'custom':
         this.showCustomInputs(selectedParticipants)
+        break
+      case 'percentage':
+        this.showPercentageInputs(selectedParticipants)
         break
       case 'item_based':
         this.showItemInputs(selectedParticipants)
@@ -189,6 +237,54 @@ export default class extends Controller {
     }
   }
 
+  showPercentageInputs(participants) {
+    this.percentageInputsTarget.style.display = 'block'
+    
+    const html = participants.map(p => {
+      const isMe = p.id.toString() === this.participantIdValue
+      const label = isMe ? '(You)' : ''
+      
+      return `
+        <div class="input-group mb-2">
+          <span class="input-group-text">Participant ${label}</span>
+          <input type="number" class="form-control" 
+                 data-participant-id="${p.id}"
+                 data-action="input->split-bill#percentageChanged"
+                 placeholder="0" step="1" min="0" max="100">
+          <span class="input-group-text">%</span>
+        </div>
+      `
+    }).join('')
+    
+    this.percentageAmountsListTarget.innerHTML = html
+    this.updatePercentageTotal()
+  }
+
+  percentageChanged() {
+    this.updatePercentageTotal()
+  }
+
+  updatePercentageTotal() {
+    const inputs = this.percentageAmountsListTarget.querySelectorAll('input[type="number"]')
+    let total = 0
+    
+    inputs.forEach(input => {
+      const value = parseFloat(input.value) || 0
+      total += value
+    })
+    
+    this.percentageTotalTarget.textContent = `${total.toFixed(1)}%`
+    
+    // Highlight if total doesn't equal 100%
+    if (Math.abs(total - 100) < 0.01) {
+      this.percentageTotalTarget.classList.remove('text-danger')
+      this.percentageTotalTarget.classList.add('text-success')
+    } else {
+      this.percentageTotalTarget.classList.remove('text-success')
+      this.percentageTotalTarget.classList.add('text-danger')
+    }
+  }
+
   showItemInputs(participants) {
     this.itemInputsTarget.style.display = 'block'
     
@@ -224,7 +320,84 @@ export default class extends Controller {
     // Could add preview of per-participant totals here
   }
 
+  validateSplitPlan() {
+    const errors = []
+    const selectedParticipants = this.getSelectedParticipants()
+    
+    if (selectedParticipants.length === 0) {
+      errors.push('Select at least one participant')
+      return errors
+    }
+    
+    if (this.currentMethod === 'custom') {
+      const inputs = this.customAmountsListTarget.querySelectorAll('input[type="number"]')
+      let total = 0
+      let hasEmptyInputs = false
+      
+      inputs.forEach(input => {
+        const value = parseFloat(input.value)
+        if (!value || value <= 0) {
+          hasEmptyInputs = true
+        }
+        total += Math.round((value || 0) * 100)
+      })
+      
+      if (hasEmptyInputs) {
+        errors.push('Enter an amount for each participant')
+      }
+      
+      if (total !== this.orderTotal) {
+        const diff = Math.abs(total - this.orderTotal) / 100
+        errors.push(`Total amounts must equal order total (off by ${this.formatCurrency(Math.abs(total - this.orderTotal))})`)
+      }
+    } else if (this.currentMethod === 'percentage') {
+      const inputs = this.percentageAmountsListTarget.querySelectorAll('input[type="number"]')
+      let total = 0
+      let hasEmptyInputs = false
+      
+      inputs.forEach(input => {
+        const value = parseFloat(input.value)
+        if (!value || value <= 0) {
+          hasEmptyInputs = true
+        }
+        total += value || 0
+      })
+      
+      if (hasEmptyInputs) {
+        errors.push('Enter a percentage for each participant')
+      }
+      
+      if (Math.abs(total - 100) > 0.01) {
+        errors.push(`Total percentages must equal 100% (currently ${total.toFixed(1)}%)`)
+      }
+    } else if (this.currentMethod === 'item_based') {
+      const selects = this.itemAssignmentsListTarget.querySelectorAll('select')
+      let hasUnassigned = false
+      
+      selects.forEach(select => {
+        if (!select.value) {
+          hasUnassigned = true
+        }
+      })
+      
+      if (hasUnassigned) {
+        errors.push('All items must be assigned to a participant')
+      }
+    }
+    
+    return errors
+  }
+
   async createPlan() {
+    this.hideError()
+    
+    // Validate before sending
+    const validationErrors = this.validateSplitPlan()
+    if (validationErrors.length > 0) {
+      this.showError('Cannot create split plan:', validationErrors)
+      return
+    }
+    
     this.showLoading()
     
     try {
@@ -245,6 +418,17 @@ export default class extends Controller {
         })
         
         params.custom_amounts_cents = customAmounts
+      } else if (this.currentMethod === 'percentage') {
+        const percentages = {}
+        const inputs = this.percentageAmountsListTarget.querySelectorAll('input[type="number"]')
+        
+        inputs.forEach(input => {
+          const participantId = input.dataset.participantId
+          const percentage = parseFloat(input.value) || 0
+          percentages[participantId] = percentage
+        })
+        
+        params.percentages = percentages
       } else if (this.currentMethod === 'item_based') {
         const itemAssignments = {}
         const selects = this.itemAssignmentsListTarget.querySelectorAll('select')
@@ -351,9 +535,29 @@ export default class extends Controller {
     this.methodSelectorTarget.style.display = 'block'
   }
 
-  showError(message) {
-    this.loadingTarget.style.display = 'none'
+  showError(message, details = null) {
+    this.hideLoading()
     this.errorTarget.style.display = 'block'
-    this.errorMessageTarget.textContent = message
+    
+    let errorHtml = `<strong>${message}</strong>`
+    
+    if (details) {
+      if (typeof details === 'string') {
+        errorHtml += `<br><small>${details}</small>`
+      } else if (Array.isArray(details)) {
+        errorHtml += '<ul class="mb-0 mt-2">'
+        details.forEach(detail => {
+          errorHtml += `<li><small>${detail}</small></li>`
+        })
+        errorHtml += '</ul>'
+      }
+    }
+    
+    this.errorMessageTarget.innerHTML = errorHtml
+  }
+
+  hideError() {
+    this.errorTarget.style.display = 'none'
+    this.errorMessageTarget.innerHTML = ''
   }
 }

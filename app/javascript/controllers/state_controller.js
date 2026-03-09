@@ -456,6 +456,7 @@ export default class extends Controller {
       html += '<div data-split-bill-target="participantsList"></div>';
       html += '<div data-split-bill-target="equalPreview" style="display:none;"><span data-split-bill-target="equalAmount"></span></div>';
       html += '<div data-split-bill-target="customInputs" style="display:none;"><div data-split-bill-target="customAmountsList"></div><div data-split-bill-target="customTotal"></div></div>';
+      html += '<div data-split-bill-target="percentageInputs" style="display:none;"><div data-split-bill-target="percentageAmountsList"></div><div data-split-bill-target="percentageTotal"></div></div>';
       html += '<div data-split-bill-target="itemInputs" style="display:none;"><div data-split-bill-target="itemAssignmentsList"></div></div>';
       html += '<button data-split-bill-target="createButton" class="btn btn-primary mt-3" style="display:none;">Create Split Plan</button>';
       html += '</div>';

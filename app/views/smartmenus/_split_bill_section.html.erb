@@ -46,6 +46,12 @@
           <i class="bi bi-calculator"></i> <%= t('smartmenus.split_bill.custom', default: 'Custom') %>
         </label>
 
+        <input type="radio" class="btn-check" name="splitMethod" id="splitMethodPercentage" value="percentage"
+               data-action="change->split-bill#methodChanged">
+        <label class="btn btn-outline-primary" for="splitMethodPercentage">
+          <i class="bi bi-percent"></i> <%= t('smartmenus.split_bill.percentage', default: '%') %>
+        </label>
+
         <input type="radio" class="btn-check" name="splitMethod" id="splitMethodItem" value="item_based"
                data-action="change->split-bill#methodChanged">
         <label class="btn btn-outline-primary" for="splitMethodItem">
@@ -87,6 +93,21 @@
       <div class="d-flex justify-content-between align-items-center mt-2 p-2 bg-light rounded">
         <span class="fw-bold"><%= t('smartmenus.split_bill.total', default: 'Total') %></span>
         <span class="fw-bold" data-split-bill-target="customTotal"><%= cur %>0.00</span>
+      </div>
+    </div>
+
+    <%# Percentage split inputs %>
+    <div data-split-bill-target="percentageInputs" class="split-custom-inputs mb-3" style="display:none;">
+      <div class="alert alert-info">
+        <i class="bi bi-info-circle"></i>
+        <%= t('smartmenus.split_bill.percentage_hint', default: 'Enter percentage for each participant. Total must equal 100%.') %>
+      </div>
+      <div data-split-bill-target="percentageAmountsList">
+        <%# Populated dynamically %>
+      </div>
+      <div class="d-flex justify-content-between align-items-center mt-2 p-2 bg-light rounded">
+        <span class="fw-bold"><%= t('smartmenus.split_bill.total_percentage', default: 'Total') %></span>
+        <span class="fw-bold" data-split-bill-target="percentageTotal">0%</span>
       </div>
     </div>
 
