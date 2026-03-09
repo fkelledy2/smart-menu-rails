@@ -422,10 +422,11 @@ export default class extends Controller {
     if (items.length > 0) {
       const totalFormatted = totals ? fmt(totals.gross) : fmt(0);
       html += '<div class="cart-sheet__actions" data-testid="cart-actions">';
-      if (opened.length > 0) {
+      const hasSubmitButton = opened.length > 0;
+      if (hasSubmitButton) {
         html += '<button type="button" class="btn-touch-primary w-100 submitOrderButton" id="cartSubmitOrder" data-testid="cart-submit-order-btn"><i class="bi bi-send"></i> Submit order</button>';
       }
-      const payVisible = flags.payVisible === true;
+      const payVisible = flags.payVisible === true && !hasSubmitButton;
       const billVisible = flags.displayRequestBill === true && !payVisible;
       html += `<button type="button" class="btn-touch-primary w-100 mt-2" id="cartRequestBill" data-bs-toggle="modal" data-bs-target="#requestBillModal" style="display:${billVisible ? 'block' : 'none'};"><i class="bi bi-receipt"></i> Request Bill</button>`;
       html += `<div class="d-flex gap-2 mt-2" id="cartPaymentButtons" style="display:${payVisible ? 'flex' : 'none'};">`;
