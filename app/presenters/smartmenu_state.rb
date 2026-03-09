@@ -125,6 +125,17 @@ class SmartmenuState
     }
   end
 
+  # Split Plan WebSocket Payload
+  # 
+  # Generates the split plan data included in SmartmenuState broadcasts.
+  # This enables realtime updates to the customer split bill UI when:
+  # - Another participant creates/modifies the split plan
+  # - Staff updates the split plan
+  # - Payment status changes (share becomes pending/succeeded)
+  # - Plan becomes frozen (after first payment initiated)
+  # 
+  # Consumed by: app/javascript/controllers/split_bill_controller.js
+  # via 'state:update' event listener
   def self.split_plan_payload(order, ordrparticipant)
     return nil unless order
 

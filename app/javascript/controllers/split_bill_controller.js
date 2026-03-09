@@ -1,5 +1,30 @@
 import { Controller } from "@hotwired/stimulus"
 
+/**
+ * Split Bill Controller
+ * 
+ * Manages the customer-facing split bill UI in the Smart Menu.
+ * Supports four split methods: equal, custom, percentage, and item-based.
+ * 
+ * Integration Points:
+ * - Rendered by: app/views/smartmenus/_split_bill_section.html.erb
+ * - Also rendered by: app/javascript/controllers/state_controller.js (for dynamic cart updates)
+ * - API Endpoints: 
+ *   - GET /restaurants/:id/ordrs/:id.json (load participants and items)
+ *   - PATCH /restaurants/:id/ordrs/:id/split_plan (create/update split plan)
+ *   - GET /restaurants/:id/ordrs/:id/payments/checkout_session (pay share)
+ * - WebSocket Updates: Listens to 'state:update' events from SmartmenuState broadcasts
+ * - Backend Services: Payments::SplitPlanUpsertService, Payments::SplitPlanCalculator
+ * 
+ * Flow:
+ * 1. On connect, loads participants and existing split plan from order endpoint
+ * 2. User selects split method and configures amounts/percentages/items
+ * 3. Client-side validation ensures totals match before submission
+ * 4. Creates split plan via API, which returns frozen plan with shares
+ * 5. Displays frozen plan with "Pay My Share" button
+ * 6. Redirects to checkout with ordr_split_payment_id parameter
+ * 7. WebSocket updates refresh UI when plan changes (other participants, staff, etc.)
+ */
 export default class extends Controller {
   static targets = [
     "loading", "error", "errorMessage",
@@ -506,8 +531,30 @@ export default class extends Controller {
   }
 
   cancel() {
-    this.element.style.display = 'none'
-    document.getElementById('cartPaySection').style.display = 'none'
+    // Hide split bill section
+    const splitSection = document.getElementById('cartSplitBillSection')
+    if (splitSection) {
+      splitSection.style.display = 'none'
+    }
+    
+    // Show payment buttons again
+    const paymentButtons = document.getElementById('cartPaymentButtons')
+    if (paymentButtons) {
+      paymentButtons.style.display = 'flex'
+    }
+    
+    // Hide any error messages
+    this.hideError()
+    
+    // Reset to default method
+    this.currentMethod = 'equal'
+    
+    // Collapse bottom sheet back to half
+    const sheet = document.getElementById('cartBottomSheet')
+    if (sheet) {
+      const ctrl = this.application?.getControllerForElementAndIdentifier(sheet, 'bottom-sheet')
+      if (ctrl) { ctrl.setState('half') }
+    }
   }
 
   getSelectedParticipants() {
