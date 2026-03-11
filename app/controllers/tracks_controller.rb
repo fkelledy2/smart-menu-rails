@@ -58,6 +58,7 @@ class TracksController < ApplicationController
     # Handle invalid enum values
     @track = Track.new(track_params.except(:status))
     @track.restaurant = @restaurant
+    authorize @track
     @track.errors.add(:status, e.message)
     respond_to do |format|
       format.html { render :new, status: :unprocessable_content }

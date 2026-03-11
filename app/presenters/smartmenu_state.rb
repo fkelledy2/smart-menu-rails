@@ -83,6 +83,17 @@ class SmartmenuState
         item.ordritemprice
       end
 
+      # Collect item notes
+      notes = begin
+        if item.respond_to?(:ordritemnotes)
+          item.ordritemnotes.map(&:note).compact
+        else
+          []
+        end
+      rescue StandardError
+        []
+      end
+
       {
         id: item.id,
         menuitem_id: item.menuitem_id,
@@ -91,6 +102,7 @@ class SmartmenuState
         quantity: item.try(:quantity) || 1,
         status: item.status.to_s,
         size_name: item.try(:size_name),
+        notes: notes,
       }
     end
     opened_count         = items.count { |i| i[:status] == 'opened' }

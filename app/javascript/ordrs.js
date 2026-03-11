@@ -91,14 +91,7 @@ export function initOrders() {
       document.getElementById('backgroundContent').removeAttribute('inert');
     });
   }
-  if (document.getElementById('viewOrderModalLabel')) {
-    document.getElementById('viewOrderModalLabel').addEventListener('shown.bs.modal', () => {
-      document.getElementById('backgroundContent').setAttribute('inert', '');
-    });
-    document.getElementById('viewOrderModalLabel').addEventListener('hidden.bs.modal', () => {
-      document.getElementById('backgroundContent').removeAttribute('inert');
-    });
-  }
+  // viewOrderModal removed - all ordering now uses bottom sheet
   if (document.getElementById('requestBillModalLabel')) {
     document.getElementById('requestBillModalLabel').addEventListener('shown.bs.modal', () => {
       document.getElementById('backgroundContent').setAttribute('inert', '');
@@ -342,6 +335,11 @@ export function initOrders() {
           const pairing = addItemToOrderModal.querySelector('#a2o_tasting_pairing');
           if (qty) qty.value = '1';
           if (pairing) pairing.checked = false;
+        } catch (_) {}
+        // Clear the note field for fresh start
+        try {
+          const noteField = addItemToOrderModal.querySelector('#a2o_item_note');
+          if (noteField) noteField.value = '';
         } catch (_) {}
         // Standard flow: populate from triggering button attributes
         const getAttr = (name) => button.getAttribute(name);

@@ -425,6 +425,7 @@ export function initOrderBindings() {
       const priceEl = document.getElementById('a2o_menuitem_price');
       const price = priceEl?.dataset?.unitPrice || priceEl?.textContent?.trim();
       const sizeName = document.getElementById('a2o_size_name')?.textContent?.trim() || null;
+      const itemNote = document.getElementById('a2o_item_note')?.value?.trim() || null;
       const restaurantId = getRestaurantId();
       if (!ordrId || !menuitemId || !restaurantId) { console.error('[AddItem][capture] Missing data'); return; }
 
@@ -432,7 +433,7 @@ export function initOrderBindings() {
       const qty = Math.max(1, Math.min(99, parseInt(window.__quickAddQty) || 1));
       window.__quickAddQty = 1;
 
-      const ordritem = { ordritem: { ordr_id: ordrId, menuitem_id: menuitemId, status: 0, ordritemprice: price, size_name: sizeName, quantity: qty } };
+      const ordritem = { ordritem: { ordr_id: ordrId, menuitem_id: menuitemId, status: 0, ordritemprice: price, size_name: sizeName, quantity: qty, note: itemNote } };
       post(`/restaurants/${restaurantId}/ordritems`, ordritem)
         .then(() => hideClosestModal(btn))
         .catch((e) => console.error('[AddItem][capture] Post failed:', e));
@@ -840,7 +841,7 @@ export function initOrderBindings() {
 
   // Modal inert toggles for accessibility
   (function bindModalInert() {
-    const ids = ['openOrderModalLabel','addItemToOrderModalLabel','allergenModalLabel','viewOrderModalLabel','requestBillModalLabel','payOrderModalLabel'];
+    const ids = ['openOrderModalLabel','addItemToOrderModalLabel','allergenModalLabel','requestBillModalLabel','payOrderModalLabel'];
     ids.forEach((id) => {
       const el = document.getElementById(id);
       if (!el || el.__inertBound) return;

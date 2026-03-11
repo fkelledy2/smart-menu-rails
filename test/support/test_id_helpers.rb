@@ -564,7 +564,7 @@ module TestIdHelpers
     JS
   end
 
-  # Opens the view order modal by clicking the FAB button or directly if FAB not visible
+  # Opens the cart bottom sheet (replaces old viewOrderModal)
   def open_view_order_modal(**)
     # Reload the page so server-rendered modal reflects current DB order
     page.execute_script('window.location.reload()')
@@ -621,22 +621,24 @@ module TestIdHelpers
 
     sleep 0.3 # Wait for cleanup
 
-    # Try to click FAB - in tests, WebSocket doesn't update so FAB may not be visible
-    begin
-      click_testid('order-fab-btn', wait: 2, **)
-    rescue Capybara::ElementNotFound, Selenium::WebDriver::Error::ElementClickInterceptedError
-      # FAB not rendered or obscured, open modal directly via JavaScript
-      page.execute_script(<<~JS)
-        const modalEl = document.getElementById('viewOrderModal');
-        if (modalEl && typeof bootstrap !== 'undefined') {
-          const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
-          modal.show();
+    # Open bottom sheet to full state (replaces old viewOrderModal)
+    page.execute_script(<<~JS)
+      const sheet = document.getElementById('cartBottomSheet');
+      if (sheet) {
+        const controller = window.Stimulus?.getControllerForElementAndIdentifier?.(sheet, 'bottom-sheet');
+        if (controller && typeof controller.setState === 'function') {
+          controller.setState('full');
+        } else {
+          // Fallback: manually set to full state
+          sheet.classList.remove('bottom-sheet--peek', 'bottom-sheet--half');
+          sheet.classList.add('bottom-sheet--full');
+          sheet.style.transform = 'translateY(0)';
         }
-      JS
-    end
+      }
+    JS
 
-    # Wait for modal to appear
-    assert_testid('view-order-modal', wait: 5)
+    # Wait for bottom sheet to appear
+    assert_testid('cart-bottom-sheet', wait: 5)
 
     # Hydrate state via JSON to ensure totals/items render in tests (no websockets)
     begin
@@ -659,107 +661,21 @@ module TestIdHelpers
       # continue
     end
 
-    # If the order has items, totals should render — wait assertively
+    # Wait for bottom sheet content to load
+    # The bottom sheet renders server-side, so we just need to wait for it to be visible
     begin
       slug = URI.parse(current_url).path.split('/').last
       sm = Smartmenu.find_by(slug: slug)
       if sm
         order = Ordr.where(restaurant_id: sm.restaurant_id, tablesetting_id: sm.tablesetting_id, menu_id: sm.menu_id, status: [0, 20, 22, 24, 25, 30]).order(:created_at).last
         if order&.ordritems&.exists?
-          unless page.has_selector?('[data-testid="order-total-amount"]', wait: 5)
-            # As a last resort for tests, inject a totals row based on DB values
-            currency = currency_symbol_for(order)
-            amount = format('%.2f', order.nett.to_f)
-            page.execute_script(<<~JS)
-              (function(){
-                const modal = document.getElementById('viewOrderModal');
-                if (!modal) return;
-                const body = modal.querySelector('[data-testid="order-modal-body"]');
-                if (!body) return;
-                if (!body.querySelector('[data-testid="order-total-amount"]')) {
-                  const row = document.createElement('div');
-                  row.className = 'row';
-                  row.innerHTML = '<div class="col-8"></div><div class="col-2"><b>Total:</b></div>' +
-                                  '<div class="col-2"><span class="float-end" data-testid="order-total-amount"><b>#{currency}#{amount}</b></span></div>';
-                  body.appendChild(row);
-                }
-              })();
-            JS
-            assert_selector('[data-testid="order-total-amount"]', wait: 2)
-          end
-
-          # Ensure at least one order item row is visible; if not, inject minimal rows
-          unless page.has_selector?('[data-testid^="order-item-"]', wait: 2)
-            items = order.ordritems.to_a
-            names = items.map { |ri| ri.menuitem&.name.to_s.gsub("'", "\\'") }
-            prices = items.map { |ri| format('%.2f', ri.ordritemprice.to_f) }
-            ids = items.map(&:id)
-            currency = currency_symbol_for(order)
-            page.execute_script(<<~JS)
-              (function(){
-                const modal = document.getElementById('viewOrderModal');
-                if (!modal) return;
-                const body = modal.querySelector('[data-testid="order-modal-body"]');
-                if (!body) return;
-                const ids = #{ids};
-                const names = #{names};
-                const prices = #{prices};
-                const currency = '#{currency}';
-                for (let i=0;i<ids.length;i++){
-                  const id = ids[i];
-                  if (body.querySelector('[data-testid="order-item-'+id+'"]')) continue;
-                  const row = document.createElement('div');
-                  row.className = 'row';
-                  row.setAttribute('data-testid','order-item-'+id);
-                  row.innerHTML = '<div class="col-8"><div class="d-flex w-100 overflow-hidden"><p class="text-truncate">'+names[i]+'</p></div></div>'+
-                                  '<div class="col-2"></div>'+
-                                  '<div class="col-2"><span class="float-end">'+currency+prices[i]+'</span></div>';
-                  body.appendChild(row);
-                }
-              })();
-            JS
-          end
+          # Wait for cart items to be visible in the bottom sheet
+          assert_selector('#cartItemsContainer', wait: 5)
         end
       end
     rescue StandardError
-      # ignore
+      # If we can't verify, continue - the test will fail if elements are truly missing
     end
-
-    # Final enforcement: if DB says there are items, totals must be present before returning
-    slug = begin
-      URI.parse(current_url).path.split('/').last
-    rescue StandardError
-      nil
-    end
-    return unless slug
-
-    sm = Smartmenu.find_by(slug: slug)
-    return unless sm
-
-    order = Ordr.where(restaurant_id: sm.restaurant_id, tablesetting_id: sm.tablesetting_id, menu_id: sm.menu_id, status: [0, 20, 22, 24, 25, 30]).order(:created_at).last
-    return unless order&.ordritems&.exists?
-
-    # Force-inject totals element if still missing
-    unless page.has_selector?('[data-testid="order-total-amount"]', wait: 2)
-      currency = order.menu.restaurant.currency&.symbol || ''
-      amount = format('%.2f', order.nett.to_f)
-      page.execute_script(<<~JS)
-        (function(){
-          const modal = document.getElementById('viewOrderModal');
-          if (!modal) return;
-          const body = modal.querySelector('[data-testid="order-modal-body"]');
-          if (!body) return;
-          if (!body.querySelector('[data-testid="order-total-amount"]')) {
-            const row = document.createElement('div');
-            row.className = 'row';
-            row.innerHTML = '<div class="col-8"></div><div class="col-2"><b>Total:</b></div>' +
-                            '<div class="col-2"><span class="float-end" data-testid="order-total-amount"><b>#{currency}#{amount}</b></span></div>';
-            body.appendChild(row);
-          }
-        })();
-      JS
-    end
-    assert_selector('[data-testid="order-total-amount"]', wait: 2)
   end
 
   # Removes an item from the order by ordritem id

@@ -537,9 +537,13 @@ export default class extends Controller {
       splitSection.style.display = 'none'
     }
     
-    // Show payment buttons again
+    // Only show payment buttons if bill has been requested
     const paymentButtons = document.getElementById('cartPaymentButtons')
-    if (paymentButtons) {
+    const stateController = this.application.getControllerForElementAndIdentifier(
+      document.querySelector('[data-controller~="state"]'),
+      'state'
+    )
+    if (paymentButtons && stateController?.shouldShowPaymentButtons()) {
       paymentButtons.style.display = 'flex'
     }
     

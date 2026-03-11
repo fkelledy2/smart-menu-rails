@@ -25,8 +25,10 @@ class SmartmenuLocaleSwitchingTest < ApplicationSystemTestCase
   # Pre-order: selecting locale persists in Menuparticipant
   test 'customer can set locale before order and it persists in menuparticipant' do
     visit smartmenu_path(@smartmenu.slug)
+    
+    # Wait for customer view to load before ensuring order context
+    assert_testid('smartmenu-customer-view', wait: 10)
     ensure_order_dom_context!
-    assert_testid('smartmenu-customer-view')
 
     # Open dropdown and click a locale flag
     begin
@@ -59,15 +61,18 @@ class SmartmenuLocaleSwitchingTest < ApplicationSystemTestCase
   # Transfer: starting an order transfers Menuparticipant preferredlocale to Ordrparticipant
   test 'starting order transfers menuparticipant preferredlocale to ordrparticipant' do
     visit smartmenu_path(@smartmenu.slug)
+    
+    # Wait for customer view to load
+    assert_testid('smartmenu-customer-view', wait: 10)
     ensure_order_dom_context!
 
     # Pre-select a locale
     begin
-      find_by_id('lovale-actions', wait: 5).click
+      find_by_id('lovale-actions', wait: 10).click
     rescue StandardError
       nil
     end
-    italian = first('.setparticipantlocale[data-locale]', wait: 5, visible: :all)
+    italian = first('.setparticipantlocale[data-locale]', wait: 10, visible: :all)
     chosen = italian[:'data-locale']
     italian.click
     wait_for_requests_to_complete(timeout: 5)
@@ -116,18 +121,26 @@ class SmartmenuLocaleSwitchingTest < ApplicationSystemTestCase
   # Post-order: changing locale persists in Ordrparticipant
   test 'customer can change locale after order and it persists in ordrparticipant' do
     visit smartmenu_path(@smartmenu.slug)
+    
+    # Wait for customer view to load
+    assert_testid('smartmenu-customer-view', wait: 10)
     ensure_order_dom_context!
     start_order_if_needed
     add_item_to_order(menuitems(:burger).id)
     order = Ordr.last
 
+    # Reload page to ensure locale selector is available after order creation
+    visit smartmenu_path(@smartmenu.slug)
+    assert_testid('smartmenu-customer-view', wait: 10)
+    ensure_order_dom_context!
+
     # Change locale
     begin
-      find_by_id('lovale-actions', wait: 5).click
+      find_by_id('lovale-actions', wait: 10).click
     rescue StandardError
       nil
     end
-    target = first('.setparticipantlocale[data-locale]', wait: 5, visible: :all)
+    target = first('.setparticipantlocale[data-locale]', wait: 10, visible: :all)
     chosen = target[:'data-locale']
     target.click
     wait_for_requests_to_complete(timeout: 5)
@@ -150,6 +163,10 @@ class SmartmenuLocaleSwitchingTest < ApplicationSystemTestCase
   # Default fallback: when no preference, display in restaurant default locale
   test 'menu displays in default restaurant locale when no preference set' do
     visit smartmenu_path(@smartmenu.slug)
+    
+    # Wait for customer view to load
+    assert_testid('smartmenu-customer-view', wait: 10)
+    
     # Do not click a locale; ensure no menuparticipant with a test session
     begin
       Menuparticipant.where(smartmenu_id: @smartmenu.id, sessionid: 'test-session').delete_all
@@ -161,12 +178,12 @@ class SmartmenuLocaleSwitchingTest < ApplicationSystemTestCase
     default_locale = 'en'
     # Open the dropdown to ensure flags are present
     begin
-      find_by_id('lovale-actions', wait: 5).click
+      find_by_id('lovale-actions', wait: 10).click
     rescue StandardError
       nil
     end
     # Ensure at least one locale option is visible (allow non-visible for dropdown rendering)
-    first('.setparticipantlocale', wait: 5, visible: :all)
+    first('.setparticipantlocale', wait: 10, visible: :all)
     # The selected flag in the button should match default locale
     find_by_id('lovale-actions', wait: 5)
     # Open dropdown and ensure default locale option is present

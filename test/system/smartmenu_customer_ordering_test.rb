@@ -102,21 +102,20 @@ class SmartmenuCustomerOrderingTest < ApplicationSystemTestCase
     assert_equal 1, order.ordritems.where(menuitem_id: @burger.id).count
   end
 
-  test 'modal does NOT auto-open after adding item' do
+  test 'bottom sheet opens to peek after adding item' do
     visit smartmenu_path(@smartmenu.slug)
 
     # Add item to order
     add_item_to_order(@burger.id)
 
-    # Verify modal is NOT visible (production behavior)
-    assert_no_selector('#viewOrderModal.show', wait: 1)
+    # Bottom sheet should open to peek state (not full)
+    assert_selector('#cartBottomSheet.bottom-sheet--peek', wait: 3)
 
-    # User must manually open modal
+    # Expand to full to verify item
     open_view_order_modal
 
-    # Now modal should be visible
-    assert_selector('#viewOrderModal.show')
-    within_testid('order-modal-body') do
+    # Verify item is in cart
+    within('#cartItemsContainer') do
       assert_text 'Classic Burger'
     end
   end
@@ -137,10 +136,10 @@ class SmartmenuCustomerOrderingTest < ApplicationSystemTestCase
     order = Ordr.where(restaurant_id: @restaurant.id, tablesetting_id: @table.id, menu_id: @menu.id, status: [0, 20, 22, 24, 25, 30]).order(:created_at).last
     assert_equal 3, order.ordritems.count
 
-    # Open modal to verify UI
+    # Open bottom sheet to verify UI
     open_view_order_modal
 
-    within_testid('order-modal-body') do
+    within('#cartItemsContainer') do
       assert_text 'Classic Burger'
       assert_text 'Spaghetti Carbonara'
       assert_text 'Spring Rolls'
@@ -159,7 +158,7 @@ class SmartmenuCustomerOrderingTest < ApplicationSystemTestCase
 
     # Total displayed is gross (includes taxes), not just raw prices
     order = Ordr.where(restaurant_id: @restaurant.id, tablesetting_id: @table.id, menu_id: @menu.id, status: [0, 20, 22, 24, 25, 30]).order(:created_at).last
-    within_testid('order-total-amount') do
+    within_testid('cart-total-amount') do
       assert_text "$#{format('%.2f', order.gross)}"
     end
   end
@@ -180,7 +179,7 @@ class SmartmenuCustomerOrderingTest < ApplicationSystemTestCase
 
     # Total displayed is gross (includes taxes)
     order.reload
-    within_testid('order-total-amount') do
+    within_testid('cart-total-amount') do
       assert_text "$#{format('%.2f', order.gross)}"
     end
   end
@@ -305,16 +304,19 @@ class SmartmenuCustomerOrderingTest < ApplicationSystemTestCase
     assert_equal 2, order.ordritems.count
   end
 
-  test 'submit button is disabled when order is empty' do
+  test 'submit button not shown when order is empty' do
     visit smartmenu_path(@smartmenu.slug)
 
-    # Create order but don't add items
-    visit smartmenu_path(@smartmenu.slug)
+    # When no order exists, bottom sheet shows "Start Order" button
+    assert_selector('[data-testid="peek-start-order-btn"]', text: 'Start Order', wait: 2)
 
-    # Try to open modal - should not have submit button enabled
+    # Open bottom sheet
     open_view_order_modal
 
-    # Submit button should be disabled
-    assert_selector('[data-testid="submit-order-btn"][disabled]', wait: 3)
+    # Submit button should not exist when cart is empty
+    assert_no_selector('[data-testid="cart-submit-order-btn"]', wait: 2)
+    
+    # Cart container should be empty (no items rendered)
+    assert_selector('#cartItemsContainer')
   end
 end

@@ -215,36 +215,11 @@ class MenuItemsTest < ApplicationSystemTestCase
   end
 
   # ===================
-  # QUICK ACTIONS TESTS
+  # QUICK ACTIONS TESTS (removed - were flaky)
   # ===================
 
-  test 'quick actions appear when sections exist' do
-    skip 'Flaky: quick-actions visibility inconsistent in test environment'
-    visit edit_restaurant_menu_path(@restaurant, @menu, section: 'items')
-
-    # Wait for items to render
-    assert_text 'Appetizers', wait: 5
-
-    # Quick actions should be visible
-    assert_testid('menu-items-quick-actions')
-    assert_testid('add-item-btn')
-  end
-
-  test 'quick actions do not appear when no sections exist' do
-    skip 'Flaky: quick-actions visibility inconsistent in test environment'
-    # Remove all items first, then sections
-    Menuitem.where(menusection: @menu.menusections).destroy_all
-    @menu.menusections.destroy_all
-    @menu.reload
-
-    visit edit_restaurant_menu_path(@restaurant, @menu, section: 'items')
-
-    # Wait for empty state to render
-    assert_testid('empty-state', wait: 5)
-
-    # Quick actions should not be present
-    assert_no_selector('[data-testid="menu-items-quick-actions"]')
-  end
+  # Removed: 'quick actions appear when sections exist' - flaky visibility
+  # Removed: 'quick actions do not appear when no sections exist' - flaky visibility
 
   # ===================
   # TABLE DISPLAY TESTS

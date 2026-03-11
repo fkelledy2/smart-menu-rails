@@ -79,8 +79,8 @@ export default class extends Controller {
           const viewBtn = document.createElement('button');
           viewBtn.type = 'button';
           viewBtn.className = 'btn-touch-secondary btn-touch-sm me-2 position-relative';
-          viewBtn.setAttribute('data-bs-toggle', 'modal');
-          viewBtn.setAttribute('data-bs-target', '#viewOrderModal');
+          viewBtn.setAttribute('data-action', 'click->bottom-sheet#setState');
+          viewBtn.setAttribute('data-bottom-sheet-state-param', 'full');
           viewBtn.innerHTML = '<i class="bi bi-receipt"></i> Order';
           const totalCount = Number((window.__SM_STATE && window.__SM_STATE.order && window.__SM_STATE.order.totalCount) || 0);
           const badge = document.createElement('span');

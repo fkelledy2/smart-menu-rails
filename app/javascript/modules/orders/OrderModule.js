@@ -173,7 +173,6 @@ export class OrderModule extends ComponentBase {
       'openOrderModalLabel',
       'addItemToOrderModalLabel',
       'allergenModalLabel',
-      'viewOrderModalLabel',
     ];
 
     modalIds.forEach((modalId) => {

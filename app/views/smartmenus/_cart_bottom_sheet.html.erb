@@ -81,6 +81,11 @@
               <% if item.size_name.present? %>
                 <span class="text-muted size-name-label">(<%= item.size_name.sub(/\s*\(.*\)/, '') %>)</span>
               <% end %>
+              <% if item.ordritemnotes.any? %>
+                <div class="text-muted small mt-1">
+                  <i class="bi bi-sticky"></i> <%= item.ordritemnotes.map(&:note).join(', ') %>
+                </div>
+              <% end %>
             </div>
             <div class="cart-sheet__qty-controls">
               <button type="button" class="cart-sheet__qty-btn cartQtyDecr"
@@ -118,6 +123,11 @@
               <% if item.size_name.present? %>
                 <span class="text-muted size-name-label">(<%= item.size_name.sub(/\s*\(.*\)/, '') %>)</span>
               <% end %>
+              <% if item.ordritemnotes.any? %>
+                <div class="text-muted small mt-1">
+                  <i class="bi bi-sticky"></i> <%= item.ordritemnotes.map(&:note).join(', ') %>
+                </div>
+              <% end %>
             </div>
             <div class="cart-sheet__item-price text-muted">
               <%= number_to_currency(item.total_price, unit: restaurantCurrency&.symbol || '') %>
@@ -140,7 +150,7 @@
           <i class="bi bi-receipt"></i>
           <%= t('smartmenus.showModals.request_bill', default: 'Request Bill') %>
         </button>
-        <div class="d-flex gap-2 mt-2" id="cartPaymentButtons" style="display:none;">
+        <div class="d-flex gap-2 mt-2" id="cartPaymentButtons" style="<%= order.status == 'billrequested' ? '' : 'display:none;' %>">
           <button type="button" class="btn-touch-secondary w-50" id="cartSplitBill">
             <i class="bi bi-people"></i>
             <%= t('smartmenus.showModals.split_bill', default: 'Split Bill') %>
@@ -228,9 +238,11 @@
         <% end %>
       </div>
 
-      <%# Split Bill Section (shown when Split Bill button is clicked) %>
-      <%= render partial: 'smartmenus/split_bill_section',
-                 locals: { order: order, restaurant: restaurant, restaurantCurrency: restaurantCurrency, ordrparticipant: ordrparticipant } %>
+      <%# Split Bill Section (only available when bill is requested) %>
+      <% if order.status == 'billrequested' %>
+        <%= render partial: 'smartmenus/split_bill_section',
+                   locals: { order: order, restaurant: restaurant, restaurantCurrency: restaurantCurrency, ordrparticipant: ordrparticipant } %>
+      <% end %>
     <% elsif has_table %>
       <%# Start Order — party size selector (replaces the modal for customers) %>
       <div id="cartStartOrderSection" class="cart-sheet__start-order">

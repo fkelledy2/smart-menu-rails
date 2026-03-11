@@ -118,26 +118,38 @@ class OrdrnotesController < ApplicationController
 
   def broadcast_ordrnote_created
     # Broadcast to OrderChannel for real-time updates
+    return unless defined?(OrderChannel)
+    
     OrderChannel.broadcast_to(@order, {
       action: 'note_created',
       note_id: @ordrnote.id,
       note_html: render_note_card(@ordrnote),
     })
+  rescue StandardError => e
+    Rails.logger.warn("[Ordrnote] Broadcast failed: #{e.message}")
   end
 
   def broadcast_ordrnote_updated
+    return unless defined?(OrderChannel)
+    
     OrderChannel.broadcast_to(@order, {
       action: 'note_updated',
       note_id: @ordrnote.id,
       note_html: render_note_card(@ordrnote),
     })
+  rescue StandardError => e
+    Rails.logger.warn("[Ordrnote] Broadcast failed: #{e.message}")
   end
 
   def broadcast_ordrnote_deleted
+    return unless defined?(OrderChannel)
+    
     OrderChannel.broadcast_to(@order, {
       action: 'note_deleted',
       note_id: @ordrnote.id,
     })
+  rescue StandardError => e
+    Rails.logger.warn("[Ordrnote] Broadcast failed: #{e.message}")
   end
 
   def render_note_card(note)

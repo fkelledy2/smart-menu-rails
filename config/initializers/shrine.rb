@@ -71,6 +71,11 @@ Shrine.plugin :validation
 Shrine.plugin :validation_helpers
 Shrine.plugin :remove_attachment
 
+# Suppress Shrine warnings in test environment
+if Rails.env.test?
+  Shrine.logger = Logger.new(nil) # Null logger to suppress all Shrine output in tests
+end
+
 # Create upload directory if it doesn't exist
 if Rails.env.development? && Shrine.storages[:store].is_a?(Shrine::Storage::FileSystem)
   FileUtils.mkdir_p(File.join(Rails.root, "public/uploads"))

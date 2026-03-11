@@ -111,7 +111,159 @@
     </div>
 
     <%# filterOrderModal has been merged into the combined allergen modal (#allergenModal) %>
-    <%# viewOrderModal removed - all ordering now uses bottom sheet (_cart_bottom_sheet.html.erb) for both customers and staff %>
+    <div class="modal fade" id="viewOrderModal" tabindex="-1" aria-labelledby="viewOrderModalLabel" aria-hidden="true" data-testid="view-order-modal" data-controller="order-totals">
+      <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-fullscreen-sm-down">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="viewOrderModalLabel"><%= t(".yourOrder")%></h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="<%= t('common.close') %>"></button>
+          </div>
+          <div class="modal-body" data-testid="order-modal-body">
+            <% if order %>
+                <% currency_unit = restaurantCurrency&.symbol || "" %>
+                <div class="row">
+                    <div class="col-8">
+                    </div>
+                    <div class="col-2">
+                    </div>
+                    <div class="col-2">
+                      <span class="float-end">
+                        <b><%= t(".price")%></b>
+                      </span>
+                    </div>
+                </div>
+                <% if order && order.addedCount > 0 %>
+                    <div class="row" data-testid="order-items-selected-section">
+                        <div class="col-2">
+                            <p><%= t('.selected') %></p>
+                        </div>
+                        <div class="col-10">
+                            <hr>
+                        </div>
+                    </div>
+                    <% order.ordractions.each do |ordraction| %>
+                        <% if ordraction.ordritem && ordraction.ordritem.status == 'opened' && ordraction.ordritem.in?(order.ordritems) %>
+                            <div id="ordritem_<%= ordraction.ordritem.id %>" class="row ordr-item-row" data-testid="order-item-<%= ordraction.ordritem.id %>">
+                                <div class="col-8">
+                                    <div class="d-flex w-100 overflow-hidden">
+                                        <p class="text-truncate">
+                                            <button type="button" class="removeItemFromOrderButton btn-touch-danger btn-touch-icon btn-touch-sm"
+                                                data-bs-ordritem_id="<%= ordraction.ordritem.id %>"
+                                                aria-label="<%= t('.remove_item', default: 'Remove item') %>"
+                                                data-testid="remove-order-item-<%= ordraction.ordritem.id %>-btn">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                            <% if ordraction.ordritem.quantity.to_i > 1 %><span class="cart-sheet__qty-badge"><%= ordraction.ordritem.quantity %>×</span><% end %>
+                                            <% if ordrparticipant && ordrparticipant.preferredlocale %>
+                                                <%= ordraction.ordritem.menuitem.localised_name(ordrparticipant.preferredlocale) %>
+                                            <% else %>
+                                                <% if menuparticipant && menuparticipant.preferredlocale %>
+                                                    <%= ordraction.ordritem.menuitem.localised_name(menuparticipant.preferredlocale) %>
+                                                <% else %>
+                                                    <%= ordraction.ordritem.menuitem.name %>
+                                                <% end %>
+                                            <% end %>
+                                            <% if ordraction.ordritem.size_name.present? %>
+                                              <span class="text-muted size-name-label">(<%= ordraction.ordritem.size_name.sub(/\s*\(.*\)/, '') %>)</span>
+                                            <% end %>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="d-flex w-100 overflow-hidden">
+                                        <p class="text-truncate">
+                                            <%= ordraction.ordrparticipant.name %>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <span class="float-end">
+                                        <%= number_to_currency(ordraction.ordritem.total_price, unit: currency_unit) %>
+                                    </span>
+                                </div>
+                            </div>
+                        <% end %>
+                    <% end %>
+                <% end %>
+                <% if order && order.orderedCount > 0 %>
+                    <div class="row">
+                        <div class="col-2">
+                            <p><%= t('.submitted') %></p>
+                        </div>
+                        <div class="col-10">
+                            <hr>
+                        </div>
+                    </div>
+                    <% order.ordractions.each do |ordraction| %>
+                        <% if ordraction.ordritem && (ordraction.ordritem.status == 'ordered' || ordraction.ordritem.status == 'preparing' || ordraction.ordritem.status == 'ready'  || ordraction.ordritem.status == 'delivered') && ordraction.ordritem.in?(order.ordritems) %>
+                            <div id="ordritem_<%= ordraction.ordritem.id %>" class="row ordr-item-row">
+                                <div class="col-8">
+                                    <div class="d-flex w-100 overflow-hidden">
+                                        <p class="text-muted text-truncate">
+                                            <button type="button" class="btn-touch-dark btn-touch-icon btn-touch-sm" disabled>
+                                                <i class="bi bi-arrow-right-circle-fill"></i>
+                                            </button>
+                                            <% if ordraction.ordritem.quantity.to_i > 1 %><span class="cart-sheet__qty-badge"><%= ordraction.ordritem.quantity %>×</span><% end %>
+                                            <% if ordrparticipant && ordrparticipant.preferredlocale %>
+                                                <%= ordraction.ordritem.menuitem.localised_name(ordrparticipant.preferredlocale) %>
+                                            <% else %>
+                                                <% if menuparticipant && menuparticipant.preferredlocale %>
+                                                    <%= ordraction.ordritem.menuitem.localised_name(menuparticipant.preferredlocale) %>
+                                                <% else %>
+                                                    <%= ordraction.ordritem.menuitem.name %>
+                                                <% end %>
+                                            <% end %>
+                                            <% if ordraction.ordritem.size_name.present? %>
+                                              <span class="text-muted size-name-label">(<%= ordraction.ordritem.size_name.sub(/\s*\(.*\)/, '') %>)</span>
+                                            <% end %>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="d-flex w-100 overflow-hidden">
+                                        <p class="text-muted text-truncate">
+                                            <%= ordraction.ordrparticipant.name %>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <span class="text-muted float-end">
+                                        <%= number_to_currency(ordraction.ordritem.total_price, unit: currency_unit) %>
+                                    </span>
+                                </div>
+                            </div>
+                        <% end %>
+                    <% end %>
+                <% end %>
+
+                <div class="row" data-testid="order-total-row">
+                    <div class="col-8">
+                    </div>
+                    <div class="col-2">
+                        <b><%= t(".total")%>:</b>
+                    </div>
+                    <div class="col-2">
+                        <% order_total = begin
+                          order.ordritems.sum(&:total_price)
+                        rescue StandardError
+                          order.nett
+                        end %>
+                        <span class="float-end" data-testid="order-total-amount"><b><%= number_to_currency(order_total, unit: currency_unit) %></b></span>
+                    </div>
+                </div>
+            <% end %>
+          </div>
+          <div class="modal-footer gap-2">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" aria-label="<%= t('common.close') %>"><%= t('.cancel') %></button>
+            <% if order && order.addedCount > 0 %>
+              <button id="confirm-order" type="button" data-bs-dismiss="modal" class="btn btn-primary" data-testid="submit-order-btn"><%= t('.submit') %></button>
+            <% else %>
+              <button id="confirm-order" type="button" data-bs-dismiss="modal" class="btn btn-primary" disabled data-testid="submit-order-btn"><%= t('.submit') %></button>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div class="modal fade" id="requestBillModal" tabindex="-1" aria-labelledby="requestBillModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">

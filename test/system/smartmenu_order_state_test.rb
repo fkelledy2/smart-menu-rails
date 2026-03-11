@@ -209,7 +209,7 @@ class SmartmenuOrderStateTest < ApplicationSystemTestCase
 
     # Verify in modal
     open_view_order_modal
-    within_testid('order-total-amount') do
+    within_testid('cart-total-amount') do
       assert_text "$#{format('%.2f', expected_total)}"
     end
   end

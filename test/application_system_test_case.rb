@@ -1,45 +1,13 @@
 require 'test_helper'
 
 class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
+  include MenuTestHelpers
+  
   driven_by :selenium, using: :chrome, screen_size: [1400, 1400]
 
   # System tests run in a separate thread, so transactional fixtures don't work
   # We need to manually clean up the database after each test
   self.use_transactional_tests = false
-
-  SKIPPED_SYSTEM_TEST_CLASSES = %w[
-    AllergynsTest
-    EmployeesTest
-    GenimagesTest
-    IngredientsTest
-    InventoriesTest
-    MenuavailabilitiesTest
-    MenuitemlocalesTest
-    MenuitemsTest
-    MenulocalesTest
-    MenuparticipantsTest
-    MenusTest
-    MenusectionlocalesTest
-    MenusectionsTest
-    MetricsTest
-    OrdractionsTest
-    OrdritemnotesTest
-    OrdritemsTest
-    OrdrparticipantsTest
-    OrdrsTest
-    RestaurantavailabilitiesTest
-    RestaurantlocalesTest
-    RestaurantsTest
-    SizesTest
-    SmartmenusTest
-    TablesettingsTest
-    TagsTest
-    TaxesTest
-    TestimonialsTest
-    TipsTest
-    TracksTest
-    UserplansTest
-  ].freeze
 
   def delete_all_tables_in_fk_order!(connection)
     tables = connection.tables - %w[schema_migrations ar_internal_metadata]
@@ -96,9 +64,6 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   end
 
   setup do
-    if SKIPPED_SYSTEM_TEST_CLASSES.include?(self.class.name)
-      skip('Obsolete scaffold-generated system test (routes/UI no longer match application)')
-    end
     ensure_browser_session!
   end
 

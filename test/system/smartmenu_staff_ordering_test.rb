@@ -28,12 +28,16 @@ class SmartmenuStaffOrderingTest < ApplicationSystemTestCase
     visit smartmenu_path(@smartmenu.slug)
 
     # Verify staff can see menu sections and items
-    assert_testid('menu-content-container')
+    assert_testid('menu-content-container', wait: 5)
     assert_testid('smartmenu-staff-view')
     assert_testid("menu-item-#{@burger.id}")
 
+    # Wait for JavaScript to enable buttons (test environment has retry script)
+    # The script runs 10 times at 50ms intervals = 500ms total
+    sleep 0.6
+
     # Verify add button exists and is enabled (table is set)
-    button = find_testid("add-item-btn-#{@burger.id}")
+    button = find("[data-testid='add-item-btn-#{@burger.id}']", wait: 5)
     assert_not button.disabled?, 'Button should be enabled when table is set'
   end
 

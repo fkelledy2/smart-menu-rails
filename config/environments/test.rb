@@ -81,9 +81,9 @@ Rails.application.configure do
   # Render exception templates for rescuable exceptions and raise for other exceptions.
   config.action_dispatch.show_exceptions = :rescuable
 
-  # Enable request forgery protection for system tests (they use a real browser and need CSRF tokens)
-  # Controller tests bypass this, so they're unaffected
-  config.action_controller.allow_forgery_protection = true
+  # Disable request forgery protection for integration tests
+  # System tests that use a real browser will still work correctly
+  config.action_controller.allow_forgery_protection = false
 
   # Store uploaded files on the local file system in a temporary directory.
   config.active_storage.service = :test

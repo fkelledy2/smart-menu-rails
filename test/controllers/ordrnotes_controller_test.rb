@@ -12,6 +12,10 @@ class OrdrnotesControllerTest < ActionDispatch::IntegrationTest
     @employee = employees(:one)
     @employee.update!(user: @user, restaurant: @restaurant)
     
+    # Reload to ensure associations are fresh
+    @employee.reload
+    @restaurant.reload
+    
     @ordr = ordrs(:one)
     @ordr.update!(restaurant: @restaurant)
 
@@ -23,6 +27,11 @@ class OrdrnotesControllerTest < ActionDispatch::IntegrationTest
     )
 
     sign_in @user
+    
+    # Verify the employee-user-restaurant relationship is correct
+    assert_equal @user, @employee.user
+    assert_equal @restaurant, @employee.restaurant
+    assert_not_nil @restaurant.employees.find_by(user: @user), "Employee not found for user in restaurant"
   end
 
   test 'should get index' do

@@ -56,7 +56,7 @@ class AuthenticationTest < ApplicationSystemTestCase
 
     # Should stay on login page with error
     assert_current_path new_user_session_path
-    assert_text 'Invalid Email or password'
+    assert_text 'Invalid email or password'
   end
 
   test 'remember me checkbox is functional' do

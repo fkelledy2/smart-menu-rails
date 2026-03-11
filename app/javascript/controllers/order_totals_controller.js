@@ -76,9 +76,7 @@ export default class extends Controller {
       window.__SM_STATE = Object.assign({}, prev, state, { order: mergedOrder, totals: mergedTotals });
       const totals = mergedTotals;
       const order = mergedOrder;
-      if (this.element?.id === 'viewOrderModal') {
-        this.renderOrderItems(order, totals);
-      } else if (this.element?.id === 'requestBillModal') {
+      if (this.element?.id === 'requestBillModal') {
         this.renderRequestBill(totals);
       } else if (this.element?.id === 'payOrderModal') {
         if (typeof this.ensurePayModalContent === 'function') this.ensurePayModalContent(totals);
