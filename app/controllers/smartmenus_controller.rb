@@ -324,8 +324,8 @@ class SmartmenusController < ApplicationController
   def eager_load_open_order
     # Eager load ordritems and their menuitems/locales for state JSON and to avoid N+1
     @openOrder = Ordr.includes(
-      ordritems: { menuitem: :menuitemlocales },
-      ordractions: [:ordrparticipant, { ordritem: { menuitem: :menuitemlocales } }],
+      ordritems: [:ordritemnotes, { menuitem: :menuitemlocales }],
+      ordractions: [:ordrparticipant, { ordritem: [:ordritemnotes, { menuitem: :menuitemlocales }] }],
     ).find(@openOrder.id)
   rescue StandardError => e
     Rails.logger.warn("[SmartmenusController#show] failed to eager load order #{@openOrder&.id}: #{e.class}: #{e.message}")
