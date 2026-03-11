@@ -16,9 +16,15 @@
   transition: transform var(--motion-duration-slow, 350ms) var(--motion-easing-decelerate, cubic-bezier(0, 0, 0.2, 1));
   will-change: transform;
   max-height: 100vh;
+  max-height: 100dvh; // Use dynamic viewport height for mobile browsers
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  
+  // Ensure bottom sheet stays at bottom on mobile when toolbar hides
+  @supports (height: 100dvh) {
+    max-height: 100dvh;
+  }
 
   &--closed {
     pointer-events: none;

@@ -44,14 +44,23 @@ export default class extends Controller {
     }
     document.addEventListener("hidden.bs.modal", this._onModalHidden)
 
+    // Recalculate position when viewport changes (mobile toolbar hide/show)
+    this._onViewportResize = () => {
+      if (!this.isDragging) {
+        this.applyState()
+      }
+    }
+    window.visualViewport?.addEventListener("resize", this._onViewportResize)
+    window.addEventListener("resize", this._onViewportResize)
+
     console.log("[BottomSheet] connected", { initial: this.state })
   }
 
   disconnect() {
     this.unbindTouchEvents()
-    if (this._onModalHidden) {
-      document.removeEventListener("hidden.bs.modal", this._onModalHidden)
-    }
+    document.removeEventListener("hidden.bs.modal", this._onModalHidden)
+    window.visualViewport?.removeEventListener("resize", this._onViewportResize)
+    window.removeEventListener("resize", this._onViewportResize)
   }
 
   // --- Public actions ---

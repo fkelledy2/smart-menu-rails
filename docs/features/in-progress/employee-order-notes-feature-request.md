@@ -7,8 +7,44 @@
 **Priority**: Medium-High
 **Requested By**: Restaurant Operations Team
 **Date**: October 11, 2025
+**Last Updated**: March 11, 2026
 
-## 🎯 **User Story**
+## ✅ **Current Implementation Status**
+
+### **Completed: Customer Order Item Notes (Smart Menu)**
+As of March 2026, **customer-facing order item notes** have been fully implemented in the Smart Menu interface:
+
+- ✅ **Customer Note Input**: Customers can add special requests/notes when adding items to their order via the "Add Item to Order" modal
+- ✅ **Note Storage**: Notes are stored in the `ordritemnotes` table with proper associations to `ordritems`
+- ✅ **Real-time Display**: Notes display in the cart bottom sheet for both opened and submitted items
+- ✅ **WebSocket Updates**: Notes are included in ActionCable broadcasts for real-time updates
+- ✅ **Cache Management**: Proper `touch: true` associations ensure cache invalidation when notes are added/updated
+- ✅ **Bill Summary Integration**: Notes are visible throughout the order lifecycle including bill request and payment flows
+
+**Implementation Files:**
+- `app/models/ordritemnote.rb` - Model with `belongs_to :ordritem, touch: true`
+- `app/views/smartmenus/_showModals.erb` - Note textarea in "Add Item to Order" modal
+- `app/views/smartmenus/_cart_bottom_sheet.html.erb` - Note display in cart
+- `app/javascript/controllers/state_controller.js` - JavaScript rendering of notes
+- `app/controllers/ordritems_controller.rb` - Eager loading and broadcast of notes
+- `app/controllers/smartmenus_controller.rb` - Eager loading for initial page render
+
+### **Remaining: Employee Order-Level Notes**
+The **employee-facing order-level notes system** described in this document remains **unimplemented**. This would allow restaurant staff to add operational notes, dietary restrictions, timing instructions, etc. at the order level (not just per item).
+
+## 📊 **Summary: Complete vs. Remaining**
+
+| Feature | Status | Notes |
+|---------|--------|-------|
+| Customer item notes | ✅ Complete | Smart Menu customers can add notes to items |
+| Employee order notes | ❌ Not Started | Staff operational notes - full feature below |
+| Note categories | ❌ Not Started | Dietary, timing, operational, etc. |
+| Kitchen display | ❌ Not Started | Real-time note visibility for kitchen |
+| Analytics | ❌ Not Started | Note usage tracking |
+
+---
+
+## 🎯 **Original User Story** (Not Yet Implemented)
 
 > **As an employee of a restaurant, I would like to be able to add notes and comments to an order containing special instructions about the order, so that I can communicate important preparation details, dietary restrictions, customer preferences, and operational notes to kitchen staff and other team members.**
 
@@ -459,11 +495,14 @@ end
 
 ## 🚀 **Implementation Phases**
 
-### **Phase 1: Core Functionality (2-3 weeks)**
-- [ ] Database schema and models
-- [ ] Basic CRUD operations
-- [ ] Simple UI for adding/viewing notes
-- [ ] Basic permission system
+### **Phase 1: Core Functionality (2-3 weeks)** ⚠️ NOT STARTED
+> **Note**: This is for employee order-level notes. Customer item notes are already complete.
+
+- [ ] Create `order_notes` table (separate from existing `ordritemnotes`)
+- [ ] Build `OrderNote` model with employee association
+- [ ] Basic CRUD operations for order-level notes
+- [ ] Simple UI for adding/viewing notes in staff interface (not Smart Menu)
+- [ ] Basic permission system with Pundit policies
 
 ### **Phase 2: Enhanced Features (2-3 weeks)**
 - [ ] Real-time updates with ActionCable
