@@ -154,6 +154,16 @@ export default class extends Controller {
         }
         paySection.style.display = paySection.style.display === 'none' ? 'block' : 'none';
       }
+      // Hide the Bill Summary section
+      const billSummary = document.querySelector('[data-testid="cart-bill-summary"]');
+      if (billSummary) {
+        billSummary.style.display = 'none';
+      }
+      // Hide the Split Bill button
+      const splitBtn = document.getElementById('cartSplitBill');
+      if (splitBtn) {
+        splitBtn.style.display = 'none';
+      }
       // Hide the Pay button itself
       btn.style.display = 'none';
       const sheet = document.getElementById('cartBottomSheet');
@@ -192,17 +202,28 @@ export default class extends Controller {
     };
     document.addEventListener('click', this._onSplitBillClick);
 
-    // Global Cancel handler called via onclick on the Cancel button
-    window.__cartPayCancel = () => {
+    // Delegated click handler for Cancel button
+    this._onCancelClick = (e) => {
+      const btn = e.target.closest('#cartPayCancel');
+      if (!btn) return;
+      e.preventDefault();
       console.debug('[State] Cancel clicked');
       const paySection = document.getElementById('cartPaySection');
       if (paySection) { paySection.style.display = 'none'; }
-      // Restore the Pay button and scroll it into view
+      const splitSection = document.getElementById('cartSplitBillSection');
+      if (splitSection) { splitSection.style.display = 'none'; }
+      // Restore Bill Summary section
+      const billSummary = document.querySelector('[data-testid="cart-bill-summary"]');
+      if (billSummary) { billSummary.style.display = 'block'; }
+      // Restore payment buttons container
+      const paymentButtons = document.getElementById('cartPaymentButtons');
+      if (paymentButtons) { paymentButtons.style.display = 'flex'; }
+      // Restore Split Bill button
+      const splitBtn = document.getElementById('cartSplitBill');
+      if (splitBtn) { splitBtn.style.display = 'block'; }
+      // Restore the Pay button
       const payBtn = document.getElementById('cartPayOrder');
-      if (payBtn) {
-        payBtn.style.display = 'block';
-        setTimeout(() => payBtn.scrollIntoView({ behavior: 'smooth', block: 'center' }), 150);
-      }
+      if (payBtn) { payBtn.style.display = 'block'; }
       const sheet = document.getElementById('cartBottomSheet');
       if (sheet) {
         const ctrl = this.application?.getControllerForElementAndIdentifier(sheet, 'bottom-sheet');
@@ -210,6 +231,10 @@ export default class extends Controller {
         if (ctrl) { ctrl.setState('full'); }
       }
     };
+    document.addEventListener('click', this._onCancelClick);
+
+    // Also expose as global for backward compatibility
+    window.__cartPayCancel = this._onCancelClick;
 
     // Initial JSON fetch to hydrate items/totals on first load
     try {
@@ -391,9 +416,10 @@ export default class extends Controller {
         const lineTotal = Number(item.price || 0) * qty;
         const sizeBit = item.size_name ? ` <span class="text-muted" style="font-size:0.8em;">(${this._esc(item.size_name.replace(/\s*\(.*\)/, ''))})</span>` : '';
         const qtyBadge = qty > 1 ? `<span class="cart-sheet__qty-badge">${qty}×</span>` : '';
+        const notesBit = (item.notes && item.notes.length > 0) ? `<div class="text-muted small mt-1"><i class="bi bi-sticky"></i> ${item.notes.map(n => this._esc(n)).join(', ')}</div>` : '';
         html += `<div class="cart-sheet__item" data-testid="cart-item-${item.id}">
           <button type="button" class="cart-sheet__remove removeItemFromOrderButton" data-bs-ordritem_id="${item.id}" aria-label="Remove item" data-testid="remove-cart-item-${item.id}"><i class="bi bi-x-circle"></i></button>
-          <div class="cart-sheet__item-name">${qtyBadge}${this._esc(item.name)}${sizeBit}</div>
+          <div class="cart-sheet__item-name">${qtyBadge}${this._esc(item.name)}${sizeBit}${notesBit}</div>
           <div class="cart-sheet__qty-controls">
             <button type="button" class="cart-sheet__qty-btn cartQtyDecr" data-ordritem-id="${item.id}" aria-label="Decrease quantity"><i class="bi bi-dash-circle"></i></button>
             <span class="cart-sheet__qty-value">${qty}</span>
@@ -411,12 +437,34 @@ export default class extends Controller {
         const lineTotal = Number(item.price || 0) * qty;
         const sizeBit = item.size_name ? ` <span class="text-muted" style="font-size:0.8em;">(${this._esc(item.size_name.replace(/\s*\(.*\)/, ''))})</span>` : '';
         const qtyBadge = qty > 1 ? `<span class="cart-sheet__qty-badge">${qty}×</span>` : '';
+        const notesBit = (item.notes && item.notes.length > 0) ? `<div class="text-muted small mt-1"><i class="bi bi-sticky"></i> ${item.notes.map(n => this._esc(n)).join(', ')}</div>` : '';
         html += `<div class="cart-sheet__item cart-sheet__item--submitted">
           <div class="cart-sheet__status-icon"><i class="bi bi-check-circle-fill text-success"></i></div>
-          <div class="cart-sheet__item-name">${qtyBadge}${this._esc(item.name)}${sizeBit}</div>
+          <div class="cart-sheet__item-name">${qtyBadge}${this._esc(item.name)}${sizeBit}${notesBit}</div>
           <div class="cart-sheet__item-price text-muted">${fmt(lineTotal)}</div>
         </div>`;
       }
+    }
+
+    // Bill Summary (shown when bill is requested)
+    if (order.status === 'billrequested' && totals) {
+      html += '<div class="cart-sheet__bill-summary mt-3" data-testid="cart-bill-summary">';
+      html += '<hr>';
+      html += '<h6 class="fw-bold mb-3">Bill Summary</h6>';
+      html += '<div class="bill-line bill-line-header"><span><b>Item</b></span><span class="bill-amount"><b>Price</b></span></div>';
+      if (totals.covercharge && totals.covercharge > 0) {
+        html += `<div class="bill-line"><span>Cover charge</span><span class="bill-amount">${fmt(totals.covercharge)}</span></div>`;
+      }
+      html += `<div class="bill-line"><span>Nett</span><span class="bill-amount">${fmt(totals.nett)}</span></div>`;
+      if (totals.service && totals.service > 0) {
+        html += `<div class="bill-line"><span>Service</span><span class="bill-amount">${fmt(totals.service)}</span></div>`;
+      }
+      if (totals.tax && totals.tax > 0) {
+        html += `<div class="bill-line"><span>Tax</span><span class="bill-amount">${fmt(totals.tax)}</span></div>`;
+      }
+      html += '<hr>';
+      html += `<div class="bill-line bill-line-total"><span><b>Total</b></span><span class="bill-amount"><b>${fmt(totals.gross)}</b></span></div>`;
+      html += '</div>';
     }
 
     if (items.length > 0) {
@@ -506,18 +554,6 @@ export default class extends Controller {
 
     let h = '<hr>';
     h += '<h6 class="fw-bold mb-3">Pay Bill</h6>';
-    h += '<div class="bill-line bill-line-header"><span><b>Item</b></span><span class="bill-amount"><b>Price</b></span></div>';
-    if ((totals.covercharge || 0) > 0) {
-      h += `<div class="bill-line"><span>Cover charge</span><span class="bill-amount" id="orderCoverCharge">${fmt(totals.covercharge)}</span></div>`;
-    }
-    h += `<div class="bill-line"><span>Nett</span><span class="bill-amount" id="orderNett">${fmt(totals.nett)}</span></div>`;
-    if ((totals.service || 0) > 0) {
-      h += `<div class="bill-line"><span>Service</span><span class="bill-amount" id="orderService">${fmt(totals.service)}</span></div>`;
-    }
-    if ((totals.tax || 0) > 0) {
-      h += `<div class="bill-line"><span>Tax</span><span class="bill-amount" id="orderTax">${fmt(totals.tax)}</span></div>`;
-    }
-    h += '<hr>';
     h += `<div class="bill-line bill-line-total"><span><b>Total</b> <i>(excluding tip)</i></span><span class="bill-amount"><b>${symbol}<span id="orderGross">${grossVal}</span></b></span></div>`;
     // Tip presets
     h += '<div class="bill-tip-row"><div class="d-flex flex-wrap align-items-center justify-content-end gap-2 mt-3 mb-3">';
@@ -583,14 +619,26 @@ export default class extends Controller {
     const cancelBtn = parent.querySelector('#cartPayCancel');
     if (!cancelBtn) return;
     cancelBtn.addEventListener('click', () => {
-      console.debug('[State] Cancel clicked');
-      const ps = document.getElementById('cartPaySection');
-      if (ps) ps.style.display = 'none';
-      const pb = document.getElementById('cartPayOrder');
-      if (pb) pb.style.display = 'block';
-      const sh = document.getElementById('cartBottomSheet');
-      if (sh) {
-        const ctrl = this.application?.getControllerForElementAndIdentifier(sh, 'bottom-sheet');
+      console.debug('[State] Cancel clicked (bound handler)');
+      const paySection = document.getElementById('cartPaySection');
+      if (paySection) { paySection.style.display = 'none'; }
+      const splitSection = document.getElementById('cartSplitBillSection');
+      if (splitSection) { splitSection.style.display = 'none'; }
+      // Restore Bill Summary section
+      const billSummary = document.querySelector('[data-testid="cart-bill-summary"]');
+      if (billSummary) { billSummary.style.display = 'block'; }
+      // Restore payment buttons container
+      const paymentButtons = document.getElementById('cartPaymentButtons');
+      if (paymentButtons) { paymentButtons.style.display = 'flex'; }
+      // Restore Split Bill button
+      const splitBtn = document.getElementById('cartSplitBill');
+      if (splitBtn) { splitBtn.style.display = 'block'; }
+      // Restore the Pay button
+      const payBtn = document.getElementById('cartPayOrder');
+      if (payBtn) { payBtn.style.display = 'block'; }
+      const sheet = document.getElementById('cartBottomSheet');
+      if (sheet) {
+        const ctrl = this.application?.getControllerForElementAndIdentifier(sheet, 'bottom-sheet');
         if (ctrl) { ctrl.setState('full'); }
       }
     });

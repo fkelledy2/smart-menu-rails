@@ -2,7 +2,7 @@ class Ordritem < ApplicationRecord
   include IdentityCache
 
   # Standard ActiveRecord associations
-  belongs_to :ordr
+  belongs_to :ordr, touch: true
   belongs_to :menuitem
   belongs_to :ordr_station_ticket, optional: true
   has_one :ordrparticipant

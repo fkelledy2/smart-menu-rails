@@ -1,3 +1,3 @@
 class Ordritemnote < ApplicationRecord
-  belongs_to :ordritem
+  belongs_to :ordritem, touch: true
 end

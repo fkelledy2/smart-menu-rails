@@ -136,6 +136,27 @@
         <% end %>
       <% end %>
 
+      <%# Bill Summary (shown when bill is requested) %>
+      <% if order.status == 'billrequested' %>
+        <div class="cart-sheet__bill-summary mt-3" data-testid="cart-bill-summary">
+          <hr>
+          <h6 class="fw-bold mb-3"><%= t('smartmenus.showModals.bill_summary', default: 'Bill Summary') %></h6>
+          <div class="bill-line bill-line-header"><span><b><%= t('smartmenus.showModals.item', default: 'Item') %></b></span><span class="bill-amount"><b><%= t('smartmenus.showModals.price', default: 'Price') %></b></span></div>
+          <% if order.covercharge.to_f > 0 %>
+            <div class="bill-line"><span><%= t('smartmenus.showModals.cover_charge', default: 'Cover charge') %></span><span class="bill-amount"><%= number_to_currency(order.covercharge, unit: cur) %></span></div>
+          <% end %>
+          <div class="bill-line"><span><%= t('smartmenus.showModals.nett', default: 'Nett') %></span><span class="bill-amount"><%= number_to_currency(order.nett, unit: cur) %></span></div>
+          <% if order.service.to_f > 0 %>
+            <div class="bill-line"><span><%= t('smartmenus.showModals.service', default: 'Service') %></span><span class="bill-amount"><%= number_to_currency(order.service, unit: cur) %></span></div>
+          <% end %>
+          <% if order.tax.to_f > 0 %>
+            <div class="bill-line"><span><%= t('smartmenus.showModals.tax', default: 'Tax') %></span><span class="bill-amount"><%= number_to_currency(order.tax, unit: cur) %></span></div>
+          <% end %>
+          <hr>
+          <div class="bill-line bill-line-total"><span><b><%= t('smartmenus.showModals.total', default: 'Total') %></b></span><span class="bill-amount"><b><%= number_to_currency(order.gross, unit: cur) %></b></span></div>
+        </div>
+      <% end %>
+
       <%# Action buttons %>
       <div class="cart-sheet__actions" data-testid="cart-actions">
         <% if order.addedCount.to_i > 0 %>
@@ -167,18 +188,6 @@
         <hr>
         <h6 class="fw-bold mb-3"><%= t('smartmenus.showModals.payBill', default: 'Pay Bill') %></h6>
         <% if order %>
-          <div class="bill-line bill-line-header"><span><b><%= t('smartmenus.showModals.item', default: 'Item') %></b></span><span class="bill-amount"><b><%= t('smartmenus.showModals.price', default: 'Price') %></b></span></div>
-          <% if order.covercharge.to_f > 0 %>
-            <div class="bill-line"><span><%= t('smartmenus.showModals.cover_charge', default: 'Cover charge') %></span><span class="bill-amount" id="orderCoverCharge"><%= number_to_currency(order.covercharge, unit: cur) %></span></div>
-          <% end %>
-          <div class="bill-line"><span><%= t('smartmenus.showModals.nett', default: 'Nett') %></span><span class="bill-amount" id="orderNett"><%= number_to_currency(order.nett, unit: cur) %></span></div>
-          <% if order.service.to_f > 0 %>
-            <div class="bill-line"><span><%= t('smartmenus.showModals.service', default: 'Service') %></span><span class="bill-amount" id="orderService"><%= number_to_currency(order.service, unit: cur) %></span></div>
-          <% end %>
-          <% if order.tax.to_f > 0 %>
-            <div class="bill-line"><span><%= t('smartmenus.showModals.tax', default: 'Tax') %></span><span class="bill-amount" id="orderTax"><%= number_to_currency(order.tax, unit: cur) %></span></div>
-          <% end %>
-          <hr>
           <div class="bill-line bill-line-total"><span><b><%= t('smartmenus.showModals.total', default: 'Total') %></b> <i>(<%= t('smartmenus.showModals.excluding_tip', default: 'excluding tip') %>)</i></span><span class="bill-amount"><b><%= cur %><span id="orderGross"><%= number_to_currency(order.gross, unit: '') %></span></b></span></div>
 
           <div class="bill-tip-row">

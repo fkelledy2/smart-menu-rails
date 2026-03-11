@@ -1,4 +1,6 @@
 def broadcast_state(ordr, tablesetting, ordrparticipant)
+  # Eager load ordritemnotes to ensure notes are included in broadcast
+  ordr = Ordr.includes(ordritems: :ordritemnotes).find(ordr.id)
   menu = ordr.menu
   restaurant = menu.restaurant
   menuparticipant = Menuparticipant.includes(:smartmenu).find_by(sessionid: session.id.to_s)
