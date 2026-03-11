@@ -25,7 +25,7 @@ class SmartmenuLocaleSwitchingTest < ApplicationSystemTestCase
   # Pre-order: selecting locale persists in Menuparticipant
   test 'customer can set locale before order and it persists in menuparticipant' do
     visit smartmenu_path(@smartmenu.slug)
-    
+
     # Wait for customer view to load before ensuring order context
     assert_testid('smartmenu-customer-view', wait: 10)
     ensure_order_dom_context!
@@ -61,7 +61,7 @@ class SmartmenuLocaleSwitchingTest < ApplicationSystemTestCase
   # Transfer: starting an order transfers Menuparticipant preferredlocale to Ordrparticipant
   test 'starting order transfers menuparticipant preferredlocale to ordrparticipant' do
     visit smartmenu_path(@smartmenu.slug)
-    
+
     # Wait for customer view to load
     assert_testid('smartmenu-customer-view', wait: 10)
     ensure_order_dom_context!
@@ -121,7 +121,7 @@ class SmartmenuLocaleSwitchingTest < ApplicationSystemTestCase
   # Post-order: changing locale persists in Ordrparticipant
   test 'customer can change locale after order and it persists in ordrparticipant' do
     visit smartmenu_path(@smartmenu.slug)
-    
+
     # Wait for customer view to load
     assert_testid('smartmenu-customer-view', wait: 10)
     ensure_order_dom_context!
@@ -163,10 +163,10 @@ class SmartmenuLocaleSwitchingTest < ApplicationSystemTestCase
   # Default fallback: when no preference, display in restaurant default locale
   test 'menu displays in default restaurant locale when no preference set' do
     visit smartmenu_path(@smartmenu.slug)
-    
+
     # Wait for customer view to load
     assert_testid('smartmenu-customer-view', wait: 10)
-    
+
     # Do not click a locale; ensure no menuparticipant with a test session
     begin
       Menuparticipant.where(smartmenu_id: @smartmenu.id, sessionid: 'test-session').delete_all

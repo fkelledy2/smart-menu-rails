@@ -17,6 +17,7 @@ AllCops:
     - 'vendor/**/*'
     - 'db/schema.rb'
     - 'db/migrate/*'
+    - 'db/migrate_archive/**/*'
     - 'bin/*'
     - 'config/boot.rb'
     - 'config/environment.rb'

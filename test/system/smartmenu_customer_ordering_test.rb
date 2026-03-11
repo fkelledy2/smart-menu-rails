@@ -315,7 +315,7 @@ class SmartmenuCustomerOrderingTest < ApplicationSystemTestCase
 
     # Submit button should not exist when cart is empty
     assert_no_selector('[data-testid="cart-submit-order-btn"]', wait: 2)
-    
+
     # Cart container should be empty (no items rendered)
     assert_selector('#cartItemsContainer')
   end

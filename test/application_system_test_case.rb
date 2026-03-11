@@ -2,7 +2,7 @@ require 'test_helper'
 
 class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   include MenuTestHelpers
-  
+
   driven_by :selenium, using: :chrome, screen_size: [1400, 1400]
 
   # System tests run in a separate thread, so transactional fixtures don't work

@@ -95,7 +95,7 @@ class OrdritemsController < ApplicationController
 
     # Extract note separately (not an Ordritem attribute)
     item_note = ordritem_params[:note]
-    
+
     # Always authorize - policy handles public vs private access
     authorize Ordritem.new(ordritem_params.except(:note))
 
@@ -176,19 +176,19 @@ class OrdritemsController < ApplicationController
           rescue StandardError => e
             Rails.logger.warn("[AlcoholOrderEvent] failed to create event: #{e.class}: #{e.message}")
           end
-          
+
           # Create ordritemnote if note was provided
           if item_note.present?
             begin
               Ordritemnote.create!(
                 ordritem: @ordritem,
-                note: item_note
+                note: item_note,
               )
             rescue StandardError => e
               Rails.logger.warn("[Ordritemnote] failed to create note: #{e.class}: #{e.message}")
             end
           end
-          
+
           adjust_inventory(@ordritem.menuitem&.inventory, -@ordritem.quantity)
           @ordrparticipant = find_or_create_participant(@ordritem.ordr)
           Ordraction.create!(ordrparticipant: @ordrparticipant, ordr: @ordritem.ordr, ordritem: @ordritem, action: 2)

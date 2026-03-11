@@ -2,7 +2,7 @@ class OrdrnotePolicy < ApplicationPolicy
   def index?
     # For class-level authorization (e.g., authorize Ordrnote), just check if user is present
     return user.present? if record.is_a?(Class)
-    
+
     user_is_restaurant_employee?
   end
 

@@ -2,12 +2,14 @@ class ImageUploader < Shrine
   plugin :backgrounding
   plugin :derivatives
   plugin :validation_helpers
-  plugin :store_dimensions, analyzer: -> (io, analyzers) do
-    analyzers[:fastimage].call(io)
-  rescue FastImage::UnknownImageType, FastImage::SizeNotFound
-    # Silently return nil for files that can't be analyzed
-    nil
-  end
+  plugin :store_dimensions, analyzer: lambda { |io, analyzers|
+    begin
+      analyzers[:fastimage].call(io)
+    rescue FastImage::UnknownImageType, FastImage::SizeNotFound
+      # Silently return nil for files that can't be analyzed
+      nil
+    end
+  }
   plugin :determine_mime_type
 
   Attacher.validate do

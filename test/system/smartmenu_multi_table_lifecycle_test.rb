@@ -94,7 +94,7 @@ class SmartmenuMultiTableLifecycleTest < ApplicationSystemTestCase
   end
 
   # Removed flaky multi-table test - was skipped due to modal timing issues
-  
+
   def removed_test_multi_table_lifecycle
     # This test was removed because it was consistently skipped
     # 1 customer per table, 2 sessions total

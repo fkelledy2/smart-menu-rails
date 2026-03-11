@@ -86,7 +86,7 @@ class SmartmenuState
       # Collect item notes
       notes = begin
         if item.respond_to?(:ordritemnotes)
-          item.ordritemnotes.map(&:note).compact
+          item.ordritemnotes.filter_map(&:note)
         else
           []
         end

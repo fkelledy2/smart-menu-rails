@@ -15,12 +15,14 @@ class Payments::SquareWebhooksController < ApplicationController
       return head :unauthorized
     end
 
+    # rubocop:disable Lint/NoReturnInBeginEndBlocks
     parsed = begin
       JSON.parse(payload)
     rescue JSON::ParserError => e
       Rails.logger.warn("[SquareWebhook] Invalid JSON: #{e.message}")
       return head :bad_request
     end
+    # rubocop:enable Lint/NoReturnInBeginEndBlocks
 
     event_id = parsed['event_id'].to_s
     event_type = parsed['type'].to_s

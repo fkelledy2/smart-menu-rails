@@ -15,7 +15,11 @@ RSpec.describe PushSubscription do
   it 'enqueues a push notification for active subscriptions with stringified data keys' do
     subscription = create(:push_subscription, user: user, endpoint: 'https://push.example.test/1', p256dh_key: 'key', auth_key: 'auth', active: true)
 
-    expect(PushNotificationJob).to receive(:perform_async).with(
+    allow(PushNotificationJob).to receive(:perform_async)
+
+    subscription.send_notification('Title', 'Body', { nested: 'value' })
+
+    expect(PushNotificationJob).to have_received(:perform_async).with(
       subscription.id,
       hash_including(
         'title' => 'Title',
@@ -23,7 +27,5 @@ RSpec.describe PushSubscription do
         'data' => { 'nested' => 'value' },
       ),
     )
-
-    subscription.send_notification('Title', 'Body', { nested: 'value' })
   end
 end

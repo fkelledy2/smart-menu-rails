@@ -2,20 +2,20 @@ require 'test_helper'
 
 class OrdrnotesControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
-  
+
   setup do
     @user = users(:one)
     @restaurant = restaurants(:one)
     @restaurant.update!(user: @user) # Ensure user owns restaurant
-    
+
     # Ensure employee belongs to the restaurant and user
     @employee = employees(:one)
     @employee.update!(user: @user, restaurant: @restaurant)
-    
+
     # Reload to ensure associations are fresh
     @employee.reload
     @restaurant.reload
-    
+
     @ordr = ordrs(:one)
     @ordr.update!(restaurant: @restaurant)
 
@@ -27,11 +27,11 @@ class OrdrnotesControllerTest < ActionDispatch::IntegrationTest
     )
 
     sign_in @user
-    
+
     # Verify the employee-user-restaurant relationship is correct
     assert_equal @user, @employee.user
     assert_equal @restaurant, @employee.restaurant
-    assert_not_nil @restaurant.employees.find_by(user: @user), "Employee not found for user in restaurant"
+    assert_not_nil @restaurant.employees.find_by(user: @user), 'Employee not found for user in restaurant'
   end
 
   test 'should get index' do

@@ -4,7 +4,7 @@ class OrdrnotePolicyTest < ActiveSupport::TestCase
   def setup
     @restaurant = restaurants(:one)
     @employee = employees(:one)
-    
+
     # Create manager dynamically since employees(:two) doesn't exist
     @manager_user = User.create!(email: 'manager_policy@test.com', password: 'password123')
     @manager = @restaurant.employees.create!(
@@ -12,7 +12,7 @@ class OrdrnotePolicyTest < ActiveSupport::TestCase
       name: 'Manager User',
       eid: 'MGR_POLICY',
       role: 'manager',
-      status: 'active'
+      status: 'active',
     )
 
     @ordr = ordrs(:one)
@@ -86,7 +86,7 @@ class OrdrnotePolicyTest < ActiveSupport::TestCase
       name: 'Admin User',
       eid: 'ADM_POLICY',
       role: 'admin',
-      status: 'active'
+      status: 'active',
     )
     @ordrnote.update_column(:created_at, 1.day.ago)
 
@@ -125,7 +125,7 @@ class OrdrnotePolicyTest < ActiveSupport::TestCase
       name: 'Admin Destroy User',
       eid: 'ADM_DESTROY',
       role: 'admin',
-      status: 'active'
+      status: 'active',
     )
     @ordrnote.update_column(:created_at, 1.day.ago)
 
@@ -141,7 +141,7 @@ class OrdrnotePolicyTest < ActiveSupport::TestCase
 
   test 'Scope returns notes for user restaurants' do
     other_restaurant = restaurants(:two)
-    
+
     # Create test order since ordrs(:two) doesn't exist
     other_ordr = Ordr.create!(
       restaurant: other_restaurant,
@@ -149,7 +149,7 @@ class OrdrnotePolicyTest < ActiveSupport::TestCase
       tablesetting: other_restaurant.tablesettings.first || Tablesetting.create!(name: 'Test Table', restaurant: other_restaurant, capacity: 4, tabletype: :indoor, status: :free),
       orderedAt: Time.current,
       nett: 10.0,
-      gross: 10.0
+      gross: 10.0,
     )
 
     other_ordr.ordrnotes.create!(

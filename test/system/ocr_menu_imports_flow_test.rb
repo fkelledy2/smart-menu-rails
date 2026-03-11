@@ -30,7 +30,7 @@ class OcrMenuImportsFlowTest < ApplicationSystemTestCase
 
   test 'invalid save shows inline errors in modal' do
     skip('Error alert rendering needs investigation - JavaScript error handling may need fixes')
-    
+
     visit Rails.application.routes.url_helpers.restaurant_ocr_menu_import_path(@restaurant, @import)
 
     # Open the edit modal
@@ -47,10 +47,10 @@ class OcrMenuImportsFlowTest < ApplicationSystemTestCase
 
     # Wait for error alert to appear in modal (AJAX response)
     # The JavaScript creates an alert with data-role="item-save-errors"
-    assert_selector '#editItemModal .alert.alert-danger[data-role="item-save-errors"]', 
-                    text: /Name can't be blank|Unable to save/i, 
+    assert_selector '#editItemModal .alert.alert-danger[data-role="item-save-errors"]',
+                    text: /Name can't be blank|Unable to save/i,
                     wait: 10
-    
+
     # Modal should stay open
     assert_selector '#editItemModal', visible: true
   end

@@ -34,7 +34,7 @@ class OrdrnotesController < ApplicationController
     unless current_employee
       redirect_to restaurant_ordr_path(@restaurant, @order), alert: 'You must be an employee to add notes.' and return
     end
-    
+
     @ordrnote = @order.ordrnotes.build(ordrnote_params)
     @ordrnote.employee = current_employee
     authorize @ordrnote
@@ -119,7 +119,7 @@ class OrdrnotesController < ApplicationController
   def broadcast_ordrnote_created
     # Broadcast to OrderChannel for real-time updates
     return unless defined?(OrderChannel)
-    
+
     OrderChannel.broadcast_to(@order, {
       action: 'note_created',
       note_id: @ordrnote.id,
@@ -131,7 +131,7 @@ class OrdrnotesController < ApplicationController
 
   def broadcast_ordrnote_updated
     return unless defined?(OrderChannel)
-    
+
     OrderChannel.broadcast_to(@order, {
       action: 'note_updated',
       note_id: @ordrnote.id,
@@ -143,7 +143,7 @@ class OrdrnotesController < ApplicationController
 
   def broadcast_ordrnote_deleted
     return unless defined?(OrderChannel)
-    
+
     OrderChannel.broadcast_to(@order, {
       action: 'note_deleted',
       note_id: @ordrnote.id,
