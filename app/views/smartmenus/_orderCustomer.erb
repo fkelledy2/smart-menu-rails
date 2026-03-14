@@ -13,10 +13,11 @@
               <button type="button" class="layout-toggle-btn" data-action="click->menu-layout#setList" data-menu-layout-target="listBtn">
                 <i class="bi bi-list-ul"></i>
               </button>
+              &nbsp;
+              <button type="button" class="layout-toggle-btn" data-bs-toggle="modal" data-bs-target="#allergenModal">
+                <i class="bi bi-shield-exclamation"></i>
+              </button>
             </div>
-            <button type="button" class="layout-toggle-btn" data-bs-toggle="modal" data-bs-target="#allergenModal">
-              <i class="bi bi-shield-exclamation"></i>
-            </button>
             <% if ordrparticipant && ordrparticipant.name == nil %>
               <button type="button" class="btn-touch-primary btn-touch-icon" data-bs-toggle="modal" data-bs-target="#addNameToParticipantModal" aria-label="<%= t('.add_name', default: 'Add your name') %>" data-testid="add-customer-name-btn">
                 <i class="bi bi-person-fill-add"></i>
