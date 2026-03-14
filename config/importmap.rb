@@ -7,6 +7,7 @@ pin 'bootstrap', to: 'https://ga.jspm.io/npm:bootstrap@5.3.0/dist/js/bootstrap.e
 pin '@popperjs/core', to: 'https://ga.jspm.io/npm:@popperjs/core@2.11.8/dist/esm/index.js'
 pin '@hotwired/stimulus', to: 'https://ga.jspm.io/npm:@hotwired/stimulus@3.2.2/dist/stimulus.js'
 pin '@hotwired/turbo-rails', to: 'https://cdn.jsdelivr.net/npm/@hotwired/turbo-rails@8.0.4/+esm'
+pin '@sentry/browser', to: 'https://cdn.jsdelivr.net/npm/@sentry/browser@8.0.0/+esm'
 # pin "@hotwired/stimulus-loading", to: "app/javascript/stimulus-loading.js"
 # Rails libraries - using local asset pipeline to avoid CDN version issues
 pin '@rails/actioncable', to: 'actioncable.esm.js', preload: true
