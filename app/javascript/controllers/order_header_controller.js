@@ -136,7 +136,6 @@ export default class extends Controller {
       const container = this.element;
       const nameSpan = container.querySelector('.menu-name');
       const layoutToggle = container.querySelector('.layout-toggle-group');
-      const allergenBtn = container.querySelector('[data-bs-target="#allergenModal"]');
       
       container.innerHTML = '';
       if (nameSpan) {
@@ -148,7 +147,6 @@ export default class extends Controller {
       
       // Preserve layout toggle and allergen filter at start of button group
       if (layoutToggle) btnGroup.insertBefore(layoutToggle.cloneNode(true), btnGroup.firstChild);
-      if (allergenBtn) btnGroup.appendChild(allergenBtn.cloneNode(true));
       
       container.appendChild(btnGroup);
     } catch (e) {
