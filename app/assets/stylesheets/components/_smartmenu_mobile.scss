@@ -347,24 +347,25 @@
     display: flex;
     gap: 8px;
     align-items: center;
+    justify-content: space-between;
     
     .menu-name {
       font-size: 1.125rem;
       font-weight: 700;
       color: var(--text-secondary, #666);
-      width: 100%;
+      flex: 1;
       min-width: 0;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
     
-    // Touch-optimized button group
     .order-button-group {
       display: flex;
       gap: 8px;
       flex-shrink: 0;
     }
+  }
   }
 }
 
