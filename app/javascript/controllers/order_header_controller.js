@@ -132,12 +132,14 @@ export default class extends Controller {
         }
       }
 
-      // Replace contents, but preserve a leading menu-name span and layout controls
+      // Rebuild container
       const container = this.element;
       const nameSpan = container.querySelector('.menu-name');
       const layoutToggle = container.querySelector('.layout-toggle-group');
       
       container.innerHTML = '';
+      
+      // Add menu name
       if (nameSpan) {
         const ns = document.createElement('span');
         ns.className = 'menu-name';
@@ -145,10 +147,12 @@ export default class extends Controller {
         container.appendChild(ns);
       }
       
-      // Preserve layout toggle and allergen filter at start of button group
-      if (layoutToggle) btnGroup.insertBefore(layoutToggle.cloneNode(true), btnGroup.firstChild);
-      
+      // Add button group with layout toggle inside
+      if (layoutToggle) {
+        btnGroup.insertBefore(layoutToggle.cloneNode(true), btnGroup.firstChild);
+      }
       container.appendChild(btnGroup);
+      container.style.visibility = 'visible';
     } catch (e) {
       console.error('[order-header] render failed', e);
     }
