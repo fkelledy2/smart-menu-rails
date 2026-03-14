@@ -156,7 +156,9 @@ module ApplicationHelper
   end
 
   def smartmenu_javascript_tags
-    if controller_name == 'smartmenus' && action_name == 'show' && !current_user
+    is_customer_view = controller_name == 'smartmenus' && action_name == 'show' && (!current_user || @force_customer_view)
+    
+    if is_customer_view
       javascript_importmap_tags('smartmenu_customer')
     else
       javascript_importmap_tags
