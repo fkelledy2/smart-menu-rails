@@ -154,7 +154,6 @@ module ApplicationHelper
     locale = resolve_participant_locale(ordrparticipant, menuparticipant)
     entity.localised_description(locale)
   end
-end
 
   def smartmenu_javascript_tags
     if controller_name == 'smartmenus' && action_name == 'show' && !current_user
