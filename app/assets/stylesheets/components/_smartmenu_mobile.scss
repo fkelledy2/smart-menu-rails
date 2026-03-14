@@ -1447,3 +1447,28 @@
     transition: none !important;
   }
 }
+
+// Menu controls row (always visible)
+.header-controls-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 8px 0;
+  
+  .menu-name {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--text-secondary, #666);
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .order-button-group {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+}
