@@ -345,26 +345,30 @@
   // Order controls row
   .header-order-row {
     display: flex;
-    gap: 8px;
+    flex-wrap: nowrap;
+    gap: 6px;
     align-items: center;
     justify-content: space-between;
     
     .menu-name {
-      font-size: 1.125rem;
+      font-size: 1rem;
       font-weight: 700;
       color: var(--text-secondary, #666);
-      flex: 1;
+      flex: 1 1 auto;
       min-width: 0;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      margin-right: 8px;
     }
     
     .order-button-group {
       display: flex;
-      gap: 8px;
+      gap: 4px;
       flex-shrink: 0;
+      margin-left: auto;
     }
+  }
   }
 }
 
