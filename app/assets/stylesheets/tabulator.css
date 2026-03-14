@@ -1,0 +1,5 @@
+/*
+ * Tabulator CSS - loaded separately to avoid SassC compression issues with min() function
+ * This file is imported directly as CSS, not processed through SCSS
+ */
+@import 'tabulator-tables/dist/css/tabulator_bootstrap5.min.css';

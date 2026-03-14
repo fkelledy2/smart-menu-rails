@@ -10,8 +10,8 @@
 @import "jumpstart/announcements";
 
 // Third-party libraries
-@import 'tabulator-tables/dist/css/tabulator_bootstrap5.min';
-@import "tom-select/dist/scss/tom-select";
+// Note: Tabulator CSS loaded separately via asset pipeline to avoid SassC min() compression issues
+// TomSelect and Tabulator CSS loaded separately to avoid SassC compression issues
 
 
 // Import custom styles (only existing files)

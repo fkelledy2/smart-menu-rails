@@ -142,7 +142,6 @@ class AiMenuPolisherJob
     set_progress('running', total_items, total_items, menu_id, message: 'Estimating prep times...')
     EstimatePrepTimesJob.new.perform(menu_id)
 
-
     set_progress('completed', total_items, total_items, menu_id)
   rescue StandardError => e
     Rails.logger.error("[AIMenuPolisherJob] Error polishing menu ##{menu_id}: #{e.class}: #{e.message}")

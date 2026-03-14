@@ -102,7 +102,6 @@ class OcrMenuImportPolisherJob
     menu_ids = import.ocr_menu_items.pluck(:menu_id).uniq
     menu_ids.each { |menu_id| EstimatePrepTimesJob.new.perform(menu_id) if menu_id.present? }
 
-
     set_progress('completed', total, total, import.id)
   rescue StandardError => e
     Rails.logger.error("[OcrMenuImportPolisherJob] Error polishing import ##{ocr_menu_import_id}: #{e.class}: #{e.message}")

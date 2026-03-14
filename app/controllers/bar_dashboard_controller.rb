@@ -8,7 +8,7 @@ class BarDashboardController < ApplicationController
     tickets = @restaurant.ordr_station_tickets
       .where(station: :bar)
       .where.not(status: 'collected')
-      .includes({ ordritems: %i[menuitem ordritemnotes] }, ordr: [:tablesetting, :kitchen_notes])
+      .includes({ ordritems: %i[menuitem ordritemnotes] }, ordr: %i[tablesetting kitchen_notes])
 
     @pending_tickets = tickets.where(status: 'ordered').order(created_at: :asc)
     @preparing_tickets = tickets.where(status: 'preparing').order(created_at: :asc)

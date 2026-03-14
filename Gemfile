@@ -173,4 +173,4 @@ end
 
 gem 'erb_lint', '~> 0.9.0', groups: %i[development test]
 
-gem "sassc-rails", "~> 2.1"
+gem 'sassc-rails', '~> 2.1'

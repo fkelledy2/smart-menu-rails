@@ -1,0 +1,5 @@
+/*
+ * TomSelect CSS - loaded separately to avoid SassC compression issues with max() function
+ * This file is imported directly as CSS, not processed through SCSS
+ */
+@import 'tom-select/dist/css/tom-select.bootstrap5.min.css';
