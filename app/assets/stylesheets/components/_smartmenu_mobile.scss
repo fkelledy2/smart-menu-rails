@@ -1472,3 +1472,30 @@
     flex-shrink: 0;
   }
 }
+
+// Standalone layout-toggle-btn (allergen filter) outside the group
+.order-button-group > .layout-toggle-btn {
+  width: 40px;
+  height: 40px;
+  border: 2px solid #e5e5e5;
+  border-radius: 8px;
+  background: white;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  padding: 0;
+
+  i { font-size: 1.125rem; }
+
+  &:hover {
+    background: #f3f4f6;
+  }
+
+  &:active {
+    background: #dc2626;
+    color: white;
+  }
+}

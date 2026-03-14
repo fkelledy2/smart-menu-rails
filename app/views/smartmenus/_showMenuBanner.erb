@@ -41,9 +41,11 @@
     </style>
   </noscript>
   </div>
+  </div>
 
-  <!-- Menu Controls (Always Visible) -->
-  <div class="header-controls-row">
+  <!-- Order Controls -->
+  <div class="header-order-row" id="openOrderContainer" data-controller="order-header" data-order-header-customer-value="true" style="visibility:hidden">
+    <span class="menu-name"><%= @menu.name %></span>
     <div class="order-button-group">
       <div class="layout-toggle-group" role="group">
         <button type="button" class="layout-toggle-btn active" data-action="click->menu-layout#setCard" data-menu-layout-target="cardBtn">
@@ -53,19 +55,10 @@
           <i class="bi bi-list-ul"></i>
         </button>
       </div>
-      <button type="button" class="filter-button" data-bs-toggle="modal" data-bs-target="#allergenModal">
+      <button type="button" class="layout-toggle-btn" data-bs-toggle="modal" data-bs-target="#allergenModal">
         <i class="bi bi-shield-exclamation"></i>
       </button>
     </div>
-  </div>
-
-  <!-- Order Controls -->
-  <div class="header-order-row" id="openOrderContainer" data-controller="order-header" data-order-header-customer-value="true" style="visibility:hidden">
-    <% if @openOrder %>
-      <%= render partial: "orderCustomer", locals: { order: @openOrder, menu: @openOrder.menu, restaurant: @restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant } %>
-    <% else %>
-      <%= render partial: "orderCustomer", locals: { order: nil, menu: @menu, restaurant: @restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant } %>
-    <% end %>
   </div>
   <!-- Navigation: Search & Sections -->
   <div class="menu-sections-nav-mobile" data-controller="scrollspy" data-scrollspy-offset-value="200">
