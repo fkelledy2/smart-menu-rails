@@ -47,6 +47,33 @@
 //= link controllers/menusections_bulk_controller.js
 //= link controllers/ai_image_generator_controller.js
 //= link controllers/ai_progress_controller.js
+//= link controllers/bottom_sheet_controller.js
+//= link controllers/camera_capture_controller.js
+//= link controllers/disabled_action_controller.js
+//= link controllers/discovered_restaurant_deep_dive_controller.js
+//= link controllers/discovered_restaurant_web_scrape_controller.js
+//= link controllers/discovered_restaurants_bulk_controller.js
+//= link controllers/generate_pairings_controller.js
+//= link controllers/go_live_progress_controller.js
+//= link controllers/inline_edit_controller.js
+//= link controllers/invite_staff_controller.js
+//= link controllers/menu_layout_controller.js
+//= link controllers/menu_search_controller.js
+//= link controllers/mobile_tab_bar_controller.js
+//= link controllers/order_notes_controller.js
+//= link controllers/password_confirmation_toggle_controller.js
+//= link controllers/quick_add_controller.js
+//= link controllers/restaurantmenus_bulk_controller.js
+//= link controllers/restaurants_bulk_controller.js
+//= link controllers/scrollspy_controller.js
+//= link controllers/settings_dependencies_controller.js
+//= link controllers/sommelier_controller.js
+//= link controllers/split_bill_controller.js
+//= link controllers/square_payment_controller.js
+//= link controllers/tab_bar_controller.js
+//= link controllers/theme_toggle_controller.js
+//= link controllers/userplan_plan_change_controller.js
+//= link controllers/whiskey_ambassador_controller.js
 
 // Application entry point
 //= link application.js
