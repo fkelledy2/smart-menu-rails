@@ -8,6 +8,11 @@
           <%= order.tablesetting.name %>
         </span>
       <% end %>
+      <% if order.kitchen_notes.any? %>
+        <span class="badge bg-warning ms-2" title="<%= order.kitchen_notes.count %> kitchen note(s)">
+          <i class="bi bi-exclamation-triangle"></i> <%= order.kitchen_notes.count %>
+        </span>
+      <% end %>
     </div>
     <small class="text-muted">
       <i class="bi bi-clock"></i> <%= time_ago_in_words(order.created_at) %> ago
@@ -15,20 +20,122 @@
   </div>
 
   <div class="card-body py-2">
-    <ul class="mb-0">
-      <% ticket.ordritems.each do |item| %>
-        <% next if item.menuitem.blank? %>
-        <li>
-          <% if item.quantity > 1 %><span class="badge bg-primary me-1"><%= item.quantity %>×</span><% end %>
-          <%= item.menuitem.name %>
-          <% if item.size_name.present? %>
-            <span class="text-muted small">(<%= item.size_name.sub(/\s*\(.*\)/, '') %>)</span>
-          <% end %>
-          <% if item.ordritemnotes.any? %>
-            <div class="text-muted small">
-              <i class="bi bi-sticky"></i> <%= item.ordritemnotes.map(&:note).join(', ') %>
-            </div>
-          <% end %>
+    <%# Display order-level kitchen notes at the top %>
+    <% if order.kitchen_notes.any? %>
+      <% order.kitchen_notes.each do |note| %>
+        <div class="order-note">
+          <i class="bi bi-exclamation-triangle order-note-icon"></i>
+          <span class="order-note-text"><%= note.note %></span>
+        </div>
+      <% end %>
+    <% end %>
+
+    <%
+      # Calculate prep times and start delays
+      items_with_prep = ticket.ordritems.select { |i| i.menuitem.present? }.map do |item|
+        prep_time = item.menuitem.preptime || 0
+        prep_time = 5 if prep_time == 0 # Default to 5 minutes
+        { item: item, prep_time: prep_time }
+      end
+      
+      max_prep_time = items_with_prep.map { |i| i[:prep_time] }.max || 5
+      order_age_minutes = ((Time.current - order.created_at) / 60).to_i
+      
+      items_with_timing = items_with_prep.map do |item_data|
+        start_delay = max_prep_time - item_data[:prep_time]
+        time_until_start = start_delay - order_age_minutes
+        start_delay_percent = max_prep_time > 0 ? (start_delay.to_f / max_prep_time * 100) : 0
+        prep_duration_percent = max_prep_time > 0 ? (item_data[:prep_time].to_f / max_prep_time * 100) : 100
+        
+        item_data.merge({
+          start_delay: start_delay,
+          time_until_start: time_until_start,
+          start_delay_percent: start_delay_percent,
+          prep_duration_percent: prep_duration_percent,
+          should_flash: time_until_start <= 0 && ticket.status == 'ordered'
+        })
+      end.sort_by { |item| -item[:prep_time] } # Sort by prep time descending (longest first)
+    %>
+
+    <%# Order Timeline Summary %>
+    <% if max_prep_time > 0 %>
+      <div class="order-timeline-summary mb-2">
+        <small class="text-muted">
+          <i class="bi bi-clock-history"></i> 
+          Total prep time: <strong><%= max_prep_time %> min</strong>
+          <span class="ms-2 text-muted">|</span>
+          <span class="ms-2">Order age: <strong><%= order_age_minutes %> min</strong></span>
+        </small>
+      </div>
+    <% end %>
+
+    <ul class="mb-0 order-items-timeline">
+      <% items_with_timing.each do |item_data| %>
+        <% item = item_data[:item] %>
+        <li class="order-item-with-timeline <%= 'timeline-item-flash' if item_data[:should_flash] %>" 
+            data-prep-time="<%= item_data[:prep_time] %>" 
+            data-start-delay="<%= item_data[:start_delay] %>">
+          
+          <%# Timeline Progress Bar - color matches column status %>
+<%
+  bar_class = case ticket.status
+  when 'ordered'
+    'timeline-bar--pending'
+  when 'preparing'
+    'timeline-bar--preparing'
+  when 'ready'
+    'timeline-bar--ready'
+  else
+    'timeline-bar--pending'
+  end
+  
+  # Ready items show 100% full bar
+  # Preparing items scale to full width based on max prep time
+  if ticket.status == 'ready'
+    display_width = 100
+  elsif ticket.status == 'preparing'
+    display_width = (item_data[:prep_time].to_f / max_prep_time * 100)
+  else
+    display_width = item_data[:prep_duration_percent]
+  end
+%>
+
+<%# Progress bar as background %>
+<div class="timeline-progress" style="--prep-width: <%= display_width %>%;">
+  <div class="timeline-bar <%= bar_class %>">
+    <span class="prep-time-label"><%= item_data[:prep_time] %>m</span>
+  </div>
+</div>
+
+<%# Item Content with inline notes on top of progress bar %>
+<div class="item-content">
+  <div class="item-main">
+    <% if item.quantity > 1 %><span class="badge bg-primary me-1"><%= item.quantity %>×</span><% end %>
+    <span class="item-name"><%= item.menuitem.name %></span>
+    <% if item.size_name.present? %>
+      <span class="text-muted small">(<%= item.size_name.sub(/\s*\(.*\)/, '') %>)</span>
+    <% end %>
+    <%# Display item-level notes inline %>
+    <% if item.ordritemnotes.any? %>
+      <span class="item-note-inline">(<%= item.ordritemnotes.map(&:note).join(', ') %>)</span>
+    <% end %>
+  </div>
+</div>
+
+<%# Time indicators for non-ready items (except START NOW which is now just an icon) %>
+<% unless ticket.status == 'ready' %>
+  <% if ticket.status != 'preparing' || item_data[:time_until_start] > 0 %>
+    <div class="prep-time-text">
+      <% if item_data[:time_until_start] <= 5 %>
+        <i class="bi bi-hourglass-split text-warning"></i>
+        <small class="text-warning">Start in <%= item_data[:time_until_start] %> min</small>
+      <% elsif item_data[:time_until_start] > 5 %>
+        <i class="bi bi-hourglass text-muted"></i>
+        <small class="text-muted">Start in <%= item_data[:time_until_start] %> min</small>
+      <% end %>
+    </div>
+  <% end %>
+<% end %>
         </li>
       <% end %>
     </ul>

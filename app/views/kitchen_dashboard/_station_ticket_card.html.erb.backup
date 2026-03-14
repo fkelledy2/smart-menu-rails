@@ -54,7 +54,7 @@
           prep_duration_percent: prep_duration_percent,
           should_flash: time_until_start <= 0 && ticket.status == 'ordered'
         })
-      end.sort_by { |item| -item[:prep_time] } # Sort by prep time descending (longest first)
+      end
     %>
 
     <%# Order Timeline Summary %>
@@ -100,14 +100,7 @@
   end
 %>
 
-<%# Progress bar as background %>
-<div class="timeline-progress" style="--prep-width: <%= display_width %>%;">
-  <div class="timeline-bar <%= bar_class %>">
-    <span class="prep-time-label"><%= item_data[:prep_time] %>m</span>
-  </div>
-</div>
-
-<%# Item Content with inline notes on top of progress bar %>
+<%# Item Content - positioned above progress bar %>
 <div class="item-content">
   <div class="item-main">
     <% if item.quantity > 1 %><span class="badge bg-primary me-1"><%= item.quantity %>×</span><% end %>
@@ -115,11 +108,17 @@
     <% if item.size_name.present? %>
       <span class="text-muted small">(<%= item.size_name.sub(/\s*\(.*\)/, '') %>)</span>
     <% end %>
-    <%# Display item-level notes inline %>
-    <% if item.ordritemnotes.any? %>
-      <span class="item-note-inline">(<%= item.ordritemnotes.map(&:note).join(', ') %>)</span>
-    <% end %>
   </div>
+</div>
+
+<%# Progress bar below text %>
+<div class="timeline-progress" style="--prep-width: <%= display_width %>%;">
+  <div class="timeline-bar <%= bar_class %>"></div>
+  
+  <%# Play icon at start of progress bar for preparing items that should start now %>
+  <% if ticket.status == 'preparing' && item_data[:time_until_start] <= 0 %>
+    <i class="bi bi-play-circle-fill timeline-play-icon"></i>
+  <% end %>
 </div>
 
 <%# Time indicators for non-ready items (except START NOW which is now just an icon) %>
@@ -136,6 +135,36 @@
     </div>
   <% end %>
 <% end %>
+
+            
+            <%# Prep Time Indicator - hide in ready column %>
+<% unless ticket.status == 'ready' %>
+  <span class="prep-indicator">
+    <% if ticket.status == 'preparing' && item_data[:time_until_start] <= 0 %>
+      <i class="bi bi-play-circle-fill text-danger"></i>
+      <small class="text-danger fw-bold">START NOW</small>
+    <% elsif item_data[:time_until_start] <= 5 %>
+      <i class="bi bi-hourglass-split text-warning"></i>
+      <small class="text-warning">Start in <%= item_data[:time_until_start] %> min</small>
+    <% else %>
+      <i class="bi bi-hourglass text-muted"></i>
+      <small class="text-muted">Start in <%= item_data[:time_until_start] %> min</small>
+    <% end %>
+  </span>
+<% end %>
+
+
+          </div>
+          
+          <%# Display item-level notes %>
+          <% if item.ordritemnotes.any? %>
+            <% item.ordritemnotes.each do |item_note| %>
+              <div class="order-item-note">
+                <i class="bi bi-sticky order-item-note-icon"></i>
+                <span class="order-item-note-text"><%= item_note.note %></span>
+              </div>
+            <% end %>
+          <% end %>
         </li>
       <% end %>
     </ul>

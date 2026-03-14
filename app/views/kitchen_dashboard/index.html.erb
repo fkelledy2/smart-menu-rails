@@ -1,9 +1,9 @@
 <%= stylesheet_link_tag 'kitchen_dashboard_bootstrap', media: 'all' %>
 
-<div class="kitchen-dashboard min-vh-100" data-restaurant-id="<%= @restaurant.id %>" data-station="kitchen">
+<div class="kitchen-dashboard d-flex flex-column" style="height: 100vh;" data-restaurant-id="<%= @restaurant.id %>" data-station="kitchen">
   <!-- Metrics Cards -->
-  <div class="container-fluid mb-4">
-    <div class="row g-3">
+  <div class="container-fluid mb-4 flex-shrink-0">
+    <div class="row g-3 flex-grow-1" style="min-height: 0;">
       <div class="col-md-3">
         <div class="card border-0 shadow-sm">
           <div class="card-body text-center">
@@ -40,11 +40,11 @@
   </div>
 
   <!-- Order Columns -->
-  <div class="container-fluid">
-    <div class="row g-3">
+  <div class="container-fluid flex-grow-1 d-flex flex-column" style="min-height: 0;">
+    <div class="row g-3 flex-grow-1" style="min-height: 0;">
       <!-- Pending Column -->
-      <div class="col-4">
-        <div class="card border-0 shadow-sm h-100">
+      <div class="col-4 d-flex flex-column" style="min-height: 0;">
+        <div class="card border-0 shadow-sm d-flex flex-column flex-grow-1">
           <div class="card-header bg-danger text-white d-flex justify-content-between align-items-center">
             <h5 class="mb-0">
               Pending
@@ -54,7 +54,7 @@
               <i class="bi bi-sort-up"></i>
             </button>
           </div>
-          <div class="card-body p-2 overflow-auto" style="max-height: calc(100vh - 350px);" id="pending-orders">
+          <div class="card-body p-2 overflow-auto flex-grow-1" id="pending-orders">
             <div class="text-center text-muted py-4 empty-state" data-empty-for="pending" style="<%= @pending_tickets.any? ? 'display:none;' : '' %>">0 pending tickets</div>
             <%= render partial: 'station_ticket_card', collection: @pending_tickets, as: :ticket %>
           </div>
@@ -62,8 +62,8 @@
       </div>
 
       <!-- Preparing Orders Column -->
-      <div class="col-4">
-        <div class="card border-0 shadow-sm h-100">
+      <div class="col-4 d-flex flex-column" style="min-height: 0;">
+        <div class="card border-0 shadow-sm d-flex flex-column flex-grow-1">
           <div class="card-header bg-warning text-dark d-flex justify-content-between align-items-center">
             <h5 class="mb-0">
               Preparing
@@ -73,7 +73,7 @@
               <i class="bi bi-sort-up"></i>
             </button>
           </div>
-          <div class="card-body p-2 overflow-auto" style="max-height: calc(100vh - 350px);" id="preparing-orders">
+          <div class="card-body p-2 overflow-auto flex-grow-1" id="preparing-orders">
             <div class="text-center text-muted py-4 empty-state" data-empty-for="preparing" style="<%= @preparing_tickets.any? ? 'display:none;' : '' %>">0 preparing tickets</div>
             <%= render partial: 'station_ticket_card', collection: @preparing_tickets, as: :ticket %>
           </div>
@@ -81,8 +81,8 @@
       </div>
 
       <!-- Ready Orders Column -->
-      <div class="col-4">
-        <div class="card border-0 shadow-sm h-100">
+      <div class="col-4 d-flex flex-column" style="min-height: 0;">
+        <div class="card border-0 shadow-sm d-flex flex-column flex-grow-1">
           <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
             <h5 class="mb-0">
               Ready
@@ -92,7 +92,7 @@
               <i class="bi bi-sort-up"></i>
             </button>
           </div>
-          <div class="card-body p-2 overflow-auto" style="max-height: calc(100vh - 350px);" id="ready-orders">
+          <div class="card-body p-2 overflow-auto flex-grow-1" id="ready-orders">
             <div class="text-center text-muted py-4 empty-state" data-empty-for="ready" style="<%= @ready_tickets.any? ? 'display:none;' : '' %>">0 ready tickets</div>
             <%= render partial: 'station_ticket_card', collection: @ready_tickets, as: :ticket %>
           </div>

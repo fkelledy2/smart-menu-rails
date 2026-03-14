@@ -8,7 +8,7 @@ class KitchenDashboardController < ApplicationController
     tickets = @restaurant.ordr_station_tickets
       .where(station: :kitchen)
       .where.not(status: 'collected')
-      .includes({ ordritems: %i[menuitem ordritemnotes] }, ordr: [:tablesetting])
+      .includes({ ordritems: %i[menuitem ordritemnotes] }, ordr: [:tablesetting, :kitchen_notes])
 
     @pending_tickets = tickets.where(status: 'ordered').order(created_at: :asc)
     @preparing_tickets = tickets.where(status: 'preparing').order(created_at: :asc)
@@ -19,7 +19,7 @@ class KitchenDashboardController < ApplicationController
       total_preparing: @preparing_tickets.count,
       total_ready: @ready_tickets.count,
       avg_prep_time: calculate_avg_prep_time,
-      orders_today: @restaurant.ordrs.where(created_at: Time.current.beginning_of_day..).count,
+      orders_today: @restaurant.ordrs.where('created_at >= ?', Time.current.beginning_of_day).count,
     }
   end
 
@@ -46,7 +46,7 @@ class KitchenDashboardController < ApplicationController
 
   def calculate_avg_prep_time
     completed_today = @restaurant.ordrs
-      .where(created_at: Time.current.beginning_of_day..)
+      .where('created_at >= ?', Time.current.beginning_of_day)
       .where(status: %w[ready delivered paid])
 
     return 0 if completed_today.empty?
