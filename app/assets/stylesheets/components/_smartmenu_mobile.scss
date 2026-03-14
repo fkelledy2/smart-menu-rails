@@ -344,18 +344,21 @@
   
   // Order controls row
   .header-order-row {
-    display: flex;
-    flex-wrap: nowrap;
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    flex-direction: row !important;
     gap: 6px;
     align-items: center;
     justify-content: space-between;
+    width: 100%;
     
     .menu-name {
       font-size: 1rem;
       font-weight: 700;
       color: var(--text-secondary, #666);
-      flex: 1 1 auto;
+      flex: 0 1 auto;
       min-width: 0;
+      max-width: 50%;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -364,9 +367,17 @@
     
     .order-button-group {
       display: flex;
+      flex-wrap: nowrap;
       gap: 4px;
       flex-shrink: 0;
       margin-left: auto;
+      
+      .layout-toggle-group {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 4px;
+        flex-shrink: 0;
+      }
     }
   }
 }
