@@ -5,7 +5,7 @@
     <%= render 'shared/head' %>
     <%= render 'shared/schema_org_json_ld' if @schema_org_json_ld.present? %>
     <%= Sentry.get_trace_propagation_meta.html_safe %>
-    <%= smartmenu_javascript_tags %>
+    <%= javascript_system_tags %>
     <script>window.USE_JSON_STATE = true;</script>
     <% if @restaurant&.square_provider? && @restaurant&.square_inline? %>
       <meta name="square-application-id" content="<%= @restaurant.square_application_id %>">

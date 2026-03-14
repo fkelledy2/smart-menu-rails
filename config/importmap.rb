@@ -27,3 +27,6 @@ pin_all_from 'app/javascript/custom', under: 'custom'
 
 # Pin specific modules (not all, to avoid missing file errors)
 pin 'modules/hero_carousel', to: 'modules/hero_carousel.js'
+
+# Customer-optimized bundle
+pin 'smartmenu_customer', to: 'smartmenu_customer.js?v=20250314', preload: false
