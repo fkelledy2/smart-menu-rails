@@ -46,6 +46,7 @@
 //= link controllers/menuitems_bulk_controller.js
 //= link controllers/menusections_bulk_controller.js
 //= link controllers/ai_image_generator_controller.js
+//= link controllers/ai_progress_controller.js
 
 // Application entry point
 //= link application.js
