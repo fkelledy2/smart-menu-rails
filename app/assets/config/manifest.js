@@ -49,5 +49,8 @@
 // Application entry point
 //= link application.js
 
+// Customer-optimized bundle
+//= link smartmenu_customer.js
+
 // Modules
 //= link modules/hero_carousel.js
