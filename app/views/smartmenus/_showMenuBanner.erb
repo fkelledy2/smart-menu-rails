@@ -52,8 +52,8 @@
   </div>
   <!-- Navigation: Search & Sections -->
   <div class="menu-sections-nav-mobile" data-controller="scrollspy" data-scrollspy-offset-value="200">
-    <!-- Search and Filter Row -->
-    <div class="sections-filter-row">
+    <!-- Search Row (Full Width) -->
+    <div class="sections-search-row">
       <input type="text" 
              id="menu-item-search" 
              class="menu-search-input" 
@@ -61,41 +61,6 @@
              data-menu-search-target="input"
              data-action="input->menu-search#filter"
              data-testid="menu-search-input">
-      
-      <!-- Layout Toggle -->
-      <div class="layout-toggle-group" role="group" aria-label="<%= t('.layout', default: 'Layout') %>">
-        <button type="button"
-                class="layout-toggle-btn active"
-                data-action="click->menu-layout#setCard"
-                data-menu-layout-target="cardBtn"
-                aria-label="<%= t('.card_view', default: 'Card view') %>"
-                title="<%= t('.card_view', default: 'Card view') %>">
-          <i class="bi bi-grid"></i>
-        </button>
-        <button type="button"
-                class="layout-toggle-btn"
-                data-action="click->menu-layout#setList"
-                data-menu-layout-target="listBtn"
-                aria-label="<%= t('.list_view', default: 'List view') %>"
-                title="<%= t('.list_view', default: 'List view') %>">
-          <i class="bi bi-list-ul"></i>
-        </button>
-      </div>
-
-      <% unless current_user %>
-        <!-- Combined Allergen Button (Key + Filter) -->
-        <button type="button"
-                class="filter-button"
-                data-bs-toggle="modal"
-                data-bs-target="#allergenModal"
-                aria-label="<%= t('.allergen_key', default: 'Allergen key') %>"
-                title="<%= t('.view_allergen_key', default: 'View allergen key') %>">
-          <i class="bi bi-shield-exclamation"></i>
-          <% if @ordrparticipant && @ordrparticipant.allergyns.size > 0 %>
-            <span class="filter-badge"><%= @ordrparticipant.allergyns.size %></span>
-          <% end %>
-        </button>
-      <% end %>
     </div>
     
     <!-- Section Tabs -->

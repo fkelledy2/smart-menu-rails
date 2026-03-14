@@ -6,6 +6,23 @@
             <% end %>
         </span>
         <div class="order-button-group" data-testid="order-action-buttons">
+            <!-- Layout Toggle -->
+            <div class="layout-toggle-group" role="group" aria-label="Layout">
+              <button type="button" class="layout-toggle-btn active" data-action="click->menu-layout#setCard" data-menu-layout-target="cardBtn" aria-label="Card view" title="Card view">
+                <i class="bi bi-grid"></i>
+              </button>
+              <button type="button" class="layout-toggle-btn" data-action="click->menu-layout#setList" data-menu-layout-target="listBtn" aria-label="List view" title="List view">
+                <i class="bi bi-list-ul"></i>
+              </button>
+            </div>
+            <!-- Allergen Filter -->
+            <button type="button" class="filter-button" data-bs-toggle="modal" data-bs-target="#allergenModal" aria-label="Allergen key" title="View allergen key">
+              <i class="bi bi-shield-exclamation"></i>
+              <% if ordrparticipant && ordrparticipant.allergyns.size > 0 %>
+                <span class="filter-badge"><%= ordrparticipant.allergyns.size %></span>
+              <% end %>
+            </button>
+            
             <% if ordrparticipant && ordrparticipant.name == nil %>
               <button type="button" class="btn-touch-primary btn-touch-icon" data-bs-toggle="modal" data-bs-target="#addNameToParticipantModal" aria-label="<%= t('.add_name', default: 'Add your name') %>" data-testid="add-customer-name-btn">
                 <i class="bi bi-person-fill-add"></i>
