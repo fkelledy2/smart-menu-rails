@@ -1,28 +1,27 @@
     <div class="col-12 col-md-6 col-lg-4 pt-3">
+    <div class="col-12 col-md-6 col-lg-4 pt-3">
         <div class="card">
             <% if @menu.displayImages == true && @menu.restaurant.displayImages == true %>
                 <% if menuitem.image %>
                     <div class="row">
                         <div class="col-12">
                             <div class="ratio ratio-1x1">
-                                <div class="d-flex justify-content-center align-items-center">
-                                    <div class="m-5" role="status">
-                                        <span class="visually-hidden"><%= t('.loading') %></span>
-                                    </div>
-                                </div>
+                                <% item_index = menuitem_counter || 0 %>
                                 <%= picture_tag_with_webp(menuitem.image,
                                   alt: menuitem.name,
                                   sizes: menuitem.image_sizes,
-                                  class_name: 'card-img-top img-fluid',
-                                  style: '-webkit-mask-image:-webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0));display:none;',
-                                  onload: 'fadeIn(this)',
-                                  loading: 'lazy',
+                                  class_name: 'card-img-top img-fluid blur-up',
+                                  loading: item_index < 6 ? 'eager' : 'lazy',
+                                  fetchpriority: item_index < 3 ? 'high' : 'auto',
+                                  onload: 'this.classList.add("loaded")',
                                   quality: 85,
                                   model: menuitem
                                 ) %>
                             </div>
                         </div>
                     </div>
+                <% end %>
+            <% end %>
                 <% end %>
             <% end %>
             <div class="card-body">

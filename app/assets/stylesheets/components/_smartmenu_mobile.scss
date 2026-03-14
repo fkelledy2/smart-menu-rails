@@ -1499,3 +1499,22 @@
     color: white;
   }
 }
+
+// LQIP Blur-up image loading
+.blur-up {
+  filter: blur(10px);
+  transition: filter 0.3s ease-out;
+}
+
+.blur-up.loaded {
+  filter: blur(0);
+}
+
+.card-img-top {
+  opacity: 0;
+  transition: opacity 0.3s ease-out;
+}
+
+.card-img-top.loaded {
+  opacity: 1;
+}
