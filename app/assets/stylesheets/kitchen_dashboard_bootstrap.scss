@@ -687,32 +687,6 @@
   .order-card .card-footer {
     background: var(--surface-elevated);
   }
-// Right-aligned timeline progress bars
-.timeline-progress {
-  position: relative;
-  height: 24px;
-  background: var(--surface-tertiary);
-  border-radius: var(--radius-sm);
-  overflow: visible;
-  display: flex;
-  justify-content: flex-end;
-}
-
-.timeline-bar {
-  position: relative;
-  height: 100%;
-  width: var(--prep-width, 100%);
-  border-radius: var(--radius-sm);
-}
-
-.timeline-play-icon {
-  position: absolute;
-  right: 0;
-  bottom: -4px;
-  font-size: 1.5rem;
-  color: var(--color-danger);
-  z-index: 3;
-}
 
 
 // Prep time label inside progress bar

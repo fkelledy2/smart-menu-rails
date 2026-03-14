@@ -13,3 +13,4 @@ Rails.application.config.assets.paths << Rails.root.join("node_modules/bootstrap
 # Rails.application.config.assets.precompile += %w( admin.js admin.css )
 
 Rails.application.config.assets.precompile += %w( jquery.min.js jquery_ujs.js bootstrap.min.js popper.js )
+Rails.application.config.assets.precompile += %w( kitchen_dashboard_bootstrap.css )
