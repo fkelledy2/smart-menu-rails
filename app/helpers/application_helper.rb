@@ -163,3 +163,8 @@ end
       javascript_importmap_tags
     end
   end
+
+  def page_modules
+    @page_modules || ''
+  end
+end
