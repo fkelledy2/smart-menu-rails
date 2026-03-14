@@ -1,7 +1,6 @@
 import { Controller } from "@hotwired/stimulus";
 
 // Controls the header CTA area (#openOrderContainer) based on state
-// Listens for state:order and state:changed events and renders appropriate buttons
 export default class extends Controller {
   static values = { customer: { type: Boolean, default: false } }
 
@@ -32,125 +31,105 @@ export default class extends Controller {
   renderFromState(state) {
     try {
       if (!state) state = this.extractState();
-      const hasOrder = !!(state.order && state.order.id);
-      const restaurantId = state.restaurant?.id || this.extractState().restaurant?.id;
-      const menuId = state.menuId || this.extractState().menuId;
-      const tableId = state.tableId || this.extractState().tableId;
-
-      // Prefer global JSON state flags
-      const gs = window.__SM_STATE || {};
-      const requestBillVisible = !!(gs.flags && (gs.flags.displayRequestBill === true));
-      const orderStatus = (gs.order && gs.order.status ? String(gs.order.status).toLowerCase() : null);
-      const hydrated = !!(gs.flags);
-
-      const btnGroup = document.createElement('div');
-      btnGroup.className = 'order-button-group';
-
-      if (!hasOrder) {
-        // Only show Start Order if tableId is present (smartmenu tied to a table)
-        if (!tableId) {
-          // Render nothing (besides optional menu-name span preserved later)
-        } else if (this.customerValue) {
-          // Start Order button removed from header — now in bottom sheet peek bar
-        } else {
-          // Staff view: use the modal
-          const btn = document.createElement('button');
-          btn.type = 'button';
-          btn.className = 'btn-touch-primary btn-touch-sm';
-          btn.setAttribute('data-bs-toggle', 'modal');
-          btn.setAttribute('data-bs-restaurant', restaurantId || '');
-          btn.setAttribute('data-bs-menu', menuId || '');
-          btn.setAttribute('data-bs-target', '#openOrderModal');
-          btn.innerHTML = '<i class="bi bi-plus-circle"></i> Start Order';
-          btnGroup.appendChild(btn);
-        }
-      } else if (this.customerValue) {
-        // Customer view: bottom sheet handles Order/Bill/Pay — render nothing
-      } else {
-        // Staff CTA set: View, Request Bill, Pay
-        if (!hydrated) {
-          const loadingBtn = document.createElement('button');
-          loadingBtn.type = 'button';
-          loadingBtn.className = 'btn-touch-secondary btn-touch-sm me-2';
-          loadingBtn.setAttribute('disabled', 'disabled');
-          loadingBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading…';
-          btnGroup.appendChild(loadingBtn);
-        } else {
-          const viewBtn = document.createElement('button');
-          viewBtn.type = 'button';
-          viewBtn.className = 'btn-touch-secondary btn-touch-sm me-2 position-relative';
-          viewBtn.setAttribute('data-action', 'click->bottom-sheet#setState');
-          viewBtn.setAttribute('data-bottom-sheet-state-param', 'full');
-          viewBtn.innerHTML = '<i class="bi bi-receipt"></i> Order';
-          const totalCount = Number((window.__SM_STATE && window.__SM_STATE.order && window.__SM_STATE.order.totalCount) || 0);
-          const badge = document.createElement('span');
-          badge.className = 'position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger';
-          badge.style.transform = 'translate(-40%, -40%)';
-          badge.style.fontSize = '0.9rem';
-          badge.style.padding = '0.35em 0.6em';
-          badge.textContent = String(totalCount);
-          if (!(totalCount > 0)) { badge.style.display = 'none'; }
-          viewBtn.appendChild(badge);
-
-          btnGroup.appendChild(viewBtn);
-        }
-        if (hydrated && requestBillVisible) {
-          const billBtn = document.createElement('button');
-          billBtn.type = 'button';
-          billBtn.id = 'request-bill';
-          billBtn.className = 'btn-touch-primary btn-touch-sm me-2';
-          billBtn.setAttribute('data-bs-toggle', 'modal');
-          billBtn.setAttribute('data-bs-target', '#requestBillModal');
-          billBtn.innerHTML = '<i class="bi bi-receipt"></i> Bill';
-          btnGroup.appendChild(billBtn);
-        }
-        if (hydrated && orderStatus === 'billrequested') {
-          const currencyToIcon = (code) => {
-            const c = String(code || '').toUpperCase();
-            switch (c) {
-              case 'EUR': return 'bi-currency-euro';
-              case 'GBP': return 'bi-currency-pound';
-              case 'JPY': return 'bi-currency-yen';
-              case 'CNY': return 'bi-currency-yen';
-              case 'INR': return 'bi-currency-rupee';
-              case 'BTC': return 'bi-currency-bitcoin';
-              case 'USD':
-              default: return 'bi-currency-dollar';
-            }
-          };
-          const currencyCode = (window.__SM_STATE && window.__SM_STATE.totals && window.__SM_STATE.totals.currency && window.__SM_STATE.totals.currency.code) || null;
-          const iconClass = currencyToIcon(currencyCode);
-
-          const payBtn = document.createElement('button');
-          payBtn.type = 'button';
-          payBtn.id = 'pay-order';
-          payBtn.className = 'btn-touch-dark btn-touch-sm';
-          payBtn.setAttribute('data-bs-toggle', 'modal');
-          payBtn.setAttribute('data-bs-target', '#payOrderModal');
-          payBtn.innerHTML = `<i class="bi ${iconClass}"></i> Pay`;
-          btnGroup.appendChild(payBtn);
-        }
-      }
-
-      // Replace contents, but preserve a leading menu-name span and layout controls
+      
       const container = this.element;
-      const nameSpan = container.querySelector('.menu-name');
-      const layoutToggle = container.querySelector('.layout-toggle-group');
+      const menuName = container.querySelector('.menu-name');
+      const layoutToggleGroup = container.querySelector('.layout-toggle-group');
       
+      // Preserve menu name and layout controls
+      const menuNameClone = menuName ? menuName.cloneNode(true) : null;
+      const layoutClone = layoutToggleGroup ? layoutToggleGroup.cloneNode(true) : null;
+      
+      // Build button group
+      const btnGroup = this.buildButtonGroup(state);
+      
+      // Rebuild container
       container.innerHTML = '';
-      if (nameSpan) {
-        const ns = document.createElement('span');
-        ns.className = 'menu-name';
-        ns.textContent = nameSpan.textContent || '';
-        container.appendChild(ns);
+      if (menuNameClone) container.appendChild(menuNameClone);
+      
+      const orderButtonGroup = document.createElement('div');
+      orderButtonGroup.className = 'order-button-group';
+      if (layoutClone) orderButtonGroup.appendChild(layoutClone);
+      if (btnGroup.children.length > 0) {
+        Array.from(btnGroup.children).forEach(child => orderButtonGroup.appendChild(child));
       }
       
-      // Preserve layout toggle and allergen filter at start of button group
-      if (layoutToggle) btnGroup.insertBefore(layoutToggle.cloneNode(true), btnGroup.firstChild);
-      
-      container.appendChild(btnGroup);
+      container.appendChild(orderButtonGroup);
+      container.style.visibility = 'visible';
     } catch (e) {
       console.error('[order-header] render failed', e);
     }
+  }
+
+  buildButtonGroup(state) {
+    const group = document.createElement('div');
+    const hasOrder = !!(state.order && state.order.id);
+    const gs = window.__SM_STATE || {};
+    const hydrated = !!(gs.flags);
+    
+    if (!hasOrder) {
+      // No order - buttons handled by bottom sheet i     tomer view
+      return group;
+    }
+    
+    if (this.customerValue) {
+      // Customer view - bottom sheet handles all order actions
+      return group;
+    }
+    
+    // Staff view buttons
+    if (!hydrated) {
+      const loadingBtn = this.createButton('btn-touch-secondary btn-touch-sm', 
+        '<span class="spinner-border spinner-border-sm"></span> Loading…', 
+        { disabled: true });
+      group.appendChild(loadingBtn);
+      return group;
+    }
+    
+    // View Order button
+    const viewBtn = this.createButton('btn-touch-secondary btn-touch-sm me-2 position-relative',
+      '<i class="bi bi-receipt"></i> Order',
+      { 'data-action': 'click->bottom-sheet#setState', 'data-bottom-sheet-state-param': 'full' }      { 'data-action': 'clnt      { 'data-actio && gs.order.totalCount) || 0);
+    if (totalCount > 0) {
+      const badge = document.createElement('span');
+      badge.className = 'position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger';
+      badge.textContent = String(totalCount);
+      viewBtn.appendChild(badge);
+    }
+    group.appendChild(viewBtn);
+    
+    // Request Bill button
+    const requestBillVisible = !!(gs.flags && gs.flags.displayRequestBill);
+    if (requestBillVisible) {
+      const billBtn = this.createButton('btn-touch-primary btn-touch-sm me-2',
+        '<i class="bi bi-receipt"></i> Bill',
+        { 'data-bs-toggle': 'modal', 'data-bs-target': '#requestBillModal' });
+      group.appendChild(billBtn);
+    }
+    
+    // Pay button
+    const orderStatus = (gs.order && gs.order.status) || '';
+    if (orderStatus.toLowerCase() === 'billrequested') {
+      const payBtn = this.createButton('btn-touch-dark btn-touch-sm',
+        '<i class="bi bi-currency-dollar"></i> Pay',
+        { 'data-bs-toggle': 'modal', 'data-bs-target': '#payOrderModal' });        { 'data-bs-toggl(payBtn);
+    }
+    
+    return group;
+  }
+
+  createButton(className, innerHTML, attrs = {}) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = className;
+    btn.innerHTML = innerHTML;
+    Object.entries(attrs).forEach(([key, value]) => {
+      if (key === 'disabled' && value) {
+        btn.disabled = true;
+      } else {
+        btn.setAttribute(key, value);
+      }
+    });
+    return btn;
   }
 }

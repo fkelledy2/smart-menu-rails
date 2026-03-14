@@ -1,56 +1,21 @@
-        <span class="menu-name">
-            <% if ordrparticipant && ordrparticipant.preferredlocale %>
-                <%= menu.localised_name(ordrparticipant.preferredlocale) %>
-            <% else %>
-                <%= menu.name %>
-            <% end %>
-        </span>
-        <div class="order-button-group" data-testid="order-action-buttons">
-            <div class="layout-toggle-group" role="group">
-              <button type="button" class="layout-toggle-btn active" data-action="click->menu-layout#setCard" data-menu-layout-target="cardBtn">
-                <i class="bi bi-grid"></i>
-              </button>
-              <button type="button" class="layout-toggle-btn" data-action="click->menu-layout#setList" data-menu-layout-target="listBtn">
-                <i class="bi bi-list-ul"></i>
-              </button>
-              &nbsp;
-              <button type="button" class="layout-toggle-btn" data-bs-toggle="modal" data-bs-target="#allergenModal">
-                <i class="bi bi-shield-exclamation"></i>
-              </button>
-            </div>
-            <% if ordrparticipant && ordrparticipant.name == nil %>
-              <button type="button" class="btn-touch-primary btn-touch-icon" data-bs-toggle="modal" data-bs-target="#addNameToParticipantModal" aria-label="<%= t('.add_name', default: 'Add your name') %>" data-testid="add-customer-name-btn">
-                <i class="bi bi-person-fill-add"></i>
-              </button>
-            <% else %>
-              <% if ordrparticipant && ordrparticipant.name %>
-                <button type="button" class="btn-touch-dark btn-touch-sm participant-name-btn" data-bs-toggle="modal" data-bs-target="#addNameToParticipantModal" data-testid="edit-customer-name-btn">
-                  <%= ordrparticipant.name %>
-                </button>
-              <% end %>
-            <% end %>
-                    <% if tablesetting %>
-                        <% if order %>
-                                <% if order.status == 'ordered' || order.status == 'preparing' || order.status == 'ready'  || order.status == 'delivered' %>
-                                    <button type="button" class="btn-touch-primary btn-touch-sm" data-bs-toggle="modal" data-bs-restaurant="<%= restaurant.id %>" data-bs-menu="<%= menu.id %>" data-bs-target="#requestBillModal" data-testid="request-bill-btn">
-                                        <i class="bi bi-receipt"></i>
-                                        <%= t(".bill") %>
-                                    </button>
-                                <% end %>
-                                <% if order.status == 'billrequested' %>
-                                        <button type="button" class="btn-touch-dark btn-touch-sm" disabled>
-                                            <i class="bi bi-receipt"></i>
-                                            <%= t(".staffAlerted") %>
-                                        </button>
-                                <% end %>
-                                <% if order.status == 'closed' %>
-                                  <%# Start Order button removed — now in bottom sheet %>
-                                <% end %>
-                        <% else %>
-                          <%# Start Order button removed — now in bottom sheet %>
-                        <% end %>
-                    <% end %>
-        </div>
-        
-        <%# FAB removed — order functionality now in bottom sheet %>
+<span class="menu-name">
+  <% if ordrparticipant && ordrparticipant.preferredlocale %>
+    <%= menu.localised_name(ordrparticipant.preferredlocale) %>
+  <% else %>
+    <%= menu.name %>
+  <% end %>
+</span>
 
+<div class="order-button-group">
+  <div class="layout-toggle-group" role="group">
+    <button type="button" class="layout-toggle-btn active" data-action="click->menu-layout#setCard" data-menu-layout-target="cardBtn">
+      <i class="bi bi-grid"></i>
+    </button>
+    <button type="button" class="layout-toggle-btn" data-action="click->menu-layout#setList" data-menu-layout-target="listBtn">
+      <i class="bi bi-list-ul"></i>
+    </button>
+    <button type="button" class="layout-toggle-btn" data-bs-toggle="modal" data-bs-target="#allergenModal">
+      <i class="bi bi-shield-exclamation"></i>
+    </button>
+  </div>
+</div>
