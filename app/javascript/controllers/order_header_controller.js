@@ -132,17 +132,24 @@ export default class extends Controller {
         }
       }
 
-      // Replace contents, but preserve a leading menu-name span if present
+      // Replace contents, but preserve a leading menu-name span and layout controls
       const container = this.element;
       const nameSpan = container.querySelector('.menu-name');
+      const layoutToggle = container.querySelector('.layout-toggle-group');
+      const allergenBtn = container.querySelector('[data-bs-target="#allergenModal"]');
+      
       container.innerHTML = '';
       if (nameSpan) {
-        // Recreate a simple name span to avoid moving nodes across controllers
         const ns = document.createElement('span');
         ns.className = 'menu-name';
         ns.textContent = nameSpan.textContent || '';
         container.appendChild(ns);
       }
+      
+      // Preserve layout toggle and allergen filter at start of button group
+      if (layoutToggle) btnGroup.insertBefore(layoutToggle.cloneNode(true), btnGroup.firstChild);
+      if (allergenBtn) btnGroup.appendChild(allergenBtn.cloneNode(true));
+      
       container.appendChild(btnGroup);
     } catch (e) {
       console.error('[order-header] render failed', e);
