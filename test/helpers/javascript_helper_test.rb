@@ -3,7 +3,7 @@
 require 'test_helper'
 
 class JavascriptHelperTest < ActionView::TestCase
-  include JavaScriptHelper
+  include JavascriptHelper
 
   def setup
     # Mock controller and action methods
