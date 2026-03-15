@@ -18,16 +18,23 @@ export default class extends Controller {
   static STORAGE_KEY = "smartmenu-layout"
 
   connect() {
+    console.log('[menu-layout] Controller connected');
+    console.log('[menu-layout] Container targets:', this.containerTargets.length);
+    console.log('[menu-layout] Card button targets:', this.cardBtnTargets.length);
+    console.log('[menu-layout] List button targets:', this.listBtnTargets.length);
+    
     const saved = localStorage.getItem("smartmenu-layout")
     // Default to list layout (mobile-first, Deliveroo/Uber Eats style)
     this.applyLayout(saved === "card" ? "card" : "list")
   }
 
   setCard() {
+    console.log('[menu-layout] setCard() called');
     this.applyLayout("card")
   }
 
   setList() {
+    console.log('[menu-layout] setList() called');
     this.applyLayout("list")
   }
 
