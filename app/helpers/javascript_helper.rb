@@ -31,7 +31,8 @@ module JavascriptHelper
     end
     
     if options[:tom_select_options]
-      existing_options = JSON.parse(attributes['data-tom-sele      existing_options = JSON.parse(attributesxisting_options.merge(options[:tom_select_options])
+      existing_options = JSON.parse(attributes['data-tom-select-options'] || '{}')
+      merged_options = existing_options.merge(options[:tom_select_options])
       attributes['data-tom-select-options'] = merged_options.to_json
     end
     
