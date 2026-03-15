@@ -199,6 +199,10 @@ body:has(.cart-bottom-sheet) {
   display: flex;
   align-items: center;
   gap: 8px;
+  margin-left: auto;
+  white-space: nowrap;
+  text-align: right;
+  flex-shrink: 0;
 }
 
 .cart-sheet__total {
