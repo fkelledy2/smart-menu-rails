@@ -28,7 +28,7 @@
        data-action="click->bottom-sheet#close"></div>
 
   <%# Drag Handle + Summary Bar (always visible in peek) %>
-  <div class="bottom-sheet__handle cart-sheet__peek-bar"
+  <div class="bottom-sheet__handle cart-sheet__peek-bar <%= 'cart-sheet__peek-bar--with-start-btn' unless order %>"
        data-bottom-sheet-target="handle"
        data-action="click->bottom-sheet#toggle">
     <div class="bottom-sheet__handle-bar"></div>
