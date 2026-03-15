@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module JavaScriptHelper
+module JavascriptHelper
   # Generate data attributes for select elements
   def select_data_attributes(type = :default, options = {})
     attributes = {
