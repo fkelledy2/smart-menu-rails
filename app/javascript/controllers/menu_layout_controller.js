@@ -26,6 +26,27 @@ export default class extends Controller {
     const saved = localStorage.getItem("smartmenu-layout")
     // Default to list layout (mobile-first, Deliveroo/Uber Eats style)
     this.applyLayout(saved === "card" ? "card" : "list")
+    
+    // Watch for menu sections being added to DOM (they're in cached fragment)
+    this.observer = new MutationObserver(() => {
+      const newCount = this.containerTargets.length;
+      if (newCount > 0 && this.lastContainerCount !== newCount) {
+        console.log('[menu-layout] New containers detected:', newCount);
+        this.lastContainerCount = newCount;
+        // Reapply layout to new containers
+        const currentMode = localStorage.getItem("smartmenu-layout") || "list";
+        this.applyLayout(currentMode);
+      }
+    });
+    
+    this.observer.observe(this.element, { childList: true, subtree: true });
+    this.lastContainerCount = 0;
+  }
+  
+  disconnect() {
+    if (this.observer) {
+      this.observer.disconnect();
+    }
   }
 
   setCard() {
