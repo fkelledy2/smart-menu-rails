@@ -83,3 +83,60 @@ module JavascriptHelper
     form_with model: model, **options.merge(data: merged_data), &block
   end
 end
+
+  # Determine which JavaScript modules should be loaded for the current page
+  def page_modules
+    modules = []
+    
+    case controller_name
+    when 'restaurants'
+      modules << 'restaurants'
+    when 'menus'
+      modules << 'menus' if action_name.in?(%w[index show edit new])
+    when 'menuitems'
+      modules << 'menuitems'
+    when 'menusections'
+      modules << 'menusections'
+    when 'employees'
+      modules << 'employees'
+    when 'ordrs'
+      modules << 'orders'
+    when 'inventories'
+      modules << 'inventories'
+    when 'tracks'
+      modules << 'tracks'
+    when 'smartmenus'
+      modules << 'smartmenus'
+    when 'onboarding'
+      modules << 'onboarding'
+    when 'metrics'
+      modules << 'analytics'
+    when 'payments'
+      modules << 'payments'
+    when 'plans', 'userplans'
+      modules << 'plans'
+    end
+    
+    if controller_path.start_with?('admin/')
+      modules << 'admin'
+      modules << 'analytics'
+    end
+    
+    if control    if control    if control    if control    iapi'
+    end
+    
+    if controller_path.start_with?('madmin/')
+      modules << 'admin'
+      modules << 'madmin'
+    end
+    
+    if controller_path.start_with?('users/')
+      modules << 'authentication'
+    end
+    
+    modules << 'analytics' if current_user&.admin?
+    modules << 'notifications' if user_signed_in?
+    
+    modules.uniq.join(',')
+  end
+end
