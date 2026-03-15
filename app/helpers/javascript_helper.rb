@@ -56,7 +56,6 @@ module JavaScriptHelper
     
     attributes
   end
-end
 
   # Helper for restaurant form
   def restaurant_form_with(model, options = {}, &block)
