@@ -57,3 +57,30 @@ module JavaScriptHelper
     attributes
   end
 end
+
+  # Helper for restaurant form
+  def restaurant_form_with(model, options = {}, &block)
+    form_options = {
+      auto_save: options.delete(:auto_save) || false,
+      validate: options.delete(:validate) || true
+    }
+    
+    attributes = form_data_attributes('restaurant', form_options)
+    merged_data = (options[:data] || {}).merge(attributes)
+    
+    form_with model: model, **options.merge(data: merged_data), &block
+  end
+
+  # Helper for menu form
+  def menu_form_with(model, options = {}, &block)
+    form_options = {
+      auto_save: options.delete(:auto_save) || false,
+      validate: options.delete(:validate) || true
+    }
+    
+    attributes = form_data_attributes('menu', form_options)
+    merged_data = (options[:data] || {}).merge(attributes)
+    
+    form_with model: model, **options.merge(data: merged_data), &block
+  end
+end
