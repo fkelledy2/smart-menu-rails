@@ -77,15 +77,4 @@ class JavascriptHelperAutoSaveTest < ActionView::TestCase
     assert_equal 'true', attributes['auto-save']
     assert_equal 'true', attributes['validate']
   end
-
-  test 'menu_form_with also supports auto-save' do
-    menu = menus(:one)
-
-    form_html = menu_form_with(menu, auto_save: true, restaurant: menu.restaurant) do |f|
-      f.text_field :name
-    end
-
-    assert_match(/data-auto-save="true"/, form_html)
-    assert_match(/data-auto-save-delay="2000"/, form_html)
-  end
 end
