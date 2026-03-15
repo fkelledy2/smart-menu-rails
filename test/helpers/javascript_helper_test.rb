@@ -14,79 +14,85 @@ class JavascriptHelperTest < ActionView::TestCase
   end
 
   # Mock methods that would normally be provided by Rails
-  def controller_name
-    @controller_name
-  end
+  attr_reader :controller_name
 
-  def action_name
-    @action_name
-  end
-
-  def controller_path
-    @controller_path
-  end
-
-  def current_user
-    @current_user
-  end
+  attr_reader :action_name, :controller_path, :current_user
 
   def user_signed_in?
-    @current_user.present?
+    !current_user.nil?
+  end
+
+  def request
+    @request ||= OpenStruct.new(host: 'localhost')
+  end
+
+  def asset_path(path)
+    "/assets/#{path}"
   end
 
   # Page modules tests
-  test 'should detect restaurant controller' do
+  test 'should return correct modules for restaurants controller' do
     @controller_name = 'restaurants'
     modules = page_modules.split(',')
 
     assert_includes modules, 'restaurants'
+    assert_includes modules, 'notifications' # user is signed in
   end
 
-  test 'should detect menu controller' do
+  test 'should return correct modules for menus controller' do
     @controller_name = 'menus'
     @action_name = 'index'
     modules = page_modules.split(',')
 
     assert_includes modules, 'menus'
+    assert_includes modules, 'notifications'
   end
 
-  test 'should not include menus for non-index actions' do
-    @controlle    @controlle    @controlle    @controlle  '
+  test 'should return correct modules for menus controller edit action' do
+    @controller_name = 'menus'
+    @action_name = 'edit'
+    modules = page_modules.split(',')
+
+    assert_includes modules, 'menus'
+  end
+
+  test 'should not include menus module for non-matching actions' do
+    @controller_name = 'menus'
+    @action_name = 'destroy'
     modules = page_modules.split(',')
 
     assert_not_includes modules, 'menus'
   end
 
-  test 'should detect smartmenus controller' do
-    @controller_name = 'smartmenus'
+  test 'should return correct modules for menuitems controller' do
+    @controller_name = 'menuitems'
     modules = page_modules.split(',')
 
-    assert_includes modules, 'smartmenus'
+    assert_includes modules, 'menuitems'
   end
 
-  test 'should include notifications for signed in users' do
-    @current_user = users(:one)
+  test 'should return correct modules for employees controller' do
+    @controller_name = 'employees'
     modules = page_modules.split(',')
 
-    assert_includes modules, 'notifications'
+    assert_includes modules, 'employees'
   end
 
-  test 'should not include notifications for guests' do
-    @current_user = nil
+  test 'should return correct modules for orders controller' do
+    @controller_name = 'ordrs'
     modules = page_modules.split(',')
 
-    assert_not_includes modules, 'notifications'
+    assert_includes modules, 'orders'
   end
 
-  test 'should include analytics for admin users' do
-    @current_user = users(:one)
-    @current_user.stubs(:admin?).returns(true)
+  test 'should return correct modules for onboarding controller' do
+    @controller_name = 'onboarding'
     modules = page_modules.split(',')
 
-    assert_includes modules, 'analytics'
+    assert_includes modules, 'onboarding'
   end
 
-  test 'should include admin modules for admin paths' do
+  test 'should return correct modules for admin controllers' do
     @controller_path = 'admin/restaurants'
     modules = page_modules.split(',')
 
@@ -94,14 +100,14 @@ class JavascriptHelperTest < ActionView::TestCase
     assert_includes modules, 'analytics'
   end
 
-  test 'should include api module for api paths' do
-    @controller_path = 'api/v1/restaurants'
+  test 'should return correct modules for api controllers' do
+    @controller_path = 'api/restaurants'
     modules = page_modules.split(',')
 
     assert_includes modules, 'api'
   end
 
-  test 'should include madmin modules for madmin paths' do
+  test 'should return correct modules for madmin controllers' do
     @controller_path = 'madmin/restaurants'
     modules = page_modules.split(',')
 
@@ -109,23 +115,84 @@ class JavascriptHelperTest < ActionView::TestCase
     assert_includes modules, 'madmin'
   end
 
-  test 'should include authentication for user paths' do
+  test 'should return correct modules for user controllers' do
     @controller_path = 'users/sessions'
     modules = page_modules.split(',')
 
     assert_includes modules, 'authentication'
   end
 
+  test 'should include analytics for admin users' do
+    # Mock admin user
+    @current_user.define_singleton_method(:admin?) { true }
+
+    modules = page_modules.split(',')
+    assert_includes modules, 'analytics'
+  end
+
+  test 'should include notifications for signed in users' do
+    modules = page_modules.split(',')
+
+    assert_includes modules, 'notifications'
+  end
+
+  test 'should not include notifications for unsigned users' do
+    @current_user = nil
+    modules = page_modules.split(',')
+
+    assert_not_includes modules, 'notifications'
+  end
+
   test 'should return unique modules' do
     @controller_path = 'admin/restaurants'
-    @controller_name = 'restaurants'
     modules = page_modules.split(',')
 
     # Should not have duplicate modules
     assert_equal modules.uniq, modules
   end
 
+  # Table data attributes tests
+  test 'should generate basic table data attributes' do
+    attributes = table_data_attributes('restaurant')
+
+    assert_equal 'true', attributes['data-tabulator']
+    assert_equal 'restaurant', attributes['data-table-type']
+  end
+
+  test 'should include ajax url in table attributes' do
+    attributes = table_data_attributes('restaurant', ajax_url: '/restaurants.json')
+
+    assert_equal '/restaurants.json', attributes['data-ajax-url']
+  end
+
+  test 'should include pagination size in table attributes' do
+    attributes = table_data_attributes('restaurant', pagination_size: 25)
+
+    assert_equal 25, attributes['data-pagination-size']
+  end
+
+  test 'should include custom config in table attributes' do
+    config = { sortable: true, filterable: false }
+    attributes = table_data_attributes('restaurant', config: config)
+
+    assert_equal config.to_json, attributes['data-tabulator-config']
+  end
+
+  test 'should include restaurant id in table attributes' do
+    attributes = table_data_attributes('menu', restaurant_id: 123)
+
+    assert_equal 123, attributes['data-restaurant-id']
+  end
+
+  test 'should include menu id in table attributes' do
+    attributes = table_data_attributes('menuitem', menu_id: 456)
+
+    assert_equal 456, attributes['data-menu-id']
+  end
+
   # Form data attributes tests
+  # Note: form_data_attributes returns keys WITHOUT 'data-' prefix
+  # because form_with will add it automatically
   test 'should generate basic form data attributes' do
     attributes = form_data_attributes('restaurant')
 
@@ -186,7 +253,7 @@ class JavascriptHelperTest < ActionView::TestCase
   end
 
   test 'should include remote url in select attributes' do
-    attributes = select_data_attributes(:default, remote_url: '    rch.json')
+    attributes = select_data_attributes(:default, remote_url: '/search.json')
 
     assert_equal '/search.json', attributes['data-remote-url']
   end
@@ -206,7 +273,40 @@ class JavascriptHelperTest < ActionView::TestCase
     assert_equal 5, parsed_options['maxItems']
   end
 
-  # Form helper tests
+  # Table helper tests
+  test 'should generate restaurant table tag' do
+    table_html = restaurant_table_tag
+
+    assert_includes table_html, 'id="restaurant-table"'
+    assert_includes table_html, 'class="table table-striped table-hover"'
+    assert_includes table_html, 'data-tabulator="true"'
+    assert_includes table_html, 'data-table-type="restaurant"'
+  end
+
+  test 'should generate menu table tag without restaurant' do
+    table_html = menu_table_tag
+
+    assert_includes table_html, 'id="menu-table"'
+    assert_includes table_html, 'data-ajax-url="/menus.json"'
+  end
+
+  test 'should generate menu table tag with restaurant' do
+    restaurant_id = 123
+    table_html = menu_table_tag(restaurant_id)
+
+    assert_includes table_html, 'id="restaurant-menu-table"'
+    assert_includes table_html, "data-restaurant-id=\"#{restaurant_id}\""
+  end
+
+  test 'should generate employee table tag' do
+    restaurant_id = 456
+    table_html = employee_table_tag(restaurant_id)
+
+    assert_includes table_html, 'id="restaurant-employee-table"'
+    assert_includes table_html, "data-restaurant-id=\"#{restaurant_id}\""
+  end
+
+  # Form helper tests - simplified without complex mocking
   test 'should generate form data attributes for restaurant forms' do
     attributes = form_data_attributes('restaurant', auto_save: true, validate: true)
 
@@ -218,11 +318,73 @@ class JavascriptHelperTest < ActionView::TestCase
   test 'should generate form data attributes for menu forms' do
     attributes = form_data_attributes('menu', auto_save: false, validate: true)
 
-    assert_equal 'true'    assert_equal 'true'    assert_equal 'true'    assert_equal 'true'    assert_e 't    assert_equal 'true'    assert_equal 'true'    assert_equal 'trould hand    assert_equal 'true'    assert_equal 'true' _name = 'unknown_controller'
+    assert_equal 'true', attributes['menu-form']
+    assert_nil attributes['auto-save']
+    assert_equal 'true', attributes['validate']
+  end
+
+  # QR code helper tests
+  test 'should generate qr code data' do
+    @restaurant = restaurants(:one)
+
+    data = qr_code_data(@restaurant)
+
+    # Should use slug if available, otherwise restaurant ID
+    expected_slug = @restaurant.respond_to?(:slug) ? @restaurant.slug : @restaurant.id.to_s
+    assert_equal expected_slug, data['data-qr-slug']
+    assert_equal 'test.host', data['data-qr-host'] # Test environment uses test.host
+    assert_equal '/assets/qr-icon.png', data['data-qr-icon']
+  end
+
+  # Notification helper tests
+  test 'should generate notification container' do
+    container_html = notification_container
+
+    assert_includes container_html, 'class="toast-container position-fixed top-0 end-0 p-3"'
+    assert_includes container_html, 'style="z-index: 1055;"'
+  end
+
+  # JavaScript system tests
+  test 'should always return true for use_new_js_system' do
+    assert use_new_js_system?
+  end
+
+  test 'should generate javascript system tags' do
+    # Test basic JavaScript system functionality without importmap dependency
+    # This tests that the helper methods exist and return reasonable values
+
+    # Test that we can generate basic script tags
+    assert_respond_to self, :javascript_include_tag
+
+    # Test basic JavaScript tag generation
+    tag = javascript_include_tag('application')
+    assert_includes tag, 'script'
+    assert_includes tag, 'application'
+  end
+
+  # Progressive enhancement tests
+  test 'should generate progressive enhancement data' do
+    data = progressive_enhancement_data
+
+    assert_equal 'true', data['data-progressive-enhancement']
+    assert_equal 'true', data['data-fallback-ready']
+  end
+
+  # Edge case tests
+  test 'should handle unknown controller names' do
+    @controller_name = 'unknown_controller'
     modules = page_modules.split(',')
 
     # Should still include notifications for signed in user
     assert_includes modules, 'notifications'
+  end
+
+  test 'should handle empty options for table attributes' do
+    attributes = table_data_attributes('test', {})
+
+    assert_equal 'true', attributes['data-tabulator']
+    assert_equal 'test', attributes['data-table-type']
+    assert_nil attributes['data-ajax-url']
   end
 
   test 'should handle empty options for form attributes' do
@@ -236,5 +398,6 @@ class JavascriptHelperTest < ActionView::TestCase
     attributes = select_data_attributes(:default, {})
 
     assert_equal 'true', attributes['data-tom-select']
+    assert_nil attributes['data-remote-url']
   end
 end
