@@ -1,3 +1,5 @@
+<div class="row">
+    <div class="col-6">
 <span class="menu-name">
   <% if ordrparticipant && ordrparticipant.preferredlocale %>
     <%= menu.localised_name(ordrparticipant.preferredlocale) %>
@@ -5,7 +7,8 @@
     <%= menu.name %>
   <% end %>
 </span>
-
+    </div>
+    <div class="col-6">
 <div class="order-button-group">
   <div class="layout-toggle-group" role="group">
     <button type="button" class="layout-toggle-btn active" data-action="click->menu-layout#setCard" data-menu-layout-target="cardBtn">
@@ -19,3 +22,6 @@
     </button>
   </div>
 </div>
+    </div>
+</div>
+
