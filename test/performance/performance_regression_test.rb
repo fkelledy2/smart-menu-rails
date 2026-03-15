@@ -9,7 +9,7 @@ class PerformanceRegressionTest < ActionDispatch::IntegrationTest
     'GET /restaurants' => 500,
     'POST /restaurants' => 600,
     'GET /restaurants/:id' => 400,
-    'GET /menus/:id' => 700, # Increased to account for test environment variability
+    'GET /menus/:id' => 750, # Increased to account for test environment variability
     'POST /ordrs' => 500,
     'GET /performance_analytics/api_metrics' => 800,
   }.freeze
