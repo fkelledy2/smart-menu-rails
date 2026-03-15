@@ -113,7 +113,9 @@ body:has(.cart-bottom-sheet) {
 }
 
 .cart-sheet__peek-bar {
+  position: relative;
   padding: 8px 16px 12px;
+  padding-right: 140px;
 
   .bottom-sheet__handle-bar {
     margin-bottom: 8px;
@@ -130,27 +132,30 @@ body:has(.cart-bottom-sheet) {
 // Start Order button shown in peek bar when no active order
 // Matches btn-touch-primary btn-touch-sm sizing
 .cart-sheet__start-order-btn {
-  margin-left: auto; // push to right
-  min-height: 36px;
-  min-width: 36px;
-  padding: 8px 16px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 72px;
+  min-width: 120px;
+  padding: 0 20px;
+  margin: 0;
   border: none;
-  border-radius: 10px;
+  border-radius: 0 var(--radius-xl, 1rem) 0 0;
   background: #dc2626;
   color: #fff;
-  font-size: 0.8125rem;
+  font-size: 0.9375rem;
   font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 8px;
   cursor: pointer;
   white-space: nowrap;
   transition: background 0.15s ease;
-  -webkit-tap-highlight-color: transparent;
-  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3);
+  box-shadow: -2px 0 8px rgba(220, 38, 38, 0.3);
+  z-index: 10;
 
-  i { font-size: 0.9375rem; }
+  i { font-size: 1.125rem; }
 
   &:hover { background: #b91c1c; }
   &:active { background: #991b1b; transform: scale(0.98); }
