@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class JavascriptHelperAutoSaveTest < ActionView::TestCase
-  include JavascriptHelper
+  include JavaScriptHelper
 
   setup do
     @restaurant = restaurants(:one)
