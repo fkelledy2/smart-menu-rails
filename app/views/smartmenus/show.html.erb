@@ -1,6 +1,5 @@
-<%= render 'shared/currency' %>
-
 <div data-controller="menu-layout menu-search">
+<%= render 'shared/currency' %>
 <%# Optional debug output for allergen query/results: ?debug=allergyns (development only) %>
 <% if Rails.env.development? && params[:debug] == 'allergyns' && defined?(@debug_allergyns_info) && @debug_allergyns_info.present? %>
   <div class="container my-2">
