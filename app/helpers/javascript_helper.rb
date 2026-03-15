@@ -31,8 +31,7 @@ module JavascriptHelper
     end
     
     if options[:tom_select_options]
-      existing_options = JSON.parse(attributes['data-tom-select-options'] || '{}')
-      merged_options = existing_options.merge(options[:tom_select_options])
+      existing_options = JSON.parse(attributes['data-tom-sele      existing_options = JSON.parse(attributesxisting_options.merge(options[:tom_select_options])
       attributes['data-tom-select-options'] = merged_options.to_json
     end
     
@@ -82,7 +81,6 @@ module JavascriptHelper
     
     form_with model: model, **options.merge(data: merged_data), &block
   end
-end
 
   # Determine which JavaScript modules should be loaded for the current page
   def page_modules
@@ -122,7 +120,8 @@ end
       modules << 'analytics'
     end
     
-    if control    if control    if control    if control    iapi'
+    if controller_path.start_with?('api/')
+      modules << 'api'
     end
     
     if controller_path.start_with?('madmin/')
