@@ -44,7 +44,6 @@
   </div>
 
   <!-- Order Controls -->
-  <!-- Order Controls -->
   <div class="header-order-row" id="openOrderContainer" data-controller="order-header" data-order-header-customer-value="true" style="visibility:hidden">
     <% if @openOrder %>
       <%= render partial: "orderCustomer", locals: { order: @openOrder, menu: @openOrder.menu, restaurant: @restaurant, tablesetting: @tablesetting, ordrparticipant: @ordrparticipant } %>
