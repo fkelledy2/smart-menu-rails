@@ -97,10 +97,6 @@ class OcrMenuImportPolisherJob
       end
     end
 
-    # Estimate prep times for all items in the import
-    set_progress('running', total, total, import.id, message: 'Estimating prep times...')
-    menu_ids = import.ocr_menu_items.pluck(:menu_id).uniq
-    menu_ids.each { |menu_id| EstimatePrepTimesJob.new.perform(menu_id) if menu_id.present? }
 
     set_progress('completed', total, total, import.id)
   rescue StandardError => e
