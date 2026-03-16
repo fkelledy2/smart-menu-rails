@@ -11,7 +11,7 @@
 
 import * as esbuild from "esbuild"
 import path from "path"
-import rails from "esbuild-rails"
+// import rails from "esbuild-rails" // Removed - causes externalization
 import chokidar from "chokidar"
 import http from "http"
 import { setTimeout } from "timers/promises"
@@ -32,7 +32,7 @@ const config = {
   entryPoints: entryPoints,
   minify: process.env.RAILS_ENV == "production",
   outdir: path.join(process.cwd(), "app/assets/builds"),
-  plugins: [rails()],
+  plugins: [],
   sourcemap: process.env.RAILS_ENV != "production"
 }
 
