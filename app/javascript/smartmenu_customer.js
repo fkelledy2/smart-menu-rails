@@ -17,14 +17,16 @@ Promise.all([
   import('./controllers/menu_search_controller'),
   import('./controllers/state_controller'),
   import('./controllers/order_header_controller'),
-  import('./controllers/scrollspy_controller')
-]).then(([bs, ml, ms, st, oh, sp]) => {
+  import('./controllers/scrollspy_controller'),
+  import('./controllers/theme_toggle_controller')
+]).then(([bs, ml, ms, st, oh, sp, tt]) => {
   app.register('bottom-sheet', bs.default);
   app.register('menu-layout', ml.default);
   app.register('menu-search', ms.default);
   app.register('state', st.default);
   app.register('order-header', oh.default);
   app.register('scrollspy', sp.default);
+  app.register('theme-toggle', tt.default);
   initOrderBindings();
   console.log('[Customer] Ready');
 });
