@@ -16,7 +16,7 @@
           <span class="badge <%= badge_class %>"><%= @local_guide.status.titleize %></span>
         </div>
         <div class="card-body">
-          <%= @local_guide.content.html_safe %>
+          <%= sanitize @local_guide.content %>
         </div>
       </div>
 

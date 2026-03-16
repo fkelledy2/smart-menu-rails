@@ -112,7 +112,7 @@ class OrdrPaymentsController < ApplicationController
   def split_plan
     return unless authorize_split_access!
 
-    if request.get?
+    if request.get? || request.head?
       plan = @ordr.ordr_split_plan
       render json: { ok: true, order_id: @ordr.id, split_plan: plan ? split_plan_payload(plan)[:split_plan] : nil }, status: :ok
       return

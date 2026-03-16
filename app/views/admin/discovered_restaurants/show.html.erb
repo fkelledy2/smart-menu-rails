@@ -125,10 +125,10 @@ end %>
               <span class="text-muted">(last: <%= Time.parse(place_fetched_at).strftime('%b %d %H:%M') rescue place_fetched_at %>)</span>
             <% end %>
           </span>
-          <% if @discovered_restaurant.website_url.present? %>
+          <% if sanitize_url(@discovered_restaurant.website_url).present? %>
             <span>
               <i class="bi bi-globe"></i>
-              <%= link_to 'Website', @discovered_restaurant.website_url, target: '_blank', rel: 'noopener', class: 'text-decoration-none' %>
+              <%= link_to 'Website', sanitize_url(@discovered_restaurant.website_url), target: '_blank', rel: 'noopener', class: 'text-decoration-none' %>
               <%= link_to deep_dive_website_admin_discovered_restaurant_path(@discovered_restaurant),
                     class: 'text-decoration-none ms-1', title: 'Enrich from website',
                     data: { turbo: true, turbo_method: :post } do %>
@@ -356,7 +356,7 @@ end %>
                 <% if ms.latest_file.attached? %>
                   <%= link_to ms.latest_file.filename.to_s, rails_blob_path(ms.latest_file, disposition: 'attachment') %>
                 <% elsif ms.source_url.present? %>
-                  <%= link_to truncate(ms.source_url, length: 60), ms.source_url, target: '_blank', rel: 'noopener' %>
+                  <%= link_to truncate(ms.source_url, length: 60), sanitize_url(ms.source_url), target: '_blank', rel: 'noopener' %>
                 <% else %>
                   <span class="text-muted">—</span>
                 <% end %>

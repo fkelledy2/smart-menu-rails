@@ -97,7 +97,6 @@ class OcrMenuImportPolisherJob
       end
     end
 
-
     set_progress('completed', total, total, import.id)
   rescue StandardError => e
     Rails.logger.error("[OcrMenuImportPolisherJob] Error polishing import ##{ocr_menu_import_id}: #{e.class}: #{e.message}")
