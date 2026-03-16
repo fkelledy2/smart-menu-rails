@@ -966,4 +966,84 @@ export function initOrderBindings() {
   // Removed legacy bubbling confirm-order handler; capture-phase handler above owns it
 
   // Removed legacy bubbling request-bill handler; capture-phase handler above owns it
+
+  // Add Item modal bindings
+  (function bindAddItemModal() {
+    const modal = document.getElementById('addItemToOrderModal');
+    if (!modal || modal.__addItemBound) return;
+    modal.__addItemBound = true;
+    
+    modal.addEventListener('show.bs.modal', (event) => {
+      const button = event.relatedTarget;
+      if (!button) return;
+      
+      const getAttr = (name) => button.getAttribute(name);
+      const priceAttr = getAttr('data-bs-menuitem_price');
+      
+      $('#a2o_ordr_id').text(getAttr('data-bs-ordr_id') || (window.__SM_STATE?.order?.id || ''));
+      $('#a2o_menuitem_id').text(getAttr('data-bs-menuitem_id'));
+      $('#a2o_menuitem_name').text(getAttr('data-bs-menuitem_name'));
+      
+      if (priceAttr) {
+        const unitPrice = parseFloat(priceAttr).toFixed(2);
+        $('#a2o_menuitem_price').text(unitPrice).attr('data-unit-price', unitPrice);
+      }
+      
+      $('#a2o_menuitem_description').text(getAttr('data-bs-menuitem_description'));
+                         meEl = document.getElementById('a2o_size_name');
+      if (sizeNameEl) sizeNameEl.textContent = getAttr('data-bs-menuitem_size_name') || '';
+      
+      const imageElement = modal.querySelector('#a2o_menuitem_image');
+      if (imageElement) {
+        imageElement.src = getAttr('data-bs-menuitem_image');
+        imageElement.alt = getAttr('data-bs-menuitem_name');
+      }
+      
+      const noteField = modal.querySelector('#a2o_item_note');
+      if (noteField) noteField.value = '';
+    });
+  })();
+
+  (function bindAddItemConfirm() {
+    if (window.__addItemConfirmBound) return;
+    window.__addItemConfirmBound = true;
+    
+    document.addEventListener('click', (evt) => {
+      const btn = evt.target.closest('#add-item-to-order-confirm');
+      if (!btn) return;
+      
+      evt.preventDefault();
+      const modal = document.getElementById('addItemToOrderModal');
+      
+      const ordrId = $('#a2o_ordr_id').text();
+      const menuitemId = $('#a2o_menuitem_id').text();
+      const qty = parseInt($('#a2o_qty_display').text() || '1', 10);
+      const note = $('#a2o_item_note').val();
+      const sizeName = $('#a2o_size_name').text();
+      
+      const payload = {
+        ordritem: {
+          ordr_id: ordrId,
+          menuitem_id: menuitemId,
+          quantity: qty,
+          status: 0
+        }
+      };
+      
+      if (note) payload.ordritem.notes = [note];
+      if (sizeName) payload.ordritem.size_name = sizeName;
+      
+      post('/ordritems', payload)
+        .then(() => {
+          window.closingAddItemModal = true;
+          const modalInst = window.bootstrap.Modal.getInstance(modal);
+          if (modalInst) modalInst.hide();
+          setTimeout(() => { window.closingAddItemModal = false; }, 500);
+        })
+        .catch((error) => {
+          console.error('Error adding item:', error);
+          window.closingAddItemModal = false;
+        });
+    }, true);
+  })();
 }
