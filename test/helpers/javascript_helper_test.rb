@@ -232,7 +232,6 @@ class JavascriptHelperTest < ActionView::TestCase
     assert_includes modules, 'notifications'
   end
 
-
   test 'should handle empty options for form attributes' do
     attributes = form_data_attributes('test', {})
 
