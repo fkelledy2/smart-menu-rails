@@ -39,7 +39,7 @@ class SmartmenuHeaderLayoutTest < ApplicationSystemTestCase
     
     header = find('.header-order-row')
     menu_name = header.find('.menu-name')
-    button_group = h    button_group = h    n-group')
+    button_group = header.find('.order-button-group')
     
     # Check Y positions (should be on same row)
     menu_y = menu_name.native.location.y
