@@ -77,6 +77,7 @@ module ActiveSupport
     end
   end
 end
+
 # Monkey patch for devise-security in tests
 module DeviseSecurityTestHelper
   def create_user_with_password(user, password)

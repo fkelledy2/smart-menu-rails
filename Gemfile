@@ -176,7 +176,7 @@ gem 'erb_lint', '~> 0.9.0', groups: %i[development test]
 gem 'sassc-rails', '~> 2.1'
 
 # Security enhancements
-gem 'devise-security', '~> 0.18'
 gem 'active_storage_validations', '~> 1.3'
-gem 'secure_headers', '~> 6.7'
+gem 'devise-security', '~> 0.18'
 gem 'invisible_captcha', '~> 2.3'
+gem 'secure_headers', '~> 6.7'
