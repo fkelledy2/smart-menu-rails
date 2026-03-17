@@ -36,7 +36,7 @@ class Ingredient < ApplicationRecord
   end
 
   # Check if this is a restaurant-specific override
-  def is_override?
+  def override?
     parent_ingredient_id.present?
   end
 
