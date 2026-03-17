@@ -11,6 +11,10 @@ class OcrMenuImport < ApplicationRecord
   has_many :ocr_menu_items, through: :ocr_menu_sections
   has_one_attached :pdf_file
 
+  # Active Storage validations
+  validates :pdf_file, content_type: ['application/pdf'],
+                       size: { less_than: 50.megabytes, message: 'must be less than 50MB' }
+
   # IdentityCache configuration (minimal to support Restaurant.cache_has_many :ocr_menu_imports)
   cache_index :id
   cache_belongs_to :restaurant

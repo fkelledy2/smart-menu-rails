@@ -2295,6 +2295,38 @@ ALTER SEQUENCE public.ocr_menu_sections_id_seq OWNED BY public.ocr_menu_sections
 
 
 --
+-- Name: old_passwords; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.old_passwords (
+    id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    encrypted_password character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: old_passwords_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.old_passwords_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: old_passwords_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.old_passwords_id_seq OWNED BY public.old_passwords.id;
+
+
+--
 -- Name: onboarding_sessions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3978,7 +4010,14 @@ CREATE TABLE public.users (
     super_admin boolean DEFAULT false NOT NULL,
     failed_attempts integer DEFAULT 0 NOT NULL,
     unlock_token character varying,
-    locked_at timestamp(6) without time zone
+    locked_at timestamp(6) without time zone,
+    password_changed_at timestamp(6) without time zone,
+    encrypted_password_salt character varying,
+    encrypted_password_iv character varying,
+    session_limitable integer,
+    unique_session_id character varying,
+    last_activity_at timestamp(6) without time zone,
+    expired_at timestamp(6) without time zone
 );
 
 
@@ -4815,6 +4854,13 @@ ALTER TABLE ONLY public.ocr_menu_sections ALTER COLUMN id SET DEFAULT nextval('p
 
 
 --
+-- Name: old_passwords id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.old_passwords ALTER COLUMN id SET DEFAULT nextval('public.old_passwords_id_seq'::regclass);
+
+
+--
 -- Name: onboarding_sessions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -5630,6 +5676,14 @@ ALTER TABLE ONLY public.ocr_menu_items
 
 ALTER TABLE ONLY public.ocr_menu_sections
     ADD CONSTRAINT ocr_menu_sections_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: old_passwords old_passwords_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.old_passwords
+    ADD CONSTRAINT old_passwords_pkey PRIMARY KEY (id);
 
 
 --
@@ -7527,6 +7581,13 @@ CREATE INDEX index_ocr_menu_sections_on_ocr_menu_import_id ON public.ocr_menu_se
 --
 
 CREATE INDEX index_ocr_menu_sections_on_sequence ON public.ocr_menu_sections USING btree (sequence);
+
+
+--
+-- Name: index_old_passwords_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_old_passwords_on_user_id ON public.old_passwords USING btree (user_id);
 
 
 --
@@ -9663,6 +9724,14 @@ ALTER TABLE ONLY public.restaurants
 
 
 --
+-- Name: old_passwords fk_rails_b03aadf864; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.old_passwords
+    ADD CONSTRAINT fk_rails_b03aadf864 FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
 -- Name: pay_charges fk_rails_b19d32f835; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -10053,6 +10122,9 @@ ALTER TABLE ONLY public.voice_commands
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260316232500'),
+('20260316231830'),
+('20260316231707'),
 ('20260309184831'),
 ('20260308084502'),
 ('20260308084501'),

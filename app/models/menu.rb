@@ -22,6 +22,10 @@ class Menu < ApplicationRecord
   has_many :whiskey_flights, dependent: :destroy
   has_one_attached :pdf_menu_scan
 
+  # Active Storage validations
+  validates :pdf_menu_scan, content_type: ['application/pdf'],
+                            size: { less_than: 10.megabytes, message: 'must be less than 10MB' }
+
   # Validations
   validate :pdf_menu_scan_format
 

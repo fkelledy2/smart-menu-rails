@@ -3,9 +3,16 @@ class User < ApplicationRecord
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :registerable, :recoverable, :rememberable, :validatable, :lockable, :timeoutable, :omniauthable, omniauth_providers: %i[google_oauth2 apple]
+  devise :database_authenticatable, :registerable, :recoverable, :rememberable, 
+         :validatable, :lockable, :timeoutable, :omniauthable,
+         :password_expirable, :session_limitable,
+         omniauth_providers: %i[google_oauth2 apple]
 
   has_one_attached :avatar
+
+  # Active Storage validations
+  validates :avatar, content_type: ['image/png', 'image/jpg', 'image/jpeg', 'image/gif', 'image/webp'],
+                     size: { less_than: 5.megabytes, message: 'must be less than 5MB' }
   has_person_name
 
   has_many :notifications, as: :recipient, dependent: :destroy, class_name: 'Noticed::Notification'
@@ -14,6 +21,7 @@ class User < ApplicationRecord
   has_many :userplans, dependent: :destroy
   has_many :testimonials, dependent: :destroy
   has_many :employees, -> { reorder(sequence: :asc, id: :asc) }, dependent: :destroy, counter_cache: :employees_count
+  has_many :old_passwords, dependent: :destroy
   has_many :push_subscriptions, dependent: :destroy
 
   belongs_to :plan, optional: true

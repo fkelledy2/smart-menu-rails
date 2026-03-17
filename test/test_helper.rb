@@ -77,3 +77,17 @@ module ActiveSupport
     end
   end
 end
+# Monkey patch for devise-security in tests
+module DeviseSecurityTestHelper
+  def create_user_with_password(user, password)
+    user.password = password
+    user.password_confirmation = password
+    user.skip_password_archivable_validation = true if user.respond_to?(:skip_password_archivable_validation=)
+    user.save(validate: false)
+    user
+  end
+end
+
+class ActiveSupport::TestCase
+  include DeviseSecurityTestHelper
+end

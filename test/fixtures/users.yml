@@ -8,6 +8,7 @@ one:
   first_name: Test
   last_name: User One
   plan: one
+  password_changed_at: <%= 30.days.ago %>
 
 two:
   email: test2@gmail.com
@@ -15,6 +16,7 @@ two:
   first_name: Test
   last_name: User Two
   plan: two
+  password_changed_at: <%= 30.days.ago %>
 
 admin:
   email: admin@gmail.com
@@ -22,8 +24,10 @@ admin:
   first_name: Admin
   last_name: User
   admin: true
+  password_changed_at: <%= 30.days.ago %>
   super_admin: false
   plan: one
+  password_changed_at: <%= 30.days.ago %>
 
 super_admin:
   email: admin@mellow.menu
@@ -31,5 +35,11 @@ super_admin:
   first_name: Super
   last_name: Admin
   admin: true
+  password_changed_at: <%= 30.days.ago %>
   super_admin: true
+  password_changed_at: <%= 30.days.ago %>
+  password_changed_at: <%= 30.days.ago %>
   plan: one
+  password_changed_at: <%= 30.days.ago %>
+# Add password_changed_at to prevent password expiry in tests
+<% User.column_names.include?('password_changed_at') ? '' : '' %>

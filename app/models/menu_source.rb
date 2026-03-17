@@ -16,6 +16,10 @@ class MenuSource < ApplicationRecord
   belongs_to :discovered_restaurant, optional: true
 
   has_one_attached :latest_file
+
+  # Active Storage validations
+  validates :latest_file, content_type: ['application/pdf', 'text/html', 'application/xhtml+xml'],
+                          size: { less_than: 50.megabytes, message: 'must be less than 50MB' }
   has_many :menu_source_change_reviews, dependent: :destroy
 
   def display_name
