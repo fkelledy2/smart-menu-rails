@@ -1,0 +1,119 @@
+<div class="page-header">
+  <div class="row">
+    <div class="col-6">
+      <h4>Inventory & Profit Alerts - <%= @restaurant.name %></h4>
+    </div>
+    <div class="col-6 text-end">
+      <%= link_to 'Dashboard', restaurant_profit_margins_path(@restaurant), class: 'btn btn-secondary' %>
+    </div>
+  </div>
+</div>
+
+<!-- Alert Summary -->
+<div class="row mb-4">
+  <div class="col-md-4">
+    <div class="card border-warning">
+      <div class="card-body text-center">
+        <h6 class="text-muted">High-Margin Low-Stock</h6>
+        <h2 class="text-warning"><%= @high_margin_low_stock.count %></h2>
+        <small class="text-muted">items need attention</small>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card border-danger">
+      <div class="card-body text-center">
+        <h6 class="text-muted">Out of Stock (Profitable)</h6>
+        <h2 class="text-danger"><%= @out_of_stock.count %></h2>
+        <small class="text-muted">lost opportunities</small>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card border    <div class="cariv cl    <div class="card border    <div class="cariv cl    <div cltenti   Impact</    <div class="card border    ce    <div class="card border    <div class="cariv cl    <div class="card border    <div class="cariv cll>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- High-Margin Low-Stock Items -->
+<div class="card mb-4">
+  <div class="card-header bg-warning">
+    <h5 class="mb-0">High-Margin Items with Low Stock</h5>
+  </div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Priority</th>
+            <th>Item</th>
+            <th>Margin %</th>
+            <th>Profit/Unit</th>
+            <th>Stock Level</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @high_margin_low_stock.each do |item| %>
+            <tr>
+              <td>
+                <% if item[:priority] > 80 %>
+                  <span class="badge bg-danger">High</span>
+                <% elsif item[:priority] > 50 %>
+                  <span class="badge bg-warning">Medium</span>
+                <% else %>
+                  <span class="badge bg-info">Low</span>
+                <% end %>
+              </td>
+              <td><%= item[:menuitem].localised_name('en') %></td>
+              <td><strong class="text-success"><%= number_to_percentage(item[:margin_percentage], precision: 1) %></strong></td>
+              <td><%= number_to_currency(item[:profit_per_unit]) %></td>
+              <td>
+                <div class="progress" style="height: 20px;">
+                  <div class="progress-bar bg-warning" role="progressbar" style="width: <%= item[:stock_level] %>%">
+                    <%= item[:stock_level] %>%
+                  </div>                 </div>
+                                                                             %>
+                <% when 'out_of_stock' %>
+                  <span class="badge bg-danger">Out of Stock</span>
+                <% when 'low_stock' %>
+                  <span class="badge bg-warning">Low Stock</span>
+                <% when 'medium_stock' %>
+                  <span class="badge bg-info">Medium</span>
+                <% else %>
+                  <span class="badge bg-success">In Stock</span>
+                <% end %>
+              </td>
+              <td>
+                <button class="btn btn-sm btn-primary">Reorder</button>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Re<!-- Re<!-- Re<!-- Re<!-- Re<!-- Re<!-- Re<!-- Re<!-- Re<rd-h<!-- Re<!-- Re<!-- Re<!-- Re<!-- Re<!-- Re<!-- Re<!-- Re<!-- Re<rd-h<!-- Re<!-- Re<!-- Re<!-- Re<!-- Re<!-- Re<!   <div class="table-responsive">
+      <table class="table table-hover">
+        <thead>
+                                                                                                                                                                                                   tr>
+                                           <% @reorder_suggestions.each do |suggestion| %>
+            <tr>
+              <td><%= suggestion[:menuit              <td><%= suggestion[:menuit              <tng><              <td><%=ted_qu              <td><%= suggestion[:menuit              <td><%=succ              <td><%= rency(suggestion[:estimated_profit_impact]) %></td>
+              <td>
+                <% case suggestion[:urgency] %>
+                <% when 'high' %>
+                  <span class="badge bg-danger">High</span>
+                <% w                <% w                <% w                <% w                <% w                <% w                <% w                <% w                <% w                <% w                <% w                              <% w               on cl          tn-sm btn-success">Create Order</button>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

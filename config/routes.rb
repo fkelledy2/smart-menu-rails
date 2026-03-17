@@ -317,6 +317,8 @@ Rails.application.routes.draw do
     resources :profit_margin_targets, only: [:index, :new, :create, :edit, :update, :destroy]
     get 'profit_margins', to: 'profit_margins#index'
     get 'profit_margins/report', to: 'profit_margins#report'
+    get 'profit_margins/order_analytics', to: 'profit_margins#order_analytics'
+    get 'profit_margins/inventory_alerts', to: 'profit_margins#inventory_alerts'
     
     # Staff invitations
     resources :staff_invitations, only: [:create]

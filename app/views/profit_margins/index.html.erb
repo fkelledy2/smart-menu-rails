@@ -1,0 +1,220 @@
+<div class="page-header">
+  <div class="row">
+    <div class="col-6">
+      <h4>Profit Margin Dashboard - <%= @restaurant.name %></h4>
+    </div>
+    <div class="col-6 text-end">
+      <%= link_to 'Detailed Report', restaurant_profit_margins_report_path(@restaurant), class: 'btn btn-primary' %>
+      <%= link_to 'Order Analytics', restaurant_profit_margins_order_analytics_path(@restaurant), class: 'btn btn-outline-primary' %>
+    </div>
+  </div>
+</div>
+
+<!-- Summary Cards -->
+<div class="row mb-4">
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-body text-center">
+        <h6 class="text-muted">Total Items</h6>
+        <h2><%= @stats[:total_items] %></h2>
+        <small class="text-muted">with cost data</small>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-body text-center">
+        <h6 class="text-muted">Avg Margin</h6>
+        <h2><%= number_to_percentage(@stats[:average_ma        <h2><%= number_to_percentage(@stats[:average_l class="text-muted">across all items</small>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-body text-center">
+        <h6 class="text-muted">Potential Profit</h6>
+        <h2><%= number_to_currency(@stats[:total_potential_profit]) %></h2>
+        <small class="text-muted">per item sold</small>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-body text-center">
+        <h6 class="text-muted">Target Status</h6>
+        <div class="d-flex justify-content-around mt-2">
+          <div>
+            <div class="text-success fw-bold"><%= @stats[:above_target_count] %></div>
+            <small class="text-muted">Above</small>
+          </div>
+          <div              <div class="text-warning fw-bold"><%= @stats[:below_target_count] %></div>
+            <small class="text-muted">Below</small>
+          </div>
+          <div>
+            <div class="text-danger fw-bold"><%= @stats[:critical_count] %></div>
+            <small class="text-muted">Critical</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Margin Trend Chart -->
+<div class="row mb-4">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <h5>Margin Trend (Last 30 Days)</h5>
+      </div>
+      <div class="card-body">
+        <canvas id="marginTrendChart" height="80"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Category Breakdown and Top/Bottom Performers -->
+<div class="row mb-4">
+  <div class="col-md-6">
+    <div class="card">
+      <div   ass="card-header">
+        <h5>Category Breakdown</h5>
+      </div>
+      <div class="card-body">
+        <canvas id="categoryChart" height="200"></canvas>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">
+        <h5>Margin Distribution</h5>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-sm">
+            <tbody>
+              <tr>
+                <td><span class="badge bg-success">Above Target</span></td>
+                <td class="text-end"><%= @stats[:above_target_count] %> items</td>
+                <td class="text-end"><%= number_to_percentage((@stats[:above_target_count].to_f / @stats[:total_items] * 100), precision: 0) %></td>
+              </tr>
+              <tr>
+                <td><span class="badge bg-warning">Below Target</span></td>
+                <td class="text-end"><%= @stats[:                <td c> items</td>
+                <td class="text-end"><%= number_to_percentage((@stats[:below_target_count].to_f / @stats[:total_items] * 100), precision: 0) %></td>
+              </tr>
+              <tr>
+                <td><span class="badge bg-danger">Critical</span></td>
+                <td class="text-end"><%= @stats[:critical_count] %> items</td>
+                <td class="text-end"><%= number_to_percentage((@stats[:critical_count].to_f / @stats[:total_items] * 100), precision: 0) %></td>
+              </tr>
+              <tr>
+                <td><span class="badge bg-secondary">No Target</span></td>
+                <td class="text-end"><%= @stats[:no_target_count] %> items</td>
+                <td class="text-end"><%= number_to_percentage((@stats[:no_target_count].to_f / @stats[:total_items] * 100), precision: 0) %></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Top and Bottom Performers -->
+<div class="row">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header bg-success text-white">
+        <h5 class="mb-0">Top 10 Performers</h5>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Price</th>
+                <th>Margin %</th>
+                <th>Profit $</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @stats[:top_performers].each do |item| %>
+                <tr>
+                  <td><%= item.localised_name('en') %></td>
+                  <td><%= number_to_currency(item.price) %></td>
+                  <td><strong class="text-success"><%= number_to_percentage(item.profit_margin_percentage, precision: 1) %></strong></td>
+                  <td><%= number_to_currency(item.profit_margin) %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header bg-danger text-white">
+        <h5 class="mb-0">Bottom 10        <h5 class="mb-0">Biv>
+        <h5 class="mb-0">Bottom 10    <        <h5 class="mb-0">Bottom 10      <        <h5 class= table-sm">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Price</th>
+                <th>Margin %</th>
+                <th>Profit $</th>
+              </tr>
+                                                                  bott              .each d                                                           item.localised_name('en') %></td>
+                  <td><%= number_to_currency(item.price) %></td>
+                  <td><strong class="text-danger"><%= number_to_percentage(item.profit_margin_percentage, precision: 1) %></strong></td>
+                  <td><%= number_to_curre          rofit_margin                  <td                     <   <% end %>
+            </tbody>
+          </table>
+              
+                     v>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Margin Trend Chart
+  const trendCtx = document.getElementById('marginTre  const trendCtx =rendCtx) {
+    const trendData = <%= raw @stats[:ma    const trendData = <%= rawew    const trendData = <%= raw: 'li    const trendData = <%= raw @ls:    const trap(d =>     const trendData = <%= raw @stats[:ma    const trendData = <%= rawew    const trendData = <%= raw: 'li    const trendData = <%= raw @ls:    const trap(d =>     const trendData =75,     const trendData = <%= raw @stats[:ma    const trendData = <',
+          tension: 0.1
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: true },
+          title: { display: false }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+                 : { ca                 value + '%' }
+                    }
+            });
+  }
+
+  // Category Breakdown Chart
+  const categoryCtx = document.getElementById('categoryChart'  consf (  const categoryCtx = document.getElementById('categoryChat  const categoryCtx = on %>;
+    new Chart(categoryCtx, {
+      type: 'bar',
+      data: {
+        labels:        labels:        labels:        labels:        labels:        labels:        labels:        labels:        labels:        labels:        labels:        labels:        labels:        labels:        labels:        labels:        labels:        labels:        labels:        labels:        labels:        labels:        labels:        labels:        labels:        labels:        labels:        labels:  
+                            y: {
+                          rue,
+            ticks: { ca        value => value + '%' }
+          }
+        }
+      }
+    });
+  }
+});
+</script>

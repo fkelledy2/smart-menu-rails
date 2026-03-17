@@ -1,0 +1,160 @@
+<div class="page-header">
+  <div class="row">
+    <div class="col-6">
+      <h4>Order Profit Analytics - <%= @restaurant.name %></h4>
+    </div>
+    <div class="col-6 text-end">
+      <%= link_to 'Dashboard', restaurant_profit_margins_path(@restaurant), class: 'btn btn-secondary' %>
+      <%= link_to 'Detailed Report', restaurant_profit_margins_report_path(@restaurant), class: 'btn btn-primary' %>
+    </div>
+  </div>
+</div>
+
+<!-- Order Profit Summary -->
+<div class="row mb-4">
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-body text-center">
+        <h6 class="text-muted">Total Orders</h6>
+        <h2><%= @order_stats[:total_orders] %></h2>
+        <small class="text-muted">last 30 days</small>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-body text-center">
+        <h6 class="text-muted">Total Revenue</h6>
+        <h2><%= number_to_currency(@order_stats[:total_revenue]) %></h2>
+        <small class="text-muted">from orders</small>
+      </div>
+    </div    </div    </divcl    </div    </div    iv    </div    </div    </divcl    </div    </div    iv    </div   <h6 class="text-muted">Total Profit</h6>
+        <h2 class="text-success"><%= number_to_currency(@order_stats[:total_profit]) %></h2>
+        <small class="text-muted">after costs</small>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-body text-center">
+        <h6 class="text-muted">Avg Profit/Order</h6>
+        <h2><%= number_to_currency(@order_stats[:average_profit_per_order]) %></h2>
+        <small class="text-muted">per order</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Profit by Day and Hour -->
+<div class="row mb-4">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header"      <div class="card-header"      <div
+                                                   <canvas id="dayOfWeekChart" height="200"></canvas>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">
+        <h5>Profit by Hour of Day</h5>
+      </div>
+      <div class="card-body">
+        <canvas id="hourChart" height="200"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Most Profitable Items by Volume -->
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <h5>Most Profitable Items (by Total Profit)</h5>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                                              <th>Item</th>
+                <th>Quantity Sold</th>
+                <th>Profit/Unit</th>
+                <th>Total Profit</th>
+                <th>Impact</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @order_stats[:most_profitable_items].each_with_index do |item, index| %>
+                <tr>
+                  <td><strong><%= index + 1 %></strong>                  <     <td><%= item[:menuitem].localised_name('en') %></td>
+                  <td><%= item[:quantity_sold] %></td>
+                  <td><%= number_to_currency(item[:profit_per_unit]) %></td>
+                  <td class="fw-bold text-success"><%= number_to_currency(item[:total_profit]) %></td>
+                  <td>
+                    <div class="progress" style="height: 20px;">
+                      <div class="progress-bar bg-success" role="progressbar" 
+                           style="width: <%= (item[:total_profit] / @order_stats[:most_profitable_items].first[:                           style="width: <%= (item[:total<%=                           style="widofit] / @order_stats[:total_profit] * 100), precision: 1) %>
+                                                                                                                                                                                                      </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Day of Week Chart
+  const dayData = <%= raw @order_stats[:profit_by_day_of_week].to_json %>;
+  const dayCtx = document.getElementById('dayOfWeekChart');
+  if (dayCtx) {
+    new Chart(dayCtx, {
+      type: 'bar',
+      data: {
+        labels: dayData.map(d => d.day),
+        datasets: [{
+          label: 'Profit ($)',
+          data: dayData.map(d => d.profit),
+          backgroundColor: 'rgba(75, 192, 192, 0.5)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: { callback: value => '$' + value.toFixed(2) }
+          }
+        }
+      }
+    });
+  }
+
+  // Hour Chart
+  const hourData = <%= raw @order_stats[:profit_by_hour].to_json %>;
+  const hourCtx = document.getElementById('hourChart');
+  if (hourCtx) {
+    new Chart(hourCtx, {
+      type: 'line',
+      data: {
+        labels: hourData.map        labe + ':00'),
+        labels: hourData.map        labe + ':00'),
+t');
+.to_json %>;
+ourDatourDatourDatourDatourDatourDatourDatourDatourDatourDatou59, ourDatourDatou  backgroundColor: 'rgba(255, 159, 64, 0.2)',
+          tension: 0.1
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: { callback: value => '$' + value.toFixed(2) }
+          }
+        }
+      }
+                  script>
