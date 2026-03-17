@@ -9,6 +9,8 @@ class Restaurant < ApplicationRecord
 
   has_many :tablesettings, -> { reorder(sequence: :asc, id: :asc) }, dependent: :delete_all, counter_cache: :tablesettings_count
   has_many :menus, -> { reorder(sequence: :asc, id: :asc) }, dependent: :delete_all, counter_cache: :menus_count
+  has_many :profit_margin_targets, dependent: :destroy
+  has_many :ingredients, dependent: :destroy
   has_many :restaurant_menus, dependent: :delete_all
   has_many :shared_menus, through: :restaurant_menus, source: :menu
   has_many :employees, -> { reorder(sequence: :asc, id: :asc) }, dependent: :delete_all, counter_cache: :employees_count

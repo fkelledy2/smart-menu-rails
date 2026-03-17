@@ -1154,7 +1154,14 @@ CREATE TABLE public.ingredients (
     description text,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    archived boolean DEFAULT false
+    archived boolean DEFAULT false,
+    restaurant_id bigint,
+    parent_ingredient_id bigint,
+    unit_of_measure character varying,
+    current_cost_per_unit numeric(10,4),
+    supplier_id bigint,
+    category character varying,
+    is_shared boolean DEFAULT false
 );
 
 
@@ -1770,6 +1777,46 @@ ALTER SEQUENCE public.menuitem_allergyn_mappings_id_seq OWNED BY public.menuitem
 
 
 --
+-- Name: menuitem_costs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.menuitem_costs (
+    id bigint NOT NULL,
+    menuitem_id bigint NOT NULL,
+    ingredient_cost numeric(10,4) DEFAULT 0.0,
+    labor_cost numeric(10,4) DEFAULT 0.0,
+    packaging_cost numeric(10,4) DEFAULT 0.0,
+    overhead_cost numeric(10,4) DEFAULT 0.0,
+    cost_source character varying DEFAULT 'manual'::character varying,
+    is_active boolean DEFAULT true,
+    effective_date date NOT NULL,
+    notes text,
+    created_by_user_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: menuitem_costs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.menuitem_costs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: menuitem_costs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.menuitem_costs_id_seq OWNED BY public.menuitem_costs.id;
+
+
+--
 -- Name: menuitem_ingredient_mappings; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1799,6 +1846,41 @@ CREATE SEQUENCE public.menuitem_ingredient_mappings_id_seq
 --
 
 ALTER SEQUENCE public.menuitem_ingredient_mappings_id_seq OWNED BY public.menuitem_ingredient_mappings.id;
+
+
+--
+-- Name: menuitem_ingredient_quantities; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.menuitem_ingredient_quantities (
+    id bigint NOT NULL,
+    menuitem_id bigint NOT NULL,
+    ingredient_id bigint NOT NULL,
+    quantity numeric(10,4) NOT NULL,
+    unit character varying NOT NULL,
+    cost_per_unit numeric(10,4),
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: menuitem_ingredient_quantities_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.menuitem_ingredient_quantities_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: menuitem_ingredient_quantities_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.menuitem_ingredient_quantities_id_seq OWNED BY public.menuitem_ingredient_quantities.id;
 
 
 --
@@ -3302,6 +3384,43 @@ ALTER SEQUENCE public.products_id_seq OWNED BY public.products.id;
 
 
 --
+-- Name: profit_margin_targets; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.profit_margin_targets (
+    id bigint NOT NULL,
+    restaurant_id bigint,
+    menusection_id bigint,
+    menuitem_id bigint,
+    target_margin_percentage numeric(5,2) NOT NULL,
+    minimum_margin_percentage numeric(5,2),
+    effective_from date NOT NULL,
+    effective_to date,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: profit_margin_targets_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.profit_margin_targets_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: profit_margin_targets_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.profit_margin_targets_id_seq OWNED BY public.profit_margin_targets.id;
+
+
+--
 -- Name: provider_accounts; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -4742,10 +4861,24 @@ ALTER TABLE ONLY public.menuitem_allergyn_mappings ALTER COLUMN id SET DEFAULT n
 
 
 --
+-- Name: menuitem_costs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.menuitem_costs ALTER COLUMN id SET DEFAULT nextval('public.menuitem_costs_id_seq'::regclass);
+
+
+--
 -- Name: menuitem_ingredient_mappings id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.menuitem_ingredient_mappings ALTER COLUMN id SET DEFAULT nextval('public.menuitem_ingredient_mappings_id_seq'::regclass);
+
+
+--
+-- Name: menuitem_ingredient_quantities id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.menuitem_ingredient_quantities ALTER COLUMN id SET DEFAULT nextval('public.menuitem_ingredient_quantities_id_seq'::regclass);
 
 
 --
@@ -5040,6 +5173,13 @@ ALTER TABLE ONLY public.product_enrichments ALTER COLUMN id SET DEFAULT nextval(
 --
 
 ALTER TABLE ONLY public.products ALTER COLUMN id SET DEFAULT nextval('public.products_id_seq'::regclass);
+
+
+--
+-- Name: profit_margin_targets id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.profit_margin_targets ALTER COLUMN id SET DEFAULT nextval('public.profit_margin_targets_id_seq'::regclass);
 
 
 --
@@ -5551,11 +5691,27 @@ ALTER TABLE ONLY public.menuitem_allergyn_mappings
 
 
 --
+-- Name: menuitem_costs menuitem_costs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.menuitem_costs
+    ADD CONSTRAINT menuitem_costs_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: menuitem_ingredient_mappings menuitem_ingredient_mappings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.menuitem_ingredient_mappings
     ADD CONSTRAINT menuitem_ingredient_mappings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: menuitem_ingredient_quantities menuitem_ingredient_quantities_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.menuitem_ingredient_quantities
+    ADD CONSTRAINT menuitem_ingredient_quantities_pkey PRIMARY KEY (id);
 
 
 --
@@ -5903,6 +6059,14 @@ ALTER TABLE ONLY public.products
 
 
 --
+-- Name: profit_margin_targets profit_margin_targets_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.profit_margin_targets
+    ADD CONSTRAINT profit_margin_targets_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: provider_accounts provider_accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6135,6 +6299,13 @@ ALTER TABLE ONLY public.whiskey_flights
 
 
 --
+-- Name: idx_effective_dates; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_effective_dates ON public.profit_margin_targets USING btree (effective_from, effective_to);
+
+
+--
 -- Name: idx_explore_pages_unique_path; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6195,6 +6366,13 @@ CREATE INDEX idx_menu_performance_restaurant_month ON public.menu_performance_mv
 --
 
 CREATE INDEX idx_menu_performance_revenue ON public.menu_performance_mv USING btree (restaurant_id, month, revenue_rank);
+
+
+--
+-- Name: idx_menuitem_ingredient; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_menuitem_ingredient ON public.menuitem_ingredient_quantities USING btree (menuitem_id, ingredient_id);
 
 
 --
@@ -6695,6 +6873,34 @@ CREATE INDEX index_impersonation_audits_on_impersonated_user_id ON public.impers
 
 
 --
+-- Name: index_ingredients_on_category; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ingredients_on_category ON public.ingredients USING btree (category);
+
+
+--
+-- Name: index_ingredients_on_is_shared; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ingredients_on_is_shared ON public.ingredients USING btree (is_shared);
+
+
+--
+-- Name: index_ingredients_on_parent_ingredient_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ingredients_on_parent_ingredient_id ON public.ingredients USING btree (parent_ingredient_id);
+
+
+--
+-- Name: index_ingredients_on_restaurant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ingredients_on_restaurant_id ON public.ingredients USING btree (restaurant_id);
+
+
+--
 -- Name: index_inventories_on_archived; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -7038,6 +7244,27 @@ CREATE INDEX index_menuitem_allergyn_on_allergyn_menuitem ON public.menuitem_all
 
 
 --
+-- Name: index_menuitem_costs_on_created_by_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_menuitem_costs_on_created_by_user_id ON public.menuitem_costs USING btree (created_by_user_id);
+
+
+--
+-- Name: index_menuitem_costs_on_effective_date; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_menuitem_costs_on_effective_date ON public.menuitem_costs USING btree (effective_date);
+
+
+--
+-- Name: index_menuitem_costs_on_menuitem_id_and_is_active; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_menuitem_costs_on_menuitem_id_and_is_active ON public.menuitem_costs USING btree (menuitem_id, is_active);
+
+
+--
 -- Name: index_menuitem_ingredient_mappings_on_ingredient_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -7056,6 +7283,20 @@ CREATE INDEX index_menuitem_ingredient_mappings_on_menuitem_id ON public.menuite
 --
 
 CREATE INDEX index_menuitem_ingredient_on_ingredient_menuitem ON public.menuitem_ingredient_mappings USING btree (ingredient_id, menuitem_id);
+
+
+--
+-- Name: index_menuitem_ingredient_quantities_on_ingredient_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_menuitem_ingredient_quantities_on_ingredient_id ON public.menuitem_ingredient_quantities USING btree (ingredient_id);
+
+
+--
+-- Name: index_menuitem_ingredient_quantities_on_menuitem_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_menuitem_ingredient_quantities_on_menuitem_id ON public.menuitem_ingredient_quantities USING btree (menuitem_id);
 
 
 --
@@ -8333,6 +8574,27 @@ CREATE UNIQUE INDEX index_products_on_product_type_and_canonical_name ON public.
 
 
 --
+-- Name: index_profit_margin_targets_on_menuitem_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_profit_margin_targets_on_menuitem_id ON public.profit_margin_targets USING btree (menuitem_id);
+
+
+--
+-- Name: index_profit_margin_targets_on_menusection_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_profit_margin_targets_on_menusection_id ON public.profit_margin_targets USING btree (menusection_id);
+
+
+--
+-- Name: index_profit_margin_targets_on_restaurant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_profit_margin_targets_on_restaurant_id ON public.profit_margin_targets USING btree (restaurant_id);
+
+
+--
 -- Name: index_provider_accounts_on_provider_and_provider_account_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -9092,6 +9354,14 @@ ALTER TABLE ONLY public.tracks
 
 
 --
+-- Name: profit_margin_targets fk_rails_2b36597cda; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.profit_margin_targets
+    ADD CONSTRAINT fk_rails_2b36597cda FOREIGN KEY (restaurant_id) REFERENCES public.restaurants(id) ON DELETE CASCADE;
+
+
+--
 -- Name: menuitem_size_mappings fk_rails_2dc87441f5; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -9372,11 +9642,27 @@ ALTER TABLE ONLY public.menu_items
 
 
 --
+-- Name: ingredients fk_rails_6defac91a6; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ingredients
+    ADD CONSTRAINT fk_rails_6defac91a6 FOREIGN KEY (restaurant_id) REFERENCES public.restaurants(id);
+
+
+--
 -- Name: ordr_split_item_assignments fk_rails_6efb42618b; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.ordr_split_item_assignments
     ADD CONSTRAINT fk_rails_6efb42618b FOREIGN KEY (ordr_split_plan_id) REFERENCES public.ordr_split_plans(id);
+
+
+--
+-- Name: ingredients fk_rails_6f9dc24b9c; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ingredients
+    ADD CONSTRAINT fk_rails_6f9dc24b9c FOREIGN KEY (parent_ingredient_id) REFERENCES public.ingredients(id);
 
 
 --
@@ -9481,6 +9767,14 @@ ALTER TABLE ONLY public.alcohol_order_events
 
 ALTER TABLE ONLY public.ordr_station_tickets
     ADD CONSTRAINT fk_rails_7ef0e690e7 FOREIGN KEY (restaurant_id) REFERENCES public.restaurants(id);
+
+
+--
+-- Name: menuitem_costs fk_rails_8001b406b2; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.menuitem_costs
+    ADD CONSTRAINT fk_rails_8001b406b2 FOREIGN KEY (menuitem_id) REFERENCES public.menuitems(id) ON DELETE CASCADE;
 
 
 --
@@ -9612,6 +9906,14 @@ ALTER TABLE ONLY public.menuparticipants
 
 
 --
+-- Name: profit_margin_targets fk_rails_a2cf07c710; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.profit_margin_targets
+    ADD CONSTRAINT fk_rails_a2cf07c710 FOREIGN KEY (menusection_id) REFERENCES public.menusections(id) ON DELETE CASCADE;
+
+
+--
 -- Name: restaurant_menus fk_rails_a4fec423e9; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -9665,6 +9967,14 @@ ALTER TABLE ONLY public.restaurant_menus
 
 ALTER TABLE ONLY public.restaurant_claim_requests
     ADD CONSTRAINT fk_rails_a714799fb8 FOREIGN KEY (restaurant_id) REFERENCES public.restaurants(id);
+
+
+--
+-- Name: profit_margin_targets fk_rails_a752280ab2; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.profit_margin_targets
+    ADD CONSTRAINT fk_rails_a752280ab2 FOREIGN KEY (menuitem_id) REFERENCES public.menuitems(id) ON DELETE CASCADE;
 
 
 --
@@ -9753,6 +10063,14 @@ ALTER TABLE ONLY public.menusections
 
 ALTER TABLE ONLY public.genimages
     ADD CONSTRAINT fk_rails_b5396a358a FOREIGN KEY (menu_id) REFERENCES public.menus(id);
+
+
+--
+-- Name: menuitem_costs fk_rails_b57d75e9eb; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.menuitem_costs
+    ADD CONSTRAINT fk_rails_b57d75e9eb FOREIGN KEY (created_by_user_id) REFERENCES public.users(id);
 
 
 --
@@ -9964,6 +10282,14 @@ ALTER TABLE ONLY public.ordritemnotes
 
 
 --
+-- Name: menuitem_ingredient_quantities fk_rails_da6c3805c1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.menuitem_ingredient_quantities
+    ADD CONSTRAINT fk_rails_da6c3805c1 FOREIGN KEY (menuitem_id) REFERENCES public.menuitems(id) ON DELETE CASCADE;
+
+
+--
 -- Name: employees fk_rails_dcfd3d4fc3; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -9985,6 +10311,14 @@ ALTER TABLE ONLY public.payment_refunds
 
 ALTER TABLE ONLY public.ordr_station_tickets
     ADD CONSTRAINT fk_rails_de8a2f319d FOREIGN KEY (ordr_id) REFERENCES public.ordrs(id);
+
+
+--
+-- Name: menuitem_ingredient_quantities fk_rails_df81b8329c; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.menuitem_ingredient_quantities
+    ADD CONSTRAINT fk_rails_df81b8329c FOREIGN KEY (ingredient_id) REFERENCES public.ingredients(id) ON DELETE CASCADE;
 
 
 --
@@ -10122,6 +10456,10 @@ ALTER TABLE ONLY public.voice_commands
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260317003953'),
+('20260317003900'),
+('20260317003803'),
+('20260317003723'),
 ('20260316232500'),
 ('20260316231830'),
 ('20260316231707'),

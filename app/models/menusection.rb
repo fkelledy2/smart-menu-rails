@@ -4,6 +4,7 @@ class Menusection < ApplicationRecord
   # Standard ActiveRecord associations
   belongs_to :menu
   has_many :menuitems, -> { reorder(sequence: :asc, id: :asc) }, dependent: :delete_all, counter_cache: :menuitems_count
+  has_one :profit_margin_target, dependent: :destroy
 
   # Default currencies based on parent restaurant
   before_validation :default_tasting_currencies
