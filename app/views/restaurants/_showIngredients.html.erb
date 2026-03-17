@@ -4,6 +4,9 @@
   </div>
   <div class="col-6 text-end">
     <div class="btn-group" role="group">
+      <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#importCsvModal">
+        <i class="bi bi-upload"></i> Import CSV
+      </button>
       <button type="button" class="btn btn-dark">
         <%= link_to new_restaurant_ingredient_path(@restaurant), class: 'link-light' do %>
           <i class="bi bi-plus"></i> Add Ingredient
@@ -20,29 +23,30 @@
         <th>Name</th>
         <th>Category</th>
         <th>Unit</th>
-        <th>Cost per Unit</th>
+        <th>Cost/Unit</th>
         <th>Type</th>
+        <th>Used In</th>
         <th>Actions</th>
       </tr>
     </thead>
     <tbody>
-      <% @restaurant.ingredients.active.each do |ingredient| %>
+      <% @restaurant.ingredients.where(archived: false).each do |ingredient| %>
         <tr>
           <td><%= ingredient.name %></td>
           <td><%= ingredient.category %></td>
           <td><%= ingredient.unit_of_measure %></td>
+          <td><%= number_to_currency(ingredient.current_cost_per_unit || 0) %></td>
           <td>
-            <% if ingredient.current_cost_per_unit.present? %>
-              <%= number_to_currency(ingredient.current_cost_per_unit) %>
-            <            <           <      las            <            pan>
-                                                <td>
             <% if ingredient.is_shared %>
-              <span class="badge bg-info">Shared</span>
-            <% elsif ingredient.parent_ingredient_id.present? %>
+              <span class="ba              <span class="ba              <spf ingredient.parent_ingredient_id %>
               <span class="badge bg-warning">Override</span>
             <% else %>
               <span class="badge bg-primary">Restaurant</span>
             <% end %>
+          </td>
+          <td>
+            <% count = ingredient.menuitem_ingredient_quantities.count %>
+            <%= count %> <%= 'item'.pluralize(count) %>
           </td>
           <td>
             <%= link_to 'Edit', edit_restaurant_ingredient_path(@restaurant, ingredient), class: 'btn btn-sm btn-outline-primary' %>
@@ -51,4 +55,32 @@
       <% end %>
     </tbody>
   </table>
+</div>
+
+<!-- CSV Import Modal -->
+<div class="modal fade" id="importCsvModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Import Ingredients from CSV</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <%= form_with url: restaurant_ingredients_import_csv_path(@restaurant), method: :post, multipart: true do |f| %>
+        <div class="modal-body">
+          <div class="mb-3">
+            <%= f.label :file, 'CSV File', class: 'form-label' %>
+            <%= f.file_field :file, accept: '.csv', class: 'form-control', required: true %>
+          </div>
+          <div class="alert alert-info">
+            <strong>CSV Format:</strong><br>
+            Required columns: name, category, unit_of_measure, cost_per_unit<br>
+            Optional: description, is_shared
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="          <button type="button" class="btn btn-secont', class: 'btn btn-primary' %>
+        </div>
+      <% end %>
+    </div>
+  </div>
 </div>

@@ -2314,7 +2314,13 @@ CREATE TABLE public.ocr_menu_items (
     updated_at timestamp(6) without time zone NOT NULL,
     is_dairy_free boolean DEFAULT false NOT NULL,
     menuitem_id bigint,
-    image_prompt text
+    image_prompt text,
+    estimated_ingredient_cost numeric(10,4),
+    estimated_labor_cost numeric(10,4),
+    estimated_packaging_cost numeric(10,4),
+    estimated_overhead_cost numeric(10,4),
+    cost_estimation_confidence numeric(5,2),
+    ai_cost_notes text
 );
 
 
@@ -10456,6 +10462,7 @@ ALTER TABLE ONLY public.voice_commands
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260317090311'),
 ('20260317003953'),
 ('20260317003900'),
 ('20260317003803'),

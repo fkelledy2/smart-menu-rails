@@ -3,7 +3,7 @@ class IngredientsController < ApplicationController
   before_action :set_restaurant
   before_action :set_ingredient, only: %i[show edit update destroy]
 
-  after_action :verify_authorized, except: [:index]
+  after_action :verify_authorized, except: [:index, :import_csv]
   after_action :verify_policy_scoped, only: [:index]
 
   def index
@@ -27,19 +27,20 @@ class IngredientsController < ApplicationController
     authorize @ingredient
 
     if @ingredient.save
-      redirect_to restaurant_ingredients_path(@restaurant), 
+      redirect_to restaurant_ingredients_path(@restaurant),
                   notice: 'Ingredient created successfully.'
     else
       render :new, status: :unprocessable_entity
     end
-  end
-
-  def update
+          ef update
     authorize @ingredient
 
     if @ingredient.update(ingredient_params)
-      redirect_to restaurant_ingredients_path(@restaurant), 
-                  notice: 'Ingredient updated successfully.'
+      # Cascade cost updates to affected menu items
+      RecalculateMenuitemCostsJob.perform_later(@ingredient.id) if ingredient_params[:current_cost_per_unit].present?
+      
+      redirect_to restaurant_ingredients_path(@restaurant),
+                  notice: 'Ingredient updated successfully. Affected menu items will be recalculated.'
     else
       render :edit, status: :unprocessable_entity
     end
@@ -48,8 +49,24 @@ class IngredientsController < ApplicationController
   def destroy
     authorize @ingredient
     @ingredient.update(archived: true)
-    redirect_to restaurant_ingredients_path(@restaurant), 
+    redirect_to restaurant_ingredients_path(@restaurant),
                 notice: 'Ingredient archived successfully.'
+  end 
+  def import_csv
+    unless params[:file].present?
+      redirect_to restaurant_ingredients_path(@restaurant), alert: 'Please select a CSV file.'
+      return
+    end
+
+    result = IngredientCsvImportService.new(@restaurant).import(params[:file])
+    
+    if result[:success]
+      redirect_to restaurant_ingredients_path(@restaurant),
+                  notice: "Successfully imported #{result[:imported]} ingredients. #{result[:skipped]} skipped."
+    else
+      redirect_to restaurant_ingredients_path(@restaurant),
+                  alert: "Import failed: #{result[:error]}"
+    end
   end
 
   private

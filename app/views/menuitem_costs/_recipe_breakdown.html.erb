@@ -1,0 +1,46 @@
+<div class="card mt-3">
+  <div class="card-header">
+    <h6 class="mb-0">Recipe Cost Breakdown</h6>
+  </div>
+  <div class="card-body">
+    <% if @menuitem.menuitem_ingredient_quantities.any? %>
+      <table class="table table-sm">
+        <thead>
+          <tr>
+            <th>Ingredient</th>
+            <th>Quantity</th>
+            <th>Unit</th>
+            <th>Cost/Unit</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @menuitem.menuitem_ingredient_quantities.includes(:ingredient).each do |qty| %>
+            <tr>
+              <td><%= qty.ingredient.name %></td>
+              <td><%= number_with_precision(qty.quantity, precision: 2) %></td>
+              <td><%= qty.unit %></td>
+              <td><%= number_to_currency(qty.cost_per_unit || qty.ingredient.current_cost_per_unit) %></td>
+              <td><%= number_to_currency(qty.total_cost) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+        <tfoot>
+          <tr class="fw-bold">
+            <td colspan="4" class="text-end">Recipe Total:</td>
+            <td><%= number_to_currency(@menuitem.       te_recipe_cost) %></td>
+          </tr>
+        </tfoot>
+      </table>
+      
+      <d      <d      <d      <d     -3">
+        <strong>Auto-calculated ingredient cost:</strong> <%= number_to_currency(@menuitem.calculate_recipe_cost) %>
+        <br>
+        <small>This is calculated from your recipe ingredients. You can override this with manual entry above.</small>
+      </div>
+    <% else %>
+      <p class="text-muted">No recipe ingredients defined yet. Add ingredients to this menu item to enable automatic cost calculation.</p>
+      <%= link_to 'Manage Recipe Ingredients', '#', class: 'btn btn-sm btn-outline-primary', data: { bs_toggle: 'modal', bs_target: '#recipeIngredientsModal' } %>
+    <% end %>
+  </div>
+</div>

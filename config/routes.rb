@@ -313,6 +313,7 @@ Rails.application.routes.draw do
 
     # Profit Margin Tracking
     resources :ingredients, only: [:index, :new, :create, :edit, :update, :destroy]
+    post 'ingredients/import_csv', to: 'ingredients#import_csv'
     resources :profit_margin_targets, only: [:index, :new, :create, :edit, :update, :destroy]
     get 'profit_margins', to: 'profit_margins#index'
     get 'profit_margins/report', to: 'profit_margins#report'

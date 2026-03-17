@@ -5,7 +5,42 @@
 <div class="row">
   <div class="col-md-8">
     <%= form_with(model: @target, url: restaurant_profit_margin_targets_path(@restaurant), local: true) do |form| %>
-      <%= form.hidden_field :restaurant_id, value: @restaurant.id %>
+      <div class="mb-3">
+        <%= form.label :target_level, 'Target Level', class: 'form-label' %>
+        <%= form.select :target_level, 
+            [['Restaurant-wide', 'restaurant'], ['Menu Section', 'menusection'], ['Individual Item', 'menuitem']],
+            {}, 
+            class: 'form-select',
+            id: 'target_level_select',
+            onchange: 'updateTargetLevelFields(this.value)' %>
+      </div>
+
+      <div id="restaurant_field">
+        <%= form.hidden_field :restaurant_id, value: @restaurant.id %>
+      </div>
+
+      <div id="menusection_field" style="display: none;">
+        <div class="mb-3">
+          <%= form.label :menusection_id, 'Menu Section', class: 'form-label' %>
+          <%= form.collec          <%= form.collec          <%= form.collec        nu          <%= form.colles), 
+              :id, 
+              ->(ms)               -me} - #{ms.name}" },
+              { include_blank: 'Select a section' },
+              class: 'form-select' %>
+        </div>
+      </div>
+
+      <div id="menuitem_field" style="display: none;">
+        <div class="mb-3">
+          <%= form.label :menuitem_id, 'Menu Item', class: 'form-label' %>
+          <%= form.collection_select :menuitem_id,
+              @restaurant.menus.flat_map { |m| m.menusections.flat_map(&:menuitems) },
+              :id,
+              ->(mi) { "#{mi.menusection.menu.name} - #{mi.menusection.name} - #{mi.localised_name('en')}" },
+              { include_blank: 'Select an item' },
+              class: 'form-select' %>
+        </div>
+      </div>
 
       <div class="row">
         <div class="col-md-6">
@@ -25,13 +60,13 @@
       <div class="row">
         <div class="col-md-6">
           <div class="mb-3">
-            <%= form.label :effective_from, class: 'form-label' %>
+            <%= form.label :ef            <%= fss: 'form-label' %>
             <%= form.date_field :effective_from, class: 'form-control', value: Date.current, required: true %>
           </div>
         </div>
         <div class="col-md-6">
-          <div class="mb-3">
-            <%= form.label :effective_to, class: 'form-label' %>
+                   s="mb-3">
+                             ff                             ' %>
             <%= form.date_field :effective_to, class: 'form-control' %>
           </div>
         </div>
@@ -39,8 +74,24 @@
 
       <div class="mt-4">
         <%= form.submit 'Create Target', class: 'btn btn-primary' %>
-        <%= link_to 'Cancel', edit_restaurant_path(@restaurant), class: 'btn btn-secondary' %>
-      </div>
-    <% end %>
+        <%= link_to 'Cancel', edit_restaurant_path(@restaurant), class: '        <%= link_to 'Cancel',/d        <% end %>
   </div>
-</div>
+
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header">
+        <strong>Tar        <strong>Tar        <strong>Tar        <strong>Tar        <strong>Tar        <strong>Tar        <strong>Tar i        <strongp>        <str class="small">
+          <li><strong>Item-level</strong> targets override all others</li>
+          <li><strong>Section-level</strong> targets override restaurant-level</li>
+          <li><strong>Restaurant-level</strong> targets are the default</li>
+        </ol>
+        <p class="small text-muted mt-3">
+                                 a                         rest                                 a                         reems                                  a                         rest   script>
+function updateTargetLevelFields(level) {
+  document.getElementById('  document.getElementById('  document.getElementById('  document.yId(  document.getElementById('  document.getElementById('  document.getElementById('  document.yId(  document.getElementByf (  docum== 'restaurant') {
+    docum    docum    docum 'res    docum    docum    docum y =     docum    docum    docum 'res    docum    docum    docum y =     docum    docum    docum 'res    docum    docum    docum y =     docum    docum    docum 'res    docum    documev    docum    docum    docum 'res    docum    docum    docum y =     do').style.display = 'block';
+    document.querySelector('#profit_margin_target_menuitem_id    document.querySelector('#profit_margin_target_menuitem_id    document.qById('menuitem_field').style.display = 'block';
+    document.querySelector('#profit_margin_target_menusection_id').value = '';
+  }
+}
+</script>
