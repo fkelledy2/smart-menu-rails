@@ -9,7 +9,6 @@
   </div>
 </div>
 
-<!-- Alert Summary -->
 <div class="row mb-4">
   <div class="col-md-4">
     <div class="card border-warning">
@@ -30,13 +29,16 @@
     </div>
   </div>
   <div class="col-md-4">
-    <div class="card border    <div class="cariv cl    <div class="card border    <div class="cariv cl    <div cltenti   Impact</    <div class="card border    ce    <div class="card border    <div class="cariv cl    <div class="card border    <div class="cariv cll>
+    <div class="card border-success">
+      <div class="card-body text-center">
+        <h6 class="text-muted">Potential Impact</h6>
+        <h2 class="text-success"><%= number_to_currency(@total_impact) %></h2>
+        <small class="text-muted">if restocked</small>
       </div>
     </div>
   </div>
 </div>
 
-<!-- High-Margin Low-Stock Items -->
 <div class="card mb-4">
   <div class="card-header bg-warning">
     <h5 class="mb-0">High-Margin Items with Low Stock</h5>
@@ -74,8 +76,11 @@
                 <div class="progress" style="height: 20px;">
                   <div class="progress-bar bg-warning" role="progressbar" style="width: <%= item[:stock_level] %>%">
                     <%= item[:stock_level] %>%
-                  </div>                 </div>
-                                                                             %>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <% case item[:status] %>
                 <% when 'out_of_stock' %>
                   <span class="badge bg-danger">Out of Stock</span>
                 <% when 'low_stock' %>
@@ -83,32 +88,43 @@
                 <% when 'medium_stock' %>
                   <span class="badge bg-info">Medium</span>
                 <% else %>
-                  <span class="badge bg-success">In Stock</span>
+                  <                  bg-success">In Stock</span>
                 <% end %>
               </td>
               <td>
                 <button class="btn btn-sm btn-primary">Reorder</button>
               </td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
+            <            <            <            <            <            <  
+  </d  </d  </d  </d  class="card">
+  <div class="card-header bg-success text-white">
+    <h5 class="mb-0">Reorder Suggestions</h5>
   </div>
-</div>
-
-<!-- Re<!-- Re<!-- Re<!-- Re<!-- Re<!-- Re<!-- Re<!-- Re<!-- Re<rd-h<!-- Re<!-- Re<!-- Re<!-- Re<!-- Re<!-- Re<!-- Re<!-- Re<!-- Re<rd-h<!-- Re<!-- Re<!-- Re<!-- Re<!-- Re<!-- Re<!   <div class="table-responsive">
+  <div class="card-body">
+    <div class="table-responsive">
       <table class="table table-hover">
         <thead>
-                                                                                                                                                                                                   tr>
-                                           <% @reorder_suggestions.each do |suggestion| %>
-            <tr>
-              <td><%= suggestion[:menuit              <td><%= suggestion[:menuit              <tng><              <td><%=ted_qu              <td><%= suggestion[:menuit              <td><%=succ              <td><%= rency(suggestion[:estimated_profit_impact]) %></td>
+          <tr>
+            <th>Item</th>
+            <th>Suggested Quantity</th>
+            <th>Estimated Profit Impact</th>
+            <th>Urgency</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @reorder_suggestions.ea          <% @reorder_suggestions.ea          <% @reorder_su sugge          <% @reorder_suggestions.ea  %></          <% @reorder_suggestions.ea          <% @reord_quan          <% @reordeits</td          <% @reorder_suggestions.ea          <% @reorder_sugge(s          <% @reordd_profi          <% @reo>
               <td>
                 <% case suggestion[:urgency] %>
                 <% when 'high' %>
                   <span class="badge bg-danger">High</span>
-                <% w                <% w                <% w                <% w                <% w                <% w                <% w                <% w                <% w                <% w                <% w                              <% w               on cl          tn-sm btn-success">Create Order</button>
+                <% when 'medium' %>
+                  <span class="badge bg-warning">Medium</span>
+                <% else %>
+                  <span class="badge bg-info">Low</span>
+                <% end %>
+              </td>
+              <td>
+                <button class="btn btn-sm btn-success">Create Order</button>
               </td>
             </tr>
           <% end %>

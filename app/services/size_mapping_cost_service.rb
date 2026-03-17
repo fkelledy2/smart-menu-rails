@@ -15,7 +15,6 @@ class SizeMappingCostService
       size = size_mapping.size
       price = size_mapping.price || @menuitem.price
       
-      # Calculate cost based on size multiplier
       multiplier = calculate_size_multiplier(size)
       
       size_cost = {
@@ -27,9 +26,9 @@ class SizeMappingCostService
         overhead_cost: (base_cost.overhead_cost * multiplier).round(4)
       }
       
-      size_cost[:total_cost] = size_cost[:ingredient_cost] + s      size_cost[:tot] + 
-                                size_cost[:packaging_cost] +                          
-      size_cost[:profit_margin] =      size_cost[:profit_m_cost]
+      size_cost[:total_cost] = size_cost[:ingredient_cost] + size_cost[:labor_cost] + 
+                                                               ze_cost[:overhead_cost]
+      size_cost[:profit_margin] = price - size_cost[:total_cost]
       size_cost[:margin_percentage] = price > 0 ? ((size_cost[:profit_margin] / price) * 100).round(2) : 0
       
       size_costs[size.id] = size_cost
@@ -47,7 +46,7 @@ class SizeMappingCostService
 
   def least_profitable_size
     size_costs = calculate_size_costs
-    return nil if size_costs.empty?
+                           s.empty?
     
     size_costs.min_by { |_, cost| cost[:margin_percentage] }
   end
@@ -67,8 +66,6 @@ class SizeMappingCostService
   private
 
   def calculate_size_multiplier(size)
-    # Calculate multiplier based on size name/category
-    # This is a simplified approach - in production, use actual portion sizes
     case size.name.downcase
     when /small|s\b/
       0.75

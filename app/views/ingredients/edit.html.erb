@@ -24,14 +24,13 @@
       <div class="mb-3">
         <%= form.label :category, class: 'form-label' %>
         <%= form.select :category, 
-            ['Protein', 'Vegetable', 'Grain', 'Dairy', 'Spice            ['Protein', 'Vegetable', 'Grain', 'Da,
-            ['Protein', an            ['Protein', a                : 'form-select' %>
+            ['Protein', 'Vegetable', 'Grain', 'Dairy', 'Spice', 'Oil', 'Beverage', 'Other'],
+            { include_blank: 'Select category' },
+            class: 'form-select' %>
       </div>
 
-      <div class="row">
-        <div class="col-md-6">
-          <div class="mb-3">
-            <%= form.label :unit_of_measure, 'Unit of Measu            <%= form.label :unit_of     <%= form.select :unit_of_measure,
+      <div class="row">      <div class="row">      <div class="row">      <div class="row">      <div class="r:unit_of_measure, class: 'form-label' %>
+            <%= form.select :unit_of_measure,
                 ['kg', 'g', 'L', 'mL', 'oz', 'lb', 'unit', 'bunch', 'piece'].map { |u| [u, u] },
                 { include_blank: 'Select unit' },
                 class: 'form-select' %>
@@ -42,14 +41,23 @@
             <%= form.label :current_cost_per_unit, 'Cost per Unit', class: 'form-label' %>
             <%= form.number_field :current_cost_per_unit, class: 'form-control', step: 0.01, min: 0 %>
           </div>
-        </di        </di        </di        </di        </di  <%= form.label :description, class: 'form-label' %>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <%= form.label :description, class: 'form-label' %>
         <%= form.text_area :description, class: 'form-control', rows: 3 %>
+      </div>
+
+      <div class="mb-3 form-check">
+        <%= form.check_box :is_shared, class: 'form-check-input' %>
+        <%= form.label :is_shared, 'Share with all restaurants (chain-wide)', class: 'form-check-label' %>
       </div>
 
       <div class="mt-4">
         <%= form.submit 'Update Ingredient', class: 'btn btn-primary' %>
+        <%= link_to 'Delete', restaurant_ingredient_path(@restaurant, @ingredient), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
         <%= link_to 'Cancel', restaurant_ingredients_path(@restaurant), class: 'btn btn-secondary' %>
-        <%= button_to 'Delete', restaurant_ingredient_path(@restaurant, @ingredient), method: :delete, class: 'btn btn-danger', data: { turbo_confirm: 'Are you sure?' } %>
       </div>
     <% end %>
   </div>

@@ -5,7 +5,7 @@ class IngredientPolicy < ApplicationPolicy
         scope.all
       else
         scope.joins(:restaurant).where(restaurants: { id: user.restaurants.pluck(:id) })
-             .or(scope.where(is_shared: true, restaurant_id: nil))
+          .or(scope.where(is_shared: true, restaurant_id: nil))
       end
     end
   end

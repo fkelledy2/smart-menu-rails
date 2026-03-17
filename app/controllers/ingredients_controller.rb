@@ -3,14 +3,14 @@ class IngredientsController < ApplicationController
   before_action :set_restaurant
   before_action :set_ingredient, only: %i[show edit update destroy]
 
-  after_action :verify_authorized, except: [:index, :import_csv]
+  after_action :verify_authorized, except: %i[index import_csv]
   after_action :verify_policy_scoped, only: [:index]
 
   def index
     @ingredients = policy_scope(Ingredient)
-                     .where(restaurant_id: [@restaurant.id, nil])
-                     .where(archived: false)
-                     .order(:name)
+      .where(restaurant_id: [@restaurant.id, nil])
+      .where(archived: false)
+      .order(:name)
   end
 
   def new
@@ -30,19 +30,19 @@ class IngredientsController < ApplicationController
       redirect_to restaurant_ingredients_path(@restaurant),
                   notice: 'Ingredient created successfully.'
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
-          ef update
+    ef update
     authorize @ingredient
 
     if @ingredient.update(ingredient_params)
       # Cascade cost updates to affected menu items
       RecalculateMenuitemCostsJob.perform_later(@ingredient.id) if ingredient_params[:current_cost_per_unit].present?
-      
+
       redirect_to restaurant_ingredients_path(@restaurant),
                   notice: 'Ingredient updated successfully. Affected menu items will be recalculated.'
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 
@@ -51,15 +51,16 @@ class IngredientsController < ApplicationController
     @ingredient.update(archived: true)
     redirect_to restaurant_ingredients_path(@restaurant),
                 notice: 'Ingredient archived successfully.'
-  end 
+  end
+
   def import_csv
-    unless params[:file].present?
+    if params[:file].blank?
       redirect_to restaurant_ingredients_path(@restaurant), alert: 'Please select a CSV file.'
       return
     end
 
     result = IngredientCsvImportService.new(@restaurant).import(params[:file])
-    
+
     if result[:success]
       redirect_to restaurant_ingredients_path(@restaurant),
                   notice: "Successfully imported #{result[:imported]} ingredients. #{result[:skipped]} skipped."
@@ -82,7 +83,7 @@ class IngredientsController < ApplicationController
   def ingredient_params
     params.require(:ingredient).permit(
       :name, :description, :unit_of_measure, :current_cost_per_unit,
-      :supplier_id, :category, :is_shared, :parent_ingredient_id
+      :supplier_id, :category, :is_shared, :parent_ingredient_id,
     )
   end
 end

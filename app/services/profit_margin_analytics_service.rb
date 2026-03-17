@@ -17,8 +17,7 @@ class ProfitMarginAnalyticsService
       no_target_count: count_by_status(menuitems_with_costs, 'no_target'),
       top_performers: top_items_by_margin(menuitems_with_costs, 10),
       bottom_performers: bottom_items_by_margin(menuitems_with_costs, 10),
-      category_breakdown: category_margin_breakdown(menuitems_with_costs),
-      margin_trend: margin_trend_data(date_range)
+      category_      category_      category_      category_      category_      margin_trend: margin_trend_data(date_range)
     }
   end
 
@@ -70,8 +69,7 @@ class ProfitMarginAnalyticsService
   def category_margin_breakdown(menuitems)
     menuitems.group_by { |mi| mi.menusection.name }.map do |category, items|
       {
-        category: category,
-        item_count: items.count,
+                                     tem_count: items.count,
         average_margin: calculate_average_margin(items),
         total_profit: items.sum(&:profit_margin)
       }
@@ -79,10 +77,10 @@ class ProfitMarginAnalyticsService
   end
 
   def margin_trend_data(date_range)
-    # Group cost records by week and calculate average margin
-    MenuitemCost.where(menuitem_id: fetch_menuitems_with_costs.map(&:id))
+    MenuitemCost.where(menuitem_id    MenuitemCost.where(menuitemp(&:id))
       .where(effective_date: date_range)
-      .where(is_active:       .where(is_active:       .where(is_acive_date.beginning_of_week }
+      .where(is_active: true)
+      .group_by { |cost| cost.effective_date.beginning_of_week }
       .map do |week, costs|
         menuitems = costs.map(&:menuitem).uniq
         {
@@ -101,14 +99,10 @@ class ProfitMarginAnalyticsService
     orders.sum do |order|
       order.ordritems.sum do |item|
         next 0 unless item.menuitem&.has_cost_data?
-        (item.menuitem.profit_margin * item.quantity)
-      end
-    end
-  end
-
-  def calculate_average_profit_per_order(orders)
-    return 0 if orders.empty?
-    (calculate_total_profit(orders) / orders.count).round(2)
+        (it        (it        (it        (it        (it        (it    d
+        (it        (it        (it        (it        (it
+                            ?
+    (calculate_total   ofit(orders) / orders.count).round(2)
   end
 
   def profit_by_day_of_week(orders)
@@ -122,7 +116,7 @@ class ProfitMarginAnalyticsService
   end
 
   def profit_by_hour(orders)
-    orders.group_by { |o| o.created_at.hour }.map do |hour, hour_orders|
+    orders.group_by { |o| o.created_at.hour }.map do |hou    orders.gro|
       {
         hour: hour,
         profit: calculate_total_profit(hour_orders),
@@ -148,7 +142,6 @@ class ProfitMarginAnalyticsService
         quantity_sold: data[:quantity],
         total_profit: data[:profit],
         profit_per_unit: menuitem.profit_margin
-      }
-    end.sort_by { |i| -i[:total_profit] }.take(20)
+                 ort_by { |i| -i[:total_profit] }.take(20)
   end
 end

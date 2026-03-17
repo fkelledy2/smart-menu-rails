@@ -10,7 +10,6 @@
   </div>
 </div>
 
-<!-- Summary Cards -->
 <div class="row mb-4">
   <div class="col-md-3">
     <div class="card">
@@ -25,7 +24,8 @@
     <div class="card">
       <div class="card-body text-center">
         <h6 class="text-muted">Avg Margin</h6>
-        <h2><%= number_to_percentage(@stats[:average_ma        <h2><%= number_to_percentage(@stats[:average_l class="text-muted">across all items</small>
+        <h2><%= number_to_percentage(@stats[:average_margin_percentage], preci        <h2</h2>
+        <small class="text-muted">across all items</small>
       </div>
     </div>
   </div>
@@ -45,9 +45,9 @@
         <div class="d-flex justify-content-around mt-2">
           <div>
             <div class="text-success fw-bold"><%= @stats[:above_target_count] %></div>
-            <small class="text-muted">Above</small>
-          </div>
-          <div              <div class="text-warning fw-bold"><%= @stats[:below_target_count] %></div>
+                                                              </div>
+          <div>
+            <div class="text-warning fw-bold"><%= @stats[:below_target_count] %></div>
             <small class="text-muted">Below</small>
           </div>
           <div>
@@ -60,7 +60,6 @@
   </div>
 </div>
 
-<!-- Margin Trend Chart -->
 <div class="row mb-4">
   <div class="col-12">
     <div class="card">
@@ -74,11 +73,10 @@
   </div>
 </div>
 
-<!-- Category Breakdown and Top/Bottom Performers -->
 <div class="row mb-4">
   <div class="col-md-6">
     <div class="card">
-      <div   ass="card-header">
+      <div class="card-header">
         <h5>Category Breakdown</h5>
       </div>
       <div class="card-body">
@@ -98,22 +96,19 @@
               <tr>
                 <td><span class="badge bg-success">Above Target</span></td>
                 <td class="text-end"><%= @stats[:above_target_count] %> items</td>
-                <td class="text-end"><%= number_to_percentage((@stats[:above_target_count].to_f / @stats[:total_items] * 100), precision: 0) %></td>
+                <td class="text-end"><%= number_to_percentage((@stats[:above_target_count].to_f / @stats[:total_items] * 100), precision: 0) if @stats[:total_items] > 0 %></td>
               </tr>
               <tr>
                 <td><span class="badge bg-warning">Below Target</span></td>
-                <td class="text-end"><%= @stats[:                <td c> items</td>
-                <td class="text-end"><%= number_to_percentage((@stats[:below_target_count].to_f / @stats[:total_items] * 100), precision: 0) %></td>
+                <td class="text-end"><%= @stats[:below_target_count] %> items</td>
+                <td class="text-end"><%= number_to_percentage((@stats[:below_target_count].to_f / @stats[:total_items] * 100), precision: 0) if @stats[:total_items] > 0 %></td>
               </tr>
               <tr>
                 <td><span class="badge bg-danger">Critical</span></td>
                 <td class="text-end"><%= @stats[:critical_count] %> items</td>
-                <td class="text-end"><%= number_to_percentage((@stats[:critical_count].to_f / @stats[:total_items] * 100), precision: 0) %></td>
-              </tr>
-              <tr>
-                <td><span class="badge bg-secondary">No Target</span></td>
+                <td class="text-end"><%= number_to_percentage((@stats[:critical_count].to_f / @stats[:total_items] * 100), p                <td class="text-end"><%= number_to_percentage((@stats[                      <td class="text-end"><%= number_to_percentage((@stats[:criticaan></td>
                 <td class="text-end"><%= @stats[:no_target_count] %> items</td>
-                <td class="text-end"><%= number_to_percentage((@stats[:no_target_count].to_f / @stats[:total_items] * 100), precision: 0) %></td>
+                <td class="text-end"><%= number_to_percentage((@stats[:no_target_count].to_f / @stats[:total_items] * 100), precision: 0) if @stats[:total_items] > 0 %></td>
               </tr>
             </tbody>
           </table>
@@ -123,15 +118,7 @@
   </div>
 </div>
 
-<!-- Top and Bottom Performers -->
-<div class="row">
-  <div class="col-md-6">
-    <div class="card">
-      <div class="card-header bg-success text-white">
-        <h5 class="mb-0">Top 10 Performers</h5>
-      </div>
-      <div class="card-body">
-        <div class="table-responsive">
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<di<<<<<<<<<<<<<<class=<<<<<<<<<<<<<<<<<    <div class="table-responsive">
           <table class="table table-sm">
             <thead>
               <tr>
@@ -152,39 +139,40 @@
               <% end %>
             </tbody>
           </table>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="card">
-      <div class="card-header bg-danger text-white">
-        <h5 class="mb-0">Bottom 10        <h5 class="mb-0">Biv>
-        <h5 class="mb-0">Bottom 10    <        <h5 class="mb-0">Bottom 10      <        <h5 class= table-sm">
-            <thead>
-              <tr>
+                                                                                                                                                                                                                                                           <div class="table-responsive">
+          <          <      e t          <                  <          <      >
                 <th>Item</th>
-                <th>Price</th>
+                         </th>
                 <th>Margin %</th>
                 <th>Profit $</th>
               </tr>
-                                                                  bott              .each d                                                           item.localised_name('en') %></td>
+                                                                  bott                    d                                                     d><%= item.localised_name('en') %></td>
                   <td><%= number_to_currency(item.price) %></td>
                   <td><strong class="text-danger"><%= number_to_percentage(item.profit_margin_percentage, precision: 1) %></strong></td>
-                  <td><%= number_to_curre          rofit_margin                  <td                     <   <% end %>
+                  <td><%= number_to_currency(item.profit_margin) %></td>
+                </tr>
+              <% end %>
             </tbody>
           </table>
-              
-                     v>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // Margin Trend Chart
-  const trendCtx = document.getElementById('marginTre  const trendCtx =rendCtx) {
-    const trendData = <%= raw @stats[:ma    const trendData = <%= rawew    const trendData = <%= raw: 'li    const trendData = <%= raw @ls:    const trap(d =>     const trendData = <%= raw @stats[:ma    const trendData = <%= rawew    const trendData = <%= raw: 'li    const trendData = <%= raw @ls:    const trap(d =>     const trendData =75,     const trendData = <%= raw @stats[:ma    const trendData = <',
+  const trendCtx = document.getElementById('marginTrendChart');
+  if (trendCtx) {
+    const trendData = <%= raw @stats[:margin_trend].to_json %>;
+    new Chart(trendCtx, {
+                                                                     new Date(d.week).toLocaleDateString()),
+        datasets: [{
+          label: 'Average Margin %',
+          data: trendData.map(d => d.average_margin),
+          borderColor: 'rgb(75, 192, 192)',
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
           tension: 0.1
         }]
       },
@@ -197,20 +185,37 @@ document.addEventListener('DOMContentLoaded', function() {
         scales: {
           y: {
             beginAtZero: true,
-                 : { ca                 value + '%' }
-                    }
-            });
+            ticks: { callback: value => value + '%' }
+          }
+        }
+      }
+    });
   }
 
-  // Category Breakdown Chart
-  const categoryCtx = document.getElementById('categoryChart'  consf (  const categoryCtx = document.getElementById('categoryChat  const categoryCtx = on %>;
+  const categoryCtx = document.getElementById('categoryChart');
+  if (categoryCtx) {
+    const categoryData = <%= r    conts[:category_breakdown].to_json %>;
     new Chart(categoryCtx, {
       type: 'bar',
       data: {
-        labels:        labels:        labels:        labels:        labels:        labels:        labels:        labels:        labels:        labels:        labels:        labels:        labels:        labels:        labels:        labels:        labels:        labels:        labels:        labels:        labels:        labels:        labels:        labels:        labels:        labels:        labels:        labels:  
-                            y: {
-                          rue,
-            ticks: { ca        value => value + '%' }
+        labels: categoryData.map(c => c.category),
+        datasets: [{
+          label: 'Average Margin %',
+          data: categoryData.map(c => c.average_margin),
+          backgroundColor: 'rgba(54, 162, 235, 0.5)',
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: { callback: value => value + '%' }
           }
         }
       }

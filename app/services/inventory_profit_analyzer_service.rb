@@ -28,8 +28,9 @@ class InventoryProfitAnalyzerService
     end.map do |menuitem|
       {
         menuitem: menuitem,
-        margin_percentage: menuitem.profit_        margin_percentage: menuitem.profit_        margin_percegin,
-        lost_opportunity: estimate_lost_opportunity(menuitem)
+        margin_percentage: menuitem.profit_margin_percentage,
+        profit_per_unit: menuitem.profit_margin,
+        lost_opportunity: estimate        lost_opportunity:m)
       }
     end.sort_by { |item| -item[:lost_opportunity] }
   end
@@ -62,7 +63,7 @@ class InventoryProfitAnalyzerService
   end
 
   def low_stock?(menuitem)
-    stock_level(menuitem) < 20 # Less than 20% stock
+    stock_level(menuitem) < 20
   end
 
   def out_of_stock?(menuitem)
@@ -70,9 +71,6 @@ class InventoryProfitAnalyzerService
   end
 
   def stock_level(menuitem)
-    # This is a placeholder - integrate with actual inventory system
-    # For now, return a random value between 0-100 for demonstration
-    # In production, this would check actual inventory levels
     menuitem.id % 100
   end
 
@@ -93,13 +91,10 @@ class InventoryProfitAnalyzerService
     margin_score = menuitem.profit_margin_percentage
     stock_score = 100 - stock_level(menuitem)
     
-    # Weighted average: 60% margin, 40% stock urgency
     (margin_score * 0.6 + stock_score * 0.4).round
   end
 
   def estimate_lost_opportunity(menuitem)
-    # Estimate based on average daily sales (placeholder)
-    # In production, use actual sales data
     avg_daily_sales = 10
     days_out_of_stock = 3
     
@@ -107,8 +102,6 @@ class InventoryProfitAnalyzerService
   end
 
   def calculate_reorder_quantity(menuitem)
-    # Placeholder logic - in production, use actual demand forecasting
-    # Suggest enough for 7 days based on average sales
     avg_daily_sales = 10
     days_to_stock = 7
     

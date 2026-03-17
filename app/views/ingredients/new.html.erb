@@ -24,13 +24,17 @@
       <div class="mb-3">
         <%= form.label :category, class: 'form-label' %>
         <%= form.select :category, 
-            ['Protein', 'Vegetable', 'Grain', 'Dairy', 'Spice', 'Oil', 'Beverage', 'Other']            ['Protein', '        { include_blank:             ['Prote,
+            ['Protein', 'Vegetable', 'Grain', 'Dairy', 'Spice', 'Oil', 'Beverage', 'Other'],
+            { include_blank: 'Select category' },
             class: 'form-select' %>
       </div>
 
       <div class="row">
-                                                                                                                    asure', class: 'form-label' %>
-                                                              ['kg', 'g', 'L', 'mL', 'oz', 'lb', 'unit', 'bunch', 'piece'].map { |u| [u, u] },
+                       -md-6">
+          <div class="mb-3">
+            <%= form.label :unit_of_measure, class: 'form-label' %>
+            <%= form.select :unit_of_measure,
+                ['kg', 'g', 'L', 'mL', 'oz', 'lb', 'unit', 'bunch', 'piece'].map { |u| [u, u] },
                 { include_blank: 'Select unit' },
                 class: 'form-select' %>
           </div>

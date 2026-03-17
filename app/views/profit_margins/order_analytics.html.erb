@@ -10,7 +10,6 @@
   </div>
 </div>
 
-<!-- Order Profit Summary -->
 <div class="row mb-4">
   <div class="col-md-3">
     <div class="card">
@@ -26,9 +25,11 @@
       <div class="card-body text-center">
         <h6 class="text-muted">Total Revenue</h6>
         <h2><%= number_to_currency(@order_stats[:total_revenue]) %></h2>
-        <small class="text-muted">from orders</small>
-      </div>
-    </div    </div    </divcl    </div    </div    iv    </div    </div    </divcl    </div    </div    iv    </div   <h6 class="text-muted">Total Profit</h6>
+        <small         <small         <small         <small         <small      </div>
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-body text-center">
+        <h6 class="text-muted">Total Profit</h6>
         <h2 class="text-success"><%= number_to_currency(@order_stats[:total_profit]) %></h2>
         <small class="text-muted">after costs</small>
       </div>
@@ -45,12 +46,13 @@
   </div>
 </div>
 
-<!-- Profit by Day and Hour -->
 <div class="row mb-4">
   <div class="col-md-6">
     <div class="card">
-      <div class="card-header"      <div class="card-header"      <div
-                                                   <canvas id="dayOfWeekChart" height="200"></canvas>
+      <div class="card-header">
+        <h5>Profit by Day of Week</h5>
+      </div>
+      <div class="ca      <div class="ca      <div class="ca      height="200"></canvas>
       </div>
     </div>
   </div>
@@ -66,19 +68,18 @@
   </div>
 </div>
 
-<!-- Most Profitable Items by Volume -->
 <div class="row">
   <div class="col-12">
     <div class="card">
-      <div class="card-header">
-        <h5>Most Profitable Items (by Total Profit)</h5>
+      <div class="c      <div class="c      <div class="c      <divby Total Profit)</h5>
       </div>
       <div class="card-body">
         <div class="table-responsive">
           <table class="table table-hover">
             <thead>
               <tr>
-                                              <th>Item</th>
+                <th>Rank</th>
+                <th>Item</th>
                 <th>Quantity Sold</th>
                 <th>Profit/Unit</th>
                 <th>Total Profit</th>
@@ -88,35 +89,40 @@
             <tbody>
               <% @order_stats[:most_profitable_items].each_with_index do |item, index| %>
                 <tr>
-                  <td><strong><%= index + 1 %></strong>                  <     <td><%= item[:menuitem].localised_name('en') %></td>
-                  <td><%= item[:quantity_sold] %></td>
-                  <td><%= number_to_currency(item[:profit_per_unit]) %></td>
-                  <td class="fw-bold text-success"><%= number_to_currency(item[:total_profit]) %></td>
+                  <td><strong><%= index + 1 %></strong></td>
+                  <td><%= item[:menuitem].localised_name('                  <td><%= i    <                  <td><%= item[:md>
+                                       rency(item[:profit_per_unit]) %></td>
+                  <td class="fw-bold      success"><%= number_to_currency(item[:total_profit]) %></td>
                   <td>
                     <div class="progress" style="height: 20px;">
-                      <div class="progress-bar bg-success" role="progressbar" 
-                           style="width: <%= (item[:total_profit] / @order_stats[:most_profitable_items].first[:                           style="width: <%= (item[:total<%=                           style="widofit] / @order_stats[:total_profit] * 100), precision: 1) %>
-                                                                                                                                                                                                      </div>
-  </div>
-</div>
+                      <div class="progr                      <divprog                      <div class="pr style="width: <%= (item[:total_profit] / @order_stats[:most_profitable_items].first[:                      <und %>%">
+                        <%= number_to_percentage((item[:total_prof                        <%= number_ 100), precision: 1) %>
+                      </div>
+                    </div>
+                                         /tr>
+                                                                                                <                  iv>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  // Day of Week Chart
-  const dayData = <%= raw @order_stats[:profit_by_day_of_week].to_json %>;
-  const dayCtx = document.getElementById('dayOfWeekChart');
-  if (dayCtx) {
-    new Chart(dayCtx, {
-      type: 'bar',
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/di<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/di<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/di<scrip @order_stats[:profit_by_day_of_week].to_json %>;
+  const dayCtx = document.get  const dayCtx = document.get  const dayCtx = document.get  const dayCtx = document.get  const dayCt: {  const dayCtx = docDat  const dayCtx = document.get  const dayCtx = document.get  cont   const dayCtx = document.get  const dayCtx = document.get  const dayCtx = document.get  const dayCtx = document.get  const dayCt: {  const dayCtx = docDat  const dayCtx = document.get  const dayCtx = document.get  cont   re  const dayCtx = document.get  const dayCtx = document.get  const dayCtx = document.get  const dayCtx = document.get  consttr  const dayCtx = documentcall  const dayCtx = documalue.toFixed(2) }
+          }
+        }
+      }
+    });
+  }
+
+  const hourData = <%= raw @order_stats[:profit_by_hour].to_json %>;
+  const hourCtx = document.getElementById('hourChart');
+  if (hourCtx) {
+    new Chart(hourCtx, {
+      type: 'line',
       data: {
-        labels: dayData.map(d => d.day),
+        labels: hourData.map(d => d.hour + ':00'),
         datasets: [{
           label: 'Profit ($)',
-          data: dayData.map(d => d.profit),
-          backgroundColor: 'rgba(75, 192, 192, 0.5)',
-          borderColor: 'rgba(75, 192, 192, 1)',
-          borderWidth: 1
+          data: hourData.map(d => d.profit),
+          borderColor: 'rgb(255, 159, 64)',
+          backgroundColor: 'rgba(255, 159, 64, 0.2)',
+          tension: 0.1
         }]
       },
       options: {
@@ -131,30 +137,5 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   }
-
-  // Hour Chart
-  const hourData = <%= raw @order_stats[:profit_by_hour].to_json %>;
-  const hourCtx = document.getElementById('hourChart');
-  if (hourCtx) {
-    new Chart(hourCtx, {
-      type: 'line',
-      data: {
-        labels: hourData.map        labe + ':00'),
-        labels: hourData.map        labe + ':00'),
-t');
-.to_json %>;
-ourDatourDatourDatourDatourDatourDatourDatourDatourDatourDatou59, ourDatourDatou  backgroundColor: 'rgba(255, 159, 64, 0.2)',
-          tension: 0.1
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: { legend: { display: false } },
-        scales: {
-          y: {
-            beginAtZero: true,
-            ticks: { callback: value => '$' + value.toFixed(2) }
-          }
-        }
-      }
-                  script>
+});
+</script>

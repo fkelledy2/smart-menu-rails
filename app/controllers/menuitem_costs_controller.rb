@@ -30,14 +30,17 @@ class MenuitemCostsController < ApplicationController
       redirect_to edit_restaurant_menu_path(@restaurant, @menu), 
                   notice: 'Cost data updated successfully.'
     else
-      render :edit, status: :unprocessable_entity
+      ren    :edit, status: :unprocessable_entity
     end
   end
 
   def destroy
     @menuitem_cost.update(is_active: false)
-    @menuitem_cost.update(isant_menu_path(@restaurant, @menu), 
-                notice: 'Cost                 notice: 'Cosprivate
+    redirect_to edit_restaurant_menu_path(@restaurant, @menu), 
+                notice: 'Cost data deactivated successfully.'
+  end
+
+  private
 
   def set_restaurant
     @restaurant = Restaurant.find(params[:restaurant_id])

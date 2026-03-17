@@ -22,7 +22,7 @@
     <div class="card">
       <div class="card-body text-center">
         <h6 class="text-muted">Avg Margin</h6>
-        <h2><%= number_to_percentage(@stats[:avg_margin], precision: 1) %></h2>
+        <h2><%= number_to_percentage(@stats[:average_margin_percentage], precision: 1) %></h2>
       </div>
     </div>
   </div>
@@ -30,22 +30,20 @@
     <div class="card border-success">
       <div class="card-body text-center">
         <h6 class="text-muted">Above Target</h6>
-        <h2 class="text-success"><%= @stats[:above_target] %></h2>
+        <h2 class="text-success"><%= @stats[:above_target_count] %></h2>
+      </div>
+    </div>
+  </di  </di  </di  </di  </d-  </di  </di  </di  </di  </d-  </di  </di  </di  </di  </d-ca  </di  <ext-center">
+        <h6 class="text-muted">Below Target</h6>
+        <h2 class="text-warning"><%= @stats[:below_target_count] %></h2>
       </div>
     </div>
   </div>
   <div class="col-md-2">
-    <div class="card border-warning">
+    <div class="card border-danger">
       <div class="card-body text-center">
-        <h        <h        <h        <h et</h6>
-        <h2 class="text-warning"><%= @stats[:below_target] %></h2>
-      </div>
-    </div>
-  </div>
-  <div cla  <div -m  <">
-    <div class="card bord    <div class="card bocl    <div class="card enter">
         <h6 class="text-muted">Critical</h6>
-        <h2 class="text-danger"><%= @stats[:critical] %></h2>
+        <h2 class="text-danger"><%= @stats[:critical_count] %></h2>
       </div>
     </div>
   </div>
@@ -53,15 +51,14 @@
 
 <div class="card">
   <div class="card-header">
-    <h5>Detailed Item Analysis</h5>
+    <h5>Detailed Cost Breakdown</h5>
   </div>
   <div class="card-body">
     <div class="table-responsive">
-      <table class="table table-hover table-sm">
+      <table class="table table-hover">
         <thead>
           <tr>
-            <th>Menu</th>
-            <th>Section</th>
+            <th>Category</th>
             <th>Item</th>
             <th>Price</th>
             <th>Ingredient</th>
@@ -72,28 +69,23 @@
             <th>Margin $</th>
             <th>Margin %</th>
             <th>Status</th>
-            <th>Status</th>
->
->
-hover t</thover t</thover t</thover t</thover t</thover <% hover t</thover t</thover t</thover t</thover t</thover <% hover enhover t</th  hover t</<% cost = mhover t</thover t</th%>
-                                                                                            <td><%= menuitem.menusection.name %></td>
+          </tr>
+        </thead>
+        <tbody>
+          <% @menuitems.each do |menuitem| %>
+            <% cost = menuitem.current_cost %>
+            <% next unless cost %>
+            <tr>
+              <td><%= menuitem.menusection.name %></td>
               <td><%= menuitem.localised_name('en') %></td>
-              <td><%= number_to_currency(menuitem.pri              <td><%= numb<t              <td><%= number_to_cued       st                        <td><%= number_to_currency(cost.labor_cost) %></td>
+              <td><%= number_to_currency(menuitem.price) %></td>
+              <td><%= number_to_currency(cost.ingredient_cost) %></td>
+              <td><%= number_to_currency(cost.labor_cost) %></td>
               <td><%= number_to_currency(cost.packaging_cost) %></td>
               <td><%= number_to_currency(cost.overhead_cost) %></td>
-              <td><%= number_to_currency(cost.total_cost) %></td>
-              <td>
-                <% margin = menuitem.profit_margin %>
-                <span class="<%= margin < 0 ? 'text-danger' : 'text-success' %>">
-                  <%= number_to_currency(margin) %>
-                   pan>
-              </td>
-              <td>
-                <% margin_pct = menuitem.profit_margin_percentage %>
-                <strong class="<%= margin_pct < 30 ? 'text-danger' : margin_pct < 50 ? 'text-warning' : 'text-success' %>">
-                  <%= number_to_percentage(margin_pct, precision: 1) %>
-                </strong>
-              </td>
+              <td><%= number_to_cur           total_cost) %></td>
+              <td><%= number_to_currency(menuitem.profit_margin) %></td>
+              <td><%= number_to_percentage(menuitem.profit_margin_percentage, precision: 1) %></td>
               <td>
                 <% case menuitem.margin_status %>
                 <% when 'above_target' %>
@@ -103,11 +95,8 @@ hover t</thover t</thover t</thover t</thover t</thover <% hover t</thover t</th
                 <% when 'critical' %>
                   <span class="badge bg-danger">Critical</span>
                 <% else %>
-                  <span class="badge bg-secondary">No Target</span>
-                <% end %>
+                  <span                   <span                   <span                end %>
               </td>
-              <td>
-                <%= link_to 'Edit Cost', new_                <%= link_to 'Edit Cost', new_  ost_p         aurant, menuite                <%,                 <io                <%= link_to 'Edit Cost', new_                <%= li    </td>
             </tr>
           <% end %>
         </tbody>

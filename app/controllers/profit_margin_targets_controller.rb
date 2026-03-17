@@ -5,7 +5,7 @@ class ProfitMarginTargetsController < ApplicationController
 
   def index
     @targets = ProfitMarginTarget.where(restaurant_id: @restaurant.id).or(
-      ProfitMarginTarget.where(menusection_id: @restaurant.menus.joins(:menusections).select('menusections.id'))
+      ProfitMarginTarget.where(menusection_id: @restaurant.menus.joins(:menusections).select('menusections.id')),
     ).active.order(effective_from: :desc)
   end
 
@@ -18,7 +18,7 @@ class ProfitMarginTargetsController < ApplicationController
     if @target.save
       redirect_to restaurant_profit_margin_targets_path(@restaurant), notice: 'Target created.'
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 
@@ -26,7 +26,7 @@ class ProfitMarginTargetsController < ApplicationController
     if @target.update(target_params)
       redirect_to restaurant_profit_margin_targets_path(@restaurant), notice: 'Target updated.'
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 
@@ -49,7 +49,7 @@ class ProfitMarginTargetsController < ApplicationController
     params.require(:profit_margin_target).permit(
       :restaurant_id, :menusection_id, :menuitem_id,
       :target_margin_percentage, :minimum_margin_percentage,
-      :effective_from, :effective_to
+      :effective_from, :effective_to,
     )
   end
 end

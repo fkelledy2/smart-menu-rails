@@ -12,13 +12,13 @@ class IngredientCsvImportService
 
     CSV.foreach(file.path, headers: true) do |row|
       ingredient = @restaurant.ingredients.find_or_initialize_by(name: row['name'])
-      
+
       ingredient.assign_attributes(
         category: row['category'],
         unit_of_measure: row['unit_of_measure'],
         current_cost_per_unit: row['cost_per_unit'],
         description: row['description'],
-        is_shared: row['is_shared'] == 'true'
+        is_shared: row['is_shared'] == 'true',
       )
 
       if ingredient.save
@@ -30,7 +30,7 @@ class IngredientCsvImportService
     end
 
     { success: true, imported: imported, skipped: skipped, errors: errors }
-  rescue => e
+  rescue StandardError => e
     { success: false, error: e.message }
   end
 end

@@ -126,13 +126,14 @@ class OcrMenuItem < ApplicationRecord
   end
 end
 
-  # AI cost estimation
-  def estimated_total_cost
-    return nil unless estimated_ingredient_cost
-    (estimated_ingredient_cost || 0) + (estimated_labor_cost || 0) + 
-    (estimated_packaging_cost || 0) + (estimated_overhead_cost || 0)
-  end
+# AI cost estimation
+def estimated_total_cost
+  return nil unless estimated_ingredient_cost
 
-  def has_cost_estimates?
-    estimated_ingredient_cost.present?
-  end
+  (estimated_ingredient_cost || 0) + (estimated_labor_cost || 0) +
+    (estimated_packaging_cost || 0) + (estimated_overhead_cost || 0)
+end
+
+def has_cost_estimates?
+  estimated_ingredient_cost.present?
+end
