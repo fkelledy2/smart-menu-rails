@@ -311,37 +311,40 @@ class Menuitem < ApplicationRecord
     alcoholic_from_classification?
   end
 
-
   # Profit Margin Tracking Methods
-  
+
   def current_cost
     menuitem_costs.active.order(effective_date: :desc).first
   end
-  
+
   def profit_margin
     return 0 unless price && current_cost
+
     price - current_cost.total_cost
   end
-  
+
   def profit_margin_percentage
-    return 0 unless price && price > 0 && current_cost
+    return 0 unless price&.positive? && current_cost
+
     ((profit_margin / price) * 100).round(2)
   end
-  
+
   def has_cost_data?
     current_cost.present?
   end
-  
+
   def cost_breakdown
     return {} unless current_cost
+
     {
       ingredient: current_cost.ingredient_cost,
       labor: current_cost.labor_cost,
       packaging: current_cost.packaging_cost,
       overhead: current_cost.overhead_cost,
-      total: current_cost.total_cost
+      total: current_cost.total_cost,
     }
   end
+
   private
 
   def abv_must_be_nil_or_zero_when_non_alcoholic

@@ -1,0 +1,69 @@
+<div class="row">
+  <div class="col-6">
+    <h4>Profit Margin Targets</h4>
+  </div>
+  <div class="col-6 text-end">
+    <div class="btn-group" role="group">
+      <button type="button" class="btn btn-dark">
+        <%= link_to new_restaurant_profit_margin_target_path(@restaurant), class: 'link-light' do %>
+          <i class="bi bi-plus"></i> Add Target
+        <% end %>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="alert alert-info mt-3">
+  <strong>Target Inheritance:</strong> Targets can be set at restaurant, section, or item level. 
+  Item-level targets override section-level, which override restaurant-level targets.
+</div>
+
+<div class="table-responsive mt-3">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Level</th>
+        <th>Target</th>
+        <th>Target %</th>
+        <th>Minimum %</th>
+        <th>Effective From</th>
+        <th>Effective To</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tb dy>
+      <% targets = ProfitMarginTarget.where(restaurant_id: @restaurant.id).active.order(effective_from: :desc) %>
+      <% targets.each do |target| %>
+        <tr>
+          <td>
+            <% if target.restaurant_id.present? %>
+              <span class="badge bg-primary">Restaurant</span>
+            <% elsif target.menusection_id.present? %>
+              <span class="badge bg-info">Section</span>
+            <% else %>
+              <span class="badge bg-success">Item</span>
+            <% end %>
+          </td>
+          <td>
+            <% if target.restaurant_id.present? %>
+              <%= @restaurant.name %>
+            <% elsif target.menusection_id.present? %>
+              <%= Menusection.find(target.menusection_id).name %>
+            <% else %>
+              <%= Menuitem.find(target.menuitem_id).localised_name('en') %>
+              <%= Menuit        </td>
+          <td><%= number_to_percentage(target.target_margin_percentage, precision: 1) %></td>
+          <td>
+            <% if target.minimum_margin_percentage.present? %>
+              <%= number_to_percentage(target.minimum_margin_percentage, precision: 1) %>
+            <% else %>
+              <span class="text-muted">Not set</span>
+            <% end %>
+          </td>
+          <td><%= target.effective_from.strftime('%b %d          <td><%= target.effective_from.strftime('%b t.effective_to.present? %>
+              <%= target.effective_to.strftime('%b %d, %Y') %>
+            <% else %>
+              <span class="text-muted">Ongoing</span>
+            <% end %>
+                                                    to                                   gin_target_path(@restaurant, target), class: 'btn btn-sm btn-outline-primary' %>
+            <%= button_to 'Delete', restaurant_profit_margin_target_path(@restaurant, target), method: :delete, class: 'btn btn-sm btn-outline-danger', data: { turbo_confirm: 'Are             <%= button_to 'Delete', restaurant_profit_margin_target_path(@restaurant, target

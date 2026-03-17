@@ -1,0 +1,117 @@
+<div class="page-header">
+  <div class="row">
+    <div class="col-6">
+      <h4>Profit Margin Report - <%= @restaurant.name %></h4>
+    </div>
+    <div class="col-6 text-end">
+      <%= link_to 'Back to Restaurant', edit_restaurant_path(@restaurant), class: 'btn btn-secondary' %>
+    </div>
+  </div>
+</div>
+
+<div class="row mb-4">
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-body text-center">
+        <h6 class="text-muted">Total Items</h6>
+        <h2><%= @stats[:total_items] %></h2>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-body text-center">
+        <h6 class="text-muted">Avg Margin</h6>
+        <h2><%= number_to_percentage(@stats[:avg_margin], precision: 1) %></h2>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-2">
+    <div class="card border-success">
+      <div class="card-body text-center">
+        <h6 class="text-muted">Above Target</h6>
+        <h2 class="text-success"><%= @stats[:above_target] %></h2>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-2">
+    <div class="card border-warning">
+      <div class="card-body text-center">
+        <h        <h        <h        <h et</h6>
+        <h2 class="text-warning"><%= @stats[:below_target] %></h2>
+      </div>
+    </div>
+  </div>
+  <div cla  <div -m  <">
+    <div class="card bord    <div class="card bocl    <div class="card enter">
+        <h6 class="text-muted">Critical</h6>
+        <h2 class="text-danger"><%= @stats[:critical] %></h2>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <h5>Detailed Item Analysis</h5>
+  </div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-hover table-sm">
+        <thead>
+          <tr>
+            <th>Menu</th>
+            <th>Section</th>
+            <th>Item</th>
+            <th>Price</th>
+            <th>Ingredient</th>
+            <th>Labor</th>
+            <th>Packaging</th>
+            <th>Overhead</th>
+            <th>Total Cost</th>
+            <th>Margin $</th>
+            <th>Margin %</th>
+            <th>Status</th>
+            <th>Status</th>
+>
+>
+hover t</thover t</thover t</thover t</thover t</thover <% hover t</thover t</thover t</thover t</thover t</thover <% hover enhover t</th  hover t</<% cost = mhover t</thover t</th%>
+                                                                                            <td><%= menuitem.menusection.name %></td>
+              <td><%= menuitem.localised_name('en') %></td>
+              <td><%= number_to_currency(menuitem.pri              <td><%= numb<t              <td><%= number_to_cued       st                        <td><%= number_to_currency(cost.labor_cost) %></td>
+              <td><%= number_to_currency(cost.packaging_cost) %></td>
+              <td><%= number_to_currency(cost.overhead_cost) %></td>
+              <td><%= number_to_currency(cost.total_cost) %></td>
+              <td>
+                <% margin = menuitem.profit_margin %>
+                <span class="<%= margin < 0 ? 'text-danger' : 'text-success' %>">
+                  <%= number_to_currency(margin) %>
+                   pan>
+              </td>
+              <td>
+                <% margin_pct = menuitem.profit_margin_percentage %>
+                <strong class="<%= margin_pct < 30 ? 'text-danger' : margin_pct < 50 ? 'text-warning' : 'text-success' %>">
+                  <%= number_to_percentage(margin_pct, precision: 1) %>
+                </strong>
+              </td>
+              <td>
+                <% case menuitem.margin_status %>
+                <% when 'above_target' %>
+                  <span class="badge bg-success">Above Target</span>
+                <% when 'below_target' %>
+                  <span class="badge bg-warning">Below Target</span>
+                <% when 'critical' %>
+                  <span class="badge bg-danger">Critical</span>
+                <% else %>
+                  <span class="badge bg-secondary">No Target</span>
+                <% end %>
+              </td>
+              <td>
+                <%= link_to 'Edit Cost', new_                <%= link_to 'Edit Cost', new_  ost_p         aurant, menuite                <%,                 <io                <%= link_to 'Edit Cost', new_                <%= li    </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

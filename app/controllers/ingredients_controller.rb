@@ -1,91 +1,71 @@
 class IngredientsController < ApplicationController
   before_action :authenticate_user!
+  before_action :set_restaurant
   before_action :set_ingredient, only: %i[show edit update destroy]
 
-  # Pundit authorization
   after_action :verify_authorized, except: [:index]
   after_action :verify_policy_scoped, only: [:index]
 
-  # GET /ingredients or /ingredients.json
   def index
-    @ingredients = policy_scope(Ingredient).where(archived: false)
+    @ingredients = policy_scope(Ingredient)
+                     .where(restaurant_id: [@restaurant.id, nil])
+                     .where(archived: false)
+                     .order(:name)
   end
 
-  # GET /ingredients/1 or /ingredients/1.json
-  def show
-    authorize @ingredient
-  end
-
-  # GET /ingredients/new
   def new
-    @ingredient = Ingredient.new
+    @ingredient = @restaurant.ingredients.new
     authorize @ingredient
   end
 
-  # GET /ingredients/1/edit
   def edit
     authorize @ingredient
   end
 
-  # POST /ingredients or /ingredients.json
   def create
-    @ingredient = Ingredient.new(ingredient_params)
+    @ingredient = @restaurant.ingredients.new(ingredient_params)
     authorize @ingredient
 
-    respond_to do |format|
-      if @ingredient.save
-        format.html do
-          redirect_to ingredient_url(@ingredient),
-                      notice: t('common.flash.created', resource: t('activerecord.models.ingredient'))
-        end
-        format.json { render :show, status: :created, location: @ingredient }
-      else
-        format.html { render :new, status: :unprocessable_content }
-        format.json { render json: @ingredient.errors, status: :unprocessable_content }
-      end
+    if @ingredient.save
+      redirect_to restaurant_ingredients_path(@restaurant), 
+                  notice: 'Ingredient created successfully.'
+    else
+      render :new, status: :unprocessable_entity
     end
   end
 
-  # PATCH/PUT /ingredients/1 or /ingredients/1.json
   def update
     authorize @ingredient
 
-    respond_to do |format|
-      if @ingredient.update(ingredient_params)
-        format.html do
-          redirect_to ingredient_url(@ingredient),
-                      notice: t('common.flash.updated', resource: t('activerecord.models.ingredient'))
-        end
-        format.json { render :show, status: :ok, location: @ingredient }
-      else
-        format.html { render :edit, status: :unprocessable_content }
-        format.json { render json: @ingredient.errors, status: :unprocessable_content }
-      end
+    if @ingredient.update(ingredient_params)
+      redirect_to restaurant_ingredients_path(@restaurant), 
+                  notice: 'Ingredient updated successfully.'
+    else
+      render :edit, status: :unprocessable_entity
     end
   end
 
-  # DELETE /ingredients/1 or /ingredients/1.json
   def destroy
     authorize @ingredient
-
     @ingredient.update(archived: true)
-    respond_to do |format|
-      format.html do
-        redirect_to ingredients_url, notice: t('common.flash.deleted', resource: t('activerecord.models.ingredient'))
-      end
-      format.json { head :no_content }
-    end
+    redirect_to restaurant_ingredients_path(@restaurant), 
+                notice: 'Ingredient archived successfully.'
   end
 
   private
 
-  # Use callbacks to share common setup or constraints between actions.
+  def set_restaurant
+    @restaurant = Restaurant.find(params[:restaurant_id])
+  end
+
   def set_ingredient
     @ingredient = Ingredient.find(params[:id])
   end
 
-  # Only allow a list of trusted parameters through.
   def ingredient_params
-    params.require(:ingredient).permit(:name, :description)
+    params.require(:ingredient).permit(
+      :name, :description, :unit_of_measure, :current_cost_per_unit,
+      :supplier_id, :category, :is_shared, :parent_ingredient_id
+    )
   end
 end

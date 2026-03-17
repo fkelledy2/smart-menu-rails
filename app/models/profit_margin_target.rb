@@ -3,17 +3,19 @@ class ProfitMarginTarget < ApplicationRecord
   belongs_to :menusection, optional: true
   belongs_to :menuitem, optional: true
 
-  validates :target_margin_percentage, presence: true, 
-            numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100 }
-  validates :minimum_margin_percentage, 
-            numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100 }, 
+  validates :target_margin_percentage, presence: true,
+                                       numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100 }
+  validates :minimum_margin_percentage,
+            numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100 },
             allow_nil: true
   validates :effective_from, presence: true
 
   validate :exactly_one_target_level
 
-  scope :active, -> { where('effective_from <= ? AND (effective_to IS NULL OR effective_to >= ?)', 
-                            Date.current, Date.current) }
+  scope :active, lambda {
+    where('effective_from <= ? AND (effective_to IS NULL OR effective_to >= ?)',
+          Date.current, Date.current,)
+  }
   scope :for_restaurant, ->(restaurant_id) { where(restaurant_id: restaurant_id) }
   scope :for_menusection, ->(menusection_id) { where(menusection_id: menusection_id) }
   scope :for_menuitem, ->(menuitem_id) { where(menuitem_id: menuitem_id) }

@@ -1,0 +1,54 @@
+<div class="row">
+  <div class="col-6">
+    <h4>Ingredients</h4>
+  </div>
+  <div class="col-6 text-end">
+    <div class="btn-group" role="group">
+      <button type="button" class="btn btn-dark">
+        <%= link_to new_restaurant_ingredient_path(@restaurant), class: 'link-light' do %>
+          <i class="bi bi-plus"></i> Add Ingredient
+        <% end %>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="table-responsive mt-3">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Category</th>
+        <th>Unit</th>
+        <th>Cost per Unit</th>
+        <th>Type</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @restaurant.ingredients.active.each do |ingredient| %>
+        <tr>
+          <td><%= ingredient.name %></td>
+          <td><%= ingredient.category %></td>
+          <td><%= ingredient.unit_of_measure %></td>
+          <td>
+            <% if ingredient.current_cost_per_unit.present? %>
+              <%= number_to_currency(ingredient.current_cost_per_unit) %>
+            <            <           <      las            <            pan>
+                                                <td>
+            <% if ingredient.is_shared %>
+              <span class="badge bg-info">Shared</span>
+            <% elsif ingredient.parent_ingredient_id.present? %>
+              <span class="badge bg-warning">Override</span>
+            <% else %>
+              <span class="badge bg-primary">Restaurant</span>
+            <% end %>
+          </td>
+          <td>
+            <%= link_to 'Edit', edit_restaurant_ingredient_path(@restaurant, ingredient), class: 'btn btn-sm btn-outline-primary' %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

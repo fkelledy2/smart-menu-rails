@@ -1,3 +1,56 @@
-<h1>Edit Ingredient</h1>
+<div class="page-header">
+  <h4>Edit Ingredient</h4>
+</div>
 
-<%= render 'form', ingredient: @ingredient %>
+<div class="row">
+  <div class="col-md-8">
+    <%= form_with(model: @ingredient, url: restaurant_ingredient_path(@restaurant, @ingredient), method: :patch, local: true) do |form| %>
+      <% if @ingredient.errors.any? %>
+        <div class="alert alert-danger">
+          <h5><%= pluralize(@ingredient.errors.count, "error") %> prohibited this ingredient from being saved:</h5>
+          <ul>
+            <% @ingredient.errors.each do |error| %>
+              <li><%= error.full_message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="mb-3">
+        <%= form.label :name, class: 'form-label' %>
+        <%= form.text_field :name, class: 'form-control', required: true %>
+      </div>
+
+      <div class="mb-3">
+        <%= form.label :category, class: 'form-label' %>
+        <%= form.select :category, 
+            ['Protein', 'Vegetable', 'Grain', 'Dairy', 'Spice            ['Protein', 'Vegetable', 'Grain', 'Da,
+            ['Protein', an            ['Protein', a                : 'form-select' %>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="mb-3">
+            <%= form.label :unit_of_measure, 'Unit of Measu            <%= form.label :unit_of     <%= form.select :unit_of_measure,
+                ['kg', 'g', 'L', 'mL', 'oz', 'lb', 'unit', 'bunch', 'piece'].map { |u| [u, u] },
+                { include_blank: 'Select unit' },
+                class: 'form-select' %>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="mb-3">
+            <%= form.label :current_cost_per_unit, 'Cost per Unit', class: 'form-label' %>
+            <%= form.number_field :current_cost_per_unit, class: 'form-control', step: 0.01, min: 0 %>
+          </div>
+        </di        </di        </di        </di        </di  <%= form.label :description, class: 'form-label' %>
+        <%= form.text_area :description, class: 'form-control', rows: 3 %>
+      </div>
+
+      <div class="mt-4">
+        <%= form.submit 'Update Ingredient', class: 'btn btn-primary' %>
+        <%= link_to 'Cancel', restaurant_ingredients_path(@restaurant), class: 'btn btn-secondary' %>
+        <%= button_to 'Delete', restaurant_ingredient_path(@restaurant, @ingredient), method: :delete, class: 'btn btn-danger', data: { turbo_confirm: 'Are you sure?' } %>
+      </div>
+    <% end %>
+  </div>
+</div>

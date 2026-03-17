@@ -1,21 +1,17 @@
-class IngredientPolicy < ApplicationPolicy
+class ProfitMarginTargetPolicy < ApplicationPolicy
   class Scope < Scope
     def resolve
       if user.super_admin?
         scope.all
       else
-        scope.joins(:restaurant).where(restaurants: { id: user.restaurants.pluck(:id) })
-             .or(scope.where(is_shared: true, restaurant_id: nil))
+        restaurant_ids = user.restaurants.pluck(:id)
+        scope.where(restaurant_id: restaurant_ids)
       end
     end
   end
 
   def index?
     true
-  end
-
-  def show?
-    user.super_admin? || record.restaurant_id.in?(user.restaurants.pluck(:id)) || record.is_shared?
   end
 
   def create?

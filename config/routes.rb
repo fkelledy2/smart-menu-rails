@@ -310,6 +310,12 @@ Rails.application.routes.draw do
       end
     end
     resources :genimages
+
+    # Profit Margin Tracking
+    resources :ingredients, only: [:index, :new, :create, :edit, :update, :destroy]
+    resources :profit_margin_targets, only: [:index, :new, :create, :edit, :update, :destroy]
+    get 'profit_margins', to: 'profit_margins#index'
+    get 'profit_margins/report', to: 'profit_margins#report'
     
     # Staff invitations
     resources :staff_invitations, only: [:create]
@@ -433,6 +439,8 @@ Rails.application.routes.draw do
             get :image_status
           end
         end
+          
+          resources :menuitem_costs, only: [:new, :create, :edit, :update, :destroy]
       end
       
       # Menu-level menuitem operations

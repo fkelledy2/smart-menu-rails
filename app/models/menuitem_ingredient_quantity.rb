@@ -9,6 +9,7 @@ class MenuitemIngredientQuantity < ApplicationRecord
   # Calculate total cost for this ingredient in the recipe
   def total_cost
     return 0 unless quantity && cost_per_unit
+
     quantity * cost_per_unit
   end
 

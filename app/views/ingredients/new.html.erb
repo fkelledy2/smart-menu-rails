@@ -1,3 +1,62 @@
-<h1>New ingredient</h1>
+<div class="page-header">
+  <h4>New Ingredient</h4>
+</div>
 
-<%= render 'form', ingredient: @ingredient %>
+<div class="row">
+  <div class="col-md-8">
+    <%= form_with(model: @ingredient, url: restaurant_ingredients_path(@restaurant), local: true) do |form| %>
+      <% if @ingredient.errors.any? %>
+        <div class="alert alert-danger">
+          <h5><%= pluralize(@ingredient.errors.count, "error") %> prohibited this ingredient from being saved:</h5>
+          <ul>
+            <% @ingredient.errors.each do |error| %>
+              <li><%= error.full_message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="mb-3">
+        <%= form.label :name, class: 'form-label' %>
+        <%= form.text_field :name, class: 'form-control', required: true %>
+      </div>
+
+      <div class="mb-3">
+        <%= form.label :category, class: 'form-label' %>
+        <%= form.select :category, 
+            ['Protein', 'Vegetable', 'Grain', 'Dairy', 'Spice', 'Oil', 'Beverage', 'Other']            ['Protein', '        { include_blank:             ['Prote,
+            class: 'form-select' %>
+      </div>
+
+      <div class="row">
+                                                                                                                    asure', class: 'form-label' %>
+                                                              ['kg', 'g', 'L', 'mL', 'oz', 'lb', 'unit', 'bunch', 'piece'].map { |u| [u, u] },
+                { include_blank: 'Select unit' },
+                class: 'form-select' %>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="mb-3">
+            <%= form.label :current_cost_per_unit, 'Cost per Unit', class: 'form-label' %>
+            <%= form.number_field :current_cost_per_unit, class: 'form-control', step: 0.01, min: 0 %>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <%= form.label :description, class: 'form-label' %>
+        <%= form.text_area :description, class: 'form-control', rows: 3 %>
+      </div>
+
+      <div class="mb-3 form-check">
+        <%= form.check_box :is_shared, class: 'form-check-input' %>
+        <%= form.label :is_shared, 'Share with all restaurants (chain-wide)', class: 'form-check-label' %>
+      </div>
+
+      <div class="mt-4">
+        <%= form.submit 'Create Ingredient', class: 'btn btn-primary' %>
+        <%= link_to 'Cancel', restaurant_ingredients_path(@restaurant), class: 'btn btn-secondary' %>
+      </div>
+    <% end %>
+  </div>
+</div>

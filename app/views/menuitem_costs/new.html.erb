@@ -1,0 +1,114 @@
+<div class="page-header">
+  <h4>Add Cost Data for <%= @menuitem.localised_name('en') %></h4>
+</div>
+
+<div class="row">
+  <div class="col-md-8">
+    <%= form_with(model: @menuitem_cost, url: restaurant_menu_menusection_menuitem_menuitem_costs_path(@restaurant, @menu, @menuitem.menusection, @menuitem), local: true) do |form| %>
+      <% if @menuitem_cost.errors.any? %>
+        <div class="alert alert-danger">
+          <h5><%= pluralize(@menuitem_cost.errors.count, "error") %> prohibited this cost from being saved:</h5>
+          <ul>
+            <% @menuitem_cost.errors.each do |error| %>
+              <li><%= error.full_message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="alert alert-info">
+        <strong>Current Price:</strong> <%= number_to_currency(@menuitem.price) %>
+      </div>
+
+      <h5 class="mt-4">Cost Components</h5>
+      
+      <div class="row">
+        <div class="col-md-6">
+          <div cl          <
+            <%= form.label :ingredient_cost, 'Ingredient Cost', class: 'form-label' %>
+            <%= form.number_field :ingredient_cost, class: 'form-control', step: 0.01, min: 0, value: 0 %>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="mb-3">
+            <%= form.label :labor_cost, 'Labor Cost', class: 'form-label' %>
+            <%= form.number_field :labor_cost, class: 'form-control', step: 0.01, min: 0, value: 0 %>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="mb-3">
+            <%= form.label :packaging_cost, 'Packaging Cost', class: 'form-label' %>
+            <%= form.number_field :packaging_cost, class: 'form-control', step: 0.01, min: 0, value: 0 %>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="mb-3">
+            <%= form.label :overhead_cost, 'Overhead Cost', class: 'form-label' %>
+            <%= form.number_field :overhead_cost, class: 'form-control', step: 0.01, min: 0, value: 0 %>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <%= form.label :cost_source, 'Cost Source', class: 'form-label' %>
+        <%= form.select :cost_source, 
+            [['Manual Entry', 'manual'], ['Recipe Calculated', 'recipe_calculated'], ['AI Estimated', 'ai_estimated']],
+            {}, class: 'form-select' %>
+      </div>
+
+      <div class="mb-3">
+        <%= form.label :effective_date, 'Effective Date', class: 'form-label' %>
+        <%= form.date_field :effective_date, class: 'form-control', required: true %>
+      </div>
+
+      <div class="mb-3">
+        <%= form.label :notes, class: 'form-label' %>
+        <%= form.text_area :notes, class: 'form-control', rows: 3, placeholder: 'Optional notes about this cost entry' %>
+      </div>
+
+      <div class="mt-4">
+        <%= form.submit 'Save Cost Data', class: 'btn btn-primary' %>
+        <%= link_to 'Cancel', edit_restaurant_menu_path(@restaurant, @menu), class: 'btn btn-secondary' %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="col-md-4">
+    <div cla    <div">
+      <div class="card-header">
+        <strong>Cost Summary</strong>
+      </div>
+      <div class="card-body">
+        <div id="cost-summary">
+          <p><strong>Total Cost:</strong> <span id="total-cost">$0.00</span></p>
+          <p><strong>Profit Margin:</strong> <span id="profit-margin">$<%= number_with_precision(@menuitem.price || 0, precision: 2) %></span></p>
+          <p><strong>Margin %:</strong> <span id="margin-percentage">100.0%</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const price = <%= @menuitem.price || 0 %>;
+  const costInputs = document.querySelectorAll('input[type="number"]');
+  
+  function updateSummary() {
+    const ingredientCost = parseFloat(document.querySelector('#menuitem_cost_ingredient_cost').value) || 0;
+    const laborCost = parseFloat(document.querySelector('#menuitem_cost_labor_cost').value) || 0;
+    const packagingCost = parseFloat(document.querySelector('#menuitem_cost_packaging    const packagingCost =const overheadCost = parseFloat(document.querySelector('#menuitem_cost_overhead_cost').value) || 0;
+    
+    const total    const total    const total    const total    const total    const total   ofitMargin = price - totalCost;
+    const marginPercentage = price > 0 ? (profitMargin / price * 100) : 0;
+    
+    document.getElementById('total-cost').textContent = '$' + totalCost.toFixed(2);
+    document.getElementById('profit-margin').textContent = '$' + profitMargin.toFixed(2);
+    document.get    document.get    document.get    document.get    doercen    document.get    document.get    docuts.forEach(input => {
+    input.addEventListener('input', updateSummary);
+  });
+});
+</script>

@@ -81,6 +81,15 @@
       <li class="nav-item" role="presentation">
         <button class="nav-link link-dark" id="tracks-tab" data-bs-toggle="tab" data-bs-target="#track" type="button" role="tab" aria-controls="trackConfig" aria-selected="false"><%= t(".tracksTab") %></button>
       </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link link-dark" id="ingredients-tab" data-bs-toggle="tab" data-bs-target="#ingredient" type="button" role="tab" aria-controls="ingredientConfig" aria-selected="false">Ingredients</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link link-dark" id="profit-margins-tab" data-bs-toggle="tab" data-bs-target="#profitmargin" type="button" role="tab" aria-controls="profitMarginConfig" aria-selected="false">Profit Margins</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link link-dark" id="margin-targets-tab" data-bs-toggle="tab" data-bs-target="#margintarget" type="button" role="tab" aria-controls="marginTargetConfig" aria-selected="false">Margin Targets</button>
+      </li>
   <% end %>
 </ul>
 <div class="menu-content-positioned tab-content" id="restaurantConfig">
@@ -163,6 +172,24 @@
             <div class="col-12">
               <%= render 'showOrdrs', restaurant: @restaurant, edit: true %>
             </div>
+
+      <div class="tab-content" id="ingredientConfig">
+        <div class="tab-pane fade" id="ingredient" role="tabpanel" aria-labelledby="ingredient-tab">
+          <%= render 'showIngredients', restaurant: @restaurant, edit: true %>
+        </div>
+      </div>
+
+      <div class="tab-content" id="profitMarginConfig">
+        <div class="tab-pane fade" id="profitmargin" role="tabpanel" aria-labelledby="profit-margins-tab">
+          <%= render 'showProfitMargins', restaurant: @restaurant, edit: true %>
+        </div>
+      </div>
+
+      <div class="tab-content" id="marginTargetConfig">
+        <div class="tab-pane fade" id="margintarget" role="tabpanel" aria-labelledby="margin-targets-tab">
+          <%= render 'showMarginTargets', restaurant: @restaurant, edit: true %>
+        </div>
+      </div>
           </div>
         </div>
       </div>

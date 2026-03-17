@@ -1,0 +1,46 @@
+<div class="page-header">
+  <h4>New Profit Margin Target</h4>
+</div>
+
+<div class="row">
+  <div class="col-md-8">
+    <%= form_with(model: @target, url: restaurant_profit_margin_targets_path(@restaurant), local: true) do |form| %>
+      <%= form.hidden_field :restaurant_id, value: @restaurant.id %>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="mb-3">
+            <%= form.label :target_margin_percentage, 'Target Margin %', class: 'form-label' %>
+            <%= form.number_field :target_margin_percentage, class: 'form-control', step: 0.1, min: 0, max: 100, required: true %>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="mb-3">
+            <%= form.label :minimum_margin_percentage, 'Minimum Margin %', class: 'form-label' %>
+            <%= form.number_field :minimum_margin_percentage, class: 'form-control', step: 0.1, min: 0, max: 100 %>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="mb-3">
+            <%= form.label :effective_from, class: 'form-label' %>
+            <%= form.date_field :effective_from, class: 'form-control', value: Date.current, required: true %>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="mb-3">
+            <%= form.label :effective_to, class: 'form-label' %>
+            <%= form.date_field :effective_to, class: 'form-control' %>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-4">
+        <%= form.submit 'Create Target', class: 'btn btn-primary' %>
+        <%= link_to 'Cancel', edit_restaurant_path(@restaurant), class: 'btn btn-secondary' %>
+      </div>
+    <% end %>
+  </div>
+</div>
