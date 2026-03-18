@@ -150,16 +150,6 @@ class RestaurantTest < ActiveSupport::TestCase
       tabletype: :indoor,
       status: :free,
     )
-    assert_equal 'staff', restaurant.onboarding_next_section
-
-    restaurant.employees.create!(
-      user: @user,
-      name: 'Manager',
-      eid: 'EID1',
-      role: :manager,
-      status: :active,
-    )
-    assert_equal 'menus', restaurant.onboarding_next_section
 
     restaurant.menus.create!(
       name: 'Menu 1',

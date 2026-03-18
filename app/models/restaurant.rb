@@ -210,6 +210,8 @@ class Restaurant < ApplicationRecord
     end
   end
 
+  before_validation :infer_currency_from_country
+
   validates :name, presence: true
   validates :address1, presence: false
   validates :city, presence: false
@@ -231,29 +233,25 @@ class Restaurant < ApplicationRecord
   end
 
   def onboarding_next_section
-    # 1) Details: require description, currency, and address + country (for correct tax inference)
+    # Optimized: Address first (Google Places), then country/currency (auto-inferred), then name
     address_ok = address1.present? || city.present? || postcode.present?
-    details_ok = description.present? && currency.present? && address_ok && country.present?
-    return 'details' unless details_ok
-
-    # 2) Localization: require at least one language and a default language set
+    return 'details' unless address_ok
+    return 'details' unless country.present?
+    return 'details' unless currency.present?
+    return 'details' unless name.present?
+    
     has_locales = restaurantlocales.any?
     has_default_locale = restaurantlocales.exists?(status: 'active', dfault: true)
     return 'localization' unless has_locales && has_default_locale
-
-    # 3) Tables: require at least one table setting
+    
     return 'tables' unless tablesettings.exists?(archived: false)
-
-    # 4) Staff: require at least one employee
-    return 'staff' unless employees.any?
-
-    # 5) Menus: require at least one menu
+    
     has_any_menu = restaurant_menus
       .where.not(status: RestaurantMenu.statuses[:archived])
       .joins(:menu)
       .exists?(menus: { archived: false })
     return 'menus' unless has_any_menu
-
+    
     nil
   end
 
@@ -339,5 +337,15 @@ class Restaurant < ApplicationRecord
 
   def invalidate_restaurant_caches
     AdvancedCacheService.invalidate_restaurant_caches(id)
+  end
+
+  private
+
+  def infer_currency_from_country
+    return if currency.present?
+    return if country.blank?
+    
+    inferred = CountryCurrencyInference.new.infer(country)
+    self.currency = inferred if inferred.present?
   end
 end
