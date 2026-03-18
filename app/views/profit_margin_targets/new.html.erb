@@ -7,9 +7,9 @@
     <%= form_with(model: @target, url: restaurant_profit_margin_targets_path(@restaurant), local: true) do |form| %>
       <div class="mb-3">
         <%= form.label :target_level, 'Target Level', class: 'form-label' %>
-        <%= form.select :target_level, 
+        <%= form.select :target_level,
             [['Restaurant-wide', 'restaurant'], ['Menu Section', 'menusection'], ['Individual Item', 'menuitem']],
-            {}, 
+            {},
             class: 'form-select',
             id: 'target_level_select',
             onchange: 'updateTargetLevelFields(this.value)' %>
@@ -22,8 +22,9 @@
       <div id="menusection_field" style="display: none;">
         <div class="mb-3">
           <%= form.label :menusection_id, 'Menu Section', class: 'form-label' %>
-          <%= form.collec ion_select :menusection_id, 
-              @restaurant.menu              @restaurons)              @restaurant.menu       ->(ms) { "#{ms.menu.name} - #{ms.name}" },
+          <%= form.collection_select :menusection_id,
+              @restaurant.menus.flat_map(&:menusections),
+                                   (ms) { "#{ms.menu.name} - #{ms.name}" },
               { include_blank: 'Select a section' },
               class: 'form-select' %>
         </div>
@@ -41,7 +42,9 @@
         </div>
       </div>
 
-                                                                 <div class="mb-3">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="mb-3">
             <%= form.label :target_margin_percentage, 'Target Margin %', class: 'form-label' %>
             <%= form.number_field :target_margin_percentage, class: 'form-control', step: 0.1, min: 0, max: 100, required: true %>
           </div>
@@ -76,27 +79,41 @@
     <% end %>
   </div>
 
-                                                                                               >Target Inheritance</strong>
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header">
+        <strong>Target Inheritance</strong>
       </div>
       <div class="card-body">
-        <p class="small">Targets are inherited in this order:</p>        <p l cl      mall">
-                       tem-level</strong> targets overri                       t                            tem-level</strong> targets overri         vel</li>
+        <p class="small">Targets are inherited in this order:</p>
+        <ol class="small">
+          <li><strong>Item-level</strong> targets override all others</li>
+          <li><strong>Section-level</strong> targets override restaurant-level</li>
           <li><strong>Restaurant-level</strong> targets are the default</li>
         </ol>
-        <p cl        <p cl t-m        <p c           <p cl        <p cl tt a        <p cl        <p cl st        <p cl        <p cl t-m        <p c           <p cl    ms as needed.
+        <p class="small text-muted mt-3">
+          This allows you to set a general target for your restaurant,
+          then customize for specific sections or items as needed.
         </p>
       </div>
     </div>
   </div>
 </div>
 
-<script<script<scripdate<script<scripel<scripel) {
-                         ('                         ('                         ('     ementById('menusection_field').style.display = 'none';
-  document.getElementById('menuitem_field').style.  docume= 'no  document.g (  docum==   document.getElementById('menuitem_field').style.  docume= 'no  document.g (  docum==   document.getElementById('menuitemit_margin_target_menusection_id').value = '';  document.getElementById('menuitem_field').style.  docume= 'no  document.g (  docum==   doevel === 'menusection') {
+<script>
+function updateTargetLevelFields(level) {
+  document.getElementById('restaurant_field').style.display = 'none';
+  document.getElementById('  document.getElementById('  document.getElementById('  document.getElementById('  document.g.display = 'none';
+
+  if (level === 'restaurant') {
+    document.getElementById('restaurant_field').style.display = 'block';
+    document.querySelector('#profit_margin_target_menusection_id').value = '';
+    document.querySelector('#profit_margin_target_menuitem_id').value = '';
+  } else if (level === 'menusection') {
     document.getElementById('menusection_field').style.display = 'block';
     document.querySelector('#profit_margin_target_menuitem_id').value = '';
   } else if (level === 'menuitem') {
-    document.getElementBy    documenm_field').style.display = 'block';
+    document.getElementById('menuitem_field').style.display = 'block';
     document.querySelector('#profit_margin_target_menusection_id').value = '';
   }
 }
