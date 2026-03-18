@@ -743,8 +743,8 @@ export function initOrderBindings() {
   }
 
   // Tip presets and manual change (delegated so modal content replacement doesn't drop bindings)
-  try { $(document).off('click.tipPreset.core').on('click.tipPreset.core', '.tipPreset', function () {
-    const presetTipPercentage = parseFloat($(this).text());
+  try { $(document).off('click.tipPreset.core').on('click.tipPreset.core', '.tip-preset-btn', function () {
+    const presetTipPercentage = parseFloat($(this).find('.tipPreset').text());
     const gross = resolveGrossForTipCalc();
     if (!Number.isFinite(gross) || gross <= 0) return;
     const tip = ((gross / 100) * presetTipPercentage).toFixed(2);
