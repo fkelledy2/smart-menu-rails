@@ -1,0 +1,114 @@
+<div class="container-fluid mt-4">
+  <div class="row">
+    <div class="col-12">
+      <h1 class="mb-4">
+        <i class="bi bi-grid-3x3"></i> Menu Engineering Matrix
+      </h1>
+      
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5 class="mb-0">Classification Summary</h5>
+        </div>
+        <div class="card-body">
+          <div class="row text-center">
+            <div class="col-md-3">
+              <h3 class="text-success"><%= @menu_engineering[:summary][:stars_count] %></h3>
+              <p>Stars (<%= number_to_percentage(@menu_engineering[:summary][:stars_percentage], precision: 0) %>)</p>
+            </div>
+            <div class="col-md-3">
+              <h3 class="text-warning"><%= @menu_engineering[:summary][:plowhorses_count] %></h3>
+              <p>Plowhorses (<%= number_to_percentage(@menu_engineering[:summary][:plowhorses_percentage], precision: 0)              <p>Plowhorses (<%= number_to_percentage(@menu_engineering[:summary][:plowhorses_percentage], precgi              <p>Plowhorsescount] %></h3>
+              <p>Puzzles (<%= number_t              <p>Puzzlineering[:summary][:puzzles_percentage], precision: 0) %>)</p>
+            </div>
+            <div class="col-md-3">
+              <h3 class="text-danger"><%= @menu_engineering[:summary][:dogs_count] %><                             <h3 class="text-centage(@menu_engineering[:summary][:dogs_percentage], precision: 0) %>)</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 mb-4">
+          <div class="card border-success">
+            <div class="card-header bg-success text-white">
+              <h5 class="mb-0"><i class="bi bi-star-fill"></i> Stars</h5>
+              <small>High Profit, High Popularity</small>
+            </div>
+            <div class="card-body">
+              <% @menu_engineering[:stars].each do |item| %>
+                <div class="mb-3 pb-3 border-bottom">
+                  <h6><%= item[:menuitem].name %></h6>
+                  <div class="small text-muted">
+                    Sold: <%= item[:quantity_sold] %> | 
+                    Margin: <%= number_to_percentage(item[:profit_margin_percentage], precision: 1) %> |
+                    Profit: <%= number_to_currency(item[:total_profit]) %>
+                  </div>
+                  <div class="small mt-1">
+                    <strong>Action:</strong> Feature prominently, maintain quality
+                  </div>
+                </div>
+              <% e              <% e    v>              <% e         /div>
+
+                                              <div class="card border-warning">
+            <div class="ca            <div class="ca            <div class="ca            <div clauck"></i> Plowhorses</h5>
+              <small>Low Profit, High Popularity</small>
+            </div>
+            <            <            <            <            <     [:plowhorses].each do |item| %>
+                <div class                <div class                <div clas%= item[:menuitem].name %></h6>
+                  <div class="small text-muted">
+                    Sold: <%= item[:quantity_sold] %> | 
+                    Margin: <%= number_to_percentage(item[:profit_margin_percentage], precision: 1) %> |
+                    Profit: <%= number_to_currency(item[:total_profit]) %>
+                  </div>
+                  <div class="small mt-1">
+                    <strong>Action:</strong> Increase price or reduce costs
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+          <div class="card border-info">
+            <div class="card-header bg-info text-white">
+              <h5 class="mb-0"><i class="bi bi-puzzle"></i> Puzzles</h5>
+              <small>High Profit, Low Popularity</small>
+            </div>
+            <div class="card-body">
+              <% @menu_engineering[:puzzle              <% @menu_engineering[:puzzle              <% @menu_engineering[:puzzle              <% @menu_menuitem].name %></h6>
+                  <div class="small text-muted">
+                    Sold: <%= item[:                    Sold: <%= item[:                    Sold: <%= item[:                    Sold: <%=age]                    Sold: <%= item[:                    Sold: <%= item[(item[:total_profit]) %>
+                  </div>
+                  <div                  <div                  <div                  <div        more, improve visibility
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+          <div class="card border-danger">
+            <div class="card-header bg-danger text-white">
+              <h5 class="mb-0"><i class="bi bi              <h5 class="mb-0"><i class="bi bi         it, Low Popularity</small>
+            </div>
+                                                                                                                                                                                     :m                                             class="small text-muted">
+                    Sold: <%= item[:quantity_sold] %> | 
+                    Margin: <%= number_to_percentage(item[:profit_margin_percentage], precision: 1) %> |
+                    Profit: <%= number_to_currency(item[:total_profit]) %>
+                  </div>
+                  <div class="small mt-1">
+                    <strong>Action:</strong> Consider removing or repositioning
+                  </div>
+                </div>
+              <% en   >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <%= link_to 'Back to Optimization Dashboard', restaurant_menu_optimizations_path(@restaurant), class: 'btn btn-secondary' %>
+    </div>
+  </div>
+</div>

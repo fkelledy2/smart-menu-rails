@@ -1,0 +1,131 @@
+<div class="container-fluid mt-4">
+  <div class="row">
+    <div class="col-12">
+      <h1 class="mb-4">
+        <i class="bi bi-graph-up-arrow"></i> Menu Optimization Dashboard
+      </h1>
+      
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5 class="mb-0">Optimization Summary</h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-3">
+              <div class="text-center">
+                <h3 class="text-primary"><%= @optimization_plan[:action_items].count %></h3>
+                <p class="text-muted">Total Actions</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="text-center">
+                <h3 class="text-success"><%= @optimization_plan[:estimated_impact][:items_to_adjust] %></h3>
+                <p class="text-muted">Price Adjustments</p>
+              </div>
+                                                                                                                                          mber                 pti                    ated_                  argin_improvement], precision: 1) %></h3>
+                <p class="text-muted">Avg Margin Improvement</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="text-center">
+                <h3 class="text-warning"><%= number_to_currency(@optimization_plan[:estimated_impact][:estimated_monthly_profit_increase]) %></h3>
+                <p class="text-muted">Est. Monthly Increase</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mb-4">
+        <div class="col-md-6">
+          <%= link_to restaurant_menu_optimizations_menu_engineering_path(@restaurant), class: 'btn btn-lg btn-outline-primary w-100 mb-3' do %>
+            <i class="bi bi-grid-3x3"></i> Menu Engineering Matrix
+          <% end %>
+        </div>
+        <div class="col-md-6">
+          <%= link_to restaurant_menu_optimizations_bundling_path(@restaurant), class: 'btn btn-lg btn-outline-success w-100 mb-3' do %>
+            <i class="bi bi-box-seam"></i> Bundling Opportunities
+          <% end %>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class        <ader d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">Recommended Actions</h5>
+          <button class="btn btn-primary" onclick="applySelectedOptimizations()">
+            <i class="bi bi-check-circle"></i> Apply Selected
+          </button>
+        </div>
+        <div class="card-body">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th width="40"><input type="checkbox" id="select-all"></th>
+                <th>Priority</th>
+                <th>Type</th>
+                <th>Item</th>
+                <th>Action</th>
+                <th>Expected Impact</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @optimization_plan[:action_items].each do |action| %>
+                <tr>
+                  <td><input type="checkbox" class="action-checkbox" data-action-id="<%= action[:id] %>"></td>
+                  <td>
+                    <span class="badge bg-<%= action[:priority] == 'high' ? 'danger' : action[:priority] == 'medium' ? 'warning' : 'secondary' %>">
+                      <%= action[:priority].upcase %>
+                    </span>
+                  </td>
+                  <td><%= action[:type].humanize %></td>
+                  <td><%= action[:menuitem_name] || "#{action[:item1_name]} + #{action[:item2_name]}" %></td>
+                  <td>
+                    <% if action[:type] == 'price_adjustment' %>
+                      <%= number_to_currency(action[:current_price]) %> → <%= number_to_currency(action[:recommended_price]) %>
+                      (<%= number_to_percentage(action[:change_percentage], precision: 1) %>)
+                    <% elsif action[:type] == 'create_bundle' %>
+                      Bundle for <%= number_to_currency(action[:bundle_price]) %>
+                    <% else %>
+                      <%= action[:reasoning] %>
+                    <% end %>
+                  </td>
+                  <td class="text-muted small"><%= action[:expected_impact] %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.getElementById('select-all').addEventListener('change', function() {
+  documen  documen  documen  documen  documen  documen  do => cb.checked = this.checked);
+});
+
+function applySelectedOpfunction applySelectest selected = Array.from(document.querySelectorAll('.action-checkbox:checked'))
+    .map(cb => cb.dataset.actionId);
+  
+  if (selected.length === 0) {
+    alert('Please select at least one action to apply');
+    return;
+  }
+  
+  if (confirm(`Apply ${selected.length} optimization(s)?`)) {
+    fetch('<%= restaurant_menu_optimizations_apply_path(@restaurant) %>', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content
+      },
+      body: JSON.stringify({ selected_actions: selected })
+    }).then(response => {
+      if (response.ok) {
+        window.location.reload();
+      }
+    });
+  }
+}
+</script>
