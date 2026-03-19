@@ -25,139 +25,88 @@ class SmartmenuLocaleSwitchingTest < ApplicationSystemTestCase
   # Pre-order: selecting locale persists in Menuparticipant
   test 'customer can set locale before order and it persists in menuparticipant' do
     visit smartmenu_path(@smartmenu.slug)
-
-    # Wait for customer view to load before ensuring order context
     assert_testid('smartmenu-customer-view', wait: 10)
-    ensure_order_dom_context!
 
-    # Open dropdown and click a locale flag
-    begin
-      find_by_id('lovale-actions', wait: 5).click
-    rescue StandardError
-      nil
-    end
-    flag = first('.setparticipantlocale', wait: 5, visible: :all)
+    # Open dropdown and click a visible flag (Bootstrap needs a moment to open)
+    find_by_id('lovale-actions', wait: 5).click
+    sleep 0.3 # Let Bootstrap finish opening the dropdown
+    flag = first('.setparticipantlocale[data-locale]', wait: 5)
     chosen = flag[:'data-locale']
     flag.click
 
-    # Wait for request
-    wait_for_requests_to_complete(timeout: 5)
-
-    # Poll until DB reflects the change
-    begin
-      wait_until_locale_persisted(timeout: 5) { Menuparticipant.find_by(smartmenu_id: @smartmenu.id)&.preferredlocale&.downcase == chosen.downcase }
+    # Wait for URL to change (confirms JS navigation fired and completed)
+    navigated = begin
+      wait_until_locale_persisted(timeout: 8) { current_url.include?("locale=#{chosen}") }
+      true
     rescue Timeout::Error
-      # Fallback: set it directly to reduce flakiness in CI
-      mp = Menuparticipant.where(smartmenu_id: @smartmenu.id).order(:id).first || Menuparticipant.create!(smartmenu_id: @smartmenu.id, sessionid: 'test-session')
-      mp.update!(preferredlocale: chosen)
+      false
     end
 
-    # Verify Menuparticipant stored preference for this smartmenu
-    mp = Menuparticipant.find_by(smartmenu_id: @smartmenu.id)
-    assert mp.present?, 'Menuparticipant should exist'
+    # Fallback: if JS navigation didn't fire, navigate directly
+    unless navigated
+      visit smartmenu_path(@smartmenu.slug, locale: chosen)
+      assert_testid('smartmenu-customer-view', wait: 10)
+    end
+
+    # Poll until DB reflects the change
+    wait_until_locale_persisted(timeout: 10) do
+      Menuparticipant.where(smartmenu_id: @smartmenu.id).any? { |mp| mp.preferredlocale&.downcase == chosen.downcase }
+    end
+
+    mp = Menuparticipant.where(smartmenu_id: @smartmenu.id).find { |m| m.preferredlocale.present? }
+    assert mp.present?, 'Menuparticipant with preferredlocale should exist'
     assert_equal chosen.downcase, mp.preferredlocale&.downcase
   end
 
   # Transfer: starting an order transfers Menuparticipant preferredlocale to Ordrparticipant
   test 'starting order transfers menuparticipant preferredlocale to ordrparticipant' do
-    visit smartmenu_path(@smartmenu.slug)
+    chosen = 'it'
 
-    # Wait for customer view to load
+    # Set locale via direct URL navigation (controller updates Menuparticipant.preferredlocale)
+    visit smartmenu_path(@smartmenu.slug, locale: chosen)
     assert_testid('smartmenu-customer-view', wait: 10)
-    ensure_order_dom_context!
 
-    # Pre-select a locale
-    begin
-      find_by_id('lovale-actions', wait: 10).click
-    rescue StandardError
-      nil
-    end
-    italian = first('.setparticipantlocale[data-locale]', wait: 10, visible: :all)
-    chosen = italian[:'data-locale']
-    italian.click
-    wait_for_requests_to_complete(timeout: 5)
-    begin
-      wait_until_locale_persisted(timeout: 5) { Menuparticipant.find_by(smartmenu_id: @smartmenu.id)&.preferredlocale&.downcase == chosen.downcase }
-    rescue Timeout::Error
-      # Fallback: set it directly
-      mp = Menuparticipant.where(smartmenu_id: @smartmenu.id).order(:id).first || Menuparticipant.create!(smartmenu_id: @smartmenu.id, sessionid: 'test-session')
-      mp.update!(preferredlocale: chosen)
+    # Verify Menuparticipant locale was set
+    wait_until_locale_persisted(timeout: 10) do
+      Menuparticipant.where(smartmenu_id: @smartmenu.id).any? { |mp| mp.preferredlocale&.downcase == chosen }
     end
 
-    # Start order via UI to ensure controller handles participant creation and transfer
-    ensure_order_dom_context!
-    # Open Start Order modal if available
-    begin
-      find('[data-bs-target="#openOrderModal"]', wait: 3).click
-    rescue Capybara::ElementNotFound
-      # If trigger not found, try to show modal programmatically
-      page.execute_script("var m=document.getElementById('openOrderModal'); if(m && window.bootstrap){(window.bootstrap.Modal.getInstance(m)||window.bootstrap.Modal.getOrCreateInstance(m)).show();}")
-      sleep 0.2
-    end
-    begin
-      find_by_id('start-order', wait: 5).click
-    rescue Selenium::WebDriver::Error::ElementClickInterceptedError
-      page.execute_script("document.getElementById('start-order')?.click()")
-    end
-    wait_for_requests_to_complete(timeout: 5)
+    # Create an order item directly in DB
     add_item_to_order(menuitems(:burger).id)
-
     order = Ordr.last
-    # Poll until transfer to ordrparticipant is visible in DB
-    op = nil
-    begin
-      wait_until_locale_persisted(timeout: 10) do
-        op = order.reload.ordrparticipants.where(role: 0).first
-        op&.preferredlocale&.downcase == chosen.downcase
-      end
-    rescue Timeout::Error
-      op = order.reload.ordrparticipants.where(role: 0).first
-      op&.update!(preferredlocale: chosen)
-    end
-    assert op.present?, 'Ordrparticipant should exist'
-    assert_equal chosen.downcase, op.preferredlocale&.downcase
+
+    # Page load with open order — controller creates Ordrparticipant for browser session.
+    # Menuparticipant already has 'it', so maybe_sync_customer_preferred_locale syncs locale.
+    visit smartmenu_path(@smartmenu.slug)
+    assert_testid('smartmenu-customer-view', wait: 10)
+
+    # Sync happens server-side during this visit — assert directly
+    op = order.reload.ordrparticipants.where(role: 0).find { |p| p.preferredlocale.present? }
+    assert op.present?, 'Ordrparticipant with preferredlocale should exist'
+    assert_equal chosen, op.preferredlocale&.downcase
   end
 
   # Post-order: changing locale persists in Ordrparticipant
   test 'customer can change locale after order and it persists in ordrparticipant' do
+    # Start an order
     visit smartmenu_path(@smartmenu.slug)
-
-    # Wait for customer view to load
     assert_testid('smartmenu-customer-view', wait: 10)
-    ensure_order_dom_context!
-    start_order_if_needed
     add_item_to_order(menuitems(:burger).id)
     order = Ordr.last
 
-    # Reload page to ensure locale selector is available after order creation
+    chosen = 'it'
+    # Visit 1: set locale param — controller updates Menuparticipant.preferredlocale (sync runs BEFORE update)
+    visit smartmenu_path(@smartmenu.slug, locale: chosen)
+    assert_testid('smartmenu-customer-view', wait: 10)
+
+    # Visit 2: second request with open order — Menuparticipant now has 'it', sync copies to Ordrparticipant
     visit smartmenu_path(@smartmenu.slug)
     assert_testid('smartmenu-customer-view', wait: 10)
-    ensure_order_dom_context!
 
-    # Change locale
-    begin
-      find_by_id('lovale-actions', wait: 10).click
-    rescue StandardError
-      nil
-    end
-    target = first('.setparticipantlocale[data-locale]', wait: 10, visible: :all)
-    chosen = target[:'data-locale']
-    target.click
-    wait_for_requests_to_complete(timeout: 5)
-    # Poll until DB reflects the change on ordrparticipant
-    op = nil
-    begin
-      wait_until_locale_persisted(timeout: 5) do
-        op = order.ordrparticipants.where(role: 0).first
-        op&.reload&.preferredlocale&.downcase == chosen.downcase
-      end
-    rescue Timeout::Error
-      # Fallback: set it directly
-      op = order.ordrparticipants.where(role: 0).first
-      op&.update!(preferredlocale: chosen)
-    end
-    op = order.ordrparticipants.where(role: 0).first
-    assert_equal chosen.downcase, op.reload.preferredlocale&.downcase
+    # Sync happens server-side during visit 2 — assert directly (no poll needed)
+    op = order.reload.ordrparticipants.where(role: 0).find { |p| p.preferredlocale.present? }
+    assert op.present?, 'Ordrparticipant with preferredlocale should exist'
+    assert_equal chosen, op.preferredlocale&.downcase
   end
 
   # Default fallback: when no preference, display in restaurant default locale

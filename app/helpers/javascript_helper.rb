@@ -47,10 +47,20 @@ module JavascriptHelper
       validate: options.delete(:validate) || true,
     }
 
-    attributes = form_data_attributes('restaurant', form_options)
-    merged_data = (options[:data] || {}).merge(attributes)
+    url = model.persisted? ? restaurant_path(model) : restaurants_path
 
-    form_with(model: model, **options.merge(data: merged_data), &)
+    attributes = form_data_attributes('restaurant', form_options)
+    merged_data = (options.delete(:data) || {}).merge(attributes)
+
+    defaults = {
+      model: model,
+      url: url,
+      method: model.persisted? ? :patch : :post,
+      local: true,
+      data: merged_data,
+    }
+
+    form_with(**defaults.merge(options), &)
   end
 
   def menu_form_with(model, options = {}, &)

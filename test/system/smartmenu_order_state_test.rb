@@ -204,7 +204,7 @@ class SmartmenuOrderStateTest < ApplicationSystemTestCase
 
     order.reload
 
-    # The displayed total is gross (nett + tax + service), not just the raw prices
+    # JS state hydration overwrites the server-rendered value with totals.gross
     expected_total = order.gross
 
     # Verify in modal

@@ -5,17 +5,14 @@ class SmartmenuCustomerOrderingTest < ApplicationSystemTestCase
     @restaurant = restaurants(:one)
     @menu = menus(:ordering_menu)
     @table = tablesettings(:table_one)
-    @smartmenu = smartmenus(:one) # test-menu-ordering slug
+    @smartmenu = smartmenus(:one)
 
-    # Ensure smartmenu has table set
     @smartmenu.update!(tablesetting: @table)
 
-    # Menu sections
     @starters = menusections(:starters_section)
     @mains = menusections(:mains_section)
     @desserts = menusections(:desserts_section)
 
-    # Menu items
     @spring_rolls = menuitems(:spring_rolls)
     @caesar_salad = menuitems(:caesar_salad)
     @burger = menuitems(:burger)
@@ -23,11 +20,10 @@ class SmartmenuCustomerOrderingTest < ApplicationSystemTestCase
     @salmon = menuitems(:salmon)
     @chocolate_cake = menuitems(:chocolate_cake)
     @ice_cream = menuitems(:ice_cream)
-  end
 
-  # ===================
-  # MENU BROWSING TESTS
-  # ===================
+    # Ensure no user is signed in for customer tests
+    logout if respond_to?(:logout)
+  end
 
   test 'customer can access smartmenu and see customer view' do
     visit smartmenu_path(@smartmenu.slug)
@@ -61,7 +57,7 @@ class SmartmenuCustomerOrderingTest < ApplicationSystemTestCase
   end
 
   test 'customer can see menu items in sections' do
-    visit smartmenu_path(@smartmenu.slug)
+    visit smartmenu_path(@smartmenu.slug, view: 'customer')
 
     # Verify items in starters section
     assert_testid("menu-item-#{@spring_rolls.id}")
@@ -156,7 +152,7 @@ class SmartmenuCustomerOrderingTest < ApplicationSystemTestCase
     # Open modal to verify total
     open_view_order_modal
 
-    # Total displayed is gross (includes taxes), not just raw prices
+    # JS state hydration overwrites server-rendered value with totals.gross
     order = Ordr.where(restaurant_id: @restaurant.id, tablesetting_id: @table.id, menu_id: @menu.id, status: [0, 20, 22, 24, 25, 30]).order(:created_at).last
     within_testid('cart-total-amount') do
       assert_text "$#{format('%.2f', order.gross)}"
@@ -177,7 +173,7 @@ class SmartmenuCustomerOrderingTest < ApplicationSystemTestCase
     # Verify in UI
     open_view_order_modal
 
-    # Total displayed is gross (includes taxes)
+    # JS state hydration overwrites server-rendered value with totals.gross
     order.reload
     within_testid('cart-total-amount') do
       assert_text "$#{format('%.2f', order.gross)}"

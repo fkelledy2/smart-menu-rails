@@ -33,7 +33,8 @@ class SmartmenusController < ApplicationController
     # causing stale table dropdown contents (e.g., missing newly added tables).
     load_header_cache_buster
 
-    unless @menu.restaurant_id == @restaurant.id || RestaurantMenu.exists?(restaurant_id: @restaurant.id, menu_id: @menu.id)
+    if @menu && (@menu.restaurant_id == @restaurant.id || RestaurantMenu.exists?(restaurant_id: @restaurant.id, menu_id: @menu.id))
+    else
       redirect_to root_url and return
     end
 
@@ -361,7 +362,10 @@ class SmartmenusController < ApplicationController
   def maybe_sync_customer_preferred_locale
     @menuparticipant = Menuparticipant.find_by(sessionid: safe_session_id)
     return unless @menuparticipant
-    return if @ordrparticipant.preferredlocale == @menuparticipant.preferredlocale
+    
+    # Compare case-insensitively and sync if menuparticipant has a locale set
+    menu_locale = @menuparticipant.preferredlocale&.downcase
+    return if menu_locale.blank? || @ordrparticipant.preferredlocale&.downcase == menu_locale
 
     @ordrparticipant.update!(preferredlocale: @menuparticipant.preferredlocale)
   end

@@ -424,7 +424,7 @@ module TestIdHelpers
 
     menuitem = Menuitem.find(item_id)
     before_count = order.ordritems.count
-    Ordritem.create!(ordr: order, menuitem: menuitem, status: 0, ordritemprice: menuitem.price)
+    Ordritem.create!(ordr: order, menuitem: menuitem, status: 0, ordritemprice: menuitem.price, quantity: 1)
     participant = Ordrparticipant.where(ordr: order, role: 0).first_or_create!(sessionid: 'test')
     Ordraction.create!(ordrparticipant: participant, ordr: order, ordritem: order.ordritems.last, action: 2)
     recalc_order_totals!(order)
@@ -567,10 +567,9 @@ module TestIdHelpers
   # Opens the cart bottom sheet (replaces old viewOrderModal)
   def open_view_order_modal(**)
     # Reload the page so server-rendered modal reflects current DB order
-    page.execute_script('window.location.reload()')
-    sleep 0.5
-    wait_for_requests_to_complete(timeout: 5)
-    wait_for_dom_update(timeout: 2)
+    # Use page.refresh so Capybara waits for the full page load to complete
+    page.refresh
+    find('body', wait: 10) # Ensure new page DOM is ready
     ensure_order_dom_context!
     begin
       page.evaluate_async_script(<<~JS, 10000)

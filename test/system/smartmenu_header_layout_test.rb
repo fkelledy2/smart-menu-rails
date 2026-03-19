@@ -15,17 +15,18 @@ class SmartmenuHeaderLayoutTest < ApplicationSystemTestCase
     @menu = Menu.create!(
       name: 'Test Menu',
       restaurant: @restaurant,
-      user: users(:one),
+      status: 'active',
     )
 
     @smartmenu = Smartmenu.create!(
       menu: @menu,
       restaurant: @restaurant,
+      slug: 'test-menu',
     )
   end
 
   test 'no nested order-button-group divs' do
-    visit smartmenu_url(@menu, view: 'customer')
+    visit smartmenu_path(@smartmenu.slug, view: 'customer')
     assert_selector '.header-order-row', visible: true, wait: 10
 
     # Count all order-button-group divs (including nested ones)
@@ -34,7 +35,7 @@ class SmartmenuHeaderLayoutTest < ApplicationSystemTestCase
   end
 
   test 'menu name and buttons on same row' do
-    visit smartmenu_url(@menu, view: 'customer')
+    visit smartmenu_path(@smartmenu.slug, view: 'customer')
     assert_selector '.header-order-row', visible: true, wait: 10
 
     header = find('.header-order-row')
