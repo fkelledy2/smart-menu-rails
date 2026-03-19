@@ -7,8 +7,6 @@ class ApplicationController < ActionController::Base
   helper_method :current_user_has_active_subscription?
   helper_method :user_has_active_subscription?
 
-  # include StructuredLogging # Temporarily disabled
-  # include MetricsTracking # Temporarily disabled
   around_action :switch_locale
 
   before_action :debug_request_in_test

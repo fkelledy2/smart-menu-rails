@@ -71,7 +71,6 @@ class MenuPerformanceMvTest < ActiveSupport::TestCase
     assert_respond_to MenuPerformanceMv, :for_restaurant
     assert_respond_to MenuPerformanceMv, :for_menu
     assert_respond_to MenuPerformanceMv, :for_date_range
-    assert_respond_to MenuPerformanceMv, :for_month
     assert_respond_to MenuPerformanceMv, :popular_items
     assert_respond_to MenuPerformanceMv, :top_revenue_items
     assert_respond_to MenuPerformanceMv, :recent

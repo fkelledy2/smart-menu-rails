@@ -7,8 +7,6 @@ class PairingRecommendation < ApplicationRecord
   validates :drink_menuitem_id, uniqueness: { scope: :food_menuitem_id }
 
   scope :top_pairings, ->(drink_id) { where(drink_menuitem_id: drink_id).order(score: :desc) }
-  scope :best_matches, -> { where(pairing_type: 'complement').order(score: :desc) }
-  scope :surprising, -> { where(pairing_type: 'surprise').order(score: :desc) }
 
   def display_score
     (score.to_f * 100).round(0)

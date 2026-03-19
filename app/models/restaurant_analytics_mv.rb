@@ -12,7 +12,6 @@ class RestaurantAnalyticsMv < ApplicationRecord
   # Scopes for common queries
   scope :for_restaurant, ->(restaurant_id) { where(restaurant_id: restaurant_id) }
   scope :for_date_range, ->(start_date, end_date) { where(date: start_date..end_date) }
-  scope :for_month, ->(month) { where(month: month) }
   scope :recent, ->(days = 30) { where(date: days.days.ago..) }
 
   # Aggregation methods

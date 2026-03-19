@@ -74,7 +74,6 @@ class TablesettingsController < ApplicationController
           redirect_to edit_restaurant_path(id: @tablesetting.restaurant.id),
                       notice: t('common.flash.created', resource: t('activerecord.models.tablesetting'))
         end
-        # format.html { redirect_to tablesetting_url(@tablesetting), notice: "Tablesetting was successfully created." }
         format.json do
           render :show, status: :created, location: restaurant_tablesetting_url(@restaurant, @tablesetting)
         end

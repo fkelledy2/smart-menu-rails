@@ -76,12 +76,10 @@ class MenuparticipantsController < ApplicationController
         @menuparticipant.smartmenu = Smartmenu.find(params[:menuparticipant][:smartmenu_id]) if params[:menuparticipant][:smartmenu_id]
         @menuparticipant.save
         broadcastState
-        #         format.html { redirect_to @menuparticipant, notice: "Menuparticipant was successfully updated." }
         format.json do
           render :show, status: :ok, location: restaurant_menu_menuparticipant_url(@restaurant, @menu, @menuparticipant)
         end
       else
-        #         @smartmenus = Smartmenu.all
         format.html { render :edit, status: :unprocessable_content }
         format.json { render json: @menuparticipant.errors, status: :unprocessable_content }
       end

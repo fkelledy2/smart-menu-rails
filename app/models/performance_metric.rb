@@ -10,7 +10,6 @@ class PerformanceMetric < ApplicationRecord
   scope :slow, ->(threshold = 1000) { where('response_time > ?', threshold) }
   scope :errors, -> { where('status_code >= 400') }
   scope :by_endpoint, ->(endpoint) { where(endpoint: endpoint) }
-  scope :by_controller, ->(controller) { where(controller: controller) }
 
   # Calculate average response time for a timeframe
   def self.avg_response_time(timeframe)

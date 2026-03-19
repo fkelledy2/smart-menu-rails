@@ -218,7 +218,6 @@ class EmployeesController < ApplicationController
         format.html do
           redirect_to edit_restaurant_path(id: @employee.restaurant.id), notice: t('employees.controller.updated')
         end
-        # format.html { redirect_to @return_url, notice: "Employee was successfully updated." }
         format.json { render :show, status: :ok, location: @employee }
       else
         format.turbo_stream { render :edit, status: :unprocessable_content }

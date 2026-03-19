@@ -11,7 +11,6 @@ class SystemAnalyticsMv < ApplicationRecord
 
   # Scopes for common queries
   scope :for_date_range, ->(start_date, end_date) { where(date: start_date..end_date) }
-  scope :for_month, ->(month) { where(month: month) }
   scope :recent, ->(days = 30) { where(date: days.days.ago..) }
   scope :current_month, -> { where(month: Date.current.beginning_of_month) }
   scope :previous_month, -> { where(month: 1.month.ago.beginning_of_month) }

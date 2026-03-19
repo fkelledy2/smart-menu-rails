@@ -67,7 +67,6 @@ class TaxesController < ApplicationController
           format.html do
             redirect_to edit_restaurant_path(id: @tax.restaurant.id), notice: t('taxes.controller.created')
           end
-          # format.html { redirect_to @return_url, notice: "Tax was successfully created." }
           format.json { render :show, status: :created, location: @tax }
         else
           format.turbo_stream { render :new, status: :unprocessable_content }
@@ -99,7 +98,6 @@ class TaxesController < ApplicationController
           format.html do
             redirect_to edit_restaurant_path(id: @tax.restaurant.id), notice: t('taxes.controller.updated')
           end
-          # format.html { redirect_to tax_url(@tax), notice: "Tax was successfully updated." }
           format.json { render :show, status: :ok, location: @tax }
         else
           format.turbo_stream { render :edit, status: :unprocessable_content }

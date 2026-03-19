@@ -13,7 +13,6 @@ class MenuPerformanceMv < ApplicationRecord
   scope :for_restaurant, ->(restaurant_id) { where(restaurant_id: restaurant_id) }
   scope :for_menu, ->(menu_id) { where(menu_id: menu_id) }
   scope :for_date_range, ->(start_date, end_date) { where(date: start_date..end_date) }
-  scope :for_month, ->(month) { where(month: month) }
   scope :popular_items, ->(limit = 10) { where(popularity_rank: ..limit) }
   scope :top_revenue_items, ->(limit = 10) { where(revenue_rank: ..limit) }
   scope :recent, ->(days = 30) { where(date: days.days.ago..) }

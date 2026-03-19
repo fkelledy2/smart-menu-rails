@@ -131,10 +131,7 @@ class Menuitem < ApplicationRecord
   end
 
   # Scopes
-  scope :tasting_items, -> { joins(:menusection).where(menusections: { tasting_menu: true }) }
-  scope :non_tasting_items, -> { joins(:menusection).where(menusections: { tasting_menu: false }) }
   scope :visible, -> { where(hidden: [false, nil]) }
-  scope :hidden_items, -> { where(hidden: true) }
   scope :carrier, -> { where(tasting_carrier: true) }
 
   # Validations for tasting supplements and ordering

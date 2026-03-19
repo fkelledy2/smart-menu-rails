@@ -16,6 +16,4 @@ class MenuSourceChangeReview < ApplicationRecord
   validates :status, presence: true
   validates :detected_at, presence: true
 
-  scope :with_diff, -> { where(diff_status: :diff_complete) }
-  scope :needs_diff, -> { where(diff_status: :diff_pending) }
 end

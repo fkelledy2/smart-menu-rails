@@ -3,7 +3,6 @@
 class ExplorePage < ApplicationRecord
   scope :published, -> { where(published: true) }
   scope :city_level, -> { where(category_slug: nil) }
-  scope :with_restaurants, -> { where('restaurant_count > 0') }
 
   validates :country_slug, :country_name, :city_slug, :city_name, presence: true
   validates :category_slug, uniqueness: { scope: %i[country_slug city_slug], allow_nil: true }

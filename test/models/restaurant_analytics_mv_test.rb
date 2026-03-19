@@ -66,7 +66,6 @@ class RestaurantAnalyticsMvTest < ActiveSupport::TestCase
     # Test that scopes exist and return ActiveRecord::Relation
     assert_respond_to RestaurantAnalyticsMv, :for_restaurant
     assert_respond_to RestaurantAnalyticsMv, :for_date_range
-    assert_respond_to RestaurantAnalyticsMv, :for_month
     assert_respond_to RestaurantAnalyticsMv, :recent
 
     # Test scope chaining

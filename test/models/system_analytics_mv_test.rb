@@ -73,10 +73,6 @@ class SystemAnalyticsMvTest < ActiveSupport::TestCase
     assert_respond_to SystemAnalyticsMv, :for_date_range
   end
 
-  test 'has for_month scope' do
-    assert_respond_to SystemAnalyticsMv, :for_month
-  end
-
   test 'has recent scope' do
     assert_respond_to SystemAnalyticsMv, :recent
   end

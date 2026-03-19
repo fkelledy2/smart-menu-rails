@@ -17,7 +17,6 @@ class ProfitMarginTarget < ApplicationRecord
           Date.current, Date.current,)
   }
   scope :for_restaurant, ->(restaurant_id) { where(restaurant_id: restaurant_id) }
-  scope :for_menusection, ->(menusection_id) { where(menusection_id: menusection_id) }
   scope :for_menuitem, ->(menuitem_id) { where(menuitem_id: menuitem_id) }
 
   private

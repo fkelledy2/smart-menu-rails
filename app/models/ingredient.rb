@@ -28,7 +28,6 @@ class Ingredient < ApplicationRecord
   scope :shared, -> { where(is_shared: true, restaurant_id: nil) }
   scope :for_restaurant, ->(restaurant_id) { where(restaurant_id: restaurant_id) }
   scope :active, -> { where(archived: false) }
-  scope :by_category, ->(category) { where(category: category) }
 
   # Get effective cost (use override if exists, otherwise parent)
   def effective_cost_per_unit
