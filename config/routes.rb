@@ -599,9 +599,14 @@ Rails.application.routes.draw do
   # ============================================================================
   # ADMIN TOOLS (Protected)
   # ============================================================================
-  authenticate :user, lambda { |u| u.admin? } do
+  # Sidekiq and Flipper are restricted to super_admin to prevent regular admins
+  # from manipulating background jobs or toggling platform-wide feature flags.
+  authenticate :user, lambda { |u| u.super_admin? } do
     mount Sidekiq::Web => '/sidekiq'
     mount Flipper::UI.app(Flipper) => '/flipper', as: :flipper_ui
+  end
+
+  authenticate :user, lambda { |u| u.admin? } do
     mount ActionCable.server => "/cable"
     
     draw :madmin

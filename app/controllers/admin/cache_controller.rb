@@ -2,6 +2,11 @@ class Admin::CacheController < ApplicationController
   before_action :authenticate_user!
   before_action :ensure_admin!
 
+  ALLOWED_CACHE_KEY_PREFIXES = %w[
+    menu restaurant smartmenu schema_org menuitem menusection
+    advanced_cache identity_cache views/
+  ].freeze
+
   # Pundit authorization
   after_action :verify_authorized
 
@@ -86,8 +91,17 @@ class Admin::CacheController < ApplicationController
   def keys
     authorize %i[admin cache], :keys?
 
-    pattern = params[:pattern] || '*'
-    limit = params[:limit]&.to_i || 100
+    # Restrict patterns to known safe prefixes to prevent admins from scanning
+    # for sensitive cached data (tokens, sessions, credentials) via glob patterns.
+    raw_pattern = params[:pattern].to_s.presence || '*'
+    pattern = if raw_pattern == '*' || ALLOWED_CACHE_KEY_PREFIXES.any? { |p| raw_pattern.start_with?(p) }
+                raw_pattern
+              else
+                Rails.logger.warn("[SECURITY] Admin #{current_user.id} requested cache keys with disallowed pattern: #{raw_pattern}")
+                '*'
+              end
+
+    limit = params[:limit]&.to_i&.clamp(1, 500) || 100
 
     cache_keys = AdvancedCacheService.list_cache_keys(pattern, limit: limit)
 

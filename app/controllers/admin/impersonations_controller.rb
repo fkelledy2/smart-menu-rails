@@ -32,14 +32,16 @@ module Admin
                           "has impersonated #{recent_count} users in the last hour")
       end
 
+      reason = params[:reason].to_s.strip.slice(0, 500).presence
+
       audit = ImpersonationAudit.create!(
         admin_user: current_user,
         impersonated_user: user,
         started_at: Time.current,
         expires_at: 30.minutes.from_now,
         ip_address: request.remote_ip,
-        user_agent: request.user_agent.to_s,
-        reason: params[:reason].to_s.presence,
+        user_agent: request.user_agent.to_s.slice(0, 512),
+        reason: reason,
       )
 
       session[:impersonation_audit_id] = audit.id

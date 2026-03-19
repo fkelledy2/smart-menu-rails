@@ -138,10 +138,12 @@ class ApplicationController < ActionController::Base
     expires_at_raw = session[:impersonation_expires_at].to_s
     expires_at = begin
       Time.zone.parse(expires_at_raw)
-    rescue StandardError
+    rescue ArgumentError, TypeError => e
+      Rails.logger.error("[SECURITY] Impersonation expiry could not be parsed (#{e.class}: #{e.message}) — terminating session")
       nil
     end
 
+    # A missing or unparseable expiry is treated as expired immediately.
     return if expires_at && Time.current <= expires_at
 
     finalize_impersonation_audit!(ended_reason: 'expired')
@@ -190,16 +192,12 @@ class ApplicationController < ActionController::Base
 
   # Add debugging for CSRF issues
   rescue_from ActionController::InvalidAuthenticityToken do |exception|
+    # Never log actual token values — they are session-bound secrets.
     Rails.logger.error "CSRF token verification failed: #{exception.message}"
-    Rails.logger.error "Session ID: #{session.id}"
-    Rails.logger.error "Request method: #{request.method}"
-    Rails.logger.error "Request path: #{request.path}"
-    Rails.logger.error "Form authenticity token: #{form_authenticity_token}"
-    Rails.logger.error "Request authenticity token: #{request.headers['X-CSRF-Token'] || params[:authenticity_token]}"
+    Rails.logger.error "Request method: #{request.method}, path: #{request.path}"
 
-    # For development, show more details
     if Rails.env.development?
-      render plain: "CSRF Error: #{exception.message}\nSession: #{session.id}\nExpected: #{form_authenticity_token}\nReceived: #{request.headers['X-CSRF-Token'] || params[:authenticity_token]}",
+      render plain: "CSRF Error: #{exception.message}\nRequest: #{request.method} #{request.path}",
              status: :unprocessable_content
     else
       redirect_to new_user_session_path, alert: 'Security token expired. Please try logging in again.'

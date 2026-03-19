@@ -44,6 +44,9 @@ class Payments::WebhooksController < ApplicationController
 
     Rails.logger.info("[StripeWebhook] Enqueued ingest job event_id=#{evt.id} job_id=#{job.job_id}")
   rescue StandardError => e
+    # The inline fallback still processes a verified Stripe::Event object — the
+    # signature was already validated by build_stripe_event before this point.
+    # We never pass unverified payloads to the ingestor.
     Rails.logger.warn("[StripeWebhook] Failed to enqueue ingest job (falling back to inline ingest): #{e.class}: #{e.message}")
     begin
       Payments::Webhooks::StripeIngestor.new.ingest!(

@@ -80,7 +80,9 @@ class Payments::SquareWebhooksController < ApplicationController
     return false if signature.blank?
 
     # Square signature = Base64(HMAC-SHA256(signature_key, notification_url + body))
-    notification_url = request.original_url
+    # Must use the registered webhook URL without query parameters — Square does not
+    # include query params when computing the signature.
+    notification_url = request.base_url + request.path
     string_to_sign = notification_url + payload
     expected = Base64.strict_encode64(
       OpenSSL::HMAC.digest('sha256', key, string_to_sign),

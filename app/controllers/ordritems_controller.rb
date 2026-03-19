@@ -49,6 +49,7 @@ class OrdritemsController < ApplicationController
   skip_before_action :verify_authenticity_token, only: %i[create update destroy]
   before_action :set_restaurant
   before_action :set_ordritem, only: %i[show edit update destroy]
+  before_action :validate_guest_ordritem_ownership, only: %i[update destroy], unless: :user_signed_in?
   before_action :set_currency
 
   # Pundit authorization
@@ -368,6 +369,32 @@ class OrdritemsController < ApplicationController
 
   def csrf_skipped_action?
     %w[create update destroy].include?(action_name)
+  end
+
+  # Prevent anonymous users from mutating ordr items that don't belong to their session.
+  # The Pundit policy allows any anonymous request, so we enforce session-level ownership
+  # here before authorization runs. Authenticated users are covered by Pundit's owner? check.
+  def validate_guest_ordritem_ownership
+    return unless @ordritem
+
+    sid = session[:sid].presence || session.id.to_s.presence
+    return if sid.blank?
+
+    has_session = Ordrparticipant.exists?(
+      ordr_id: @ordritem.ordr_id,
+      sessionid: sid,
+    )
+
+    return if has_session
+
+    Rails.logger.warn(
+      "[SECURITY] Guest session #{sid} attempted to mutate ordritem #{@ordritem.id} " \
+      "(ordr #{@ordritem.ordr_id}) without a matching participant record",
+    )
+    respond_to do |format|
+      format.json { render json: { error: 'forbidden' }, status: :forbidden }
+      format.html { redirect_to root_path, alert: 'Not authorized.' }
+    end
   end
 
   # Set restaurant from nested route parameter
