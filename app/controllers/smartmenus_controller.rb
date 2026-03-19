@@ -283,15 +283,17 @@ class SmartmenusController < ApplicationController
   end
 
   def load_allergyns
-    # Allergens must be those actually used by items in this menu
-    # We deduplicate in Ruby since the has_many :through association can cause DISTINCT issues
-    allergyns_relation = @menu.allergyns
-      .where(archived: false)
-      .where(status: :active)
-      .order('allergyns.sequence NULLS LAST, allergyns.name')
+    # Use a subquery to deduplicate allergyns at the SQL level.
+    # The has_many :through chain (menu → menuitems → mappings → allergyns) produces
+    # duplicate rows when the same allergyn appears on multiple items. Wrapping the
+    # join in a subquery (SELECT id FROM ...) and querying Allergyn directly avoids
+    # duplicates without needing Ruby-level dedup or problematic SQL DISTINCT on joins.
+    allergyn_ids_subquery = @menu.allergyns.select('allergyns.id')
+    allergyns_relation = Allergyn.where(id: allergyn_ids_subquery, archived: false, status: :active)
+      .order('sequence NULLS LAST, name')
 
     log_allergyns_debug(allergyns_relation) if allergyns_debug_enabled?
-    @allergyns = allergyns_relation.to_a.uniq(&:id)
+    @allergyns = allergyns_relation.to_a
 
     if allergyns_debug_enabled?
       log_allergyns_result_debug(@allergyns)
@@ -305,13 +307,12 @@ class SmartmenusController < ApplicationController
 
     return unless @allergyns.empty?
 
-    # Fallback to restaurant allergyns (deduplicate in Ruby)
-    fallback_relation = @restaurant.allergyns
-      .where(archived: false)
-      .where(status: :active)
-      .order('allergyns.sequence NULLS LAST, allergyns.name')
+    # Fallback to restaurant allergyns via same subquery pattern
+    fallback_ids_subquery = @restaurant.allergyns.select('allergyns.id')
+    fallback_relation = Allergyn.where(id: fallback_ids_subquery, archived: false, status: :active)
+      .order('sequence NULLS LAST, name')
     log_fallback_allergyns_debug(fallback_relation) if allergyns_debug_enabled?
-    @allergyns = fallback_relation.to_a.uniq(&:id)
+    @allergyns = fallback_relation.to_a
 
     return unless allergyns_debug_enabled?
 
@@ -422,16 +423,20 @@ class SmartmenusController < ApplicationController
   def set_seo_metadata
     return unless @restaurant && @menu && @smartmenu
 
-    # Schema.org JSON-LD
-    menusections = Menusection.where(menu_id: @menu.id, archived: false)
-      .includes(menuitems: :allergyns)
-      .order(:sequence)
-    @schema_org_json_ld = SchemaOrgSerializer.new(
-      restaurant: @restaurant,
-      menu: @menu,
-      menusections: menusections,
-      smartmenu: @smartmenu,
-    ).to_json_ld
+    # Schema.org JSON-LD — cached per menu+restaurant update pair to avoid repeated
+    # eager loads and serialization on every request.
+    schema_cache_key = "schema_org/v1/menu/#{@menu.id}/#{@menu.updated_at.to_i}-#{@restaurant.updated_at.to_i}"
+    @schema_org_json_ld = Rails.cache.fetch(schema_cache_key, expires_in: 1.hour) do
+      menusections = Menusection.where(menu_id: @menu.id, archived: false)
+        .includes(menuitems: :allergyns)
+        .order(:sequence)
+      SchemaOrgSerializer.new(
+        restaurant: @restaurant,
+        menu: @menu,
+        menusections: menusections,
+        smartmenu: @smartmenu,
+      ).to_json_ld
+    end
 
     # Dynamic meta tags
     @page_title = "#{@restaurant.name} — Menu | mellow.menu"
@@ -454,11 +459,11 @@ class SmartmenusController < ApplicationController
   def set_smartmenu
     @smartmenu = Smartmenu.where(slug: params[:id]).includes(
       :tablesetting,
-      restaurant: %i[user restaurantlocales tips alcohol_policy],
+      restaurant: %i[restaurantlocales tips alcohol_policy],
       menu: [
-        { restaurant: %i[user restaurantlocales tips alcohol_policy] },
+        { restaurant: %i[restaurantlocales tips alcohol_policy] },
         :menulocales,
-        :menuavailabilities,
+        :menu_versions,
         { menusections: [
           :menusectionlocales,
           { menuitems: [

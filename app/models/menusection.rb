@@ -56,55 +56,19 @@ class Menusection < ApplicationRecord
   has_one :genimage, dependent: :destroy
 
   def localised_name(locale)
-    # Case-insensitive locale lookup
+    @localised_name_cache ||= {}
     locale_code = locale.to_s.downcase
-    restaurant = menu&.restaurant
+    return @localised_name_cache[locale_code] if @localised_name_cache.key?(locale_code)
 
-    rl = nil
-    if restaurant&.association(:restaurantlocales)&.loaded?
-      rl = restaurant.restaurantlocales.find { |x| x.locale.to_s.downcase == locale_code }
-    end
-    if rl.nil? && restaurant&.id
-      rl = Restaurantlocale.where(restaurant_id: restaurant.id, locale: locale_code).first
-      rl ||= Restaurantlocale.where(restaurant_id: restaurant.id).where('LOWER(locale) = ?', locale_code).first
-    end
-
-    return name if rl&.dfault == true
-
-    mil = if association(:menusectionlocales).loaded?
-            menusectionlocales.find { |x| x.locale.to_s.downcase == locale_code }
-          else
-            Menusectionlocale.where(menusection_id: id, locale: locale_code).first ||
-              Menusectionlocale.where(menusection_id: id).where('LOWER(locale) = ?', locale_code).first
-          end
-
-    mil&.name.presence || name
+    @localised_name_cache[locale_code] = resolve_localised_name(locale_code)
   end
 
   def localised_description(locale)
-    # Case-insensitive locale lookup
+    @localised_description_cache ||= {}
     locale_code = locale.to_s.downcase
-    restaurant = menu&.restaurant
+    return @localised_description_cache[locale_code] if @localised_description_cache.key?(locale_code)
 
-    rl = nil
-    if restaurant&.association(:restaurantlocales)&.loaded?
-      rl = restaurant.restaurantlocales.find { |x| x.locale.to_s.downcase == locale_code }
-    end
-    if rl.nil? && restaurant&.id
-      rl = Restaurantlocale.where(restaurant_id: restaurant.id, locale: locale_code).first
-      rl ||= Restaurantlocale.where(restaurant_id: restaurant.id).where('LOWER(locale) = ?', locale_code).first
-    end
-
-    return description if rl&.dfault == true
-
-    mil = if association(:menusectionlocales).loaded?
-            menusectionlocales.find { |x| x.locale.to_s.downcase == locale_code }
-          else
-            Menusectionlocale.where(menusection_id: id, locale: locale_code).first ||
-              Menusectionlocale.where(menusection_id: id).where('LOWER(locale) = ?', locale_code).first
-          end
-
-    mil&.description.presence || description
+    @localised_description_cache[locale_code] = resolve_localised_description(locale_code)
   end
 
   enum :status, {
@@ -188,6 +152,48 @@ class Menusection < ApplicationRecord
   end
 
   private
+
+  def resolve_localised_name(locale_code)
+    restaurant = menu&.restaurant
+    rl = if restaurant&.association(:restaurantlocales)&.loaded?
+           restaurant.restaurantlocales.find { |x| x.locale.to_s.downcase == locale_code }
+         elsif restaurant&.id
+           Restaurantlocale.where(restaurant_id: restaurant.id, locale: locale_code).first ||
+             Restaurantlocale.where(restaurant_id: restaurant.id).where('LOWER(locale) = ?', locale_code).first
+         end
+
+    return name if rl&.dfault == true
+
+    mil = if association(:menusectionlocales).loaded?
+            menusectionlocales.find { |x| x.locale.to_s.downcase == locale_code }
+          else
+            Menusectionlocale.where(menusection_id: id, locale: locale_code).first ||
+              Menusectionlocale.where(menusection_id: id).where('LOWER(locale) = ?', locale_code).first
+          end
+
+    mil&.name.presence || name
+  end
+
+  def resolve_localised_description(locale_code)
+    restaurant = menu&.restaurant
+    rl = if restaurant&.association(:restaurantlocales)&.loaded?
+           restaurant.restaurantlocales.find { |x| x.locale.to_s.downcase == locale_code }
+         elsif restaurant&.id
+           Restaurantlocale.where(restaurant_id: restaurant.id, locale: locale_code).first ||
+             Restaurantlocale.where(restaurant_id: restaurant.id).where('LOWER(locale) = ?', locale_code).first
+         end
+
+    return description if rl&.dfault == true
+
+    mil = if association(:menusectionlocales).loaded?
+            menusectionlocales.find { |x| x.locale.to_s.downcase == locale_code }
+          else
+            Menusectionlocale.where(menusection_id: id, locale: locale_code).first ||
+              Menusectionlocale.where(menusection_id: id).where('LOWER(locale) = ?', locale_code).first
+          end
+
+    mil&.description.presence || description
+  end
 
   def default_tasting_currencies
     parent_currency = menu&.restaurant&.currency

@@ -51,55 +51,19 @@ class Menuitem < ApplicationRecord
   after_commit :enqueue_menu_item_search_reindex, on: %i[create update destroy]
 
   def localised_name(locale)
-    # Case-insensitive locale lookup
+    @localised_name_cache ||= {}
     locale_code = locale.to_s.downcase
-    restaurant = menusection&.menu&.restaurant
+    return @localised_name_cache[locale_code] if @localised_name_cache.key?(locale_code)
 
-    rl = nil
-    if restaurant&.association(:restaurantlocales)&.loaded?
-      rl = restaurant.restaurantlocales.find { |x| x.locale.to_s.downcase == locale_code }
-    end
-    if rl.nil? && restaurant&.id
-      rl = Restaurantlocale.where(restaurant_id: restaurant.id, locale: locale_code).first
-      rl ||= Restaurantlocale.where(restaurant_id: restaurant.id).where('LOWER(locale) = ?', locale_code).first
-    end
-
-    return name if rl&.dfault == true
-
-    mil = if association(:menuitemlocales).loaded?
-            menuitemlocales.find { |x| x.locale.to_s.downcase == locale_code }
-          else
-            Menuitemlocale.where(menuitem_id: id, locale: locale_code).first ||
-              Menuitemlocale.where(menuitem_id: id).where('LOWER(locale) = ?', locale_code).first
-          end
-
-    mil&.name.presence || name
+    @localised_name_cache[locale_code] = resolve_localised_name(locale_code)
   end
 
   def localised_description(locale)
-    # Case-insensitive locale lookup
+    @localised_description_cache ||= {}
     locale_code = locale.to_s.downcase
-    restaurant = menusection&.menu&.restaurant
+    return @localised_description_cache[locale_code] if @localised_description_cache.key?(locale_code)
 
-    rl = nil
-    if restaurant&.association(:restaurantlocales)&.loaded?
-      rl = restaurant.restaurantlocales.find { |x| x.locale.to_s.downcase == locale_code }
-    end
-    if rl.nil? && restaurant&.id
-      rl = Restaurantlocale.where(restaurant_id: restaurant.id, locale: locale_code).first
-      rl ||= Restaurantlocale.where(restaurant_id: restaurant.id).where('LOWER(locale) = ?', locale_code).first
-    end
-
-    return description if rl&.dfault == true
-
-    mil = if association(:menuitemlocales).loaded?
-            menuitemlocales.find { |x| x.locale.to_s.downcase == locale_code }
-          else
-            Menuitemlocale.where(menuitem_id: id, locale: locale_code).first ||
-              Menuitemlocale.where(menuitem_id: id).where('LOWER(locale) = ?', locale_code).first
-          end
-
-    mil&.description.presence || description
+    @localised_description_cache[locale_code] = resolve_localised_description(locale_code)
   end
 
   enum :status, {
@@ -257,23 +221,9 @@ class Menuitem < ApplicationRecord
 
   # Generate WebP srcset for responsive images
   def webp_srcset
-    return '' if image.blank?
+    return @webp_srcset if defined?(@webp_srcset)
 
-    begin
-      srcset_parts = []
-      derivs = image_attacher.derivatives
-      return '' unless derivs
-
-      srcset_parts << "#{image_url(:card_webp)} 150w" if derivs.key?(:card_webp)
-      srcset_parts << "#{image_url(:thumb_webp)} 200w" if derivs.key?(:thumb_webp)
-      srcset_parts << "#{image_url(:medium_webp)} 600w" if derivs.key?(:medium_webp)
-      srcset_parts << "#{image_url(:large_webp)} 1000w" if derivs.key?(:large_webp)
-
-      srcset_parts.join(', ')
-    rescue StandardError => e
-      Rails.logger.error "[Menuitem] Error generating WebP srcset for #{id}: #{e.message}"
-      ''
-    end
+    @webp_srcset = build_webp_srcset
   end
 
   # Enhanced srcset that includes WebP when available
@@ -346,6 +296,68 @@ class Menuitem < ApplicationRecord
   end
 
   private
+
+  def resolve_localised_name(locale_code)
+    restaurant = menusection&.menu&.restaurant
+    rl = if restaurant&.association(:restaurantlocales)&.loaded?
+           restaurant.restaurantlocales.find { |x| x.locale.to_s.downcase == locale_code }
+         elsif restaurant&.id
+           Restaurantlocale.where(restaurant_id: restaurant.id, locale: locale_code).first ||
+             Restaurantlocale.where(restaurant_id: restaurant.id).where('LOWER(locale) = ?', locale_code).first
+         end
+
+    return name if rl&.dfault == true
+
+    mil = if association(:menuitemlocales).loaded?
+            menuitemlocales.find { |x| x.locale.to_s.downcase == locale_code }
+          else
+            Menuitemlocale.where(menuitem_id: id, locale: locale_code).first ||
+              Menuitemlocale.where(menuitem_id: id).where('LOWER(locale) = ?', locale_code).first
+          end
+
+    mil&.name.presence || name
+  end
+
+  def resolve_localised_description(locale_code)
+    restaurant = menusection&.menu&.restaurant
+    rl = if restaurant&.association(:restaurantlocales)&.loaded?
+           restaurant.restaurantlocales.find { |x| x.locale.to_s.downcase == locale_code }
+         elsif restaurant&.id
+           Restaurantlocale.where(restaurant_id: restaurant.id, locale: locale_code).first ||
+             Restaurantlocale.where(restaurant_id: restaurant.id).where('LOWER(locale) = ?', locale_code).first
+         end
+
+    return description if rl&.dfault == true
+
+    mil = if association(:menuitemlocales).loaded?
+            menuitemlocales.find { |x| x.locale.to_s.downcase == locale_code }
+          else
+            Menuitemlocale.where(menuitem_id: id, locale: locale_code).first ||
+              Menuitemlocale.where(menuitem_id: id).where('LOWER(locale) = ?', locale_code).first
+          end
+
+    mil&.description.presence || description
+  end
+
+  def build_webp_srcset
+    return '' if image.blank?
+
+    begin
+      srcset_parts = []
+      derivs = image_attacher.derivatives
+      return '' unless derivs
+
+      srcset_parts << "#{image_url(:card_webp)} 150w" if derivs.key?(:card_webp)
+      srcset_parts << "#{image_url(:thumb_webp)} 200w" if derivs.key?(:thumb_webp)
+      srcset_parts << "#{image_url(:medium_webp)} 600w" if derivs.key?(:medium_webp)
+      srcset_parts << "#{image_url(:large_webp)} 1000w" if derivs.key?(:large_webp)
+
+      srcset_parts.join(', ')
+    rescue StandardError => e
+      Rails.logger.error "[Menuitem] Error generating WebP srcset for #{id}: #{e.message}"
+      ''
+    end
+  end
 
   def abv_must_be_nil_or_zero_when_non_alcoholic
     return if alcoholic?

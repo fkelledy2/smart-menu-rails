@@ -89,17 +89,47 @@ class Menu < ApplicationRecord
   end
 
   def localised_name(locale)
-    # Case-insensitive locale lookup
+    @localised_name_cache ||= {}
     locale_code = locale.to_s.downcase
+    return @localised_name_cache[locale_code] if @localised_name_cache.key?(locale_code)
 
-    rl = nil
-    if restaurant&.association(:restaurantlocales)&.loaded?
-      rl = restaurant.restaurantlocales.find { |x| x.locale.to_s.downcase == locale_code }
-    end
-    if rl.nil? && restaurant&.id
-      rl = Restaurantlocale.find_by(restaurant_id: restaurant.id, locale: locale_code)
-      rl ||= Restaurantlocale.where(restaurant_id: restaurant.id).where('LOWER(locale) = ?', locale_code).first
-    end
+    @localised_name_cache[locale_code] = resolve_localised_name(locale_code)
+  end
+
+  def localised_description(locale)
+    @localised_description_cache ||= {}
+    locale_code = locale.to_s.downcase
+    return @localised_description_cache[locale_code] if @localised_description_cache.key?(locale_code)
+
+    @localised_description_cache[locale_code] = resolve_localised_description(locale_code)
+  end
+
+  def active_menu_version(at: Time.current)
+    now = at
+    # Use in-memory collection when already eager-loaded (e.g. from set_smartmenu includes),
+    # avoiding 2-3 extra DB queries per request. Falls back to DB queries if not loaded.
+    versions = menu_versions.to_a
+
+    windowed = versions
+      .select { |v| (v.starts_at.present? || v.ends_at.present?) &&
+                    (v.starts_at.nil? || v.starts_at <= now) &&
+                    (v.ends_at.nil? || v.ends_at >= now) }
+      .max_by(&:version_number)
+
+    return windowed if windowed
+
+    versions.find(&:is_active) || versions.max_by(&:version_number)
+  end
+
+  private
+
+  def resolve_localised_name(locale_code)
+    rl = if restaurant&.association(:restaurantlocales)&.loaded?
+           restaurant.restaurantlocales.find { |x| x.locale.to_s.downcase == locale_code }
+         elsif restaurant&.id
+           Restaurantlocale.find_by(restaurant_id: restaurant.id, locale: locale_code) ||
+             Restaurantlocale.where(restaurant_id: restaurant.id).where('LOWER(locale) = ?', locale_code).first
+         end
 
     return name if rl&.dfault == true
 
@@ -113,18 +143,13 @@ class Menu < ApplicationRecord
     mil&.name.presence || name
   end
 
-  def localised_description(locale)
-    # Case-insensitive locale lookup
-    locale_code = locale.to_s.downcase
-
-    rl = nil
-    if restaurant&.association(:restaurantlocales)&.loaded?
-      rl = restaurant.restaurantlocales.find { |x| x.locale.to_s.downcase == locale_code }
-    end
-    if rl.nil? && restaurant&.id
-      rl = Restaurantlocale.find_by(restaurant_id: restaurant.id, locale: locale_code)
-      rl ||= Restaurantlocale.where(restaurant_id: restaurant.id).where('LOWER(locale) = ?', locale_code).first
-    end
+  def resolve_localised_description(locale_code)
+    rl = if restaurant&.association(:restaurantlocales)&.loaded?
+           restaurant.restaurantlocales.find { |x| x.locale.to_s.downcase == locale_code }
+         elsif restaurant&.id
+           Restaurantlocale.find_by(restaurant_id: restaurant.id, locale: locale_code) ||
+             Restaurantlocale.where(restaurant_id: restaurant.id).where('LOWER(locale) = ?', locale_code).first
+         end
 
     return description if rl&.dfault == true
 
@@ -137,27 +162,6 @@ class Menu < ApplicationRecord
 
     mil&.description.presence || description
   end
-
-  def active_menu_version(at: Time.current)
-    now = at
-
-    windowed = menu_versions
-      .where.not(starts_at: nil)
-      .or(menu_versions.where.not(ends_at: nil))
-      .where('starts_at IS NULL OR starts_at <= ?', now)
-      .where('ends_at IS NULL OR ends_at >= ?', now)
-      .order(version_number: :desc)
-      .first
-
-    return windowed if windowed
-
-    active_version = menu_versions.find_by(is_active: true)
-    return active_version if active_version
-
-    menu_versions.order(version_number: :desc).first
-  end
-
-  private
 
   def ensure_owner_restaurant_menu
     return if restaurant_id.blank?
