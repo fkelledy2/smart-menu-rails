@@ -88,15 +88,14 @@
                 <% when 'medium_stock' %>
                   <span class="badge bg-info">Medium</span>
                 <% else %>
-                  <                  bg-success">In Stock</span>
+                  <span class="badge bg-success">In Stock</span>
                 <% end %>
               </td>
               <td>
                 <button class="btn btn-sm btn-primary">Reorder</button>
               </td>
-            <            <            <            <            <            <  
-  </d  </d  </d  </d  class="card">
   <div class="card-header bg-success text-white">
+          <% end %>
     <h5 class="mb-0">Reorder Suggestions</h5>
   </div>
   <div class="card-body">
@@ -112,7 +111,8 @@
           </tr>
         </thead>
         <tbody>
-          <% @reorder_suggestions.ea          <% @reorder_suggestions.ea          <% @reorder_su sugge          <% @reorder_suggestions.ea  %></          <% @reorder_suggestions.ea          <% @reord_quan          <% @reordeits</td          <% @reorder_suggestions.ea          <% @reorder_sugge(s          <% @reordd_profi          <% @reo>
+          <% @reorder_suggestions.each do |suggestion| %>
+            <tr>
               <td>
                 <% case suggestion[:urgency] %>
                 <% when 'high' %>

@@ -320,6 +320,11 @@ Rails.application.routes.draw do
     get 'profit_margins/order_analytics', to: 'profit_margins#order_analytics'
     get 'profit_margins/inventory_alerts', to: 'profit_margins#inventory_alerts'
     
+    get "menu_optimizations", to: "menu_optimizations#index"
+    get "menu_optimizations/menu_engineering", to: "menu_optimizations#menu_engineering"
+    get "menu_optimizations/bundling", to: "menu_optimizations#bundling_opportunities"
+    post "menu_optimizations/apply", to: "menu_optimizations#apply_optimizations"
+
     # Staff invitations
     resources :staff_invitations, only: [:create]
 

@@ -24,7 +24,7 @@
           <%= form.label :menusection_id, 'Menu Section', class: 'form-label' %>
           <%= form.collection_select :menusection_id,
               @restaurant.menus.flat_map(&:menusections),
-                                   (ms) { "#{ms.menu.name} - #{ms.name}" },
+              :id, :name,
               { include_blank: 'Select a section' },
               class: 'form-select' %>
         </div>

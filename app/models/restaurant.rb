@@ -236,22 +236,22 @@ class Restaurant < ApplicationRecord
     # Optimized: Address first (Google Places), then country/currency (auto-inferred), then name
     address_ok = address1.present? || city.present? || postcode.present?
     return 'details' unless address_ok
-    return 'details' unless country.present?
-    return 'details' unless currency.present?
-    return 'details' unless name.present?
-    
+    return 'details' if country.blank?
+    return 'details' if currency.blank?
+    return 'details' if name.blank?
+
     has_locales = restaurantlocales.any?
     has_default_locale = restaurantlocales.exists?(status: 'active', dfault: true)
     return 'localization' unless has_locales && has_default_locale
-    
+
     return 'tables' unless tablesettings.exists?(archived: false)
-    
+
     has_any_menu = restaurant_menus
       .where.not(status: RestaurantMenu.statuses[:archived])
       .joins(:menu)
       .exists?(menus: { archived: false })
     return 'menus' unless has_any_menu
-    
+
     nil
   end
 
@@ -339,12 +339,10 @@ class Restaurant < ApplicationRecord
     AdvancedCacheService.invalidate_restaurant_caches(id)
   end
 
-  private
-
   def infer_currency_from_country
     return if currency.present?
     return if country.blank?
-    
+
     inferred = CountryCurrencyInference.new.infer(country)
     self.currency = inferred if inferred.present?
   end

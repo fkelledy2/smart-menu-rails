@@ -1,84 +1,10 @@
-<div class="container-fluid mt-4">
-  <div class="row">
-    <div class="col-12">
-      <h1 class="mb-4">
-        <i class="bi bi-box-seam"></i> Bundling Opportunities
-      </h1>
-      
-      <div class="card mb-4">
-        <div class="card-header">
-          <h5 class="mb-0">Summary</h5>
-        </div>
-        <div class="card-body">
-          <div class="row text-center">
-            <div class="col-md-4">
-              <h3 class="text-primary"><%= @bundling[:summary][:total_opportunities] %></h3>
-              <p class="text-muted">Total Opportunities</p>
-            </div>
-            <div class="col-md-4">
-              <h3 class="text-success"><%= @bundling[:summary][:high_appeal_count] %></h3>
-              <p class="text-muted">High Appeal</p>
-            </div>
-            <div class="col-md-4">
-              <h3 class="text-info"><%= number_to_currency(@bundling[:summary][:total_pote              <h3 class="text-info"><%= number_to_currency(@bundling[:summary][:total_pote              <h3 class="te
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-header">
-          <h5 class="mb-0">Recommended Bundles</h5>
-        </div>
-        <div class="card-body">
-          <div class="table-responsive">
-            <table cla            <table cla            <tab<thead>
-                <tr>
-                  <th>Items</th>
-                  <th>Frequency</th>
-                  <th>Individual Price</th>
-                  <th>Bundle Price</th>
-                  <th>Discount</th>
-                  <th>Margin</th>
-                  <th>Appeal Score</th>
-                </tr>
-              </thead>
-              <tbody>
-                <% @bundling[:bundle_opportunities].each do |bundle| %>
-                  <tr class="<%= bundle[:appeal_score] > 100 ? 'table-success' : '' %>">
-                    <td>
-                      <strong><%= bundle[:item1][:name] %></strong>
-                      <br>
-                      <small class="text-muted">+ <%= bundle[:item2][:name] %></small>
-                    </td>
-                    <td>
-                      <span class="badge bg-primary"><%= bundle[:frequency] %>x</span>
-                    </td>
-                    <td><%= number_to_currency(bundle[:individual_total]) %></td>
-                    <td>
-                      <strong class="text-success"><%= number_to_currency(bundle[:suggested_bundle_price]) %></strong>
-                    </td>
-                    <td>
-                      <%= number_to_currency(bundle[:discount_amount]) %>
-                      (<%= number_to_percentage(bundle[:discount_percentage], precision: 0) %>)
-                    </td>
-                    <td>
-                      <%= number_to_percentage(bundle[:bundle_margin_percentage], precision: 1) %>
-                    </td>
-                    <td>
-                      <span class="badge bg-<%= bundle[:appeal_score] > 100 ? 'success' : 'secondary' %>">
-                        <%= bundle[:appeal_score].round %>
-                      </span>
-                    </td>
-                  </tr>
-                <% end %>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <div class="mt-3">
-        <%= link_to 'Back to Optimization Dashboard', restaurant_menu_optimizations_path(@restaurant), class: 'btn btn-secondary' %>
-      </div>
+<div class="container mt-4">
+  <h1>Bundling Opportunities</h1>
+  
+  <div class="card">
+    <div class="card-body">
+      <p>Total Opportunities: <%= @bundling[:summary][:total_opportunities] %></p>
+      <p>High Appeal Count: <%= @bundling[:summary][:high_appeal_count] %></p>
     </div>
   </div>
 </div>

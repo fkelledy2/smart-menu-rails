@@ -90,21 +90,54 @@
               <% @order_stats[:most_profitable_items].each_with_index do |item, index| %>
                 <tr>
                   <td><strong><%= index + 1 %></strong></td>
-                  <td><%= item[:menuitem].localised_name('                  <td><%= i    <                  <td><%= item[:md>
+                  <td><%= item[:menuitem].localised_name('EN') %></td>
                                        rency(item[:profit_per_unit]) %></td>
-                  <td class="fw-bold      success"><%= number_to_currency(item[:total_profit]) %></td>
+                  <td class="fw-bold text-success"><%= number_to_currency(item[:total_profit]) %></td>
                   <td>
                     <div class="progress" style="height: 20px;">
-                      <div class="progr                      <divprog                      <div class="pr style="width: <%= (item[:total_profit] / @order_stats[:most_profitable_items].first[:                      <und %>%">
-                        <%= number_to_percentage((item[:total_prof                        <%= number_ 100), precision: 1) %>
+                      <div class="progress-bar bg-success" role="progressbar" style="width: <%= (item[:total_profit] / @order_stats[:most_profitable_items].first[:total_profit] * 100).round %>%">
+                        <%= number_to_percentage((item[:total_profit] / @order_stats[:most_profitable_items].first[:total_profit] * 100), precision: 1) %>
                       </div>
                     </div>
-                                         /tr>
-                                                                                                <                  iv>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/di<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/di<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/di<scrip @order_stats[:profit_by_day_of_week].to_json %>;
-  const dayCtx = document.get  const dayCtx = document.get  const dayCtx = document.get  const dayCtx = document.get  const dayCt: {  const dayCtx = docDat  const dayCtx = document.get  const dayCtx = document.get  cont   const dayCtx = document.get  const dayCtx = document.get  const dayCtx = document.get  const dayCtx = document.get  const dayCt: {  const dayCtx = docDat  const dayCtx = document.get  const dayCtx = document.get  cont   re  const dayCtx = document.get  const dayCtx = document.get  const dayCtx = document.get  const dayCtx = document.get  consttr  const dayCtx = documentcall  const dayCtx = documalue.toFixed(2) }
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const dayData = <%= raw @order_stats[:profit_by_day_of_week].to_json %>;
+  const dayCtx = document.getElementById('dayChart');
+  if (dayCtx) {
+    new Chart(dayCtx, {
+      type: 'bar',
+      data: {
+        labels: dayData.map(d => d.day),
+        datasets: [{
+          label: 'Profit ($)',
+          data: dayData.map(d => d.profit),
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          borderColor: 'rgb(75, 192, 192)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: { callback: value => '$' + value.toFixed(2) }
           }
+        }
+      }
+    });
+  }
         }
       }
     });

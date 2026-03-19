@@ -24,7 +24,7 @@
     <div class="card">
       <div class="card-body text-center">
         <h6 class="text-muted">Avg Margin</h6>
-        <h2><%= number_to_percentage(@stats[:average_margin_percentage], preci        <h2</h2>
+        <h2><%= number_to_percentage(@stats[:average_margin_percentage], precision: 1) %></h2>
         <small class="text-muted">across all items</small>
       </div>
     </div>
@@ -106,7 +106,7 @@
               <tr>
                 <td><span class="badge bg-danger">Critical</span></td>
                 <td class="text-end"><%= @stats[:critical_count] %> items</td>
-                <td class="text-end"><%= number_to_percentage((@stats[:critical_count].to_f / @stats[:total_items] * 100), p                <td class="text-end"><%= number_to_percentage((@stats[                      <td class="text-end"><%= number_to_percentage((@stats[:criticaan></td>
+                <td class="text-end"><%= number_to_percentage((@stats[:critical_count].to_f / @stats[:total_items] * 100), precision: 0) if @stats[:total_items] > 0 %></td>
                 <td class="text-end"><%= @stats[:no_target_count] %> items</td>
                 <td class="text-end"><%= number_to_percentage((@stats[:no_target_count].to_f / @stats[:total_items] * 100), precision: 0) if @stats[:total_items] > 0 %></td>
               </tr>
@@ -140,13 +140,16 @@
             </tbody>
           </table>
                                                                                                                                                                                                                                                            <div class="table-responsive">
-          <          <      e t          <                  <          <      >
-                <th>Item</th>
-                         </th>
+            <thead>
+              <tr>
+                <th>Price</th>
                 <th>Margin %</th>
-                <th>Profit $</th>
+              </thead>
               </tr>
-                                                                  bott                    d                                                     d><%= item.localised_name('en') %></td>
+            <tbody>
+              <% @stats[:bottom_performers].each do |item| %>
+                <tr>
+                  <td><%= item.localised_name('en') %></td>
                   <td><%= number_to_currency(item.price) %></td>
                   <td><strong class="text-danger"><%= number_to_percentage(item.profit_margin_percentage, precision: 1) %></strong></td>
                   <td><%= number_to_currency(item.profit_margin) %></td>

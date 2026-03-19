@@ -83,7 +83,7 @@
               <td><%= number_to_currency(cost.labor_cost) %></td>
               <td><%= number_to_currency(cost.packaging_cost) %></td>
               <td><%= number_to_currency(cost.overhead_cost) %></td>
-              <td><%= number_to_cur           total_cost) %></td>
+              <td><%= number_to_currency(cost.total_cost) %></td>
               <td><%= number_to_currency(menuitem.profit_margin) %></td>
               <td><%= number_to_percentage(menuitem.profit_margin_percentage, precision: 1) %></td>
               <td>
@@ -95,7 +95,8 @@
                 <% when 'critical' %>
                   <span class="badge bg-danger">Critical</span>
                 <% else %>
-                  <span                   <span                   <span                end %>
+                  <span class="badge bg-secondary">No Target</span>
+                <% end %>
               </td>
             </tr>
           <% end %>
