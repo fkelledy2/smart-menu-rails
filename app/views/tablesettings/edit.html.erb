@@ -1,37 +1,44 @@
-<%= render 'shared/customcss' %>
+<%#
+  Edit Table Setting - 2025 Design System
+  Modern form layout with consistent styling
+%>
+
 <% in_frame = defined?(turbo_frame_request?) && turbo_frame_request? %>
 
+<!-- Page Header -->
 <% unless in_frame %>
-  <div class="page-header">
-    <div class="row">
-      <div class="col-12">
-        <h4>
-          <%= link_to edit_restaurant_path(@tablesetting.restaurant, section: 'tables'), class: "link-dark" do %>
-            <%= @tablesetting.restaurant.name %>
-          <% end %>
-        </h4>
+  <div class="container-fluid px-0 pb-4">
+    <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+      <div>
+        <!-- Breadcrumb -->
+        <div class="text-sm text-gray-500 mb-2">
+          <%= link_to @tablesetting.restaurant.name, edit_restaurant_path(@tablesetting.restaurant), class: 'text-primary' %>
+          <i class="bi bi-chevron-right"></i>
+          <%= link_to t('.tables', default: 'Tables'), edit_restaurant_path(@tablesetting.restaurant, section: 'tables'), class: 'text-primary' %>
+          <i class="bi bi-chevron-right"></i>
+          <%= @tablesetting.name %>
+        </div>
+
+        <h1 class="text-2xl font-semibold text-gray-900 mb-1">
+          <i class="bi bi-grid-3x3-gap"></i>
+          <%= t('.edit_tablesetting', default: 'Edit Table') %>
+        </h1>
+        <p class="text-sm text-gray-500">
+          <%= t('.description', default: 'Update table configuration and seating details') %>
+        </p>
       </div>
-    </div>
-  </div>
-  <ul class="nav-tabs-height nav nav-tabs overflow-auto flex-nowrap" id="tablesettingTabsBack" role="tablist">
-    <li class="nav-item" role="presentation">
-      <button class="nav-link link-dark">
-        <%= link_to edit_restaurant_path(@tablesetting.restaurant, section: 'tables'), class: "link-dark" do %>
-          <strong><i class="bi bi-lg bi-chevron-double-left"></i></strong>
+
+      <div class="d-flex gap-2">
+        <%= link_to edit_restaurant_path(@tablesetting.restaurant, section: 'tables'),
+            class: 'btn btn-ghost' do %>
+          <i class="bi bi-arrow-left"></i> <%= t('.back_to_tables', default: 'Back to Tables') %>
         <% end %>
-      </button>
-    </li>
-  </ul>
-  <p>
-  <div class="page-header">
-    <div class="row">
-      <div class="col-12">
-          <h4><%= t(".tablesetting") %></h4>
       </div>
     </div>
   </div>
 <% end %>
 
+<!-- Form Card -->
 <%= turbo_frame_tag 'tables_edit_tablesetting' do %>
   <div class="content-card" data-skip-form-manager="true">
     <h2 class="content-card-title">
@@ -42,3 +49,22 @@
     <%= render 'form', tablesetting: @tablesetting %>
   </div>
 <% end %>
+
+<style>
+  .text-2xl {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+
+  .text-gray-900 {
+    color: var(--color-gray-900);
+  }
+
+  .text-gray-500 {
+    color: var(--color-gray-500);
+  }
+
+  .text-sm {
+    font-size: 0.875rem;
+  }
+</style>

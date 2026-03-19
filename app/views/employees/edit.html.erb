@@ -1,36 +1,70 @@
+<%#
+  Edit Employee - 2025 Design System
+  Modern form layout with consistent styling
+%>
+
 <% in_frame = defined?(turbo_frame_request?) && turbo_frame_request? %>
 
+<!-- Page Header -->
 <% unless in_frame %>
-  <div class="page-header">
-    <div class="row">
-      <div class="col-12">
-        <h4>
-          <%= link_to edit_restaurant_path(@employee.restaurant, section: 'staff'), class: "link-dark" do %>
-            <%= @employee.restaurant.name %>
-          <% end %>
-        </h4>
+  <div class="container-fluid px-0 pb-4">
+    <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+      <div>
+        <!-- Breadcrumb -->
+        <div class="text-sm text-gray-500 mb-2">
+          <%= link_to @employee.restaurant.name, edit_restaurant_path(@employee.restaurant), class: 'text-primary' %>
+          <i class="bi bi-chevron-right"></i>
+          <%= link_to t('.staff', default: 'Staff'), edit_restaurant_path(@employee.restaurant, section: 'staff'), class: 'text-primary' %>
+          <i class="bi bi-chevron-right"></i>
+          <%= @employee.name %>
+        </div>
+
+        <h1 class="text-2xl font-semibold text-gray-900 mb-1">
+          <i class="bi bi-person"></i>
+          <%= t('.edit_employee', default: 'Edit Staff') %>
+        </h1>
+        <p class="text-sm text-gray-500">
+          <%= t('.description', default: 'Update staff member details and role') %>
+        </p>
+      </div>
+
+      <div class="d-flex gap-2">
+        <%= link_to edit_restaurant_path(@employee.restaurant, section: 'staff'),
+            class: 'btn btn-ghost' do %>
+          <i class="bi bi-arrow-left"></i> <%= t('.back_to_staff', default: 'Back to Staff') %>
+        <% end %>
       </div>
     </div>
   </div>
-  <ul class="nav-tabs-height nav nav-tabs overflow-auto flex-nowrap" id="enployeeTabsBack" role="tablist">
-    <li class="nav-item" role="presentation">
-      <button class="nav-link link-dark">
-        <%= link_to edit_restaurant_path(@employee.restaurant, section: 'staff'), class: "link-dark" do %>
-          <strong><i class="bi bi-lg bi-chevron-double-left"></i></strong>
-        <% end %>
-      </button>
-    </li>
-  </ul>
-  <p>
 <% end %>
 
+<!-- Form Card -->
 <%= turbo_frame_tag 'staff_edit_employee' do %>
   <div class="content-card" data-skip-form-manager="true">
     <h2 class="content-card-title">
       <i class="bi bi-person"></i>
-      Edit Staff
+      <%= t('.employee_details', default: 'Staff Details') %>
     </h2>
 
     <%= render 'form', employee: @employee %>
   </div>
 <% end %>
+
+<style>
+  .text-2xl {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+
+  .text-gray-900 {
+    color: var(--color-gray-900);
+  }
+
+  .text-gray-500 {
+    color: var(--color-gray-500);
+  }
+
+  .text-sm {
+    font-size: 0.875rem;
+  }
+</style>

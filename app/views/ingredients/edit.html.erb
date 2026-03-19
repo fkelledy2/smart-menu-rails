@@ -1,64 +1,68 @@
-<div class="page-header">
-  <h4>Edit Ingredient</h4>
-</div>
+<%#
+  Edit Ingredient - 2025 Design System
+  Modern form layout with consistent styling
+%>
 
-<div class="row">
-  <div class="col-md-8">
-    <%= form_with(model: @ingredient, url: restaurant_ingredient_path(@restaurant, @ingredient), method: :patch, local: true) do |form| %>
-      <% if @ingredient.errors.any? %>
-        <div class="alert alert-danger">
-          <h5><%= pluralize(@ingredient.errors.count, "error") %> prohibited this ingredient from being saved:</h5>
-          <ul>
-            <% @ingredient.errors.each do |error| %>
-              <li><%= error.full_message %></li>
-            <% end %>
-          </ul>
+<% in_frame = defined?(turbo_frame_request?) && turbo_frame_request? %>
+
+<!-- Page Header -->
+<% unless in_frame %>
+  <div class="container-fluid px-0 pb-4">
+    <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+      <div>
+        <!-- Breadcrumb -->
+        <div class="text-sm text-gray-500 mb-2">
+          <%= link_to @restaurant.name, edit_restaurant_path(@restaurant), class: 'text-primary' %>
+          <i class="bi bi-chevron-right"></i>
+          <%= link_to t('.ingredients', default: 'Ingredients'), restaurant_ingredients_path(@restaurant), class: 'text-primary' %>
+          <i class="bi bi-chevron-right"></i>
+          <%= @ingredient.name %>
         </div>
-      <% end %>
 
-      <div class="mb-3">
-        <%= form.label :name, class: 'form-label' %>
-        <%= form.text_field :name, class: 'form-control', required: true %>
+        <h1 class="text-2xl font-semibold text-gray-900 mb-1">
+          <i class="bi bi-box-seam"></i>
+          <%= t('.edit_ingredient', default: 'Edit Ingredient') %>
+        </h1>
+        <p class="text-sm text-gray-500">
+          <%= t('.description', default: 'Update ingredient details and cost information') %>
+        </p>
       </div>
 
-      <div class="mb-3">
-        <%= form.label :category, class: 'form-label' %>
-        <%= form.select :category, 
-            ['Protein', 'Vegetable', 'Grain', 'Dairy', 'Spice', 'Oil', 'Beverage', 'Other'],
-            { include_blank: 'Select category' },
-            class: 'form-select' %>
+      <div class="d-flex gap-2">
+        <%= link_to restaurant_ingredients_path(@restaurant),
+            class: 'btn btn-ghost' do %>
+          <i class="bi bi-arrow-left"></i> <%= t('.back_to_ingredients', default: 'Back to Ingredients') %>
+        <% end %>
       </div>
-
-      <div class="row">      <div class="row">      <div class="row">      <div class="row">      <div class="r:unit_of_measure, class: 'form-label' %>
-            <%= form.select :unit_of_measure,
-                ['kg', 'g', 'L', 'mL', 'oz', 'lb', 'unit', 'bunch', 'piece'].map { |u| [u, u] },
-                { include_blank: 'Select unit' },
-                class: 'form-select' %>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="mb-3">
-            <%= form.label :current_cost_per_unit, 'Cost per Unit', class: 'form-label' %>
-            <%= form.number_field :current_cost_per_unit, class: 'form-control', step: 0.01, min: 0 %>
-          </div>
-        </div>
-      </div>
-
-      <div class="mb-3">
-        <%= form.label :description, class: 'form-label' %>
-        <%= form.text_area :description, class: 'form-control', rows: 3 %>
-      </div>
-
-      <div class="mb-3 form-check">
-        <%= form.check_box :is_shared, class: 'form-check-input' %>
-        <%= form.label :is_shared, 'Share with all restaurants (chain-wide)', class: 'form-check-label' %>
-      </div>
-
-      <div class="mt-4">
-        <%= form.submit 'Update Ingredient', class: 'btn btn-primary' %>
-        <%= link_to 'Delete', restaurant_ingredient_path(@restaurant, @ingredient), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
-        <%= link_to 'Cancel', restaurant_ingredients_path(@restaurant), class: 'btn btn-secondary' %>
-      </div>
-    <% end %>
+    </div>
   </div>
+<% end %>
+
+<!-- Form Card -->
+<div class="content-card" data-skip-form-manager="true">
+  <h2 class="content-card-title">
+    <i class="bi bi-box-seam"></i>
+    <%= t('.ingredient_details', default: 'Ingredient Details') %>
+  </h2>
+
+  <%= render 'form', ingredient: @ingredient %>
 </div>
+
+<style>
+  .text-2xl {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+
+  .text-gray-900 {
+    color: var(--color-gray-900);
+  }
+
+  .text-gray-500 {
+    color: var(--color-gray-500);
+  }
+
+  .text-sm {
+    font-size: 0.875rem;
+  }
+</style>
