@@ -6,7 +6,9 @@
 // JS-toggled visibility
 // Used by Stimulus controllers (skeleton show/hide, slider init, etc.)
 // ------------------------------------
-.hidden { display: none !important; }
+.hidden       { display: none !important; }
+.display-none { display: none !important; }
+.width-full   { width: 100%; }
 .transition-opacity-300 { transition: opacity 0.3s ease; }
 
 // ------------------------------------
