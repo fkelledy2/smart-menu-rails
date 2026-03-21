@@ -74,17 +74,19 @@ class LocalizeMenuServiceTest < ActiveSupport::TestCase
   end
 
   test 'localize_menu_to_all_locales handles default locale without translation' do
-    DeeplApiService.stub :translate, ->(text, _options) { "TRANSLATED: #{text}" } do
-      LocalizeMenuService.localize_menu_to_all_locales(@menu)
+    DeeplApiService.stub :configured?, true do
+      DeeplApiService.stub :translate, ->(text, _options) { "TRANSLATED: #{text}" } do
+        LocalizeMenuService.localize_menu_to_all_locales(@menu)
 
-      # Default locale should copy original text
-      default_menu_locale = Menulocale.find_by(menu: @menu, locale: 'EN')
-      assert_equal @menu.name, default_menu_locale.name
-      assert_equal @menu.description, default_menu_locale.description
+        # Default locale should copy original text
+        default_menu_locale = Menulocale.find_by(menu: @menu, locale: 'EN')
+        assert_equal @menu.name, default_menu_locale.name
+        assert_equal @menu.description, default_menu_locale.description
 
-      # Non-default locales should be translated
-      italian_menu_locale = Menulocale.find_by(menu: @menu, locale: 'IT')
-      assert_includes italian_menu_locale.name, 'TRANSLATED'
+        # Non-default locales should be translated
+        italian_menu_locale = Menulocale.find_by(menu: @menu, locale: 'IT')
+        assert_includes italian_menu_locale.name, 'TRANSLATED'
+      end
     end
   end
 
@@ -289,17 +291,19 @@ class LocalizeMenuServiceTest < ActiveSupport::TestCase
   test 'translation_calls_DeeplApiService_with_correct_parameters' do
     translation_calls = []
 
-    DeeplApiService.stub :translate, lambda { |text, options|
-      translation_calls << { text: text, to: options[:to], from: options[:from] }
-      "TRANSLATED: #{text}"
-    } do
-      LocalizeMenuService.localize_menu_to_locale(@menu, @italian_locale)
-    end
+    DeeplApiService.stub :configured?, true do
+      DeeplApiService.stub :translate, lambda { |text, options|
+        translation_calls << { text: text, to: options[:to], from: options[:from] }
+        "TRANSLATED: #{text}"
+      } do
+        LocalizeMenuService.localize_menu_to_locale(@menu, @italian_locale)
+      end
 
-    # Verify translation was called for menu, section, and item
-    assert(translation_calls.any? { |call| call[:text] == @menu.name && call[:to] == 'IT' })
-    assert(translation_calls.any? { |call| call[:text] == @section.name && call[:to] == 'IT' })
-    assert(translation_calls.any? { |call| call[:text] == @item.name && call[:to] == 'IT' })
+      # Verify translation was called for menu, section, and item
+      assert(translation_calls.any? { |call| call[:text] == @menu.name && call[:to] == 'IT' })
+      assert(translation_calls.any? { |call| call[:text] == @section.name && call[:to] == 'IT' })
+      assert(translation_calls.any? { |call| call[:text] == @item.name && call[:to] == 'IT' })
+    end
   end
 
   test 'default_locale_does_not_call_translation_service' do

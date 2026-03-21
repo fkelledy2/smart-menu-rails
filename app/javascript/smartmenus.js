@@ -231,7 +231,8 @@ function initMenuTimeRestrictions() {
         // Only enable button if we're within the valid time range
         // AND there's a table selected (check if button has data-bs-ordr_id)
         const hasOrder = button.getAttribute('data-bs-ordr_id');
-        if (hasOrder) {
+        const isStaffView = !!document.querySelector('[data-testid="smartmenu-staff-view"]');
+        if (hasOrder || isStaffView) {
           button.disabled = false;
           button.classList.remove('disabled');
           button.style.opacity = '';
@@ -263,7 +264,8 @@ function initMenuTimeRestrictions() {
         } else {
           // Only enable button if there's a table selected (check if button has data-bs-ordr_id)
           const hasOrder = button.getAttribute('data-bs-ordr_id');
-          if (hasOrder) {
+          const isStaffView = !!document.querySelector('[data-testid="smartmenu-staff-view"]');
+          if (hasOrder || isStaffView) {
             button.disabled = false;
             button.classList.remove('disabled');
             button.style.opacity = '';

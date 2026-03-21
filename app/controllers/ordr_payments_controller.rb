@@ -23,7 +23,8 @@ class OrdrPaymentsController < ApplicationController
     begin
       OrdrStationTicketService.submit_unsubmitted_items!(@ordr)
       @ordr.reload
-    rescue StandardError
+    rescue StandardError => e
+      Rails.logger.warn("[OrdrPaymentsController#request_bill] submit_unsubmitted_items failed for order=#{@ordr.id}: #{e.message}")
       begin
         opened_status = Ordritem.statuses['opened']
         ordered_status = Ordritem.statuses['ordered']
@@ -31,8 +32,8 @@ class OrdrPaymentsController < ApplicationController
         @ordr.ordritems.where(status: opened_status).update_all(status: ordered_status)
         @ordr.update(status: 'ordered') if @ordr.status.to_s == 'opened'
         @ordr.reload
-      rescue StandardError
-        nil
+      rescue StandardError => e
+        Rails.logger.warn("[OrdrPaymentsController#request_bill] fallback item status update failed for order=#{@ordr.id}: #{e.message}")
       end
     end
 
@@ -376,14 +377,16 @@ class OrdrPaymentsController < ApplicationController
     if Stripe.api_key.blank?
       key = begin
         Rails.application.credentials.stripe_secret_key
-      rescue StandardError
+      rescue StandardError => e
+        Rails.logger.warn("[OrdrPaymentsController#create_stripe_checkout] credentials.stripe_secret_key lookup failed: #{e.message}")
         nil
       end
       if key.blank?
         key = begin
           Rails.application.credentials.dig(:stripe, :secret_key) ||
             Rails.application.credentials.dig(:stripe, :api_key)
-        rescue StandardError
+        rescue StandardError => e
+          Rails.logger.warn("[OrdrPaymentsController#create_stripe_checkout] credentials dig for stripe key failed: #{e.message}")
           nil
         end
       end
@@ -491,7 +494,8 @@ class OrdrPaymentsController < ApplicationController
 
     participant = begin
       ordr.ordrparticipants.find_by(sessionid: session.id.to_s)
-    rescue StandardError
+    rescue StandardError => e
+      Rails.logger.warn("[OrdrPaymentsController#broadcast_state] participant lookup failed for order=#{ordr.id}: #{e.message}")
       nil
     end
 
@@ -512,8 +516,8 @@ class OrdrPaymentsController < ApplicationController
       if smartmenu&.slug.present?
         ActionCable.server.broadcast("ordr_#{smartmenu.slug}_channel", { state: payload })
       end
-    rescue StandardError
-      nil
+    rescue StandardError => e
+      Rails.logger.warn("[OrdrPaymentsController#broadcast_state] slug channel broadcast failed for order=#{ordr.id}: #{e.message}")
     end
   end
 end

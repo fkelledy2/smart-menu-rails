@@ -8,6 +8,11 @@ class User < ApplicationRecord
          :password_expirable, :session_limitable,
          omniauth_providers: %i[google_oauth2 apple]
 
+  # PII encryption. user.email is intentionally excluded: Devise and IdentityCache
+  # both depend on plaintext email lookups; that field requires a dedicated migration.
+  encrypts :first_name
+  encrypts :last_name
+
   has_one_attached :avatar
 
   # Active Storage validations

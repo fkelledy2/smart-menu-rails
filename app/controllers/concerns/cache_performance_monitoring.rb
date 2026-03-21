@@ -43,7 +43,8 @@ module CachePerformanceMonitoring
   def get_cache_hits
     # Get current cache hit count from AdvancedCacheService
     AdvancedCacheService.cache_stats[:hits] || 0
-  rescue StandardError
+  rescue StandardError => e
+    Rails.logger.warn("[CachePerformanceMonitoring] Failed to get cache hits: #{e.message}")
     0
   end
 
@@ -78,7 +79,8 @@ module CachePerformanceMonitoring
         pattern = "performance_metrics:#{date}:*"
         keys = begin
           Rails.cache.redis.keys(pattern)
-        rescue StandardError
+        rescue StandardError => e
+          Rails.logger.warn("[CachePerformanceMonitoring] Failed to fetch Redis keys for pattern #{pattern}: #{e.message}")
           []
         end
 

@@ -133,6 +133,22 @@
     <% end %>
   </div>
 
+  <!-- PROFITABILITY SECTION -->
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">
+      <i class="bi bi-graph-up-arrow"></i>
+      Profitability
+    </div>
+
+    <%= link_to edit_restaurant_path(restaurant, section: 'profitability'),
+        class: "sidebar-link #{'active' if current_section.to_s.start_with?('profitability')} #{disabled_class_for('profitability', onboarding_next)}",
+        data: { testid: 'sidebar-profitability-link', turbo_frame: 'restaurant_content', turbo_action: 'advance', action: 'click->sidebar#handleLinkClick', **disabled_data_attrs('profitability', onboarding_next) } do %>
+      <i class="bi bi-bar-chart-line"></i>
+      <span>Overview</span>
+      <%= sa_badge %>
+    <% end %>
+  </div>
+
   <!-- OPERATIONS (Tables + Staff) — collapsible -->
   <%
     ops_sections = %w[staff tables taxes_and_tips ordering insights jukebox wifi]

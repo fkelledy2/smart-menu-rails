@@ -180,8 +180,8 @@ class MenuitemsController < ApplicationController
       end
       AdvancedCacheService.invalidate_menu_caches(@menu.id)
       AdvancedCacheService.invalidate_restaurant_caches(@restaurant.id)
-    rescue StandardError
-      nil
+    rescue StandardError => e
+      Rails.logger.warn("[MenuitemsController] Cache invalidation failed after bulk_update: #{e.message}")
     end
 
     redirect_to edit_restaurant_menu_path(@restaurant, @menu, section: 'items'),
@@ -470,6 +470,7 @@ class MenuitemsController < ApplicationController
 
     render json: { status: 'success' }, status: :ok
   rescue StandardError => e
+    Rails.logger.warn("[MenuitemsController] reorder failed: #{e.message}")
     render json: { status: 'error', message: e.message }, status: :unprocessable_content
   end
 

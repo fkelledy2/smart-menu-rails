@@ -33,7 +33,7 @@ module TestIdHelpers
 
   # Recalculate order totals (nett, tax, service, gross) to mirror production logic
   def recalc_order_totals!(order)
-    nett = order.ordritems.sum(:ordritemprice).to_f
+    nett = order.ordritems.sum('ordritemprice * quantity').to_f
     taxes = Tax.where(restaurant_id: order.restaurant_id).order(sequence: :asc)
     total_tax = 0.0
     total_service = 0.0
@@ -425,8 +425,12 @@ module TestIdHelpers
     menuitem = Menuitem.find(item_id)
     before_count = order.ordritems.count
     Ordritem.create!(ordr: order, menuitem: menuitem, status: 0, ordritemprice: menuitem.price, quantity: 1)
-    participant = Ordrparticipant.where(ordr: order, role: 0).first_or_create!(sessionid: 'test')
-    Ordraction.create!(ordrparticipant: participant, ordr: order, ordritem: order.ordritems.last, action: 2)
+    # Don't create participant here - let the controller create it with the correct session ID
+    # when the page is visited. Only create ordraction if participant already exists.
+    participant = Ordrparticipant.where(ordr: order, role: 0).first
+    if participant
+      Ordraction.create!(ordrparticipant: participant, ordr: order, ordritem: order.ordritems.last, action: 2)
+    end
     recalc_order_totals!(order)
     ensure_order_dom_context!
     order.reload

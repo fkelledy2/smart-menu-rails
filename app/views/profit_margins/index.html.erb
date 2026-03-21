@@ -197,7 +197,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   const categoryCtx = document.getElementById('categoryChart');
   if (categoryCtx) {
-    const categoryData = <%= r    conts[:category_breakdown].to_json %>;
+    const categoryData = <%= raw @stats[:category_breakdown].to_json %>;
     new Chart(categoryCtx, {
       type: 'bar',
       data: {

@@ -5,8 +5,17 @@
 
 Rack::Attack.enabled = !Rails.env.test?
 
-# Cache store — use Rails cache (Redis in production, memory in dev)
-Rack::Attack.cache.store = ActiveSupport::Cache::MemoryStore.new
+# Cache store — must use a shared store so limits are enforced across all
+# processes/dynos. MemoryStore is per-process and ineffective in production.
+Rack::Attack.cache.store = begin
+  if Rails.env.production? && ENV['REDIS_URL'].present?
+    ActiveSupport::Cache::RedisCacheStore.new(url: ENV['REDIS_URL'], namespace: 'rack_attack')
+  else
+    ActiveSupport::Cache::MemoryStore.new
+  end
+rescue Gem::LoadError, LoadError
+  ActiveSupport::Cache::MemoryStore.new
+end
 
 # ----------------------------------------------------------------------------
 # Throttles

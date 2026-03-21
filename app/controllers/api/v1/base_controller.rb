@@ -2,6 +2,7 @@ module Api
   module V1
     class BaseController < ApplicationController
       include Pundit::Authorization
+      include Pagy::Backend if defined?(Pagy::Backend)
 
       protect_from_forgery with: :null_session
 
@@ -72,6 +73,18 @@ module Api
         response[:message] = message if message
         response[:data] = data unless data.empty?
         response
+      end
+
+      # Pagination metadata for collection responses
+      def pagy_metadata_response(pagy)
+        {
+          count: pagy.count,
+          page: pagy.page,
+          items: pagy.items,
+          pages: pagy.pages,
+          next: pagy.next,
+          prev: pagy.prev,
+        }
       end
 
       # Standardized error response format

@@ -63,6 +63,7 @@ class HealthController < ApplicationController
         }, status: :service_unavailable
       end
     rescue StandardError => e
+      Rails.logger.error("[HealthController#redis_check] Redis check failed: #{e.message}")
       render json: {
         status: 'unhealthy',
         service: 'redis',
@@ -95,6 +96,7 @@ class HealthController < ApplicationController
         timestamp: Time.current.iso8601,
       }
     rescue StandardError => e
+      Rails.logger.error("[HealthController#database_check] Database check failed: #{e.message}")
       render json: {
         status: 'unhealthy',
         service: 'database',
@@ -125,6 +127,7 @@ class HealthController < ApplicationController
 
       overall_status = 'unhealthy' if results[:redis][:status] == 'unhealthy'
     rescue StandardError => e
+      Rails.logger.error("[HealthController#full_check] Redis check failed: #{e.message}")
       results[:redis] = {
         status: 'unhealthy',
         error: e.message,
@@ -142,6 +145,7 @@ class HealthController < ApplicationController
         latency_ms: ((Time.current - db_start) * 1000).round(2),
       }
     rescue StandardError => e
+      Rails.logger.error("[HealthController#full_check] Database check failed: #{e.message}")
       results[:database] = {
         status: 'unhealthy',
         error: e.message,
@@ -167,6 +171,7 @@ class HealthController < ApplicationController
         latency_ms: ((Time.current - ic_start) * 1000).round(2),
       }
     rescue StandardError => e
+      Rails.logger.warn("[HealthController#full_check] IdentityCache check failed: #{e.message}")
       results[:identity_cache] = {
         status: 'degraded',
         error: e.message,
@@ -213,6 +218,7 @@ class HealthController < ApplicationController
       timestamp: Time.current.iso8601,
     }
   rescue StandardError => e
+    Rails.logger.error("[HealthController#cache_stats] Cache stats failed: #{e.message}")
     render json: {
       status: 'error',
       error: e.message,

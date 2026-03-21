@@ -406,6 +406,45 @@
             </div>
           </div>
         <% end %>
+        <!-- Cost & Margin Card -->
+        <% if menuitem.persisted? %>
+          <% current_cost = menuitem.current_cost %>
+          <div class="menuitem-card">
+            <div class="menuitem-card-header">
+              <i class="bi bi-graph-up-arrow"></i>
+              <h2>Cost & Margin</h2>
+            </div>
+            <div class="menuitem-card-body">
+              <% if current_cost %>
+                <% total = current_cost.total_cost.to_f %>
+                <div class="d-flex justify-content-between mb-2">
+                  <span class="text-muted small">Total cost</span>
+                  <span class="fw-semibold"><%= number_to_currency(total) %></span>
+                </div>
+                <% if menuitem.price.to_f > 0 && total > 0 %>
+                  <% margin_pct = ((menuitem.price.to_f - total) / menuitem.price.to_f * 100).round(1) %>
+                  <div class="d-flex justify-content-between mb-3">
+                    <span class="text-muted small">Gross margin</span>
+                    <span class="fw-semibold <%= margin_pct >= 60 ? 'text-success' : margin_pct >= 30 ? 'text-warning' : 'text-danger' %>">
+                      <%= margin_pct %>%
+                    </span>
+                  </div>
+                <% end %>
+                <%= link_to 'Edit cost data',
+                    edit_restaurant_menu_menusection_menuitem_cost_path(restaurant, menu, menusection, current_cost, menuitem_id: menuitem.id),
+                    class: 'btn btn-sm btn-outline-secondary w-100',
+                    data: { turbo: false } %>
+              <% else %>
+                <p class="text-muted small mb-3">No cost data yet. Add ingredient, labor, and overhead costs to track profitability.</p>
+                <%= link_to 'Add cost data',
+                    new_restaurant_menu_menusection_menuitem_cost_path(restaurant, menu, menusection, menuitem_id: menuitem.id),
+                    class: 'btn btn-sm btn-outline-primary w-100',
+                    data: { turbo: false } %>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+
       </div><!-- /RIGHT COLUMN -->
 
     </div><!-- /menuitem-edit-grid -->

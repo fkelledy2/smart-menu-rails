@@ -33,8 +33,7 @@ class SmartmenusController < ApplicationController
     # causing stale table dropdown contents (e.g., missing newly added tables).
     load_header_cache_buster
 
-    if @menu && (@menu.restaurant_id == @restaurant.id || RestaurantMenu.exists?(restaurant_id: @restaurant.id, menu_id: @menu.id))
-    else
+    unless @menu && (@menu.restaurant_id == @restaurant.id || RestaurantMenu.exists?(restaurant_id: @restaurant.id, menu_id: @menu.id))
       redirect_to root_url and return
     end
 
@@ -52,7 +51,8 @@ class SmartmenusController < ApplicationController
 
     begin
       @needs_age_check = !(@openOrder && AlcoholOrderEvent.exists?(ordr_id: @openOrder.id, age_check_acknowledged: false)).nil?
-    rescue StandardError
+    rescue StandardError => e
+      Rails.logger.warn("[SmartmenusController#show] age check lookup failed: #{e.message}")
       @needs_age_check = false
     end
 
@@ -245,7 +245,8 @@ class SmartmenusController < ApplicationController
                         else
                           []
                         end
-  rescue StandardError
+  rescue StandardError => e
+    Rails.logger.warn("[SmartmenusController#load_table_smartmenus] failed to load table smartmenus: #{e.message}")
     @table_smartmenus = []
   end
 
@@ -254,7 +255,8 @@ class SmartmenusController < ApplicationController
     # No reload needed — avoids 3-5 extra queries per request.
     @active_locales = @restaurant&.restaurantlocales&.select { |rl| rl.status.to_s == 'active' } || []
     @default_locale = @active_locales.find { |rl| rl.dfault == true }
-  rescue StandardError
+  rescue StandardError => e
+    Rails.logger.warn("[SmartmenusController#load_restaurant_locales] failed to load restaurant locales: #{e.message}")
     @active_locales = []
     @default_locale = nil
   end
@@ -360,9 +362,9 @@ class SmartmenusController < ApplicationController
   end
 
   def maybe_sync_customer_preferred_locale
-    @menuparticipant = Menuparticipant.find_by(sessionid: safe_session_id)
+    @menuparticipant = Menuparticipant.find_by(sessionid: safe_session_id, smartmenu_id: @smartmenu.id)
     return unless @menuparticipant
-    
+
     # Compare case-insensitively and sync if menuparticipant has a locale set
     menu_locale = @menuparticipant.preferredlocale&.downcase
     return if menu_locale.blank? || @ordrparticipant.preferredlocale&.downcase == menu_locale

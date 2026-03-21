@@ -23,7 +23,7 @@
 </div>
 
 <!-- Operating Hours -->
-<div class="mb-3 p-3">
+<div class="mb-3 p-3" data-hours-root>
   <h2 class="h5 mb-3">
     <i class="bi bi-clock"></i>
     <%= t('.operating_hours') %>
@@ -40,12 +40,12 @@
 
     <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
 
-    <!-- Loading skeleton -->
-    <div class="hours-loading-skeleton">
+    <!-- Loading skeleton (hidden by default to avoid flash) -->
+    <div class="hours-loading-skeleton hidden">
       <div class="skeleton-shimmer"></div>
     </div>
 
-  <div class="hours-editor opacity-0 transition-opacity-300">
+  <div class="hours-editor transition-opacity-300">
     <% %w[monday tuesday wednesday thursday friday saturday sunday].each_with_index do |day, index| %>
       <% day_hours = restaurant.restaurantavailabilities.where(dayofweek: day).order(:sequence).first %>
       <% is_closed = day_hours.nil? || day_hours.closed? %>
@@ -126,22 +126,14 @@
 <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider@15.7.1/dist/nouislider.min.css" /></noscript>
 
 <!-- Load noUiSlider if not already loaded -->
-<script data-turbo-track="reload" data-turbo-eval="true">
-  // Check if noUiSlider is already loaded
+<script data-turbo-eval="true">
   if (typeof noUiSlider === 'undefined') {
-    console.log('[HoursEditor] Loading noUiSlider from CDN...');
     const script = document.createElement('script');
     script.src = 'https://cdn.jsdelivr.net/npm/nouislider@15.7.1/dist/nouislider.min.js';
-    script.onload = function() {
-      console.log('[HoursEditor] noUiSlider loaded successfully');
-      window.noUiSliderLoaded = true;
-    };
-    script.onerror = function() {
-      console.error('[HoursEditor] Failed to load noUiSlider from CDN');
-    };
+    script.onload = function() { window.noUiSliderLoaded = true; };
+    script.onerror = function() { console.error('[HoursEditor] Failed to load noUiSlider'); };
     document.head.appendChild(script);
   } else {
-    console.log('[HoursEditor] noUiSlider already loaded');
     window.noUiSliderLoaded = true;
   }
 </script>
@@ -324,39 +316,52 @@
 </style>
 
 <script data-turbo-eval="true">
-  // Track retry attempts
-  let noUiSliderRetries = 0;
-  const MAX_RETRIES = 50; // 5 seconds maximum wait (50 * 100ms)
+  let hoursEditorRetries = 0;
+  const MAX_HOURS_RETRIES = 50;
+  let hoursInitStarted = false;
+  let hoursEditorReady = false;
+
+  function hoursEditorRoot() {
+    return document.querySelector('[data-hours-root]');
+  }
+
+  function showHoursEditorFallback() {
+    const root = hoursEditorRoot();
+    if (!root) return;
+    const editor = root.querySelector('.hours-editor');
+    const skeleton = root.querySelector('.hours-loading-skeleton');
+    if (skeleton) skeleton.classList.add('hidden');
+    if (editor) editor.style.opacity = '1';
+  }
 
   function initializeHoursEditor() {
-    console.log('[HoursEditor] Initializing with auto-save');
+    const root = hoursEditorRoot();
+    if (!root) return;
 
-    // Check if noUiSlider is loaded
+    hoursInitStarted = true;
+
     if (typeof noUiSlider === 'undefined') {
-      if (noUiSliderRetries < MAX_RETRIES) {
-        noUiSliderRetries++;
-        console.log(`[HoursEditor] Waiting for noUiSlider to load... (attempt ${noUiSliderRetries}/${MAX_RETRIES})`);
-        // Retry after a short delay
+      if (hoursEditorRetries < MAX_HOURS_RETRIES) {
+        hoursEditorRetries++;
         setTimeout(initializeHoursEditor, 100);
         return;
       } else {
         console.error('[HoursEditor] Failed to load noUiSlider after max retries');
+        showHoursEditorFallback();
         return;
       }
     }
 
-    // Reset retry counter on success
-    noUiSliderRetries = 0;
-    console.log('[HoursEditor] noUiSlider is available, proceeding with initialization');
+    hoursEditorRetries = 0;
 
     // Verify auto-save controller is attached
-    const form = document.querySelector('[data-controller*="auto-save"]');
+    const form = root.querySelector('form[data-controller*="auto-save"]');
     if (!form) {
       console.error('[HoursEditor] Auto-save form NOT found!');
     }
 
     // Initialize all time sliders
-    const sliders = document.querySelectorAll('.time-range-slider');
+    const sliders = root.querySelectorAll('.time-range-slider');
 
     // Destroy existing sliders first to prevent duplicates
     sliders.forEach((sliderElement) => {
@@ -368,22 +373,18 @@
     sliders.forEach((sliderElement) => {
       const day = sliderElement.id.replace('slider_', '');
       const dayRow = sliderElement.closest('.day-row');
+      if (!dayRow) return;
       const openMinutes = parseInt(sliderElement.dataset.open) || 540; // 9:00
       const closeMinutes = parseInt(sliderElement.dataset.close) || 1320; // 22:00
 
-      // Create the slider
       const slider = noUiSlider.create(sliderElement, {
         start: [openMinutes, closeMinutes],
         connect: true,
-        range: {
-          'min': 0,      // 00:00
-          'max': 1440    // 24:00
-        },
-        step: 15, // 15-minute intervals
+        range: { 'min': 0, 'max': 1440 },
+        step: 15,
         tooltips: false
       });
 
-      // Update time displays in real-time while dragging
       slider.on('update', function(values, handle) {
         const minutes = Math.round(values[handle]);
         const hours = Math.floor(minutes / 60);
@@ -391,47 +392,42 @@
         const timeString = sprintf('%02d:%02d', hours, mins);
 
         if (handle === 0) {
-          // Opening time
           const openingTime = dayRow.querySelector('.opening-time .time-value');
-          openingTime.textContent = timeString;
+          if (openingTime) openingTime.textContent = timeString;
         } else {
-          // Closing time
           const closingTime = dayRow.querySelector('.closing-time .time-value');
-          closingTime.textContent = timeString;
+          if (closingTime) closingTime.textContent = timeString;
         }
       });
 
-      // Trigger auto-save when user releases the slider handle
       slider.on('set', function(values, handle) {
         const minutes = Math.round(values[handle]);
         const hours = Math.floor(minutes / 60);
         const mins = minutes % 60;
         const timeString = sprintf('%02d:%02d', hours, mins);
 
-        let input; // Declare outside if/else for proper scoping
-
+        let input;
         if (handle === 0) {
-          // Opening time
           input = dayRow.querySelector('.open-time-input');
-          input.value = timeString;
         } else {
-          // Closing time
           input = dayRow.querySelector('.close-time-input');
-          input.value = timeString;
         }
-
-        // Trigger change and input events for auto-save
+        if (!input) return;
+        input.value = timeString;
         input.dispatchEvent(new Event('change', { bubbles: true }));
         input.dispatchEvent(new Event('input', { bubbles: true }));
       });
     });
 
     // Handle closed toggle
-    document.querySelectorAll('.closed-toggle').forEach((toggle) => {
+    root.querySelectorAll('.closed-toggle').forEach((toggle) => {
+      if (toggle.dataset.hoursEditorBound === '1') return;
+      toggle.dataset.hoursEditorBound = '1';
       toggle.addEventListener('change', function() {
         const dayRow = this.closest('.day-row');
+        if (!dayRow) return;
         const container = dayRow.querySelector('.time-slider-container');
-
+        if (!container) return;
         if (this.checked) {
           container.classList.add('disabled');
         } else {
@@ -441,37 +437,33 @@
     });
 
     // Copy Monday to all days
-    const copyButton = document.querySelector('.copy-monday-btn');
-    if (copyButton) {
+    const copyButton = root.querySelector('.copy-monday-btn');
+    if (copyButton && copyButton.dataset.hoursEditorBound !== '1') {
+      copyButton.dataset.hoursEditorBound = '1';
       copyButton.addEventListener('click', function(e) {
         e.preventDefault();
 
-        const mondayRow = document.querySelector('[data-day="monday"]');
+        const mondayRow = root.querySelector('[data-day="monday"]');
         if (!mondayRow) return;
 
         const mondaySlider = mondayRow.querySelector('.time-range-slider');
-        const mondaySliderInstance = mondaySlider.noUiSlider;
-        const mondayValues = mondaySliderInstance.get();
+        const mondayValues = mondaySlider.noUiSlider.get();
         const mondayIsClosed = mondayRow.querySelector('.closed-toggle').checked;
 
-        // Apply to all other days
-        document.querySelectorAll('.day-row').forEach((row) => {
+        root.querySelectorAll('.day-row').forEach((row) => {
           if (row.dataset.day === 'monday') return;
 
           const slider = row.querySelector('.time-range-slider');
           const toggle = row.querySelector('.closed-toggle');
 
-          // Set closed state
           toggle.checked = mondayIsClosed;
           toggle.dispatchEvent(new Event('change'));
 
-          // Set slider values
           if (slider.noUiSlider) {
             slider.noUiSlider.set(mondayValues);
           }
         });
 
-        // Show success message
         const btn = this;
         const originalText = btn.innerHTML;
         const copiedText = btn.dataset.copiedText || '<%= j t('.copied_success') %>';
@@ -487,19 +479,12 @@
       });
     }
 
-    // Show the editor and hide skeleton now that sliders are initialized
-    const editor = document.querySelector('.hours-editor');
-    const skeleton = document.querySelector('.hours-loading-skeleton');
-
-    if (skeleton) {
-      skeleton.classList.add('hidden');
-    }
-
-    if (editor) {
-      // Remove any utility class that forces opacity 0
-      editor.classList.remove('opacity-0');
-      editor.style.opacity = '1';
-    }
+    // Show editor, hide skeleton
+    const editor = root.querySelector('.hours-editor');
+    const skeleton = root.querySelector('.hours-loading-skeleton');
+    if (skeleton) skeleton.classList.add('hidden');
+    if (editor) editor.style.opacity = '1';
+    hoursEditorReady = true;
   }
 
   // Helper function for formatting
@@ -511,12 +496,22 @@
     });
   }
 
-  // Initialize on DOMContentLoaded (full page load)
-  document.addEventListener('DOMContentLoaded', initializeHoursEditor);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeHoursEditor);
+  } else {
+    initializeHoursEditor();
+  }
 
-  // Initialize on Turbo navigation (sidebar navigation)
   document.addEventListener('turbo:load', initializeHoursEditor);
   document.addEventListener('turbo:frame-load', initializeHoursEditor);
+  document.addEventListener('turbo:render', initializeHoursEditor);
 
-  console.log('[HoursEditor] Event listeners registered for DOMContentLoaded, turbo:load, and turbo:frame-load');
+  // Delay-show the skeleton only if init takes noticeable time
+  setTimeout(function() {
+    if (!hoursEditorReady) {
+      const root = hoursEditorRoot();
+      const skeleton = root ? root.querySelector('.hours-loading-skeleton') : null;
+      if (skeleton && hoursInitStarted) skeleton.classList.remove('hidden');
+    }
+  }, 250);
 </script>

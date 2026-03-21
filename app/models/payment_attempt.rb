@@ -2,7 +2,12 @@ class PaymentAttempt < ApplicationRecord
   belongs_to :ordr
   belongs_to :restaurant
 
-  has_many :payment_refunds, dependent: :delete_all
+  has_many :payment_refunds, dependent: :destroy
+
+  # provider_checkout_url is a Stripe/Square session URL — encrypt at rest.
+  # provider_payment_id is excluded: it has a unique DB index which would break
+  # with non-deterministic encryption and is needed for idempotency checks.
+  encrypts :provider_checkout_url
 
   enum :provider, {
     stripe: 0,

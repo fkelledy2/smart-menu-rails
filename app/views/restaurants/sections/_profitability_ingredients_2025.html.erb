@@ -1,0 +1,96 @@
+<%#
+  Profitability: Ingredients sub-section
+  List of ingredients used for costing menu items.
+%>
+
+<% restaurant = local_assigns[:restaurant] || @restaurant %>
+
+<%
+  ingredients = restaurant.ingredients.order(:name) rescue []
+  total = ingredients.count
+%>
+
+<!-- Section Header -->
+<div class="mb-3 p-3 border-bottom d-flex align-items-center justify-content-between flex-wrap gap-2">
+  <div>
+    <div class="d-flex align-items-center gap-2 mb-1">
+      <%= link_to edit_restaurant_path(restaurant, section: 'profitability'),
+          class: 'btn btn-sm btn-outline-secondary',
+          data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
+        <i class="bi bi-arrow-left"></i>
+      <% end %>
+      <h2 class="h5 mb-0 d-flex align-items-center gap-2">
+        <i class="bi bi-egg-fried"></i>
+        Ingredients
+      </h2>
+    </div>
+    <p class="text-muted small mb-0 ms-5">Manage your ingredient library for accurate cost calculations</p>
+  </div>
+  <div class="d-flex gap-2">
+    <%= link_to new_restaurant_ingredient_path(restaurant),
+        class: 'btn btn-sm btn-primary',
+        data: { turbo: false } do %>
+      <i class="bi bi-plus me-1"></i>Add Ingredient
+    <% end %>
+  </div>
+</div>
+
+<% if total == 0 %>
+  <div class="px-3 pb-3">
+    <div class="text-center py-5 text-muted">
+      <i class="bi bi-egg-fried fs-1 d-block mb-3 opacity-25"></i>
+      <p class="mb-1 fw-medium">No ingredients yet</p>
+      <p class="small mb-3">Add ingredients to start tracking the true cost of your menu items.</p>
+      <div class="d-flex gap-2 justify-content-center flex-wrap">
+        <%= link_to new_restaurant_ingredient_path(restaurant),
+            class: 'btn btn-sm btn-primary',
+            data: { turbo: false } do %>
+          <i class="bi bi-plus me-1"></i>Add first ingredient
+        <% end %>
+        <%= link_to restaurant_ingredients_path(restaurant),
+            class: 'btn btn-sm btn-outline-secondary',
+            data: { turbo: false } do %>
+          <i class="bi bi-upload me-1"></i>Import CSV
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% else %>
+  <div class="px-3 pb-3">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <span class="text-muted small"><%= total %> ingredient<%= total == 1 ? '' : 's' %></span>
+      <%= link_to restaurant_ingredients_path(restaurant),
+          class: 'btn btn-sm btn-outline-secondary',
+          data: { turbo: false } do %>
+        <i class="bi bi-upload me-1"></i>Import CSV
+      <% end %>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-sm table-hover align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>Name</th>
+            <th>Unit</th>
+            <th class="text-end">Cost per unit</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% ingredients.each do |ingredient| %>
+            <tr>
+              <td class="fw-medium"><%= ingredient.name %></td>
+              <td class="text-muted small"><%= ingredient.unit_of_measure %></td>
+              <td class="text-end"><%= number_to_currency(ingredient.effective_cost_per_unit) %></td>
+              <td class="text-end">
+                <%= link_to 'Edit',
+                    edit_restaurant_ingredient_path(restaurant, ingredient),
+                    class: 'btn btn-xs btn-outline-secondary',
+                    data: { turbo: false } %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+<% end %>

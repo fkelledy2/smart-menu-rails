@@ -28,7 +28,8 @@ class Payments::SquareWebhooksController < ApplicationController
     event_type = parsed['type'].to_s
     occurred_at = begin
       Time.zone.parse(parsed['created_at'])
-    rescue StandardError
+    rescue StandardError => e
+      Rails.logger.warn("[Payments::SquareWebhooksController] Failed to parse occurred_at: #{e.message}")
       Time.current
     end
 

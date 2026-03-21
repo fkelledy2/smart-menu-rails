@@ -17,8 +17,8 @@ class MenuitemCostsController < ApplicationController
     @menuitem_cost.is_active = true
 
     if @menuitem_cost.save
-      redirect_to edit_restaurant_menu_path(@restaurant, @menu),
-                  notice: 'Cost data saved successfully.'
+      redirect_to edit_restaurant_path(@restaurant, section: 'profitability_margins'),
+                  notice: 'Cost data saved.'
     else
       render :new, status: :unprocessable_content
     end
@@ -26,17 +26,17 @@ class MenuitemCostsController < ApplicationController
 
   def update
     if @menuitem_cost.update(menuitem_cost_params)
-      redirect_to edit_restaurant_menu_path(@restaurant, @menu),
-                  notice: 'Cost data updated successfully.'
+      redirect_to edit_restaurant_path(@restaurant, section: 'profitability_margins'),
+                  notice: 'Cost data updated.'
     else
-      ren :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 
   def destroy
     @menuitem_cost.update(is_active: false)
-    redirect_to edit_restaurant_menu_path(@restaurant, @menu),
-                notice: 'Cost data deactivated successfully.'
+    redirect_to edit_restaurant_path(@restaurant, section: 'profitability_margins'),
+                notice: 'Cost data deactivated.'
   end
 
   private
@@ -50,7 +50,9 @@ class MenuitemCostsController < ApplicationController
   end
 
   def set_menuitem
-    @menuitem = @menu.menusections.flat_map(&:menuitems).find(params[:menuitem_id])
+    @menuitem = Menuitem.joins(:menusection)
+      .where(menusections: { menu_id: @menu.id })
+      .find(params[:menuitem_id])
   end
 
   def set_menuitem_cost

@@ -53,8 +53,8 @@ class BeverageReviewQueuesController < ApplicationController
 
     begin
       menuitem.expire_cache if menuitem.respond_to?(:expire_cache)
-    rescue StandardError
-      nil
+    rescue StandardError => e
+      Rails.logger.warn("[BeverageReviewQueuesController] expire_cache failed for menuitem_id=#{menuitem.id}: #{e.message}")
     end
 
     redirect_to beverage_review_queue_restaurant_path(@restaurant), notice: 'Marked as reviewed', status: :see_other

@@ -77,6 +77,7 @@ class OcrMenuImportsController < ApplicationController
   rescue ActiveRecord::RecordNotFound
     render json: { ok: false, error: 'Section not found' }, status: :not_found
   rescue StandardError => e
+    Rails.logger.error("[OcrMenuImportsController#set_section_price] #{e.class}: #{e.message}")
     render json: { ok: false, error: e.message }, status: :unprocessable_content
   end
 

@@ -267,7 +267,8 @@ class RestaurantAnalyticsController < ApplicationController
       begin
         cs = Time.zone.parse(params[:start].to_s).beginning_of_day
         ce = Time.zone.parse(params[:end].to_s).end_of_day
-      rescue StandardError
+      rescue StandardError => e
+        Rails.logger.warn("[RestaurantAnalyticsController] Failed to parse custom date range: #{e.message}")
         cs = 27.days.ago.beginning_of_day
         ce = now.end_of_day
       end

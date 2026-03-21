@@ -4,19 +4,19 @@ class ProfitMarginTargetsController < ApplicationController
   before_action :set_target, only: %i[edit update destroy]
 
   def index
-    @targets = ProfitMarginTarget.where(restaurant_id: @restaurant.id).or(
-      ProfitMarginTarget.where(menusection_id: @restaurant.menus.joins(:menusections).select('menusections.id')),
-    ).active.order(effective_from: :desc)
+    redirect_to edit_restaurant_path(@restaurant, section: 'profitability_targets')
   end
 
   def new
     @target = ProfitMarginTarget.new
   end
 
+  def edit; end
+
   def create
     @target = ProfitMarginTarget.new(target_params)
     if @target.save
-      redirect_to restaurant_profit_margin_targets_path(@restaurant), notice: 'Target created.'
+      redirect_to edit_restaurant_path(@restaurant, section: 'profitability_targets'), notice: 'Target created.'
     else
       render :new, status: :unprocessable_content
     end
@@ -24,7 +24,7 @@ class ProfitMarginTargetsController < ApplicationController
 
   def update
     if @target.update(target_params)
-      redirect_to restaurant_profit_margin_targets_path(@restaurant), notice: 'Target updated.'
+      redirect_to edit_restaurant_path(@restaurant, section: 'profitability_targets'), notice: 'Target updated.'
     else
       render :edit, status: :unprocessable_content
     end
@@ -32,7 +32,7 @@ class ProfitMarginTargetsController < ApplicationController
 
   def destroy
     @target.destroy
-    redirect_to restaurant_profit_margin_targets_path(@restaurant), notice: 'Target deleted.'
+    redirect_to edit_restaurant_path(@restaurant, section: 'profitability_targets'), notice: 'Target deleted.'
   end
 
   private

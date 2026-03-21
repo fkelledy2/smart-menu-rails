@@ -1,9 +1,34 @@
+---
 es:
+  devise:
+    failure:
+      expired: Su cuenta ha expirado debido a inactividad. Por favor contacte al administrador
+        de la aplicación.
+      session_limited: Sus credenciales de inicio de sesión fueron usadas en otro
+        navegador. Por favor inicie sesión nuevamente para continuar en este navegador.
+    invalid_captcha: El captcha ingresado es inválido.
+    invalid_security_question: La respuesta a la pregunta de seguridad fue incorrecta.
+    paranoid_verification_code:
+      show:
+        submit: Entregar
+        submit_verification_code: Envíe el código de verificación
+        verification_code: Código de verificación
+      updated: Se acepta el código de verificación
+    paranoid_verify:
+      code_required: Por favor ingrese el código provisto por nuestro equipo de soporte
+    password_expired:
+      change_required: Su contraseña ha expirado. Por favor renueve su contraseña.
+      show:
+        change_my_password: Cambiar mi contraseña
+        current_password: Actual contraseña
+        new_password: Nueva contraseña
+        new_password_confirmation: Confirmar nueva contraseña
+        renew_your_password: Renueve su contraseña
+      updated: Su nueva contraseña ha sido guardada.
   errors:
     messages:
-      taken_in_past: 'la contraseña fue usada previamente, por favor elige otra.'
-      equal_to_current_password: 'tiene que ser diferente a la contraseña actual.'
-      equal_to_email: 'tiene que ser diferente al email'
+      equal_to_current_password: tiene que ser diferente a la contraseña actual.
+      equal_to_email: tiene que ser diferente al email
       password_complexity:
         digit:
           one: tiene que contener al menos un dígito
@@ -17,26 +42,4 @@ es:
         upper:
           one: tiene que contener al menos una mayúscula
           other: tiene que contener al menos %{count} mayúsculas
-  devise:
-    invalid_captcha: 'El captcha ingresado es inválido.'
-    invalid_security_question: 'La respuesta a la pregunta de seguridad fue incorrecta.'
-    paranoid_verify:
-      code_required: 'Por favor ingrese el código provisto por nuestro equipo de soporte'
-    paranoid_verification_code:
-      updated: Se acepta el código de verificación
-      show:
-        submit_verification_code: Envíe el código de verificación
-        verification_code: Código de verificación
-        submit: Entregar
-    password_expired:
-      updated: 'Su nueva contraseña ha sido guardada.'
-      change_required: 'Su contraseña ha expirado. Por favor renueve su contraseña.'
-      show:
-        renew_your_password: Renueve su contraseña
-        current_password: Actual contraseña
-        new_password: Nueva contraseña
-        new_password_confirmation: Confirmar nueva contraseña
-        change_my_password: Cambiar mi contraseña
-    failure:
-      session_limited: 'Sus credenciales de inicio de sesión fueron usadas en otro navegador. Por favor inicie sesión nuevamente para continuar en este navegador.'
-      expired: 'Su cuenta ha expirado debido a inactividad. Por favor contacte al administrador de la aplicación.'
+      taken_in_past: la contraseña fue usada previamente, por favor elige otra.

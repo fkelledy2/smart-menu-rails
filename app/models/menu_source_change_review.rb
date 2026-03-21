@@ -15,5 +15,4 @@ class MenuSourceChangeReview < ApplicationRecord
 
   validates :status, presence: true
   validates :detected_at, presence: true
-
 end

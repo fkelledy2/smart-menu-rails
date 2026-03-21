@@ -1,0 +1,97 @@
+<%= turbo_frame_tag 'inline_cost_form' do %>
+  <div class="card mb-3">
+    <div class="card-header d-flex align-items-center justify-content-between">
+      <span class="fw-semibold">Edit Cost Data — <%= @menuitem.localised_name('en') %></span>
+      <small class="text-muted">Price: <%= number_to_currency(@menuitem.price) %></small>
+    </div>
+    <div class="card-body">
+      <%= form_with(model: @menuitem_cost,
+                    url: restaurant_menu_menusection_menuitem_cost_path(@restaurant, @menu, @menuitem.menusection, @menuitem_cost, menuitem_id: @menuitem.id),
+                    method: :patch,
+                    local: true,
+                    data: { turbo_frame: 'restaurant_content' }) do |form| %>
+        <% if @menuitem_cost.errors.any? %>
+          <div class="alert alert-danger py-2">
+            <ul class="mb-0 ps-3">
+              <% @menuitem_cost.errors.each do |error| %>
+                <li class="small"><%= error.full_message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <div class="row g-3">
+          <div class="col-6 col-md-3">
+            <%= form.label :ingredient_cost, 'Ingredients', class: 'form-label form-label-sm' %>
+            <%= form.number_field :ingredient_cost, class: 'form-control form-control-sm', step: 0.01, min: 0, id: 'ecc_ingredient_cost' %>
+          </div>
+          <div class="col-6 col-md-3">
+            <%= form.label :labor_cost, 'Labour', class: 'form-label form-label-sm' %>
+            <%= form.number_field :labor_cost, class: 'form-control form-control-sm', step: 0.01, min: 0, id: 'ecc_labor_cost' %>
+          </div>
+          <div class="col-6 col-md-3">
+            <%= form.label :packaging_cost, 'Packaging', class: 'form-label form-label-sm' %>
+            <%= form.number_field :packaging_cost, class: 'form-control form-control-sm', step: 0.01, min: 0, id: 'ecc_packaging_cost' %>
+          </div>
+          <div class="col-6 col-md-3">
+            <%= form.label :overhead_cost, 'Overhead', class: 'form-label form-label-sm' %>
+            <%= form.number_field :overhead_cost, class: 'form-control form-control-sm', step: 0.01, min: 0, id: 'ecc_overhead_cost' %>
+          </div>
+        </div>
+
+        <div class="row g-3 mt-1 align-items-end">
+          <div class="col-md-3">
+            <div class="border rounded p-2 text-center bg-light">
+              <div class="text-muted small">Total Cost</div>
+              <div class="fw-bold" id="ecc_total_cost">$0.00</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="border rounded p-2 text-center bg-light">
+              <div class="text-muted small">Margin</div>
+              <div class="fw-bold" id="ecc_margin_pct">0.0%</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <%= form.label :effective_date, 'Effective Date', class: 'form-label form-label-sm' %>
+            <%= form.date_field :effective_date, class: 'form-control form-control-sm', required: true %>
+          </div>
+          <div class="col-md-3">
+            <%= form.label :cost_source, 'Source', class: 'form-label form-label-sm' %>
+            <%= form.select :cost_source,
+                [['Manual', 'manual'], ['Recipe', 'recipe_calculated'], ['AI Est.', 'ai_estimated']],
+                {}, class: 'form-select form-select-sm' %>
+          </div>
+        </div>
+
+        <div class="mb-3 mt-3">
+          <%= form.label :notes, 'Notes (optional)', class: 'form-label form-label-sm' %>
+          <%= form.text_area :notes, class: 'form-control form-control-sm', rows: 2 %>
+        </div>
+
+        <div class="d-flex gap-2">
+          <%= form.submit 'Update Cost', class: 'btn btn-sm btn-primary' %>
+          <%= link_to 'Cancel',
+              edit_restaurant_path(@restaurant, section: 'profitability_margins'),
+              class: 'btn btn-sm btn-outline-secondary',
+              data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' } %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      const price = <%= @menuitem.price.to_f %>;
+      const ids = ['ecc_ingredient_cost', 'ecc_labor_cost', 'ecc_packaging_cost', 'ecc_overhead_cost'];
+      function update() {
+        const total = ids.reduce((sum, id) => sum + (parseFloat(document.getElementById(id)?.value) || 0), 0);
+        const pct = price > 0 ? ((price - total) / price * 100) : 0;
+        document.getElementById('ecc_total_cost').textContent = '$' + total.toFixed(2);
+        document.getElementById('ecc_margin_pct').textContent = pct.toFixed(1) + '%';
+      }
+      ids.forEach(id => document.getElementById(id)?.addEventListener('input', update));
+      update();
+    })();
+  </script>
+<% end %>

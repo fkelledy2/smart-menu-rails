@@ -17,7 +17,7 @@ SecureHeaders::Configuration.default do |config|
   config.csp = {
     default_src: %w['self'],
     script_src: %w['self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://www.googletagmanager.com],
-    style_src: %w['self' 'unsafe-inline' https://fonts.googleapis.com],
+    style_src: %w['self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net],
     font_src: %w['self' https://fonts.gstatic.com data:],
     img_src: %w['self' data: https: blob:],
     connect_src: %w['self' https://api.stripe.com https://*.sentry.io],
@@ -26,5 +26,5 @@ SecureHeaders::Configuration.default do |config|
     base_uri: %w['self']
   }
   
-  # Referrer Po  # Referrer Po  # Referrer y = "strict-origin-when-cross-origin"
+  config.referrer_policy = "strict-origin-when-cross-origin"
 end

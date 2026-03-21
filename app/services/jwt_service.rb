@@ -5,6 +5,18 @@ class JwtService
   TOKEN_TTL = 1.hour
   DENYLIST_PREFIX = 'jwt_denied:'
 
+  # Dedicated Redis connection for the JWT denylist — intentionally separate
+  # from Rails.cache so that cache flushes, deploys, or Redis eviction policy
+  # cannot silently resurrect revoked tokens.
+  def self.denylist_redis
+    return nil unless defined?(Redis)
+
+    @denylist_redis ||= Redis.new(url: ENV.fetch('REDIS_URL', 'redis://localhost:6379/0'))
+  rescue StandardError => e
+    Rails.logger.warn "Failed to connect to Redis for JWT denylist: #{e.message}"
+    nil
+  end
+
   def self.encode(payload, exp = TOKEN_TTL.from_now)
     payload[:exp] = exp.to_i
     payload[:jti] ||= SecureRandom.uuid
@@ -57,12 +69,18 @@ class JwtService
     return unless jti
 
     ttl = [exp.to_i - Time.current.to_i, 0].max
-    Rails.cache.write("#{DENYLIST_PREFIX}#{jti}", true, expires_in: ttl.seconds)
+    return if ttl <= 0
+
+    redis = denylist_redis
+    redis&.setex("#{DENYLIST_PREFIX}#{jti}", ttl, '1')
   rescue JWT::DecodeError
     nil
   end
 
   def self.denied?(jti)
-    Rails.cache.read("#{DENYLIST_PREFIX}#{jti}").present?
+    redis = denylist_redis
+    return false unless redis
+
+    redis.exists?("#{DENYLIST_PREFIX}#{jti}")
   end
 end

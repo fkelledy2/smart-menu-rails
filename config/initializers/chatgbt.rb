@@ -11,8 +11,8 @@ if defined?(OpenAI)
   if api_key.present?
     timeout_seconds = (ENV['OPENAI_TIMEOUT'] || 120).to_i
     Rails.configuration.x.openai_client = OpenAI::Client.new(
-      access_token: api_key,
-      request_timeout: timeout_seconds
+      api_key: api_key,
+      timeout: timeout_seconds
     )
   else
     Rails.logger.info 'OpenAI initializer: no API key configured; client not initialized'

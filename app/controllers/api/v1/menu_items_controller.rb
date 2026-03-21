@@ -5,9 +5,12 @@ class Api::V1::MenuItemsController < Api::V1::BaseController
 
   # GET /api/v1/menus/:menu_id/items
   def index
-    @menu_items = @menu.menuitems.includes(:menusection)
+    @pagy, @menu_items = pagy(@menu.menuitems.includes(:menusection))
 
-    render json: @menu_items.map { |item| menu_item_json(item) }
+    render json: {
+      data: @menu_items.map { |item| menu_item_json(item) },
+      pagination: pagy_metadata_response(@pagy),
+    }
   end
 
   private

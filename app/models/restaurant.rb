@@ -8,13 +8,13 @@ class Restaurant < ApplicationRecord
   belongs_to :user
 
   has_many :tablesettings, -> { reorder(sequence: :asc, id: :asc) }, dependent: :delete_all, counter_cache: :tablesettings_count
-  has_many :menus, -> { reorder(sequence: :asc, id: :asc) }, dependent: :delete_all, counter_cache: :menus_count
+  has_many :menus, -> { reorder(sequence: :asc, id: :asc) }, dependent: :destroy, counter_cache: :menus_count
   has_many :profit_margin_targets, dependent: :destroy
   has_many :ingredients, dependent: :destroy
-  has_many :restaurant_menus, dependent: :delete_all
+  has_many :restaurant_menus, dependent: :destroy
   has_many :shared_menus, through: :restaurant_menus, source: :menu
-  has_many :employees, -> { reorder(sequence: :asc, id: :asc) }, dependent: :delete_all, counter_cache: :employees_count
-  has_many :staff_invitations, dependent: :delete_all
+  has_many :employees, -> { reorder(sequence: :asc, id: :asc) }, dependent: :destroy, counter_cache: :employees_count
+  has_many :staff_invitations, dependent: :destroy
 
   def alcohol_allowed_now?(now: Time.zone.now)
     return false if respond_to?(:allow_alcohol) && !allow_alcohol
@@ -24,15 +24,15 @@ class Restaurant < ApplicationRecord
   end
 
   has_many :smartmenus, dependent: :delete_all
-  has_many :ordrs, -> { reorder(orderedAt: :desc, id: :desc) }, dependent: :delete_all, counter_cache: :ordrs_count
+  has_many :ordrs, -> { reorder(orderedAt: :desc, id: :desc) }, dependent: :destroy, counter_cache: :ordrs_count
   has_many :ordr_station_tickets, dependent: :delete_all
   has_many :taxes, -> { reorder(sequence: :asc, id: :asc) }, dependent: :delete_all
   has_many :tips, -> { reorder(sequence: :asc, id: :asc) }, dependent: :delete_all
 
   has_one :payment_profile, dependent: :destroy
-  has_many :provider_accounts, dependent: :delete_all
-  has_many :payment_attempts, dependent: :delete_all
-  has_many :payment_refunds, dependent: :delete_all
+  has_many :provider_accounts, dependent: :destroy
+  has_many :payment_attempts, dependent: :destroy
+  has_many :payment_refunds, dependent: :destroy
   has_one :restaurant_subscription, dependent: :destroy
   has_many :restaurantavailabilities, dependent: :delete_all
   has_many :menusections, through: :menus

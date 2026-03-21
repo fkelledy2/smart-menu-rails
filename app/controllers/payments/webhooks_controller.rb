@@ -24,13 +24,15 @@ class Payments::WebhooksController < ApplicationController
   def enqueue_ingest!(evt, payload)
     raw = begin
       JSON.parse(payload)
-    rescue StandardError
+    rescue StandardError => e
+      Rails.logger.warn("[StripeWebhook] Failed to parse payload JSON: #{e.message}")
       {}
     end
 
     occurred_at = begin
       Time.zone.at(evt.created.to_i)
-    rescue StandardError
+    rescue StandardError => e
+      Rails.logger.warn("[StripeWebhook] Failed to parse event timestamp: #{e.message}")
       Time.current
     end
 
@@ -66,7 +68,8 @@ class Payments::WebhooksController < ApplicationController
     credentials_secret = begin
       Rails.application.credentials.dig(:stripe, :webhook_secret) ||
         Rails.application.credentials[:stripe_webhook_secret]
-    rescue StandardError
+    rescue StandardError => e
+      Rails.logger.warn("[StripeWebhook] Could not read webhook_secret from credentials: #{e.message}")
       nil
     end
 

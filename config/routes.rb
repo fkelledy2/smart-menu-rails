@@ -99,9 +99,11 @@ Rails.application.routes.draw do
   # ============================================================================
   namespace :api, defaults: { format: :json } do
     namespace :v1 do
-      # Test endpoints
-      get 'test/ping', to: 'test#ping'
-      
+      # Test endpoints (development and test only)
+      if Rails.env.development? || Rails.env.test?
+        get 'test/ping', to: 'test#ping'
+      end
+
       # Restaurant Management API
       resources :restaurants, only: [:index, :show, :create, :update, :destroy] do
         # Restaurant-specific menus
@@ -224,12 +226,12 @@ Rails.application.routes.draw do
     member do
       get 'kitchen', to: 'kitchen_dashboard#index', as: :kitchen_dashboard
       get 'bar', to: 'bar_dashboard#index', as: :bar_dashboard
-      patch :archive
-      patch :restore
-      patch 'update_hours', to: 'restaurants#update_hours'
-      patch 'update_alcohol_policy', to: 'restaurants#update_alcohol_policy'
-      patch 'publish_preview', to: 'restaurants#publish_preview'
-      get 'alcohol_status', to: 'restaurants#alcohol_status'
+      patch :archive, to: 'restaurants/lifecycle#archive'
+      patch :restore, to: 'restaurants/lifecycle#restore'
+      patch 'update_hours', to: 'restaurants/hours#update_hours'
+      patch 'update_alcohol_policy', to: 'restaurants/alcohol_policy#update_alcohol_policy'
+      patch 'publish_preview', to: 'restaurants/lifecycle#publish_preview'
+      get 'alcohol_status', to: 'restaurants/alcohol_policy#alcohol_status'
 
       get 'beverage_review_queue', to: 'beverage_review_queues#show'
       patch 'beverage_review_queue/menuitems/:menuitem_id/review', to: 'beverage_review_queues#review', as: :beverage_review_queue_review
@@ -370,10 +372,11 @@ Rails.application.routes.draw do
     # Music/Entertainment
     resources :tracks
     
-    # Restaurant analytics endpoints
+    # Restaurant analytics and performance endpoints
     member do
-      get :analytics
-      get :performance
+      get :analytics,     to: 'restaurants/analytics#analytics'
+      get :performance,   to: 'restaurants/performance#performance'
+      get :user_activity, to: 'restaurants/analytics#user_activity'
     end
     
     # Restaurant summary endpoints
@@ -410,69 +413,75 @@ Rails.application.routes.draw do
 
     resources :menus do
       member do
-        post :attach
-        post :share
-        delete :detach
+        # Sharing
+        post :attach,  to: 'menus/sharing#attach'
+        post :share,   to: 'menus/sharing#share'
+        delete :detach, to: 'menus/sharing#detach'
 
-        get :versions
-        get 'versions/diff', to: 'menus#versions_diff', as: :versions_diff
-        post :create_version
-        post :activate_version
-        get 'versions/:from_version_id/diff/:to_version_id', to: 'menus#version_diff', as: :version_diff
+        # Versioning
+        get  :versions,       to: 'menus/versions#versions'
+        get  'versions/diff', to: 'menus/versions#versions_diff', as: :versions_diff
+        post :create_version,   to: 'menus/versions#create_version'
+        post :activate_version, to: 'menus/versions#activate_version'
+        get  'versions/:from_version_id/diff/:to_version_id', to: 'menus/versions#version_diff', as: :version_diff
+
+        # Localization
+        post :localize,               to: 'menus/localization#localize'
+        get  :localization_progress,  to: 'menus/localization#localization_progress'
+
+        # AI / image generation
+        post :regenerate_images,        to: 'menus/ai#regenerate_images'
+        get  :image_generation_progress, to: 'menus/ai#image_generation_progress'
+        post :polish,                   to: 'menus/ai#polish'
+        get  :polish_progress,          to: 'menus/ai#polish_progress'
+        post :generate_pairings,        to: 'menus/ai#generate_pairings'
+
+        # Performance
+        get :performance, to: 'menus/performance#performance'
+
+        # Core
+        patch :update_availabilities
+        get   :tablesettings, to: 'menus#show'
+        get   :analytics
       end
       collection do
         patch :update_sequence
         patch :bulk_update
       end
-      
+
       # Menu configuration
       resources :menuparticipants
       resources :menuavailabilities
-      
+
       # Menu structure and content
       resources :menusections do
         collection do
           patch :bulk_update
           patch :reorder
         end
-        
-        resources :menuitems do  # Full CRUD for menusection-specific menuitems
+
+        resources :menuitems do
           collection do
             patch :reorder
           end
-          
+
           member do
-            get :analytics
+            get  :analytics
             post :generate_ai_image
-            get :image_status
+            get  :image_status
           end
         end
-          
-          resources :menuitem_costs, only: [:new, :create, :edit, :update, :destroy]
+
+        resources :menuitem_costs, only: [:new, :create, :edit, :update, :destroy]
       end
-      
+
       # Menu-level menuitem operations
-      resources :menuitems, only: [:index] do  # Bulk operations across all menusections
+      resources :menuitems, only: [:index] do
         collection do
           patch :bulk_update
         end
       end
       resources :menuitem_size_mappings, controller: 'menuitemsizemappings', only: [:update]
-      
-      # Menu actions and analytics
-      member do
-        post :regenerate_images
-        get :image_generation_progress
-        get :localization_progress
-        post :generate_pairings
-        post :polish, to: 'menus#polish'
-        get :polish_progress, to: 'menus#polish_progress'
-        post :localize
-        patch :update_availabilities
-        get :tablesettings, to: 'menus#show'
-        get :analytics
-        get :performance
-      end
     end
     
     # OCR menu import functionality
@@ -592,9 +601,9 @@ Rails.application.routes.draw do
   # ============================================================================
   # AUTHENTICATION INTEGRATIONS
   # ============================================================================
-  get 'auth/spotify', to: 'restaurants#spotify_auth'
-  get 'auth/spotify/callback', to: 'restaurants#spotify_callback'
-  delete 'logout', to: 'restaurants#logout'
+  get 'auth/spotify', to: 'restaurants/spotify#spotify_auth'
+  get 'auth/spotify/callback', to: 'restaurants/spotify#spotify_callback'
+  delete 'logout', to: 'restaurants/spotify#logout'
   
   # ============================================================================
   # ADMIN TOOLS (Protected)

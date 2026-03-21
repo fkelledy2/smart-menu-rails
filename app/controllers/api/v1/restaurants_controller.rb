@@ -6,23 +6,11 @@ class Api::V1::RestaurantsController < Api::V1::BaseController
 
   # GET /api/v1/restaurants
   def index
-    @restaurants = Restaurant.includes(:user).page(params[:page]).per(20)
+    @pagy, @restaurants = pagy(Restaurant.includes(:user))
 
-    render json: @restaurants.map { |restaurant|
-      {
-        id: restaurant.id,
-        name: restaurant.name,
-        description: restaurant.description,
-        address: restaurant.address,
-        phone: restaurant.phone,
-        email: restaurant.email,
-        website: restaurant.website,
-        currency: restaurant.currency,
-        timezone: restaurant.timezone,
-        active: restaurant.active?,
-        created_at: restaurant.created_at,
-        updated_at: restaurant.updated_at,
-      }
+    render json: {
+      data: @restaurants.map { |restaurant| restaurant_json(restaurant) },
+      pagination: pagy_metadata_response(@pagy),
     }
   end
 

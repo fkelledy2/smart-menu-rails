@@ -47,7 +47,7 @@ class DeeplApiServiceTest < ActiveSupport::TestCase
       ],
     })
 
-    DeeplApiService.stub(:api_key, DeeplApiService::TEST_API_KEY) do
+    DeeplApiService.stub(:api_key, test_api_key) do
       DeeplApiService.stub(:post, mock_successful_response) do
         result = DeeplApiService.translate('Hello world')
         assert_equal 'Bonjour le monde', result
@@ -62,7 +62,7 @@ class DeeplApiServiceTest < ActiveSupport::TestCase
       ],
     })
 
-    DeeplApiService.stub(:api_key, DeeplApiService::TEST_API_KEY) do
+    DeeplApiService.stub(:api_key, test_api_key) do
       DeeplApiService.stub(:post, mock_successful_response) do
         result = DeeplApiService.translate('Hello world', to: 'ES', from: 'EN')
         assert_equal 'Hola mundo', result
@@ -77,7 +77,7 @@ class DeeplApiServiceTest < ActiveSupport::TestCase
       ],
     })
 
-    DeeplApiService.stub(:api_key, DeeplApiService::TEST_API_KEY) do
+    DeeplApiService.stub(:api_key, test_api_key) do
       DeeplApiService.stub(:post, mock_successful_response) do
         result = DeeplApiService.translate('Hello world', to: 'IT')
         assert_equal 'Ciao mondo', result
@@ -92,7 +92,7 @@ class DeeplApiServiceTest < ActiveSupport::TestCase
       ],
     })
 
-    DeeplApiService.stub(:api_key, DeeplApiService::TEST_API_KEY) do
+    DeeplApiService.stub(:api_key, test_api_key) do
       DeeplApiService.stub(:post, mock_successful_response) do
         result = DeeplApiService.translate('Hello world', from: 'EN')
         assert_equal 'Bonjour le monde', result
@@ -107,7 +107,7 @@ class DeeplApiServiceTest < ActiveSupport::TestCase
       ],
     })
 
-    DeeplApiService.stub(:api_key, DeeplApiService::TEST_API_KEY) do
+    DeeplApiService.stub(:api_key, test_api_key) do
       DeeplApiService.stub(:post, mock_successful_response) do
         result = DeeplApiService.translate('')
         assert_equal '', result
@@ -125,7 +125,7 @@ class DeeplApiServiceTest < ActiveSupport::TestCase
       ],
     })
 
-    DeeplApiService.stub(:api_key, DeeplApiService::TEST_API_KEY) do
+    DeeplApiService.stub(:api_key, test_api_key) do
       DeeplApiService.stub(:post, mock_successful_response) do
         result = DeeplApiService.translate(long_text)
         assert_equal translated_text, result
@@ -143,7 +143,7 @@ class DeeplApiServiceTest < ActiveSupport::TestCase
       ],
     })
 
-    DeeplApiService.stub(:api_key, DeeplApiService::TEST_API_KEY) do
+    DeeplApiService.stub(:api_key, test_api_key) do
       DeeplApiService.stub(:post, mock_successful_response) do
         result = DeeplApiService.translate(special_text)
         assert_equal translated_text, result
@@ -161,7 +161,7 @@ class DeeplApiServiceTest < ActiveSupport::TestCase
       ],
     })
 
-    DeeplApiService.stub(:api_key, DeeplApiService::TEST_API_KEY) do
+    DeeplApiService.stub(:api_key, test_api_key) do
       DeeplApiService.stub(:post, mock_successful_response) do
         result = DeeplApiService.translate(html_text)
         assert_equal translated_text, result
@@ -179,7 +179,7 @@ class DeeplApiServiceTest < ActiveSupport::TestCase
       ],
     })
 
-    DeeplApiService.stub(:api_key, DeeplApiService::TEST_API_KEY) do
+    DeeplApiService.stub(:api_key, test_api_key) do
       DeeplApiService.stub(:post, mock_successful_response) do
         result = DeeplApiService.translate(multiline_text)
         assert_equal translated_text, result
@@ -196,14 +196,14 @@ class DeeplApiServiceTest < ActiveSupport::TestCase
       mock_deepl_response({ 'translations' => [{ 'text' => 'Bonjour' }] })
     end
 
-    DeeplApiService.stub(:api_key, DeeplApiService::TEST_API_KEY) do
+    DeeplApiService.stub(:api_key, test_api_key) do
       DeeplApiService.stub(:post, mock_post) do
         DeeplApiService.translate('Hello', to: 'FR', from: 'EN')
 
         assert_equal '/translate', captured_params[:endpoint]
 
         body = captured_params[:options][:body]
-        assert_equal '9079cde6-1153-4f72-a220-306de587c58e:fx', body[:auth_key]
+        assert_equal test_api_key, body[:auth_key]
         assert_equal 'Hello', body[:text]
         assert_equal 'EN', body[:source_lang]
         assert_equal 'FR', body[:target_lang]
@@ -219,7 +219,7 @@ class DeeplApiServiceTest < ActiveSupport::TestCase
       mock_deepl_response({ 'translations' => [{ 'text' => 'Bonjour' }] })
     end
 
-    DeeplApiService.stub(:api_key, DeeplApiService::TEST_API_KEY) do
+    DeeplApiService.stub(:api_key, test_api_key) do
       DeeplApiService.stub(:post, mock_post) do
         DeeplApiService.translate('Hello')
 
@@ -238,12 +238,12 @@ class DeeplApiServiceTest < ActiveSupport::TestCase
       mock_deepl_response({ 'translations' => [{ 'text' => 'Test' }] })
     end
 
-    DeeplApiService.stub(:api_key, DeeplApiService::TEST_API_KEY) do
+    DeeplApiService.stub(:api_key, test_api_key) do
       DeeplApiService.stub(:post, mock_post) do
         DeeplApiService.translate('Test text')
 
         body = captured_params[:options][:body]
-        assert_equal '9079cde6-1153-4f72-a220-306de587c58e:fx', body[:auth_key]
+        assert_equal test_api_key, body[:auth_key]
       end
     end
   end
@@ -252,7 +252,7 @@ class DeeplApiServiceTest < ActiveSupport::TestCase
   test 'should raise error on API failure with 400 status' do
     mock_error_response = mock_deepl_error_response(400, 'Bad Request')
 
-    DeeplApiService.stub(:api_key, DeeplApiService::TEST_API_KEY) do
+    DeeplApiService.stub(:api_key, test_api_key) do
       DeeplApiService.stub(:post, mock_error_response) do
         error = assert_raises(RuntimeError) do
           DeeplApiService.translate('Hello')
@@ -267,7 +267,7 @@ class DeeplApiServiceTest < ActiveSupport::TestCase
   test 'should raise error on API failure with 401 status' do
     mock_error_response = mock_deepl_error_response(401, 'Unauthorized')
 
-    DeeplApiService.stub(:api_key, DeeplApiService::TEST_API_KEY) do
+    DeeplApiService.stub(:api_key, test_api_key) do
       DeeplApiService.stub(:post, mock_error_response) do
         error = assert_raises(RuntimeError) do
           DeeplApiService.translate('Hello')
@@ -282,7 +282,7 @@ class DeeplApiServiceTest < ActiveSupport::TestCase
   test 'should raise error on API failure with 403 status' do
     mock_error_response = mock_deepl_error_response(403, 'Forbidden - Invalid auth key')
 
-    DeeplApiService.stub(:api_key, DeeplApiService::TEST_API_KEY) do
+    DeeplApiService.stub(:api_key, test_api_key) do
       DeeplApiService.stub(:post, mock_error_response) do
         error = assert_raises(RuntimeError) do
           DeeplApiService.translate('Hello')
@@ -297,7 +297,7 @@ class DeeplApiServiceTest < ActiveSupport::TestCase
   test 'should raise error on API failure with 429 status' do
     mock_error_response = mock_deepl_error_response(429, 'Too Many Requests')
 
-    DeeplApiService.stub(:api_key, DeeplApiService::TEST_API_KEY) do
+    DeeplApiService.stub(:api_key, test_api_key) do
       DeeplApiService.stub(:post, mock_error_response) do
         error = assert_raises(RuntimeError) do
           DeeplApiService.translate('Hello')
@@ -312,7 +312,7 @@ class DeeplApiServiceTest < ActiveSupport::TestCase
   test 'should raise error on API failure with 500 status' do
     mock_error_response = mock_deepl_error_response(500, 'Internal Server Error')
 
-    DeeplApiService.stub(:api_key, DeeplApiService::TEST_API_KEY) do
+    DeeplApiService.stub(:api_key, test_api_key) do
       DeeplApiService.stub(:post, mock_error_response) do
         error = assert_raises(RuntimeError) do
           DeeplApiService.translate('Hello')
@@ -327,7 +327,7 @@ class DeeplApiServiceTest < ActiveSupport::TestCase
   test 'should raise error when response has no translations' do
     mock_invalid_response = mock_deepl_response({})
 
-    DeeplApiService.stub(:api_key, DeeplApiService::TEST_API_KEY) do
+    DeeplApiService.stub(:api_key, test_api_key) do
       DeeplApiService.stub(:post, mock_invalid_response) do
         error = assert_raises(NoMethodError) do
           DeeplApiService.translate('Hello')
@@ -342,7 +342,7 @@ class DeeplApiServiceTest < ActiveSupport::TestCase
   test 'should raise error when translations array is empty' do
     mock_empty_response = mock_deepl_response({ 'translations' => [] })
 
-    DeeplApiService.stub(:api_key, DeeplApiService::TEST_API_KEY) do
+    DeeplApiService.stub(:api_key, test_api_key) do
       DeeplApiService.stub(:post, mock_empty_response) do
         error = assert_raises(NoMethodError) do
           DeeplApiService.translate('Hello')
@@ -359,7 +359,7 @@ class DeeplApiServiceTest < ActiveSupport::TestCase
       'translations' => [{}], # Missing 'text' key
     })
 
-    DeeplApiService.stub(:api_key, DeeplApiService::TEST_API_KEY) do
+    DeeplApiService.stub(:api_key, test_api_key) do
       DeeplApiService.stub(:post, mock_malformed_response) do
         result = DeeplApiService.translate('Hello')
 
@@ -384,7 +384,7 @@ class DeeplApiServiceTest < ActiveSupport::TestCase
         'translations' => [{ 'text' => lang[:expected] }],
       })
 
-      DeeplApiService.stub(:api_key, DeeplApiService::TEST_API_KEY) do
+      DeeplApiService.stub(:api_key, test_api_key) do
         DeeplApiService.stub(:post, mock_response) do
           result = DeeplApiService.translate('Hello world', to: lang[:code])
           assert_equal lang[:expected], result
@@ -405,7 +405,7 @@ class DeeplApiServiceTest < ActiveSupport::TestCase
         'translations' => [{ 'text' => lang[:expected] }],
       })
 
-      DeeplApiService.stub(:api_key, DeeplApiService::TEST_API_KEY) do
+      DeeplApiService.stub(:api_key, test_api_key) do
         DeeplApiService.stub(:post, mock_response) do
           result = DeeplApiService.translate('Hello world', to: lang[:code])
           assert_equal lang[:expected], result
@@ -416,7 +416,7 @@ class DeeplApiServiceTest < ActiveSupport::TestCase
 
   # Edge case tests
   test 'should handle network timeout gracefully' do
-    DeeplApiService.stub(:api_key, DeeplApiService::TEST_API_KEY) do
+    DeeplApiService.stub(:api_key, test_api_key) do
       DeeplApiService.stub(:post, ->(*_args) { raise Timeout::Error, 'Timeout' }) do
         error = assert_raises(Timeout::Error) do
           DeeplApiService.translate('Hello')
@@ -428,7 +428,7 @@ class DeeplApiServiceTest < ActiveSupport::TestCase
   end
 
   test 'should handle connection refused gracefully' do
-    DeeplApiService.stub(:api_key, DeeplApiService::TEST_API_KEY) do
+    DeeplApiService.stub(:api_key, test_api_key) do
       DeeplApiService.stub(:post, ->(*_args) { raise Errno::ECONNREFUSED }) do
         error = assert_raises(Errno::ECONNREFUSED) do
           DeeplApiService.translate('Hello')
@@ -440,7 +440,7 @@ class DeeplApiServiceTest < ActiveSupport::TestCase
   end
 
   test 'should handle SSL certificate errors gracefully' do
-    DeeplApiService.stub(:api_key, DeeplApiService::TEST_API_KEY) do
+    DeeplApiService.stub(:api_key, test_api_key) do
       DeeplApiService.stub(:post, ->(*_args) { raise OpenSSL::SSL::SSLError }) do
         error = assert_raises(OpenSSL::SSL::SSLError) do
           DeeplApiService.translate('Hello')
@@ -458,7 +458,7 @@ class DeeplApiServiceTest < ActiveSupport::TestCase
       raise JSON::ParserError, 'Invalid JSON'
     end
 
-    DeeplApiService.stub(:api_key, DeeplApiService::TEST_API_KEY) do
+    DeeplApiService.stub(:api_key, test_api_key) do
       DeeplApiService.stub(:post, mock_invalid_json_response) do
         error = assert_raises(JSON::ParserError) do
           DeeplApiService.translate('Hello')
@@ -482,7 +482,7 @@ class DeeplApiServiceTest < ActiveSupport::TestCase
         'translations' => [{ 'text' => translation[:expected] }],
       })
 
-      DeeplApiService.stub(:api_key, DeeplApiService::TEST_API_KEY) do
+      DeeplApiService.stub(:api_key, test_api_key) do
         DeeplApiService.stub(:post, mock_response) do
           result = DeeplApiService.translate(translation[:text])
           assert_equal translation[:expected], result
@@ -497,7 +497,7 @@ class DeeplApiServiceTest < ActiveSupport::TestCase
       'translations' => [{ 'text' => 'Bonjour' }],
     })
 
-    DeeplApiService.stub(:api_key, DeeplApiService::TEST_API_KEY) do
+    DeeplApiService.stub(:api_key, test_api_key) do
       DeeplApiService.stub(:post, mock_response) do
         threads = Array.new(3) do |i|
           Thread.new do
@@ -519,7 +519,7 @@ class DeeplApiServiceTest < ActiveSupport::TestCase
       'translations' => [{ 'text' => translated_text }],
     })
 
-    DeeplApiService.stub(:api_key, DeeplApiService::TEST_API_KEY) do
+    DeeplApiService.stub(:api_key, test_api_key) do
       DeeplApiService.stub(:post, mock_response) do
         result = DeeplApiService.translate(formatted_text)
         assert_equal translated_text, result
@@ -541,6 +541,11 @@ class DeeplApiServiceTest < ActiveSupport::TestCase
     mock_response.define_singleton_method(:success?) { false }
     mock_response.define_singleton_method(:code) { status_code }
     mock_response.define_singleton_method(:body) { body }
+
     mock_response
+  end
+
+  def test_api_key
+    Rails.application.credentials.dig(:deepl, :api_key) || ENV['DEEPL_API_KEY'] || 'test-api-key-dummy'
   end
 end

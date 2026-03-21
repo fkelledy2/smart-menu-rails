@@ -31,7 +31,8 @@ class HealthControllerTest < ActionDispatch::IntegrationTest
 
   test 'should handle redis health check failure gracefully' do
     # Mock Rails.cache to raise an error
-    Rails.cache.stub(:write, ->(*_args) { raise Redis::ConnectionError, 'Connection refused' }) do
+    error_class = defined?(Redis::ConnectionError) ? Redis::ConnectionError : StandardError
+    Rails.cache.stub(:write, ->(*_args) { raise error_class, 'Connection refused' }) do
       get health_redis_path
       assert_response :service_unavailable
 
@@ -39,7 +40,7 @@ class HealthControllerTest < ActionDispatch::IntegrationTest
       assert_equal 'unhealthy', json_response['status']
       assert_equal 'redis', json_response['service']
       assert json_response['error'].present?
-      assert_equal 'Redis::ConnectionError', json_response['error_class']
+      assert_includes ['Redis::ConnectionError', 'StandardError'], json_response['error_class']
     end
   end
 

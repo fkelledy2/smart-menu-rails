@@ -29,6 +29,7 @@ module Admin
       @claim_request.approve!(reviewer: current_user)
       redirect_back_or_to(admin_restaurant_claim_requests_path, notice: 'Claim approved — restaurant is now soft-claimed', status: :see_other)
     rescue StandardError => e
+      Rails.logger.error("[Admin::RestaurantClaimRequestsController] approve failed for claim_request_id=#{@claim_request&.id}: #{e.message}")
       redirect_back_or_to(admin_restaurant_claim_requests_path, alert: "Failed: #{e.message}", status: :see_other)
     end
 

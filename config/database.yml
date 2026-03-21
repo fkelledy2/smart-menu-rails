@@ -21,7 +21,9 @@ default: &default
   password: <%= ENV['DB_PASSWORD'] %>
   
   # Connection pooling configuration
-  pool: <%= ENV.fetch("DB_POOL_SIZE", 5).to_i %>
+  # Default of 10 covers Sidekiq concurrency (10) and exceeds Puma threads (5).
+  # Set DB_POOL_SIZE explicitly if running higher concurrency.
+  pool: <%= ENV.fetch("DB_POOL_SIZE", 10).to_i %>
   checkout_timeout: 30
   prepared_statements: true
   variables:
@@ -97,12 +99,12 @@ production:
     username: smart_menu
     password: <%= ENV["SMART_MENU_DATABASE_PASSWORD"] %>
     host: <%= ENV['PRIMARY_DB_HOST'] || ENV['DB_HOST'] || 'localhost' %>
-    pool: <%= ENV.fetch("DB_POOL_SIZE", 5).to_i %>
+    pool: <%= ENV.fetch("DB_POOL_SIZE", 10).to_i %>
     checkout_timeout: 30
     prepared_statements: true
     variables:
       statement_timeout: 5000
-  
+
   # Read replica configuration for production
   replica:
     # Use REPLICA_DATABASE_URL if available, otherwise fallback to individual settings

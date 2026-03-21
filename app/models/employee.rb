@@ -9,6 +9,10 @@ class Employee < ApplicationRecord
   has_many :ordrs, dependent: :destroy
   has_many :ordrnotes, dependent: :destroy
 
+  # PII encryption. email uses deterministic mode so the DB index remains usable.
+  encrypts :name
+  encrypts :email, deterministic: true
+
   # IdentityCache configuration
   cache_index :id
   cache_index :user_id

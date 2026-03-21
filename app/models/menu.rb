@@ -7,7 +7,7 @@ class Menu < ApplicationRecord
   belongs_to :owner_restaurant, class_name: 'Restaurant', optional: true
   has_many :restaurant_menus, dependent: :destroy
   has_many :restaurants, through: :restaurant_menus
-  has_many :menusections, -> { reorder(sequence: :asc, id: :asc) }, dependent: :delete_all, counter_cache: :menusections_count
+  has_many :menusections, -> { reorder(sequence: :asc, id: :asc) }, dependent: :destroy, counter_cache: :menusections_count
   has_many :menuavailabilities
   has_many :menuitems, through: :menusections
   has_many :menu_versions, -> { reorder(version_number: :desc) }, dependent: :destroy
@@ -111,9 +111,11 @@ class Menu < ApplicationRecord
     versions = menu_versions.to_a
 
     windowed = versions
-      .select { |v| (v.starts_at.present? || v.ends_at.present?) &&
-                    (v.starts_at.nil? || v.starts_at <= now) &&
-                    (v.ends_at.nil? || v.ends_at >= now) }
+      .select do |v|
+        (v.starts_at.present? || v.ends_at.present?) &&
+          (v.starts_at.nil? || v.starts_at <= now) &&
+          (v.ends_at.nil? || v.ends_at >= now)
+    end
       .max_by(&:version_number)
 
     return windowed if windowed

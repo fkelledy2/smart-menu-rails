@@ -117,6 +117,14 @@
       <span><%= t('.versions', default: 'Versions') %></span>
       <%= sa_badge %>
     <% end %>
+
+    <%= link_to edit_restaurant_menu_path(restaurant, menu, section: 'profitability'),
+        class: "sidebar-link #{'active' if current_section == 'profitability'}",
+        data: { turbo_frame: 'menu_content', turbo_action: 'advance', action: 'click->sidebar#handleLinkClick' } do %>
+      <i class="bi bi-graph-up-arrow"></i>
+      <span>Profitability</span>
+      <%= sa_badge %>
+    <% end %>
   </div>
 </aside>
 

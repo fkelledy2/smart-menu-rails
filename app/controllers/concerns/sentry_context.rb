@@ -60,8 +60,7 @@ module SentryContext
         referer: request.referer,
       })
     rescue StandardError => e
-      # Silently fail in test environment or if Sentry is not properly configured
-      Rails.logger.debug { "Sentry context setting failed: #{e.message}" } if Rails.env.development?
+      Rails.logger.warn("[SentryContext] set_sentry_context failed: #{e.message}")
     end
   end
 end

@@ -1,120 +1,100 @@
-<div class="page-header">
-  <h4>New Profit Margin Target</h4>
-</div>
+<%= turbo_frame_tag 'inline_target_form' do %>
+  <div class="card mb-3">
+    <div class="card-header fw-semibold">New Margin Target</div>
+    <div class="card-body">
+      <%= form_with(model: @target,
+                    url: restaurant_profit_margin_targets_path(@restaurant),
+                    local: true,
+                    data: { turbo_frame: 'restaurant_content' }) do |form| %>
+        <% if @target.errors.any? %>
+          <div class="alert alert-danger py-2">
+            <ul class="mb-0 ps-3">
+              <% @target.errors.full_messages.each do |msg| %>
+                <li class="small"><%= msg %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
 
-<div class="row">
-  <div class="col-md-8">
-    <%= form_with(model: @target, url: restaurant_profit_margin_targets_path(@restaurant), local: true) do |form| %>
-      <div class="mb-3">
-        <%= form.label :target_level, 'Target Level', class: 'form-label' %>
-        <%= form.select :target_level,
-            [['Restaurant-wide', 'restaurant'], ['Menu Section', 'menusection'], ['Individual Item', 'menuitem']],
-            {},
-            class: 'form-select',
-            id: 'target_level_select',
-            onchange: 'updateTargetLevelFields(this.value)' %>
-      </div>
-
-      <div id="restaurant_field">
-        <%= form.hidden_field :restaurant_id, value: @restaurant.id %>
-      </div>
-
-      <div id="menusection_field" style="display: none;">
         <div class="mb-3">
-          <%= form.label :menusection_id, 'Menu Section', class: 'form-label' %>
+          <%= form.label :target_level, 'Apply to', class: 'form-label form-label-sm' %>
+          <%= form.select :target_level,
+              [['Restaurant-wide', 'restaurant'], ['Menu Section', 'menusection'], ['Individual Item', 'menuitem']],
+              {},
+              class: 'form-select form-select-sm',
+              id: 'target_level_select',
+              onchange: 'updateTargetLevelFields(this.value)' %>
+        </div>
+
+        <div id="restaurant_field">
+          <%= form.hidden_field :restaurant_id, value: @restaurant.id %>
+        </div>
+
+        <div id="menusection_field" style="display:none;" class="mb-3">
+          <%= form.label :menusection_id, 'Menu Section', class: 'form-label form-label-sm' %>
           <%= form.collection_select :menusection_id,
               @restaurant.menus.flat_map(&:menusections),
               :id, :name,
               { include_blank: 'Select a section' },
-              class: 'form-select' %>
+              class: 'form-select form-select-sm' %>
         </div>
-      </div>
 
-      <div id="menuitem_field" style="display: none;">
-        <div class="mb-3">
-          <%= form.label :menuitem_id, 'Menu Item', class: 'form-label' %>
+        <div id="menuitem_field" style="display:none;" class="mb-3">
+          <%= form.label :menuitem_id, 'Menu Item', class: 'form-label form-label-sm' %>
           <%= form.collection_select :menuitem_id,
               @restaurant.menus.flat_map { |m| m.menusections.flat_map(&:menuitems) },
               :id,
-              ->(mi) { "#{mi.menusection.menu.name} - #{mi.menusection.name} - #{mi.localised_name('en')}" },
+              ->(mi) { "#{mi.menusection.menu.name} › #{mi.menusection.name} › #{mi.localised_name('en')}" },
               { include_blank: 'Select an item' },
-              class: 'form-select' %>
+              class: 'form-select form-select-sm' %>
         </div>
-      </div>
 
-      <div class="row">
-        <div class="col-md-6">
-          <div class="mb-3">
-            <%= form.label :target_margin_percentage, 'Target Margin %', class: 'form-label' %>
-            <%= form.number_field :target_margin_percentage, class: 'form-control', step: 0.1, min: 0, max: 100, required: true %>
+        <div class="row g-3 mb-3">
+          <div class="col-6">
+            <%= form.label :target_margin_percentage, 'Target %', class: 'form-label form-label-sm' %>
+            <%= form.number_field :target_margin_percentage, class: 'form-control form-control-sm', step: 0.1, min: 0, max: 100, required: true %>
+          </div>
+          <div class="col-6">
+            <%= form.label :minimum_margin_percentage, 'Minimum %', class: 'form-label form-label-sm' %>
+            <%= form.number_field :minimum_margin_percentage, class: 'form-control form-control-sm', step: 0.1, min: 0, max: 100 %>
+          </div>
+          <div class="col-6">
+            <%= form.label :effective_from, 'From', class: 'form-label form-label-sm' %>
+            <%= form.date_field :effective_from, class: 'form-control form-control-sm', value: Date.current, required: true %>
+          </div>
+          <div class="col-6">
+            <%= form.label :effective_to, 'To (optional)', class: 'form-label form-label-sm' %>
+            <%= form.date_field :effective_to, class: 'form-control form-control-sm' %>
           </div>
         </div>
-        <div class="col-md-6">
-          <div class="mb-3">
-            <%= form.label :minimum_margin_percentage, 'Minimum Margin %', class: 'form-label' %>
-            <%= form.number_field :minimum_margin_percentage, class: 'form-control', step: 0.1, min: 0, max: 100 %>
-          </div>
-        </div>
-      </div>
 
-      <div class="row">
-        <div class="col-md-6">
-          <div class="mb-3">
-            <%= form.label :effective_from, class: 'form-label' %>
-            <%= form.date_field :effective_from, class: 'form-control', value: Date.current, required: true %>
-          </div>
+        <div class="d-flex gap-2">
+          <%= form.submit 'Save Target', class: 'btn btn-sm btn-primary' %>
+          <%= link_to 'Cancel',
+              edit_restaurant_path(@restaurant, section: 'profitability_targets'),
+              class: 'btn btn-sm btn-outline-secondary',
+              data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' } %>
         </div>
-        <div class="col-md-6">
-          <div class="mb-3">
-            <%= form.label :effective_to, class: 'form-label' %>
-            <%= form.date_field :effective_to, class: 'form-control' %>
-          </div>
-        </div>
-      </div>
-
-      <div class="mt-4">
-        <%= form.submit 'Create Target', class: 'btn btn-primary' %>
-        <%= link_to 'Cancel', edit_restaurant_path(@restaurant), class: 'btn btn-secondary' %>
-      </div>
-    <% end %>
-  </div>
-
-  <div class="col-md-4">
-    <div class="card">
-      <div class="card-header">
-        <strong>Target Inheritance</strong>
-      </div>
-      <div class="card-body">
-        <p class="small">Targets are inherited in this order:</p>
-        <ol class="small">
-          <li><strong>Item-level</strong> targets override all others</li>
-          <li><strong>Section-level</strong> targets override restaurant-level</li>
-          <li><strong>Restaurant-level</strong> targets are the default</li>
-        </ol>
-        <p class="small text-muted mt-3">
-          This allows you to set a general target for your restaurant,
-          then customize for specific sections or items as needed.
-        </p>
-      </div>
+      <% end %>
     </div>
   </div>
-</div>
 
-<script>
-function updateTargetLevelFields(level) {
-  document.getElementById('restaurant_field').style.display = 'none';
-  document.getElementById('  document.getElementById('  document.getElementById('  document.getElementById('  document.g.display = 'none';
-
-  if (level === 'restaurant') {
-    document.getElementById('restaurant_field').style.display = 'block';
-    document.querySelector('#profit_margin_target_menusection_id').value = '';
-    document.querySelector('#profit_margin_target_menuitem_id').value = '';
-  } else if (level === 'menusection') {
-    document.getElementById('menusection_field').style.display = 'block';
-    document.querySelector('#profit_margin_target_menuitem_id').value = '';
-  } else if (level === 'menuitem') {
-    document.getElementById('menuitem_field').style.display = 'block';
-    document.querySelector('#profit_margin_target_menusection_id').value = '';
+  <script>
+  function updateTargetLevelFields(level) {
+    document.getElementById('restaurant_field').style.display = 'none';
+    document.getElementById('menusection_field').style.display = 'none';
+    document.getElementById('menuitem_field').style.display = 'none';
+    if (level === 'restaurant') {
+      document.getElementById('restaurant_field').style.display = 'block';
+      document.querySelector('#profit_margin_target_menusection_id').value = '';
+      document.querySelector('#profit_margin_target_menuitem_id').value = '';
+    } else if (level === 'menusection') {
+      document.getElementById('menusection_field').style.display = 'block';
+      document.querySelector('#profit_margin_target_menuitem_id').value = '';
+    } else if (level === 'menuitem') {
+      document.getElementById('menuitem_field').style.display = 'block';
+      document.querySelector('#profit_margin_target_menusection_id').value = '';
+    }
   }
-}
-</script>
+  </script>
+<% end %>

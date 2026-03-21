@@ -94,7 +94,8 @@ module Admin
       if name.blank?
         uri = begin
           URI.parse(website_url)
-        rescue StandardError
+        rescue StandardError => e
+          Rails.logger.warn("[Admin::DiscoveredRestaurantsController#create] URI parse failed for #{website_url.inspect}: #{e.message}")
           nil
         end
         name = uri&.host&.delete_prefix('www.')&.split('.')&.first&.titleize || 'Unknown'
@@ -342,7 +343,12 @@ module Admin
       end
 
       key = ENV.fetch('GOOGLE_MAPS_API_KEY', nil) || ENV.fetch('GOOGLE_MAPS_BROWSER_API_KEY', nil)
-      key ||= begin; Rails.application.credentials.google_maps_api_key; rescue StandardError; nil; end
+      key ||= begin
+        Rails.application.credentials.google_maps_api_key
+      rescue StandardError => e
+        Rails.logger.warn("[Admin::DiscoveredRestaurantsController#refresh_place_details] credentials lookup failed: #{e.message}")
+        nil
+      end
 
       if key.blank?
         redirect_back_or_to(admin_discovered_restaurant_path(@discovered_restaurant), alert: 'Google Maps API key not configured', status: :see_other)

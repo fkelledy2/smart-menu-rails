@@ -1,0 +1,210 @@
+<%#
+  Restaurant Profitability Hub Section
+  Entry point into cost tracking, ingredient management, and menu optimization.
+%>
+
+<% restaurant = local_assigns[:restaurant] || @restaurant %>
+
+<%
+  total_items  = Menuitem.joins(menusection: :menu)
+                         .where(menus: { restaurant_id: restaurant.id, archived: false })
+                         .where(menuitems: { archived: false })
+                         .count rescue 0
+  costed_items = Menuitem.joins(menusection: :menu)
+                         .joins(:menuitem_costs)
+                         .where(menus: { restaurant_id: restaurant.id, archived: false })
+                         .where(menuitems: { archived: false })
+                         .distinct.count rescue 0
+  uncosted     = [total_items - costed_items, 0].max
+  ingredients  = restaurant.ingredients.count rescue 0
+  targets      = restaurant.profit_margin_targets.count rescue 0
+  costed_pct   = total_items > 0 ? (costed_items.to_f / total_items * 100).round : 0
+%>
+
+<!-- Section Header -->
+<div class="mb-3 p-3 border-bottom">
+  <h2 class="h5 mb-1 d-flex align-items-center gap-2">
+    <i class="bi bi-graph-up-arrow"></i>
+    Profitability
+  </h2>
+  <p class="text-muted small mb-0">Track costs, margins, and menu performance</p>
+</div>
+
+<!-- Stats -->
+<div class="p-3">
+  <div class="profitability-count-panel">
+    <div class="profitability-count-item">
+      <div class="profitability-count-value text-success"><%= costed_items %></div>
+      <div class="profitability-count-label">Items costed</div>
+    </div>
+    <div class="profitability-count-item">
+      <div class="profitability-count-value <%= uncosted > 0 ? 'text-warning' : 'text-muted' %>"><%= uncosted %></div>
+      <div class="profitability-count-label">Missing costs</div>
+    </div>
+    <div class="profitability-count-item">
+      <div class="profitability-count-value"><%= ingredients %></div>
+      <div class="profitability-count-label">Ingredients</div>
+    </div>
+    <div class="profitability-count-item">
+      <div class="profitability-count-value"><%= targets %></div>
+      <div class="profitability-count-label">Margin targets</div>
+    </div>
+  </div>
+</div>
+
+<% if uncosted > 0 %>
+  <div class="px-3 mb-1">
+    <div class="alert alert-warning mb-0 d-flex align-items-center gap-2">
+      <i class="bi bi-exclamation-triangle flex-shrink-0"></i>
+      <span>
+        <strong><%= uncosted %> item<%= uncosted == 1 ? '' : 's' %></strong> missing cost data.
+        <%= link_to 'Add costs now',
+            edit_restaurant_path(restaurant, section: 'profitability_margins'),
+            class: 'alert-link',
+            data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' } %>
+      </span>
+    </div>
+  </div>
+<% end %>
+
+<!-- Navigation Hub Cards -->
+<div class="p-3">
+  <div class="profitability-nav-grid">
+
+    <%= link_to edit_restaurant_path(restaurant, section: 'profitability_margins'),
+        class: 'profitability-nav-item text-decoration-none',
+        data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
+      <div class="profitability-nav-icon" style="background: #0d6efd;">
+        <i class="bi bi-bar-chart-line"></i>
+      </div>
+      <div class="profitability-nav-info">
+        <p class="profitability-nav-title">Profit Margins</p>
+        <p class="profitability-nav-sub"><%= total_items > 0 ? "#{costed_pct}% of items costed" : 'No menu items yet' %></p>
+      </div>
+      <i class="bi bi-chevron-right text-muted ms-auto flex-shrink-0"></i>
+    <% end %>
+
+    <%= link_to edit_restaurant_path(restaurant, section: 'profitability_ingredients'),
+        class: 'profitability-nav-item text-decoration-none',
+        data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
+      <div class="profitability-nav-icon" style="background: #198754;">
+        <i class="bi bi-egg-fried"></i>
+      </div>
+      <div class="profitability-nav-info">
+        <p class="profitability-nav-title">Ingredients</p>
+        <p class="profitability-nav-sub"><%= ingredients.positive? ? "#{ingredients} ingredient#{'s' if ingredients != 1}" : 'None yet' %> — CSV import</p>
+      </div>
+      <i class="bi bi-chevron-right text-muted ms-auto flex-shrink-0"></i>
+    <% end %>
+
+    <%= link_to edit_restaurant_path(restaurant, section: 'profitability_optimization'),
+        class: 'profitability-nav-item text-decoration-none',
+        data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
+      <div class="profitability-nav-icon" style="background: #6f42c1;">
+        <i class="bi bi-stars"></i>
+      </div>
+      <div class="profitability-nav-info">
+        <p class="profitability-nav-title">Menu Engineering</p>
+        <p class="profitability-nav-sub">Stars · Plowhorses · Puzzles · Dogs</p>
+      </div>
+      <i class="bi bi-chevron-right text-muted ms-auto flex-shrink-0"></i>
+    <% end %>
+
+    <%= link_to edit_restaurant_path(restaurant, section: 'profitability_targets'),
+        class: 'profitability-nav-item text-decoration-none',
+        data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
+      <div class="profitability-nav-icon" style="background: #ffc107; color: #000;">
+        <i class="bi bi-bullseye"></i>
+      </div>
+      <div class="profitability-nav-info">
+        <p class="profitability-nav-title">Margin Targets</p>
+        <p class="profitability-nav-sub"><%= targets.positive? ? "#{targets} target#{'s' if targets != 1} configured" : 'No targets yet' %></p>
+      </div>
+      <i class="bi bi-chevron-right text-muted ms-auto flex-shrink-0"></i>
+    <% end %>
+
+    <%= link_to edit_restaurant_path(restaurant, section: 'profitability_analytics'),
+        class: 'profitability-nav-item text-decoration-none',
+        data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
+      <div class="profitability-nav-icon" style="background: #0dcaf0; color: #000;">
+        <i class="bi bi-graph-up"></i>
+      </div>
+      <div class="profitability-nav-info">
+        <p class="profitability-nav-title">Order Analytics</p>
+        <p class="profitability-nav-sub">Profit by order, item, and time</p>
+      </div>
+      <i class="bi bi-chevron-right text-muted ms-auto flex-shrink-0"></i>
+    <% end %>
+
+  </div>
+</div>
+
+<style>
+  .profitability-count-panel {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+    gap: 0.75rem;
+    background: var(--color-gray-50, #f9fafb);
+    border: 1px solid var(--color-gray-200, #e5e7eb);
+    border-radius: 0.5rem;
+    padding: 0.75rem;
+  }
+  .profitability-count-item { text-align: center; }
+  .profitability-count-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 0.25rem;
+  }
+  .profitability-count-label {
+    font-size: 0.75rem;
+    color: var(--color-gray-500, #6b7280);
+  }
+  .profitability-nav-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 0.75rem;
+  }
+  .profitability-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem 1rem;
+    background: var(--color-gray-50, #f9fafb);
+    border: 1px solid var(--color-gray-200, #e5e7eb);
+    border-radius: 0.5rem;
+    transition: all 0.15s ease;
+    color: var(--bs-body-color);
+  }
+  .profitability-nav-item:hover {
+    background: #fff;
+    border-color: var(--color-gray-300, #d1d5db);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    color: var(--bs-body-color);
+  }
+  .profitability-nav-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 0.375rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.125rem;
+    flex-shrink: 0;
+  }
+  .profitability-nav-info { flex: 1; min-width: 0; }
+  .profitability-nav-title {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    margin: 0 0 0.125rem 0;
+  }
+  .profitability-nav-sub {
+    font-size: 0.8125rem;
+    color: var(--color-gray-500, #6b7280);
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+</style>

@@ -1,0 +1,126 @@
+<%#
+  Menu Profitability Section
+  Cost coverage summary and per-item cost status for a single menu.
+%>
+
+<% menu = local_assigns[:menu] || @menu %>
+<% restaurant = local_assigns[:restaurant] || @restaurant || menu.restaurant %>
+
+<%
+  items = Menuitem.joins(:menusection)
+                  .where(menusections: { menu_id: menu.id })
+                  .where(archived: false)
+                  .includes(:menuitem_costs)
+                  .order('menusections.sequence, menuitems.sequence')
+
+  total_count  = items.count
+  costed_count = items.select { |i| i.current_cost.present? }.count
+  uncosted     = total_count - costed_count
+%>
+
+<!-- Summary strip -->
+<div class="mb-3 p-3">
+  <h2 class="h5 mb-3">
+    <i class="bi bi-graph-up-arrow"></i>
+    Menu Profitability
+  </h2>
+
+  <div class="count-panel">
+    <div class="count-panel-item">
+      <div class="count-panel-value text-success"><%= costed_count %></div>
+      <div class="count-panel-label">Items with costs</div>
+    </div>
+    <div class="count-panel-item">
+      <div class="count-panel-value <%= uncosted > 0 ? 'text-warning' : 'text-muted' %>"><%= uncosted %></div>
+      <div class="count-panel-label">Missing cost data</div>
+    </div>
+    <div class="count-panel-item">
+      <div class="count-panel-value"><%= total_count %></div>
+      <div class="count-panel-label">Total items</div>
+    </div>
+  </div>
+</div>
+
+<% if uncosted > 0 %>
+  <div class="px-3 mb-3">
+    <div class="alert alert-warning mb-0 d-flex align-items-center gap-2">
+      <i class="bi bi-exclamation-triangle flex-shrink-0"></i>
+      <span>
+        <strong><%= uncosted %> item<%= uncosted == 1 ? '' : 's' %></strong> in this menu have no cost data.
+        <%= link_to 'View full report', edit_restaurant_path(restaurant, section: 'profitability_margins'),
+            class: 'alert-link', data: { turbo: false } %>
+      </span>
+    </div>
+  </div>
+<% end %>
+
+<!-- Per-item cost table -->
+<div class="p-3">
+  <% if items.any? %>
+    <div class="table-responsive">
+      <table class="table table-sm table-hover align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>Item</th>
+            <th class="text-end">Price</th>
+            <th class="text-end">Cost</th>
+            <th class="text-end">Margin</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% items.each do |item| %>
+            <% cost = item.current_cost %>
+            <% menusection = item.menusection %>
+            <tr>
+              <td>
+                <span class="fw-medium"><%= item.name %></span>
+                <small class="text-muted d-block"><%= menusection.name %></small>
+              </td>
+              <td class="text-end"><%= number_to_currency(item.price) %></td>
+              <td class="text-end">
+                <% if cost %>
+                  <%= number_to_currency(cost.total_cost) %>
+                <% else %>
+                  <span class="text-muted">—</span>
+                <% end %>
+              </td>
+              <td class="text-end">
+                <% if cost && item.price.to_f > 0 && cost.total_cost.to_f > 0 %>
+                  <% margin_pct = ((item.price.to_f - cost.total_cost.to_f) / item.price.to_f * 100).round(1) %>
+                  <span class="badge <%= margin_pct >= 60 ? 'bg-success' : margin_pct >= 30 ? 'bg-warning text-dark' : 'bg-danger' %>">
+                    <%= margin_pct %>%
+                  </span>
+                <% else %>
+                  <span class="text-muted small">—</span>
+                <% end %>
+              </td>
+              <td class="text-end">
+                <% if cost %>
+                  <%= link_to 'Edit',
+                      edit_restaurant_menu_menusection_menuitem_cost_path(restaurant, menu, menusection, cost, menuitem_id: item.id),
+                      class: 'btn btn-xs btn-outline-secondary',
+                      data: { turbo: false } %>
+                <% else %>
+                  <%= link_to 'Add cost',
+                      new_restaurant_menu_menusection_menuitem_cost_path(restaurant, menu, menusection, menuitem_id: item.id),
+                      class: 'btn btn-xs btn-outline-primary',
+                      data: { turbo: false } %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <p class="text-muted">No items in this menu yet.</p>
+  <% end %>
+
+  <div class="mt-3">
+    <%= link_to 'Full profitability report',
+        edit_restaurant_path(restaurant, section: 'profitability_margins'),
+        class: 'btn btn-outline-secondary btn-sm',
+        data: { turbo: false } %>
+  </div>
+</div>

@@ -1,0 +1,122 @@
+<%#
+  Profitability: Margin Targets sub-section
+  Set target and minimum margin percentages per item, section, or restaurant.
+%>
+
+<% restaurant = local_assigns[:restaurant] || @restaurant %>
+
+<%
+  targets = restaurant.profit_margin_targets.order(created_at: :desc) rescue []
+  total = targets.count
+%>
+
+<!-- Section Header -->
+<div class="mb-3 p-3 border-bottom d-flex align-items-center justify-content-between flex-wrap gap-2">
+  <div>
+    <div class="d-flex align-items-center gap-2 mb-1">
+      <%= link_to edit_restaurant_path(restaurant, section: 'profitability'),
+          class: 'btn btn-sm btn-outline-secondary',
+          data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
+        <i class="bi bi-arrow-left"></i>
+      <% end %>
+      <h2 class="h5 mb-0 d-flex align-items-center gap-2">
+        <i class="bi bi-bullseye"></i>
+        Margin Targets
+      </h2>
+    </div>
+    <p class="text-muted small mb-0 ms-5">Set target profit margins to flag underperforming items</p>
+  </div>
+  <%= link_to new_restaurant_profit_margin_target_path(restaurant),
+      class: 'btn btn-sm btn-primary',
+      data: { turbo_frame: 'inline_target_form' } do %>
+    <i class="bi bi-plus me-1"></i>Add Target
+  <% end %>
+</div>
+
+<!-- Inline form frame (populated when Add/Edit is clicked) -->
+<%= turbo_frame_tag 'inline_target_form', class: 'px-3 d-block' %>
+
+<% if total == 0 %>
+  <div class="px-3 pb-3">
+    <div class="text-center py-5 text-muted">
+      <i class="bi bi-bullseye fs-1 d-block mb-3 opacity-25"></i>
+      <p class="mb-1 fw-medium">No margin targets yet</p>
+      <p class="small mb-3">Set targets to automatically flag items that fall below your desired profit margins.</p>
+      <%= link_to new_restaurant_profit_margin_target_path(restaurant),
+          class: 'btn btn-sm btn-primary',
+          data: { turbo_frame: 'inline_target_form' } do %>
+        <i class="bi bi-plus me-1"></i>Add first target
+      <% end %>
+    </div>
+  </div>
+<% else %>
+  <div class="px-3 pb-3">
+    <div class="table-responsive">
+      <table class="table table-sm table-hover align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>Scope</th>
+            <th class="text-end">Target %</th>
+            <th class="text-end">Minimum %</th>
+            <th>Effective</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% targets.each do |target| %>
+            <tr>
+              <td>
+                <% if target.menuitem.present? %>
+                  <span class="fw-medium"><%= target.menuitem.name %></span>
+                  <small class="text-muted d-block">Item</small>
+                <% elsif target.menusection.present? %>
+                  <span class="fw-medium"><%= target.menusection.name %></span>
+                  <small class="text-muted d-block">Section</small>
+                <% else %>
+                  <span class="fw-medium">Restaurant-wide</span>
+                  <small class="text-muted d-block">All items</small>
+                <% end %>
+              </td>
+              <td class="text-end">
+                <% if target.target_margin_percentage.present? %>
+                  <span class="badge bg-primary"><%= target.target_margin_percentage %>%</span>
+                <% else %>
+                  <span class="text-muted">—</span>
+                <% end %>
+              </td>
+              <td class="text-end">
+                <% if target.minimum_margin_percentage.present? %>
+                  <span class="badge bg-secondary"><%= target.minimum_margin_percentage %>%</span>
+                <% else %>
+                  <span class="text-muted">—</span>
+                <% end %>
+              </td>
+              <td class="small text-muted">
+                <% if target.effective_from.present? %>
+                  From <%= target.effective_from.strftime('%b %d, %Y') %>
+                  <% if target.effective_to.present? %>
+                    <br>To <%= target.effective_to.strftime('%b %d, %Y') %>
+                  <% end %>
+                <% else %>
+                  Always
+                <% end %>
+              </td>
+              <td class="text-end">
+                <div class="d-flex gap-1 justify-content-end">
+                  <%= link_to 'Edit',
+                      edit_restaurant_profit_margin_target_path(restaurant, target),
+                      class: 'btn btn-xs btn-outline-secondary',
+                      data: { turbo_frame: 'inline_target_form' } %>
+                  <%= link_to 'Delete',
+                      restaurant_profit_margin_target_path(restaurant, target),
+                      class: 'btn btn-xs btn-outline-danger',
+                      data: { turbo_method: :delete, turbo_confirm: 'Delete this target?' } %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+<% end %>

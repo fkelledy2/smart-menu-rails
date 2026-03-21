@@ -32,7 +32,9 @@ class IngredientsController < ApplicationController
     else
       render :new, status: :unprocessable_content
     end
-    ef update
+  end
+
+  def update
     authorize @ingredient
 
     if @ingredient.update(ingredient_params)

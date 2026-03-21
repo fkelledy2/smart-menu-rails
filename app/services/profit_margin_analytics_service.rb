@@ -95,7 +95,7 @@ class ProfitMarginAnalyticsService
   end
 
   def calculate_total_revenue(orders)
-    orders.sum { |order| order.ordritems.sum { |item| item.price * item.quantity } }
+    orders.sum { |order| order.ordritems.sum { |item| item.ordritemprice.to_f * item.quantity.to_i } }
   end
 
   def calculate_total_profit(orders)

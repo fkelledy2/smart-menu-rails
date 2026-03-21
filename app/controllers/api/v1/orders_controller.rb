@@ -9,11 +9,14 @@ class Api::V1::OrdersController < Api::V1::BaseController
   def index
     authorize @restaurant
 
-    @orders = @restaurant.ordrs.includes(:ordritems)
-    @orders = @orders.where(status: params[:status]) if params[:status].present?
-    @orders = @orders.page(params[:page]).per(20)
+    scope = @restaurant.ordrs.includes(:ordritems)
+    scope = scope.where(status: params[:status]) if params[:status].present?
+    @pagy, @orders = pagy(scope)
 
-    render json: @orders.map { |order| order_json(order) }
+    render json: {
+      data: @orders.map { |order| order_json(order) },
+      pagination: pagy_metadata_response(@pagy),
+    }
   end
 
   # GET /api/v1/orders/:id

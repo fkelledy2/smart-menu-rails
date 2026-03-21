@@ -45,7 +45,8 @@ class ApplicationController < ActionController::Base
     cu = respond_to?(:current_user) ? current_user : nil
     tu = respond_to?(:true_user) ? true_user : nil
     cu.present? && tu.present? && cu != tu
-  rescue StandardError
+  rescue StandardError => e
+    Rails.logger.warn("[ApplicationController] impersonating_user? check failed: #{e.message}")
     false
   ensure
     request.env['impersonating_user_checking'] = false
@@ -222,7 +223,8 @@ class ApplicationController < ActionController::Base
     user.restaurants
       .includes(:restaurant_subscription)
       .any? { |r| r.restaurant_subscription&.active_or_trialing_with_payment_method? }
-  rescue StandardError
+  rescue StandardError => e
+    Rails.logger.warn("[ApplicationController] user_has_active_subscription? failed: #{e.message}")
     false
   end
 
@@ -390,8 +392,8 @@ class ApplicationController < ActionController::Base
     # Update session timestamp
     session[:last_cache_warm] = Time.current.iso8601
     true
-  rescue StandardError
-    # If there's any error with session handling, default to not warming
+  rescue StandardError => e
+    Rails.logger.warn("[ApplicationController] Cache warm session check failed: #{e.message}")
     false
   end
 

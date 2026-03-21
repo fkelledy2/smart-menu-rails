@@ -7,9 +7,12 @@ class Api::V1::MenusController < Api::V1::BaseController
 
   # GET /api/v1/restaurants/:restaurant_id/menus
   def index
-    @menus = @restaurant.menus.includes(:menusections)
+    @pagy, @menus = pagy(@restaurant.menus.includes(:menusections))
 
-    render json: @menus.map { |menu| menu_json(menu) }
+    render json: {
+      data: @menus.map { |menu| menu_json(menu) },
+      pagination: pagy_metadata_response(@pagy),
+    }
   end
 
   # GET /api/v1/menus/:id

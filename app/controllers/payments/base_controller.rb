@@ -13,7 +13,8 @@ class Payments::BaseController < ApplicationController
     currency = params[:currency] || 'usd'
     key = begin
       Rails.application.credentials.stripe_secret_key
-    rescue StandardError
+    rescue StandardError => e
+      Rails.logger.warn("[Payments::BaseController] credentials.stripe_secret_key unavailable: #{e.message}")
       nil
     end
 
@@ -21,7 +22,8 @@ class Payments::BaseController < ApplicationController
       key = begin
         Rails.application.credentials.dig(:stripe, :secret_key) ||
           Rails.application.credentials.dig(:stripe, :api_key)
-      rescue StandardError
+      rescue StandardError => e
+        Rails.logger.warn("[Payments::BaseController] credentials dig for stripe key unavailable: #{e.message}")
         nil
       end
     end

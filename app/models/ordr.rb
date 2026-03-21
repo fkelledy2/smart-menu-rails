@@ -54,8 +54,8 @@ class Ordr < ApplicationRecord
   has_one :ordr_split_plan, dependent: :destroy
   has_many :ordr_split_payments, dependent: :destroy
   has_many :ordr_split_item_assignments, through: :ordr_split_plan
-  has_many :payment_attempts, dependent: :delete_all
-  has_many :payment_refunds, dependent: :delete_all
+  has_many :payment_attempts, dependent: :destroy
+  has_many :payment_refunds, dependent: :destroy
   has_many :ordrnotes, -> { reorder(created_at: :desc) }, dependent: :destroy
   has_many :active_ordrnotes, -> { active.reorder(priority: :desc, created_at: :desc) }, class_name: 'Ordrnote'
   has_many :kitchen_notes, -> { for_kitchen.active.reorder(priority: :desc, created_at: :desc) }, class_name: 'Ordrnote'

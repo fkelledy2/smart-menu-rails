@@ -157,6 +157,7 @@ class MenusectionsController < ApplicationController
 
     render json: { status: 'success' }, status: :ok
   rescue StandardError => e
+    Rails.logger.warn("[MenusectionsController] reorder failed: #{e.message}")
     render json: { status: 'error', message: e.message }, status: :unprocessable_content
   end
 

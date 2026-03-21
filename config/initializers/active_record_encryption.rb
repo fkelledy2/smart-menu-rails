@@ -24,3 +24,8 @@ Rails.application.config.active_record.encryption.deterministic_key =
 Rails.application.config.active_record.encryption.key_derivation_salt =
   ENV['ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT'] ||
   Rails.application.credentials.dig(:active_record_encryption, :key_derivation_salt)
+
+# During the backfill migration period, allow reading plaintext values from columns
+# that now have `encrypts` declared. Remove this once all existing rows are backfilled
+# via the backfill rake task (lib/tasks/encrypt_pii.rake).
+Rails.application.config.active_record.encryption.support_unencrypted_data = true

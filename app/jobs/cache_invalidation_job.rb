@@ -3,7 +3,9 @@ class CacheInvalidationJob < ApplicationJob
   queue_as :default
 
   # Retry with exponential backoff for Redis connectivity issues
-  retry_on Redis::BaseError, wait: :exponentially_longer, attempts: 3
+  if defined?(Redis::BaseError)
+    retry_on Redis::BaseError, wait: :exponentially_longer, attempts: 3
+  end
 
   # Only retry on IdentityCache errors if the constant exists
   if defined?(IdentityCache::UnsupportedOperation)

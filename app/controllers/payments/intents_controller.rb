@@ -13,7 +13,8 @@ class Payments::IntentsController < ApplicationController
 
     key = begin
       Rails.application.credentials.stripe_secret_key
-    rescue StandardError
+    rescue StandardError => e
+      Rails.logger.error("[Payments::IntentsController] Failed to read stripe_secret_key credential: #{e.message}")
       nil
     end
 
@@ -21,7 +22,8 @@ class Payments::IntentsController < ApplicationController
       key = begin
         Rails.application.credentials.dig(:stripe, :secret_key) ||
           Rails.application.credentials.dig(:stripe, :api_key)
-      rescue StandardError
+      rescue StandardError => e
+        Rails.logger.error("[Payments::IntentsController] Failed to read stripe credential keys: #{e.message}")
         nil
       end
     end

@@ -416,8 +416,8 @@ class OrdrsController < ApplicationController
               opened_status = Ordritem.statuses['opened']
               ordered_status = Ordritem.statuses['ordered']
               @ordr.ordritems.where(status: opened_status).update_all(status: ordered_status)
-            rescue StandardError
-              nil
+            rescue StandardError => e
+              Rails.logger.warn("[OrdrsController#update] fallback item status update failed for order=#{@ordr.id}: #{e.message}")
             end
           end
         end
@@ -582,8 +582,8 @@ class OrdrsController < ApplicationController
         if mp&.preferredlocale.present? && participant.preferredlocale.blank?
           participant.preferredlocale = mp.preferredlocale.to_s.downcase
         end
-      rescue StandardError
-        # No-op
+      rescue StandardError => e
+        Rails.logger.warn("[OrdrsController#find_or_create_ordr_participant] locale sync failed: #{e.message}")
       end
 
       # Save the participant first to get an ID

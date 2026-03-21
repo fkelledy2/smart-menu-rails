@@ -29,6 +29,7 @@ module Admin
       @removal_request.action_unpublish!(user: current_user)
       redirect_back_or_to(admin_restaurant_removal_requests_path, notice: 'Unpublished and actioned', status: :see_other)
     rescue StandardError => e
+      Rails.logger.error("[Admin::RestaurantRemovalRequestsController] action_unpublish failed for request_id=#{@removal_request&.id}: #{e.message}")
       redirect_back_or_to(admin_restaurant_removal_requests_path, alert: "Failed: #{e.message}", status: :see_other)
     end
 

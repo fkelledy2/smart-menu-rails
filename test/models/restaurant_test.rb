@@ -296,8 +296,8 @@ class RestaurantTest < ActiveSupport::TestCase
   # Dependent destroy tests
   test 'should have dependent destroy/delete_all associations configured' do
     assert_equal :delete_all, Restaurant.reflect_on_association(:tablesettings).options[:dependent]
-    assert_equal :delete_all, Restaurant.reflect_on_association(:menus).options[:dependent]
-    assert_equal :delete_all, Restaurant.reflect_on_association(:employees).options[:dependent]
+    assert_equal :destroy, Restaurant.reflect_on_association(:menus).options[:dependent]
+    assert_equal :destroy, Restaurant.reflect_on_association(:employees).options[:dependent]
     assert_equal :delete_all, Restaurant.reflect_on_association(:taxes).options[:dependent]
     assert_equal :delete_all, Restaurant.reflect_on_association(:tips).options[:dependent]
     assert_equal :destroy, Restaurant.reflect_on_association(:ocr_menu_imports).options[:dependent]

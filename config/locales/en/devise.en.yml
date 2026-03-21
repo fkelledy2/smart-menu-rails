@@ -42,9 +42,9 @@ en:
       new:
         back_to_sign_in: Back to sign in
         email_placeholder: Enter your email address
-        reset_instructions_help: "We'll send password reset instructions to this email"
+        reset_instructions_help: We'll send password reset instructions to this email
         reset_password: Reset password
-        reset_subtitle: "We'll email you a reset link."
+        reset_subtitle: We'll email you a reset link.
         send_reset_instructions: Send Reset Instructions
       no_token: You can't access this page without coming from a password reset email.
         If you do come from a password reset email, please make sure you used the
@@ -62,24 +62,26 @@ en:
         account: Account
         account_information: Account Information
         change_password: Change Password
+        confirmPassword: Confirm password
         confirm_new_password: Confirm New Password
         confirm_new_password_placeholder: Confirm new password
-        confirmPassword: Confirm password
         currentPassword: Current password
         currentPasswordHelp: We need your current password to confirm your changes
         danger_zone: Danger Zone
         deactivateMyAccount: Deactivate my account
         deactivateMyAccountAreYouSure: Are you sure you want to deactivate your account?
-        deactivate_warning: Once you deactivate your account, there is no going back. Please be certain.
+        deactivate_warning: Once you deactivate your account, there is no going back.
+          Please be certain.
         emailAddress: Email address
         fullName: Full name
         leave_blank: Leave blank to keep your current password
         new_password: New Password
         new_password_placeholder: New password
-        pending_confirmation: "Pending confirmation:"
+        pending_confirmation: 'Pending confirmation:'
         saveChanges: Save changes
         update_subtitle: Update your account information and password
       new:
+        already_have_account: Already have an account?
         confirmPassword: Confirm password
         create_account: Create Account
         create_your_account: Create your account.
@@ -88,7 +90,6 @@ en:
         minimum_characters: Minimum 6 characters
         password: Password
         signUp: Sign up
-        already_have_account: Already have an account?
         sign_in: Sign in
       signed_up: Welcome! You have signed up successfully.
       signed_up_but_inactive: You have signed up successfully. However, we could not
@@ -106,13 +107,13 @@ en:
     sessions:
       already_signed_out: Signed out successfully.
       new:
+        create_account: Create account
+        dont_have_account: Don't have an account?
         emailAddress: Email address
         login: Log in
         password: Password
         rememberMe: Remember me
         welcome_back: Welcome back.
-        dont_have_account: "Don't have an account?"
-        create_account: Create account
       signed_in: Signed in successfully.
       signed_out: Signed out successfully.
     shared:

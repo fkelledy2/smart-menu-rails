@@ -30,7 +30,8 @@ class OcrMenuItemsController < ApplicationController
     if attrs.key?(:price)
       attrs[:price] = begin
         BigDecimal(attrs[:price].to_s)
-      rescue StandardError
+      rescue StandardError => e
+        Rails.logger.warn("[OcrMenuItemsController] Failed to parse price '#{attrs[:price]}': #{e.message}")
         0
       end
     end
@@ -53,7 +54,8 @@ class OcrMenuItemsController < ApplicationController
 
         allergens = begin
           JSON.parse(allergens)
-        rescue StandardError
+        rescue StandardError => e
+          Rails.logger.warn("[OcrMenuItemsController] Failed to parse allergens JSON: #{e.message}")
           []
         end
 
@@ -79,7 +81,8 @@ class OcrMenuItemsController < ApplicationController
     if params.dig(:ocr_menu_item, :metadata).present?
       md = begin
         params[:ocr_menu_item][:metadata].to_unsafe_h.symbolize_keys
-      rescue StandardError
+      rescue StandardError => e
+        Rails.logger.warn("[OcrMenuItemsController] Failed to parse metadata: #{e.message}")
         {}
       end
       safe_md = {}

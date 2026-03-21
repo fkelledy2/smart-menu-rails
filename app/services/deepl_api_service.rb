@@ -6,8 +6,6 @@ class DeeplApiService
 
   base_uri 'https://api-free.deepl.com/v2'
 
-  TEST_API_KEY = '9079cde6-1153-4f72-a220-306de587c58e:fx'.freeze
-
   class MissingApiKeyError < StandardError; end
 
   def self.api_key
@@ -16,7 +14,7 @@ class DeeplApiService
 
   def self.api_key_with_test_fallback
     key = api_key
-    return TEST_API_KEY if key.blank? && Rails.env.test?
+    return Rails.application.credentials.dig(:deepl, :test_api_key).to_s if key.blank? && Rails.env.test?
 
     key
   end

@@ -10,6 +10,8 @@ class SmartmenuLocaleSwitchingTest < ApplicationSystemTestCase
     @smartmenu.update!(tablesetting: @table) unless @smartmenu.tablesetting_id == @table.id
     # Clean up fixture menuparticipants that interfere with locale assertions
     Menuparticipant.where(smartmenu_id: @smartmenu.id).delete_all
+    # Clean up ordrparticipants to prevent test isolation issues
+    Ordr.where(restaurant_id: @restaurant.id).find_each { |o| o.ordrparticipants.delete_all }
     # Ensure active locales exist for the restaurant so the selector renders
     %w[en it es].each do |loc|
       rl = Restaurantlocale.find_or_initialize_by(restaurant: @restaurant, locale: loc)
@@ -103,7 +105,6 @@ class SmartmenuLocaleSwitchingTest < ApplicationSystemTestCase
     visit smartmenu_path(@smartmenu.slug)
     assert_testid('smartmenu-customer-view', wait: 10)
 
-    # Sync happens server-side during visit 2 — assert directly (no poll needed)
     op = order.reload.ordrparticipants.where(role: 0).find { |p| p.preferredlocale.present? }
     assert op.present?, 'Ordrparticipant with preferredlocale should exist'
     assert_equal chosen, op.preferredlocale&.downcase

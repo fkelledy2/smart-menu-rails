@@ -1,0 +1,97 @@
+<%#
+  Profitability: Order Analytics sub-section
+  Revenue and profit breakdown by order history.
+%>
+
+<% restaurant = local_assigns[:restaurant] || @restaurant %>
+
+<%
+  begin
+    analytics = ProfitMarginAnalyticsService.new(restaurant)
+    stats = analytics.dashboard_stats
+    order_stats = analytics.order_profit_analytics
+  rescue => e
+    stats = {}
+    order_stats = { total_orders: 0, total_revenue: 0, total_profit: 0, average_profit_per_order: 0, most_profitable_items: [] }
+  end
+%>
+
+<!-- Section Header -->
+<div class="mb-3 p-3 border-bottom d-flex align-items-center justify-content-between flex-wrap gap-2">
+  <div>
+    <div class="d-flex align-items-center gap-2 mb-1">
+      <%= link_to edit_restaurant_path(restaurant, section: 'profitability'),
+          class: 'btn btn-sm btn-outline-secondary',
+          data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
+        <i class="bi bi-arrow-left"></i>
+      <% end %>
+      <h2 class="h5 mb-0 d-flex align-items-center gap-2">
+        <i class="bi bi-graph-up"></i>
+        Order Analytics
+      </h2>
+    </div>
+    <p class="text-muted small mb-0 ms-5">Profit performance across your order history</p>
+  </div>
+</div>
+
+<!-- KPI row -->
+<div class="px-3 mb-4">
+  <div class="row g-2">
+    <div class="col-6 col-md-3">
+      <div class="border rounded p-3 text-center">
+        <div class="fw-bold fs-5"><%= order_stats[:total_orders] %></div>
+        <div class="text-muted small">Orders (30d)</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="border rounded p-3 text-center">
+        <div class="fw-bold fs-5"><%= number_to_currency(order_stats[:total_revenue]) %></div>
+        <div class="text-muted small">Revenue</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="border rounded p-3 text-center">
+        <div class="fw-bold fs-5 text-success"><%= number_to_currency(order_stats[:total_profit]) %></div>
+        <div class="text-muted small">Total Profit</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="border rounded p-3 text-center">
+        <div class="fw-bold fs-5"><%= number_to_currency(order_stats[:average_profit_per_order]) %></div>
+        <div class="text-muted small">Avg / Order</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Top performers by volume -->
+<div class="px-3 pb-3">
+  <h6 class="fw-semibold mb-2">Most Profitable Items (by volume)</h6>
+  <% items = order_stats[:most_profitable_items] || [] %>
+  <% if items.any? %>
+    <div class="table-responsive">
+      <table class="table table-sm table-hover align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>Item</th>
+            <th class="text-end">Sold</th>
+            <th class="text-end">Profit / unit</th>
+            <th class="text-end">Total profit</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% items.first(15).each do |row| %>
+            <tr>
+              <td><%= row[:menuitem]&.name || '—' %></td>
+              <td class="text-end"><%= row[:quantity_sold] %></td>
+              <td class="text-end"><%= number_to_currency(row[:profit_per_unit]) %></td>
+              <td class="text-end text-success fw-medium"><%= number_to_currency(row[:total_profit]) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <p class="text-muted small">No order data with cost information yet. <a href="<%= edit_restaurant_path(restaurant, section: 'profitability_margins') %>" data-turbo-frame="restaurant_content">Add cost data</a> to your items first.</p>
+  <% end %>
+</div>
