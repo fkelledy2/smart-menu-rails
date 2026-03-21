@@ -33,7 +33,7 @@ RUN bundle install && \
 
 # Install JS dependencies
 COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile --ignore-engines
+RUN yarn config set ignore-engines true && yarn install --frozen-lockfile
 
 # Copy application code
 COPY . .
