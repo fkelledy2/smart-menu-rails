@@ -5,36 +5,19 @@ class MenuOptimizationsController < ApplicationController
   before_action :set_restaurant
 
   def index
-    @optimization_plan = {
-      action_items: [],
-      estimated_impact: { items_to_adjust: 0 },
-    }
+    redirect_to edit_restaurant_path(@restaurant, section: 'profitability')
   end
 
   def menu_engineering
-    @menu_engineering = {
-      summary: {
-        stars_count: 0,
-        plowhorses_count: 0,
-        puzzles_count: 0,
-        dogs_count: 0,
-      },
-      items: [],
-    }
+    redirect_to edit_restaurant_path(@restaurant, section: 'profitability_optimization')
   end
 
   def bundling_opportunities
-    @bundling = {
-      summary: {
-        total_opportunities: 0,
-        high_appeal_count: 0,
-      },
-      opportunities: [],
-    }
+    redirect_to edit_restaurant_path(@restaurant, section: 'profitability')
   end
 
   def apply_optimizations
-    redirect_to restaurant_menu_optimizations_path(@restaurant),
+    redirect_to edit_restaurant_path(@restaurant, section: 'profitability'),
                 notice: 'Optimization applied.'
   end
 

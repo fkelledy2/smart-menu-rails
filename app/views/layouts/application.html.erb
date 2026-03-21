@@ -20,12 +20,15 @@
         <main class="flex-wrapper">
           <%= render 'shared/navbar' %>
           <div class="container-fluid mx-auto">
-                <div class="spacing-xs"></div>
+                <div class="mb-1"></div>
                 <%= yield %>
           </div>
         </main>
       </div>
       <%= render 'shared/footer' %>
+    </div>
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" data-controller="flash">
+      <%= render 'shared/notices' %>
     </div>
   </body>
 </html>

@@ -65,7 +65,7 @@
                   placeholder: t(".confirmPassword"),
                   class: 'form-control form-control-lg',
                   id: 'user_password_confirmation',
-                  data: { testid: 'signup-password-confirmation-input' } %>
+                  data: { testid: 'signup-password-confirmation-input', controller: 'submit-on-enter', action: 'keydown->submit-on-enter#submit' } %>
             </div>
 
             <!-- Submit Button -->

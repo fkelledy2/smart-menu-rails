@@ -1,141 +1,19 @@
-// Utility Classes
-// Common spacing, layout, and helper classes extracted from inline styles
+// Utilities
+// Only custom classes with no Bootstrap equivalent.
+// Bootstrap 5 handles all spacing, flexbox, display, position, text, shadow, overflow, etc.
 
-// Height spacers (common spacing patterns from extracted inline styles)
-.opacity-0 { opacity: 0; }
+// ------------------------------------
+// JS-toggled visibility
+// Used by Stimulus controllers (skeleton show/hide, slider init, etc.)
+// ------------------------------------
+.hidden { display: none !important; }
 .transition-opacity-300 { transition: opacity 0.3s ease; }
-.spacing-xs { height: 5px; }
-.spacing-sm { height: 10px; }
-.spacing-md { height: 15px; }
-.spacing-lg { height: 20px; }
-.spacing-xl { height: 30px; }
 
-// Padding utilities
-.padding-top-sm { padding-top: 5px; }
-.padding-top-md { padding-top: 10px; }
-.padding-top-lg { padding-top: 20px; }
-.padding-left-sm { padding-left: 10px; }
-.padding-left-md { padding-left: 15px; }
-.padding-right-sm { padding-right: 10px; }
-.padding-right-md { padding-right: 15px; }
-.padding-bottom-sm { padding-bottom: 5px; }
-.padding-bottom-md { padding-bottom: 10px; }
-// Extra compact utility for 5px on all sides (used to remove multiple inline styles)
-.padding-5 { padding: 5px; }
-.m-0 { margin: 0 !important; }
-
-// Margin utilities
-.margin-top-sm { margin-top: 5px; }
-.margin-top-md { margin-top: 10px; }
-.margin-left-sm { margin-left: 5px; }
-.margin-left-md { margin-left: 10px; }
-.margin-right-sm { margin-right: 5px; }
-.margin-right-md { margin-right: 10px; }
-
-// Display utilities
-.display-none { display: none; }
-.display-block { display: block; }
-.display-inline { display: inline; }
-.display-inline-block { display: inline-block; }
-.display-flex { display: flex; }
-
-// Position utilities
-.position-relative { position: relative; }
-.position-absolute { position: absolute; }
-.position-fixed { position: fixed; }
-.position-sticky { position: sticky; }
-.left-0 { left: 0 !important; }
-.right-0 { right: 0 !important; }
-.bottom-0 { bottom: 0 !important; }
-
-// Width and height utilities
-.width-full { width: 100%; }
-.width-auto { width: auto; }
-.height-full { height: 100%; }
-.height-auto { height: auto; }
-.min-height-120 { min-height: 120px; }
-
-// Z-index utilities
-.z-index-1 { z-index: 1; }
-.z-index-10 { z-index: 10; }
-.z-index-100 { z-index: 100; }
-.z-index-1000 { z-index: 1000; }
-.z-index-10000 { z-index: 10000; }
-.z-index-dropdown { z-index: 1070; }
-.z-index-7000 { z-index: 7000; }
-.z-index-7001 { z-index: 7001; }
-
-// Text utilities
-.text-justify { text-align: justify; }
-.whitespace-nowrap { white-space: nowrap; }
-.text-14px { font-size: 14px; }
-.text-3rem { font-size: 3rem; }
-.text-1_5rem { font-size: 1.5rem; }
-.text-left-force { text-align: left !important; }
-
-// Color utilities
-.color-green { color: green; }
-.feature-icon { color: green; }
-
-// Overflow utilities
-.overflow-hidden { overflow: hidden; }
-.overflow-x-hidden { overflow-x: hidden; }
-.overflow-y-hidden { overflow-y: hidden; }
-.overflow-scroll { overflow: scroll; }
-.cursor-grab { cursor: grab; }
-// Pointer events
-.pointer-events-none { pointer-events: none !important; }
-.pointer-events-auto { pointer-events: auto; }
-// Position helpers
-.pos-rel { position: relative !important; }
-.bottom-neg-12 { bottom: -12px !important; }
-
-// Border radius utilities
-.border-radius-sm { border-radius: 4px; }
-.border-radius-md { border-radius: 8px; }
-.border-radius-lg { border-radius: 12px; }
-// Bottom-right only radius utility (replaces inline styles in tasting CTA)
-.br-bottom-right-4 { border-radius: 0 0 0.25rem 0; }
-// Generic corner radius pattern used in some dropdowns
-.br-0-0-8-8 { border-radius: 0 0 8px 8px; }
-// Specific mixed-corner radius used in menu size button
-.br-8-0-8-0 { border-radius: 8px 0 8px 0 !important; }
-
-// Box shadow utilities
-.shadow-sm { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
-.shadow-md { box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-.shadow-lg { box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
-
-// Flexbox utilities
-.flex-center { display: flex; justify-content: center; align-items: center; }
-.flex-between { display: flex; justify-content: space-between; }
-.flex-around { display: flex; justify-content: space-around; }
-// Reset helpers
-.btn-reset { background: none; border: none; padding: 0; }
-.flex-start { display: flex; justify-content: flex-start; }
-.flex-end { display: flex; justify-content: flex-end; }
-.flex-column { flex-direction: column; }
-.flex-wrap { flex-wrap: wrap; }
-.flex-nowrap { flex-wrap: nowrap; }
-
-// Alignment utilities
-.justify-center { justify-content: center; }
-.justify-start { justify-content: flex-start; }
-.justify-end { justify-content: flex-end; }
-.justify-between { justify-content: space-between; }
-.justify-around { justify-content: space-around; }
-.align-center { align-items: center; }
-.align-start { align-items: flex-start; }
-.align-end { align-items: flex-end; }
-
-// Pointer events
-.pointer-events-none { pointer-events: none; }
-.pointer-events-auto { pointer-events: auto; }
-
-// Layout utilities for application layouts
-.layout-body {
-  overflow-x: hidden;
-}
+// ------------------------------------
+// Application layout
+// Wraps the main content area in application.html.erb and variants
+// ------------------------------------
+.layout-body { overflow-x: hidden; }
 
 .layout-container {
   display: flex;
@@ -152,66 +30,13 @@
   justify-content: space-between;
 }
 
-.layout-content {
-  padding-left: 0px;
-  padding-right: 0px;
-}
+.layout-content { padding-left: 0; padding-right: 0; }
+.layout-content-marketing { overflow-x: hidden; }
+.html-full-width { max-width: 100%; }
 
-.layout-content-marketing {
-  overflow-x: hidden;
-}
-
-.html-full-width {
-  max-width: 100%;
-}
-
-// Modal-specific utilities
-.modal-footer-custom {
-  border-top: 0px;
-  padding: 0px;
-}
-
-.modal-footer-absolute {
-  width: 100%;
-  position: absolute;
-  bottom: 0px;
-  border-top: 0px;
-  padding: 0px;
-}
-
-.modal-body-no-padding {
-  padding: 0px;
-}
-// Modal footer spacing utility (replaces inline styles specifying padding/gap/justify)
-.modal-footer-spaced {
-  padding: 16px;
-  gap: 12px;
-  justify-content: flex-end;
-}
-
-.modal-content-padding {
-  padding-left: 15px;
-  padding-right: 15px;
-}
-
-.modal-spacing-top {
-  margin-top: 20px;
-}
-
-.modal-spacing-item {
-  margin-top: 5px;
-}
-
-.modal-input-width {
-  width: 50px;
-}
-
-.modal-btn-group-position {
-  position: relative;
-  right: -5px;
-  bottom: -5px;
-}
-
+// ------------------------------------
+// Navigation
+// ------------------------------------
 .menu-sticky-header {
   position: sticky;
   top: 0;
@@ -219,296 +44,35 @@
   z-index: 1020;
 }
 
-.allergyn-spacing {
-  padding-top: 20px;
-}
-
-.allergyn-text {
-  white-space: nowrap;
-}
-
-.dropdown-custom-padding {
-  --bs-dropdown-padding-y: 0.0rem;
-  --bs-dropdown-min-width: 0em;
-}
-
-.dropdown-item-custom-padding {
-  padding-right: 4px;
-  padding-left: 4px;
-}
-// Dropdown padding-y custom utility
-.dropdown-padding-y-05 { --bs-dropdown-padding-y: 0.5rem; }
-.dropdown-min-w-0 { --bs-dropdown-min-width: 0em; }
-.min-w-0 { min-width: 0 !important; }
-.min-w-60 { min-width: 60px !important; }
-.min-w-180 { min-width: 180px !important; }
-
-// Additional utility classes for remaining patterns
-.w-60 { width: 60% !important; }
-.w-34 { width: 34% !important; }
-.w-22 { width: 22% !important; }
-.w-36px { width: 36px !important; }
-.w-24px { width: 24px !important; }
-.w-40px { width: 40px !important; }
-.w-140px { width: 140px !important; }
-.max-width-100 { max-width: 100% !important; }
-.h-36px { height: 36px !important; }
-.menu-item-image { height: 150px; }
-.progress-custom { height: 8px; }
-.progress-thin { height: 3px; }
-.progress-thick { height: 10px; }
-.qr-code-image { max-width: 180px; }
-.qr-code-placeholder { 
-  height: 200px; 
-  border-radius: 8px; 
-}
-.min-h-44 { min-height: 44px !important; }
-.sticky-offset { top: 2rem; }
-// Additional min/max size helpers
-.min-h-100 { min-height: 100px !important; }
-.max-w-50px { max-width: 50px !important; }
-
-// Common inline style patterns extracted
-.table-container-spacing {
-  padding-top: 10px;
-}
-
-.section-spacing-top {
-  padding-top: 20px;
-}
-
-.section-spacing-bottom {
-  padding-bottom: 20px;
-}
-
-.section-spacing-vertical {
-  padding-top: 20px;
-  padding-bottom: 20px;
-}
-
 .nav-tabs-height {
   height: 43px;
   overflow-y: hidden;
 }
 
-.text-large {
-  font-size: 3rem;
-}
+// ------------------------------------
+// Button reset (no Bootstrap equivalent)
+// ------------------------------------
+.btn-reset { background: none; border: none; padding: 0; }
 
-.position-relative-top-neg5 {
-  position: relative;
-  top: -5px !important;
-  margin-top: 5px;
-}
+// ------------------------------------
+// Border radius one-offs (still referenced in views)
+// ------------------------------------
+.br-bottom-right-4 { border-radius: 0 0 0.25rem 0; }
+.br-0-0-8-8       { border-radius: 0 0 8px 8px; }
 
-.position-relative-right-25 {
-  position: relative;
-  right: 25px;
-}
+// ------------------------------------
+// Dropdown sizing helpers
+// CSS variable overrides for Bootstrap dropdown
+// ------------------------------------
+.dropdown-padding-y-05 { --bs-dropdown-padding-y: 0.5rem; }
+.dropdown-min-w-0       { --bs-dropdown-min-width: 0; }
+.min-w-0                { min-width: 0 !important; }
+.min-w-60               { min-width: 60px !important; }
+.min-w-180              { min-width: 180px !important; }
 
-.z-index-high {
-  z-index: 1070;
-}
-
-.item-spacing {
-  margin-top: 5px;
-}
-
-.text-align-left {
-  text-align: left;
-}
-
-.full-width {
-  width: 100%;
-}
-
-.height-3px {
-  height: 3px;
-}
-
-.icon-size-36 {
-  width: 36px;
-  height: 36px;
-  z-index: 1;
-}
-
-// Additional patterns from remaining inline styles
-.text-justify {
-  text-align: justify;
-}
-
-.text-center-padded {
-  padding-left: 10px;
-  padding-right: 10px;
-  text-align: center;
-}
-
-.text-left-padded {
-  text-align: left;
-  padding-left: 5px;
-}
-
-.padding-left-sm {
-  padding-left: 5px;
-}
-
-.padding-top-xs {
-  padding-top: 5px;
-}
-
-.text-extra-large {
-  font-size: 4rem;
-}
-
-.max-width-180 {
-  max-width: 180px;
-}
-
-.max-width-1200 {
-  max-width: 1200px;
-}
-
-.top-2rem {
-  top: 2rem;
-}
-
-// Final batch of utility classes for remaining patterns
-.height-90vh-scroll {
-  height: 90vh;
-  overflow: scroll;
-}
-
-.padding-bottom-xs {
-  padding-bottom: 5px;
-}
-
-.hero-section {
-  padding-top: 50px;
-  padding-bottom: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.padding-top-7px {
-  padding-top: 7px;
-}
-
-.inline-block-padded {
-  padding: 1px;
-  display: inline-block;
-}
-
-.max-height-40 {
-  max-height: 40px;
-}
-
-.min-height-60 {
-  min-height: 60px;
-}
-
-.form-textarea-custom {
-  padding-top: 2px;
-  padding-bottom: 5px;
-  width: 100%;
-  height: 200px;
-}
-
-.progress-bar-8 {
-  height: 8px;
-}
-
-.progress-bar-10 {
-  height: 10px;
-}
-
-.qr-placeholder {
-  height: 200px;
-  border-radius: 8px;
-}
-
-.text-2rem {
-  font-size: 2rem;
-}
-
-.flex-1 {
-  flex: 1;
-}
-
-.max-width-60 {
-  max-width: 60%;
-}
-
-.position-relative-top5 {
-  position: relative;
-  top: 5px !important;
-  margin-top: 5px;
-}
-
-.height-150 {
-  height: 150px;
-}
-
-.position-relative-left-neg37 {
-  position: relative;
-  left: -37px;
-}
-
-.position-relative-left-neg10 {
-  position: relative;
-  left: -10px;
-}
-
-.height-40 {
-  height: 40px;
-}
-
-.top-neg7 {
-  top: -7px;
-}
-
-.text-center {
-  text-align: center;
-}
-
-.padding-horizontal-0 {
-  padding-left: 0;
-  padding-right: 0;
-}
-.wizard-form { max-width: 1200px; }
-
-// Navigation specific utilities
-.nav-tabs-fixed-height {
-  height: 43px;
-  overflow-y: hidden;
-}
-
-.nav-tabs-scrollable {
-  position: relative;
-  top: -43px;
-  left: 50px;
-  height: 43px;
-  overflow-y: hidden;
-  width: 85%;
-  mask-image: linear-gradient(to right, #008080, rgba(0,32,32,0) 120%);
-}
-
-.tab-content-offset {
-  position: relative;
-  top: -43px;
-}
-
-.sticky-nav {
-  padding-bottom: 10px;
-  box-shadow: 0 4px 2px -2px gray;
-}
-
-// Table utilities
-.table-container {
-  padding-top: 10px;
-}
-
-// Hero section utilities
+// ------------------------------------
+// Marketing — hero carousel
+// ------------------------------------
 .hero-carousel {
   overflow-x: hidden;
   width: calc(100% + 50px);
@@ -516,103 +80,36 @@
   margin-right: -25px;
   background: url('/table-setting.png') no-repeat center center;
   background-size: cover;
-}
 
-.hero-overlay {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  background: rgba(0, 0, 0, 0.32);
-  z-index: 1;
-  pointer-events: none;
-}
-
-.hero-caption {
-  left: 5%;
-  right: 5%;
-}
-
-.hero-cta-btn {
-  z-index: 10000;
-}
-
-// Feature utilities
-.feature-card {
-  padding-left: 15px;
-}
-
-.feature-description {
-  padding-right: 10px;
-  min-height: 120px;
-  text-align: justify;
-}
-
-.feature-icon {
-  color: green;
-}
-
-// Form positioning utilities
-.form-icon-position {
-  position: relative;
-  top: 5px !important;
-  margin-top: 5px;
-}
-
-.form-icon-position-alt {
-  position: relative;
-  top: -5px !important;
-  margin-top: 5px;
-}
-
-// Responsive utilities
-@media (max-width: 576px) {
-  .spacing-lg { height: 8px; }
-  .padding-top-lg { padding-top: 10px; }
-  .padding-left-md { padding-left: 10px; }
-  .padding-right-md { padding-right: 10px; }
-  
-  .hero-carousel {
+  @media (max-width: 576px) {
     width: 100%;
     margin-left: 0;
     margin-right: 0;
   }
-  
-  .hero-caption {
-    left: 10px;
-    right: 10px;
-  }
-  
-  .feature-card {
-    padding-left: 0;
-  }
-  
-  .nav-tabs-scrollable {
-    width: 100%;
-    left: 0;
-    mask-image: none;
-  }
-  
-  .wizard-form {
-    max-width: 100%;
-  }
 }
 
-@media (max-width: 768px) {
-  .min-height-120 { min-height: auto; }
-  
-  .feature-description {
-    min-height: auto;
-    padding-right: 0;
-  }
-  
-  .nav-tabs-fixed-height {
-    height: auto;
-    overflow-y: visible;
-  }
-  
-  .tab-content-offset {
-    top: 0;
-  }
+.hero-caption { left: 5%; right: 5%; }
+
+// ------------------------------------
+// Marketing — feature grid
+// ------------------------------------
+.feature-card { padding-left: 15px; }
+.feature-icon  { color: green; }
+
+// ------------------------------------
+// Forms
+// ------------------------------------
+.wizard-form { max-width: 1200px; }
+
+// ------------------------------------
+// QR code placeholder
+// ------------------------------------
+.qr-placeholder {
+  height: 200px;
+  border-radius: 8px;
 }
+
+// ------------------------------------
+// One-off vertical nudge (single use — candidate for removal)
+// ------------------------------------
+.padding-top-7px { padding-top: 7px; }

@@ -47,7 +47,6 @@
 
     <!-- Main Content Area -->
     <div class="sidebar-main-content">
-      <%= render('shared/notices') unless @current_section.to_s == 'details' %>
       <%= render(GoLiveChecklistComponent.new(restaurant: @restaurant, userplan: @userplan)) unless @current_section.to_s == 'menus' %>
       <%= turbo_frame_tag 'restaurant_content' do %>
         <%

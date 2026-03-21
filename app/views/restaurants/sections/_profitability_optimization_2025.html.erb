@@ -9,11 +9,6 @@
 <div class="mb-3 p-3 border-bottom d-flex align-items-center justify-content-between flex-wrap gap-2">
   <div>
     <div class="d-flex align-items-center gap-2 mb-1">
-      <%= link_to edit_restaurant_path(restaurant, section: 'profitability'),
-          class: 'btn btn-sm btn-outline-secondary',
-          data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
-        <i class="bi bi-arrow-left"></i>
-      <% end %>
       <h2 class="h5 mb-0 d-flex align-items-center gap-2">
         <i class="bi bi-stars"></i>
         Menu Engineering
@@ -21,11 +16,6 @@
     </div>
     <p class="text-muted small mb-0 ms-5">Classify items by profitability and popularity</p>
   </div>
-  <%= link_to restaurant_menu_optimizations_path(restaurant),
-      class: 'btn btn-sm btn-outline-primary',
-      data: { turbo: false } do %>
-    <i class="bi bi-box-arrow-up-right me-1"></i>Full Analysis
-  <% end %>
 </div>
 
 <div class="px-3 pb-3">
@@ -66,9 +56,6 @@
     <div>
       <strong>How it works:</strong> Menu engineering classifies each item based on its gross margin relative to your average, and its order frequency relative to other items. Items need cost data and order history for classification.
       <div class="mt-2">
-        <%= link_to 'View full analysis', restaurant_menu_optimizations_path(restaurant),
-            class: 'btn btn-sm btn-primary me-2',
-            data: { turbo: false } %>
         <%= link_to edit_restaurant_path(restaurant, section: 'profitability_margins'),
             class: 'btn btn-sm btn-outline-secondary',
             data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>

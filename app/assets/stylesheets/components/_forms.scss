@@ -1,12 +1,6 @@
 // Form Components
 // Styles for form elements and form-specific layouts
 
-// Form spacing utilities
-.form-spacing-xs { margin-bottom: 0.25rem; }
-.form-spacing-sm { margin-bottom: 0.5rem; }
-.form-spacing-md { margin-bottom: 1rem; }
-.form-spacing-lg { margin-bottom: 1.5rem; }
-
 // Form control enhancements
 .form-control:disabled {
   background-color: #fafafa;
@@ -27,30 +21,6 @@
   padding-left: 12px;
   font-size: 16px;
   line-height: 18px;
-}
-
-// Form icon positioning
-.form-icon-position {
-  position: relative;
-  top: 5px !important;
-  margin-top: 5px;
-}
-
-.form-icon-position-alt {
-  position: relative;
-  top: -5px !important;
-  margin-top: 5px;
-}
-
-// Form layout helpers
-.form-row-spacing {
-  margin-bottom: 1rem;
-}
-
-.form-section-header {
-  margin-bottom: 1rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid #dee2e6;
 }
 
 // Form validation styles
@@ -78,37 +48,3 @@
   border-color: #007bff;
 }
 
-// File input styling
-.form-file-input {
-  position: relative;
-  overflow: hidden;
-  display: inline-block;
-}
-
-.form-file-input input[type="file"] {
-  position: absolute;
-  left: -9999px;
-}
-
-// Form button groups
-.form-button-group {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 1rem;
-}
-
-.form-button-group .btn {
-  flex: 1;
-}
-
-// Responsive form adjustments
-@media (max-width: 768px) {
-  .form-button-group {
-    flex-direction: column;
-  }
-  
-  .form-button-group .btn {
-    width: 100%;
-    margin-bottom: 0.5rem;
-  }
-}

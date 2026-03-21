@@ -54,6 +54,8 @@
 //= link controllers/discovered_restaurant_web_scrape_controller.js
 //= link controllers/discovered_restaurants_bulk_controller.js
 //= link controllers/generate_pairings_controller.js
+//= link controllers/flash_controller.js
+//= link controllers/submit_on_enter_controller.js
 //= link controllers/go_live_progress_controller.js
 //= link controllers/inline_edit_controller.js
 //= link controllers/invite_staff_controller.js

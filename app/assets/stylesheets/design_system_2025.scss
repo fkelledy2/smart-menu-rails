@@ -413,124 +413,124 @@ body {
 }
 
 // ============================================
-// UTILITY CLASSES
+// EXTENDED SPACING (Bootstrap covers 0–5; these extend beyond)
 // ============================================
-
-// Spacing Utilities
-@each $key, $value in (
-  '0': var(--space-0),
-  '1': var(--space-1),
-  '2': var(--space-2),
-  '3': var(--space-3),
-  '4': var(--space-4),
-  '5': var(--space-5),
+// Bootstrap spacers go up to 5 ($spacer * 3 = 3rem).
+// These add 6, 8, 10, 12 for large section gaps.
+$extended-spacers: (
   '6': var(--space-6),
   '8': var(--space-8),
   '10': var(--space-10),
-  '12': var(--space-12)
-) {
-  .m-#{$key} { margin: #{$value}; }
+  '12': var(--space-12),
+);
+
+@each $key, $value in $extended-spacers {
+  .m-#{$key}  { margin: #{$value}; }
   .mt-#{$key} { margin-top: #{$value}; }
-  .mr-#{$key} { margin-right: #{$value}; }
   .mb-#{$key} { margin-bottom: #{$value}; }
-  .ml-#{$key} { margin-left: #{$value}; }
   .mx-#{$key} { margin-left: #{$value}; margin-right: #{$value}; }
   .my-#{$key} { margin-top: #{$value}; margin-bottom: #{$value}; }
-  
-  .p-#{$key} { padding: #{$value}; }
+  .p-#{$key}  { padding: #{$value}; }
   .pt-#{$key} { padding-top: #{$value}; }
-  .pr-#{$key} { padding-right: #{$value}; }
   .pb-#{$key} { padding-bottom: #{$value}; }
-  .pl-#{$key} { padding-left: #{$value}; }
   .px-#{$key} { padding-left: #{$value}; padding-right: #{$value}; }
   .py-#{$key} { padding-top: #{$value}; padding-bottom: #{$value}; }
 }
 
-// Text Utilities
-.text-xs { font-size: var(--text-xs); }
-.text-sm { font-size: var(--text-sm); }
+// ============================================
+// TYPOGRAPHY — no Bootstrap equivalent
+// (Bootstrap uses .fs-1–6 and .small, not .text-sm/.text-xs etc.)
+// ============================================
+.text-xs   { font-size: var(--text-xs); }
+.text-sm   { font-size: var(--text-sm); }
 .text-base { font-size: var(--text-base); }
-.text-lg { font-size: var(--text-lg); }
-.text-xl { font-size: var(--text-xl); }
-.text-2xl { font-size: var(--text-2xl); }
-.text-3xl { font-size: var(--text-3xl); }
+.text-lg   { font-size: var(--text-lg); }
+.text-xl   { font-size: var(--text-xl); }
+.text-2xl  { font-size: var(--text-2xl); }
+.text-3xl  { font-size: var(--text-3xl); }
 
-.font-light { font-weight: var(--font-light); }
-.font-normal { font-weight: var(--font-normal); }
-.font-medium { font-weight: var(--font-medium); }
+// Bootstrap uses .fw-light/normal/bold but not .font-medium/.font-semibold
+.font-light    { font-weight: var(--font-light); }
+.font-normal   { font-weight: var(--font-normal); }
+.font-medium   { font-weight: var(--font-medium); }
 .font-semibold { font-weight: var(--font-semibold); }
-.font-bold { font-weight: var(--font-bold); }
+.font-bold     { font-weight: var(--font-bold); }
 
-.text-center { text-align: center; }
-.text-left { text-align: left; }
-.text-right { text-align: right; }
-
-// Color Utilities
+// ============================================
+// COLOR UTILITIES — no Bootstrap equivalent
+// (Bootstrap has .text-primary etc. but with different palette)
+// ============================================
 .text-gray-500 { color: var(--color-gray-500); }
 .text-gray-600 { color: var(--color-gray-600); }
 .text-gray-700 { color: var(--color-gray-700); }
 .text-gray-900 { color: var(--color-gray-900); }
-.text-primary { color: var(--color-primary); }
-.text-success { color: var(--color-success); }
-.text-danger { color: var(--color-danger); }
 
-// Background Utilities
-.bg-white { background-color: #fff; }
-.bg-gray-50 { background-color: var(--color-gray-50); }
+.bg-gray-50  { background-color: var(--color-gray-50); }
 .bg-gray-100 { background-color: var(--color-gray-100); }
-.bg-primary { background-color: var(--color-primary); }
 
-// Display Utilities
-.hidden { display: none !important; }
-.block { display: block; }
-.inline-block { display: inline-block; }
-.flex { display: flex; }
+// ============================================
+// DISPLAY — Tailwind-style aliases used in OCR views
+// (Bootstrap uses d-flex, d-grid etc.; migrate these over time)
+// ============================================
+.flex        { display: flex; }
 .inline-flex { display: inline-flex; }
-.grid { display: grid; }
+.grid        { display: grid; }
 
-// Flexbox Utilities
-.flex-row { flex-direction: row; }
-.flex-col { flex-direction: column; }
-.items-start { align-items: flex-start; }
-.items-center { align-items: center; }
-.items-end { align-items: flex-end; }
-.justify-start { justify-content: flex-start; }
-.justify-center { justify-content: center; }
-.justify-end { justify-content: flex-end; }
+// ============================================
+// FLEXBOX — Tailwind-style aliases (120+ view files)
+// Bootstrap equivalents: flex-column, align-items-*, justify-content-*
+// Migrate views gradually; keep aliases until then.
+// ============================================
+.flex-row      { flex-direction: row; }
+.flex-col      { flex-direction: column; }
+.flex-1        { flex: 1; }
+.items-start   { align-items: flex-start; }
+.items-center  { align-items: center; }
+.items-end     { align-items: flex-end; }
+.justify-start   { justify-content: flex-start; }
+.justify-center  { justify-content: center; }
+.justify-end     { justify-content: flex-end; }
 .justify-between { justify-content: space-between; }
+
+// gap-* — Bootstrap 5 has .gap-1–5 but with different values for 3+.
+// These are used in 270+ places; keep custom values until layout is audited.
 .gap-1 { gap: var(--space-1); }
 .gap-2 { gap: var(--space-2); }
 .gap-3 { gap: var(--space-3); }
 .gap-4 { gap: var(--space-4); }
 .gap-6 { gap: var(--space-6); }
 
-// Border Utilities
-.border { border: 1px solid var(--color-gray-200); }
-.border-t { border-top: 1px solid var(--color-gray-200); }
-.border-b { border-bottom: 1px solid var(--color-gray-200); }
+// ============================================
+// BORDER RADIUS — custom values not in Bootstrap
+// (Bootstrap has .rounded-sm/.rounded-lg but different px values)
+// ============================================
 .rounded-none { border-radius: var(--radius-none); }
-.rounded-sm { border-radius: var(--radius-sm); }
-.rounded-md { border-radius: var(--radius-md); }
-.rounded-lg { border-radius: var(--radius-lg); }
-.rounded-xl { border-radius: var(--radius-xl); }
+.rounded-md   { border-radius: var(--radius-md); }
+.rounded-xl   { border-radius: var(--radius-xl); }
 .rounded-full { border-radius: var(--radius-full); }
 
-// Shadow Utilities
-.shadow-none { box-shadow: none; }
-.shadow-sm { box-shadow: var(--shadow-sm); }
+// ============================================
+// SHADOWS — Bootstrap doesn't have .shadow-md
+// ============================================
 .shadow-md { box-shadow: var(--shadow-md); }
-.shadow-lg { box-shadow: var(--shadow-lg); }
 
-// Width/Height Utilities
-.w-full { width: 100%; }
-.h-full { height: 100%; }
-.min-h-44 { min-height: 44px; }  // Touch-friendly minimum
+// ============================================
+// SIZING
+// ============================================
+.w-full  { width: 100%; }
+.h-full  { height: 100%; }
+.w-8     { width: 2rem; }
+.h-8     { height: 2rem; }
+.w-12    { width: 3rem; }
+.h-12    { height: 3rem; }
+.min-h-44 { min-height: 44px; }  // WCAG touch target minimum
 
-// Cursor Utilities
-.cursor-pointer { cursor: pointer; }
+// ============================================
+// MISC
+// ============================================
+.cursor-pointer    { cursor: pointer; }
 .cursor-not-allowed { cursor: not-allowed; }
-
-// Transition Utilities
-.transition { transition: all var(--transition-base); }
+.transition      { transition: all var(--transition-base); }
 .transition-fast { transition: all var(--transition-fast); }
 .transition-slow { transition: all var(--transition-slow); }
+.text-white      { color: #fff; }
