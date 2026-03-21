@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class JwtService
-  SECRET_KEY = Rails.application.secret_key_base
+  SECRET_KEY = ENV.fetch('JWT_SECRET_KEY', Rails.application.secret_key_base)
   TOKEN_TTL = 1.hour
   DENYLIST_PREFIX = 'jwt_denied:'
 

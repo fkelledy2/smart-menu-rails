@@ -887,7 +887,6 @@ export function initOrderBindings() {
     const restaurantId = getRestaurantId();
     if (!restaurantId) { console.warn('[RemoveItem] Missing restaurant id; aborting'); return true; }
     patch(`/restaurants/${restaurantId}/ordritems/${ordrItemId}`, ordritem);
-    $('#confirm-order').click();
     return true;
   });
   } catch (e) { console.warn('[ordr_commons] Participant/locale/remove bindings failed (non-fatal):', e); }

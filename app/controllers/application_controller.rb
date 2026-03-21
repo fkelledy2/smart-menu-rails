@@ -315,8 +315,6 @@ class ApplicationController < ActionController::Base
 
     return if impersonating_user?
 
-    return if current_user&.email.to_s.downcase.end_with?('@mellow.menu')
-
     return if current_user&.admin? || current_user&.super_admin?
 
     return if current_user.has_active_employment?

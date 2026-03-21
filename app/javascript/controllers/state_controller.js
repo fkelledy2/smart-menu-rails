@@ -374,7 +374,10 @@ export default class extends Controller {
 
     // Sync cart bottom sheet counts and totals with state
     try {
-      const totalCount = Number(this.state.order?.totalCount || 0) - Number(this.state.order?.removedCount || 0);
+      const stateItems = Array.isArray(this.state.order?.items) ? this.state.order.items : [];
+      const totalCount = stateItems.length > 0
+        ? stateItems.filter(i => i.status !== 'removed').reduce((sum, i) => sum + (Number(i.quantity) || 1), 0)
+        : Number(this.state.order?.totalCount || 0) - Number(this.state.order?.removedCount || 0);
       const countEl = document.getElementById('cartItemCount');
       if (countEl) { countEl.textContent = totalCount; }
 

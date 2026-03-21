@@ -1,45 +1,31 @@
   <% if menu.persisted? %>
-    <div class="row mb-3">
-      <div class="col-12">
-          <div class="float-end">
-            <div class="btn-group" role="group">
-              <div style='display:none'>
-                  <%= button_to 'Optimise Images', regenerate_images_restaurant_menu_path(@restaurant || @menu.restaurant, @menu), method: :post, class: 'btn btn-outline-secondary btn-sm', data: { turbo: false, confirm: 'Regenerate WebP derivatives for existing images?' }, title: 'Regenerate WebP derivatives for existing menu item images' %>
-              </div>
-              <%= button_to regenerate_images_restaurant_menu_path(@restaurant || @menu.restaurant, @menu, generate_ai: true), method: :post, class: 'btn btn-outline-secondary btn-sm', data: { turbo: false }, form: { data: { turbo: false, ai_generate: true, menu_id: @menu.id } }, title: 'Generate new AI images for menu items using DALL-E' do %>
-                <i class="bi bi-stars"></i> Generate Images
-              <% end %>
-            </div>
-          </div>
+    <div class="mb-3 d-flex justify-content-end">
+      <div class="btn-group" role="group">
+        <%= button_to regenerate_images_restaurant_menu_path(@restaurant || @menu.restaurant, @menu, generate_ai: true), method: :post, class: 'btn btn-outline-secondary btn-sm', data: { turbo: false }, form: { data: { turbo: false, ai_generate: true, menu_id: @menu.id } }, title: 'Generate new AI images for menu items using DALL-E' do %>
+          <i class="bi bi-stars"></i> Generate Images
+        <% end %>
       </div>
-  </div>
+    </div>
   <% end %>
 <%= menu_form_with(menu, auto_save: true, validate: true) do |form| %>
-  <div class="form-group row">
-    <div class="col-12">
-        <div class="row">
-            <div class="col-12">
-                <h4>
-                    <%= t(".details") %>
-                    <% if menu.id %>
-                    <span class="float-end">
-                      <% if @menu.smartmenu&.slug %>
-                        <%= link_to smartmenu_path(@menu.smartmenu.slug), class: 'btn btn-outline-secondary btn-sm', target: '_blank' do %>
-                          <i class="bi bi-eye-fill"></i> Preview
-                        <% end %>
-                      <% else %>
-                        <button type="button" class="btn btn-outline-secondary btn-sm" disabled>
-                          <i class="bi bi-eye-fill"></i> Preview
-                        </button>
-                      <% end %>
-                    </span>
-                    <% end %>
-                </h4>
-            </div>
-        </div>
-    </div>
-  </div>
-  <div class="form-group row">
+  <h4 class="mb-3">
+    <%= t(".details") %>
+    <% if menu.id %>
+      <span class="float-end">
+        <% if @menu.smartmenu&.slug %>
+          <%= link_to smartmenu_path(@menu.smartmenu.slug), class: 'btn btn-outline-secondary btn-sm', target: '_blank' do %>
+            <i class="bi bi-eye-fill"></i> Preview
+          <% end %>
+        <% else %>
+          <button type="button" class="btn btn-outline-secondary btn-sm" disabled>
+            <i class="bi bi-eye-fill"></i> Preview
+          </button>
+        <% end %>
+      </span>
+    <% end %>
+  </h4>
+
+  <div class="form-group row mb-2">
     <div class="col-3">
       <span class="float-md-end"><%= form.label :name, class: 'col-form-label' %></span>
     </div>
@@ -47,8 +33,7 @@
       <%= form.text_field :name, class: 'form-control' %>
     </div>
   </div>
-  <div class="spacing-sm"></div>
-  <div class="form-group row">
+  <div class="form-group row mb-2">
     <div class="col-3">
       <span class="float-md-end"><%= form.label :description, class: 'col-form-label' %></span>
     </div>
@@ -57,14 +42,9 @@
     </div>
   </div>
 
-  <div class="form-group row">
-    <div class="col-12">
-        <p>
-        <h4><%= t(".pdfSettings") %></h4>
-    </div>
-  </div>
-  <div class="spacing-md"></div>
-  <div class="form-group row">
+  <h4 class="mt-3 mb-3"><%= t(".pdfSettings") %></h4>
+
+  <div class="form-group row mb-2">
     <div class="col-3">
       <span class="float-md-end"><%= form.label :pdf_menu_scan, class: 'col-form-label' %></span>
     </div>
@@ -82,37 +62,26 @@
     </div>
   </div>
 
-  <div class="form-group row">
-    <div class="col-12">
-        <p>
-        <h4><%= t(".imageSettings") %></h4>
-    </div>
-  </div>
-  <div class="form-group row">
+  <h4 class="mt-3 mb-3"><%= t(".imageSettings") %></h4>
+
+  <div class="form-group row mb-2">
     <div class="col-3">
       <span class="float-md-end"><%= form.label :image, class: 'col-form-label' %></span>
     </div>
     <div class="col-9">
       <div class="row">
-            <div class="col-10">
-              <%= form.hidden_field :image, value: form.object.cached_image_data, id: nil %>
-              <%= form.file_field :image, class: 'form-control' %>
-            </div>
-            <div class="col-2">
-              <span class="position-relative-top-neg5 float-md-end"><i class="bi bi-trash"></i> <%= form.check_box :remove_image %></span>
-            </div>
+        <div class="col-10">
+          <%= form.hidden_field :image, value: form.object.cached_image_data, id: nil %>
+          <%= form.file_field :image, class: 'form-control' %>
+        </div>
+        <div class="col-2">
+          <span class="position-relative float-md-end"><i class="bi bi-trash"></i> <%= form.check_box :remove_image %></span>
+        </div>
       </div>
+      <%= image_tag menu.image_url, class: "img-thumbnail rounded mx-auto d-block mt-2" if menu.image %>
     </div>
   </div>
-  <div class="form-group row">
-    <div class="col-3">
-    </div>
-    <div class="col-9">
-      <%= image_tag menu.image_url, :class => "img-thumbnail rounded mx-auto d-block" if menu.image %>
-    </div>
-  </div>
-  <div class="spacing-sm"></div>
-  <div class="form-group row">
+  <div class="form-group row mb-2">
     <div class="col-3">
       <span class="float-md-end"><%= form.label :imagecontext, class: 'col-form-label' %></span>
     </div>
@@ -121,15 +90,9 @@
     </div>
   </div>
 
-  <div class="spacing-sm"></div>
-  <div class="form-group row">
-    <div class="col-12">
-      <h4><%= t(".settings") %></h4>
-    </div>
-  </div>
-  <div class="spacing-sm"></div>
-  
-  <div class="form-group row">
+  <h4 class="mt-3 mb-3"><%= t(".settings") %></h4>
+
+  <div class="form-group row mb-2">
     <div class="col-3">
       <span class="float-md-end"><%= form.label :displayImages, class: 'col-form-label' %></span>
     </div>
@@ -137,8 +100,7 @@
       <%= form.select :displayImages, [['On', true], ['Off', false]], { prompt: 'Select option...' }, { class: 'form-control', **select_data_attributes(:default) } %>
     </div>
   </div>
-  <div class="spacing-sm"></div>
-  <div class="form-group row">
+  <div class="form-group row mb-2">
     <div class="col-3">
       <span class="float-md-end"><%= form.label :displayImagesInPopup, class: 'col-form-label' %></span>
     </div>
@@ -146,7 +108,7 @@
       <%= form.select :displayImagesInPopup, [['On', true], ['Off', false]], { prompt: 'Select option...' }, { class: 'form-control', **select_data_attributes(:default) } %>
     </div>
   </div>
-  <div class="form-group row">
+  <div class="form-group row mb-2">
     <div class="col-3">
       <span class="float-md-end"><%= form.label :allowOrdering, class: 'col-form-label' %></span>
     </div>
@@ -154,7 +116,7 @@
       <%= form.select :allowOrdering, [['On', true], ['Off', false]], { prompt: 'Select option...' }, { class: 'form-control', **select_data_attributes(:default) } %>
     </div>
   </div>
-  <div class="form-group row">
+  <div class="form-group row mb-2">
     <div class="col-3">
       <span class="float-md-end"><%= form.label :inventoryTracking, class: 'col-form-label' %></span>
     </div>
@@ -162,8 +124,7 @@
       <%= form.select :inventoryTracking, [['On', true], ['Off', false]], { prompt: 'Select option...' }, { class: 'form-control', **select_data_attributes(:default) } %>
     </div>
   </div>
-  <div class="spacing-sm"></div>
-  <div class="form-group row">
+  <div class="form-group row mb-2">
     <div class="col-3">
       <span class="float-md-end"><%= form.label :covercharge, class: 'col-form-label' %></span>
     </div>
@@ -171,39 +132,32 @@
       <%= form.text_field :covercharge, class: 'form-control' %>
     </div>
   </div>
-  <div class="display-none">
+
   <% if @futureParentRestaurant %>
-      <%= form.hidden_field :restaurant_id, value: @futureParentRestaurant.id %>
+    <%= form.hidden_field :restaurant_id, value: @futureParentRestaurant.id %>
   <% else %>
-      <%= form.hidden_field :restaurant_id %>
+    <%= form.hidden_field :restaurant_id %>
   <% end %>
+
+  <div class="mt-3 d-flex justify-content-end gap-3">
+    <% if menu.persisted? %>
+      <%= link_to t('common.delete'), restaurant_menu_path(menu.restaurant, menu), method: :delete, class: "btn btn-outline-danger", data: { confirm: t('common.confirm') } %>
+    <% end %>
+    <%= form.submit value: t('common.save'), class: 'btn btn-primary' %>
   </div>
-  <div class="spacing-md"></div>
-  <div class="row">
-    <div class="col-3">
-    </div>
-    <div class="col-9">
-        <div class="d-flex justify-content-end gap-3">
-        <% if menu.persisted? %>
-          <%= link_to t('common.delete'), restaurant_menu_path(menu.restaurant, menu), method: :delete, class: "btn btn-outline-danger", data: { confirm: t('common.confirm') } %>
-        <% end %>
-        <%= form.submit value: t('common.save'), class: 'btn btn-primary' %>
-        </div>
-    </div>
-  </div>
-  <div class="spacing-sm"></div>
+
   <% if menu.errors.any? %>
-    <div class="row">
-    <div class="col-3">
-      <span class="float-md-end"><%= t('common.errors') %></span>
-    </div>
-    <div class="col-9">
-      <ul>
+    <div class="row mt-2">
+      <div class="col-3">
+        <span class="float-md-end"><%= t('common.errors') %></span>
+      </div>
+      <div class="col-9">
+        <ul>
           <% menu.errors.full_messages.each do |message| %>
             <li><%= message %></li>
           <% end %>
-      </ul>
+        </ul>
+      </div>
     </div>
-  </div>
   <% end %>
 <% end %>

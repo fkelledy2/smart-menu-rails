@@ -10,8 +10,9 @@ Rails.application.configure do
     policy.font_src    :self, :https, :data
     policy.img_src     :self, :https, :data, :blob
     policy.object_src  :none
-    # unsafe_eval removed. unsafe_inline retained pending migration of remaining
-    # inline scripts to Stimulus controllers — track in improvements.md #8.
+    # unsafe_inline retained: ~30 inline <script> blocks across views require nonce
+    # migration before this can be removed. Nonce infrastructure is enabled below.
+    # See docs/pentest_remediation.md Finding 3 for the full migration plan.
     policy.script_src  :self, :unsafe_inline, :https
     policy.style_src   :self, :unsafe_inline, :https
     policy.connect_src :self, :https, 'wss:', 'ws:'
@@ -26,4 +27,10 @@ Rails.application.configure do
 
   # Enforced — policy is active, not report-only.
   config.content_security_policy_report_only = false
+
+  # Nonce generation — Rails injects a unique per-request nonce into script tags
+  # that include nonce: content_security_policy_nonce. Once all inline <script>
+  # blocks have been migrated to use nonces, :unsafe_inline can be removed above.
+  config.content_security_policy_nonce_generator = ->(_request) { SecureRandom.base64(16) }
+  config.content_security_policy_nonce_directives = %w[script-src]
 end

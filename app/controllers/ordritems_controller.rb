@@ -414,20 +414,22 @@ class OrdritemsController < ApplicationController
   end
 
   def find_or_create_participant(ordr)
+    # Use the same session ID priority as validate_guest_ordritem_ownership
+    sid = session[:sid].presence || session.id.to_s
     if current_user && @current_employee
       Ordrparticipant.where(ordr: ordr, employee: @current_employee, role: 1,
-                            sessionid: session.id.to_s,).first_or_create do |participant|
+                            sessionid: sid).first_or_create do |participant|
         participant.ordr = ordr
         participant.employee = @current_employee
         participant.role = 1
-        participant.sessionid = session.id.to_s
+        participant.sessionid = sid
       end
     else
       # For anonymous users or users without employee record
-      Ordrparticipant.where(ordr: ordr, role: 0, sessionid: session.id.to_s).first_or_create do |participant|
+      Ordrparticipant.where(ordr: ordr, role: 0, sessionid: sid).first_or_create do |participant|
         participant.ordr = ordr
         participant.role = 0
-        participant.sessionid = session.id.to_s
+        participant.sessionid = sid
       end
     end
   end

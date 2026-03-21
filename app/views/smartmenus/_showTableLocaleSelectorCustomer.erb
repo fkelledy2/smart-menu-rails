@@ -36,7 +36,7 @@
                 <% selected_locale = I18n.default_locale.to_s %>
             <% end %>
         <% end %>
-        <div class="btn-group position-relative z-index-10000" role="group">
+        <div class="btn-group position-relative" role="group">
             <button id="lovale-actions" type="button" class="btn-touch-dark btn-touch-sm dropdown-toggle br-0-0-8-8 min-w-60" data-bs-toggle="dropdown" aria-expanded="false">
                     <% selected_locale_obj = selected_locale ? active_locales.find { |rl| rl.locale.to_s.downcase == selected_locale } : nil %>
                     <% if selected_locale_obj %>
@@ -45,7 +45,7 @@
                         <i class="bi bi-translate"></i>
                     <% end %>
             </button>
-            <ul class="dropdown-menu dropdown-menu-dark dropdown-padding-y-05 dropdown-min-w-0 z-index-10000" aria-labelledby="locales">
+            <ul class="dropdown-menu dropdown-menu-dark dropdown-padding-y-05 dropdown-min-w-0" aria-labelledby="locales">
                 <% active_locales.each do |restaurantlocale| %>
                     <li>
                         <a class="dropdown-item min-h-44 d-flex align-items-center py-2 px-3" href="#">

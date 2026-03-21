@@ -29,12 +29,16 @@ class Api::V1::OrdersController < Api::V1::BaseController
   # POST /api/v1/restaurants/:restaurant_id/orders
   def create
     @order = @restaurant.ordrs.build(order_params)
+    authorize @order
 
     if @order.save
       # Create order items
       if params[:items].present?
         params[:items].each do |item_params|
-          menu_item = Menuitem.find(item_params[:menu_item_id])
+          menu_item = Menuitem
+            .joins(menusection: :menu)
+            .where(menus: { restaurant_id: @restaurant.id })
+            .find(item_params[:menu_item_id])
           @order.ordritems.create!(
             menuitem: menu_item,
             quantity: item_params[:quantity],

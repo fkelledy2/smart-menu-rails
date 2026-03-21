@@ -21,7 +21,9 @@
     </div>
 
     <div class="guide-content mb-5">
-      <%= @guide.content.html_safe %>
+      <%= sanitize @guide.content,
+            tags: %w[p br strong em b i ul ol li h2 h3 h4 blockquote a img table thead tbody tr th td],
+            attributes: %w[class href src alt title target rel] %>
     </div>
 
     <% if @guide.faq_data.present? && @guide.faq_data.any? %>

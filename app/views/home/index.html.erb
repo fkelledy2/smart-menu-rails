@@ -4,26 +4,9 @@
         width: 4px;
         border: 1px solid #d5d5d5;
     }
-    .form-control:disabled {
-        background-color: #fafafa;
-        opacity: 1;
-    }
-    .tabulator-row-odd {
-        background-color: #ffffff !important;
-    }
+    .tabulator-row-odd,
     .tabulator-row-even {
         background-color: #ffffff !important;
-    }
-    .disabled .ts-control {
-        opacity: 1.0;
-        background-color: #fafafa;
-    }
-    .ts-dropdown, .ts-control, .ts-control input {
-        border: 0px;
-        color: #000000;
-        padding-left:12px;
-        font-size: 16px;
-        line-height: 18px;
     }
 </style>
 
@@ -378,23 +361,23 @@
   </div>
 
   <% if @demoMenu %>
-    <span class="display-none" id="qrIcon"><%= image_url('qr-icon.svg') %></span>
-    <span class="display-none" id="qrHost"><%= @qrHost %></span>
+    <span class="d-none" id="qrIcon"><%= image_url('qr-icon.svg') %></span>
+    <span class="d-none" id="qrHost"><%= @qrHost %></span>
     <div class="">
       <div id="demo-table" class="demo-hero" style="--demo-bg: url('<%= image_path('smart-menu-demo.png') %>');">
-        <span class="display-none qrSlug" data-qr-size="200"><%= @demoMenu.slug %></span>
+        <span class="d-none qrSlug" data-qr-size="200"><%= @demoMenu.slug %></span>
         <div class="container px-3 px-md-1">
           <div class="demo-hero-content">
             <h2 class="pb-2 border-bottom"><%= t(".demoMenu") %></h2>
             <div class="bunq-qr-card demo-hero-cta">
-              <h6 class="text-center-padded"><%= t(".demoMenuTag").html_safe %></h6>
+              <h6 class="text-center px-2"><%= t(".demoMenuTag").html_safe %></h6>
               <div class="d-flex justify-content-center">
                 <a href="<%= smartmenu_path(@demoMenu.slug) %>" target="_blank">
                   <div id="<%= @demoMenu.slug %>">
                   </div>
                 </a>
               </div>
-              <h6 class="text-center-padded"></h6>
+              <h6 class="text-center px-2"></h6>
               <h6 class="text-center">
                 <%= link_to t(".browse"), smartmenus_path, class: "btn btn-danger" %>
               </h6>
@@ -405,12 +388,12 @@
     </div>
   <% end %>
 
-  <div id="metrics-table" class="display-none container px-3 px-md-1 py-2">
+  <div id="metrics-table" class="d-none container px-3 px-md-1 py-2">
     <h2 class="pb-2 border-bottom"><%= t(".numbers") %></h2>
     <p class="text-justify"><%= t(".numbersTag") %></p>
     <div class="row g-4 py-5 row-cols-2 row-cols-2 row-cols-lg-4">
       <div class="col d-flex align-items-start">
-        <div class="card text-center width-full">
+        <div class="card text-center w-100">
           <div class="card-header">
             <h4 class="card-title"><%= t(".restaurants") %></h4>
           </div>
@@ -420,7 +403,7 @@
         </div>
       </div>
       <div class="col d-flex align-items-start">
-        <div class="card text-center width-full">
+        <div class="card text-center w-100">
           <div class="card-header">
             <h4 class="card-title"><%= t(".menus") %></h4>
           </div>
@@ -430,7 +413,7 @@
         </div>
       </div>
       <div class="col d-flex align-items-start">
-        <div class="card text-center width-full">
+        <div class="card text-center w-100">
           <div class="card-header">
             <h4 class="card-title"><%= t(".orders") %></h4>
           </div>
@@ -440,7 +423,7 @@
         </div>
       </div>
       <div class="col d-flex align-items-start">
-        <div class="card text-center width-full">
+        <div class="card text-center w-100">
           <div class="card-header">
             <h4 class="card-title"><%= t(".orderValue") %></h4>
           </div>
@@ -479,7 +462,7 @@
                         <h1 class="card-title pricing-card-title"><i class="bi bi-telephone-plus-fill"></i><small class="text-body-secondary fw-light"></small></h1>
                     <% end %>
                 </div>
-                <div class="display-none">
+                <div class="d-none">
                     <% if plan.pricePerYear %>
                         <h1 class="card-title pricing-card-title"><i class="bi bi-currency-dollar"></i><%= number_with_precision(plan.pricePerYear, precision: 0) %><small class="text-body-secondary fw-light">/yr</small></h1>
                     <% else %>
@@ -520,8 +503,8 @@
     </div>
   </div>
 
-   <h2 class="display-none pb-2"><%= t('.compare_plans') %></h2>
-   <div class="display-none table-responsive">
+   <h2 class="d-none pb-2"><%= t('.compare_plans') %></h2>
+   <div class="d-none table-responsive">
       <table class="table text-center">
         <thead>
           <tr>

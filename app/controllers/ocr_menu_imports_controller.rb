@@ -6,7 +6,6 @@ class OcrMenuImportsController < ApplicationController
   skip_before_action :set_current_employee, only: %i[reorder_sections reorder_items]
   skip_before_action :set_permissions, only: %i[reorder_sections reorder_items]
   skip_before_action :redirect_to_onboarding_if_needed, only: %i[reorder_sections reorder_items]
-  skip_forgery_protection only: %i[reorder_sections reorder_items]
   before_action :set_restaurant
   before_action :set_ocr_menu_import,
                 only: %i[show edit update destroy process_pdf cancel_processing progress confirm_import reorder_sections reorder_items toggle_section_confirmation

@@ -6,7 +6,8 @@ class Api::V1::RestaurantsController < Api::V1::BaseController
 
   # GET /api/v1/restaurants
   def index
-    @pagy, @restaurants = pagy(Restaurant.includes(:user))
+    authorize Restaurant, :index?
+    @pagy, @restaurants = pagy(current_user.restaurants)
 
     render json: {
       data: @restaurants.map { |restaurant| restaurant_json(restaurant) },

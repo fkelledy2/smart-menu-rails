@@ -203,11 +203,11 @@ class Ordr < ApplicationRecord
 
   def addedCount
     if association(:ordritems).loaded?
-      ordritems.count { |item| item.status.to_s == 'opened' }
+      ordritems.select { |item| item.status.to_s == 'opened' }.sum(&:quantity)
     elsif association(:ordractions).loaded?
-      ordractions.filter_map(&:ordritem).count { |item| item.status.to_s == 'opened' }
+      ordractions.filter_map(&:ordritem).select { |item| item.status.to_s == 'opened' }.sum(&:quantity)
     else
-      ordractions.joins(:ordritem).where(ordritems: { status: 0 }).count
+      ordritems.where(status: 0).sum(:quantity)
     end
   end
 

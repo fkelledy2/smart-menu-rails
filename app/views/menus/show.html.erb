@@ -33,7 +33,7 @@
                                     <% end %>
                                 <% end %>
                                 <% if @tablesetting %>
-                                    <span class="display-none" id="orderUpdatedSpan" data-bs-delay={"hide":500} data-bs-toggle="tooltip" data-bs-placement="left" title="<%= t('.order_updated') %>">
+                                    <span class="d-none" id="orderUpdatedSpan" data-bs-delay={"hide":500} data-bs-toggle="tooltip" data-bs-placement="left" title="<%= t('.order_updated') %>">
                                         <button id="orderUpdatedButton" type="button" class="btn btn-sm btn-danger">
                                             <i class="bi bi-arrow-clockwise"></i>
                                         </button>
@@ -120,8 +120,8 @@
             </div>
         </div>
         <div class="height-40" class="container-fluid">
-            <nav id="navbar-example2" class="position-relative-left-neg10 nav flex-nowrap overflow-auto">
-              <ul class="position-relative-left-neg37 d-flex">
+            <nav id="navbar-example2" class="position-relative nav flex-nowrap overflow-auto">
+              <ul class="position-relative d-flex">
                 <% @menu.menusections.order(:sequence).each do |menusection| %>
                       <a class="m-1 sectionnav btn btn-sm btn-outline-secondary text-nowrap" href="#menusection_<%= menusection.id %>"><%= menusection.name %></a>
                 <% end %>
@@ -165,7 +165,7 @@
                                         <span class="visually-hidden"><%= t('.loading') %></span>
                                       </div>
                                     </div>
-                                  <img class="img-thumbnail card-img-bottom display-none" onload="fadeIn(this)" src="<%= menuitem.image_url %>" alt="<%= menuitem.name %>">
+                                  <img class="img-thumbnail card-img-bottom d-none" onload="fadeIn(this)" src="<%= menuitem.image_url %>" alt="<%= menuitem.name %>">
                                 </div>
                             <% end %>
                           <% end %>

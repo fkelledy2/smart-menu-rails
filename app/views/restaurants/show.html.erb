@@ -1,4 +1,3 @@
-<%= render 'shared/customcss' %>
 <div class="page-header">
   <div class="row">
     <div class="col-10">
@@ -63,7 +62,7 @@
                   <%= form.text_field :name, class: 'form-control', disabled: true %>
                 </div>
               </div>
-              <div class="spacing-sm"></div>
+              <div class="mb-2"></div>
               <div class="form-group row">
                 <div class="col-3">
                     <span class="float-md-end"><%= form.label :description, class: 'col-form-label' %> :</span>
@@ -72,7 +71,7 @@
                   <%= form.text_area :description, class: 'form-control', rows: 6, disabled: true %>
                 </div>
               </div>
-              <div class="spacing-sm"></div>
+              <div class="mb-2"></div>
               <div class="form-group row">
                 <div class="col-3">
                     <span class="float-md-end"><%= form.label :currency, class: 'col-form-label' %> :</span>
@@ -89,7 +88,7 @@
                     <h4><%= t(".address") %></h4>
                 </div>
               </div>
-              <div class="spacing-sm"></div>
+              <div class="mb-2"></div>
               <div class="form-group row">
                 <div class="col-sm-3">
                 </div>
@@ -107,7 +106,7 @@
                     <%= form.text_field :address1, class: 'form-control', disabled: true %>
                 </div>
               </div>
-              <div class="spacing-sm"></div>
+              <div class="mb-2"></div>
               <div class="form-group row">
                 <div class="col-sm-3">
                     <span class="float-md-end"><%= form.label :postcode, class: 'col-form-label' %> :</span>
@@ -116,7 +115,7 @@
                     <%= form.text_field :postcode, class: 'form-control', disabled: true %>
                 </div>
               </div>
-              <div class="spacing-sm"></div>
+              <div class="mb-2"></div>
               <div class="form-group row">
                 <div class="col-sm-3">
                     <span class="float-md-end"><%= form.label :country, class: 'col-form-label' %> :</span>
@@ -144,7 +143,7 @@
                     <% end %>
                 </div>
               </div>
-              <div class="spacing-sm"></div>
+              <div class="mb-2"></div>
               <div class="form-group row">
                 <div class="col-sm-3">
                     <span class="float-md-end"><%= form.label :genid, class: 'col-form-label' %> :</span>
@@ -169,7 +168,7 @@
                     <%= form.select :status, options_for_select(Restaurant.statuses.keys.to_a, form.object.status), {}, disabled: 'disabled' %>
                 </div>
               </div>
-              <div class="spacing-sm"></div>
+              <div class="mb-2"></div>
               <div class="form-group row">
                 <div class="col-sm-3">
                     <span class="float-md-end"><%= form.label :displayImages, class: 'col-form-label' %> :</span>
@@ -178,7 +177,7 @@
                   <%= form.select :displayImages, [[t('.switch_on'), true], [t('.switch_off'), false]], {}, disabled: 'disabled' %>
                 </div>
               </div>
-              <div class="spacing-sm"></div>
+              <div class="mb-2"></div>
               <div class="form-group row">
                 <div class="col-sm-3">
                     <span class="float-md-end"><%= form.label :allowOrdering, class: 'col-form-label' %> :</span>
@@ -187,7 +186,7 @@
                   <%= form.select :allowOrdering, [[t('.switch_on'), true], [t('.switch_off'), false]], {}, disabled: 'disabled' %>
                 </div>
               </div>
-              <div class="spacing-sm"></div>
+              <div class="mb-2"></div>
               <div class="form-group row">
                 <div class="col-sm-3">
                     <span class="float-md-end"><%= form.label :inventoryTracking, class: 'col-form-label' %> :</span>

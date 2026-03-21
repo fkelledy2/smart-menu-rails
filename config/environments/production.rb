@@ -30,9 +30,9 @@ Rails.application.configure do
   # Rake tasks automatically ignore this option for performance.
   config.eager_load = true
 
-  # Enable fragment caching and action caching for improved performance
+  # Enable fragment caching and action caching for improved performance.
+  # Cache store is configured in config/initializers/cache_store.rb (Redis).
   config.action_controller.perform_caching = true
-  config.cache_store = :memory_store
 
   # Cache configuration
   config.cache_classes = true
@@ -42,7 +42,7 @@ Rails.application.configure do
   config.require_master_key = true
 
   # Disable serving static files from `public/`, relying on NGINX/Apache to do so instead.
-  # config.public_file_server.enabled = false
+  config.public_file_server.enabled = ENV.fetch("RAILS_SERVE_STATIC_FILES", "true").present?
 
   # Disable CSS compression - SassC doesn't support modern CSS syntax (min/max with mixed units)
   config.assets.css_compressor = nil
