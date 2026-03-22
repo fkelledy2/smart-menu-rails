@@ -17,10 +17,10 @@
   color: #fff;
   font-size: 0.875rem;
   font-weight: 600;
-  box-shadow: 0 4px 14px rgb(99, 102, 241, 0.4);
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  &:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgb(99, 102, 241, 0.5); }
+  &:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5); }
   &:active { transform: translateY(0); }
   svg { flex-shrink: 0; }
 }
@@ -28,7 +28,7 @@
 
 .sommelier-panel {
   position: fixed; inset: 0; z-index: 1060;
-  background: rgb(0, 0, 0, 0.5); backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px);
   display: flex; align-items: flex-end; justify-content: center;
   animation: sommelier-fade-in 0.2s ease;
   @media (min-width: 768px) { align-items: center; }
@@ -38,7 +38,7 @@
   width: 100%; max-width: 480px; max-height: 90vh;
   display: flex; flex-direction: column; overflow: hidden;
   background: #fff; border-radius: 20px 20px 0 0;
-  box-shadow: 0 -4px 24px rgb(0, 0, 0, 0.12);
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.12);
   animation: sommelier-slide-up 0.3s ease;
   @media (min-width: 768px) { border-radius: 20px; max-height: 80vh; }
 }
@@ -103,7 +103,7 @@
 .sommelier-card {
   border: 1px solid #e2e8f0; border-radius: 16px; padding: 16px; background: #fff;
   transition: box-shadow 0.15s;
-  &:hover { box-shadow: 0 2px 12px rgb(0, 0, 0, 0.06); }
+  &:hover { box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06); }
 }
 .sommelier-card-header { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px; }
 .sommelier-medal { font-size: 1.5rem; flex-shrink: 0; }
@@ -162,7 +162,7 @@
 // Pairings modal
 .sommelier-modal-overlay {
   position: fixed; inset: 0; z-index: 1070;
-  background: rgb(0, 0, 0, 0.5); backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px);
   display: flex; align-items: center; justify-content: center;
   animation: sommelier-fade-in 0.2s ease;
 }
@@ -170,7 +170,7 @@
 .sommelier-modal {
   width: 90%; max-width: 440px; max-height: 80vh; overflow-y: auto;
   background: #fff; border-radius: 20px; padding: 24px;
-  box-shadow: 0 8px 32px rgb(0, 0, 0, 0.16);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.16);
 }
 
 .sommelier-modal-header {

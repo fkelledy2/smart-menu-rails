@@ -64,7 +64,7 @@
     border-color: var(--color-danger);
     
     &:focus {
-      box-shadow: 0 0 0 3px rgb(239, 68, 68, 0.1);
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
     }
   }
   
@@ -72,7 +72,7 @@
     border-color: var(--color-success);
     
     &:focus {
-      box-shadow: 0 0 0 3px rgb(16, 185, 129, 0.1);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
     }
   }
 }
@@ -81,10 +81,10 @@
   position: sticky;
   bottom: 0;
   z-index: var(--z-fixed);
-  background-color: rgb(255, 255, 255, 0.98);
+  background-color: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(8px);
   border-top: 1px solid var(--color-gray-200);
-  box-shadow: 0 -8px 20px rgb(0, 0, 0, 0.06);
+  box-shadow: 0 -8px 20px rgba(0, 0, 0, 0.06);
   padding: var(--space-3) 0;
   padding-bottom: calc(var(--space-3) + env(safe-area-inset-bottom));
 }

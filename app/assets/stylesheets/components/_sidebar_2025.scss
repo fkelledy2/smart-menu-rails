@@ -46,7 +46,7 @@
     display: block;
     position: fixed;
     inset: 0;
-    background: rgb(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.5);
     z-index: 1040;
     opacity: 0;
     pointer-events: none;
@@ -516,7 +516,7 @@
     z-index: 1030;
     background: #fff;
     border-top: 1px solid var(--color-gray-200);
-    box-shadow: 0 -2px 8px rgb(0, 0, 0, 0.08);
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.08);
     padding: var(--space-1) 0;
     padding-bottom: calc(var(--space-1) + env(safe-area-inset-bottom, 0px));
     justify-content: space-around;
@@ -609,7 +609,7 @@ turbo-frame#restaurant_content {
   border-top-right-radius: 0.75rem;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
-  box-shadow: 0 -8px 24px rgb(0, 0, 0, 0.2);
+  box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.2);
 }
 
 #aiProgressModal.modal.fade .modal-dialog {

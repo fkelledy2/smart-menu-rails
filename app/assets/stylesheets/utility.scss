@@ -5,5 +5,5 @@
 
 // Mask-image helper (no Bootstrap equivalent)
 .mask-gradient-right {
-  mask-image: linear-gradient(to right, #008080, rgb(0,32,32,0) 120%);
+  mask-image: linear-gradient(to right, #008080, rgba(0,32,32,0) 120%);
 }

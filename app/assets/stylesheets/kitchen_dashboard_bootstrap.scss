@@ -20,11 +20,11 @@
 
 @keyframes pulseGlow {
   0%, 100% {
-    box-shadow: 0 0 0 0 rgb(220, 53, 69, 0.7);
+    box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
   }
 
   50% {
-    box-shadow: 0 0 0 10px rgb(220, 53, 69, 0);
+    box-shadow: 0 0 0 10px rgba(220, 53, 69, 0);
   }
 }
 
@@ -80,7 +80,7 @@
     flex-shrink: 0;
     background: white;
     z-index: 10;
-    box-shadow: 0 -2px 4px rgb(0,0,0,0.05);
+    box-shadow: 0 -2px 4px rgba(0,0,0,0.05);
   }
 }
 
@@ -469,9 +469,9 @@
   }
 
   50% {
-    background-color: rgb(220, 38, 38, 0.1);
+    background-color: rgba(220, 38, 38, 0.1);
     border-color: var(--color-danger);
-    box-shadow: 0 0 0 3px rgb(220, 38, 38, 0.2);
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2);
   }
 }
 
@@ -600,9 +600,9 @@
       }
 
       50% {
-        background-color: rgb(220, 38, 38, 0.2);
+        background-color: rgba(220, 38, 38, 0.2);
         border-color: var(--color-danger);
-        box-shadow: 0 0 0 3px rgb(220, 38, 38, 0.3);
+        box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.3);
       }
     }
 
@@ -680,9 +680,9 @@
         }
 
         50% {
-          background-color: rgb(220, 38, 38, 0.2);
+          background-color: rgba(220, 38, 38, 0.2);
           border-color: var(--color-danger);
-          box-shadow: 0 0 0 3px rgb(220, 38, 38, 0.3);
+          box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.3);
         }
       }
 
