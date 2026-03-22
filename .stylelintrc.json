@@ -16,6 +16,8 @@
     "declaration-block-no-redundant-longhand-properties": null,
     "scss/at-import-partial-extension": null,
     "color-function-notation": "legacy",
-    "alpha-value-notation": "number"
+    "color-function-alias-notation": null,
+    "alpha-value-notation": "number",
+    "media-feature-range-notation": null
   }
 }

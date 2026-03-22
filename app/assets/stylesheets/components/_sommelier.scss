@@ -34,7 +34,7 @@
 .sommelier-fab-label {
   white-space: nowrap;
 
-  @media (width <= 380px) { display: none; }
+  @media (max-width: 380px) { display: none; }
 }
 
 .sommelier-panel {
@@ -43,7 +43,7 @@
   display: flex; align-items: flex-end; justify-content: center;
   animation: sommelier-fade-in 0.2s ease;
 
-  @media (width >= 768px) { align-items: center; }
+  @media (min-width: 768px) { align-items: center; }
 }
 
 .sommelier-panel-inner {
@@ -53,7 +53,7 @@
   box-shadow: 0 -4px 24px rgb(0, 0, 0, 0.12);
   animation: sommelier-slide-up 0.3s ease;
 
-  @media (width >= 768px) {
+  @media (min-width: 768px) {
     border-radius: 20px;
     max-height: 80vh;
   }
