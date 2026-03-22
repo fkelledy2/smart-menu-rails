@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'cgi'
 
 RSpec.describe 'Smartmenus tasting bundle rendering' do
   let(:restaurant) { create(:restaurant, country: 'US') }
@@ -49,8 +50,8 @@ RSpec.describe 'Smartmenus tasting bundle rendering' do
       body = response.body
       expect(body).to include('data-tasting-meta=')
       expect(body).to include('Add Tasting Menu')
-      # Ensure carrier id is present in the tasting metadata JSON
-      expect(body).to include("\"carrier_id\":#{carrier.id}")
+      # data-tasting-meta is HTML-attribute-encoded; unescape before checking JSON content
+      expect(CGI.unescapeHTML(body)).to include("\"carrier_id\":#{carrier.id}")
     end
   end
 

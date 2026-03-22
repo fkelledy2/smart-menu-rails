@@ -7,7 +7,9 @@ function fetchAndDispatchState() {
   try {
     const slug = document.body?.dataset?.smartmenuId;
     if (!slug) return;
-    fetch(`/smartmenus/${encodeURIComponent(slug)}.json`, { headers: { Accept: 'application/json' } })
+    fetch(`/smartmenus/${encodeURIComponent(slug)}.json`, {
+      headers: { Accept: 'application/json' },
+    })
       .then((r) => (r && r.ok ? r.json() : null))
       .then((payload) => {
         if (!payload) return;
@@ -18,13 +20,26 @@ function fetchAndDispatchState() {
 }
 
 export function post(url, body) {
-  try { $('#orderCart').hide(); } catch (_) {}
-  try { $('#orderCartSpinner').show(); } catch (_) {}
+  try {
+    $('#orderCart').hide();
+  } catch (_) {}
+  try {
+    $('#orderCartSpinner').show();
+  } catch (_) {}
 
   const csrfToken = document.querySelector("meta[name='csrf-token']")?.content || '';
-  const orderSource = (typeof window !== 'undefined' && window.__SM_ORDER_SOURCE) || document.body?.dataset?.orderSource || '';
+  const orderSource =
+    (typeof window !== 'undefined' && window.__SM_ORDER_SOURCE) ||
+    document.body?.dataset?.orderSource ||
+    '';
 
-  try { window.dispatchEvent(new CustomEvent('ordr:request:start', { detail: { method: 'POST', url, body, timestamp: Date.now() } })); } catch (_) {}
+  try {
+    window.dispatchEvent(
+      new CustomEvent('ordr:request:start', {
+        detail: { method: 'POST', url, body, timestamp: Date.now() },
+      })
+    );
+  } catch (_) {}
 
   return fetch(url, {
     method: 'POST',
@@ -41,37 +56,73 @@ export function post(url, body) {
       return response.json().catch(() => ({}));
     })
     .then((data) => {
-      try { $('#orderCartSpinner').hide(); } catch (_) {}
-      try { $('#orderCart').show(); } catch (_) {}
-      try { window.dispatchEvent(new CustomEvent('ordr:request:complete', { detail: { method: 'POST', url, status: 200, timestamp: Date.now() } })); } catch (_) {}
+      try {
+        $('#orderCartSpinner').hide();
+      } catch (_) {}
+      try {
+        $('#orderCart').show();
+      } catch (_) {}
+      try {
+        window.dispatchEvent(
+          new CustomEvent('ordr:request:complete', {
+            detail: { method: 'POST', url, status: 200, timestamp: Date.now() },
+          })
+        );
+      } catch (_) {}
       try {
         // If server returned JSON state or a state-like payload, forward it
-        const looksLikeState = data && (data.state || data.order || data.menuId || data.tableId || data.restaurant);
+        const looksLikeState =
+          data && (data.state || data.order || data.menuId || data.tableId || data.restaurant);
         if (looksLikeState) {
           const payload = data.state || data;
           document.dispatchEvent(new CustomEvent('state:update', { detail: payload }));
         }
         // Ensure state is updated for Start Order create and Add Item
-        if (/\/(ordrs|ordritems)(\/|$)/.test(url)) { fetchAndDispatchState(); }
+        if (/\/(ordrs|ordritems)(\/|$)/.test(url)) {
+          fetchAndDispatchState();
+        }
       } catch (_) {}
       return data;
     })
     .catch((error) => {
-      try { $('#orderCartSpinner').hide(); } catch (_) {}
-      try { $('#orderCart').show(); } catch (_) {}
-      try { window.dispatchEvent(new CustomEvent('ordr:request:error', { detail: { method: 'POST', url, error: String(error), timestamp: Date.now() } })); } catch (_) {}
+      try {
+        $('#orderCartSpinner').hide();
+      } catch (_) {}
+      try {
+        $('#orderCart').show();
+      } catch (_) {}
+      try {
+        window.dispatchEvent(
+          new CustomEvent('ordr:request:error', {
+            detail: { method: 'POST', url, error: String(error), timestamp: Date.now() },
+          })
+        );
+      } catch (_) {}
       throw error;
     });
 }
 
 export function patch(url, body) {
-  try { $('#orderCart').hide(); } catch (_) {}
-  try { $('#orderCartSpinner').show(); } catch (_) {}
+  try {
+    $('#orderCart').hide();
+  } catch (_) {}
+  try {
+    $('#orderCartSpinner').show();
+  } catch (_) {}
 
   const csrfToken = document.querySelector("meta[name='csrf-token']")?.content || '';
-  const orderSource = (typeof window !== 'undefined' && window.__SM_ORDER_SOURCE) || document.body?.dataset?.orderSource || '';
+  const orderSource =
+    (typeof window !== 'undefined' && window.__SM_ORDER_SOURCE) ||
+    document.body?.dataset?.orderSource ||
+    '';
 
-  try { window.dispatchEvent(new CustomEvent('ordr:request:start', { detail: { method: 'PATCH', url, body, timestamp: Date.now() } })); } catch (_) {}
+  try {
+    window.dispatchEvent(
+      new CustomEvent('ordr:request:start', {
+        detail: { method: 'PATCH', url, body, timestamp: Date.now() },
+      })
+    );
+  } catch (_) {}
 
   return fetch(url, {
     method: 'PATCH',
@@ -87,32 +138,66 @@ export function patch(url, body) {
       if (!response.ok) {
         // Attempt to read error payload for diagnostics
         let errPayload = null;
-        try { errPayload = await response.json(); } catch (_) { try { errPayload = await response.text(); } catch (_) {} }
-        console.error('[PATCH Error]', { url, status: response.status, body, response: errPayload });
+        try {
+          errPayload = await response.json();
+        } catch (_) {
+          try {
+            errPayload = await response.text();
+          } catch (_) {}
+        }
+        console.error('[PATCH Error]', {
+          url,
+          status: response.status,
+          body,
+          response: errPayload,
+        });
         throw new Error('Network response was not ok.');
       }
       return response.json().catch(() => ({}));
     })
     .then((data) => {
-      try { $('#orderCartSpinner').hide(); } catch (_) {}
-      try { $('#orderCart').show(); } catch (_) {}
-      try { window.dispatchEvent(new CustomEvent('ordr:request:complete', { detail: { method: 'PATCH', url, status: 200, timestamp: Date.now() } })); } catch (_) {}
+      try {
+        $('#orderCartSpinner').hide();
+      } catch (_) {}
+      try {
+        $('#orderCart').show();
+      } catch (_) {}
+      try {
+        window.dispatchEvent(
+          new CustomEvent('ordr:request:complete', {
+            detail: { method: 'PATCH', url, status: 200, timestamp: Date.now() },
+          })
+        );
+      } catch (_) {}
       try {
         // Forward JSON state if present
-        const looksLikeState = data && (data.state || data.order || data.menuId || data.tableId || data.restaurant);
+        const looksLikeState =
+          data && (data.state || data.order || data.menuId || data.tableId || data.restaurant);
         if (looksLikeState) {
           const payload = data.state || data;
           document.dispatchEvent(new CustomEvent('state:update', { detail: payload }));
         }
         // Also refetch state for safety on PATCH to ordrs/ordritems (status or items changes)
-        if (/\/(ordrs|ordritems)\//.test(url)) { fetchAndDispatchState(); }
+        if (/\/(ordrs|ordritems)\//.test(url)) {
+          fetchAndDispatchState();
+        }
       } catch (_) {}
       return data;
     })
     .catch((error) => {
-      try { $('#orderCartSpinner').hide(); } catch (_) {}
-      try { $('#orderCart').show(); } catch (_) {}
-      try { window.dispatchEvent(new CustomEvent('ordr:request:error', { detail: { method: 'PATCH', url, error: String(error), timestamp: Date.now() } })); } catch (_) {}
+      try {
+        $('#orderCartSpinner').hide();
+      } catch (_) {}
+      try {
+        $('#orderCart').show();
+      } catch (_) {}
+      try {
+        window.dispatchEvent(
+          new CustomEvent('ordr:request:error', {
+            detail: { method: 'PATCH', url, error: String(error), timestamp: Date.now() },
+          })
+        );
+      } catch (_) {}
       throw error;
     });
 }
@@ -218,7 +303,10 @@ function getCurrentOrderStatus() {
 
   // Fallback: legacy DOM nodes
   try {
-    const legacy = document.getElementById('currentOrderStatus')?.textContent?.trim()?.toLowerCase();
+    const legacy = document
+      .getElementById('currentOrderStatus')
+      ?.textContent?.trim()
+      ?.toLowerCase();
     if (legacy) return legacy;
   } catch (_) {}
 
@@ -235,8 +323,13 @@ export function initOrderBindings() {
       const header = document.querySelector('.header-order-row');
       if (!header) return;
       // If no state present yet, hide until we receive one
-      const hasState = !!(window.__SM_STATE && (window.__SM_STATE.order || window.__SM_STATE.flags));
-      if (!hasState) { header.style.visibility = 'hidden'; }
+      const hasState = !!(
+        window.__SM_STATE &&
+        (window.__SM_STATE.order || window.__SM_STATE.flags)
+      );
+      if (!hasState) {
+        header.style.visibility = 'hidden';
+      }
 
       // Debounced reveal when state includes an order status (stable)
       let t;
@@ -267,12 +360,16 @@ export function initOrderBindings() {
     searchInput.addEventListener('input', function () {
       const term = (searchInput.value || '').trim().toLowerCase();
       const cards = document.querySelectorAll('.menu-item-card');
-      if (!term) { cards.forEach((c) => (c.style.display = '')); return; }
+      if (!term) {
+        cards.forEach((c) => (c.style.display = ''));
+        return;
+      }
       cards.forEach((card) => {
         const name = card.getAttribute('data-name') || '';
         const desc = card.getAttribute('data-description') || '';
         const text = (card.textContent || '').toLowerCase();
-        card.style.display = (name.includes(term) || desc.includes(term) || text.includes(term)) ? '' : 'none';
+        card.style.display =
+          name.includes(term) || desc.includes(term) || text.includes(term) ? '' : 'none';
       });
     });
   })();
@@ -281,32 +378,45 @@ export function initOrderBindings() {
   (function bindOpenOrderModalOpen() {
     if (window.__openOrderModalOpenBound) return;
     window.__openOrderModalOpenBound = true;
-    document.addEventListener('click', (evt) => {
-      const target = evt.target instanceof Element ? evt.target : null;
-      if (!target) return;
-      const btn = target.closest && target.closest('[data-bs-target="#openOrderModal"][data-bs-toggle="modal"]');
-      if (!btn) return;
-      // Let Bootstrap attempt first; if it errors or target missing, fall back to manual show
-      const modalEl = document.getElementById('openOrderModal');
-      if (modalEl && window.bootstrap && window.bootstrap.Modal) {
-        try {
-          // Defer to next tick so Bootstrap's handler runs first; if not shown, show manually
-          setTimeout(() => {
-            let inst = window.bootstrap.Modal.getInstance(modalEl) || window.bootstrap.Modal.getOrCreateInstance(modalEl);
-            // If not visible, show it
-            const isShown = modalEl.classList.contains('show');
-            if (!isShown) {
-              try { inst.show(); } catch (_) { inst = window.bootstrap.Modal.getOrCreateInstance(modalEl); inst.show(); }
-            }
-          }, 0);
-        } catch (_) {
-          evt.preventDefault();
-          evt.stopPropagation();
-          const inst = window.bootstrap.Modal.getOrCreateInstance(modalEl);
-          inst.show();
+    document.addEventListener(
+      'click',
+      (evt) => {
+        const target = evt.target instanceof Element ? evt.target : null;
+        if (!target) return;
+        const btn =
+          target.closest &&
+          target.closest('[data-bs-target="#openOrderModal"][data-bs-toggle="modal"]');
+        if (!btn) return;
+        // Let Bootstrap attempt first; if it errors or target missing, fall back to manual show
+        const modalEl = document.getElementById('openOrderModal');
+        if (modalEl && window.bootstrap && window.bootstrap.Modal) {
+          try {
+            // Defer to next tick so Bootstrap's handler runs first; if not shown, show manually
+            setTimeout(() => {
+              let inst =
+                window.bootstrap.Modal.getInstance(modalEl) ||
+                window.bootstrap.Modal.getOrCreateInstance(modalEl);
+              // If not visible, show it
+              const isShown = modalEl.classList.contains('show');
+              if (!isShown) {
+                try {
+                  inst.show();
+                } catch (_) {
+                  inst = window.bootstrap.Modal.getOrCreateInstance(modalEl);
+                  inst.show();
+                }
+              }
+            }, 0);
+          } catch (_) {
+            evt.preventDefault();
+            evt.stopPropagation();
+            const inst = window.bootstrap.Modal.getOrCreateInstance(modalEl);
+            inst.show();
+          }
         }
-      }
-    }, true);
+      },
+      true
+    );
   })();
 
   // Header CTA visibility is managed by Stimulus state controller
@@ -339,31 +449,51 @@ export function initOrderBindings() {
       }
     }
 
-    document.addEventListener('click', (evt) => {
-      const target = evt.target instanceof Element ? evt.target : null;
-      if (!target) return;
-      if (target.closest('#a2o_qty_incr')) {
-        evt.preventDefault(); evt.stopPropagation();
-        if (modalQty < 99) { modalQty++; updateModalQtyDisplay(); }
-      } else if (target.closest('#a2o_qty_decr')) {
-        evt.preventDefault(); evt.stopPropagation();
-        if (modalQty > 1) { modalQty--; updateModalQtyDisplay(); }
-      }
-    }, true);
+    document.addEventListener(
+      'click',
+      (evt) => {
+        const target = evt.target instanceof Element ? evt.target : null;
+        if (!target) return;
+        if (target.closest('#a2o_qty_incr')) {
+          evt.preventDefault();
+          evt.stopPropagation();
+          if (modalQty < 99) {
+            modalQty++;
+            updateModalQtyDisplay();
+          }
+        } else if (target.closest('#a2o_qty_decr')) {
+          evt.preventDefault();
+          evt.stopPropagation();
+          if (modalQty > 1) {
+            modalQty--;
+            updateModalQtyDisplay();
+          }
+        }
+      },
+      true
+    );
 
-    document.addEventListener('input', (evt) => {
-      const target = evt.target instanceof Element ? evt.target : null;
-      if (!target || !target.matches('#a2o_qty_input')) return;
-      modalQty = clampModalQty(target.value);
-      updateModalQtyDisplay();
-    }, true);
+    document.addEventListener(
+      'input',
+      (evt) => {
+        const target = evt.target instanceof Element ? evt.target : null;
+        if (!target || !target.matches('#a2o_qty_input')) return;
+        modalQty = clampModalQty(target.value);
+        updateModalQtyDisplay();
+      },
+      true
+    );
 
-    document.addEventListener('change', (evt) => {
-      const target = evt.target instanceof Element ? evt.target : null;
-      if (!target || !target.matches('#a2o_qty_input')) return;
-      modalQty = clampModalQty(target.value);
-      updateModalQtyDisplay();
-    }, true);
+    document.addEventListener(
+      'change',
+      (evt) => {
+        const target = evt.target instanceof Element ? evt.target : null;
+        if (!target || !target.matches('#a2o_qty_input')) return;
+        modalQty = clampModalQty(target.value);
+        updateModalQtyDisplay();
+      },
+      true
+    );
 
     // Reset qty when the add-item modal opens
     const addModal = document.getElementById('addItemToOrderModal');
@@ -379,65 +509,107 @@ export function initOrderBindings() {
   (function bindAddItemCapture() {
     if (window.__addItemCaptureBound) return;
     window.__addItemCaptureBound = true;
-    document.addEventListener('click', (evt) => {
-      const target = evt.target instanceof Element ? evt.target : null;
-      if (!target) return;
-      const btn = target.closest && target.closest('#addItemToOrderButton');
-      if (!btn || btn.hasAttribute('disabled')) return;
-      const addModalEl = document.getElementById('addItemToOrderModal');
-      if (addModalEl?.dataset?.tasting === 'true') return; // let tasting flow handle
-      evt.stopPropagation();
-      if (evt.stopImmediatePropagation) try { evt.stopImmediatePropagation(); } catch (_) {}
-      evt.preventDefault();
+    document.addEventListener(
+      'click',
+      (evt) => {
+        const target = evt.target instanceof Element ? evt.target : null;
+        if (!target) return;
+        const btn = target.closest && target.closest('#addItemToOrderButton');
+        if (!btn || btn.hasAttribute('disabled')) return;
+        const addModalEl = document.getElementById('addItemToOrderModal');
+        if (addModalEl?.dataset?.tasting === 'true') return; // let tasting flow handle
+        evt.stopPropagation();
+        if (evt.stopImmediatePropagation)
+          try {
+            evt.stopImmediatePropagation();
+          } catch (_) {}
+        evt.preventDefault();
 
-      // Require active order
-      const currentOrderId = getCurrentOrderId();
-      const currentStatus = getCurrentOrderStatus();
-      const canAdd = !!currentOrderId && !!currentStatus && currentStatus !== 'billrequested' && currentStatus !== 'closed';
-      if (!canAdd) {
-        // Close add modal and open Start Order
-        if (addModalEl && window.bootstrap && window.bootstrap.Modal) {
-          const addInst = window.bootstrap.Modal.getInstance(addModalEl) || window.bootstrap.Modal.getOrCreateInstance(addModalEl);
-          addInst.hide();
-        }
-        // Prefer bottom sheet for customers; fall back to modal for staff
-        const sheet = document.getElementById('cartBottomSheet');
-        const startSection = document.getElementById('cartStartOrderSection');
-        if (sheet && startSection) {
-          const app = window.Stimulus || document.querySelector('[data-controller~="bottom-sheet"]')?.__stimulusApplication;
-          let ctrl = null;
-          try { ctrl = Stimulus.getControllerForElementAndIdentifier(sheet, 'bottom-sheet'); } catch (_) {}
-          if (!ctrl) try { ctrl = window.Stimulus?.application?.getControllerForElementAndIdentifier(sheet, 'bottom-sheet'); } catch (_) {}
-          if (ctrl) { ctrl.setState('full'); }
-          else { sheet.style.transform = 'translateY(0)'; }
-        } else {
-          const openOrderModal = document.getElementById('openOrderModal');
-          if (openOrderModal && window.bootstrap && window.bootstrap.Modal) {
-            const openInst = window.bootstrap.Modal.getInstance(openOrderModal) || window.bootstrap.Modal.getOrCreateInstance(openOrderModal);
-            openInst.show();
+        // Require active order
+        const currentOrderId = getCurrentOrderId();
+        const currentStatus = getCurrentOrderStatus();
+        const canAdd =
+          !!currentOrderId &&
+          !!currentStatus &&
+          currentStatus !== 'billrequested' &&
+          currentStatus !== 'closed';
+        if (!canAdd) {
+          // Close add modal and open Start Order
+          if (addModalEl && window.bootstrap && window.bootstrap.Modal) {
+            const addInst =
+              window.bootstrap.Modal.getInstance(addModalEl) ||
+              window.bootstrap.Modal.getOrCreateInstance(addModalEl);
+            addInst.hide();
           }
+          // Prefer bottom sheet for customers; fall back to modal for staff
+          const sheet = document.getElementById('cartBottomSheet');
+          const startSection = document.getElementById('cartStartOrderSection');
+          if (sheet && startSection) {
+            const app =
+              window.Stimulus ||
+              document.querySelector('[data-controller~="bottom-sheet"]')?.__stimulusApplication;
+            let ctrl = null;
+            try {
+              ctrl = Stimulus.getControllerForElementAndIdentifier(sheet, 'bottom-sheet');
+            } catch (_) {}
+            if (!ctrl)
+              try {
+                ctrl = window.Stimulus?.application?.getControllerForElementAndIdentifier(
+                  sheet,
+                  'bottom-sheet'
+                );
+              } catch (_) {}
+            if (ctrl) {
+              ctrl.setState('full');
+            } else {
+              sheet.style.transform = 'translateY(0)';
+            }
+          } else {
+            const openOrderModal = document.getElementById('openOrderModal');
+            if (openOrderModal && window.bootstrap && window.bootstrap.Modal) {
+              const openInst =
+                window.bootstrap.Modal.getInstance(openOrderModal) ||
+                window.bootstrap.Modal.getOrCreateInstance(openOrderModal);
+              openInst.show();
+            }
+          }
+          return;
         }
-        return;
-      }
 
-      const ordrId = document.getElementById('a2o_ordr_id')?.textContent?.trim() || currentOrderId;
-      const menuitemId = document.getElementById('a2o_menuitem_id')?.textContent?.trim();
-      const priceEl = document.getElementById('a2o_menuitem_price');
-      const price = priceEl?.dataset?.unitPrice || priceEl?.textContent?.trim();
-      const sizeName = document.getElementById('a2o_size_name')?.textContent?.trim() || null;
-      const itemNote = document.getElementById('a2o_item_note')?.value?.trim() || null;
-      const restaurantId = getRestaurantId();
-      if (!ordrId || !menuitemId || !restaurantId) { console.error('[AddItem][capture] Missing data'); return; }
+        const ordrId =
+          document.getElementById('a2o_ordr_id')?.textContent?.trim() || currentOrderId;
+        const menuitemId = document.getElementById('a2o_menuitem_id')?.textContent?.trim();
+        const priceEl = document.getElementById('a2o_menuitem_price');
+        const price = priceEl?.dataset?.unitPrice || priceEl?.textContent?.trim();
+        const sizeName = document.getElementById('a2o_size_name')?.textContent?.trim() || null;
+        const itemNote = document.getElementById('a2o_item_note')?.value?.trim() || null;
+        const restaurantId = getRestaurantId();
+        if (!ordrId || !menuitemId || !restaurantId) {
+          console.error('[AddItem][capture] Missing data');
+          return;
+        }
 
-      // Quick-add: respect quantity set by quick_add_controller
-      const qty = Math.max(1, Math.min(99, parseInt(window.__quickAddQty) || 1));
-      window.__quickAddQty = 1;
+        // Quick-add: respect quantity set by quick_add_controller
+        const qty = Math.max(1, Math.min(99, parseInt(window.__quickAddQty) || 1));
+        window.__quickAddQty = 1;
 
-      const ordritem = { ordritem: { ordr_id: ordrId, menuitem_id: menuitemId, status: 0, ordritemprice: price, size_name: sizeName, quantity: qty, note: itemNote } };
-      post(`/restaurants/${restaurantId}/ordritems`, ordritem)
-        .then(() => hideClosestModal(btn))
-        .catch((e) => console.error('[AddItem][capture] Post failed:', e));
-    }, true);
+        const ordritem = {
+          ordritem: {
+            ordr_id: ordrId,
+            menuitem_id: menuitemId,
+            status: 0,
+            ordritemprice: price,
+            size_name: sizeName,
+            quantity: qty,
+            note: itemNote,
+          },
+        };
+        post(`/restaurants/${restaurantId}/ordritems`, ordritem)
+          .then(() => hideClosestModal(btn))
+          .catch((e) => console.error('[AddItem][capture] Post failed:', e));
+      },
+      true
+    );
   })();
 
   // Utility: hide closest modal for a button element
@@ -445,7 +617,9 @@ export function initOrderBindings() {
     try {
       const modalEl = btn.closest && btn.closest('.modal');
       if (modalEl && window.bootstrap && window.bootstrap.Modal) {
-        const inst = window.bootstrap.Modal.getInstance(modalEl) || window.bootstrap.Modal.getOrCreateInstance(modalEl);
+        const inst =
+          window.bootstrap.Modal.getInstance(modalEl) ||
+          window.bootstrap.Modal.getOrCreateInstance(modalEl);
         inst.hide();
       }
     } catch (_) {}
@@ -455,224 +629,320 @@ export function initOrderBindings() {
   (function bindCartQtyButtons() {
     if (window.__cartQtyButtonsBound) return;
     window.__cartQtyButtonsBound = true;
-    document.addEventListener('click', (evt) => {
-      const target = evt.target instanceof Element ? evt.target : null;
-      if (!target) return;
-      const incrBtn = target.closest && target.closest('.cartQtyIncr');
-      const decrBtn = target.closest && target.closest('.cartQtyDecr');
-      if (!incrBtn && !decrBtn) return;
-      evt.preventDefault(); evt.stopPropagation();
+    document.addEventListener(
+      'click',
+      (evt) => {
+        const target = evt.target instanceof Element ? evt.target : null;
+        if (!target) return;
+        const incrBtn = target.closest && target.closest('.cartQtyIncr');
+        const decrBtn = target.closest && target.closest('.cartQtyDecr');
+        if (!incrBtn && !decrBtn) return;
+        evt.preventDefault();
+        evt.stopPropagation();
 
-      const btn = incrBtn || decrBtn;
-      const ordritemId = btn.dataset.ordritemId;
-      const restaurantId = getRestaurantId();
-      if (!ordritemId || !restaurantId) return;
+        const btn = incrBtn || decrBtn;
+        const ordritemId = btn.dataset.ordritemId;
+        const restaurantId = getRestaurantId();
+        if (!ordritemId || !restaurantId) return;
 
-      const qtyEl = btn.closest('.cart-sheet__item')?.querySelector('.cart-sheet__qty-value');
-      const currentQty = parseInt(qtyEl?.textContent || '1');
+        const qtyEl = btn.closest('.cart-sheet__item')?.querySelector('.cart-sheet__qty-value');
+        const currentQty = parseInt(qtyEl?.textContent || '1');
 
-      if (decrBtn && currentQty <= 1) {
-        // Remove the item entirely
-        patch(`/restaurants/${restaurantId}/ordritems/${ordritemId}`, { ordritem: { status: 10 } })
-          .catch((e) => console.error('[CartQty] Remove failed:', e));
-      } else {
-        const newQty = incrBtn ? Math.min(currentQty + 1, 99) : Math.max(currentQty - 1, 1);
-        patch(`/restaurants/${restaurantId}/ordritems/${ordritemId}`, { ordritem: { quantity: newQty } })
-          .catch((e) => console.error('[CartQty] Update failed:', e));
-      }
-    }, true);
+        if (decrBtn && currentQty <= 1) {
+          // Remove the item entirely
+          patch(`/restaurants/${restaurantId}/ordritems/${ordritemId}`, {
+            ordritem: { status: 10 },
+          }).catch((e) => console.error('[CartQty] Remove failed:', e));
+        } else {
+          const newQty = incrBtn ? Math.min(currentQty + 1, 99) : Math.max(currentQty - 1, 1);
+          patch(`/restaurants/${restaurantId}/ordritems/${ordritemId}`, {
+            ordritem: { quantity: newQty },
+          }).catch((e) => console.error('[CartQty] Update failed:', e));
+        }
+      },
+      true
+    );
   })();
 
   // Confirm Order capture
   (function bindConfirmOrderCapture() {
     if (window.__confirmOrderCaptureBound) return;
     window.__confirmOrderCaptureBound = true;
-    document.addEventListener('click', (evt) => {
-      const target = evt.target instanceof Element ? evt.target : null;
-      if (!target) return;
-      const btn = target.closest && (target.closest('#confirm-order') || target.closest('#cartSubmitOrder'));
-      if (!btn || btn.hasAttribute('disabled')) return;
-      evt.stopPropagation();
-      if (evt.stopImmediatePropagation) try { evt.stopImmediatePropagation(); } catch (_) {}
-      evt.preventDefault();
-
-      if (window.__confirmOrderPosting) return;
-      window.__confirmOrderPosting = true;
-      const base = { tablesetting_id: getCurrentTableId(), restaurant_id: getRestaurantId(), menu_id: getCurrentMenuId(), status: 20 };
-      const eid = getCurrentEmployeeId(); if (eid) { base.employee_id = eid; }
-      const restaurantId = getRestaurantId();
-      const orderId = getCurrentOrderId();
-      if (!restaurantId || !orderId) { console.warn('[ConfirmOrder][capture] Missing id; aborting', { restaurantId, orderId }); window.__confirmOrderPosting = false; return; }
-      patch(`/restaurants/${restaurantId}/ordrs/` + orderId, { ordr: base })
-        .then(() => {
-          hideClosestModal(btn);
-          // Close the cart bottom sheet if submit came from there
+    document.addEventListener(
+      'click',
+      (evt) => {
+        const target = evt.target instanceof Element ? evt.target : null;
+        if (!target) return;
+        const btn =
+          target.closest &&
+          (target.closest('#confirm-order') || target.closest('#cartSubmitOrder'));
+        if (!btn || btn.hasAttribute('disabled')) return;
+        evt.stopPropagation();
+        if (evt.stopImmediatePropagation)
           try {
-            const sheet = btn.closest && btn.closest('[data-controller="bottom-sheet"]');
-            if (sheet) {
-              const ctrl = window.Stimulus?.getControllerForElementAndIdentifier?.(sheet, 'bottom-sheet');
-              if (ctrl && typeof ctrl.close === 'function') { ctrl.close(); }
-            }
+            evt.stopImmediatePropagation();
           } catch (_) {}
-        })
-        .finally(() => setTimeout(() => { window.__confirmOrderPosting = false; }, 500));
-    }, true);
+        evt.preventDefault();
+
+        if (window.__confirmOrderPosting) return;
+        window.__confirmOrderPosting = true;
+        const base = {
+          tablesetting_id: getCurrentTableId(),
+          restaurant_id: getRestaurantId(),
+          menu_id: getCurrentMenuId(),
+          status: 20,
+        };
+        const eid = getCurrentEmployeeId();
+        if (eid) {
+          base.employee_id = eid;
+        }
+        const restaurantId = getRestaurantId();
+        const orderId = getCurrentOrderId();
+        if (!restaurantId || !orderId) {
+          console.warn('[ConfirmOrder][capture] Missing id; aborting', { restaurantId, orderId });
+          window.__confirmOrderPosting = false;
+          return;
+        }
+        patch(`/restaurants/${restaurantId}/ordrs/` + orderId, { ordr: base })
+          .then(() => {
+            hideClosestModal(btn);
+            // Close the cart bottom sheet if submit came from there
+            try {
+              const sheet = btn.closest && btn.closest('[data-controller="bottom-sheet"]');
+              if (sheet) {
+                const ctrl = window.Stimulus?.getControllerForElementAndIdentifier?.(
+                  sheet,
+                  'bottom-sheet'
+                );
+                if (ctrl && typeof ctrl.close === 'function') {
+                  ctrl.close();
+                }
+              }
+            } catch (_) {}
+          })
+          .finally(() =>
+            setTimeout(() => {
+              window.__confirmOrderPosting = false;
+            }, 500)
+          );
+      },
+      true
+    );
   })();
 
   // Request Bill confirm capture (modal only)
   (function bindRequestBillCapture() {
     if (window.__requestBillCaptureBound) return;
     window.__requestBillCaptureBound = true;
-    document.addEventListener('click', (evt) => {
-      const target = evt.target instanceof Element ? evt.target : null;
-      if (!target) return;
-      const btn = target.closest && target.closest('#request-bill-confirm');
-      if (!btn || btn.hasAttribute('disabled')) return;
-      try { console.debug('[RequestBill][capture] click intercepted'); } catch (_) {}
-      evt.stopPropagation();
-      if (evt.stopImmediatePropagation) try { evt.stopImmediatePropagation(); } catch (_) {}
-      evt.preventDefault();
+    document.addEventListener(
+      'click',
+      (evt) => {
+        const target = evt.target instanceof Element ? evt.target : null;
+        if (!target) return;
+        const btn = target.closest && target.closest('#request-bill-confirm');
+        if (!btn || btn.hasAttribute('disabled')) return;
+        try {
+          console.debug('[RequestBill][capture] click intercepted');
+        } catch (_) {}
+        evt.stopPropagation();
+        if (evt.stopImmediatePropagation)
+          try {
+            evt.stopImmediatePropagation();
+          } catch (_) {}
+        evt.preventDefault();
 
-      if (window.__requestBillPosting) return;
-      window.__requestBillPosting = true;
-      const currentStatus = getCurrentOrderStatus();
-      if (currentStatus === 'billrequested' || currentStatus === 'closed') { window.__requestBillPosting = false; return; }
-      const restaurantId = getRestaurantId();
-      const orderId = getCurrentOrderId();
-      if (!restaurantId || !orderId) { console.warn('[RequestBill][capture] Missing id; aborting', { restaurantId, orderId }); window.__requestBillPosting = false; return; }
+        if (window.__requestBillPosting) return;
+        window.__requestBillPosting = true;
+        const currentStatus = getCurrentOrderStatus();
+        if (currentStatus === 'billrequested' || currentStatus === 'closed') {
+          window.__requestBillPosting = false;
+          return;
+        }
+        const restaurantId = getRestaurantId();
+        const orderId = getCurrentOrderId();
+        if (!restaurantId || !orderId) {
+          console.warn('[RequestBill][capture] Missing id; aborting', { restaurantId, orderId });
+          window.__requestBillPosting = false;
+          return;
+        }
 
-      const csrfToken = document.querySelector("meta[name='csrf-token']")?.content || '';
-      const orderSource = (typeof window !== 'undefined' && window.__SM_ORDER_SOURCE) || document.body?.dataset?.orderSource || '';
+        const csrfToken = document.querySelector("meta[name='csrf-token']")?.content || '';
+        const orderSource =
+          (typeof window !== 'undefined' && window.__SM_ORDER_SOURCE) ||
+          document.body?.dataset?.orderSource ||
+          '';
 
-      const postJson = (url, body) => {
-        return fetch(url, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-            'X-CSRF-Token': csrfToken,
-            ...(orderSource ? { 'X-Order-Source': String(orderSource) } : {}),
-          },
-          body: JSON.stringify(body || {}),
-        }).then(async (res) => {
-          let data = null;
-          try { data = await res.json(); } catch (_) { data = {}; }
-          if (!res.ok) {
-            const msg = (data && (data.error || data.message)) ? (data.error || data.message) : `Request failed (${res.status})`;
-            throw new Error(msg);
-          }
-          return data;
-        });
-      };
+        const postJson = (url, body) => {
+          return fetch(url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Accept: 'application/json',
+              'X-CSRF-Token': csrfToken,
+              ...(orderSource ? { 'X-Order-Source': String(orderSource) } : {}),
+            },
+            body: JSON.stringify(body || {}),
+          }).then(async (res) => {
+            let data = null;
+            try {
+              data = await res.json();
+            } catch (_) {
+              data = {};
+            }
+            if (!res.ok) {
+              const msg =
+                data && (data.error || data.message)
+                  ? data.error || data.message
+                  : `Request failed (${res.status})`;
+              throw new Error(msg);
+            }
+            return data;
+          });
+        };
 
-      postJson(`/restaurants/${restaurantId}/ordrs/${orderId}/request_bill`, {})
-        .then((rb) => {
-          if (!rb || rb.ok !== true) throw new Error('request_bill failed');
-          try { hideClosestModal(btn); } catch (_) {}
-        })
-        .catch((e) => {
-          console.error('[RequestBill][capture] Failed', e);
-          try { alert(String(e && e.message ? e.message : e)); } catch (_) {}
-        })
-        .finally(() => setTimeout(() => { window.__requestBillPosting = false; }, 500));
-    }, true);
+        postJson(`/restaurants/${restaurantId}/ordrs/${orderId}/request_bill`, {})
+          .then((rb) => {
+            if (!rb || rb.ok !== true) throw new Error('request_bill failed');
+            try {
+              hideClosestModal(btn);
+            } catch (_) {}
+          })
+          .catch((e) => {
+            console.error('[RequestBill][capture] Failed', e);
+            try {
+              alert(String(e && e.message ? e.message : e));
+            } catch (_) {}
+          })
+          .finally(() =>
+            setTimeout(() => {
+              window.__requestBillPosting = false;
+            }, 500)
+          );
+      },
+      true
+    );
   })();
 
   // Pay Order confirm capture (modal only)
   (function bindPayOrderCapture() {
     if (window.__payOrderCaptureBound) return;
     window.__payOrderCaptureBound = true;
-    document.addEventListener('click', (evt) => {
-      const target = evt.target instanceof Element ? evt.target : null;
-      if (!target) return;
-      const btn = target.closest && target.closest('#pay-order-confirm');
-      if (!btn || btn.hasAttribute('disabled')) return;
+    document.addEventListener(
+      'click',
+      (evt) => {
+        const target = evt.target instanceof Element ? evt.target : null;
+        if (!target) return;
+        const btn = target.closest && target.closest('#pay-order-confirm');
+        if (!btn || btn.hasAttribute('disabled')) return;
 
-      // Detect payment provider from body data attribute
-      const provider = (document.body.dataset.paymentProvider || 'stripe').toLowerCase();
+        // Detect payment provider from body data attribute
+        const provider = (document.body.dataset.paymentProvider || 'stripe').toLowerCase();
 
-      // Square inline: the Stimulus controller handles tokenize+submit via
-      // data-action="click->square-payment#pay" on the button. We only need
-      // to ensure the bill is requested first, then let the event propagate.
-      if (provider === 'square-inline') {
+        // Square inline: the Stimulus controller handles tokenize+submit via
+        // data-action="click->square-payment#pay" on the button. We only need
+        // to ensure the bill is requested first, then let the event propagate.
+        if (provider === 'square-inline') {
+          const restaurantId = getRestaurantId();
+          const orderId = getCurrentOrderId();
+          const currentStatus = (getCurrentOrderStatus() || '').toLowerCase();
+          if (currentStatus !== 'billrequested' && restaurantId && orderId) {
+            evt.stopPropagation();
+            evt.preventDefault();
+            post(`/restaurants/${restaurantId}/ordrs/${orderId}/request_bill`, {})
+              .then(() => {
+                btn.click();
+              })
+              .catch((e) => {
+                console.error('[PayOrder][capture] request_bill failed', e);
+              });
+          }
+          // Otherwise let the click propagate to the Stimulus action
+          return;
+        }
+
+        // Stripe / Square hosted: redirect to checkout URL
+        evt.stopPropagation();
+        if (evt.stopImmediatePropagation)
+          try {
+            evt.stopImmediatePropagation();
+          } catch (_) {}
+        evt.preventDefault();
+
+        if (window.__payOrderPosting) return;
+        window.__payOrderPosting = true;
+
         const restaurantId = getRestaurantId();
         const orderId = getCurrentOrderId();
-        const currentStatus = (getCurrentOrderStatus() || '').toLowerCase();
-        if (currentStatus !== 'billrequested' && restaurantId && orderId) {
-          evt.stopPropagation();
-          evt.preventDefault();
-          post(`/restaurants/${restaurantId}/ordrs/${orderId}/request_bill`, {})
-            .then(() => { btn.click(); })
-            .catch((e) => { console.error('[PayOrder][capture] request_bill failed', e); });
+        if (!restaurantId || !orderId) {
+          console.warn('[PayOrder][capture] Missing id; aborting', { restaurantId, orderId });
+          window.__payOrderPosting = false;
+          return;
         }
-        // Otherwise let the click propagate to the Stimulus action
-        return;
-      }
 
-      // Stripe / Square hosted: redirect to checkout URL
-      evt.stopPropagation();
-      if (evt.stopImmediatePropagation) try { evt.stopImmediatePropagation(); } catch (_) {}
-      evt.preventDefault();
+        const currentStatus = (getCurrentOrderStatus() || '').toLowerCase();
 
-      if (window.__payOrderPosting) return;
-      window.__payOrderPosting = true;
+        const successUrl = window.location.href;
+        const cancelUrl = window.location.href;
 
-      const restaurantId = getRestaurantId();
-      const orderId = getCurrentOrderId();
-      if (!restaurantId || !orderId) {
-        console.warn('[PayOrder][capture] Missing id; aborting', { restaurantId, orderId });
-        window.__payOrderPosting = false;
-        return;
-      }
+        const ensureBillRequested = () => {
+          if (currentStatus === 'billrequested') return Promise.resolve({ ok: true });
+          return post(`/restaurants/${restaurantId}/ordrs/${orderId}/request_bill`, {});
+        };
 
-      const currentStatus = (getCurrentOrderStatus() || '').toLowerCase();
-
-      const successUrl = window.location.href;
-      const cancelUrl = window.location.href;
-
-      const ensureBillRequested = () => {
-        if (currentStatus === 'billrequested') return Promise.resolve({ ok: true });
-        return post(`/restaurants/${restaurantId}/ordrs/${orderId}/request_bill`, {});
-      };
-
-      const startPaymentAttempt = () => {
-        return post('/payments/payment_attempts', {
-          ordr_id: orderId,
-          success_url: successUrl,
-          cancel_url: cancelUrl,
-        });
-      };
-
-      ensureBillRequested()
-        .then((rb) => {
-          if (!rb || rb.ok !== true) throw new Error('request_bill failed');
-          return startPaymentAttempt().catch(() => {
-            return post(`/restaurants/${restaurantId}/ordrs/${orderId}/payments/checkout_session`, {
-              success_url: successUrl,
-              cancel_url: cancelUrl,
-            });
+        const startPaymentAttempt = () => {
+          return post('/payments/payment_attempts', {
+            ordr_id: orderId,
+            success_url: successUrl,
+            cancel_url: cancelUrl,
           });
-        })
-        .then((cs) => {
-          const redirectUrl = (cs && (cs.redirect_url || cs.checkout_url)) ? (cs.redirect_url || cs.checkout_url) : null;
-          if (!cs || cs.ok !== true || !redirectUrl) throw new Error('checkout start failed');
-          try { hideClosestModal(btn); } catch (_) {}
-          window.location.assign(String(redirectUrl));
-        })
-        .catch((e) => {
-          console.error('[PayOrder][capture] Failed to start checkout', e);
-        })
-        .finally(() => {
-          setTimeout(() => { window.__payOrderPosting = false; }, 500);
-        });
-    }, true);
+        };
+
+        ensureBillRequested()
+          .then((rb) => {
+            if (!rb || rb.ok !== true) throw new Error('request_bill failed');
+            return startPaymentAttempt().catch(() => {
+              return post(
+                `/restaurants/${restaurantId}/ordrs/${orderId}/payments/checkout_session`,
+                {
+                  success_url: successUrl,
+                  cancel_url: cancelUrl,
+                }
+              );
+            });
+          })
+          .then((cs) => {
+            const redirectUrl =
+              cs && (cs.redirect_url || cs.checkout_url)
+                ? cs.redirect_url || cs.checkout_url
+                : null;
+            if (!cs || cs.ok !== true || !redirectUrl) throw new Error('checkout start failed');
+            try {
+              hideClosestModal(btn);
+            } catch (_) {}
+            window.location.assign(String(redirectUrl));
+          })
+          .catch((e) => {
+            console.error('[PayOrder][capture] Failed to start checkout', e);
+          })
+          .finally(() => {
+            setTimeout(() => {
+              window.__payOrderPosting = false;
+            }, 500);
+          });
+      },
+      true
+    );
   })();
 
   // Enable/disable add-to-order buttons based solely on centralized state flag
   (function bindMenuItemsEnabled() {
     const update = () => {
       try {
-        const enabled = !!(window.__SM_STATE && window.__SM_STATE.flags && window.__SM_STATE.flags.menuItemsEnabled === true);
+        const enabled = !!(
+          window.__SM_STATE &&
+          window.__SM_STATE.flags &&
+          window.__SM_STATE.flags.menuItemsEnabled === true
+        );
         const $addButtons = $('.addItemToOrder');
         const $tastingButtons = $('.tasting-cta');
         const $stepperButtons = $('.quick-add-stepper-vertical .quick-add-btn');
@@ -681,7 +951,8 @@ export function initOrderBindings() {
           $tastingButtons.removeAttr('disabled').css('pointer-events', '');
           $stepperButtons.removeAttr('disabled').css('pointer-events', '');
           // Stamp current order ID onto buttons that were cached without one
-          const stateOrderId = window.__SM_STATE && window.__SM_STATE.order && window.__SM_STATE.order.id;
+          const stateOrderId =
+            window.__SM_STATE && window.__SM_STATE.order && window.__SM_STATE.order.id;
           if (stateOrderId) {
             $addButtons.each(function () {
               if (!this.getAttribute('data-bs-ordr_id')) {
@@ -743,153 +1014,194 @@ export function initOrderBindings() {
   }
 
   // Tip presets and manual change (delegated so modal content replacement doesn't drop bindings)
-  try { $(document).off('click.tipPreset.core').on('click.tipPreset.core', '.tip-preset-btn', function () {
-    const presetTipPercentage = parseFloat($(this).find('.tipPreset').text());
-    const gross = resolveGrossForTipCalc();
-    if (!Number.isFinite(gross) || gross <= 0) return;
-    const tip = ((gross / 100) * presetTipPercentage).toFixed(2);
-    $('#tipNumberField').val(tip);
-    recalcTipAndTotals();
-    $('#paymentlink').text('');
-    $('#paymentAnchor').prop('href', '');
-    $('#paymentQR').html('');
-    $('#paymentQR').text('');
-  });
-  $(document).off('change.tipNumberField.core').on('change.tipNumberField.core', '#tipNumberField', function () {
-    const parsed = parseFloat($(this).val());
-    $(this).val((Number.isFinite(parsed) ? parsed : 0).toFixed(2));
-    recalcTipAndTotals();
-  });
+  try {
+    $(document)
+      .off('click.tipPreset.core')
+      .on('click.tipPreset.core', '.tip-preset-btn', function () {
+        const presetTipPercentage = parseFloat($(this).find('.tipPreset').text());
+        const gross = resolveGrossForTipCalc();
+        if (!Number.isFinite(gross) || gross <= 0) return;
+        const tip = ((gross / 100) * presetTipPercentage).toFixed(2);
+        $('#tipNumberField').val(tip);
+        recalcTipAndTotals();
+        $('#paymentlink').text('');
+        $('#paymentAnchor').prop('href', '');
+        $('#paymentQR').html('');
+        $('#paymentQR').text('');
+      });
+    $(document)
+      .off('change.tipNumberField.core')
+      .on('change.tipNumberField.core', '#tipNumberField', function () {
+        const parsed = parseFloat($(this).val());
+        $(this).val((Number.isFinite(parsed) ? parsed : 0).toFixed(2));
+        recalcTipAndTotals();
+      });
 
-  // When opening the Pay modal without a full refresh, ensure totals are computed at show-time.
-  // Bootstrap modal events bubble, so we can delegate from document.
-  $(document)
-    .off('shown.bs.modal.payOrderTip')
-    .on('shown.bs.modal.payOrderTip', '#payOrderModal', function () {
-      recalcTipAndTotals();
-    });
-  } catch (e) { console.warn('[ordr_commons] Tip/payment bindings failed (non-fatal):', e); }
+    // When opening the Pay modal without a full refresh, ensure totals are computed at show-time.
+    // Bootstrap modal events bubble, so we can delegate from document.
+    $(document)
+      .off('shown.bs.modal.payOrderTip')
+      .on('shown.bs.modal.payOrderTip', '#payOrderModal', function () {
+        recalcTipAndTotals();
+      });
+  } catch (e) {
+    console.warn('[ordr_commons] Tip/payment bindings failed (non-fatal):', e);
+  }
 
   // Start Order modal: party size selector (no typing)
   (function bindOrderCapacityUi() {
     try {
-    function clamp(n, min, max) {
-      const nn = Number.isFinite(n) ? n : parseInt(String(n || ''), 10);
-      const safe = Number.isFinite(nn) ? nn : min;
-      return Math.max(min, Math.min(max, safe));
-    }
+      function clamp(n, min, max) {
+        const nn = Number.isFinite(n) ? n : parseInt(String(n || ''), 10);
+        const safe = Number.isFinite(nn) ? nn : min;
+        return Math.max(min, Math.min(max, safe));
+      }
 
-    function getBounds() {
-      const input = document.getElementById('orderCapacity');
-      const min = parseInt(input?.dataset?.min || '1', 10) || 1;
-      const max = parseInt(input?.dataset?.max || '1', 10) || 1;
-      return { input, min, max };
-    }
+      function getBounds() {
+        const input = document.getElementById('orderCapacity');
+        const min = parseInt(input?.dataset?.min || '1', 10) || 1;
+        const max = parseInt(input?.dataset?.max || '1', 10) || 1;
+        return { input, min, max };
+      }
 
-    function setCapacity(nextValue) {
-      const { input, min, max } = getBounds();
-      if (!input) return;
-      const value = clamp(nextValue, min, max);
-      input.value = String(value);
-      const label = document.getElementById('orderCapacityValue');
-      if (label) label.textContent = String(value);
-      const dec = document.getElementById('orderCapacityDecrement');
-      const inc = document.getElementById('orderCapacityIncrement');
-      if (dec) dec.toggleAttribute('disabled', value <= min);
-      if (inc) inc.toggleAttribute('disabled', value >= max);
-    }
-
-    $(document)
-      .off('click.orderCapacityPreset.core')
-      .on('click.orderCapacityPreset.core', '.orderCapacityPreset', function (evt) {
-        evt.preventDefault();
-        const cap = parseInt(String($(this).data('capacity') || ''), 10);
-        setCapacity(cap);
-      });
-
-    $(document)
-      .off('click.orderCapacityInc.core')
-      .on('click.orderCapacityInc.core', '#orderCapacityIncrement', function (evt) {
-        evt.preventDefault();
+      function setCapacity(nextValue) {
         const { input, min, max } = getBounds();
         if (!input) return;
-        const current = clamp(input.value, min, max);
-        setCapacity(current + 1);
-      });
+        const value = clamp(nextValue, min, max);
+        input.value = String(value);
+        const label = document.getElementById('orderCapacityValue');
+        if (label) label.textContent = String(value);
+        const dec = document.getElementById('orderCapacityDecrement');
+        const inc = document.getElementById('orderCapacityIncrement');
+        if (dec) dec.toggleAttribute('disabled', value <= min);
+        if (inc) inc.toggleAttribute('disabled', value >= max);
+      }
 
-    $(document)
-      .off('click.orderCapacityDec.core')
-      .on('click.orderCapacityDec.core', '#orderCapacityDecrement', function (evt) {
-        evt.preventDefault();
-        const { input, min, max } = getBounds();
-        if (!input) return;
-        const current = clamp(input.value, min, max);
-        setCapacity(current - 1);
-      });
+      $(document)
+        .off('click.orderCapacityPreset.core')
+        .on('click.orderCapacityPreset.core', '.orderCapacityPreset', function (evt) {
+          evt.preventDefault();
+          const cap = parseInt(String($(this).data('capacity') || ''), 10);
+          setCapacity(cap);
+        });
 
-    // Reset to min each time the modal opens (keeps intent explicit)
-    const modalEl = document.getElementById('openOrderModal');
-    if (modalEl && !modalEl.__orderCapacityBound) {
-      modalEl.__orderCapacityBound = true;
-      modalEl.addEventListener('shown.bs.modal', () => {
-        const { min } = getBounds();
-        setCapacity(min);
-      });
+      $(document)
+        .off('click.orderCapacityInc.core')
+        .on('click.orderCapacityInc.core', '#orderCapacityIncrement', function (evt) {
+          evt.preventDefault();
+          const { input, min, max } = getBounds();
+          if (!input) return;
+          const current = clamp(input.value, min, max);
+          setCapacity(current + 1);
+        });
+
+      $(document)
+        .off('click.orderCapacityDec.core')
+        .on('click.orderCapacityDec.core', '#orderCapacityDecrement', function (evt) {
+          evt.preventDefault();
+          const { input, min, max } = getBounds();
+          if (!input) return;
+          const current = clamp(input.value, min, max);
+          setCapacity(current - 1);
+        });
+
+      // Reset to min each time the modal opens (keeps intent explicit)
+      const modalEl = document.getElementById('openOrderModal');
+      if (modalEl && !modalEl.__orderCapacityBound) {
+        modalEl.__orderCapacityBound = true;
+        modalEl.addEventListener('shown.bs.modal', () => {
+          const { min } = getBounds();
+          setCapacity(min);
+        });
+      }
+    } catch (e) {
+      console.warn('[ordr_commons] Order capacity UI bindings failed (non-fatal):', e);
     }
-    } catch (e) { console.warn('[ordr_commons] Order capacity UI bindings failed (non-fatal):', e); }
   })();
 
   // Modal inert toggles for accessibility
   (function bindModalInert() {
-    const ids = ['openOrderModalLabel','addItemToOrderModalLabel','allergenModalLabel','requestBillModalLabel','payOrderModalLabel'];
+    const ids = [
+      'openOrderModalLabel',
+      'addItemToOrderModalLabel',
+      'allergenModalLabel',
+      'requestBillModalLabel',
+      'payOrderModalLabel',
+    ];
     ids.forEach((id) => {
       const el = document.getElementById(id);
       if (!el || el.__inertBound) return;
       el.__inertBound = true;
-      el.addEventListener('shown.bs.modal', () => { document.getElementById('backgroundContent')?.setAttribute('inert', ''); });
-      el.addEventListener('hidden.bs.modal', () => { document.getElementById('backgroundContent')?.removeAttribute('inert'); });
+      el.addEventListener('shown.bs.modal', () => {
+        document.getElementById('backgroundContent')?.setAttribute('inert', '');
+      });
+      el.addEventListener('hidden.bs.modal', () => {
+        document.getElementById('backgroundContent')?.removeAttribute('inert');
+      });
     });
   })();
 
   try {
-  // Add name to participant
-  $(document).off('click.addNameToParticipant.core').on('click.addNameToParticipant.core', '#addNameToParticipantButton', function (event) {
-    const modal = document.getElementById('addNameToParticipantModal');
-    if (!modal) return;
-    const ordrparticipant = { ordrparticipant: { name: modal.querySelector('#name')?.value } };
-    patch('/ordrparticipants/' + (document.getElementById('contextContainer')?.dataset?.participantId || ''), ordrparticipant);
-    event.preventDefault();
-  });
+    // Add name to participant
+    $(document)
+      .off('click.addNameToParticipant.core')
+      .on('click.addNameToParticipant.core', '#addNameToParticipantButton', function (event) {
+        const modal = document.getElementById('addNameToParticipantModal');
+        if (!modal) return;
+        const ordrparticipant = { ordrparticipant: { name: modal.querySelector('#name')?.value } };
+        patch(
+          '/ordrparticipants/' +
+            (document.getElementById('contextContainer')?.dataset?.participantId || ''),
+          ordrparticipant
+        );
+        event.preventDefault();
+      });
 
-  // Locale setter
-  $(document).off('click.setparticipantlocale.core').on('click.setparticipantlocale.core', '.setparticipantlocale', function (event) {
-    const locale = $(this).data('locale');
-    const participantId = document.getElementById('contextContainer')?.dataset?.participantId;
-    if (participantId) {
-      const ordrparticipant = { ordrparticipant: { preferredlocale: locale } };
-      patch('/ordrparticipants/' + participantId, ordrparticipant);
-    }
-    const menuParticipantId = document.getElementById('contextContainer')?.dataset?.menuParticipantId;
-    if (menuParticipantId) {
-      const menuparticipant = { menuparticipant: { preferredlocale: locale } };
-      const restaurantId = getRestaurantId();
-      if (!restaurantId) { console.warn('[Locale] Missing restaurant id; aborting'); return; }
-      const menuId = getCurrentMenuId();
-      patch(`/restaurants/${restaurantId}/menus/${menuId}/menuparticipants/${menuParticipantId}`, menuparticipant);
-    }
-    event.preventDefault();
-  });
+    // Locale setter
+    $(document)
+      .off('click.setparticipantlocale.core')
+      .on('click.setparticipantlocale.core', '.setparticipantlocale', function (event) {
+        const locale = $(this).data('locale');
+        const participantId = document.getElementById('contextContainer')?.dataset?.participantId;
+        if (participantId) {
+          const ordrparticipant = { ordrparticipant: { preferredlocale: locale } };
+          patch('/ordrparticipants/' + participantId, ordrparticipant);
+        }
+        const menuParticipantId =
+          document.getElementById('contextContainer')?.dataset?.menuParticipantId;
+        if (menuParticipantId) {
+          const menuparticipant = { menuparticipant: { preferredlocale: locale } };
+          const restaurantId = getRestaurantId();
+          if (!restaurantId) {
+            console.warn('[Locale] Missing restaurant id; aborting');
+            return;
+          }
+          const menuId = getCurrentMenuId();
+          patch(
+            `/restaurants/${restaurantId}/menus/${menuId}/menuparticipants/${menuParticipantId}`,
+            menuparticipant
+          );
+        }
+        event.preventDefault();
+      });
 
-  // Remove item
-  $(document).off('click.removeItemFromOrder.core').on('click.removeItemFromOrder.core', '.removeItemFromOrderButton', function () {
-    const ordrItemId = $(this).attr('data-bs-ordritem_id');
-    const ordritem = { ordritem: { status: 10, ordritemprice: 0 } }; // ORDRITEM_REMOVED
-    const restaurantId = getRestaurantId();
-    if (!restaurantId) { console.warn('[RemoveItem] Missing restaurant id; aborting'); return true; }
-    patch(`/restaurants/${restaurantId}/ordritems/${ordrItemId}`, ordritem);
-    return true;
-  });
-  } catch (e) { console.warn('[ordr_commons] Participant/locale/remove bindings failed (non-fatal):', e); }
+    // Remove item
+    $(document)
+      .off('click.removeItemFromOrder.core')
+      .on('click.removeItemFromOrder.core', '.removeItemFromOrderButton', function () {
+        const ordrItemId = $(this).attr('data-bs-ordritem_id');
+        const ordritem = { ordritem: { status: 10, ordritemprice: 0 } }; // ORDRITEM_REMOVED
+        const restaurantId = getRestaurantId();
+        if (!restaurantId) {
+          console.warn('[RemoveItem] Missing restaurant id; aborting');
+          return true;
+        }
+        patch(`/restaurants/${restaurantId}/ordritems/${ordrItemId}`, ordritem);
+        return true;
+      });
+  } catch (e) {
+    console.warn('[ordr_commons] Participant/locale/remove bindings failed (non-fatal):', e);
+  }
 
   // Add item to order (standard flow)
   // Removed legacy bubbling handler; capture-phase handler above owns this reliably
@@ -907,23 +1219,43 @@ export function initOrderBindings() {
       if (!btn || btn.hasAttribute('disabled')) return;
       // Intercept before Bootstrap hides the modal
       evt.stopPropagation();
-      if (evt.stopImmediatePropagation) try { evt.stopImmediatePropagation(); } catch (_) {}
+      if (evt.stopImmediatePropagation)
+        try {
+          evt.stopImmediatePropagation();
+        } catch (_) {}
       evt.preventDefault();
 
       btn.setAttribute('disabled', 'disabled');
       // Find orderCapacity relative to button context (handles duplicate IDs when modal + bottom sheet coexist)
-      const container = btn.closest('.modal-content') || btn.closest('#cartStartOrderSection') || document;
-      const ordercapacity = (container.querySelector('#orderCapacity') || container.querySelector('[name="orderCapacity"]'))?.value || 1;
+      const container =
+        btn.closest('.modal-content') || btn.closest('#cartStartOrderSection') || document;
+      const ordercapacity =
+        (
+          container.querySelector('#orderCapacity') ||
+          container.querySelector('[name="orderCapacity"]')
+        )?.value || 1;
       const restaurantId = getRestaurantId();
       const tablesettingId = getCurrentTableId();
       const menuId = getCurrentMenuId();
       if (!restaurantId || !tablesettingId || !menuId) {
-        console.warn('[StartOrder][capture] Missing required ids; aborting', { restaurantId, tablesettingId, menuId });
+        console.warn('[StartOrder][capture] Missing required ids; aborting', {
+          restaurantId,
+          tablesettingId,
+          menuId,
+        });
         alert('Please select a table before starting an order.');
         btn.removeAttribute('disabled');
         return;
       }
-      const payload = { ordr: { tablesetting_id: tablesettingId, restaurant_id: restaurantId, menu_id: menuId, ordercapacity: ordercapacity, status: 0 } };
+      const payload = {
+        ordr: {
+          tablesetting_id: tablesettingId,
+          restaurant_id: restaurantId,
+          menu_id: menuId,
+          ordercapacity: ordercapacity,
+          status: 0,
+        },
+      };
       if (document.getElementById('currentEmployee')) {
         payload.ordr.employee_id = document.getElementById('currentEmployee').textContent;
       }
@@ -934,7 +1266,9 @@ export function initOrderBindings() {
           const modalEl = document.getElementById('openOrderModal');
           if (modalEl && window.bootstrap && window.bootstrap.Modal) {
             try {
-              const inst = window.bootstrap.Modal.getInstance(modalEl) || window.bootstrap.Modal.getOrCreateInstance(modalEl);
+              const inst =
+                window.bootstrap.Modal.getInstance(modalEl) ||
+                window.bootstrap.Modal.getOrCreateInstance(modalEl);
               inst.hide();
             } catch (_) {}
           }
@@ -942,7 +1276,10 @@ export function initOrderBindings() {
           try {
             const sheet = document.getElementById('cartBottomSheet');
             if (sheet) {
-              const ctrl = window.Stimulus?.getControllerForElementAndIdentifier?.(sheet, 'bottom-sheet');
+              const ctrl = window.Stimulus?.getControllerForElementAndIdentifier?.(
+                sheet,
+                'bottom-sheet'
+              );
               if (ctrl) ctrl.setState('peek');
             }
           } catch (_) {}
@@ -951,7 +1288,9 @@ export function initOrderBindings() {
         })
         .catch((err) => {
           console.error('[StartOrder] Failed to create order:', err);
-          try { alert('Could not start order. Please try again.'); } catch (_) {}
+          try {
+            alert('Could not start order. Please try again.');
+          } catch (_) {}
         })
         .finally(() => {
           btn.removeAttribute('disabled');
@@ -971,33 +1310,53 @@ export function initOrderBindings() {
     const modal = document.getElementById('addItemToOrderModal');
     if (!modal || modal.__addItemBound) return;
     modal.__addItemBound = true;
-    
+
     modal.addEventListener('show.bs.modal', (event) => {
       const button = event.relatedTarget;
       if (!button) return;
-      
+
       const getAttr = (name) => button.getAttribute(name);
       const priceAttr = getAttr('data-bs-menuitem_price');
-      
-      $('#a2o_ordr_id').text(getAttr('data-bs-ordr_id') || (window.__SM_STATE?.order?.id || ''));
+
+      $('#a2o_ordr_id').text(getAttr('data-bs-ordr_id') || window.__SM_STATE?.order?.id || '');
       $('#a2o_menuitem_id').text(getAttr('data-bs-menuitem_id'));
       $('#a2o_menuitem_name').text(getAttr('data-bs-menuitem_name'));
-      
+
       if (priceAttr) {
         const unitPrice = parseFloat(priceAttr).toFixed(2);
         $('#a2o_menuitem_price').text(unitPrice).attr('data-unit-price', unitPrice);
       }
-      
+
       $('#a2o_menuitem_description').text(getAttr('data-bs-menuitem_description'));
-                         meEl = document.getElementById('a2o_size_name');
+      meEl = document.getElementById('a2o_size_name');
       if (sizeNameEl) sizeNameEl.textContent = getAttr('data-bs-menuitem_size_name') || '';
-      
+
+      const imageContainer = modal.querySelector('.image-container');
       const imageElement = modal.querySelector('#a2o_menuitem_image');
+      const spinner = modal.querySelector('#spinner');
+      const placeholder = modal.querySelector('#placeholder');
+
+      // Bug A fix: hide image container in list view
+      const layout = localStorage.getItem('smartmenu-layout') || 'list';
+      if (imageContainer) {
+        imageContainer.style.display = layout === 'card' ? '' : 'none';
+      }
+
+      // Bug B fix: reset state then load image; hide spinner on load
       if (imageElement) {
+        imageElement.style.display = 'none';
+        if (spinner) spinner.style.display = '';
+        if (placeholder) placeholder.style.visibility = 'visible';
+
+        imageElement.onload = () => {
+          if (spinner) spinner.style.display = 'none';
+          if (placeholder) placeholder.style.visibility = 'hidden';
+          $(imageElement).fadeIn(1000);
+        };
         imageElement.src = getAttr('data-bs-menuitem_image');
         imageElement.alt = getAttr('data-bs-menuitem_name');
       }
-      
+
       const noteField = modal.querySelector('#a2o_item_note');
       if (noteField) noteField.value = '';
     });
@@ -1006,43 +1365,49 @@ export function initOrderBindings() {
   (function bindAddItemConfirm() {
     if (window.__addItemConfirmBound) return;
     window.__addItemConfirmBound = true;
-    
-    document.addEventListener('click', (evt) => {
-      const btn = evt.target.closest('#add-item-to-order-confirm');
-      if (!btn) return;
-      
-      evt.preventDefault();
-      const modal = document.getElementById('addItemToOrderModal');
-      
-      const ordrId = $('#a2o_ordr_id').text();
-      const menuitemId = $('#a2o_menuitem_id').text();
-      const qty = parseInt($('#a2o_qty_display').text() || '1', 10);
-      const note = $('#a2o_item_note').val();
-      const sizeName = $('#a2o_size_name').text();
-      
-      const payload = {
-        ordritem: {
-          ordr_id: ordrId,
-          menuitem_id: menuitemId,
-          quantity: qty,
-          status: 0
-        }
-      };
-      
-      if (note) payload.ordritem.notes = [note];
-      if (sizeName) payload.ordritem.size_name = sizeName;
-      
-      post('/ordritems', payload)
-        .then(() => {
-          window.closingAddItemModal = true;
-          const modalInst = window.bootstrap.Modal.getInstance(modal);
-          if (modalInst) modalInst.hide();
-          setTimeout(() => { window.closingAddItemModal = false; }, 500);
-        })
-        .catch((error) => {
-          console.error('Error adding item:', error);
-          window.closingAddItemModal = false;
-        });
-    }, true);
+
+    document.addEventListener(
+      'click',
+      (evt) => {
+        const btn = evt.target.closest('#add-item-to-order-confirm');
+        if (!btn) return;
+
+        evt.preventDefault();
+        const modal = document.getElementById('addItemToOrderModal');
+
+        const ordrId = $('#a2o_ordr_id').text();
+        const menuitemId = $('#a2o_menuitem_id').text();
+        const qty = parseInt($('#a2o_qty_display').text() || '1', 10);
+        const note = $('#a2o_item_note').val();
+        const sizeName = $('#a2o_size_name').text();
+
+        const payload = {
+          ordritem: {
+            ordr_id: ordrId,
+            menuitem_id: menuitemId,
+            quantity: qty,
+            status: 0,
+          },
+        };
+
+        if (note) payload.ordritem.notes = [note];
+        if (sizeName) payload.ordritem.size_name = sizeName;
+
+        post('/ordritems', payload)
+          .then(() => {
+            window.closingAddItemModal = true;
+            const modalInst = window.bootstrap.Modal.getInstance(modal);
+            if (modalInst) modalInst.hide();
+            setTimeout(() => {
+              window.closingAddItemModal = false;
+            }, 500);
+          })
+          .catch((error) => {
+            console.error('Error adding item:', error);
+            window.closingAddItemModal = false;
+          });
+      },
+      true
+    );
   })();
 }
