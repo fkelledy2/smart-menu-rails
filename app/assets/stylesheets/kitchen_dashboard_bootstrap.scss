@@ -3,7 +3,7 @@
 // ============================================================================
 
 /* Ensure Bootstrap Icons are available */
-@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css");
+@import "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css";
 
 /* Custom animations for new orders */
 @keyframes slideInFromTop {
@@ -11,6 +11,7 @@
     opacity: 0;
     transform: translateY(-20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -19,10 +20,11 @@
 
 @keyframes pulseGlow {
   0%, 100% {
-    box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
+    box-shadow: 0 0 0 0 rgb(220, 53, 69, 0.7);
   }
+
   50% {
-    box-shadow: 0 0 0 10px rgba(220, 53, 69, 0);
+    box-shadow: 0 0 0 10px rgb(220, 53, 69, 0);
   }
 }
 
@@ -78,7 +80,7 @@
     flex-shrink: 0;
     background: white;
     z-index: 10;
-    box-shadow: 0 -2px 4px rgba(0,0,0,0.05);
+    box-shadow: 0 -2px 4px rgb(0,0,0,0.05);
   }
 }
 
@@ -140,6 +142,7 @@
   0%, 100% {
     transform: scale(1);
   }
+
   50% {
     transform: scale(1.05);
   }
@@ -177,7 +180,7 @@
   }
   
   .order-card {
-    page-break-inside: avoid;
+    break-inside: avoid;
     border: 2px solid #000 !important;
     margin-bottom: 1rem;
   }
@@ -464,10 +467,11 @@
     background-color: var(--surface-elevated);
     border-color: var(--color-danger);
   }
+
   50% {
-    background-color: rgba(220, 38, 38, 0.1);
+    background-color: rgb(220, 38, 38, 0.1);
     border-color: var(--color-danger);
-    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2);
+    box-shadow: 0 0 0 3px rgb(220, 38, 38, 0.2);
   }
 }
 
@@ -594,12 +598,14 @@
         background-color: var(--surface-elevated);
         border-color: var(--color-danger);
       }
+
       50% {
-        background-color: rgba(220, 38, 38, 0.2);
+        background-color: rgb(220, 38, 38, 0.2);
         border-color: var(--color-danger);
-        box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.3);
+        box-shadow: 0 0 0 3px rgb(220, 38, 38, 0.3);
       }
     }
+
     animation: flashUrgentDark 2s ease-in-out infinite;
   }
 }
@@ -672,12 +678,14 @@
           background-color: var(--surface-elevated);
           border-color: var(--color-danger);
         }
+
         50% {
-          background-color: rgba(220, 38, 38, 0.2);
+          background-color: rgb(220, 38, 38, 0.2);
           border-color: var(--color-danger);
-          box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.3);
+          box-shadow: 0 0 0 3px rgb(220, 38, 38, 0.3);
         }
       }
+
       animation: flashUrgentDark 2s ease-in-out infinite;
     }
   }
