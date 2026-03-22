@@ -1348,13 +1348,22 @@ export function initOrderBindings() {
         if (spinner) spinner.style.display = '';
         if (placeholder) placeholder.style.visibility = 'visible';
 
-        imageElement.onload = () => {
+        const showImage = () => {
           if (spinner) spinner.style.display = 'none';
           if (placeholder) placeholder.style.visibility = 'hidden';
           $(imageElement).fadeIn(1000);
         };
+
+        imageElement.onload = showImage;
+        // Clear src first so setting the same URL on a cached image always re-triggers onload
+        imageElement.src = '';
         imageElement.src = getAttr('data-bs-menuitem_image');
         imageElement.alt = getAttr('data-bs-menuitem_name');
+
+        // Fallback: if image was already cached and onload already fired (complete before assignment)
+        if (imageElement.complete && imageElement.naturalWidth > 0) {
+          showImage();
+        }
       }
 
       const noteField = modal.querySelector('#a2o_item_note');

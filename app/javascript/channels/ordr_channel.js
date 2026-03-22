@@ -352,15 +352,9 @@ function refreshOrderJSLogic() {
       const unitPrice = parseFloat(button.getAttribute('data-bs-menuitem_price')).toFixed(2);
       $('#a2o_menuitem_price').text(unitPrice).attr('data-unit-price', unitPrice);
       $('#a2o_menuitem_description').text(button.getAttribute('data-bs-menuitem_description'));
-      try {
-        const imageElement = addItemToOrderModal.querySelector('#a2o_menuitem_image');
-        if (imageElement) {
-          imageElement.src = button.getAttribute('data-bs-menuitem_image');
-          imageElement.alt = button.getAttribute('data-bs-menuitem_name');
-        }
-      } catch (err) {
-        alert(err);
-      }
+      // Image display is handled by ordr_commons.js bindAddItemModal (registered after ordr_channel,
+      // so it fires second and owns the full display/hide/onload logic). Setting src here would
+      // cause a double-set: same URL won't re-trigger onload for cached images → image stays hidden.
     });
     // Always reset tasting controls when modal is fully hidden
     addItemToOrderModal.addEventListener('hidden.bs.modal', () => {
