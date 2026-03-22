@@ -54,7 +54,7 @@
     .spinner {
       width: 40px;
       height: 40px;
-      border: 3px solid rgba(255, 255, 255, 0.3);
+      border: 3px solid rgb(255, 255, 255, 0.3);
       border-top-color: white;
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
@@ -277,11 +277,16 @@
     // Image rendering optimization
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
-    
+
     // Prevent layout shift
     width: 100%;
     height: 100%;
     object-fit: cover;
+
+    // Improve text alternatives
+    &[alt=""] {
+      opacity: 0.5;
+    }
   }
 }
 
@@ -289,7 +294,7 @@
 // MOBILE OPTIMIZATION
 // ============================================================================
 
-@media (max-width: 576px) {
+@media (width <= 576px) {
   .menu-item-image-progressive {
     height: 150px; // Smaller on mobile
   }
@@ -306,16 +311,6 @@
 // ============================================================================
 // ACCESSIBILITY
 // ============================================================================
-
-.image-progressive,
-.menu-item-image-progressive {
-  img {
-    // Improve text alternatives
-    &[alt=""] {
-      opacity: 0.5;
-    }
-  }
-}
 
 // No animations for users who prefer reduced motion
 @media (prefers-reduced-motion: reduce) {

@@ -32,7 +32,10 @@
   justify-content: space-between;
 }
 
-.layout-content { padding-left: 0; padding-right: 0; }
+.layout-content {
+  padding-left: 0;
+  padding-right: 0;
+}
 .layout-content-marketing { overflow-x: hidden; }
 .html-full-width { max-width: 100%; }
 
@@ -54,7 +57,11 @@
 // ------------------------------------
 // Button reset (no Bootstrap equivalent)
 // ------------------------------------
-.btn-reset { background: none; border: none; padding: 0; }
+.btn-reset {
+  background: none;
+  border: none;
+  padding: 0;
+}
 
 // ------------------------------------
 // Border radius one-offs (still referenced in views)
@@ -83,14 +90,17 @@
   background: url('/table-setting.png') no-repeat center center;
   background-size: cover;
 
-  @media (max-width: 576px) {
+  @media (width <= 576px) {
     width: 100%;
     margin-left: 0;
     margin-right: 0;
   }
 }
 
-.hero-caption { left: 5%; right: 5%; }
+.hero-caption {
+  left: 5%;
+  right: 5%;
+}
 
 // ------------------------------------
 // Marketing — feature grid

@@ -1,4 +1,5 @@
 import { initTomSelectIfNeeded } from './tomselect_helper';
+import { patch } from './utils/api';
 
 export function initialiseSlugs() {
   $('.qrSlug').each(function () {
@@ -202,7 +203,7 @@ export function initRestaurants() {
     window.__restaurantsInitBound = true;
 
     $(document).on('keydown', 'form', function (event) {
-      return event.key != 'Enter';
+      return event.key !== 'Enter';
     });
 
     // Clickable rows/cards: navigate to edit when clicking background.

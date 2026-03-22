@@ -1,6 +1,15 @@
 // Split Bill Section Styles
 .cart-sheet__split-section {
   padding: 0 1rem;
+
+  .spinner-border {
+    width: 3rem;
+    height: 3rem;
+  }
+
+  .alert {
+    margin-bottom: 1rem;
+  }
 }
 
 .split-participants-list {
@@ -107,20 +116,8 @@
   }
 }
 
-// Loading and error states
-.cart-sheet__split-section {
-  .spinner-border {
-    width: 3rem;
-    height: 3rem;
-  }
-  
-  .alert {
-    margin-bottom: 1rem;
-  }
-}
-
 // Responsive adjustments
-@media (max-width: 576px) {
+@media (width <= 576px) {
   .split-participants-list {
     max-height: 150px;
   }

@@ -1,3 +1,5 @@
+import { patch } from './utils/api';
+
 export function initTestimonials() {
   if ($('#testimonial-table').length) {
     function status(cell, formatterParams) {

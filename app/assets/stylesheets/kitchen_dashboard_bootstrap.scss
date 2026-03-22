@@ -20,11 +20,11 @@
 
 @keyframes pulseGlow {
   0%, 100% {
-    box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
+    box-shadow: 0 0 0 0 rgb(220, 53, 69, 0.7);
   }
 
   50% {
-    box-shadow: 0 0 0 10px rgba(220, 53, 69, 0);
+    box-shadow: 0 0 0 10px rgb(220, 53, 69, 0);
   }
 }
 
@@ -78,9 +78,9 @@
     position: sticky;
     bottom: 0;
     flex-shrink: 0;
-    background: white;
+    background: var(--surface-elevated, white);
     z-index: 10;
-    box-shadow: 0 -2px 4px rgba(0,0,0,0.05);
+    box-shadow: 0 -2px 4px rgb(0,0,0,0.05);
   }
 }
 
@@ -163,7 +163,7 @@
 }
 
 /* Responsive adjustments for smaller screens */
-@media (max-width: 991px) {
+@media (width <= 991px) {
   .col-lg-4 {
     margin-bottom: 1rem;
   }
@@ -354,10 +354,12 @@
 
 .item-content {
   position: relative;
-  z-index: 2;
+  z-index: 1;
   padding: 0.5rem 0.75rem;
   display: flex;
+  justify-content: space-between;
   align-items: center;
+  gap: 1rem;
 }
 
 .item-main {
@@ -425,21 +427,6 @@
 
 
 // Item content sits above the timeline bar
-.item-content {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-}
-
-.item-main {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
 
 .item-name {
   font-weight: 500;
@@ -469,9 +456,9 @@
   }
 
   50% {
-    background-color: rgba(220, 38, 38, 0.1);
+    background-color: rgb(220, 38, 38, 0.1);
     border-color: var(--color-danger);
-    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2);
+    box-shadow: 0 0 0 3px rgb(220, 38, 38, 0.2);
   }
 }
 
@@ -600,9 +587,9 @@
       }
 
       50% {
-        background-color: rgba(220, 38, 38, 0.2);
+        background-color: rgb(220, 38, 38, 0.2);
         border-color: var(--color-danger);
-        box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.3);
+        box-shadow: 0 0 0 3px rgb(220, 38, 38, 0.3);
       }
     }
 
@@ -680,9 +667,9 @@
         }
 
         50% {
-          background-color: rgba(220, 38, 38, 0.2);
+          background-color: rgb(220, 38, 38, 0.2);
           border-color: var(--color-danger);
-          box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.3);
+          box-shadow: 0 0 0 3px rgb(220, 38, 38, 0.3);
         }
       }
 
@@ -690,11 +677,6 @@
     }
   }
 }
-
-
-  .order-card .card-footer {
-    background: var(--surface-elevated);
-  }
 
 
 // Prep time label inside progress bar

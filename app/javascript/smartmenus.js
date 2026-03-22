@@ -110,10 +110,10 @@ export function initSmartmenus() {
           headerFilter: 'input',
           mutator: function (value) {
             console.log(value);
-            if (value.toUpperCase() == 'GB') {
+            if (value.toUpperCase() === 'GB') {
               return 'UK';
             }
-            if (value.toUpperCase() == 'US') {
+            if (value.toUpperCase() === 'US') {
               return 'USA';
             }
             return regionNames.of(value.toUpperCase()) || 'Unknown';

@@ -1,4 +1,5 @@
 import { initTomSelectIfNeeded } from './tomselect_helper';
+import { patch, del } from './utils/api';
 
 export function initRestaurantlocales() {
   if ($('#restaurantlocale_restaurant_id').length) {

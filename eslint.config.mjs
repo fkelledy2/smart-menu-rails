@@ -53,6 +53,30 @@ export default [
         PerformanceObserver: 'readonly',
         IntersectionObserver: 'readonly',
         ResizeObserver: 'readonly',
+        // Browser dialog APIs
+        alert: 'readonly',
+        confirm: 'readonly',
+        // DOM APIs
+        Element: 'readonly',
+        DataTransfer: 'readonly',
+        CSS: 'readonly',
+        // Web APIs
+        Notification: 'readonly',
+        requestAnimationFrame: 'readonly',
+        cancelAnimationFrame: 'readonly',
+        btoa: 'readonly',
+        atob: 'readonly',
+        MediaRecorder: 'readonly',
+        // Third-party libraries
+        Sortable: 'readonly',
+        google: 'readonly',
+        Spotify: 'readonly',
+        gtag: 'readonly',
+        // Stimulus framework (legacy stimulus-loading.js)
+        Stimulus: 'readonly',
+        Application: 'readonly',
+        definitionsFromContext: 'readonly',
+        require: 'readonly',
       },
     },
     plugins: {
@@ -74,6 +98,7 @@ export default [
           allow: ['warn', 'error'],
         },
       ],
+      'no-empty': ['error', { allowEmptyCatch: true }],
       'no-var': 'error',
       'prefer-const': 'warn',
       eqeqeq: [
@@ -83,6 +108,19 @@ export default [
           null: 'ignore',
         },
       ],
+    },
+  },
+  {
+    files: ['app/javascript/pwa/service-worker.js'],
+    languageOptions: {
+      globals: {
+        self: 'readonly',
+        caches: 'readonly',
+        Response: 'readonly',
+        clients: 'readonly',
+        skipWaiting: 'readonly',
+        importScripts: 'readonly',
+      },
     },
   },
   {

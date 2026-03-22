@@ -11,11 +11,13 @@
   padding: 48px 24px;
   text-align: center;
   min-height: 400px;
-  
+  animation: fadeIn 0.3s ease-in;
+
   .empty-icon {
     font-size: 64px;
     margin-bottom: 24px;
     opacity: 0.3;
+    animation: bounceIn 0.6s ease-out;
     
     i {
       display: block;
@@ -165,7 +167,7 @@
 // MOBILE OPTIMIZATION
 // ============================================================================
 
-@media (max-width: 576px) {
+@media (width <= 576px) {
   .empty-state {
     padding: 32px 16px;
     min-height: 300px;
@@ -192,14 +194,6 @@
 // ============================================================================
 // ANIMATION
 // ============================================================================
-
-.empty-state {
-  animation: fadeIn 0.3s ease-in;
-  
-  .empty-icon {
-    animation: bounceIn 0.6s ease-out;
-  }
-}
 
 @keyframes fadeIn {
   from {

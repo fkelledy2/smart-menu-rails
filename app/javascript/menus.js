@@ -1,4 +1,5 @@
 import { initTomSelectIfNeeded } from './tomselect_helper';
+import { patch } from './utils/api';
 
 export function initMenus() {
   $(window).on('activate.bs.scrollspy', function () {

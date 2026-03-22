@@ -300,7 +300,7 @@
 // RESPONSIVE ADJUSTMENTS
 // ============================================
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   // Ensure touch-friendly on mobile
   .btn-sm-legacy {
     min-height: 40px;

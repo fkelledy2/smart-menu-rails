@@ -1,4 +1,5 @@
 import { initTomSelectIfNeeded } from './tomselect_helper';
+import { patch } from './utils/api';
 
 export function initMenuavailabilities() {
   if ($('#menuavailability_dayofweek').length) {

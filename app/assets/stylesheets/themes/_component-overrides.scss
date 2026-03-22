@@ -3,7 +3,7 @@
 
 // Navigation enhancements
 .navbar {
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgb(0,0,0,0.1);
   
   .navbar-brand {
     font-weight: 600;
@@ -25,7 +25,7 @@
   
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    box-shadow: 0 8px 25px rgb(0,0,0,0.15);
   }
   
   .card-header {
@@ -94,7 +94,7 @@
 // Modal enhancements
 .modal-content {
   border: none;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  box-shadow: 0 10px 30px rgb(0,0,0,0.2);
   
   .modal-header {
     background: $light;

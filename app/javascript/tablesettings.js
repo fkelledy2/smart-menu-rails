@@ -1,4 +1,5 @@
 import { initTomSelectIfNeeded } from './tomselect_helper';
+import { patch } from './utils/api';
 
 export function initTablesettings() {
   if ($('#tablesetting_tabletype').length) {

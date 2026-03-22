@@ -1,4 +1,5 @@
 import { initTomSelectIfNeeded } from './tomselect_helper';
+import { patch } from './utils/api';
 
 export function initiInventories() {
   if ($('#inventory_menuitem_id').length) {

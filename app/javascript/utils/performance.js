@@ -292,7 +292,7 @@ export class PerformanceMonitor {
           };
           break;
 
-        case 'componentInit':
+        case 'componentInit': {
           const durations = recent.map((e) => e.duration);
           report.metrics.componentInit = {
             count: recent.length,
@@ -301,8 +301,9 @@ export class PerformanceMonitor {
             slowComponents: recent.filter((e) => e.duration > 100),
           };
           break;
+        }
 
-        case 'asyncOperation':
+        case 'asyncOperation': {
           const successRate = recent.filter((e) => e.success).length / recent.length;
           report.metrics.asyncOperations = {
             count: recent.length,
@@ -311,6 +312,7 @@ export class PerformanceMonitor {
             failures: recent.filter((e) => !e.success),
           };
           break;
+        }
 
         case 'longTask':
           report.metrics.longTasks = {

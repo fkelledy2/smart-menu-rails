@@ -1,3 +1,5 @@
+import { patch } from './utils/api';
+
 export function initAllergyns() {
   // Initialize allergyn table if it exists on the page
   const allergynTableElement = document.getElementById('allergyn-table');

@@ -978,7 +978,7 @@ export function initOrderBindings() {
   })();
 
   function resolveGrossForTipCalc() {
-    const domGross = parseFloat(String($('#orderGross').text() || '').replace(/[^0-9.\-]/g, ''));
+    const domGross = parseFloat(String($('#orderGross').text() || '').replace(/[^0-9.-]/g, ''));
     if (Number.isFinite(domGross) && domGross > 0) return domGross;
     try {
       const gsGross = window.__SM_STATE?.totals?.gross;
@@ -1328,7 +1328,7 @@ export function initOrderBindings() {
       }
 
       $('#a2o_menuitem_description').text(getAttr('data-bs-menuitem_description'));
-      meEl = document.getElementById('a2o_size_name');
+      const sizeNameEl = document.getElementById('a2o_size_name');
       if (sizeNameEl) sizeNameEl.textContent = getAttr('data-bs-menuitem_size_name') || '';
 
       const imageContainer = modal.querySelector('.image-container');

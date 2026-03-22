@@ -1,3 +1,5 @@
+import { patch } from './utils/api';
+
 export function initSizes() {
   if ($('#size-table').length) {
     // Sizes

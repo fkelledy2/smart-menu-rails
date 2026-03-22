@@ -1,4 +1,5 @@
 import { initTomSelectIfNeeded } from './tomselect_helper';
+import { patch } from './utils/api';
 export function initTaxes() {
   if ($('#tax_taxtype').length) {
     initTomSelectIfNeeded('#tax_taxtype', {});

@@ -512,8 +512,8 @@ export class OrderModule extends ComponentBase {
         if (paymentAnchorEl) paymentAnchorEl.href = response.payment_link;
 
         // Generate QR code if function exists
-        if (typeof fetchQR === 'function') {
-          fetchQR(response.payment_link);
+        if (typeof window.fetchQR === 'function') {
+          window.fetchQR(response.payment_link);
         }
 
         this.showNotification('Payment link refreshed', 'success');

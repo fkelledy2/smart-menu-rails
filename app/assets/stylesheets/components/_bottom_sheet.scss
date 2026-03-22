@@ -80,7 +80,7 @@
   position: fixed;
   inset: 0;
   z-index: -1;
-  background: rgba(0, 0, 0, 0.08); // Much lighter backdrop for light mode
+  background: rgb(0, 0, 0, 0.08); // Much lighter backdrop for light mode
   pointer-events: none;
   transition: opacity var(--motion-duration-base, 200ms) ease;
 
@@ -155,13 +155,17 @@ body:has(.cart-bottom-sheet) {
   cursor: pointer;
   white-space: nowrap;
   transition: background 0.15s ease;
-  box-shadow: -2px 0 8px rgba(220, 38, 38, 0.3);
+  box-shadow: -2px 0 8px rgb(220, 38, 38, 0.3);
   z-index: 10;
 
   i { font-size: 1.125rem; }
 
   &:hover { background: #b91c1c; }
-  &:active { background: #991b1b; transform: scale(0.98); }
+
+  &:active {
+    background: #991b1b;
+    transform: scale(0.98);
+  }
 }
 
 // Hide Start Order button when sheet is expanded
@@ -371,16 +375,16 @@ body:has(.cart-bottom-sheet) {
   }
 
   .bottom-sheet-backdrop {
-    background: rgba(0, 0, 0, 0.6);
+    background: rgb(0, 0, 0, 0.6);
   }
 
   // Cart-specific dark mode refinements
   .cart-sheet__start-order-btn {
-    box-shadow: 0 2px 8px rgba(220, 38, 38, 0.4);
+    box-shadow: 0 2px 8px rgb(220, 38, 38, 0.4);
   }
 
   .cart-sheet__count {
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 1px 3px rgb(0, 0, 0, 0.3);
   }
 }
 
@@ -396,15 +400,15 @@ body:has(.cart-bottom-sheet) {
     }
 
     .bottom-sheet-backdrop {
-      background: rgba(0, 0, 0, 0.6);
+      background: rgb(0, 0, 0, 0.6);
     }
 
     .cart-sheet__start-order-btn {
-      box-shadow: 0 2px 8px rgba(220, 38, 38, 0.4);
+      box-shadow: 0 2px 8px rgb(220, 38, 38, 0.4);
     }
 
     .cart-sheet__count {
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 1px 3px rgb(0, 0, 0, 0.3);
     }
   }
 }
