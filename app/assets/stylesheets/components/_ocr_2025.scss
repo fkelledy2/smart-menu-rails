@@ -289,7 +289,7 @@
 }
 
 // Responsive
-@media (width <= 768px) {
+@media (max-width: 768px) {
   .progress-steps {
     padding: var(--space-4) 0;
     gap: var(--space-2);
@@ -327,7 +327,5 @@
     flex-direction: column;
   }
 
-  .alert-actions .btn-legacy {
-    width: 100%;
-  }
+
 }

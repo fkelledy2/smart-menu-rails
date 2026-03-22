@@ -294,7 +294,7 @@
 // MOBILE OPTIMIZATION
 // ============================================================================
 
-@media (width <= 576px) {
+@media (max-width: 576px) {
   .menu-item-image-progressive {
     height: 150px; // Smaller on mobile
   }

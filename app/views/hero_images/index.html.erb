@@ -39,11 +39,7 @@
             <td><%= hero_image.alt_text %></td>
             <td><%= hero_image.sequence %></td>
             <td>
-              <% if hero_image.approved? %>
-                <span class="badge bg-success">Approved</span>
-              <% else %>
-                <span class="badge bg-warning">Unapproved</span>
-              <% end %>
+              <%= render 'shared/status_badge', status: (hero_image.approved? ? 'approved' : 'unapproved') %>
             </td>
             <td>
               <%= link_to 'Show', hero_image, class: 'btn btn-sm btn-info' %>

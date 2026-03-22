@@ -47,5 +47,8 @@
     <%= render partial: "smartmenus/showModals", locals: { order: @openOrder, menu: @menu, restaurant: @restaurant, allergyns: @allergyns, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant, restaurantCurrency: @restaurantCurrency, tablesetting: @tablesetting, current_employee: @current_employee } %>
     <%= render partial: "smartmenus/showContext", locals: { order: @openOrder, menu: @menu, restaurant: @restaurant, current_employee: @current_employee, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant, restaurantCurrency: @restaurantCurrency, tablesetting: @tablesetting } %>
     <%= render partial: "smartmenus/cart_bottom_sheet", locals: { order: @openOrder, restaurant: @restaurant, restaurantCurrency: @restaurantCurrency, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant, tablesetting: @tablesetting } %>
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" data-controller="flash">
+      <%= render 'shared/notices' %>
+    </div>
   </body>
 </html>

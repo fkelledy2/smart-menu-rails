@@ -180,7 +180,7 @@
 }
 
 // Responsive adjustments
-@media (width <= 768px) {
+@media (max-width: 768px) {
   .order-notes-section {
     .note-card {
       .note-header {

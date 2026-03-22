@@ -43,6 +43,9 @@ import SplitBillController from './split_bill_controller';
 import OrderNotesController from './order_notes_controller';
 import FlashController from './flash_controller';
 import SubmitOnEnterController from './submit_on_enter_controller';
+import CharCounterController from './char_counter_controller';
+import WelcomeModalController from './welcome_modal_controller';
+import AllergenFilterController from './allergen_filter_controller';
 
 application.register('sortable', SortableController);
 application.register('auto-save', AutoSaveController);
@@ -85,6 +88,9 @@ application.register('split-bill', SplitBillController);
 application.register('order-notes', OrderNotesController);
 application.register('flash', FlashController);
 application.register('submit-on-enter', SubmitOnEnterController);
+application.register('char-counter', CharCounterController);
+application.register('welcome-modal', WelcomeModalController);
+application.register('allergen-filter', AllergenFilterController);
 
 console.log('[Stimulus] Controllers registered:', [
   'sortable',

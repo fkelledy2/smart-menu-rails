@@ -4,14 +4,22 @@
   size ||= local_assigns[:size] || 'md'
 
   variant_map = {
-    'active' => 'success',
-    'inactive' => 'secondary',
-    'draft' => 'warning',
-    'archived' => 'danger',
-    'pending' => 'info',
-    'processing' => 'info',
-    'completed' => 'success',
-    'failed' => 'danger'
+    'active'      => 'success',
+    'published'   => 'success',
+    'completed'   => 'success',
+    'approved'    => 'success',
+    'inactive'    => 'secondary',
+    'archived'    => 'secondary',
+    'secondary'   => 'secondary',
+    'draft'       => 'warning',
+    'unapproved'  => 'warning',
+    'pending'     => 'warning',
+    'reviewing'   => 'warning',
+    'processing'  => 'info',
+    'started'     => 'info',
+    'failed'      => 'danger',
+    'rejected'    => 'danger',
+    'cancelled'   => 'danger',
   }
 
   variant = variant_map[status.to_s.downcase] || 'secondary'

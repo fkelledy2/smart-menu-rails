@@ -167,7 +167,7 @@
 // MOBILE OPTIMIZATION
 // ============================================================================
 
-@media (width <= 576px) {
+@media (max-width: 576px) {
   .empty-state {
     padding: 32px 16px;
     min-height: 300px;

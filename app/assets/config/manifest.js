@@ -76,6 +76,9 @@
 //= link controllers/theme_toggle_controller.js
 //= link controllers/userplan_plan_change_controller.js
 //= link controllers/whiskey_ambassador_controller.js
+//= link controllers/allergen_filter_controller.js
+//= link controllers/char_counter_controller.js
+//= link controllers/welcome_modal_controller.js
 
 // Application entry point
 //= link application.js

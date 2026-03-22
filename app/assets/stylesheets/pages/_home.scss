@@ -530,7 +530,7 @@
   width: 100%;
 }
 
-@media (width >= 992px) {
+@media (min-width: 992px) {
   .bunq-demo-grid {
     flex-wrap: nowrap;
   }
@@ -726,7 +726,7 @@
 }
 
 // Responsive adjustments
-@media (width <= 768px) {
+@media (max-width: 768px) {
   .bunq-section {
     padding: 2.75rem 0;
   }
@@ -807,7 +807,7 @@
   
 }
 
-@media (width <= 576px) {
+@media (max-width: 576px) {
   .demo-section {
     padding: 2rem 0;
   }

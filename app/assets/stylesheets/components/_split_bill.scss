@@ -117,7 +117,7 @@
 }
 
 // Responsive adjustments
-@media (width <= 576px) {
+@media (max-width: 576px) {
   .split-participants-list {
     max-height: 150px;
   }

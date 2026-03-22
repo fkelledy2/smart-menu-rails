@@ -6,7 +6,8 @@
   custom   = allergyns.reject { |a| standard.keys.include?(a.symbol) }
 %>
 
-<div class="modal fade" id="allergenModal" tabindex="-1" aria-labelledby="allergenModalLabel" aria-hidden="true">
+<div class="modal fade" id="allergenModal" tabindex="-1" aria-labelledby="allergenModalLabel" aria-hidden="true"
+     data-controller="allergen-filter">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
 
@@ -28,7 +29,10 @@
           <%# ── Standard EU 14 allergens ── %>
           <% standard.each do |code, name| %>
             <label class="list-group-item list-group-item-action d-flex align-items-center gap-3 allergen-row"
-                   data-allergen-code="<%= code %>" role="button">
+                   data-allergen-code="<%= code %>"
+                   data-allergen-filter-target="row"
+                   data-action="click->allergen-filter#toggle"
+                   role="button">
               <span class="badge bg-warning text-dark allergen-badge">
                 <%= code %>
               </span>
@@ -57,8 +61,10 @@
       </div>
 
       <div class="modal-footer">
-        <span class="me-auto text-muted small" id="allergenFilterCount"></span>
-        <button type="button" class="btn btn-outline-secondary btn-sm" id="allergenClearAll" style="display: none;">
+        <span class="me-auto text-muted small" id="allergenFilterCount" data-allergen-filter-target="count"></span>
+        <button type="button" class="btn btn-outline-secondary btn-sm" id="allergenClearAll" style="display: none;"
+                data-allergen-filter-target="clearBtn"
+                data-action="click->allergen-filter#clearAll">
           <%= t('smartmenus.allergen_combined_modal.clear_all', default: 'Clear all') %>
         </button>
         <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">
@@ -69,93 +75,3 @@
     </div>
   </div>
 </div>
-
-<script>
-(function () {
-  document.addEventListener('DOMContentLoaded', function () {
-    var modal = document.getElementById('allergenModal');
-    if (!modal) return;
-
-    var STORAGE_KEY = 'sm_allergen_filters';
-    var rows = modal.querySelectorAll('.allergen-row');
-    var countEl = document.getElementById('allergenFilterCount');
-    var clearBtn = document.getElementById('allergenClearAll');
-    var selected = new Set();
-
-    // ── Restore from localStorage ──
-    try {
-      var saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
-      if (Array.isArray(saved)) saved.forEach(function (c) { selected.add(c); });
-    } catch (_) {}
-
-    function save() {
-      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(Array.from(selected))); } catch (_) {}
-    }
-
-    // ── Update visual state of rows ──
-    function renderRows() {
-      rows.forEach(function (row) {
-        var code = row.getAttribute('data-allergen-code');
-        var icon = row.querySelector('.allergen-check-icon');
-        var isOn = selected.has(code);
-        if (icon) icon.style.display = isOn ? '' : 'none';
-        row.classList.toggle('active', isOn);
-      });
-      // Footer count + clear button
-      var n = selected.size;
-      if (countEl) countEl.textContent = n > 0 ? (n + ' selected') : '';
-      if (clearBtn) clearBtn.style.display = n > 0 ? '' : 'none';
-    }
-
-    // ── Apply filter to menu item cards ──
-    function applyFilter() {
-      var cards = document.querySelectorAll('.menu-item-card-mobile');
-      cards.forEach(function (card) {
-        if (selected.size === 0) {
-          card.style.display = '';
-          return;
-        }
-        // Read allergen codes from badges inside this card
-        var badges = card.querySelectorAll('.allergen-badges .badge.bg-warning');
-        var cardAllergens = [];
-        badges.forEach(function (b) { cardAllergens.push(b.textContent.trim()); });
-        // Hide if any of the card's allergens are in the selected set
-        var shouldHide = cardAllergens.some(function (c) { return selected.has(c); });
-        card.style.display = shouldHide ? 'none' : '';
-      });
-      // Update the trigger button badge
-      var triggerBadge = document.querySelector('[data-bs-target="#allergenModal"] .filter-badge');
-      if (triggerBadge) {
-        triggerBadge.textContent = selected.size;
-        triggerBadge.style.display = selected.size > 0 ? '' : 'none';
-      }
-    }
-
-    // ── Row click toggles selection ──
-    rows.forEach(function (row) {
-      row.addEventListener('click', function (e) {
-        e.preventDefault();
-        var code = row.getAttribute('data-allergen-code');
-        if (selected.has(code)) { selected.delete(code); } else { selected.add(code); }
-        save();
-        renderRows();
-        applyFilter();
-      });
-    });
-
-    // ── Clear all ──
-    if (clearBtn) {
-      clearBtn.addEventListener('click', function () {
-        selected.clear();
-        save();
-        renderRows();
-        applyFilter();
-      });
-    }
-
-    // ── Initial render ──
-    renderRows();
-    applyFilter();
-  });
-})();
-</script>

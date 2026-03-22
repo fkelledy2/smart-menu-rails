@@ -42,16 +42,17 @@
             <div class="form-text">Urgent notes will be highlighted prominently</div>
           </div>
 
-          <div class="mb-3">
+          <div class="mb-3" data-controller="char-counter">
             <%= form.label :content, "Note Content", class: "form-label fw-bold" %>
             <%= form.text_area :content,
                 class: "form-control",
                 rows: 4,
                 maxlength: 500,
                 placeholder: "Enter special instructions, dietary restrictions, or other important notes...",
-                required: true %>
+                required: true,
+                data: { char_counter_target: "input", action: "input->char-counter#update" } %>
             <div class="form-text">
-              <span id="charCount">0</span>/500 characters
+              <span data-char-counter-target="count">0</span>/500 characters
             </div>
           </div>
 
@@ -132,17 +133,3 @@
     </div>
   </div>
 </div>
-
-<script>
-  // Character counter
-  document.addEventListener('DOMContentLoaded', function() {
-    const contentField = document.getElementById('ordrnote_content');
-    const charCount = document.getElementById('charCount');
-    
-    if (contentField && charCount) {
-      contentField.addEventListener('input', function() {
-        charCount.textContent = this.value.length;
-      });
-    }
-  });
-</script>

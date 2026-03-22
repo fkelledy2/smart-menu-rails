@@ -10,12 +10,6 @@
 <% half    ||= 50 %>
 <% initial ||= "peek" %>
 
-<div class="bottom-sheet-backdrop"
-     data-bottom-sheet-target="backdrop"
-     data-action="click->bottom-sheet#close"
-     data-testid="<%= id %>-backdrop">
-</div>
-
 <div id="<%= id %>"
      class="bottom-sheet"
      data-controller="bottom-sheet"
@@ -25,6 +19,12 @@
      data-testid="<%= id %>"
      role="dialog"
      aria-modal="true">
+
+  <%# Backdrop must be inside the controller element so Stimulus can target it %>
+  <div class="bottom-sheet-backdrop"
+       data-bottom-sheet-target="backdrop"
+       data-action="click->bottom-sheet#close"
+       data-testid="<%= id %>-backdrop"></div>
 
   <div class="bottom-sheet__handle"
        data-bottom-sheet-target="handle"

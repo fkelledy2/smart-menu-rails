@@ -329,7 +329,7 @@
 // MOBILE OPTIMIZATION
 // ============================================================================
 
-@media (width <= 576px) {
+@media (max-width: 576px) {
   .welcome-banner {
     margin: 12px 8px;
     padding: 20px 12px;

@@ -20,7 +20,7 @@
   background: #a8a8a8;
 }
 
-@media (width <= 768px) {
+@media (max-width: 768px) {
   ::-webkit-scrollbar {
     width: 2px;
     height: 2px;

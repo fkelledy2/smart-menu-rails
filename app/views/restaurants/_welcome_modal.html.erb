@@ -1,7 +1,9 @@
 <%# Welcome modal shown once after onboarding completes.
     Auto-dismisses after 3 seconds or on click/Escape. %>
 <div id="welcome-modal" class="modal fade" tabindex="-1" aria-labelledby="welcomeModalLabel" aria-hidden="true"
-     data-testid="welcome-modal">
+     data-testid="welcome-modal"
+     data-controller="welcome-modal"
+     data-welcome-modal-key-value="welcome_modal_shown_<%= restaurant.id %>">
   <div class="modal-dialog modal-dialog-centered modal-sm">
     <div class="modal-content text-center border-0 shadow-lg">
       <div class="modal-body py-5 px-4">
@@ -18,29 +20,3 @@
     </div>
   </div>
 </div>
-
-<script>
-(function() {
-  var KEY = 'welcome_modal_shown_<%= restaurant.id %>';
-  if (sessionStorage.getItem(KEY)) return;
-
-  document.addEventListener('DOMContentLoaded', init);
-  document.addEventListener('turbo:load', init);
-
-  var fired = false;
-  function init() {
-    if (fired) return;
-    fired = true;
-
-    var el = document.getElementById('welcome-modal');
-    if (!el || !window.bootstrap) return;
-
-    sessionStorage.setItem(KEY, '1');
-    var modal = new bootstrap.Modal(el, { backdrop: true, keyboard: true });
-    modal.show();
-
-    // Auto-dismiss after 3 seconds
-    setTimeout(function() { modal.hide(); }, 3000);
-  }
-})();
-</script>

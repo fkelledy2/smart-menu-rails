@@ -34,8 +34,7 @@
             <td><%= guide.city %>, <%= guide.country %></td>
             <td><%= guide.category || '—' %></td>
             <td>
-              <% badge_class = { 'draft' => 'bg-warning', 'published' => 'bg-success', 'archived' => 'bg-secondary' }[guide.status] || 'bg-light' %>
-              <span class="badge <%= badge_class %>"><%= guide.status.titleize %></span>
+              <%= render 'shared/status_badge', status: guide.status %>
             </td>
             <td><%= time_ago_in_words(guide.updated_at) %> ago</td>
             <td>

@@ -40,7 +40,7 @@
 </div>
 
 <div class="card mb-4">
-  <div class="card-header bg-warning">
+  <div class="card-header bg-warning text-dark">
     <h5 class="mb-0">High-Margin Items with Low Stock</h5>
   </div>
   <div class="card-body">
@@ -64,7 +64,7 @@
                 <% if item[:priority] > 80 %>
                   <span class="badge bg-danger">High</span>
                 <% elsif item[:priority] > 50 %>
-                  <span class="badge bg-warning">Medium</span>
+                  <span class="badge bg-warning text-dark">Medium</span>
                 <% else %>
                   <span class="badge bg-info">Low</span>
                 <% end %>
@@ -84,7 +84,7 @@
                 <% when 'out_of_stock' %>
                   <span class="badge bg-danger">Out of Stock</span>
                 <% when 'low_stock' %>
-                  <span class="badge bg-warning">Low Stock</span>
+                  <span class="badge bg-warning text-dark">Low Stock</span>
                 <% when 'medium_stock' %>
                   <span class="badge bg-info">Medium</span>
                 <% else %>
@@ -118,7 +118,7 @@
                 <% when 'high' %>
                   <span class="badge bg-danger">High</span>
                 <% when 'medium' %>
-                  <span class="badge bg-warning">Medium</span>
+                  <span class="badge bg-warning text-dark">Medium</span>
                 <% else %>
                   <span class="badge bg-info">Low</span>
                 <% end %>

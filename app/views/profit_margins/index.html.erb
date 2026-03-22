@@ -99,7 +99,7 @@
                 <td class="text-end"><%= number_to_percentage((@stats[:above_target_count].to_f / @stats[:total_items] * 100), precision: 0) if @stats[:total_items] > 0 %></td>
               </tr>
               <tr>
-                <td><span class="badge bg-warning">Below Target</span></td>
+                <td><span class="badge bg-warning text-dark">Below Target</span></td>
                 <td class="text-end"><%= @stats[:below_target_count] %> items</td>
                 <td class="text-end"><%= number_to_percentage((@stats[:below_target_count].to_f / @stats[:total_items] * 100), precision: 0) if @stats[:total_items] > 0 %></td>
               </tr>

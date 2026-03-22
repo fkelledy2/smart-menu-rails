@@ -63,7 +63,7 @@
 }
 
 // Mobile navigation
-@media (width <= 768px) {
+@media (max-width: 768px) {
   .restaurant-tabs-main,
   .menu-tabs-main,
   .edit-tabs-main {

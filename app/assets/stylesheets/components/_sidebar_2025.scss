@@ -21,7 +21,7 @@
   overflow-y: auto;
   flex-shrink: 0;
   
-  @media (width <= 768px) {
+  @media (max-width: 768px) {
     position: fixed;
     top: 0;
     left: -260px;
@@ -42,7 +42,7 @@
 .sidebar-overlay {
   display: none;
   
-  @media (width <= 768px) {
+  @media (max-width: 768px) {
     display: block;
     position: fixed;
     inset: 0;
@@ -69,7 +69,7 @@
     border-bottom: none;
     
     // Extra padding on mobile to ensure last items are accessible when keyboard appears
-    @media (width <= 768px) {
+    @media (max-width: 768px) {
       padding-bottom: 300px; // Large bottom padding for mobile keyboard clearance
     }
   }
@@ -165,7 +165,7 @@
   display: flex;
   min-height: calc(100vh - 60px);
   
-  @media (width <= 768px) {
+  @media (max-width: 768px) {
     display: block;
   }
 }
@@ -178,7 +178,7 @@
   padding: 0; // No padding - maximizes content width
   background: transparent; // No background - let page background show through
   
-  @media (width <= 768px) {
+  @media (max-width: 768px) {
     padding: 0;
   }
 }
@@ -187,7 +187,7 @@
 .sidebar-toggle-btn {
   display: none;
   
-  @media (width <= 768px) {
+  @media (max-width: 768px) {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -215,7 +215,7 @@
 .sidebar-header {
   display: none;
   
-  @media (width <= 768px) {
+  @media (max-width: 768px) {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -308,7 +308,7 @@
   box-shadow: none;
   border: none;
   
-  @media (width <= 768px) {
+  @media (max-width: 768px) {
     padding: var(--space-4);
     margin-bottom: var(--space-3);
   }
@@ -338,7 +338,7 @@
     justify-content: center;
   }
 
-  @media (width <= 768px) {
+  @media (max-width: 768px) {
     grid-template-columns: 1fr;
   }
 
@@ -421,7 +421,7 @@
   margin-bottom: var(--space-4); // Reduced vertical spacing
   box-shadow: var(--shadow-sm);
   
-  @media (width <= 768px) {
+  @media (max-width: 768px) {
     padding: var(--space-4);
     margin-bottom: var(--space-3);
   }
@@ -432,7 +432,7 @@
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   gap: var(--space-4);
   
-  @media (width <= 768px) {
+  @media (max-width: 768px) {
     grid-template-columns: repeat(2, 1fr);
   }
 }
@@ -465,7 +465,7 @@
   margin-bottom: var(--space-4); // Reduced vertical margin for tighter layout
   box-shadow: var(--shadow-sm);
   
-  @media (width <= 768px) {
+  @media (max-width: 768px) {
     padding: var(--space-4);
     margin-bottom: var(--space-3);
   }
@@ -512,7 +512,7 @@
 .mobile-tab-bar {
   display: none;
 
-  @media (width <= 768px) {
+  @media (max-width: 768px) {
     display: flex;
     position: fixed;
     bottom: 0;
@@ -567,7 +567,7 @@
 }
 
 // Add bottom padding to main content on mobile to prevent tab bar from covering content
-@media (width <= 768px) {
+@media (max-width: 768px) {
   .sidebar-main-content {
     padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
   }

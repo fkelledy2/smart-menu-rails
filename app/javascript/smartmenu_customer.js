@@ -19,7 +19,8 @@ Promise.all([
   import('./controllers/order_header_controller'),
   import('./controllers/scrollspy_controller'),
   import('./controllers/theme_toggle_controller'),
-]).then(([bs, ml, ms, st, oh, sp, tt]) => {
+  import('./controllers/allergen_filter_controller'),
+]).then(([bs, ml, ms, st, oh, sp, tt, af]) => {
   app.register('bottom-sheet', bs.default);
   app.register('menu-layout', ml.default);
   app.register('menu-search', ms.default);
@@ -27,6 +28,7 @@ Promise.all([
   app.register('order-header', oh.default);
   app.register('scrollspy', sp.default);
   app.register('theme-toggle', tt.default);
+  app.register('allergen-filter', af.default);
   initOrderBindings();
   console.log('[Customer] Ready');
 });

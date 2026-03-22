@@ -762,7 +762,7 @@
 // ============================================================================
 
 // Tablet landscape and up - adjust for larger screens
-@media (width >= 768px) {
+@media (min-width: 768px) {
   .menu-item-card-mobile {
     // Allow 2 columns on tablets
     width: calc(50% - 12px);
@@ -783,7 +783,7 @@
 }
 
 // Desktop - allow 3 columns
-@media (width >= 1024px) {
+@media (min-width: 1024px) {
   .menu-item-card-mobile {
     width: calc(33.333% - 16px);
   }
