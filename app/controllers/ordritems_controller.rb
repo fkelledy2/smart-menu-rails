@@ -377,18 +377,24 @@ class OrdritemsController < ApplicationController
   def validate_guest_ordritem_ownership
     return unless @ordritem
 
-    sid = session[:sid].presence || session.id.to_s.presence
-    return if sid.blank?
+    # Collect all candidate session IDs. smartmenus_controller stores participants
+    # using session.id.to_s first (safe_session_id), while older flows may use
+    # session[:sid]. Accept either to avoid false 403s.
+    sid_candidates = [
+      session.id.to_s.presence,
+      session[:sid].presence,
+    ].compact.uniq
+    return if sid_candidates.empty?
 
     has_session = Ordrparticipant.exists?(
       ordr_id: @ordritem.ordr_id,
-      sessionid: sid,
+      sessionid: sid_candidates,
     )
 
     return if has_session
 
     Rails.logger.warn(
-      "[SECURITY] Guest session #{sid} attempted to mutate ordritem #{@ordritem.id} " \
+      "[SECURITY] Guest sessions #{sid_candidates.inspect} attempted to mutate ordritem #{@ordritem.id} " \
       "(ordr #{@ordritem.ordr_id}) without a matching participant record",
     )
     respond_to do |format|
@@ -414,8 +420,9 @@ class OrdritemsController < ApplicationController
   end
 
   def find_or_create_participant(ordr)
-    # Use the same session ID priority as validate_guest_ordritem_ownership
-    sid = session[:sid].presence || session.id.to_s
+    # Match safe_session_id priority in smartmenus_controller: prefer session.id.to_s
+    # (reliable on all but the very first response) with session[:sid] UUID as fallback.
+    sid = session.id.to_s.presence || (session[:sid] ||= SecureRandom.uuid)
     if current_user && @current_employee
       Ordrparticipant.where(ordr: ordr, employee: @current_employee, role: 1,
                             sessionid: sid,).first_or_create do |participant|
