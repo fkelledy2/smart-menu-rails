@@ -151,8 +151,7 @@ jobs:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/smart_menu_test
           REDIS_URL: redis://localhost:6379/0
         run: |
-          bundle exec rails db:create
-          bundle exec rails db:schema:load
+          bundle exec rails db:drop db:create db:schema:load
 
       - name: Run tests
         env:
@@ -258,8 +257,7 @@ jobs:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/smart_menu_test
           REDIS_URL: redis://localhost:6379/0
         run: |
-          bundle exec rails db:create
-          bundle exec rails db:schema:load
+          bundle exec rails db:drop db:create db:schema:load
 
       - name: Seed test data for Lighthouse
         env:
@@ -329,8 +327,7 @@ jobs:
         env:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/smart_menu_test
         run: |
-          bundle exec rails db:create
-          bundle exec rails db:schema:load
+          bundle exec rails db:drop db:create db:schema:load
 
       - name: Run Bullet N+1 detection tests
         env:
@@ -389,8 +386,7 @@ jobs:
         env:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/smart_menu_test
         run: |
-          bundle exec rails db:create
-          bundle exec rails db:schema:load
+          bundle exec rails db:drop db:create db:schema:load
 
       - name: Check for pending migrations
         env:
