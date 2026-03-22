@@ -418,7 +418,7 @@ class OrdritemsController < ApplicationController
     sid = session[:sid].presence || session.id.to_s
     if current_user && @current_employee
       Ordrparticipant.where(ordr: ordr, employee: @current_employee, role: 1,
-                            sessionid: sid).first_or_create do |participant|
+                            sessionid: sid,).first_or_create do |participant|
         participant.ordr = ordr
         participant.employee = @current_employee
         participant.role = 1

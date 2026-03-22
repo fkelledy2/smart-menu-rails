@@ -64,12 +64,14 @@ export class FormManager extends ComponentBase {
       const id = element.id || '';
       const name = element.name || '';
       if (
-        id === 'menu_status' || name === 'menu[status]' ||
-        id === 'restaurant_status' || name === 'restaurant[status]'
+        id === 'menu_status' ||
+        name === 'menu[status]' ||
+        id === 'restaurant_status' ||
+        name === 'restaurant[status]'
       ) {
         return null;
       }
-    } catch(_) {}
+    } catch (_) {}
 
     try {
       // Parse options from data attribute

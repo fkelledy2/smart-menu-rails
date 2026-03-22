@@ -1,4 +1,4 @@
-import { Controller } from "@hotwired/stimulus"
+import { Controller } from '@hotwired/stimulus';
 
 /**
  * Inline Edit Stimulus Controller
@@ -20,158 +20,158 @@ import { Controller } from "@hotwired/stimulus"
  *   </tr>
  */
 export default class extends Controller {
-  static targets = ["cell"]
+  static targets = ['cell'];
   static values = {
-    url: String
-  }
+    url: String,
+  };
 
   connect() {
-    this.editing = false
-    this._cancelled = false
+    this.editing = false;
+    this._cancelled = false;
   }
 
   edit(event) {
-    const cell = event.currentTarget
-    if (cell.querySelector("input, textarea")) return // already editing
+    const cell = event.currentTarget;
+    if (cell.querySelector('input, textarea')) return; // already editing
 
-    const field = cell.dataset.field
-    const currentValue = cell.dataset.value ?? cell.textContent.trim()
-    const isPrice = field === "price" || field === "tasting_supplement_cents"
-    const isDescription = field === "description"
+    const field = cell.dataset.field;
+    const currentValue = cell.dataset.value ?? cell.textContent.trim();
+    const isPrice = field === 'price' || field === 'tasting_supplement_cents';
+    const isDescription = field === 'description';
 
     // Store original for cancel
-    this._cancelled = false
-    cell.dataset.originalHtml = cell.innerHTML
+    this._cancelled = false;
+    cell.dataset.originalHtml = cell.innerHTML;
 
     // Create input
-    let input
+    let input;
     if (isDescription) {
-      input = document.createElement("textarea")
-      input.rows = 2
-      input.className = "form-control form-control-sm"
+      input = document.createElement('textarea');
+      input.rows = 2;
+      input.className = 'form-control form-control-sm';
     } else {
-      input = document.createElement("input")
-      input.type = isPrice ? "number" : "text"
-      input.step = isPrice ? "0.01" : undefined
-      input.min = isPrice ? "0" : undefined
-      input.className = "form-control form-control-sm"
+      input = document.createElement('input');
+      input.type = isPrice ? 'number' : 'text';
+      input.step = isPrice ? '0.01' : undefined;
+      input.min = isPrice ? '0' : undefined;
+      input.className = 'form-control form-control-sm';
     }
 
-    input.value = currentValue
-    input.dataset.field = field
-    input.style.minWidth = "80px"
+    input.value = currentValue;
+    input.dataset.field = field;
+    input.style.minWidth = '80px';
 
-    cell.innerHTML = ""
-    cell.appendChild(input)
-    input.focus()
-    input.select()
+    cell.innerHTML = '';
+    cell.appendChild(input);
+    input.focus();
+    input.select();
 
     // Save on blur or Enter
-    input.addEventListener("blur", () => this.save(cell, input))
-    input.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" && !isDescription) {
-        e.preventDefault()
-        input.blur()
+    input.addEventListener('blur', () => this.save(cell, input));
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !isDescription) {
+        e.preventDefault();
+        input.blur();
       }
-      if (e.key === "Escape") {
-        this._cancelled = true
-        this.cancel(cell)
+      if (e.key === 'Escape') {
+        this._cancelled = true;
+        this.cancel(cell);
       }
-    })
+    });
   }
 
   async save(cell, input) {
     // Skip save if edit was cancelled via Escape
-    if (this._cancelled) return
+    if (this._cancelled) return;
 
-    const field = input.dataset.field
-    const newValue = input.value.trim()
-    const originalHtml = cell.dataset.originalHtml
+    const field = input.dataset.field;
+    const newValue = input.value.trim();
+    const originalHtml = cell.dataset.originalHtml;
 
     // If value unchanged, just cancel
-    if (newValue === (cell.dataset.value ?? "").trim()) {
-      this.cancel(cell)
-      return
+    if (newValue === (cell.dataset.value ?? '').trim()) {
+      this.cancel(cell);
+      return;
     }
 
     // Optimistic update — show the new value immediately
-    cell.innerHTML = this.formatDisplay(field, newValue)
-    cell.dataset.value = newValue
+    cell.innerHTML = this.formatDisplay(field, newValue);
+    cell.dataset.value = newValue;
 
     // Build payload
-    const body = {}
-    if (field === "price") {
-      body.menuitem = { price: parseFloat(newValue) || 0 }
-    } else if (field === "tasting_supplement_cents") {
-      body.menuitem = { tasting_supplement_cents: Math.round((parseFloat(newValue) || 0) * 100) }
+    const body = {};
+    if (field === 'price') {
+      body.menuitem = { price: parseFloat(newValue) || 0 };
+    } else if (field === 'tasting_supplement_cents') {
+      body.menuitem = { tasting_supplement_cents: Math.round((parseFloat(newValue) || 0) * 100) };
     } else {
-      body.menuitem = { [field]: newValue }
+      body.menuitem = { [field]: newValue };
     }
 
     try {
       const response = await fetch(this.urlValue, {
-        method: "PATCH",
+        method: 'PATCH',
         headers: {
-          "Content-Type": "application/json",
-          "X-CSRF-Token": this.csrfToken(),
-          "Accept": "application/json",
-          "X-Requested-With": "XMLHttpRequest"
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': this.csrfToken(),
+          Accept: 'application/json',
+          'X-Requested-With': 'XMLHttpRequest',
         },
-        body: JSON.stringify(body)
-      })
+        body: JSON.stringify(body),
+      });
 
       if (response.ok) {
-        this.showIndicator("✓ Saved", "success")
+        this.showIndicator('✓ Saved', 'success');
       } else {
         // Revert on failure
-        cell.innerHTML = originalHtml
-        this.showIndicator("⚠ Save failed", "error")
+        cell.innerHTML = originalHtml;
+        this.showIndicator('⚠ Save failed', 'error');
       }
     } catch (error) {
-      cell.innerHTML = originalHtml
-      this.showIndicator("⚠ Save failed", "error")
-      console.error("[InlineEdit] Save error:", error)
+      cell.innerHTML = originalHtml;
+      this.showIndicator('⚠ Save failed', 'error');
+      console.error('[InlineEdit] Save error:', error);
     }
   }
 
   cancel(cell) {
     if (cell.dataset.originalHtml) {
-      cell.innerHTML = cell.dataset.originalHtml
+      cell.innerHTML = cell.dataset.originalHtml;
     }
   }
 
   formatDisplay(field, value) {
-    if (field === "description") {
-      if (!value) return ""
-      const truncated = value.length > 50 ? value.substring(0, 50) + "…" : value
-      return `<div class="text-sm text-muted">${this.escapeHtml(truncated)}</div>`
+    if (field === 'description') {
+      if (!value) return '';
+      const truncated = value.length > 50 ? value.substring(0, 50) + '…' : value;
+      return `<div class="text-sm text-muted">${this.escapeHtml(truncated)}</div>`;
     }
-    return this.escapeHtml(value)
+    return this.escapeHtml(value);
   }
 
   escapeHtml(text) {
-    const div = document.createElement("div")
-    div.textContent = text
-    return div.innerHTML
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
   }
 
   showIndicator(text, state) {
-    let indicator = document.getElementById("auto-save-indicator")
+    let indicator = document.getElementById('auto-save-indicator');
     if (!indicator) {
-      indicator = document.createElement("div")
-      indicator.id = "auto-save-indicator"
-      indicator.className = "form-autosave"
-      document.body.appendChild(indicator)
+      indicator = document.createElement('div');
+      indicator.id = 'auto-save-indicator';
+      indicator.className = 'form-autosave';
+      document.body.appendChild(indicator);
     }
-    indicator.textContent = text
-    indicator.className = `form-autosave ${state}`
+    indicator.textContent = text;
+    indicator.className = `form-autosave ${state}`;
     setTimeout(() => {
-      indicator.className = "form-autosave"
-    }, 2000)
+      indicator.className = 'form-autosave';
+    }, 2000);
   }
 
   csrfToken() {
-    const meta = document.querySelector('meta[name="csrf-token"]')
-    return meta ? meta.content : ""
+    const meta = document.querySelector('meta[name="csrf-token"]');
+    return meta ? meta.content : '';
   }
 }

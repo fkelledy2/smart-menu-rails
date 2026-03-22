@@ -123,13 +123,16 @@ class KitchenDashboard {
     }
     const resetIdleTimer = () => {
       if (this.idleTimer) clearTimeout(this.idleTimer);
-      this.idleTimer = setTimeout(() => {
-        try {
-          if (this.presenceChannel) {
-            this.presenceChannel.perform('away');
-          }
-        } catch (_) {}
-      }, 5 * 60 * 1000);
+      this.idleTimer = setTimeout(
+        () => {
+          try {
+            if (this.presenceChannel) {
+              this.presenceChannel.perform('away');
+            }
+          } catch (_) {}
+        },
+        5 * 60 * 1000
+      );
     };
     resetIdleTimer();
     ['mousemove', 'keydown', 'click', 'touchstart'].forEach((evt) => {
@@ -187,10 +190,7 @@ class KitchenDashboard {
       .join('');
 
     if (users.length > 5) {
-      listEl.insertAdjacentHTML(
-        'beforeend',
-        `<span class="ms-1">+${users.length - 5} more</span>`
-      );
+      listEl.insertAdjacentHTML('beforeend', `<span class="ms-1">+${users.length - 5} more</span>`);
     }
   }
 

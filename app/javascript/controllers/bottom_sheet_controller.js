@@ -1,5 +1,5 @@
-import { Controller } from "@hotwired/stimulus"
-import { post, getCurrentTableId, getCurrentMenuId, getRestaurantId } from "../ordr_commons"
+import { Controller } from '@hotwired/stimulus';
+import { post, getCurrentTableId, getCurrentMenuId, getRestaurantId } from '../ordr_commons';
 
 /**
  * Bottom Sheet Stimulus Controller
@@ -19,85 +19,97 @@ import { post, getCurrentTableId, getCurrentMenuId, getRestaurantId } from "../o
  * </div>
  */
 export default class extends Controller {
-  static targets = ["handle", "content", "backdrop"]
+  static targets = ['handle', 'content', 'backdrop'];
 
   static values = {
-    peek:    { type: Number, default: 64 },   // px height in peek state
-    half:    { type: Number, default: 50 },    // % of viewport in half state
-    initial: { type: String, default: "peek" } // peek | half | full | closed
-  }
+    peek: { type: Number, default: 64 }, // px height in peek state
+    half: { type: Number, default: 50 }, // % of viewport in half state
+    initial: { type: String, default: 'peek' }, // peek | half | full | closed
+  };
 
   connect() {
-    this.state = this.initialValue
-    this.startY = 0
-    this.currentY = 0
-    this.isDragging = false
+    this.state = this.initialValue;
+    this.startY = 0;
+    this.currentY = 0;
+    this.isDragging = false;
 
-    this.applyState()
-    this.bindTouchEvents()
+    this.applyState();
+    this.bindTouchEvents();
 
     // Restore to peek after any Bootstrap modal closes
     this._onModalHidden = () => {
-      if (this.state === "closed" && this.initialValue !== "closed") {
-        this.setState("peek")
+      if (this.state === 'closed' && this.initialValue !== 'closed') {
+        this.setState('peek');
       }
-    }
-    document.addEventListener("hidden.bs.modal", this._onModalHidden)
+    };
+    document.addEventListener('hidden.bs.modal', this._onModalHidden);
 
     // Recalculate position when viewport changes (mobile toolbar hide/show)
     this._onViewportResize = () => {
       if (!this.isDragging) {
-        this.applyState()
+        this.applyState();
       }
-    }
-    window.visualViewport?.addEventListener("resize", this._onViewportResize)
-    window.addEventListener("resize", this._onViewportResize)
+    };
+    window.visualViewport?.addEventListener('resize', this._onViewportResize);
+    window.addEventListener('resize', this._onViewportResize);
 
-    console.log("[BottomSheet] connected", { initial: this.state })
+    console.log('[BottomSheet] connected', { initial: this.state });
   }
 
   disconnect() {
-    this.unbindTouchEvents()
-    document.removeEventListener("hidden.bs.modal", this._onModalHidden)
-    window.visualViewport?.removeEventListener("resize", this._onViewportResize)
-    window.removeEventListener("resize", this._onViewportResize)
+    this.unbindTouchEvents();
+    document.removeEventListener('hidden.bs.modal', this._onModalHidden);
+    window.visualViewport?.removeEventListener('resize', this._onViewportResize);
+    window.removeEventListener('resize', this._onViewportResize);
   }
 
   // --- Public actions ---
 
   toggle() {
     const transitions = {
-      closed: "full",
-      peek:   "full",
-      full:   "peek"
-    }
-    this.setState(transitions[this.state] || "peek")
+      closed: 'full',
+      peek: 'full',
+      full: 'peek',
+    };
+    this.setState(transitions[this.state] || 'peek');
   }
 
-  open()  { this.setState("full") }
-  close() { this.setState("closed") }
-  peek()  { this.setState("peek") }
-  expand() { this.setState("full") }
+  open() {
+    this.setState('full');
+  }
+  close() {
+    this.setState('closed');
+  }
+  peek() {
+    this.setState('peek');
+  }
+  expand() {
+    this.setState('full');
+  }
 
   startOrder(event) {
-    event.preventDefault()
-    event.stopPropagation()
+    event.preventDefault();
+    event.stopPropagation();
 
-    const btn = event.currentTarget
-    if (btn.hasAttribute("disabled")) return
+    const btn = event.currentTarget;
+    if (btn.hasAttribute('disabled')) return;
 
-    const container = btn.closest("#cartStartOrderSection") || this.element
-    const orderCapacity = (container.querySelector("#orderCapacity") || container.querySelector('[name="orderCapacity"]'))?.value || 1
-    const restaurantId = getRestaurantId()
-    const tablesettingId = getCurrentTableId()
-    const menuId = getCurrentMenuId()
+    const container = btn.closest('#cartStartOrderSection') || this.element;
+    const orderCapacity =
+      (
+        container.querySelector('#orderCapacity') ||
+        container.querySelector('[name="orderCapacity"]')
+      )?.value || 1;
+    const restaurantId = getRestaurantId();
+    const tablesettingId = getCurrentTableId();
+    const menuId = getCurrentMenuId();
 
     if (!restaurantId || !tablesettingId || !menuId) {
-      alert("Please select a table before starting an order.")
-      return
+      alert('Please select a table before starting an order.');
+      return;
     }
 
-    btn.setAttribute("disabled", "disabled")
+    btn.setAttribute('disabled', 'disabled');
 
     const payload = {
       ordr: {
@@ -107,144 +119,163 @@ export default class extends Controller {
         ordercapacity: orderCapacity,
         status: 0,
       },
-    }
+    };
 
-    const currentEmployee = document.getElementById("currentEmployee")
+    const currentEmployee = document.getElementById('currentEmployee');
     if (currentEmployee?.textContent) {
-      payload.ordr.employee_id = currentEmployee.textContent
+      payload.ordr.employee_id = currentEmployee.textContent;
     }
 
     post(`/restaurants/${restaurantId}/ordrs`, payload)
       .then(() => {
-        this.setState("peek")
-        window.location.reload()
+        this.setState('peek');
+        window.location.reload();
       })
       .catch((err) => {
-        console.error("[BottomSheet] Failed to create order:", err)
-        alert("Could not start order. Please try again.")
+        console.error('[BottomSheet] Failed to create order:', err);
+        alert('Could not start order. Please try again.');
       })
       .finally(() => {
-        btn.removeAttribute("disabled")
-      })
+        btn.removeAttribute('disabled');
+      });
   }
 
   // --- State management ---
 
   setState(newState) {
-    const oldState = this.state
-    this.state = newState
-    console.debug('[BottomSheet] setState', oldState, '->', newState, new Error().stack?.split('\n')[2]?.trim())
-    this.applyState()
-    this.dispatch("stateChanged", { detail: { from: oldState, to: newState } })
+    const oldState = this.state;
+    this.state = newState;
+    console.debug(
+      '[BottomSheet] setState',
+      oldState,
+      '->',
+      newState,
+      new Error().stack?.split('\n')[2]?.trim()
+    );
+    this.applyState();
+    this.dispatch('stateChanged', { detail: { from: oldState, to: newState } });
   }
 
   applyState() {
-    const el = this.element
+    const el = this.element;
 
     // Remove all state classes
-    el.classList.remove("bottom-sheet--closed", "bottom-sheet--peek", "bottom-sheet--half", "bottom-sheet--full")
-    el.classList.add(`bottom-sheet--${this.state}`)
+    el.classList.remove(
+      'bottom-sheet--closed',
+      'bottom-sheet--peek',
+      'bottom-sheet--half',
+      'bottom-sheet--full'
+    );
+    el.classList.add(`bottom-sheet--${this.state}`);
 
     switch (this.state) {
-      case "closed":
-        el.style.transform = "translateY(100%)"
-        this.hideBackdrop()
-        break
-      case "peek":
-        el.style.transform = `translateY(calc(100% - ${this.peekValue}px))`
-        this.hideBackdrop()
-        break
-      case "half":
-        el.style.transform = `translateY(${100 - this.halfValue}%)`
-        this.showBackdrop()
-        break
-      case "full":
-        el.style.transform = "translateY(0)"
-        this.showBackdrop()
-        break
+      case 'closed':
+        el.style.transform = 'translateY(100%)';
+        this.hideBackdrop();
+        break;
+      case 'peek':
+        el.style.transform = `translateY(calc(100% - ${this.peekValue}px))`;
+        this.hideBackdrop();
+        break;
+      case 'half':
+        el.style.transform = `translateY(${100 - this.halfValue}%)`;
+        this.showBackdrop();
+        break;
+      case 'full':
+        el.style.transform = 'translateY(0)';
+        this.showBackdrop();
+        break;
     }
   }
 
   // --- Touch / drag handling ---
 
   bindTouchEvents() {
-    if (!this.hasHandleTarget) return
+    if (!this.hasHandleTarget) return;
 
-    this._onTouchStart = this.onTouchStart.bind(this)
-    this._onTouchMove  = this.onTouchMove.bind(this)
-    this._onTouchEnd   = this.onTouchEnd.bind(this)
+    this._onTouchStart = this.onTouchStart.bind(this);
+    this._onTouchMove = this.onTouchMove.bind(this);
+    this._onTouchEnd = this.onTouchEnd.bind(this);
 
-    this.handleTarget.addEventListener("touchstart", this._onTouchStart, { passive: true })
-    document.addEventListener("touchmove", this._onTouchMove, { passive: false })
-    document.addEventListener("touchend", this._onTouchEnd, { passive: true })
+    this.handleTarget.addEventListener('touchstart', this._onTouchStart, { passive: true });
+    document.addEventListener('touchmove', this._onTouchMove, { passive: false });
+    document.addEventListener('touchend', this._onTouchEnd, { passive: true });
   }
 
   unbindTouchEvents() {
-    if (!this.hasHandleTarget) return
+    if (!this.hasHandleTarget) return;
 
-    this.handleTarget.removeEventListener("touchstart", this._onTouchStart)
-    document.removeEventListener("touchmove", this._onTouchMove)
-    document.removeEventListener("touchend", this._onTouchEnd)
+    this.handleTarget.removeEventListener('touchstart', this._onTouchStart);
+    document.removeEventListener('touchmove', this._onTouchMove);
+    document.removeEventListener('touchend', this._onTouchEnd);
   }
 
   onTouchStart(e) {
-    this.isDragging = true
-    this.startY = e.touches[0].clientY
-    this.element.style.transition = "none"
+    this.isDragging = true;
+    this.startY = e.touches[0].clientY;
+    this.element.style.transition = 'none';
   }
 
   onTouchMove(e) {
-    if (!this.isDragging) return
-    e.preventDefault()
+    if (!this.isDragging) return;
+    e.preventDefault();
 
-    this.currentY = e.touches[0].clientY
-    const delta = this.currentY - this.startY
-    const vh = window.innerHeight
+    this.currentY = e.touches[0].clientY;
+    const delta = this.currentY - this.startY;
+    const vh = window.innerHeight;
 
     // Translate based on current state + drag delta
-    let baseOffset
+    let baseOffset;
     switch (this.state) {
-      case "peek": baseOffset = vh - this.peekValue; break
-      case "half": baseOffset = vh * (1 - this.halfValue / 100); break
-      case "full": baseOffset = 0; break
-      default:     baseOffset = vh; break
+      case 'peek':
+        baseOffset = vh - this.peekValue;
+        break;
+      case 'half':
+        baseOffset = vh * (1 - this.halfValue / 100);
+        break;
+      case 'full':
+        baseOffset = 0;
+        break;
+      default:
+        baseOffset = vh;
+        break;
     }
 
-    const newOffset = Math.max(0, Math.min(vh, baseOffset + delta))
-    this.element.style.transform = `translateY(${newOffset}px)`
+    const newOffset = Math.max(0, Math.min(vh, baseOffset + delta));
+    this.element.style.transform = `translateY(${newOffset}px)`;
   }
 
   onTouchEnd() {
-    if (!this.isDragging) return
-    this.isDragging = false
+    if (!this.isDragging) return;
+    this.isDragging = false;
 
-    this.element.style.transition = ""
-    const delta = this.currentY - this.startY
-    const threshold = 50
+    this.element.style.transition = '';
+    const delta = this.currentY - this.startY;
+    const threshold = 50;
 
     if (delta > threshold) {
       // Swiped down
-      const downMap = { full: "peek", peek: "closed" }
-      this.setState(downMap[this.state] || "closed")
+      const downMap = { full: 'peek', peek: 'closed' };
+      this.setState(downMap[this.state] || 'closed');
     } else if (delta < -threshold) {
       // Swiped up
-      const upMap = { closed: "peek", peek: "full" }
-      this.setState(upMap[this.state] || "full")
+      const upMap = { closed: 'peek', peek: 'full' };
+      this.setState(upMap[this.state] || 'full');
     } else {
       // Snap back
-      this.applyState()
+      this.applyState();
     }
   }
 
   // --- Backdrop ---
 
   showBackdrop() {
-    if (!this.hasBackdropTarget) return
-    this.backdropTarget.classList.add("bottom-sheet-backdrop--visible")
+    if (!this.hasBackdropTarget) return;
+    this.backdropTarget.classList.add('bottom-sheet-backdrop--visible');
   }
 
   hideBackdrop() {
-    if (!this.hasBackdropTarget) return
-    this.backdropTarget.classList.remove("bottom-sheet-backdrop--visible")
+    if (!this.hasBackdropTarget) return;
+    this.backdropTarget.classList.remove('bottom-sheet-backdrop--visible');
   }
 }

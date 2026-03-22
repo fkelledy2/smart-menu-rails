@@ -169,11 +169,7 @@ export class OrderModule extends ComponentBase {
    * Initialize modal functionality
    */
   initializeModals() {
-    const modalIds = [
-      'openOrderModalLabel',
-      'addItemToOrderModalLabel',
-      'allergenModalLabel',
-    ];
+    const modalIds = ['openOrderModalLabel', 'addItemToOrderModalLabel', 'allergenModalLabel'];
 
     modalIds.forEach((modalId) => {
       const modal = this.find(`#${modalId}`);

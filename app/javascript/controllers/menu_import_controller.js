@@ -111,7 +111,7 @@ export default class extends Controller {
         rejected: () => {
           this.unsubscribeFromProgressChannel();
         },
-      },
+      }
     );
   }
 
@@ -125,7 +125,8 @@ export default class extends Controller {
   applyProgress(data) {
     const percent = Number(data.percent || 0);
 
-    if (this.hasOverallPercentTarget) this.overallPercentTarget.textContent = `${Math.round(percent)}%`;
+    if (this.hasOverallPercentTarget)
+      this.overallPercentTarget.textContent = `${Math.round(percent)}%`;
     if (this.hasOverallSliderTarget) this.overallSliderTarget.value = String(Math.round(percent));
     if (this.hasOverallFillTarget) this.overallFillTarget.style.width = `${Math.round(percent)}%`;
 
@@ -289,14 +290,22 @@ export default class extends Controller {
       sizePrices = {};
     }
     console.debug('[menu-import#showEditItemModal] parsed sizePrices:', sizePrices);
-    console.debug('[menu-import#showEditItemModal] hasEditSizePriceTarget:', this.hasEditSizePriceTarget);
-    console.debug('[menu-import#showEditItemModal] editSizePriceTargets count:', this.hasEditSizePriceTarget ? this.editSizePriceTargets.length : 0);
+    console.debug(
+      '[menu-import#showEditItemModal] hasEditSizePriceTarget:',
+      this.hasEditSizePriceTarget
+    );
+    console.debug(
+      '[menu-import#showEditItemModal] editSizePriceTargets count:',
+      this.hasEditSizePriceTarget ? this.editSizePriceTargets.length : 0
+    );
     if (this.hasEditSizePriceTarget) {
-      this.editSizePriceTargets.forEach(input => {
+      this.editSizePriceTargets.forEach((input) => {
         const key = input.dataset.sizeKey;
         const val = sizePrices[key];
-        console.debug(`[menu-import#showEditItemModal] size input key=${key} raw=${val} setting=${(val != null && parseFloat(val) > 0) ? val : ''}`);
-        input.value = (val != null && parseFloat(val) > 0) ? val : '';
+        console.debug(
+          `[menu-import#showEditItemModal] size input key=${key} raw=${val} setting=${val != null && parseFloat(val) > 0 ? val : ''}`
+        );
+        input.value = val != null && parseFloat(val) > 0 ? val : '';
       });
     }
 
@@ -306,11 +315,25 @@ export default class extends Controller {
     }
 
     // Auto-select pricing mode based on whether size prices exist
-    const hasSizePrices = Object.values(sizePrices).some(v => v != null && parseFloat(v) > 0);
-    console.debug('[menu-import#showEditItemModal] hasSizePrices:', hasSizePrices, '=> mode:', hasSizePrices ? 'sizes' : 'single');
-    console.debug('[menu-import#showEditItemModal] hasPricingModeBtnTarget:', this.hasPricingModeBtnTarget);
-    console.debug('[menu-import#showEditItemModal] hasSinglePriceSectionTarget:', this.hasSinglePriceSectionTarget);
-    console.debug('[menu-import#showEditItemModal] hasSizePricesSectionTarget:', this.hasSizePricesSectionTarget);
+    const hasSizePrices = Object.values(sizePrices).some((v) => v != null && parseFloat(v) > 0);
+    console.debug(
+      '[menu-import#showEditItemModal] hasSizePrices:',
+      hasSizePrices,
+      '=> mode:',
+      hasSizePrices ? 'sizes' : 'single'
+    );
+    console.debug(
+      '[menu-import#showEditItemModal] hasPricingModeBtnTarget:',
+      this.hasPricingModeBtnTarget
+    );
+    console.debug(
+      '[menu-import#showEditItemModal] hasSinglePriceSectionTarget:',
+      this.hasSinglePriceSectionTarget
+    );
+    console.debug(
+      '[menu-import#showEditItemModal] hasSizePricesSectionTarget:',
+      this.hasSizePricesSectionTarget
+    );
     this._applyPricingMode(hasSizePrices ? 'sizes' : 'single');
 
     // Store id on modal dataset for save fallback
@@ -340,7 +363,7 @@ export default class extends Controller {
   _applyPricingMode(mode) {
     // Toggle btn-group active states
     if (this.hasPricingModeBtnTarget) {
-      this.pricingModeBtnTargets.forEach(btn => {
+      this.pricingModeBtnTargets.forEach((btn) => {
         btn.classList.toggle('active', btn.dataset.pricingMode === mode);
       });
     }
@@ -430,7 +453,7 @@ export default class extends Controller {
     // Collect size prices from inputs
     const sizePrices = {};
     if (this.hasEditSizePriceTarget) {
-      this.editSizePriceTargets.forEach(input => {
+      this.editSizePriceTargets.forEach((input) => {
         const key = input.dataset.sizeKey;
         const val = parseFloat(input.value);
         if (!isNaN(val) && val > 0) sizePrices[key] = val;
@@ -438,9 +461,10 @@ export default class extends Controller {
     }
 
     // Detect the active pricing mode from the DOM (which panel is visible)
-    const sizePanelVisible = this.hasSizePricesSectionTarget && this.sizePricesSectionTarget.style.display !== 'none';
+    const sizePanelVisible =
+      this.hasSizePricesSectionTarget && this.sizePricesSectionTarget.style.display !== 'none';
     const pricingMode = sizePanelVisible ? 'sizes' : 'single';
-    const singlePrice = pricingMode === 'single' ? (parseFloat(formData.get('item_price')) || 0) : 0;
+    const singlePrice = pricingMode === 'single' ? parseFloat(formData.get('item_price')) || 0 : 0;
     const finalSizePrices = pricingMode === 'sizes' ? sizePrices : {};
 
     const payload = {
@@ -510,7 +534,9 @@ export default class extends Controller {
 
             // Update price / size-prices display
             const spData = data.item?.size_prices || {};
-            const spEntries = Object.entries(spData).filter(([, v]) => v != null && parseFloat(v) > 0);
+            const spEntries = Object.entries(spData).filter(
+              ([, v]) => v != null && parseFloat(v) > 0
+            );
             const priceArea = row.querySelector('.d-flex.align-items-center.gap-2.flex-shrink-0');
 
             if (priceArea) {
@@ -528,10 +554,12 @@ export default class extends Controller {
                 const sp = document.createElement('span');
                 sp.className = 'text-muted small';
                 sp.setAttribute('data-item-size-prices-display', id);
-                sp.textContent = spEntries.map(([k, v]) => {
-                  const label = k.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-                  return `${label}: ${parseFloat(v).toFixed(2)}`;
-                }).join(' \u00b7 ');
+                sp.textContent = spEntries
+                  .map(([k, v]) => {
+                    const label = k.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+                    return `${label}: ${parseFloat(v).toFixed(2)}`;
+                  })
+                  .join(' \u00b7 ');
                 priceArea.insertBefore(sp, editBtn);
               } else {
                 // Show single price
@@ -583,7 +611,9 @@ export default class extends Controller {
             }
 
             // Update edit trigger data attributes on the button for next open
-            const editBtn = row.querySelector('[data-action="click->menu-import#showEditItemModal"]');
+            const editBtn = row.querySelector(
+              '[data-action="click->menu-import#showEditItemModal"]'
+            );
             if (editBtn) {
               editBtn.dataset.itemName = item.name || '';
               editBtn.dataset.itemDescription = item.description || '';
@@ -679,7 +709,9 @@ export default class extends Controller {
 
     const sectionId = btn.dataset.sectionId;
     const url = btn.dataset.url;
-    const input = this.element.querySelector(`[data-role="section-price-input"][data-section-id="${sectionId}"]`);
+    const input = this.element.querySelector(
+      `[data-role="section-price-input"][data-section-id="${sectionId}"]`
+    );
     if (!input) return;
 
     const price = parseFloat(input.value);
@@ -734,7 +766,8 @@ export default class extends Controller {
     const btn = this.polishButtonTarget;
     const originalHtml = btn.innerHTML;
     btn.disabled = true;
-    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> Polishing…';
+    btn.innerHTML =
+      '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> Polishing…';
 
     let jobId = null;
     try {
@@ -759,7 +792,10 @@ export default class extends Controller {
       try {
         const u = new URL(this.polishProgressUrlValue, window.location.origin);
         u.searchParams.set('job_id', jobId);
-        const res = await fetch(u.toString(), { headers: { Accept: 'application/json' }, credentials: 'same-origin' });
+        const res = await fetch(u.toString(), {
+          headers: { Accept: 'application/json' },
+          credentials: 'same-origin',
+        });
         if (!res.ok) {
           if (res.status === 401 || res.status === 403 || res.status === 404) {
             btn.disabled = false;

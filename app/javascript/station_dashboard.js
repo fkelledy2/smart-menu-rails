@@ -106,7 +106,9 @@ class StationDashboard {
     const listEl = document.getElementById('kitchen-presence-list');
     if (!countEl) return;
 
-    const users = Array.from(this.presenceState.values()).filter((u) => u.status && u.status !== 'offline');
+    const users = Array.from(this.presenceState.values()).filter(
+      (u) => u.status && u.status !== 'offline'
+    );
     countEl.textContent = String(users.length);
 
     if (!listEl) return;
@@ -138,7 +140,8 @@ class StationDashboard {
 
       // If we've already applied this move optimistically (e.g., via drag/drop),
       // ignore the broadcast to avoid double metric updates.
-      if (card && card.dataset.status === data.new_status && currentColumnType === newColumnType) return;
+      if (card && card.dataset.status === data.new_status && currentColumnType === newColumnType)
+        return;
 
       this.moveTicketBetweenColumns(data.ticket.id, data.old_status, data.new_status, data.ticket);
       this.updateMetricsFromStatusChange(data.old_status, data.new_status);
@@ -219,7 +222,8 @@ class StationDashboard {
       if (this.dragState.pointerId == null) return;
       if (event.pointerId !== this.dragState.pointerId) return;
 
-      const dropZone = this.dragState.activeDropZone || this.findDropZoneFromPoint(event.clientX, event.clientY);
+      const dropZone =
+        this.dragState.activeDropZone || this.findDropZoneFromPoint(event.clientX, event.clientY);
       const ticketId = this.dragState.ticketId;
       const fromStatus = this.dragState.fromStatus;
 
@@ -600,7 +604,9 @@ class StationDashboard {
 
     const itemsHtml = (ticket.items || [])
       .map((i) => {
-        const notes = (i.notes || []).length ? `<div class="text-muted small">${i.notes.join(', ')}</div>` : '';
+        const notes = (i.notes || []).length
+          ? `<div class="text-muted small">${i.notes.join(', ')}</div>`
+          : '';
         return `<li>${i.name || 'Item'}${notes}</li>`;
       })
       .join('');

@@ -82,7 +82,13 @@ export class MenuModule extends ComponentBase {
         image: qrIcon,
         dotsOptionsHelper: {
           colorType: { single: true, gradient: false },
-          gradient: { linear: true, radial: false, color1: '#6a1a4c', color2: '#6a1a4c', rotation: '0' },
+          gradient: {
+            linear: true,
+            radial: false,
+            color1: '#6a1a4c',
+            color2: '#6a1a4c',
+            rotation: '0',
+          },
         },
         cornersSquareOptions: { type: 'extra-rounded', color: '#000000' },
         cornersDotOptions: { type: 'extra-rounded', color: '#000000' },
@@ -92,7 +98,8 @@ export class MenuModule extends ComponentBase {
 
       const container = element.closest('.qr-container') || element.parentElement;
       if (container) {
-        const target = container.querySelector(`#${CSS.escape(qrSlug)}`) || document.createElement('div');
+        const target =
+          container.querySelector(`#${CSS.escape(qrSlug)}`) || document.createElement('div');
         if (!target.id) {
           target.id = qrSlug;
           target.className = 'qr-code-display mt-2';

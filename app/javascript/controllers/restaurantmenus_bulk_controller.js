@@ -1,23 +1,23 @@
-import { Controller } from "@hotwired/stimulus";
-import { Modal } from "bootstrap";
+import { Controller } from '@hotwired/stimulus';
+import { Modal } from 'bootstrap';
 
 export default class extends Controller {
   static targets = [
-    "checkbox",
-    "selectAll",
-    "apply",
-    "operation",
-    "value",
-    "actionSelect",
-    "modal",
-    "modalTitle",
-    "modalBodyArchive",
-    "modalBodyRestore",
-    "modalBodyStatus",
-    "modalBodyShare",
-    "modalStatusSelect",
-    "modalShareSelect",
-    "modalApply",
+    'checkbox',
+    'selectAll',
+    'apply',
+    'operation',
+    'value',
+    'actionSelect',
+    'modal',
+    'modalTitle',
+    'modalBodyArchive',
+    'modalBodyRestore',
+    'modalBodyStatus',
+    'modalBodyShare',
+    'modalStatusSelect',
+    'modalShareSelect',
+    'modalApply',
   ];
 
   connect() {
@@ -54,18 +54,18 @@ export default class extends Controller {
       this.selectAllTarget.indeterminate = someChecked && !allChecked;
     }
 
-    const action = this.hasActionSelectTarget ? this.actionSelectTarget.value : "";
+    const action = this.hasActionSelectTarget ? this.actionSelectTarget.value : '';
     const anySelected = selected.length > 0;
 
     if (this.hasActionSelectTarget) {
       if (!anySelected) {
-        this.actionSelectTarget.value = "";
+        this.actionSelectTarget.value = '';
       }
       this.actionSelectTarget.disabled = !anySelected;
     }
 
-    if (this.hasOperationTarget) this.operationTarget.value = "";
-    if (this.hasValueTarget) this.valueTarget.value = "";
+    if (this.hasOperationTarget) this.operationTarget.value = '';
+    if (this.hasValueTarget) this.valueTarget.value = '';
 
     if (this.hasApplyTarget) {
       this.applyTarget.disabled = !(anySelected && action);
@@ -79,52 +79,52 @@ export default class extends Controller {
       return;
     }
 
-    const op = this.hasOperationTarget ? this.operationTarget.value : "";
-    const val = this.hasValueTarget ? this.valueTarget.value : "";
+    const op = this.hasOperationTarget ? this.operationTarget.value : '';
+    const val = this.hasValueTarget ? this.valueTarget.value : '';
     if (!op || !val) {
       event.preventDefault();
     }
   }
 
   apply(event) {
-    const action = this.hasActionSelectTarget ? this.actionSelectTarget.value : "";
+    const action = this.hasActionSelectTarget ? this.actionSelectTarget.value : '';
     event.preventDefault();
 
     if (!this.bsModal) return;
 
-    if (this.hasModalBodyArchiveTarget) this.modalBodyArchiveTarget.classList.add("d-none");
-    if (this.hasModalBodyRestoreTarget) this.modalBodyRestoreTarget.classList.add("d-none");
-    if (this.hasModalBodyStatusTarget) this.modalBodyStatusTarget.classList.add("d-none");
-    if (this.hasModalBodyShareTarget) this.modalBodyShareTarget.classList.add("d-none");
+    if (this.hasModalBodyArchiveTarget) this.modalBodyArchiveTarget.classList.add('d-none');
+    if (this.hasModalBodyRestoreTarget) this.modalBodyRestoreTarget.classList.add('d-none');
+    if (this.hasModalBodyStatusTarget) this.modalBodyStatusTarget.classList.add('d-none');
+    if (this.hasModalBodyShareTarget) this.modalBodyShareTarget.classList.add('d-none');
 
     if (this.hasModalApplyTarget) {
-      this.modalApplyTarget.textContent = "Apply";
-      this.modalApplyTarget.classList.remove("btn-danger");
-      this.modalApplyTarget.classList.add("btn-primary");
+      this.modalApplyTarget.textContent = 'Apply';
+      this.modalApplyTarget.classList.remove('btn-danger');
+      this.modalApplyTarget.classList.add('btn-primary');
     }
 
-    if (action === "archive") {
-      if (this.hasModalTitleTarget) this.modalTitleTarget.textContent = "Archive";
-      if (this.hasModalBodyArchiveTarget) this.modalBodyArchiveTarget.classList.remove("d-none");
+    if (action === 'archive') {
+      if (this.hasModalTitleTarget) this.modalTitleTarget.textContent = 'Archive';
+      if (this.hasModalBodyArchiveTarget) this.modalBodyArchiveTarget.classList.remove('d-none');
       if (this.hasModalApplyTarget) {
-        this.modalApplyTarget.textContent = "Archive";
-        this.modalApplyTarget.classList.remove("btn-primary");
-        this.modalApplyTarget.classList.add("btn-danger");
+        this.modalApplyTarget.textContent = 'Archive';
+        this.modalApplyTarget.classList.remove('btn-primary');
+        this.modalApplyTarget.classList.add('btn-danger');
       }
-    } else if (action === "restore") {
-      if (this.hasModalTitleTarget) this.modalTitleTarget.textContent = "Restore";
-      if (this.hasModalBodyRestoreTarget) this.modalBodyRestoreTarget.classList.remove("d-none");
+    } else if (action === 'restore') {
+      if (this.hasModalTitleTarget) this.modalTitleTarget.textContent = 'Restore';
+      if (this.hasModalBodyRestoreTarget) this.modalBodyRestoreTarget.classList.remove('d-none');
       if (this.hasModalApplyTarget) {
-        this.modalApplyTarget.textContent = "Restore";
+        this.modalApplyTarget.textContent = 'Restore';
       }
-    } else if (action === "set_status") {
-      if (this.hasModalTitleTarget) this.modalTitleTarget.textContent = "Set status";
-      if (this.hasModalBodyStatusTarget) this.modalBodyStatusTarget.classList.remove("d-none");
-    } else if (action === "share") {
-      if (this.hasModalTitleTarget) this.modalTitleTarget.textContent = "Share";
-      if (this.hasModalBodyShareTarget) this.modalBodyShareTarget.classList.remove("d-none");
+    } else if (action === 'set_status') {
+      if (this.hasModalTitleTarget) this.modalTitleTarget.textContent = 'Set status';
+      if (this.hasModalBodyStatusTarget) this.modalBodyStatusTarget.classList.remove('d-none');
+    } else if (action === 'share') {
+      if (this.hasModalTitleTarget) this.modalTitleTarget.textContent = 'Share';
+      if (this.hasModalBodyShareTarget) this.modalBodyShareTarget.classList.remove('d-none');
       if (this.hasModalApplyTarget) {
-        this.modalApplyTarget.textContent = "Share";
+        this.modalApplyTarget.textContent = 'Share';
       }
     }
 
@@ -134,36 +134,36 @@ export default class extends Controller {
   confirmModalApply(event) {
     event.preventDefault();
 
-    const action = this.hasActionSelectTarget ? this.actionSelectTarget.value : "";
+    const action = this.hasActionSelectTarget ? this.actionSelectTarget.value : '';
 
-    if (action === "archive") {
-      if (this.hasOperationTarget) this.operationTarget.value = "archive";
-      if (this.hasValueTarget) this.valueTarget.value = "1";
-    } else if (action === "restore") {
-      if (this.hasOperationTarget) this.operationTarget.value = "restore";
-      if (this.hasValueTarget) this.valueTarget.value = "1";
-    } else if (action === "set_status") {
-      const v = this.hasModalStatusSelectTarget ? this.modalStatusSelectTarget.value : "";
-      if (this.hasOperationTarget) this.operationTarget.value = "set_status";
+    if (action === 'archive') {
+      if (this.hasOperationTarget) this.operationTarget.value = 'archive';
+      if (this.hasValueTarget) this.valueTarget.value = '1';
+    } else if (action === 'restore') {
+      if (this.hasOperationTarget) this.operationTarget.value = 'restore';
+      if (this.hasValueTarget) this.valueTarget.value = '1';
+    } else if (action === 'set_status') {
+      const v = this.hasModalStatusSelectTarget ? this.modalStatusSelectTarget.value : '';
+      if (this.hasOperationTarget) this.operationTarget.value = 'set_status';
       if (this.hasValueTarget) this.valueTarget.value = v;
-    } else if (action === "share") {
+    } else if (action === 'share') {
       const selected = this.hasModalShareSelectTarget
         ? Array.from(this.modalShareSelectTarget.selectedOptions)
             .map((o) => o.value)
-            .filter((v) => v && v.trim() !== "")
+            .filter((v) => v && v.trim() !== '')
         : [];
 
       if (selected.length === 0) {
         return;
       }
 
-      if (this.hasOperationTarget) this.operationTarget.value = "share";
-      if (this.hasValueTarget) this.valueTarget.value = "1";
+      if (this.hasOperationTarget) this.operationTarget.value = 'share';
+      if (this.hasValueTarget) this.valueTarget.value = '1';
     }
 
     if (this.bsModal) this.bsModal.hide();
 
-    const form = this.element.querySelector("form") || this.element.closest("form");
+    const form = this.element.querySelector('form') || this.element.closest('form');
     if (form) form.requestSubmit();
   }
 }

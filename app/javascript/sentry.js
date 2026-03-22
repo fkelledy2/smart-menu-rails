@@ -5,7 +5,8 @@ import * as Sentry from '@sentry/browser';
 
 // Initialize Sentry only if DSN is configured
 const sentryDsn = document.querySelector('meta[name="sentry-dsn"]')?.content;
-const sentryEnvironment = document.querySelector('meta[name="sentry-environment"]')?.content || 'development';
+const sentryEnvironment =
+  document.querySelector('meta[name="sentry-environment"]')?.content || 'development';
 const sentryRelease = document.querySelector('meta[name="sentry-release"]')?.content || 'unknown';
 
 if (sentryDsn && sentryEnvironment !== 'test' && sentryEnvironment !== 'development') {

@@ -1,4 +1,4 @@
-import { Controller } from "@hotwired/stimulus";
+import { Controller } from '@hotwired/stimulus';
 
 // StateController: single source of truth in the browser
 // - Reads state from #contextContainer.dataset
@@ -7,8 +7,8 @@ import { Controller } from "@hotwired/stimulus";
 export default class extends Controller {
   static values = {
     // optional future bootstrap state via data-state-value (JSON)
-    state: Object
-  }
+    state: Object,
+  };
 
   // Apply JSON state payload (replace or shallow-merge critical fields)
   applyJsonState(payload) {
@@ -16,40 +16,62 @@ export default class extends Controller {
     const hasOrderKey = Object.prototype.hasOwnProperty.call(payload, 'order');
     const next = {
       session: payload.session ?? prev.session ?? null,
-      order: hasOrderKey ? {
-        id: payload.order?.id ?? null,
-        status: payload.order?.status ?? null,
-        items: Array.isArray(payload.order?.items) ? payload.order.items : [],
-        addedCount: typeof payload.order?.addedCount !== 'undefined' ? payload.order.addedCount : 0,
-        orderedCount: typeof payload.order?.orderedCount !== 'undefined' ? payload.order.orderedCount : 0,
-        totalCount: typeof payload.order?.totalCount !== 'undefined' ? payload.order.totalCount : 0,
-        openedCount: typeof payload.order?.openedCount !== 'undefined' ? payload.order.openedCount : 0,
-        removedCount: typeof payload.order?.removedCount !== 'undefined' ? payload.order.removedCount : 0,
-        orderedOnlyCount: typeof payload.order?.orderedOnlyCount !== 'undefined' ? payload.order.orderedOnlyCount : 0,
-        preparingCount: typeof payload.order?.preparingCount !== 'undefined' ? payload.order.preparingCount : 0,
-        readyCount: typeof payload.order?.readyCount !== 'undefined' ? payload.order.readyCount : 0,
-        deliveredCount: typeof payload.order?.deliveredCount !== 'undefined' ? payload.order.deliveredCount : 0,
-        billrequestedCount: typeof payload.order?.billrequestedCount !== 'undefined' ? payload.order.billrequestedCount : 0,
-        paidCount: typeof payload.order?.paidCount !== 'undefined' ? payload.order.paidCount : 0,
-        closedCount: typeof payload.order?.closedCount !== 'undefined' ? payload.order.closedCount : 0
-      } : {
-        // If no 'order' key in payload, preserve previous (old event type)
-        id: prev.order?.id ?? null,
-        status: prev.order?.status ?? null,
-        items: Array.isArray(prev.order?.items) ? prev.order.items : [],
-        addedCount: prev.order?.addedCount || 0,
-        orderedCount: prev.order?.orderedCount || 0,
-        totalCount: prev.order?.totalCount || 0,
-        openedCount: prev.order?.openedCount || 0,
-        removedCount: prev.order?.removedCount || 0,
-        orderedOnlyCount: prev.order?.orderedOnlyCount || 0,
-        preparingCount: prev.order?.preparingCount || 0,
-        readyCount: prev.order?.readyCount || 0,
-        deliveredCount: prev.order?.deliveredCount || 0,
-        billrequestedCount: prev.order?.billrequestedCount || 0,
-        paidCount: prev.order?.paidCount || 0,
-        closedCount: prev.order?.closedCount || 0
-      },
+      order: hasOrderKey
+        ? {
+            id: payload.order?.id ?? null,
+            status: payload.order?.status ?? null,
+            items: Array.isArray(payload.order?.items) ? payload.order.items : [],
+            addedCount:
+              typeof payload.order?.addedCount !== 'undefined' ? payload.order.addedCount : 0,
+            orderedCount:
+              typeof payload.order?.orderedCount !== 'undefined' ? payload.order.orderedCount : 0,
+            totalCount:
+              typeof payload.order?.totalCount !== 'undefined' ? payload.order.totalCount : 0,
+            openedCount:
+              typeof payload.order?.openedCount !== 'undefined' ? payload.order.openedCount : 0,
+            removedCount:
+              typeof payload.order?.removedCount !== 'undefined' ? payload.order.removedCount : 0,
+            orderedOnlyCount:
+              typeof payload.order?.orderedOnlyCount !== 'undefined'
+                ? payload.order.orderedOnlyCount
+                : 0,
+            preparingCount:
+              typeof payload.order?.preparingCount !== 'undefined'
+                ? payload.order.preparingCount
+                : 0,
+            readyCount:
+              typeof payload.order?.readyCount !== 'undefined' ? payload.order.readyCount : 0,
+            deliveredCount:
+              typeof payload.order?.deliveredCount !== 'undefined'
+                ? payload.order.deliveredCount
+                : 0,
+            billrequestedCount:
+              typeof payload.order?.billrequestedCount !== 'undefined'
+                ? payload.order.billrequestedCount
+                : 0,
+            paidCount:
+              typeof payload.order?.paidCount !== 'undefined' ? payload.order.paidCount : 0,
+            closedCount:
+              typeof payload.order?.closedCount !== 'undefined' ? payload.order.closedCount : 0,
+          }
+        : {
+            // If no 'order' key in payload, preserve previous (old event type)
+            id: prev.order?.id ?? null,
+            status: prev.order?.status ?? null,
+            items: Array.isArray(prev.order?.items) ? prev.order.items : [],
+            addedCount: prev.order?.addedCount || 0,
+            orderedCount: prev.order?.orderedCount || 0,
+            totalCount: prev.order?.totalCount || 0,
+            openedCount: prev.order?.openedCount || 0,
+            removedCount: prev.order?.removedCount || 0,
+            orderedOnlyCount: prev.order?.orderedOnlyCount || 0,
+            preparingCount: prev.order?.preparingCount || 0,
+            readyCount: prev.order?.readyCount || 0,
+            deliveredCount: prev.order?.deliveredCount || 0,
+            billrequestedCount: prev.order?.billrequestedCount || 0,
+            paidCount: prev.order?.paidCount || 0,
+            closedCount: prev.order?.closedCount || 0,
+          },
       totals: payload.totals ?? prev.totals ?? null,
       flags: payload.flags ?? prev.flags ?? {},
       tableId: payload.tableId ?? prev.tableId ?? null,
@@ -60,14 +82,18 @@ export default class extends Controller {
         allowAlcohol: payload.restaurant?.allowAlcohol ?? prev.restaurant?.allowAlcohol ?? false,
         allowedNow: payload.restaurant?.allowedNow ?? prev.restaurant?.allowedNow ?? false,
         verifyAgeText: payload.restaurant?.verifyAgeText ?? prev.restaurant?.verifyAgeText ?? '',
-        salesDisabledText: payload.restaurant?.salesDisabledText ?? prev.restaurant?.salesDisabledText ?? '',
-        policyBlockedText: payload.restaurant?.policyBlockedText ?? prev.restaurant?.policyBlockedText ?? ''
+        salesDisabledText:
+          payload.restaurant?.salesDisabledText ?? prev.restaurant?.salesDisabledText ?? '',
+        policyBlockedText:
+          payload.restaurant?.policyBlockedText ?? prev.restaurant?.policyBlockedText ?? '',
       },
       participants: {
-        orderParticipantId: payload.participants?.orderParticipantId ?? prev.participants?.orderParticipantId ?? null,
-        menuParticipantId: payload.participants?.menuParticipantId ?? prev.participants?.menuParticipantId ?? null
+        orderParticipantId:
+          payload.participants?.orderParticipantId ?? prev.participants?.orderParticipantId ?? null,
+        menuParticipantId:
+          payload.participants?.menuParticipantId ?? prev.participants?.menuParticipantId ?? null,
       },
-      version: payload.version ?? prev.version
+      version: payload.version ?? prev.version,
     };
     this.state = next;
   }
@@ -101,7 +127,10 @@ export default class extends Controller {
           restaurantId = node?.dataset?.restaurantId?.trim() || null;
         } catch (_) {}
       }
-      if (!restaurantId) { console.warn('[State][RemoveItem] Missing restaurant id'); return; }
+      if (!restaurantId) {
+        console.warn('[State][RemoveItem] Missing restaurant id');
+        return;
+      }
 
       const csrfToken = document.querySelector("meta[name='csrf-token']")?.content || '';
       const url = `/restaurants/${restaurantId}/ordritems/${ordrItemId}`;
@@ -112,14 +141,18 @@ export default class extends Controller {
 
       fetch(url, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json', 'X-CSRF-Token': csrfToken },
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+          'X-CSRF-Token': csrfToken,
+        },
         body: JSON.stringify({ ordritem: { status: 10, ordritemprice: 0 } }),
       })
-        .then(r => {
+        .then((r) => {
           if (!r.ok) throw new Error(`PATCH ${r.status}`);
           return r.json().catch(() => ({}));
         })
-        .then(data => {
+        .then((data) => {
           // Forward JSON state if present
           const payload = data?.state || data;
           if (payload && (payload.order || payload.totals)) {
@@ -128,7 +161,7 @@ export default class extends Controller {
           // Also re-fetch full state for safety
           this._fetchState();
         })
-        .catch(err => {
+        .catch((err) => {
           console.error('[State][RemoveItem] PATCH failed', err);
           // Revert optimistic hide
           if (row) row.style.display = '';
@@ -169,7 +202,9 @@ export default class extends Controller {
       const sheet = document.getElementById('cartBottomSheet');
       if (sheet) {
         const ctrl = this.application?.getControllerForElementAndIdentifier(sheet, 'bottom-sheet');
-        if (ctrl) { ctrl.setState('full'); }
+        if (ctrl) {
+          ctrl.setState('full');
+        }
       }
     };
     document.addEventListener('click', this._onPayClick);
@@ -197,7 +232,9 @@ export default class extends Controller {
       const sheet = document.getElementById('cartBottomSheet');
       if (sheet) {
         const ctrl = this.application?.getControllerForElementAndIdentifier(sheet, 'bottom-sheet');
-        if (ctrl) { ctrl.setState('full'); }
+        if (ctrl) {
+          ctrl.setState('full');
+        }
       }
     };
     document.addEventListener('click', this._onSplitBillClick);
@@ -209,26 +246,40 @@ export default class extends Controller {
       e.preventDefault();
       console.debug('[State] Cancel clicked');
       const paySection = document.getElementById('cartPaySection');
-      if (paySection) { paySection.style.display = 'none'; }
+      if (paySection) {
+        paySection.style.display = 'none';
+      }
       const splitSection = document.getElementById('cartSplitBillSection');
-      if (splitSection) { splitSection.style.display = 'none'; }
+      if (splitSection) {
+        splitSection.style.display = 'none';
+      }
       // Restore Bill Summary section
       const billSummary = document.querySelector('[data-testid="cart-bill-summary"]');
-      if (billSummary) { billSummary.style.display = 'block'; }
+      if (billSummary) {
+        billSummary.style.display = 'block';
+      }
       // Restore payment buttons container
       const paymentButtons = document.getElementById('cartPaymentButtons');
-      if (paymentButtons) { paymentButtons.style.display = 'flex'; }
+      if (paymentButtons) {
+        paymentButtons.style.display = 'flex';
+      }
       // Restore Split Bill button
       const splitBtn = document.getElementById('cartSplitBill');
-      if (splitBtn) { splitBtn.style.display = 'block'; }
+      if (splitBtn) {
+        splitBtn.style.display = 'block';
+      }
       // Restore the Pay button
       const payBtn = document.getElementById('cartPayOrder');
-      if (payBtn) { payBtn.style.display = 'block'; }
+      if (payBtn) {
+        payBtn.style.display = 'block';
+      }
       const sheet = document.getElementById('cartBottomSheet');
       if (sheet) {
         const ctrl = this.application?.getControllerForElementAndIdentifier(sheet, 'bottom-sheet');
         console.debug('[State] Cancel -> bottom-sheet ctrl:', !!ctrl);
-        if (ctrl) { ctrl.setState('full'); }
+        if (ctrl) {
+          ctrl.setState('full');
+        }
       }
     };
     document.addEventListener('click', this._onCancelClick);
@@ -247,13 +298,22 @@ export default class extends Controller {
       const doHydrate = () => {
         if (!slug) return;
         const url = `/smartmenus/${encodeURIComponent(slug)}.json?ts=${Date.now()}`;
-        fetch(url, { headers: { Accept: 'application/json', 'Cache-Control': 'no-cache', Pragma: 'no-cache' } })
+        fetch(url, {
+          headers: { Accept: 'application/json', 'Cache-Control': 'no-cache', Pragma: 'no-cache' },
+        })
           .then((r) => (r && r.ok ? r.json() : null))
           .then((payload) => {
             if (payload) {
               try {
                 const cnt = Array.isArray(payload?.order?.items) ? payload.order.items.length : 0;
-                console.debug('[State][hydrate] items=', cnt, 'orderId=', payload?.order?.id, 'hasTotals=', !!payload?.totals);
+                console.debug(
+                  '[State][hydrate] items=',
+                  cnt,
+                  'orderId=',
+                  payload?.order?.id,
+                  'hasTotals=',
+                  !!payload?.totals
+                );
               } catch (_) {}
               this.applyJsonState(payload);
               this.dispatchState();
@@ -263,14 +323,18 @@ export default class extends Controller {
       };
 
       // Always hydrate if state is not yet hydrated (even if a previous page set __SM_INIT_FETCHED)
-      if (needsHydration()) { doHydrate(); }
+      if (needsHydration()) {
+        doHydrate();
+      }
 
       // Rehydrate on BFCache restore
       if (!window.__SM_PAGESHOW_BOUND) {
         window.__SM_PAGESHOW_BOUND = true;
         window.addEventListener('pageshow', (evt) => {
           // evt.persisted is true when restored from bfcache
-          if (evt?.persisted || needsHydration()) { doHydrate(); }
+          if (evt?.persisted || needsHydration()) {
+            doHydrate();
+          }
         });
       }
 
@@ -291,7 +355,14 @@ export default class extends Controller {
         const incoming = e.detail || {};
         try {
           const cnt = Array.isArray(incoming?.order?.items) ? incoming.order.items.length : 0;
-          console.info('[State][update] items=', cnt, 'orderId=', incoming?.order?.id, 'hasTotals=', !!incoming?.totals);
+          console.info(
+            '[State][update] items=',
+            cnt,
+            'orderId=',
+            incoming?.order?.id,
+            'hasTotals=',
+            !!incoming?.totals
+          );
         } catch (_) {}
         this.applyJsonState(incoming);
         this.dispatchState();
@@ -319,7 +390,8 @@ export default class extends Controller {
     if (this._onStateUpdate) document.removeEventListener('state:update', this._onStateUpdate);
     if (this._onPayClick) document.removeEventListener('click', this._onPayClick);
     if (this._onSplitBillClick) document.removeEventListener('click', this._onSplitBillClick);
-    if (this._onRemoveItemClick) document.removeEventListener('click', this._onRemoveItemClick, true);
+    if (this._onRemoveItemClick)
+      document.removeEventListener('click', this._onRemoveItemClick, true);
     delete window.__cartPayCancel;
   }
 
@@ -330,7 +402,7 @@ export default class extends Controller {
       session: d.session || null,
       order: {
         id: d.orderId || null,
-        status: (d.orderStatus || '').toLowerCase() || null
+        status: (d.orderStatus || '').toLowerCase() || null,
       },
       totals: null,
       tableId: d.tableId || null,
@@ -342,19 +414,20 @@ export default class extends Controller {
         allowedNow: d.alcoholAllowedNow === '1',
         verifyAgeText: d.alcoholVerifyAgeText || '',
         salesDisabledText: d.alcoholSalesDisabledText || '',
-        policyBlockedText: d.alcoholPolicyBlockedText || ''
+        policyBlockedText: d.alcoholPolicyBlockedText || '',
       },
       participants: {
         orderParticipantId: d.participantId || null,
-        menuParticipantId: d.menuParticipantId || null
-      }
+        menuParticipantId: d.menuParticipantId || null,
+      },
     };
   }
 
-
   // Dispatch broad and targeted events for other controllers
   dispatchState() {
-    try { window.__SM_STATE = this.state; } catch (_) {}
+    try {
+      window.__SM_STATE = this.state;
+    } catch (_) {}
     this.dispatch('changed', { detail: this.state });
     this.dispatch('order', { detail: this.state.order });
     this.dispatch('menu', { detail: { menuId: this.state.menuId } });
@@ -364,8 +437,12 @@ export default class extends Controller {
     try {
       document.dispatchEvent(new CustomEvent('state:changed', { detail: this.state }));
       document.dispatchEvent(new CustomEvent('state:order', { detail: this.state.order }));
-      document.dispatchEvent(new CustomEvent('state:menu', { detail: { menuId: this.state.menuId } }));
-      document.dispatchEvent(new CustomEvent('state:flags', { detail: { restaurant: this.state.restaurant } }));
+      document.dispatchEvent(
+        new CustomEvent('state:menu', { detail: { menuId: this.state.menuId } })
+      );
+      document.dispatchEvent(
+        new CustomEvent('state:flags', { detail: { restaurant: this.state.restaurant } })
+      );
 
       // bridge to old events if any code still listens
       document.dispatchEvent(new CustomEvent('ordr:updated'));
@@ -375,11 +452,16 @@ export default class extends Controller {
     // Sync cart bottom sheet counts and totals with state
     try {
       const stateItems = Array.isArray(this.state.order?.items) ? this.state.order.items : [];
-      const totalCount = stateItems.length > 0
-        ? stateItems.filter(i => i.status !== 'removed').reduce((sum, i) => sum + (Number(i.quantity) || 1), 0)
-        : Number(this.state.order?.totalCount || 0) - Number(this.state.order?.removedCount || 0);
+      const totalCount =
+        stateItems.length > 0
+          ? stateItems
+              .filter((i) => i.status !== 'removed')
+              .reduce((sum, i) => sum + (Number(i.quantity) || 1), 0)
+          : Number(this.state.order?.totalCount || 0) - Number(this.state.order?.removedCount || 0);
       const countEl = document.getElementById('cartItemCount');
-      if (countEl) { countEl.textContent = totalCount; }
+      if (countEl) {
+        countEl.textContent = totalCount;
+      }
 
       const totals = this.state.totals;
       const symbol = (totals && totals.currency && totals.currency.symbol) || '';
@@ -387,12 +469,16 @@ export default class extends Controller {
         const gross = Number(totals.gross || 0);
         const formatted = symbol + gross.toFixed(2);
         const totalAmountEl = document.getElementById('cartTotalAmount');
-        if (totalAmountEl) { totalAmountEl.textContent = formatted; }
+        if (totalAmountEl) {
+          totalAmountEl.textContent = formatted;
+        }
       }
 
       // Dynamically re-render cart item rows from state
       this._renderCartItems(this.state, symbol);
-    } catch (e) { console.error('[State] cart sync error', e); }
+    } catch (e) {
+      console.error('[State] cart sync error', e);
+    }
   }
 
   _renderCartItems(state, symbol) {
@@ -401,11 +487,17 @@ export default class extends Controller {
     const order = state.order || {};
     // Don't render until items array has been hydrated from JSON (preserve server-rendered ERB)
     if (!Array.isArray(order.items)) return;
-    const items = order.items.filter(i => i.status !== 'removed');
-    console.debug('[State] _renderCartItems', { itemCount: items.length, orderId: order.id, hasContainer: !!container });
+    const items = order.items.filter((i) => i.status !== 'removed');
+    console.debug('[State] _renderCartItems', {
+      itemCount: items.length,
+      orderId: order.id,
+      hasContainer: !!container,
+    });
 
-    const opened = items.filter(i => i.status === 'opened');
-    const submitted = items.filter(i => ['ordered','preparing','ready','delivered'].includes(i.status));
+    const opened = items.filter((i) => i.status === 'opened');
+    const submitted = items.filter((i) =>
+      ['ordered', 'preparing', 'ready', 'delivered'].includes(i.status)
+    );
     const fmt = (n) => symbol + Number(n || 0).toFixed(2);
     const totals = state.totals;
     const flags = state.flags || {};
@@ -417,9 +509,14 @@ export default class extends Controller {
       for (const item of opened) {
         const qty = Math.max(1, parseInt(item.quantity) || 1);
         const lineTotal = Number(item.price || 0) * qty;
-        const sizeBit = item.size_name ? ` <span class="text-muted" style="font-size:0.8em;">(${this._esc(item.size_name.replace(/\s*\(.*\)/, ''))})</span>` : '';
+        const sizeBit = item.size_name
+          ? ` <span class="text-muted" style="font-size:0.8em;">(${this._esc(item.size_name.replace(/\s*\(.*\)/, ''))})</span>`
+          : '';
         const qtyBadge = qty > 1 ? `<span class="cart-sheet__qty-badge">${qty}×</span>` : '';
-        const notesBit = (item.notes && item.notes.length > 0) ? `<div class="text-muted small mt-1"><i class="bi bi-sticky"></i> ${item.notes.map(n => this._esc(n)).join(', ')}</div>` : '';
+        const notesBit =
+          item.notes && item.notes.length > 0
+            ? `<div class="text-muted small mt-1"><i class="bi bi-sticky"></i> ${item.notes.map((n) => this._esc(n)).join(', ')}</div>`
+            : '';
         html += `<div class="cart-sheet__item" data-testid="cart-item-${item.id}">
           <button type="button" class="cart-sheet__remove removeItemFromOrderButton" data-bs-ordritem_id="${item.id}" aria-label="Remove item" data-testid="remove-cart-item-${item.id}"><i class="bi bi-x-circle"></i></button>
           <div class="cart-sheet__item-name">${qtyBadge}${this._esc(item.name)}${sizeBit}${notesBit}</div>
@@ -434,13 +531,19 @@ export default class extends Controller {
     }
 
     if (submitted.length > 0) {
-      html += '<div class="cart-sheet__section-label cart-sheet__section-label--muted">Submitted</div>';
+      html +=
+        '<div class="cart-sheet__section-label cart-sheet__section-label--muted">Submitted</div>';
       for (const item of submitted) {
         const qty = Math.max(1, parseInt(item.quantity) || 1);
         const lineTotal = Number(item.price || 0) * qty;
-        const sizeBit = item.size_name ? ` <span class="text-muted" style="font-size:0.8em;">(${this._esc(item.size_name.replace(/\s*\(.*\)/, ''))})</span>` : '';
+        const sizeBit = item.size_name
+          ? ` <span class="text-muted" style="font-size:0.8em;">(${this._esc(item.size_name.replace(/\s*\(.*\)/, ''))})</span>`
+          : '';
         const qtyBadge = qty > 1 ? `<span class="cart-sheet__qty-badge">${qty}×</span>` : '';
-        const notesBit = (item.notes && item.notes.length > 0) ? `<div class="text-muted small mt-1"><i class="bi bi-sticky"></i> ${item.notes.map(n => this._esc(n)).join(', ')}</div>` : '';
+        const notesBit =
+          item.notes && item.notes.length > 0
+            ? `<div class="text-muted small mt-1"><i class="bi bi-sticky"></i> ${item.notes.map((n) => this._esc(n)).join(', ')}</div>`
+            : '';
         html += `<div class="cart-sheet__item cart-sheet__item--submitted">
           <div class="cart-sheet__status-icon"><i class="bi bi-check-circle-fill text-success"></i></div>
           <div class="cart-sheet__item-name">${qtyBadge}${this._esc(item.name)}${sizeBit}${notesBit}</div>
@@ -454,7 +557,8 @@ export default class extends Controller {
       html += '<div class="cart-sheet__bill-summary mt-3" data-testid="cart-bill-summary">';
       html += '<hr>';
       html += '<h6 class="fw-bold mb-3">Bill Summary</h6>';
-      html += '<div class="bill-line bill-line-header"><span><b>Item</b></span><span class="bill-amount"><b>Price</b></span></div>';
+      html +=
+        '<div class="bill-line bill-line-header"><span><b>Item</b></span><span class="bill-amount"><b>Price</b></span></div>';
       if (totals.covercharge && totals.covercharge > 0) {
         html += `<div class="bill-line"><span>Cover charge</span><span class="bill-amount">${fmt(totals.covercharge)}</span></div>`;
       }
@@ -475,7 +579,8 @@ export default class extends Controller {
       html += '<div class="cart-sheet__actions" data-testid="cart-actions">';
       const hasSubmitButton = opened.length > 0;
       if (hasSubmitButton) {
-        html += '<button type="button" class="btn-touch-primary w-100 submitOrderButton" id="cartSubmitOrder" data-testid="cart-submit-order-btn"><i class="bi bi-send"></i> Submit order</button>';
+        html +=
+          '<button type="button" class="btn-touch-primary w-100 submitOrderButton" id="cartSubmitOrder" data-testid="cart-submit-order-btn"><i class="bi bi-send"></i> Submit order</button>';
       }
       const payVisible = flags.payVisible === true && !hasSubmitButton;
       const billVisible = flags.displayRequestBill === true && !payVisible;
@@ -490,16 +595,18 @@ export default class extends Controller {
 
       // Inline pay section (only when bill requested)
       if (payVisible) {
-        html += '<div id="cartPaySection" style="display:none;" class="cart-sheet__pay-section mt-3">';
+        html +=
+          '<div id="cartPaySection" style="display:none;" class="cart-sheet__pay-section mt-3">';
         if (totals) {
           html += this._renderPaySection(totals, symbol, flags);
         }
         html += '</div>';
       }
-      
+
       // Split bill section (only when bill requested)
       if (payVisible) {
-        html += '<div id="cartSplitBillSection" style="display:none;" class="cart-sheet__split-section mt-3">';
+        html +=
+          '<div id="cartSplitBillSection" style="display:none;" class="cart-sheet__split-section mt-3">';
         html += '<div data-controller="split-bill" ';
         html += `data-split-bill-order-id-value="${order.id || ''}" `;
         html += `data-split-bill-restaurant-id-value="${this.state?.restaurant?.id || ''}" `;
@@ -507,26 +614,35 @@ export default class extends Controller {
         html += `data-split-bill-currency-symbol-value="${symbol}" `;
         html += `data-split-bill-currency-code-value="${totals?.currency?.code || ''}">`;
         html += '<hr><h6 class="fw-bold mb-3">Split Bill</h6>';
-        html += '<div data-split-bill-target="loading" class="text-center py-4" style="display:none;"><div class="spinner-border text-primary"></div></div>';
-        html += '<div data-split-bill-target="error" class="alert alert-danger" style="display:none;"><i class="bi bi-exclamation-triangle"></i> <span data-split-bill-target="errorMessage"></span></div>';
+        html +=
+          '<div data-split-bill-target="loading" class="text-center py-4" style="display:none;"><div class="spinner-border text-primary"></div></div>';
+        html +=
+          '<div data-split-bill-target="error" class="alert alert-danger" style="display:none;"><i class="bi bi-exclamation-triangle"></i> <span data-split-bill-target="errorMessage"></span></div>';
         html += '<div data-split-bill-target="methodSelector">';
         html += '<div data-split-bill-target="participantsList"></div>';
-        html += '<div data-split-bill-target="equalPreview" style="display:none;"><span data-split-bill-target="equalAmount"></span></div>';
-        html += '<div data-split-bill-target="customInputs" style="display:none;"><div data-split-bill-target="customAmountsList"></div><div data-split-bill-target="customTotal"></div></div>';
-        html += '<div data-split-bill-target="percentageInputs" style="display:none;"><div data-split-bill-target="percentageAmountsList"></div><div data-split-bill-target="percentageTotal"></div></div>';
-        html += '<div data-split-bill-target="itemInputs" style="display:none;"><div data-split-bill-target="itemAssignmentsList"></div></div>';
-        html += '<button data-split-bill-target="createButton" class="btn btn-primary mt-3" style="display:none;">Create Split Plan</button>';
+        html +=
+          '<div data-split-bill-target="equalPreview" style="display:none;"><span data-split-bill-target="equalAmount"></span></div>';
+        html +=
+          '<div data-split-bill-target="customInputs" style="display:none;"><div data-split-bill-target="customAmountsList"></div><div data-split-bill-target="customTotal"></div></div>';
+        html +=
+          '<div data-split-bill-target="percentageInputs" style="display:none;"><div data-split-bill-target="percentageAmountsList"></div><div data-split-bill-target="percentageTotal"></div></div>';
+        html +=
+          '<div data-split-bill-target="itemInputs" style="display:none;"><div data-split-bill-target="itemAssignmentsList"></div></div>';
+        html +=
+          '<button data-split-bill-target="createButton" class="btn btn-primary mt-3" style="display:none;">Create Split Plan</button>';
         html += '</div>';
         html += '<div data-split-bill-target="planView" style="display:none;">';
         html += '<div data-split-bill-target="planStatus"></div>';
         html += '<div data-split-bill-target="planDetails"></div>';
         html += '<div data-split-bill-target="myShareAmount"></div>';
-        html += '<button data-split-bill-target="payShareButton" class="btn btn-primary mt-3" style="display:none;">Pay My Share</button>';
+        html +=
+          '<button data-split-bill-target="payShareButton" class="btn btn-primary mt-3" style="display:none;">Pay My Share</button>';
         html += '</div>';
         html += '</div></div>';
       }
     } else if (order.id) {
-      html += '<div class="text-center text-muted py-4"><i class="bi bi-cart3 fs-1 mb-2 d-block"></i><p>Your cart is empty</p><p class="small">Tap + on any item to add it</p></div>';
+      html +=
+        '<div class="text-center text-muted py-4"><i class="bi bi-cart3 fs-1 mb-2 d-block"></i><p>Your cart is empty</p><p class="small">Tap + on any item to add it</p></div>';
     } else {
       // No order yet — always preserve server-rendered start-order section
       return;
@@ -543,7 +659,9 @@ export default class extends Controller {
     const sheet = document.getElementById('cartBottomSheet');
     if (sheet && order.id && items.length > 0) {
       const ctrl = this.application?.getControllerForElementAndIdentifier(sheet, 'bottom-sheet');
-      if (ctrl && ctrl.state === 'closed') { ctrl.setState('peek'); }
+      if (ctrl && ctrl.state === 'closed') {
+        ctrl.setState('peek');
+      }
     }
   }
 
@@ -552,18 +670,22 @@ export default class extends Controller {
     const fmt = (n) => symbol + Number(n || 0).toFixed(2);
     const sheet = document.getElementById('cartBottomSheet');
     let tipPresets = [];
-    try { tipPresets = JSON.parse(sheet?.dataset?.tipPresets || '[]'); } catch (_) {}
+    try {
+      tipPresets = JSON.parse(sheet?.dataset?.tipPresets || '[]');
+    } catch (_) {}
     const grossVal = Number(totals.gross || 0).toFixed(2);
 
     let h = '<hr>';
     h += '<h6 class="fw-bold mb-3">Pay Bill</h6>';
     h += `<div class="bill-line bill-line-total"><span><b>Total</b> <i>(excluding tip)</i></span><span class="bill-amount"><b>${symbol}<span id="orderGross">${grossVal}</span></b></span></div>`;
     // Tip presets
-    h += '<div class="bill-tip-row"><div class="d-flex flex-wrap align-items-center justify-content-end gap-2 mt-3 mb-3">';
-    tipPresets.forEach(pct => {
+    h +=
+      '<div class="bill-tip-row"><div class="d-flex flex-wrap align-items-center justify-content-end gap-2 mt-3 mb-3">';
+    tipPresets.forEach((pct) => {
       h += `<button type="button" class="btn-touch-secondary btn-touch-sm tip-preset-btn"><span class="tipPreset">${pct}%</span></button>`;
     });
-    h += '<input id="tipNumberField" type="number" min="0.00" class="form-control form-control-sm text-end" style="width:80px" value="0.00">';
+    h +=
+      '<input id="tipNumberField" type="number" min="0.00" class="form-control form-control-sm text-end" style="width:80px" value="0.00">';
     h += '</div></div>';
     h += '<hr>';
     h += `<div class="bill-line bill-line-total"><span><b>Total</b> <i>(including tip)</i></span><span class="bill-amount"><b><span id="orderGrandTotal">${symbol}${grossVal}</span></b></span></div>`;
@@ -588,11 +710,13 @@ export default class extends Controller {
       h += ` data-square-payment-amount-cents-value="${amountCents}"`;
       h += ` data-square-payment-sandbox-value="${sqSandbox}"`;
       h += ` data-square-payment-payment-url-value="${payUrl}">`;
-      h += '<div data-square-payment-target="cardContainer" class="mb-3" style="min-height:90px;"></div>';
+      h +=
+        '<div data-square-payment-target="cardContainer" class="mb-3" style="min-height:90px;"></div>';
       h += '<div data-square-payment-target="applePayContainer" class="d-none mb-2"></div>';
       h += '<div data-square-payment-target="googlePayContainer" class="d-none mb-2"></div>';
       h += '<input type="hidden" data-square-payment-target="tipInput" value="0">';
-      h += '<div data-square-payment-target="errorMessage" class="d-none alert alert-danger py-2 px-3 small mt-2"></div>';
+      h +=
+        '<div data-square-payment-target="errorMessage" class="d-none alert alert-danger py-2 px-3 small mt-2"></div>';
       h += '<div data-square-payment-target="processingOverlay" class="d-none text-center py-3">';
       h += '<div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div>';
       h += '<span class="small text-muted">Processing payment…</span></div>';
@@ -608,7 +732,8 @@ export default class extends Controller {
     // Cancel + Confirm buttons (50/50)
     const hasPayable = Number(totals.gross || 0) > 0;
     h += '<div class="d-flex gap-2 mt-3">';
-    h += '<button id="cartPayCancel" type="button" class="btn-touch-secondary w-50">Cancel</button>';
+    h +=
+      '<button id="cartPayCancel" type="button" class="btn-touch-secondary w-50">Cancel</button>';
     if (provider === 'square-inline') {
       h += `<button id="pay-order-confirm" type="button" class="btn-touch-primary w-50" data-action="click->square-payment#pay" ${hasPayable ? '' : 'disabled'}><i class="bi bi-credit-card"></i> Pay</button>`;
     } else {
@@ -624,25 +749,39 @@ export default class extends Controller {
     cancelBtn.addEventListener('click', () => {
       console.debug('[State] Cancel clicked (bound handler)');
       const paySection = document.getElementById('cartPaySection');
-      if (paySection) { paySection.style.display = 'none'; }
+      if (paySection) {
+        paySection.style.display = 'none';
+      }
       const splitSection = document.getElementById('cartSplitBillSection');
-      if (splitSection) { splitSection.style.display = 'none'; }
+      if (splitSection) {
+        splitSection.style.display = 'none';
+      }
       // Restore Bill Summary section
       const billSummary = document.querySelector('[data-testid="cart-bill-summary"]');
-      if (billSummary) { billSummary.style.display = 'block'; }
+      if (billSummary) {
+        billSummary.style.display = 'block';
+      }
       // Restore payment buttons container
       const paymentButtons = document.getElementById('cartPaymentButtons');
-      if (paymentButtons) { paymentButtons.style.display = 'flex'; }
+      if (paymentButtons) {
+        paymentButtons.style.display = 'flex';
+      }
       // Restore Split Bill button
       const splitBtn = document.getElementById('cartSplitBill');
-      if (splitBtn) { splitBtn.style.display = 'block'; }
+      if (splitBtn) {
+        splitBtn.style.display = 'block';
+      }
       // Restore the Pay button
       const payBtn = document.getElementById('cartPayOrder');
-      if (payBtn) { payBtn.style.display = 'block'; }
+      if (payBtn) {
+        payBtn.style.display = 'block';
+      }
       const sheet = document.getElementById('cartBottomSheet');
       if (sheet) {
         const ctrl = this.application?.getControllerForElementAndIdentifier(sheet, 'bottom-sheet');
-        if (ctrl) { ctrl.setState('full'); }
+        if (ctrl) {
+          ctrl.setState('full');
+        }
       }
     });
   }
@@ -651,9 +790,11 @@ export default class extends Controller {
     try {
       const slug = document.body?.dataset?.smartmenuId;
       if (!slug) return;
-      fetch(`/smartmenus/${encodeURIComponent(slug)}.json?ts=${Date.now()}`, { headers: { Accept: 'application/json', 'Cache-Control': 'no-cache' } })
-        .then(r => r && r.ok ? r.json() : null)
-        .then(payload => {
+      fetch(`/smartmenus/${encodeURIComponent(slug)}.json?ts=${Date.now()}`, {
+        headers: { Accept: 'application/json', 'Cache-Control': 'no-cache' },
+      })
+        .then((r) => (r && r.ok ? r.json() : null))
+        .then((payload) => {
           if (payload) {
             this.applyJsonState(payload);
             this.dispatchState();

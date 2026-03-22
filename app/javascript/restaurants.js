@@ -201,44 +201,45 @@ export function initRestaurants() {
   if (!alreadyBound) {
     window.__restaurantsInitBound = true;
 
-  $(document).on('keydown', 'form', function (event) {
-    return event.key != 'Enter';
-  });
+    $(document).on('keydown', 'form', function (event) {
+      return event.key != 'Enter';
+    });
 
-  // Clickable rows/cards: navigate to edit when clicking background.
-  // Ignore clicks on interactive elements within the row.
-  $(document).on('click', '.clickable-row[data-href]', function (event) {
-    const $target = $(event.target);
-    if (
-      $target.closest('a, button, input, select, textarea, label, .drag-handle, .form-check-input').length > 0
-    ) {
-      return;
-    }
+    // Clickable rows/cards: navigate to edit when clicking background.
+    // Ignore clicks on interactive elements within the row.
+    $(document).on('click', '.clickable-row[data-href]', function (event) {
+      const $target = $(event.target);
+      if (
+        $target.closest(
+          'a, button, input, select, textarea, label, .drag-handle, .form-check-input'
+        ).length > 0
+      ) {
+        return;
+      }
 
-    const frame = this.getAttribute('data-turbo-frame');
+      const frame = this.getAttribute('data-turbo-frame');
 
-    const primaryLink = this.querySelector('a[data-row-primary-link]');
-    if (primaryLink) {
-      const href = primaryLink.getAttribute('href');
-      if (href && frame && window.Turbo && typeof window.Turbo.visit === 'function') {
+      const primaryLink = this.querySelector('a[data-row-primary-link]');
+      if (primaryLink) {
+        const href = primaryLink.getAttribute('href');
+        if (href && frame && window.Turbo && typeof window.Turbo.visit === 'function') {
+          window.Turbo.visit(href, { frame });
+          return;
+        }
+        primaryLink.click();
+        return;
+      }
+
+      const href = this.getAttribute('data-href');
+      if (!href) return;
+
+      if (frame && window.Turbo && typeof window.Turbo.visit === 'function') {
         window.Turbo.visit(href, { frame });
         return;
       }
-      primaryLink.click();
-      return;
-    }
 
-    const href = this.getAttribute('data-href');
-    if (!href) return;
-
-    if (frame && window.Turbo && typeof window.Turbo.visit === 'function') {
-      window.Turbo.visit(href, { frame });
-      return;
-    }
-
-    window.location.href = href;
-  });
-
+      window.location.href = href;
+    });
   }
 
   const syncNewRestaurantSaveEnabled = () => {
@@ -251,7 +252,8 @@ export function initRestaurants() {
 
     const nameOk = (nameEl && nameEl.value && nameEl.value.trim().length > 0) || false;
     const addressOk = (addressEl && addressEl.value && addressEl.value.trim().length > 0) || false;
-    const currencyOk = (currencyEl && currencyEl.value && currencyEl.value.trim().length > 0) || false;
+    const currencyOk =
+      (currencyEl && currencyEl.value && currencyEl.value.trim().length > 0) || false;
 
     saveBtn.disabled = !(nameOk && addressOk && currencyOk);
   };
@@ -372,7 +374,7 @@ export function initRestaurants() {
           };
 
           const mapEl = document.getElementById('restaurant-map');
-          if (mapEl && (typeof mapEl.style !== 'undefined') && mapEl.style.display === 'none') {
+          if (mapEl && typeof mapEl.style !== 'undefined' && mapEl.style.display === 'none') {
             mapEl.style.display = 'block';
           }
 
@@ -381,7 +383,10 @@ export function initRestaurants() {
             mapInstance && mapInstance.element && mapEl && mapInstance.element !== mapEl;
 
           if (
-            (mapInstanceIsForDifferentElement || !mapInstance || !mapInstance.map || !mapInstance.marker) &&
+            (mapInstanceIsForDifferentElement ||
+              !mapInstance ||
+              !mapInstance.map ||
+              !mapInstance.marker) &&
             mapEl &&
             window.google &&
             window.google.maps &&

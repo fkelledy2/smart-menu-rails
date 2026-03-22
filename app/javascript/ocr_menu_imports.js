@@ -552,10 +552,20 @@ export function initOCRMenuImportDnD() {
             },
             onFilter: (evt) => {},
             onChoose: (evt) => {
-              console.log('[OCR DnD][items] onChoose section=', sectionId, 'item=', evt.item?.dataset?.itemId);
+              console.log(
+                '[OCR DnD][items] onChoose section=',
+                sectionId,
+                'item=',
+                evt.item?.dataset?.itemId
+              );
             },
             onStart: (evt) => {
-              console.log('[OCR DnD][items] onStart section=', sectionId, 'item=', evt.item?.dataset?.itemId);
+              console.log(
+                '[OCR DnD][items] onStart section=',
+                sectionId,
+                'item=',
+                evt.item?.dataset?.itemId
+              );
             },
             onMove: (evt) => {},
             onUnchoose: (evt) => {},
@@ -563,10 +573,21 @@ export function initOCRMenuImportDnD() {
               persistItems();
             },
           });
-          console.log('[OCR DnD][items] SortableJS initialized for section', sectionId, 'with', itemContainer.querySelectorAll('.item-row').length, 'items');
+          console.log(
+            '[OCR DnD][items] SortableJS initialized for section',
+            sectionId,
+            'with',
+            itemContainer.querySelectorAll('.item-row').length,
+            'items'
+          );
           return;
         } catch (e) {
-          console.warn('[OCR DnD][items] Sortable init failed for section', sectionId, ', fallback', e);
+          console.warn(
+            '[OCR DnD][items] Sortable init failed for section',
+            sectionId,
+            ', fallback',
+            e
+          );
         }
       }
 

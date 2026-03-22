@@ -1,16 +1,30 @@
-import { post as commonsPost, patch as commonsPatch, getCurrentOrderId as commonsGetCurrentOrderId, getCurrentTableId as commonsGetCurrentTableId, getCurrentMenuId as commonsGetCurrentMenuId, initOrderBindings as commonsInitOrderBindings, getRestaurantId as commonsGetRestaurantId } from './ordr_commons';
+import {
+  post as commonsPost,
+  patch as commonsPatch,
+  getCurrentOrderId as commonsGetCurrentOrderId,
+  getCurrentTableId as commonsGetCurrentTableId,
+  getCurrentMenuId as commonsGetCurrentMenuId,
+  initOrderBindings as commonsInitOrderBindings,
+  getRestaurantId as commonsGetRestaurantId,
+} from './ordr_commons';
 
 export function initOrders() {
   // Apply shared delegated bindings and UI logic
-  try { commonsInitOrderBindings(); } catch (_) {}
+  try {
+    commonsInitOrderBindings();
+  } catch (_) {}
   // Define utility functions first
-  function post(url, body) { return commonsPost(url, body); }
+  function post(url, body) {
+    return commonsPost(url, body);
+  }
   // Delegated handler for Request Bill moved to commons
   $(document).off('click.requestBillMain2');
-    // Delegated handler for Request Bill moved to commons
-    $(document).off('click.requestBillMain');
+  // Delegated handler for Request Bill moved to commons
+  $(document).off('click.requestBillMain');
 
-  function patch(url, body) { return commonsPatch(url, body); }
+  function patch(url, body) {
+    return commonsPatch(url, body);
+  }
 
   function del(url) {
     $('#orderCart').hide();
@@ -58,14 +72,22 @@ export function initOrders() {
   let restaurantCurrencySymbol = '$';
 
   // --- Robust resolvers for dynamic IDs (DOM may re-render) ---
-  function getRestaurantId() { return commonsGetRestaurantId(); }
-  function getCurrentOrderId() { return commonsGetCurrentOrderId(); }
+  function getRestaurantId() {
+    return commonsGetRestaurantId();
+  }
+  function getCurrentOrderId() {
+    return commonsGetCurrentOrderId();
+  }
 
   // Resolve current table id from context partials
-  function getCurrentTableId() { return commonsGetCurrentTableId(); }
+  function getCurrentTableId() {
+    return commonsGetCurrentTableId();
+  }
 
   // Resolve current menu id from context partials
-  function getCurrentMenuId() { return commonsGetCurrentMenuId(); }
+  function getCurrentMenuId() {
+    return commonsGetCurrentMenuId();
+  }
 
   if (document.getElementById('openOrderModalLabel')) {
     document.getElementById('openOrderModalLabel').addEventListener('shown.bs.modal', () => {
@@ -109,32 +131,36 @@ export function initOrders() {
     });
   }
   if (document.getElementById('addNameToParticipantModal')) {
-    document.getElementById('addNameToParticipantModal').addEventListener('shown.bs.modal', (event) => {
-      const button = event.relatedTarget;
-    });
+    document
+      .getElementById('addNameToParticipantModal')
+      .addEventListener('shown.bs.modal', (event) => {
+        const button = event.relatedTarget;
+      });
     // Add name moved to commons
     $(document).off('click.addNameToParticipant');
   }
 
   // Size pill selector: clicking a pill updates selection and the [+] button data (works for all sized items: wine, coffee, etc.)
-  $(document).off('click.sizePill').on('click.sizePill', '.size-pill', function () {
-    const pill = this;
-    const selector = pill.closest('.size-selector');
-    if (!selector) return;
-    // Update pill visual state
-    selector.querySelectorAll('.size-pill').forEach((p) => {
-      p.classList.remove('btn-dark');
-      p.classList.add('btn-outline-dark');
+  $(document)
+    .off('click.sizePill')
+    .on('click.sizePill', '.size-pill', function () {
+      const pill = this;
+      const selector = pill.closest('.size-selector');
+      if (!selector) return;
+      // Update pill visual state
+      selector.querySelectorAll('.size-pill').forEach((p) => {
+        p.classList.remove('btn-dark');
+        p.classList.add('btn-outline-dark');
+      });
+      pill.classList.remove('btn-outline-dark');
+      pill.classList.add('btn-dark');
+      // Update the [+] add button with selected size data
+      const addBtn = selector.querySelector('.size-add-btn');
+      if (addBtn) {
+        addBtn.setAttribute('data-bs-menuitem_price', pill.getAttribute('data-size-price'));
+        addBtn.setAttribute('data-bs-menuitem_size_name', pill.getAttribute('data-size-name'));
+      }
     });
-    pill.classList.remove('btn-outline-dark');
-    pill.classList.add('btn-dark');
-    // Update the [+] add button with selected size data
-    const addBtn = selector.querySelector('.size-add-btn');
-    if (addBtn) {
-      addBtn.setAttribute('data-bs-menuitem_price', pill.getAttribute('data-size-price'));
-      addBtn.setAttribute('data-bs-menuitem_size_name', pill.getAttribute('data-size-name'));
-    }
-  });
 
   function refreshOrderJSLogic() {
     // Table selector: search filter (idempotent)
@@ -146,14 +172,24 @@ export function initOrders() {
       input.__bound = true;
 
       const items = Array.from(menuEl.querySelectorAll('li > a.dropdown-item'));
-      const getText = (a) => (a.getAttribute('data-filter-text') || a.textContent || '').toLowerCase();
+      const getText = (a) =>
+        (a.getAttribute('data-filter-text') || a.textContent || '').toLowerCase();
       const liFromA = (a) => a.closest('li');
-      const debounce = (fn, ms) => { let t; return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); }; };
+      const debounce = (fn, ms) => {
+        let t;
+        return (...args) => {
+          clearTimeout(t);
+          t = setTimeout(() => fn(...args), ms);
+        };
+      };
 
       const applyFilter = (q) => {
         const query = (q || '').trim().toLowerCase();
         if (!query) {
-          items.forEach((a) => { const li = liFromA(a); if (li) li.style.display = ''; });
+          items.forEach((a) => {
+            const li = liFromA(a);
+            if (li) li.style.display = '';
+          });
           return;
         }
         items.forEach((a) => {
@@ -164,7 +200,10 @@ export function initOrders() {
         });
       };
 
-      input.addEventListener('input', debounce((e) => applyFilter(e.target.value), 180));
+      input.addEventListener(
+        'input',
+        debounce((e) => applyFilter(e.target.value), 180)
+      );
     })();
     const searchInput = document.getElementById('menu-item-search');
     if (!searchInput) return;
@@ -179,7 +218,9 @@ export function initOrders() {
           const row = el.closest('.row');
           if (row) row.style.display = '';
         });
-        document.querySelectorAll('[data-testid^="menu-items-row-"]').forEach((el) => (el.style.display = ''));
+        document
+          .querySelectorAll('[data-testid^="menu-items-row-"]')
+          .forEach((el) => (el.style.display = ''));
         return;
       }
 
@@ -197,10 +238,14 @@ export function initOrders() {
 
       // Hide section headers when all items in that section are hidden
       document.querySelectorAll('[data-testid^="menu-items-row-"]').forEach(function (row) {
-        const visibleItems = row.querySelectorAll('.menu-item-card-mobile:not([style*="display: none"])');
+        const visibleItems = row.querySelectorAll(
+          '.menu-item-card-mobile:not([style*="display: none"])'
+        );
         const sectionId = row.getAttribute('data-testid').replace('menu-items-row-', '');
         const anchor = document.getElementById('menusection_' + sectionId);
-        const header = document.querySelector('[data-testid="menu-section-title-' + sectionId + '"]');
+        const header = document.querySelector(
+          '[data-testid="menu-section-title-' + sectionId + '"]'
+        );
         const headerRow = header ? header.closest('.row') : null;
 
         if (visibleItems.length === 0) {
@@ -224,14 +269,18 @@ export function initOrders() {
       const currentOffset = hour * 60 + minutes;
       // Determine if items can be added
       const currentOrderId = document.getElementById('currentOrder')?.textContent?.trim();
-      const statusStr = document.getElementById('currentOrderStatus')?.textContent?.trim()?.toLowerCase();
+      const statusStr = document
+        .getElementById('currentOrderStatus')
+        ?.textContent?.trim()
+        ?.toLowerCase();
       // Detect staff context (employee id present in context container)
       const ctx = document.getElementById('contextContainer');
       const isStaff = !!(ctx && ctx.getAttribute('data-employee-id'));
       const hasTable = !!(ctx && ctx.getAttribute('data-table-id'));
       // For customers: need an active order and allowed status
       // For staff: allow enabling buttons when a table is set even before an order exists
-      const canAddBase = !!currentOrderId && !!statusStr && statusStr !== 'billrequested' && statusStr !== 'closed';
+      const canAddBase =
+        !!currentOrderId && !!statusStr && statusStr !== 'billrequested' && statusStr !== 'closed';
       const canAdd = isStaff ? hasTable : canAddBase;
       $('.addItemToOrder').each(function () {
         const fromOffeset = $(this).data('bs-menusection_from_offset');
@@ -266,15 +315,17 @@ export function initOrders() {
         const button = event.relatedTarget;
       });
       // Delegated to survive modal re-renders
-      $(document).off('click.addNameToParticipant').on('click.addNameToParticipant', '#addNameToParticipantButton', function (event) {
-        const ordrparticipant = {
-          ordrparticipant: {
-            name: addNameToParticipantModal.querySelector('#name').value,
-          },
-        };
-        patch('/ordrparticipants/' + $('#currentParticipant').text(), ordrparticipant);
-        event.preventDefault();
-      });
+      $(document)
+        .off('click.addNameToParticipant')
+        .on('click.addNameToParticipant', '#addNameToParticipantButton', function (event) {
+          const ordrparticipant = {
+            ordrparticipant: {
+              name: addNameToParticipantModal.querySelector('#name').value,
+            },
+          };
+          patch('/ordrparticipants/' + $('#currentParticipant').text(), ordrparticipant);
+          event.preventDefault();
+        });
     }
     // Locale setter moved to commons
     $(document).off('click.setparticipantlocale');
@@ -321,7 +372,9 @@ export function initOrders() {
           // Programmatic show (e.g., tasting). Ensure tasting controls are visible only when flagged
           const isTasting = addItemToOrderModal?.dataset?.tasting === 'true';
           let base = {};
-          try { base = JSON.parse(addItemToOrderModal?.dataset?.tastingBase || '{}'); } catch (_) {}
+          try {
+            base = JSON.parse(addItemToOrderModal?.dataset?.tastingBase || '{}');
+          } catch (_) {}
           const allowPairing = !!base.allow_pairing;
           setTastingControlsVisible(addItemToOrderModal, !!isTasting, { allowPairing });
           return;
@@ -344,7 +397,12 @@ export function initOrders() {
         // Standard flow: populate from triggering button attributes
         const getAttr = (name) => button.getAttribute(name);
         const priceAttr = getAttr('data-bs-menuitem_price');
-        $('#a2o_ordr_id').text(getAttr('data-bs-ordr_id') || (window.__SM_STATE && window.__SM_STATE.order && window.__SM_STATE.order.id ? String(window.__SM_STATE.order.id) : ''));
+        $('#a2o_ordr_id').text(
+          getAttr('data-bs-ordr_id') ||
+            (window.__SM_STATE && window.__SM_STATE.order && window.__SM_STATE.order.id
+              ? String(window.__SM_STATE.order.id)
+              : '')
+        );
         $('#a2o_menuitem_id').text(getAttr('data-bs-menuitem_id'));
         $('#a2o_menuitem_name').text(getAttr('data-bs-menuitem_name'));
         if (priceAttr) {
@@ -354,7 +412,9 @@ export function initOrders() {
         $('#a2o_menuitem_description').text(getAttr('data-bs-menuitem_description'));
         // Wine size name (from wine size pill selector)
         const sizeNameEl = document.getElementById('a2o_size_name');
-        if (sizeNameEl) { sizeNameEl.textContent = getAttr('data-bs-menuitem_size_name') || ''; }
+        if (sizeNameEl) {
+          sizeNameEl.textContent = getAttr('data-bs-menuitem_size_name') || '';
+        }
         try {
           const imageElement = addItemToOrderModal.querySelector('#a2o_menuitem_image');
           if (imageElement) {
@@ -382,7 +442,9 @@ export function initOrders() {
               const note = document.createElement('div');
               note.className = 'alcohol-age-reminder alert alert-warning py-2 px-3 mb-2';
               note.role = 'alert';
-              note.textContent = (document.getElementById('alcoholVerifyAgeText')?.textContent || 'Contains alcohol — verify legal age where applicable.');
+              note.textContent =
+                document.getElementById('alcoholVerifyAgeText')?.textContent ||
+                'Contains alcohol — verify legal age where applicable.';
               modalBody.prepend(note);
             }
           } else {
@@ -392,210 +454,245 @@ export function initOrders() {
         } catch (_) {}
       });
       // Delegated to survive modal re-renders
-      $(document).off('click.addItemToOrder').on('click.addItemToOrder', '#addItemToOrderButton', async function (evt) {
-        console.log('[A2O] Confirm clicked');
-        const addModalEl = document.getElementById('addItemToOrderModal');
-        const isTasting = addModalEl && addModalEl.dataset && addModalEl.dataset.tasting === 'true';
-        if (isTasting) {
-          if (window.__tastingPosting) {
-            console.warn('[TASTING] Post already in progress, skipping duplicate');
+      $(document)
+        .off('click.addItemToOrder')
+        .on('click.addItemToOrder', '#addItemToOrderButton', async function (evt) {
+          console.log('[A2O] Confirm clicked');
+          const addModalEl = document.getElementById('addItemToOrderModal');
+          const isTasting =
+            addModalEl && addModalEl.dataset && addModalEl.dataset.tasting === 'true';
+          if (isTasting) {
+            if (window.__tastingPosting) {
+              console.warn('[TASTING] Post already in progress, skipping duplicate');
+              return false;
+            }
+            window.__tastingPosting = true;
+            try {
+              const restaurantId = getRestaurantId();
+              const ordrId = getCurrentOrderId();
+              const enabledFlag = !!(
+                window.__SM_STATE &&
+                window.__SM_STATE.flags &&
+                window.__SM_STATE.flags.menuItemsEnabled === true
+              );
+              if (!restaurantId || !ordrId || !enabledFlag) {
+                console.error('[TASTING] Order not active or status not allowed.');
+                // Offer to open Start Order
+                const openOrderModal = document.getElementById('openOrderModal');
+                if (openOrderModal && window.bootstrap && window.bootstrap.Modal) {
+                  const openInst =
+                    window.bootstrap.Modal.getInstance(openOrderModal) ||
+                    window.bootstrap.Modal.getOrCreateInstance(openOrderModal);
+                  openInst.show();
+                }
+                window.__tastingPosting = false;
+                return false;
+              }
+              let base = {};
+              try {
+                base = JSON.parse(addModalEl.dataset.tastingBase || '{}');
+              } catch (e) {
+                console.error('[TASTING] Invalid tasting base payload:', e);
+                window.__tastingPosting = false;
+                return false;
+              }
+              const qtyField = addModalEl.querySelector('#a2o_tasting_qty');
+              const pairingField = addModalEl.querySelector('#a2o_tasting_pairing');
+              const qty = Math.max(1, parseInt(qtyField?.value || '1'));
+              const includePairing = !!pairingField?.checked;
+
+              const tastingPrice = Number(base.tasting_price || 0);
+              const pairingPrice = Number(base.pairing_price || 0);
+              const allowPairing = !!base.allow_pairing;
+              const carrierId = base.carrier_id;
+              const pricePer = base.price_per;
+              const activeItems = Array.isArray(base.active_items) ? base.active_items : [];
+
+              const lines = [];
+              if (tastingPrice > 0 && carrierId) {
+                if (pricePer === 'table') {
+                  lines.push({ menuitem_id: carrierId, price: tastingPrice });
+                } else {
+                  for (let i = 0; i < qty; i++) {
+                    lines.push({ menuitem_id: carrierId, price: tastingPrice });
+                  }
+                }
+              }
+              if (includePairing && allowPairing && pairingPrice > 0 && carrierId) {
+                for (let i = 0; i < qty; i++) {
+                  lines.push({ menuitem_id: carrierId, price: pairingPrice });
+                }
+              }
+              activeItems.forEach((it) => {
+                const suppCents = Number(it.supplement_cents || 0);
+                if (suppCents > 0 && it.id) {
+                  const unitSupp = suppCents / 100.0;
+                  for (let i = 0; i < qty; i++) {
+                    lines.push({ menuitem_id: it.id, price: unitSupp });
+                  }
+                }
+              });
+
+              console.log('[TASTING] Posting lines (serialized):', lines);
+              const requests = lines.map((l) => ({
+                ordritem: {
+                  ordr_id: ordrId,
+                  menuitem_id: l.menuitem_id,
+                  status: ORDRITEM_ADDED,
+                  ordritemprice: Number(l.price).toFixed(2),
+                },
+              }));
+              (async () => {
+                for (const payload of requests) {
+                  await post(`/restaurants/${restaurantId}/ordritems`, payload);
+                }
+              })()
+                .then(() => {
+                  // Clear tasting flags and hide modal
+                  delete addModalEl.dataset.tasting;
+                  delete addModalEl.dataset.tastingBase;
+                  if (addModalEl && window.bootstrap && window.bootstrap.Modal) {
+                    const modalInstance =
+                      window.bootstrap.Modal.getInstance(addModalEl) ||
+                      window.bootstrap.Modal.getOrCreateInstance(addModalEl);
+                    modalInstance.hide();
+                  }
+                })
+                .catch((e) => {
+                  console.error('[TASTING] Post failed:', e);
+                })
+                .finally(() => {
+                  window.__tastingPosting = false;
+                });
+              return false;
+            } catch (e) {
+              console.error('[TASTING] Unexpected error:', e);
+              window.__tastingPosting = false;
+              return false;
+            }
+          }
+          // For non-tasting flow, defer to centralized commons binding
+          return true;
+          // Gate: require active order before posting; if not, prompt Start Order
+          const currentOrderId = document.getElementById('currentOrder')?.textContent?.trim();
+          const currentStatus = document
+            .getElementById('currentOrderStatus')
+            ?.textContent?.trim()
+            ?.toLowerCase();
+          const canAdd =
+            !!currentOrderId &&
+            !!currentStatus &&
+            currentStatus !== 'billrequested' &&
+            currentStatus !== 'closed';
+          if (!canAdd) {
+            // Close add modal and open Start Order modal if available
+            if (addModalEl && window.bootstrap && window.bootstrap.Modal) {
+              const addInst =
+                window.bootstrap.Modal.getInstance(addModalEl) ||
+                window.bootstrap.Modal.getOrCreateInstance(addModalEl);
+              addInst.hide();
+            }
+            const openOrderModal = document.getElementById('openOrderModal');
+            if (openOrderModal && window.bootstrap && window.bootstrap.Modal) {
+              const openInst =
+                window.bootstrap.Modal.getInstance(openOrderModal) ||
+                window.bootstrap.Modal.getOrCreateInstance(openOrderModal);
+              openInst.show();
+            }
+            evt.preventDefault();
             return false;
           }
-          window.__tastingPosting = true;
+
+          // Alcohol Phase 1: block alcoholic items if restaurant does not allow alcohol
           try {
-            const restaurantId = getRestaurantId();
-            const ordrId = getCurrentOrderId();
-            const enabledFlag = !!(window.__SM_STATE && window.__SM_STATE.flags && window.__SM_STATE.flags.menuItemsEnabled === true);
-            if (!restaurantId || !ordrId || !enabledFlag) {
-              console.error('[TASTING] Order not active or status not allowed.');
-              // Offer to open Start Order
-              const openOrderModal = document.getElementById('openOrderModal');
-              if (openOrderModal && window.bootstrap && window.bootstrap.Modal) {
-                const openInst = window.bootstrap.Modal.getInstance(openOrderModal) || window.bootstrap.Modal.getOrCreateInstance(openOrderModal);
-                openInst.show();
-              }
-              window.__tastingPosting = false;
+            const allowAlcohol =
+              document.getElementById('currentRestaurantAllowAlcohol')?.textContent === '1';
+            const isAlcoholicItem = !!(
+              addModalEl &&
+              addModalEl.dataset &&
+              addModalEl.dataset.alcoholic === '1'
+            );
+            if (isAlcoholicItem && !allowAlcohol) {
+              // Non-blocking UX: disable action and show message
+              alert(
+                document.getElementById('alcoholSalesDisabledText')?.textContent ||
+                  'Alcohol sales are disabled for this restaurant.'
+              );
+              evt.preventDefault();
               return false;
             }
-            let base = {};
-            try {
-              base = JSON.parse(addModalEl.dataset.tastingBase || '{}');
-            } catch (e) {
-              console.error('[TASTING] Invalid tasting base payload:', e);
-              window.__tastingPosting = false;
+            // Phase 2: time/day policy enforcement
+            const allowedNow = document.getElementById('alcoholAllowedNow')?.textContent === '1';
+            if (isAlcoholicItem && allowAlcohol && !allowedNow) {
+              alert(
+                document.getElementById('alcoholPolicyBlockedText')?.textContent ||
+                  'Alcohol not available at this time.'
+              );
+              evt.preventDefault();
               return false;
             }
-            const qtyField = addModalEl.querySelector('#a2o_tasting_qty');
-            const pairingField = addModalEl.querySelector('#a2o_tasting_pairing');
-            const qty = Math.max(1, parseInt(qtyField?.value || '1'));
-            const includePairing = !!pairingField?.checked;
+          } catch (_) {}
 
-            const tastingPrice = Number(base.tasting_price || 0);
-            const pairingPrice = Number(base.pairing_price || 0);
-            const allowPairing = !!base.allow_pairing;
-            const carrierId = base.carrier_id;
-            const pricePer = base.price_per;
-            const activeItems = Array.isArray(base.active_items) ? base.active_items : [];
+          // Debug: Check if required elements exist
+          const ordrId = $('#a2o_ordr_id').text() || currentOrderId;
+          const menuitemId = $('#a2o_menuitem_id').text();
+          const price = $('#a2o_menuitem_price').text();
+          const restaurantId = $('#currentRestaurant').text();
 
-            const lines = [];
-            if (tastingPrice > 0 && carrierId) {
-              if (pricePer === 'table') {
-                lines.push({ menuitem_id: carrierId, price: tastingPrice });
-              } else {
-                for (let i = 0; i < qty; i++) {
-                  lines.push({ menuitem_id: carrierId, price: tastingPrice });
-                }
+          console.log('Order Item Debug:', {
+            ordrId: ordrId,
+            menuitemId: menuitemId,
+            price: price,
+            restaurantId: restaurantId,
+            status: ORDRITEM_ADDED,
+          });
+
+          // Check for missing required data
+          if (!ordrId || !menuitemId || !restaurantId) {
+            console.error('Missing required data for order item creation');
+            return false;
+          }
+
+          const ordritem = {
+            ordritem: {
+              ordr_id: ordrId,
+              menuitem_id: menuitemId,
+              status: ORDRITEM_ADDED,
+              ordritemprice: price,
+            },
+          };
+
+          console.log('Sending order item:', ordritem);
+
+          // Post the order item first
+          post(`/restaurants/${restaurantId}/ordritems`, ordritem)
+            .then(() => {
+              console.log('Order item posted successfully');
+
+              // Set flag to prevent WebSocket from updating modals while closing
+              window.closingAddItemModal = true;
+
+              // Close the modal (Bootstrap 5 API only; avoid jQuery plugin)
+              const modalEl = document.getElementById('addItemToOrderModal');
+              if (modalEl && window.bootstrap && window.bootstrap.Modal) {
+                const modalInstance =
+                  window.bootstrap.Modal.getInstance(modalEl) ||
+                  window.bootstrap.Modal.getOrCreateInstance(modalEl);
+                modalInstance.hide();
               }
-            }
-            if (includePairing && allowPairing && pairingPrice > 0 && carrierId) {
-              for (let i = 0; i < qty; i++) {
-                lines.push({ menuitem_id: carrierId, price: pairingPrice });
-              }
-            }
-            activeItems.forEach((it) => {
-              const suppCents = Number(it.supplement_cents || 0);
-              if (suppCents > 0 && it.id) {
-                const unitSupp = suppCents / 100.0;
-                for (let i = 0; i < qty; i++) {
-                  lines.push({ menuitem_id: it.id, price: unitSupp });
-                }
-              }
+
+              // Clear flag after a delay (modal animation is ~300ms)
+              setTimeout(() => {
+                window.closingAddItemModal = false;
+              }, 500);
+            })
+            .catch((error) => {
+              console.error('Error adding item to order:', error);
+              window.closingAddItemModal = false;
             });
 
-            console.log('[TASTING] Posting lines (serialized):', lines);
-            const requests = lines.map((l) => ({
-              ordritem: {
-                ordr_id: ordrId,
-                menuitem_id: l.menuitem_id,
-                status: ORDRITEM_ADDED,
-                ordritemprice: Number(l.price).toFixed(2),
-              },
-            }));
-            (async () => {
-              for (const payload of requests) {
-                await post(`/restaurants/${restaurantId}/ordritems`, payload);
-              }
-            })()
-              .then(() => {
-                // Clear tasting flags and hide modal
-                delete addModalEl.dataset.tasting;
-                delete addModalEl.dataset.tastingBase;
-                if (addModalEl && window.bootstrap && window.bootstrap.Modal) {
-                  const modalInstance = window.bootstrap.Modal.getInstance(addModalEl) || window.bootstrap.Modal.getOrCreateInstance(addModalEl);
-                  modalInstance.hide();
-                }
-              })
-              .catch((e) => {
-                console.error('[TASTING] Post failed:', e);
-              })
-              .finally(() => {
-                window.__tastingPosting = false;
-              });
-            return false;
-          } catch (e) {
-            console.error('[TASTING] Unexpected error:', e);
-            window.__tastingPosting = false;
-            return false;
-          }
-        }
-        // For non-tasting flow, defer to centralized commons binding
-        return true;
-        // Gate: require active order before posting; if not, prompt Start Order
-        const currentOrderId = document.getElementById('currentOrder')?.textContent?.trim();
-        const currentStatus = document.getElementById('currentOrderStatus')?.textContent?.trim()?.toLowerCase();
-        const canAdd = !!currentOrderId && !!currentStatus && currentStatus !== 'billrequested' && currentStatus !== 'closed';
-        if (!canAdd) {
-          // Close add modal and open Start Order modal if available
-          if (addModalEl && window.bootstrap && window.bootstrap.Modal) {
-            const addInst = window.bootstrap.Modal.getInstance(addModalEl) || window.bootstrap.Modal.getOrCreateInstance(addModalEl);
-            addInst.hide();
-          }
-          const openOrderModal = document.getElementById('openOrderModal');
-          if (openOrderModal && window.bootstrap && window.bootstrap.Modal) {
-            const openInst = window.bootstrap.Modal.getInstance(openOrderModal) || window.bootstrap.Modal.getOrCreateInstance(openOrderModal);
-            openInst.show();
-          }
-          evt.preventDefault();
-          return false;
-        }
-
-        // Alcohol Phase 1: block alcoholic items if restaurant does not allow alcohol
-        try {
-          const allowAlcohol = document.getElementById('currentRestaurantAllowAlcohol')?.textContent === '1';
-          const isAlcoholicItem = !!(addModalEl && addModalEl.dataset && addModalEl.dataset.alcoholic === '1');
-          if (isAlcoholicItem && !allowAlcohol) {
-            // Non-blocking UX: disable action and show message
-            alert(document.getElementById('alcoholSalesDisabledText')?.textContent || 'Alcohol sales are disabled for this restaurant.');
-            evt.preventDefault();
-            return false;
-          }
-          // Phase 2: time/day policy enforcement
-          const allowedNow = document.getElementById('alcoholAllowedNow')?.textContent === '1';
-          if (isAlcoholicItem && allowAlcohol && !allowedNow) {
-            alert(document.getElementById('alcoholPolicyBlockedText')?.textContent || 'Alcohol not available at this time.');
-            evt.preventDefault();
-            return false;
-          }
-        } catch (_) {}
-
-        // Debug: Check if required elements exist
-        const ordrId = $('#a2o_ordr_id').text() || currentOrderId;
-        const menuitemId = $('#a2o_menuitem_id').text();
-        const price = $('#a2o_menuitem_price').text();
-        const restaurantId = $('#currentRestaurant').text();
-
-        console.log('Order Item Debug:', {
-          ordrId: ordrId,
-          menuitemId: menuitemId,
-          price: price,
-          restaurantId: restaurantId,
-          status: ORDRITEM_ADDED,
+          return false; // Prevent any default behavior
         });
-
-        // Check for missing required data
-        if (!ordrId || !menuitemId || !restaurantId) {
-          console.error('Missing required data for order item creation');
-          return false;
-        }
-
-        const ordritem = {
-          ordritem: {
-            ordr_id: ordrId,
-            menuitem_id: menuitemId,
-            status: ORDRITEM_ADDED,
-            ordritemprice: price,
-          },
-        };
-
-        console.log('Sending order item:', ordritem);
-        
-        // Post the order item first
-        post(`/restaurants/${restaurantId}/ordritems`, ordritem)
-          .then(() => {
-            console.log('Order item posted successfully');
-            
-            // Set flag to prevent WebSocket from updating modals while closing
-            window.closingAddItemModal = true;
-            
-            // Close the modal (Bootstrap 5 API only; avoid jQuery plugin)
-            const modalEl = document.getElementById('addItemToOrderModal');
-            if (modalEl && window.bootstrap && window.bootstrap.Modal) {
-              const modalInstance = window.bootstrap.Modal.getInstance(modalEl) || window.bootstrap.Modal.getOrCreateInstance(modalEl);
-              modalInstance.hide();
-            }
-            
-            // Clear flag after a delay (modal animation is ~300ms)
-            setTimeout(() => {
-              window.closingAddItemModal = false;
-            }, 500);
-          })
-          .catch((error) => {
-            console.error('Error adding item to order:', error);
-            window.closingAddItemModal = false;
-          });
-        
-        return false; // Prevent any default behavior
-      });
     }
     // Start Order moved to commons
     $(document).off('click.startOrder');
@@ -607,10 +704,15 @@ export function initOrders() {
       // Update enabled state for all tasting CTAs
       const updateAll = () => {
         const ordrId = document.getElementById('currentOrder')?.textContent?.trim();
-        const statusStr = document.getElementById('currentOrderStatus')?.textContent?.trim()?.toLowerCase();
-        const canAdd = !!ordrId && !!statusStr && statusStr !== 'billrequested' && statusStr !== 'closed';
+        const statusStr = document
+          .getElementById('currentOrderStatus')
+          ?.textContent?.trim()
+          ?.toLowerCase();
+        const canAdd =
+          !!ordrId && !!statusStr && statusStr !== 'billrequested' && statusStr !== 'closed';
         document.querySelectorAll('[data-tasting-meta] .tasting-cta').forEach((btn) => {
-          if (canAdd) btn.removeAttribute('disabled'); else btn.setAttribute('disabled', 'disabled');
+          if (canAdd) btn.removeAttribute('disabled');
+          else btn.setAttribute('disabled', 'disabled');
         });
       };
       updateAll();
@@ -630,26 +732,45 @@ export function initOrders() {
           const meta = JSON.parse(container.getAttribute('data-tasting-meta'));
           const restaurantId = getRestaurantId();
           const ordrId = getCurrentOrderId();
-          const statusStr = (window.__SM_STATE && window.__SM_STATE.order && window.__SM_STATE.order.status ? String(window.__SM_STATE.order.status).toLowerCase() : null);
-          if (!restaurantId || !ordrId || !statusStr || statusStr === 'billrequested' || statusStr === 'closed') {
+          const statusStr =
+            window.__SM_STATE && window.__SM_STATE.order && window.__SM_STATE.order.status
+              ? String(window.__SM_STATE.order.status).toLowerCase()
+              : null;
+          if (
+            !restaurantId ||
+            !ordrId ||
+            !statusStr ||
+            statusStr === 'billrequested' ||
+            statusStr === 'closed'
+          ) {
             console.error('Order not active or status not allowed');
             return;
           }
           const optionalToggles = Array.from(document.querySelectorAll('.tasting-optional-toggle'));
-          const uncheckedOptionalIds = new Set(optionalToggles.filter((el) => !el.checked).map((el) => parseInt(el.getAttribute('data-menuitem-id'))));
+          const uncheckedOptionalIds = new Set(
+            optionalToggles
+              .filter((el) => !el.checked)
+              .map((el) => parseInt(el.getAttribute('data-menuitem-id')))
+          );
           const items = meta.items || [];
           const activeItems = items.filter((it) => !uncheckedOptionalIds.has(it.id));
           const tastingPrice = (meta.tasting_price_cents || 0) / 100.0;
           const pairingPrice = (meta.pairing_price_cents || 0) / 100.0;
           if (activeItems.length === 0 && items.length > 0) activeItems.push(items[0]);
           const carrierMenuitemId = meta.carrier_id || activeItems[0]?.id || items[0]?.id;
-          if (!carrierMenuitemId) { console.error('No items available to carry tasting base'); return; }
+          if (!carrierMenuitemId) {
+            console.error('No items available to carry tasting base');
+            return;
+          }
 
           const addModal = document.getElementById('addItemToOrderModal');
           if (!addModal) return;
           const name = meta.section_name || 'Tasting Menu';
           const description = 'Tasting menu bundle';
-          const setText = (sel, text) => { const el = addModal.querySelector(sel); if (el) el.textContent = text; };
+          const setText = (sel, text) => {
+            const el = addModal.querySelector(sel);
+            if (el) el.textContent = text;
+          };
           setText('#a2o_ordr_id', ordrId);
           setText('#a2o_menuitem_id', carrierMenuitemId);
           setText('#a2o_menuitem_name', name);
@@ -668,8 +789,13 @@ export function initOrders() {
             const baseMultiplier = meta.price_per === 'table' ? 1 : q;
             const baseTotal = tastingPrice * baseMultiplier;
             let sum = baseTotal > 0 ? baseTotal : 0;
-            if (includePairing && meta.allow_pairing && pairingPrice > 0) { sum += pairingPrice * q; }
-            activeItems.forEach((it) => { const supp = (it.supplement_cents || 0) / 100.0; if (supp > 0) sum += supp * q; });
+            if (includePairing && meta.allow_pairing && pairingPrice > 0) {
+              sum += pairingPrice * q;
+            }
+            activeItems.forEach((it) => {
+              const supp = (it.supplement_cents || 0) / 100.0;
+              if (supp > 0) sum += supp * q;
+            });
             return sum;
           };
           const updatePrice = () => {
@@ -677,8 +803,17 @@ export function initOrders() {
             const total = computeTotal(q, !!pairingField?.checked);
             setText('#a2o_menuitem_price', total.toFixed(2));
           };
-          qtyIncr?.addEventListener('click', () => { if (!qtyField) return; qtyField.value = Math.max(1, parseInt(qtyField.value || '1')) + 1; updatePrice(); });
-          qtyDecr?.addEventListener('click', () => { if (!qtyField) return; const q = Math.max(1, parseInt(qtyField.value || '1')); qtyField.value = q > 1 ? q - 1 : 1; updatePrice(); });
+          qtyIncr?.addEventListener('click', () => {
+            if (!qtyField) return;
+            qtyField.value = Math.max(1, parseInt(qtyField.value || '1')) + 1;
+            updatePrice();
+          });
+          qtyDecr?.addEventListener('click', () => {
+            if (!qtyField) return;
+            const q = Math.max(1, parseInt(qtyField.value || '1'));
+            qtyField.value = q > 1 ? q - 1 : 1;
+            updatePrice();
+          });
           qtyField?.addEventListener('input', updatePrice);
           pairingField?.addEventListener('change', updatePrice);
           updatePrice();
@@ -690,10 +825,15 @@ export function initOrders() {
             pairing_price: pairingPrice,
             allow_pairing: !!meta.allow_pairing,
             carrier_id: carrierMenuitemId,
-            active_items: activeItems.map(it => ({ id: it.id, supplement_cents: it.supplement_cents }))
+            active_items: activeItems.map((it) => ({
+              id: it.id,
+              supplement_cents: it.supplement_cents,
+            })),
           });
           if (window.bootstrap && window.bootstrap.Modal) {
-            const instance = window.bootstrap.Modal.getInstance(addModal) || window.bootstrap.Modal.getOrCreateInstance(addModal);
+            const instance =
+              window.bootstrap.Modal.getInstance(addModal) ||
+              window.bootstrap.Modal.getOrCreateInstance(addModal);
             instance.show();
           }
         } catch (e) {
@@ -705,7 +845,9 @@ export function initOrders() {
     // Bind on initial load
     window.bindTastingCTAs();
     // Re-bind/refresh after websocket menu content updates
-    window.addEventListener('ordr:menu:updated', () => { window.bindTastingCTAs(); });
+    window.addEventListener('ordr:menu:updated', () => {
+      window.bindTastingCTAs();
+    });
   }
 
   refreshOrderJSLogic();

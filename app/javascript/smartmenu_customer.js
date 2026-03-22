@@ -18,7 +18,7 @@ Promise.all([
   import('./controllers/state_controller'),
   import('./controllers/order_header_controller'),
   import('./controllers/scrollspy_controller'),
-  import('./controllers/theme_toggle_controller')
+  import('./controllers/theme_toggle_controller'),
 ]).then(([bs, ml, ms, st, oh, sp, tt]) => {
   app.register('bottom-sheet', bs.default);
   app.register('menu-layout', ml.default);

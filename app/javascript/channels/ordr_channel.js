@@ -1,5 +1,12 @@
 import consumer from './consumer';
-import { post as commonsPost, patch as commonsPatch, getCurrentOrderId as commonsGetCurrentOrderId, getCurrentTableId as commonsGetCurrentTableId, getCurrentMenuId as commonsGetCurrentMenuId, initOrderBindings as commonsInitOrderBindings } from '../ordr_commons';
+import {
+  post as commonsPost,
+  patch as commonsPatch,
+  getCurrentOrderId as commonsGetCurrentOrderId,
+  getCurrentTableId as commonsGetCurrentTableId,
+  getCurrentMenuId as commonsGetCurrentMenuId,
+  initOrderBindings as commonsInitOrderBindings,
+} from '../ordr_commons';
 import $ from 'jquery';
 import * as bootstrap from 'bootstrap';
 
@@ -7,10 +14,14 @@ function post(url, body) {
   return commonsPost(url, body);
 }
 // Resolve current table id
-function getCurrentTableId() { return commonsGetCurrentTableId(); }
+function getCurrentTableId() {
+  return commonsGetCurrentTableId();
+}
 // Resolve current menu id
-function getCurrentMenuId() { return commonsGetCurrentMenuId(); }
- 
+function getCurrentMenuId() {
+  return commonsGetCurrentMenuId();
+}
+
 function patch(url, body) {
   return commonsPatch(url, body);
 }
@@ -35,11 +46,14 @@ const isBrowser = typeof window !== 'undefined' && typeof document !== 'undefine
 const flashTableSelector = (durationMs = 2000) => {
   if (!isBrowser) return;
   try {
-    const el = document.getElementById('table-selector-staff') || document.getElementById('table-selector-customer');
+    const el =
+      document.getElementById('table-selector-staff') ||
+      document.getElementById('table-selector-customer');
     if (!el) return;
     const prev = el.getAttribute('style') || '';
     // Apply temporary green background + white text
-    el.style.transition = el.style.transition || 'background-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease';
+    el.style.transition =
+      el.style.transition || 'background-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease';
     el.style.backgroundColor = '#4CAF50';
     el.style.color = '#ffffff';
     el.style.boxShadow = '0 0 0 0.15rem rgba(76,175,80,.35)';
@@ -97,7 +111,9 @@ function getRestaurantId() {
   return found;
 }
 // Resolve current order id from multiple sources
-function getCurrentOrderId() { return commonsGetCurrentOrderId(); }
+function getCurrentOrderId() {
+  return commonsGetCurrentOrderId();
+}
 // Try to eagerly cache after DOM ready
 if (typeof document !== 'undefined') {
   if (document.readyState === 'complete' || document.readyState === 'interactive') {
@@ -153,13 +169,21 @@ function refreshOrderJSLogic() {
     const currentOffset = hour * 60 + minutes;
     // Determine if items can be added: require an active order and allowed status
     const currentOrderId = document.getElementById('currentOrder')?.textContent?.trim();
-    const statusStr = document.getElementById('currentOrderStatus')?.textContent?.trim()?.toLowerCase();
-    const canAdd = !!currentOrderId && !!statusStr && statusStr !== 'billrequested' && statusStr !== 'closed';
+    const statusStr = document
+      .getElementById('currentOrderStatus')
+      ?.textContent?.trim()
+      ?.toLowerCase();
+    const canAdd =
+      !!currentOrderId && !!statusStr && statusStr !== 'billrequested' && statusStr !== 'closed';
     $('.addItemToOrder').each(function () {
       const fromOffeset = $(this).data('bs-menusection_from_offset');
       const toOffeset = $(this).data('bs-menusection_to_offset');
       const withinWindow = currentOffset >= fromOffeset && currentOffset <= toOffeset;
-      if (!withinWindow || !canAdd) { $(this).attr('disabled', 'disabled'); } else { $(this).removeAttr('disabled'); }
+      if (!withinWindow || !canAdd) {
+        $(this).attr('disabled', 'disabled');
+      } else {
+        $(this).removeAttr('disabled');
+      }
     });
   }
   $('#toggleFilters').click(function () {
@@ -186,11 +210,14 @@ function refreshOrderJSLogic() {
   }
   $(document).on('click', '.setparticipantlocale', function (event) {
     const $target = $(event.target);
-    const locale = $target.data('locale') || $target.closest('[data-locale]').data('locale') || $(this).data('locale');
+    const locale =
+      $target.data('locale') ||
+      $target.closest('[data-locale]').data('locale') ||
+      $(this).data('locale');
     const ctx = document.getElementById('contextContainer');
-    const ctxParticipantId = ctx && ctx.dataset ? (ctx.dataset.participantId || '') : '';
-    const ctxMenuParticipantId = ctx && ctx.dataset ? (ctx.dataset.menuParticipantId || '') : '';
-    const menuId = getCurrentMenuId() || (ctx && ctx.dataset ? (ctx.dataset.menuId || '') : '');
+    const ctxParticipantId = ctx && ctx.dataset ? ctx.dataset.participantId || '' : '';
+    const ctxMenuParticipantId = ctx && ctx.dataset ? ctx.dataset.menuParticipantId || '' : '';
+    const menuId = getCurrentMenuId() || (ctx && ctx.dataset ? ctx.dataset.menuId || '' : '');
 
     const requests = [];
 
@@ -202,8 +229,15 @@ function refreshOrderJSLogic() {
     if (ctxMenuParticipantId) {
       const menuparticipant = { menuparticipant: { preferredlocale: locale } };
       const restaurantId = getRestaurantId();
-      if (!restaurantId || !menuId) { return; }
-      requests.push(patch(`/restaurants/${restaurantId}/menus/${menuId}/menuparticipants/${ctxMenuParticipantId}`, menuparticipant));
+      if (!restaurantId || !menuId) {
+        return;
+      }
+      requests.push(
+        patch(
+          `/restaurants/${restaurantId}/menus/${menuId}/menuparticipants/${ctxMenuParticipantId}`,
+          menuparticipant
+        )
+      );
     }
 
     // The Smartmenu UI is server-rendered; locale changes are broadcast as HTML partials in some paths,
@@ -229,7 +263,10 @@ function refreshOrderJSLogic() {
       },
     };
     const restaurantId = getRestaurantId();
-    if (!restaurantId) { console.warn('[RemoveItem] Missing restaurant id; aborting'); return true; }
+    if (!restaurantId) {
+      console.warn('[RemoveItem] Missing restaurant id; aborting');
+      return true;
+    }
     patch(`/restaurants/${restaurantId}/ordritems/${ordrItemId}`, ordritem);
     $('#confirm-order').click();
     return true;
@@ -285,7 +322,9 @@ function refreshOrderJSLogic() {
         // Programmatic show (e.g., tasting). Ensure tasting controls are visible when flagged
         const isTasting = addItemToOrderModal?.dataset?.tasting === 'true';
         let base = {};
-        try { base = JSON.parse(addItemToOrderModal?.dataset?.tastingBase || '{}'); } catch (_) {}
+        try {
+          base = JSON.parse(addItemToOrderModal?.dataset?.tastingBase || '{}');
+        } catch (_) {}
         const allowPairing = !!base.allow_pairing;
         setTastingControlsVisible(addItemToOrderModal, !!isTasting, { allowPairing });
         return;
@@ -302,7 +341,12 @@ function refreshOrderJSLogic() {
         if (qty) qty.value = '1';
         if (pairing) pairing.checked = false;
       } catch (_) {}
-      $('#a2o_ordr_id').text(button.getAttribute('data-bs-ordr_id') || (window.__SM_STATE && window.__SM_STATE.order && window.__SM_STATE.order.id ? String(window.__SM_STATE.order.id) : ''));
+      $('#a2o_ordr_id').text(
+        button.getAttribute('data-bs-ordr_id') ||
+          (window.__SM_STATE && window.__SM_STATE.order && window.__SM_STATE.order.id
+            ? String(window.__SM_STATE.order.id)
+            : '')
+      );
       $('#a2o_menuitem_id').text(button.getAttribute('data-bs-menuitem_id'));
       $('#a2o_menuitem_name').text(button.getAttribute('data-bs-menuitem_name'));
       const unitPrice = parseFloat(button.getAttribute('data-bs-menuitem_price')).toFixed(2);
@@ -349,9 +393,20 @@ function refreshOrderJSLogic() {
       if (isTasting) {
         try {
           const ordrId = document.getElementById('currentOrder')?.textContent?.trim();
-          const statusStr = document.getElementById('currentOrderStatus')?.textContent?.trim()?.toLowerCase();
-          if (!restaurantId || !ordrId || !statusStr || statusStr === 'billrequested' || statusStr === 'closed') {
-            console.error('[TASTING][channel] Order not active or status not allowed. Aborting add.');
+          const statusStr = document
+            .getElementById('currentOrderStatus')
+            ?.textContent?.trim()
+            ?.toLowerCase();
+          if (
+            !restaurantId ||
+            !ordrId ||
+            !statusStr ||
+            statusStr === 'billrequested' ||
+            statusStr === 'closed'
+          ) {
+            console.error(
+              '[TASTING][channel] Order not active or status not allowed. Aborting add.'
+            );
             return true;
           }
           if (window.__tastingPosting) {
@@ -407,14 +462,16 @@ function refreshOrderJSLogic() {
           });
 
           const postOrdritem = (payload) => post(`/restaurants/${restaurantId}/ordritems`, payload);
-          const requests = lines.map((l) => ({
-            ordritem: {
-              ordr_id: ordrId,
-              menuitem_id: l.menuitem_id,
-              status: ORDRITEM_ADDED,
-              ordritemprice: Number(l.price).toFixed(2),
-            },
-          })).map(postOrdritem);
+          const requests = lines
+            .map((l) => ({
+              ordritem: {
+                ordr_id: ordrId,
+                menuitem_id: l.menuitem_id,
+                status: ORDRITEM_ADDED,
+                ordritemprice: Number(l.price).toFixed(2),
+              },
+            }))
+            .map(postOrdritem);
 
           Promise.all(requests)
             .then(() => {
@@ -422,7 +479,8 @@ function refreshOrderJSLogic() {
               delete addModal.dataset.tasting;
               delete addModal.dataset.tastingBase;
               if (addModal && typeof bootstrap !== 'undefined' && bootstrap.Modal) {
-                const addInstance = bootstrap.Modal.getInstance(addModal) || new bootstrap.Modal(addModal);
+                const addInstance =
+                  bootstrap.Modal.getInstance(addModal) || new bootstrap.Modal(addModal);
                 addInstance.hide();
               }
             })
@@ -441,17 +499,27 @@ function refreshOrderJSLogic() {
       }
 
       // Require active order; if missing, prompt Start Order
-      let ordrId = document.getElementById('currentOrder')?.textContent?.trim();
-      let statusStr = document.getElementById('currentOrderStatus')?.textContent?.trim()?.toLowerCase();
-      const canAdd = !!restaurantId && !!ordrId && !!statusStr && statusStr !== 'billrequested' && statusStr !== 'closed';
+      const ordrId = document.getElementById('currentOrder')?.textContent?.trim();
+      const statusStr = document
+        .getElementById('currentOrderStatus')
+        ?.textContent?.trim()
+        ?.toLowerCase();
+      const canAdd =
+        !!restaurantId &&
+        !!ordrId &&
+        !!statusStr &&
+        statusStr !== 'billrequested' &&
+        statusStr !== 'closed';
       if (!canAdd) {
         if (addModal && typeof bootstrap !== 'undefined' && bootstrap.Modal) {
-          const addInstance = bootstrap.Modal.getInstance(addModal) || new bootstrap.Modal(addModal);
+          const addInstance =
+            bootstrap.Modal.getInstance(addModal) || new bootstrap.Modal(addModal);
           addInstance.hide();
         }
         const openOrderModal = document.getElementById('openOrderModal');
         if (openOrderModal && typeof bootstrap !== 'undefined' && bootstrap.Modal) {
-          const openInstance = bootstrap.Modal.getInstance(openOrderModal) || new bootstrap.Modal(openOrderModal);
+          const openInstance =
+            bootstrap.Modal.getInstance(openOrderModal) || new bootstrap.Modal(openOrderModal);
           openInstance.show();
         }
         evt.preventDefault();
@@ -482,7 +550,7 @@ function refreshOrderJSLogic() {
 
       // Post and then close modal; do NOT redirect or open View Order (match ordrs.js behavior)
       postPromise
-        .then(() => new Promise(resolve => setTimeout(resolve, 1000)))
+        .then(() => new Promise((resolve) => setTimeout(resolve, 1000)))
         .then(() => {
           // Reset tasting flags if any
           if (addModal) {
@@ -490,11 +558,12 @@ function refreshOrderJSLogic() {
             delete addModal.dataset.tastingBase;
           }
           if (addModal && typeof bootstrap !== 'undefined' && bootstrap.Modal) {
-            const addInstance = bootstrap.Modal.getInstance(addModal) || new bootstrap.Modal(addModal);
+            const addInstance =
+              bootstrap.Modal.getInstance(addModal) || new bootstrap.Modal(addModal);
             addInstance.hide();
           }
           // Small delay to allow modal to fully close
-          return new Promise(resolve => setTimeout(resolve, 300));
+          return new Promise((resolve) => setTimeout(resolve, 300));
         })
         .catch((error) => {
           console.error('Error adding item to order:', error);
@@ -506,40 +575,62 @@ function refreshOrderJSLogic() {
   // Start Order click is handled centrally in ordr_commons.js (capture-phase).
   // Removed legacy bubbling handler here to avoid duplicate POSTs.
   // Delegated handler so replacements of modal content don't drop the binding
-  $(document).off('click.confirmOrder').on('click.confirmOrder', '#confirm-order:not([disabled]), #cartSubmitOrder:not([disabled])', function () {
-    if (window.__confirmOrderPosting) { return; }
-    window.__confirmOrderPosting = true;
-    if ($('#currentEmployee').length) {
-      const ordr = {
-        ordr: {
-          tablesetting_id: $('#currentTable').text(),
-          employee_id: $('#currentEmployee').text(),
-          restaurant_id: getRestaurantId(),
-          menu_id: $('#currentMenu').text(),
-          status: ORDR_ORDERED,
-        },
-      };
-      const restaurantId = getRestaurantId();
-      const orderId = getCurrentOrderId();
-      if (!restaurantId || !orderId) { console.warn('[ConfirmOrder] Missing id; aborting', { restaurantId, orderId }); window.__confirmOrderPosting = false; return; }
-      patch(`/restaurants/${restaurantId}/ordrs/` + orderId, ordr)
-        .finally(() => setTimeout(() => { window.__confirmOrderPosting = false; }, 500));
-    } else {
-      const ordr = {
-        ordr: {
-          tablesetting_id: $('#currentTable').text(),
-          restaurant_id: getRestaurantId(),
-          menu_id: $('#currentMenu').text(),
-          status: ORDR_ORDERED,
-        },
-      };
-      const restaurantId = getRestaurantId();
-      const orderId = getCurrentOrderId();
-      if (!restaurantId || !orderId) { console.warn('[ConfirmOrder] Missing id; aborting', { restaurantId, orderId }); window.__confirmOrderPosting = false; return; }
-      patch(`/restaurants/${restaurantId}/ordrs/` + orderId, ordr)
-        .finally(() => setTimeout(() => { window.__confirmOrderPosting = false; }, 500));
-    }
-  });
+  $(document)
+    .off('click.confirmOrder')
+    .on(
+      'click.confirmOrder',
+      '#confirm-order:not([disabled]), #cartSubmitOrder:not([disabled])',
+      function () {
+        if (window.__confirmOrderPosting) {
+          return;
+        }
+        window.__confirmOrderPosting = true;
+        if ($('#currentEmployee').length) {
+          const ordr = {
+            ordr: {
+              tablesetting_id: $('#currentTable').text(),
+              employee_id: $('#currentEmployee').text(),
+              restaurant_id: getRestaurantId(),
+              menu_id: $('#currentMenu').text(),
+              status: ORDR_ORDERED,
+            },
+          };
+          const restaurantId = getRestaurantId();
+          const orderId = getCurrentOrderId();
+          if (!restaurantId || !orderId) {
+            console.warn('[ConfirmOrder] Missing id; aborting', { restaurantId, orderId });
+            window.__confirmOrderPosting = false;
+            return;
+          }
+          patch(`/restaurants/${restaurantId}/ordrs/` + orderId, ordr).finally(() =>
+            setTimeout(() => {
+              window.__confirmOrderPosting = false;
+            }, 500)
+          );
+        } else {
+          const ordr = {
+            ordr: {
+              tablesetting_id: $('#currentTable').text(),
+              restaurant_id: getRestaurantId(),
+              menu_id: $('#currentMenu').text(),
+              status: ORDR_ORDERED,
+            },
+          };
+          const restaurantId = getRestaurantId();
+          const orderId = getCurrentOrderId();
+          if (!restaurantId || !orderId) {
+            console.warn('[ConfirmOrder] Missing id; aborting', { restaurantId, orderId });
+            window.__confirmOrderPosting = false;
+            return;
+          }
+          patch(`/restaurants/${restaurantId}/ordrs/` + orderId, ordr).finally(() =>
+            setTimeout(() => {
+              window.__confirmOrderPosting = false;
+            }, 500)
+          );
+        }
+      }
+    );
   if ($('#pay-order').length) {
     if (document.getElementById('refreshPaymentLink')) {
       document.getElementById('refreshPaymentLink').addEventListener('click', async () => {
@@ -551,14 +642,22 @@ function refreshOrderJSLogic() {
           tip = $('#tipNumberField').val();
         }
         try {
-          const response = await fetch(`/restaurants/${restaurantId}/ordrs/${openOrderId}/payments/checkout_session`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Accept: 'application/json',
-            },
-            body: JSON.stringify({ amount_cents: amountCents, tip: tip, success_url: window.location.href, cancel_url: window.location.href }),
-          });
+          const response = await fetch(
+            `/restaurants/${restaurantId}/ordrs/${openOrderId}/payments/checkout_session`,
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+              },
+              body: JSON.stringify({
+                amount_cents: amountCents,
+                tip: tip,
+                success_url: window.location.href,
+                cancel_url: window.location.href,
+              }),
+            }
+          );
           const data = await response.json();
           if (data.checkout_url) {
             $('#paymentlink').text(data.checkout_url);
@@ -574,7 +673,6 @@ function refreshOrderJSLogic() {
       });
     }
   }
-
 }
 
 // Initialize the order channel subscription
@@ -582,15 +680,31 @@ function initializeOrderChannel() {
   if (!isBrowser || !document.body) return null;
 
   let currentOrderId = (function () {
-    try { return (typeof commonsGetCurrentOrderId === 'function') ? commonsGetCurrentOrderId() : null; } catch (_) { return null; }
+    try {
+      return typeof commonsGetCurrentOrderId === 'function' ? commonsGetCurrentOrderId() : null;
+    } catch (_) {
+      return null;
+    }
   })();
-  const getSlug = () => { try { return document.body?.dataset?.smartmenuId || null; } catch (_) { return null; } };
+  const getSlug = () => {
+    try {
+      return document.body?.dataset?.smartmenuId || null;
+    } catch (_) {
+      return null;
+    }
+  };
   let currentIdentifier = currentOrderId || getSlug();
   let usingSlug = !currentOrderId && !!currentIdentifier;
   let subscription = null;
 
   const subscribeToChannel = () => {
-    const orderId = (function () { try { return (typeof commonsGetCurrentOrderId === 'function') ? commonsGetCurrentOrderId() : null; } catch (_) { return null; } })();
+    const orderId = (function () {
+      try {
+        return typeof commonsGetCurrentOrderId === 'function' ? commonsGetCurrentOrderId() : null;
+      } catch (_) {
+        return null;
+      }
+    })();
     const slug = getSlug();
     const identifier = orderId || slug;
     if (!identifier) return null;
@@ -601,40 +715,42 @@ function initializeOrderChannel() {
     currentIdentifier = identifier;
     usingSlug = !orderId && !!slug;
 
-    const params = usingSlug ? { channel: 'OrdrChannel', slug } : { channel: 'OrdrChannel', order_id: orderId };
+    const params = usingSlug
+      ? { channel: 'OrdrChannel', slug }
+      : { channel: 'OrdrChannel', order_id: orderId };
 
-    subscription = consumer.subscriptions.create(
-      params,
-      {
-        connected() {
-          console.log('Connected to OrdrChannel', usingSlug ? `(slug=${slug})` : `(order_id=${orderId})`);
+    subscription = consumer.subscriptions.create(params, {
+      connected() {
+        console.log(
+          'Connected to OrdrChannel',
+          usingSlug ? `(slug=${slug})` : `(order_id=${orderId})`
+        );
+        updateConnectionStatus('connected');
+      },
+
+      disconnected() {
+        console.log('Disconnected from OrdrChannel');
+        updateConnectionStatus('disconnected');
+      },
+
+      rejected() {
+        console.error('Connection to OrdrChannel was rejected');
+        updateConnectionStatus('error');
+      },
+
+      received(data) {
+        try {
+          const payload = data && (data.state || data);
+          if (!payload) return;
+          // JSON state only
+          document.dispatchEvent(new CustomEvent('state:update', { detail: payload }));
           updateConnectionStatus('connected');
-        },
-
-        disconnected() {
-          console.log('Disconnected from OrdrChannel');
-          updateConnectionStatus('disconnected');
-        },
-
-        rejected() {
-          console.error('Connection to OrdrChannel was rejected');
-          updateConnectionStatus('error');
-        },
-
-        received(data) {
-          try {
-            const payload = data && (data.state || data);
-            if (!payload) return;
-            // JSON state only
-            document.dispatchEvent(new CustomEvent('state:update', { detail: payload }));
-            updateConnectionStatus('connected');
-          } catch (error) {
-            console.error('Error processing received state:', error);
-            updateConnectionStatus('error', 'Error processing update');
-          }
-        },
-      }
-    );
+        } catch (error) {
+          console.error('Error processing received state:', error);
+          updateConnectionStatus('error', 'Error processing update');
+        }
+      },
+    });
 
     return subscription;
   };
@@ -698,9 +814,16 @@ function initializeOrderChannel() {
 // Initialize the order channel when the document is ready
 if (isBrowser) {
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => { try { commonsInitOrderBindings(); } catch (_) {} initializeOrderChannel(); });
+    document.addEventListener('DOMContentLoaded', () => {
+      try {
+        commonsInitOrderBindings();
+      } catch (_) {}
+      initializeOrderChannel();
+    });
   } else {
-    try { commonsInitOrderBindings(); } catch (_) {}
+    try {
+      commonsInitOrderBindings();
+    } catch (_) {}
     initializeOrderChannel();
   }
 }

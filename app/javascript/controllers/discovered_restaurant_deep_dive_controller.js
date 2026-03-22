@@ -1,39 +1,39 @@
-import { Controller } from '@hotwired/stimulus'
+import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
   static values = {
     statusUrl: String,
     initialStatus: String,
-  }
+  };
 
   connect() {
-    this.pollHandle = null
+    this.pollHandle = null;
 
-    const status = (this.initialStatusValue || '').toLowerCase()
+    const status = (this.initialStatusValue || '').toLowerCase();
     if (status === 'queued') {
-      this.startPolling()
+      this.startPolling();
     }
   }
 
   disconnect() {
-    this.stopPolling()
+    this.stopPolling();
   }
 
   startPolling() {
-    if (!this.statusUrlValue) return
-    if (this.pollHandle) return
+    if (!this.statusUrlValue) return;
+    if (this.pollHandle) return;
 
     this.pollHandle = window.setInterval(() => {
-      this.checkOnce()
-    }, 2000)
+      this.checkOnce();
+    }, 2000);
 
-    this.checkOnce()
+    this.checkOnce();
   }
 
   stopPolling() {
-    if (!this.pollHandle) return
-    window.clearInterval(this.pollHandle)
-    this.pollHandle = null
+    if (!this.pollHandle) return;
+    window.clearInterval(this.pollHandle);
+    this.pollHandle = null;
   }
 
   async checkOnce() {
@@ -41,16 +41,16 @@ export default class extends Controller {
       const resp = await fetch(this.statusUrlValue, {
         headers: { Accept: 'application/json' },
         credentials: 'same-origin',
-      })
+      });
 
-      if (!resp.ok) return
+      if (!resp.ok) return;
 
-      const data = await resp.json()
-      const status = (data.status || '').toLowerCase()
+      const data = await resp.json();
+      const status = (data.status || '').toLowerCase();
 
       if (status === 'completed' || status === 'failed') {
-        this.stopPolling()
-        window.location.reload()
+        this.stopPolling();
+        window.location.reload();
       }
     } catch (_e) {
       // ignore

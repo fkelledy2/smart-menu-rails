@@ -12,7 +12,9 @@ export const OrderingModule = {
       this.restaurantId = wrapper.dataset.restaurantId;
       // Determine currency code from dataset or meta tag, fallback to USD
       const dsCode = (wrapper.dataset.currencyCode || '').toUpperCase();
-      const metaCode = (document.querySelector('meta[name="restaurant-currency"]')?.content || '').toUpperCase();
+      const metaCode = (
+        document.querySelector('meta[name="restaurant-currency"]')?.content || ''
+      ).toUpperCase();
       this.currencyCode = dsCode || metaCode || 'USD';
       this.charts = this.charts || {};
       if (this.initialized) {
@@ -34,8 +36,14 @@ export const OrderingModule = {
   renderHorizontalDualBar(canvasId, labels, qtyData, revenueData) {
     const canvas = this.q('#' + canvasId);
     const ctx = canvas;
-    if (!ctx || !window.Chart) { return; }
-    if (this.charts[canvasId]) { try { this.charts[canvasId].destroy(); } catch(_) {} }
+    if (!ctx || !window.Chart) {
+      return;
+    }
+    if (this.charts[canvasId]) {
+      try {
+        this.charts[canvasId].destroy();
+      } catch (_) {}
+    }
     try {
       const targetH = Math.max(220, labels.length * 26 + 40);
       canvas.style.display = 'block';
@@ -44,7 +52,7 @@ export const OrderingModule = {
       canvas.height = targetH;
       const parentW = canvas.parentElement ? canvas.parentElement.clientWidth : 600;
       canvas.width = Math.max(300, parentW);
-    } catch(_) {}
+    } catch (_) {}
     const fmt = this.getCurrencyFormatter();
     this.charts[canvasId] = new window.Chart(ctx, {
       type: 'bar',
@@ -61,43 +69,60 @@ export const OrderingModule = {
         maintainAspectRatio: false,
         scales: {
           xQty: { position: 'top', beginAtZero: true, grid: { drawOnChartArea: false } },
-          xRev: { position: 'bottom', beginAtZero: true, grid: { drawOnChartArea: true }, ticks: { callback: (v) => fmt(v) } },
+          xRev: {
+            position: 'bottom',
+            beginAtZero: true,
+            grid: { drawOnChartArea: true },
+            ticks: { callback: (v) => fmt(v) },
+          },
           y: { ticks: { autoSkip: false, maxRotation: 0, minRotation: 0 } },
         },
         plugins: {
           tooltip: {
             callbacks: {
-              label: (ctx) => ctx.dataset.label === 'Revenue' ? `Revenue: ${fmt(ctx.parsed.x)}` : `Qty: ${ctx.parsed.x}`,
-            }
+              label: (ctx) =>
+                ctx.dataset.label === 'Revenue'
+                  ? `Revenue: ${fmt(ctx.parsed.x)}`
+                  : `Qty: ${ctx.parsed.x}`,
+            },
           },
         },
       },
     });
-    console.log('[OrderingModule] chart rendered', canvasId, { bars: labels.length, orientation: 'horizontal' });
+    console.log('[OrderingModule] chart rendered', canvasId, {
+      bars: labels.length,
+      orientation: 'horizontal',
+    });
   },
 
   bindUI() {
     if (this._odBound) return;
     const range = this.q('#od-time-range');
     const compare = this.q('#od-compare');
-    ['change', 'input'].forEach(evt => {
+    ['change', 'input'].forEach((evt) => {
       range && range.addEventListener(evt, () => this.refresh());
       compare && compare.addEventListener(evt, () => this.refresh());
     });
-    ['#od-filter-menu', '#od-filter-employee', '#od-filter-table', '#od-filter-status']
-      .forEach(sel => { const el = this.q(sel); el && el.addEventListener('change', () => this.refresh()); });
+    ['#od-filter-menu', '#od-filter-employee', '#od-filter-table', '#od-filter-status'].forEach(
+      (sel) => {
+        const el = this.q(sel);
+        el && el.addEventListener('change', () => this.refresh());
+      }
+    );
 
     // Export buttons
     const expOrders = this.q('#od-export-orders');
     const expItems = this.q('#od-export-items');
-    expOrders && expOrders.addEventListener('click', () => {
-      const url = `/restaurants/${this.restaurantId}/analytics/orders.csv?${this.params()}`;
-      window.open(url, '_blank');
-    });
-    expItems && expItems.addEventListener('click', () => {
-      const url = `/restaurants/${this.restaurantId}/analytics/items.csv?${this.params()}`;
-      window.open(url, '_blank');
-    });
+    expOrders &&
+      expOrders.addEventListener('click', () => {
+        const url = `/restaurants/${this.restaurantId}/analytics/orders.csv?${this.params()}`;
+        window.open(url, '_blank');
+      });
+    expItems &&
+      expItems.addEventListener('click', () => {
+        const url = `/restaurants/${this.restaurantId}/analytics/items.csv?${this.params()}`;
+        window.open(url, '_blank');
+      });
     this._odBound = true;
   },
 
@@ -172,10 +197,10 @@ export const OrderingModule = {
     const json = await this.fetchJSON(url);
     console.log('[OrderingModule] Timeseries payload', json);
     const series = Array.isArray(json?.series) ? json.series : [];
-    const labels = series.map(p => p.t);
-    const gross = series.map(p => p.gross || 0);
-    const net = series.map(p => p.net || 0);
-    const orders = series.map(p => p.orders || 0);
+    const labels = series.map((p) => p.t);
+    const gross = series.map((p) => p.gross || 0);
+    const net = series.map((p) => p.net || 0);
+    const orders = series.map((p) => p.orders || 0);
     await this.ensureChartJs();
     this.renderLineChart('od-chart-revenue', labels, [
       { label: 'Gross', data: gross, borderColor: '#0d6efd' },
@@ -197,13 +222,17 @@ export const OrderingModule = {
 
   formatValue(key, v) {
     if (v === null || v === undefined) return '—';
-    if (['gross','net','taxes','tips','service','aov'].includes(key)) {
+    if (['gross', 'net', 'taxes', 'tips', 'service', 'aov'].includes(key)) {
       const code = this.currencyCode || 'USD';
       try {
-        return new Intl.NumberFormat(undefined, { style: 'currency', currency: code }).format(Number(v));
+        return new Intl.NumberFormat(undefined, { style: 'currency', currency: code }).format(
+          Number(v)
+        );
       } catch (e) {
         // Fallback if invalid code
-        return new Intl.NumberFormat(undefined, { style: 'currency', currency: 'USD' }).format(Number(v));
+        return new Intl.NumberFormat(undefined, { style: 'currency', currency: 'USD' }).format(
+          Number(v)
+        );
       }
     }
     return String(v);
@@ -219,7 +248,7 @@ export const OrderingModule = {
 
   renderLoading() {
     // simple shimmer-free loading: clear deltas
-    this.qAll('.od-kpi-card [data-kpi-delta]').forEach(el => el.textContent = '');
+    this.qAll('.od-kpi-card [data-kpi-delta]').forEach((el) => (el.textContent = ''));
   },
 
   async ensureChartJs() {
@@ -241,8 +270,12 @@ export const OrderingModule = {
           resolve();
         }
       }, 50);
-      script.addEventListener('load', () => { resolve(); });
-      script.addEventListener('error', () => { resolve(); });
+      script.addEventListener('load', () => {
+        resolve();
+      });
+      script.addEventListener('error', () => {
+        resolve();
+      });
     });
     if (!window.Chart) {
       console.warn('[OrderingModule] Chart.js failed to load; charts will be skipped');
@@ -252,11 +285,19 @@ export const OrderingModule = {
   renderLineChart(canvasId, labels, datasets) {
     const canvas = this.q('#' + canvasId);
     const ctx = canvas;
-    if (!ctx) { console.warn('[OrderingModule] canvas not found', canvasId); return; }
-    if (!window.Chart) { console.warn('[OrderingModule] Chart.js unavailable'); return; }
+    if (!ctx) {
+      console.warn('[OrderingModule] canvas not found', canvasId);
+      return;
+    }
+    if (!window.Chart) {
+      console.warn('[OrderingModule] Chart.js unavailable');
+      return;
+    }
     // Destroy existing chart if re-rendering
     if (this.charts[canvasId]) {
-      try { this.charts[canvasId].destroy(); } catch(_) {}
+      try {
+        this.charts[canvasId].destroy();
+      } catch (_) {}
     }
     // Ensure stable height to avoid vertical growth across renders
     try {
@@ -268,8 +309,8 @@ export const OrderingModule = {
       canvas.height = targetH;
       const parentW = canvas.parentElement ? canvas.parentElement.clientWidth : 600;
       canvas.width = Math.max(300, parentW);
-    } catch(_) {}
-    const ds = datasets.map(d => ({
+    } catch (_) {}
+    const ds = datasets.map((d) => ({
       label: d.label,
       data: d.data,
       borderColor: d.borderColor,
@@ -294,8 +335,14 @@ export const OrderingModule = {
   renderBarChart(canvasId, labels, data, seriesLabel) {
     const canvas = this.q('#' + canvasId);
     const ctx = canvas;
-    if (!ctx || !window.Chart) { return; }
-    if (this.charts[canvasId]) { try { this.charts[canvasId].destroy(); } catch(_) {} }
+    if (!ctx || !window.Chart) {
+      return;
+    }
+    if (this.charts[canvasId]) {
+      try {
+        this.charts[canvasId].destroy();
+      } catch (_) {}
+    }
     try {
       const targetH = 220;
       canvas.style.display = 'block';
@@ -304,7 +351,7 @@ export const OrderingModule = {
       canvas.height = targetH;
       const parentW = canvas.parentElement ? canvas.parentElement.clientWidth : 600;
       canvas.width = Math.max(300, parentW);
-    } catch(_) {}
+    } catch (_) {}
     const fmt = this.getCurrencyFormatter();
     this.charts[canvasId] = new window.Chart(ctx, {
       type: 'bar',
@@ -325,8 +372,14 @@ export const OrderingModule = {
   renderDoughnutChart(canvasId, labels, data) {
     const canvas = this.q('#' + canvasId);
     const ctx = canvas;
-    if (!ctx || !window.Chart) { return; }
-    if (this.charts[canvasId]) { try { this.charts[canvasId].destroy(); } catch(_) {} }
+    if (!ctx || !window.Chart) {
+      return;
+    }
+    if (this.charts[canvasId]) {
+      try {
+        this.charts[canvasId].destroy();
+      } catch (_) {}
+    }
     try {
       const targetH = 220;
       canvas.style.display = 'block';
@@ -335,12 +388,32 @@ export const OrderingModule = {
       canvas.height = targetH;
       const parentW = canvas.parentElement ? canvas.parentElement.clientWidth : 600;
       canvas.width = Math.max(300, parentW);
-    } catch(_) {}
-    const colors = ['#0d6efd','#20c997','#6f42c1','#fd7e14','#dc3545','#198754','#0dcaf0','#6c757d','#6610f2','#d63384','#1982c4','#8ac926'];
+    } catch (_) {}
+    const colors = [
+      '#0d6efd',
+      '#20c997',
+      '#6f42c1',
+      '#fd7e14',
+      '#dc3545',
+      '#198754',
+      '#0dcaf0',
+      '#6c757d',
+      '#6610f2',
+      '#d63384',
+      '#1982c4',
+      '#8ac926',
+    ];
     this.charts[canvasId] = new window.Chart(ctx, {
       type: 'doughnut',
-      data: { labels, datasets: [{ data, backgroundColor: labels.map((_, i) => colors[i % colors.length]) }] },
-      options: { responsive: false, maintainAspectRatio: false, plugins: { legend: { display: true } } },
+      data: {
+        labels,
+        datasets: [{ data, backgroundColor: labels.map((_, i) => colors[i % colors.length]) }],
+      },
+      options: {
+        responsive: false,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: true } },
+      },
     });
     console.log('[OrderingModule] chart rendered', canvasId, { slices: labels.length });
   },
@@ -350,7 +423,7 @@ export const OrderingModule = {
     try {
       const intl = new Intl.NumberFormat(undefined, { style: 'currency', currency: code });
       return (n) => intl.format(Number(n || 0));
-    } catch(_) {
+    } catch (_) {
       const intl = new Intl.NumberFormat(undefined, { style: 'currency', currency: 'USD' });
       return (n) => intl.format(Number(n || 0));
     }
@@ -362,8 +435,8 @@ export const OrderingModule = {
     const json = await this.fetchJSON(url);
     const rows = Array.isArray(json?.data) ? json.data : [];
     await this.ensureChartJs();
-    const labels = rows.map(r => r.menu_name || `#${r.menu_id}`);
-    const data = rows.map(r => r.revenue || 0);
+    const labels = rows.map((r) => r.menu_name || `#${r.menu_id}`);
+    const data = rows.map((r) => r.revenue || 0);
     this.renderDoughnutChart('od-chart-menu-mix', labels, data);
   },
 
@@ -373,9 +446,9 @@ export const OrderingModule = {
     const json = await this.fetchJSON(url);
     const rows = Array.isArray(json?.data) ? json.data : [];
     await this.ensureChartJs();
-    const labels = rows.map(r => r.item_name || `#${r.item_id}`);
-    const qty = rows.map(r => r.qty || 0);
-    const revenue = rows.map(r => r.revenue || 0);
+    const labels = rows.map((r) => r.item_name || `#${r.item_id}`);
+    const qty = rows.map((r) => r.qty || 0);
+    const revenue = rows.map((r) => r.revenue || 0);
     this.renderHorizontalDualBar('od-chart-top-items', labels, qty, revenue);
   },
 
@@ -385,8 +458,8 @@ export const OrderingModule = {
     const json = await this.fetchJSON(url);
     const rows = Array.isArray(json?.data) ? json.data : [];
     await this.ensureChartJs();
-    const labels = rows.map(r => r.employee_name || `#${r.employee_id}`);
-    const data = rows.map(r => r.revenue || 0);
+    const labels = rows.map((r) => r.employee_name || `#${r.employee_id}`);
+    const data = rows.map((r) => r.revenue || 0);
     this.renderBarChart('od-chart-staff', labels, data, 'Revenue');
   },
 
@@ -396,22 +469,28 @@ export const OrderingModule = {
     const json = await this.fetchJSON(url);
     const rows = Array.isArray(json?.data) ? json.data : [];
     await this.ensureChartJs();
-    const labels = rows.map(r => r.table_name || `#${r.table_id}`);
-    const data = rows.map(r => r.revenue || 0);
+    const labels = rows.map((r) => r.table_name || `#${r.table_id}`);
+    const data = rows.map((r) => r.revenue || 0);
     this.renderBarChart('od-chart-tables', labels, data, 'Revenue');
   },
 
   destroy() {
     try {
       Object.keys(this.charts || {}).forEach((key) => {
-        try { this.charts[key].destroy(); } catch(_) {}
+        try {
+          this.charts[key].destroy();
+        } catch (_) {}
       });
-    } catch(_) {}
+    } catch (_) {}
     this.charts = {};
     try {
-      if (this.tables?.orders) { this.tables.orders.destroy(); }
-      if (this.tables?.items) { this.tables.items.destroy(); }
-    } catch(_) {}
+      if (this.tables?.orders) {
+        this.tables.orders.destroy();
+      }
+      if (this.tables?.items) {
+        this.tables.items.destroy();
+      }
+    } catch (_) {}
     this.tables = {};
     this.initialized = false;
     this._odBound = false;
@@ -421,16 +500,22 @@ export const OrderingModule = {
   async fetchJSON(url) {
     const headers = {
       'X-Requested-With': 'XMLHttpRequest',
-      'X-CSRF-Token': document.querySelector("meta[name='csrf-token']")?.content || ''
+      'X-CSRF-Token': document.querySelector("meta[name='csrf-token']")?.content || '',
     };
     const res = await fetch(url, { headers });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     return res.json();
   },
 
-  val(sel) { return this.q(sel)?.value; },
-  q(sel) { return this.container.querySelector(sel); },
-  qAll(sel) { return Array.from(this.container.querySelectorAll(sel)); },
+  val(sel) {
+    return this.q(sel)?.value;
+  },
+  q(sel) {
+    return this.container.querySelector(sel);
+  },
+  qAll(sel) {
+    return Array.from(this.container.querySelectorAll(sel));
+  },
 
   async loadTables() {
     await Promise.all([this.loadOrdersTable(), this.loadItemsTable()]);
@@ -445,10 +530,17 @@ export const OrderingModule = {
     if (!container) return;
     // Destroy prior table
     if (!this.tables) this.tables = {};
-    if (this.tables.orders) { try { this.tables.orders.destroy(); } catch(_) {} }
+    if (this.tables.orders) {
+      try {
+        this.tables.orders.destroy();
+      } catch (_) {}
+    }
     const twoDp = (cell) => {
       const n = Number(cell.getValue() ?? 0);
-      return new Intl.NumberFormat(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n);
+      return new Intl.NumberFormat(undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }).format(n);
     };
     // Build Tabulator
     this.tables.orders = new window.Tabulator(container, {
@@ -461,7 +553,7 @@ export const OrderingModule = {
             const url = `/restaurants/${this.restaurantId}/ordrs/${data.id}`;
             window.open(url, '_blank');
           }
-        } catch(_) {}
+        } catch (_) {}
       },
       columns: [
         { title: 'ID', field: 'id', sorter: 'number', width: 90, frozen: true, hozAlign: 'right' },
@@ -471,10 +563,25 @@ export const OrderingModule = {
         { title: 'Employee', field: 'employee', sorter: 'string' },
         { title: 'Net', field: 'net', hozAlign: 'right', sorter: 'number', formatter: twoDp },
         { title: 'Tax', field: 'tax', hozAlign: 'right', sorter: 'number', formatter: twoDp },
-        { title: 'Service', field: 'service', hozAlign: 'right', sorter: 'number', formatter: twoDp },
+        {
+          title: 'Service',
+          field: 'service',
+          hozAlign: 'right',
+          sorter: 'number',
+          formatter: twoDp,
+        },
         { title: 'Tip', field: 'tip', hozAlign: 'right', sorter: 'number', formatter: twoDp },
         { title: 'Gross', field: 'gross', hozAlign: 'right', sorter: 'number', formatter: twoDp },
-        { title: 'Date', field: 'created_at', sorter: 'datetime', width: 160, frozen: true, frozenPosition: 'right', hozAlign: 'right', resizable: false, formatter: (cell) => {
+        {
+          title: 'Date',
+          field: 'created_at',
+          sorter: 'datetime',
+          width: 160,
+          frozen: true,
+          frozenPosition: 'right',
+          hozAlign: 'right',
+          resizable: false,
+          formatter: (cell) => {
             const v = cell.getValue();
             if (!v) return '';
             const d = new Date(v);
@@ -486,14 +593,23 @@ export const OrderingModule = {
             const hh = pad(d.getHours());
             const mi = pad(d.getMinutes());
             return `${yyyy}-${mm}-${dd} ${hh}:${mi}`;
-          }
+          },
         },
       ],
       data: rows,
       placeholder: 'No orders',
     });
     // Server-side sorting reload
-    const ordersSortMap = { created_at: 'created_at', status: 'status', gross: 'gross', net: 'nett', nett: 'nett', tax: 'tax', service: 'service', tip: 'tip' };
+    const ordersSortMap = {
+      created_at: 'created_at',
+      status: 'status',
+      gross: 'gross',
+      net: 'nett',
+      nett: 'nett',
+      tax: 'tax',
+      service: 'service',
+      tip: 'tip',
+    };
     this.tables.orders.on('sortChanged', async (sorters) => {
       try {
         const s = Array.isArray(sorters) && sorters[0] ? sorters[0] : null;
@@ -504,7 +620,9 @@ export const OrderingModule = {
         const json = await this.fetchJSON(url);
         const rows = Array.isArray(json?.rows) ? json.rows : [];
         this.tables.orders.setData(rows);
-      } catch (e) { console.warn('orders sort reload failed', e); }
+      } catch (e) {
+        console.warn('orders sort reload failed', e);
+      }
     });
   },
 
@@ -516,10 +634,17 @@ export const OrderingModule = {
     const container = this.q('#od-table-items');
     if (!container) return;
     if (!this.tables) this.tables = {};
-    if (this.tables.items) { try { this.tables.items.destroy(); } catch(_) {} }
+    if (this.tables.items) {
+      try {
+        this.tables.items.destroy();
+      } catch (_) {}
+    }
     const twoDp = (cell) => {
       const n = Number(cell.getValue() ?? 0);
-      return new Intl.NumberFormat(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n);
+      return new Intl.NumberFormat(undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }).format(n);
     };
     this.tables.items = new window.Tabulator(container, {
       layout: 'fitDataStretch',
@@ -528,8 +653,23 @@ export const OrderingModule = {
         { title: 'ID', field: 'id', sorter: 'number', width: 90, frozen: true, hozAlign: 'right' },
         { title: 'Order', field: 'ordr_id', sorter: 'number', width: 110, hozAlign: 'right' },
         { title: 'Item', field: 'item', sorter: 'string' },
-        { title: 'Revenue', field: 'revenue', hozAlign: 'right', sorter: 'number', formatter: twoDp },
-        { title: 'Date', field: 'created_at', sorter: 'datetime', width: 160, frozen: true, frozenPosition: 'right', hozAlign: 'right', resizable: false, formatter: (cell) => {
+        {
+          title: 'Revenue',
+          field: 'revenue',
+          hozAlign: 'right',
+          sorter: 'number',
+          formatter: twoDp,
+        },
+        {
+          title: 'Date',
+          field: 'created_at',
+          sorter: 'datetime',
+          width: 160,
+          frozen: true,
+          frozenPosition: 'right',
+          hozAlign: 'right',
+          resizable: false,
+          formatter: (cell) => {
             const v = cell.getValue();
             if (!v) return '';
             const d = new Date(v);
@@ -541,7 +681,7 @@ export const OrderingModule = {
             const hh = pad(d.getHours());
             const mi = pad(d.getMinutes());
             return `${yyyy}-${mm}-${dd} ${hh}:${mi}`;
-          }
+          },
         },
       ],
       data: rows,
@@ -559,7 +699,9 @@ export const OrderingModule = {
         const json = await this.fetchJSON(url);
         const rows = Array.isArray(json?.rows) ? json.rows : [];
         this.tables.items.setData(rows);
-      } catch (e) { console.warn('items sort reload failed', e); }
+      } catch (e) {
+        console.warn('items sort reload failed', e);
+      }
     });
   },
 };

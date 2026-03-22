@@ -95,7 +95,8 @@ export function initMenus() {
 
   if ($('#menu-table').length) {
     function status(cell, formatterParams) {
-      const s = cell.getRow().getData('data').status; return s ? s.toUpperCase() : '';;
+      const s = cell.getRow().getData('data').status;
+      return s ? s.toUpperCase() : '';
     }
     const menuTable = new Tabulator('#menu-table', {
       dataLoader: false,

@@ -266,33 +266,35 @@ class ApplicationManager {
 
       initializeAutoSave() {
         // Find all forms with data-auto-save attribute that haven't been bound yet
-        const autoSaveForms = this.container.querySelectorAll('form[data-auto-save="true"]:not([data-auto-save-bound])');
-        
+        const autoSaveForms = this.container.querySelectorAll(
+          'form[data-auto-save="true"]:not([data-auto-save-bound])'
+        );
+
         autoSaveForms.forEach((form) => {
           form.setAttribute('data-auto-save-bound', 'true');
           const saveDelay = parseInt(form.dataset.autoSaveDelay) || 2000;
-          
+
           const debouncedSave = () => {
             // Clear existing timeout for this form
             if (this.saveTimeouts.has(form)) {
               clearTimeout(this.saveTimeouts.get(form));
             }
-            
+
             // Set new timeout
             const timeoutId = setTimeout(() => {
               this.autoSaveForm(form);
             }, saveDelay);
-            
+
             this.saveTimeouts.set(form, timeoutId);
           };
-          
+
           // Bind to all form inputs
           const inputs = form.querySelectorAll('input, select, textarea');
           inputs.forEach((input) => {
             input.addEventListener('input', debouncedSave);
             input.addEventListener('change', debouncedSave);
           });
-          
+
           console.log('[SmartMenu] Auto-save enabled for form:', form.action);
         });
       }
@@ -301,20 +303,20 @@ class ApplicationManager {
         try {
           const formData = new FormData(form);
           const csrfToken = document.querySelector("meta[name='csrf-token']")?.content;
-          
+
           // Use form.action if it's set correctly, otherwise construct from pathname
           let url = form.action;
-          
+
           // If form.action is empty or contains /edit, reconstruct it
           if (!url || url.includes('/edit')) {
             const pathname = window.location.pathname.replace(/\/edit.*$/, '');
             url = window.location.origin + pathname;
           }
-          
+
           console.log('[SmartMenu] Form action:', form.action);
           console.log('[SmartMenu] Final URL for PATCH:', url);
           console.log('[SmartMenu] Using XMLHttpRequest to bypass fetch interceptors');
-          
+
           // Use XMLHttpRequest instead of fetch to avoid browser extension interference
           const response = await new Promise((resolve, reject) => {
             const xhr = new XMLHttpRequest();
@@ -322,21 +324,21 @@ class ApplicationManager {
             xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
             xhr.setRequestHeader('X-CSRF-Token', csrfToken || '');
             xhr.setRequestHeader('Accept', 'application/json');
-            
+
             xhr.onload = () => {
               console.log('[SmartMenu] XHR completed, status:', xhr.status);
               resolve({
                 ok: xhr.status >= 200 && xhr.status < 300,
                 status: xhr.status,
-                json: async () => JSON.parse(xhr.responseText || '{}')
+                json: async () => JSON.parse(xhr.responseText || '{}'),
               });
             };
-            
+
             xhr.onerror = () => {
               console.error('[SmartMenu] XHR error');
               reject(new Error('Network error'));
             };
-            
+
             console.log('[SmartMenu] Sending XHR to:', url);
             xhr.send(formData);
           });
@@ -360,10 +362,11 @@ class ApplicationManager {
         if (!indicator) {
           indicator = document.createElement('div');
           indicator.className = 'auto-save-indicator';
-          indicator.style.cssText = 'position: fixed; top: 20px; right: 20px; padding: 12px 20px; border-radius: 6px; z-index: 9999; font-size: 14px; transition: opacity 0.3s;';
+          indicator.style.cssText =
+            'position: fixed; top: 20px; right: 20px; padding: 12px 20px; border-radius: 6px; z-index: 9999; font-size: 14px; transition: opacity 0.3s;';
           form.appendChild(indicator);
         }
-        
+
         if (status === 'saved') {
           indicator.textContent = '✓ Saved';
           indicator.style.backgroundColor = '#10b981';
@@ -373,9 +376,9 @@ class ApplicationManager {
           indicator.style.backgroundColor = '#ef4444';
           indicator.style.color = 'white';
         }
-        
+
         indicator.style.opacity = '1';
-        
+
         // Fade out after 2 seconds
         setTimeout(() => {
           indicator.style.opacity = '0';
@@ -649,10 +652,17 @@ class ApplicationManager {
           if (el && window.OrderingModule && el.dataset.odInitialized !== 'true') {
             el.dataset.odInitialized = 'true';
             console.log('[SmartMenu] Initializing OrderingModule via MutationObserver');
-            try { window.OrderingModule.init(document); } catch (e) { console.warn('OrderingModule init via observer failed', e); }
+            try {
+              window.OrderingModule.init(document);
+            } catch (e) {
+              console.warn('OrderingModule init via observer failed', e);
+            }
           }
         });
-        observer.observe(document.documentElement || document.body, { childList: true, subtree: true });
+        observer.observe(document.documentElement || document.body, {
+          childList: true,
+          subtree: true,
+        });
       }
     } catch (e) {
       console.warn('[SmartMenu] OrderingModule auto-init failed', e);
@@ -995,8 +1005,12 @@ document.addEventListener('turbo:frame-load', (event) => {
     if (!(frame instanceof Element)) return;
 
     // Re-initialize restaurants JS (TomSelect, etc.) for any restaurant/menu content frame
-    if (frame.id === 'restaurant_content' || frame.id === 'menu_content' ||
-        (frame.querySelector && (frame.querySelector('#newRestaurant') || frame.querySelector('#restaurant_address1')))) {
+    if (
+      frame.id === 'restaurant_content' ||
+      frame.id === 'menu_content' ||
+      (frame.querySelector &&
+        (frame.querySelector('#newRestaurant') || frame.querySelector('#restaurant_address1')))
+    ) {
       try {
         initRestaurants();
       } catch (e) {
@@ -1005,7 +1019,10 @@ document.addEventListener('turbo:frame-load', (event) => {
     }
 
     // Re-initialize auto-save for any new forms loaded via Turbo frame
-    if (frame.querySelector && frame.querySelector('form[data-auto-save="true"]:not([data-auto-save-bound])')) {
+    if (
+      frame.querySelector &&
+      frame.querySelector('form[data-auto-save="true"]:not([data-auto-save-bound])')
+    ) {
       try {
         if (window.SmartMenuApp && window.SmartMenuApp.globalFormManager) {
           window.SmartMenuApp.globalFormManager.refresh();
@@ -1049,7 +1066,11 @@ window.addEventListener('load', () => {
       if (el && window.OrderingModule && el.dataset.odInitialized !== 'true') {
         el.dataset.odInitialized = 'true';
         console.log('[SmartMenu] Initializing OrderingModule via post-load retry');
-        try { window.OrderingModule.init(document); } catch (e) { console.warn('OrderingModule init retry failed', e); }
+        try {
+          window.OrderingModule.init(document);
+        } catch (e) {
+          console.warn('OrderingModule init retry failed', e);
+        }
       }
     }, 250);
 
@@ -1064,7 +1085,11 @@ window.addEventListener('load', () => {
         if (el && window.OrderingModule && el.dataset.odInitialized !== 'true') {
           el.dataset.odInitialized = 'true';
           console.log('[SmartMenu] Initializing OrderingModule via ordering-page poll');
-          try { window.OrderingModule.init(document); } catch (e) { console.warn('OrderingModule init poll failed', e); }
+          try {
+            window.OrderingModule.init(document);
+          } catch (e) {
+            console.warn('OrderingModule init poll failed', e);
+          }
           clearInterval(iv);
         } else if (tries >= max) {
           clearInterval(iv);

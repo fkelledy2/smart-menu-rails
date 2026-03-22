@@ -1,4 +1,4 @@
-import { Controller } from "@hotwired/stimulus"
+import { Controller } from '@hotwired/stimulus';
 
 /**
  * Square Web Payments SDK Stimulus Controller
@@ -26,201 +26,200 @@ import { Controller } from "@hotwired/stimulus"
  */
 export default class extends Controller {
   static targets = [
-    "cardContainer",
-    "applePayContainer",
-    "googlePayContainer",
-    "submitButton",
-    "tipInput",
-    "errorMessage",
-    "processingOverlay",
-  ]
+    'cardContainer',
+    'applePayContainer',
+    'googlePayContainer',
+    'submitButton',
+    'tipInput',
+    'errorMessage',
+    'processingOverlay',
+  ];
 
   static values = {
     applicationId: String,
     locationId: String,
     orderId: String,
-    currency: { type: String, default: "EUR" },
+    currency: { type: String, default: 'EUR' },
     amountCents: { type: Number, default: 0 },
     sandbox: { type: Boolean, default: true },
     paymentUrl: String, // override POST URL if needed
-  }
+  };
 
   async connect() {
-    this.card = null
-    this.applePay = null
-    this.googlePay = null
-    this.payments = null
+    this.card = null;
+    this.applePay = null;
+    this.googlePay = null;
+    this.payments = null;
 
     try {
-      await this.#loadSdk()
-      await this.#initializePayments()
+      await this.#loadSdk();
+      await this.#initializePayments();
     } catch (e) {
-      console.error("[SquarePayment] Initialization failed:", e)
-      this.#showError("Payment system failed to load. Please refresh and try again.")
+      console.error('[SquarePayment] Initialization failed:', e);
+      this.#showError('Payment system failed to load. Please refresh and try again.');
     }
   }
 
   disconnect() {
-    this.card?.destroy?.()
-    this.applePay?.destroy?.()
-    this.googlePay?.destroy?.()
+    this.card?.destroy?.();
+    this.applePay?.destroy?.();
+    this.googlePay?.destroy?.();
   }
 
   // ── Actions ────────────────────────────────────────────────────────
 
   async pay(event) {
-    event?.preventDefault()
+    event?.preventDefault();
 
     if (!this.card) {
-      this.#showError("Card payment is not ready. Please wait or refresh.")
-      return
+      this.#showError('Card payment is not ready. Please wait or refresh.');
+      return;
     }
 
-    this.#setProcessing(true)
-    this.#clearError()
+    this.#setProcessing(true);
+    this.#clearError();
 
     try {
-      const tokenResult = await this.card.tokenize()
+      const tokenResult = await this.card.tokenize();
 
-      if (tokenResult.status !== "OK") {
-        const errorMsg = tokenResult.errors
-          ?.map((e) => e.message)
-          .join(", ") || "Card tokenization failed"
-        this.#showError(errorMsg)
-        this.#setProcessing(false)
-        return
+      if (tokenResult.status !== 'OK') {
+        const errorMsg =
+          tokenResult.errors?.map((e) => e.message).join(', ') || 'Card tokenization failed';
+        this.#showError(errorMsg);
+        this.#setProcessing(false);
+        return;
       }
 
-      const sourceId = tokenResult.token
-      let verificationToken = null
+      const sourceId = tokenResult.token;
+      let verificationToken = null;
 
       // Buyer verification (SCA) — optional
       try {
-        verificationToken = await this.#verifyBuyer(sourceId)
+        verificationToken = await this.#verifyBuyer(sourceId);
       } catch (verifyErr) {
-        console.warn("[SquarePayment] Buyer verification skipped:", verifyErr)
+        console.warn('[SquarePayment] Buyer verification skipped:', verifyErr);
       }
 
-      await this.#submitPayment(sourceId, verificationToken)
+      await this.#submitPayment(sourceId, verificationToken);
     } catch (e) {
-      console.error("[SquarePayment] Payment failed:", e)
-      this.#showError("Payment failed. Please try again.")
-      this.#setProcessing(false)
+      console.error('[SquarePayment] Payment failed:', e);
+      this.#showError('Payment failed. Please try again.');
+      this.#setProcessing(false);
     }
   }
 
   // ── SDK Loading ────────────────────────────────────────────────────
 
   async #loadSdk() {
-    if (window.Square) return
+    if (window.Square) return;
 
     const sdkUrl = this.sandboxValue
-      ? "https://sandbox.web.squarecdn.com/v1/square.js"
-      : "https://web.squarecdn.com/v1/square.js"
+      ? 'https://sandbox.web.squarecdn.com/v1/square.js'
+      : 'https://web.squarecdn.com/v1/square.js';
 
     return new Promise((resolve, reject) => {
       // Check if script is already loading
       if (document.querySelector(`script[src="${sdkUrl}"]`)) {
         const check = setInterval(() => {
-          if (window.Square) { clearInterval(check); resolve() }
-        }, 100)
-        setTimeout(() => { clearInterval(check); reject(new Error("SDK load timeout")) }, 10000)
-        return
+          if (window.Square) {
+            clearInterval(check);
+            resolve();
+          }
+        }, 100);
+        setTimeout(() => {
+          clearInterval(check);
+          reject(new Error('SDK load timeout'));
+        }, 10000);
+        return;
       }
 
-      const script = document.createElement("script")
-      script.src = sdkUrl
-      script.onload = () => resolve()
-      script.onerror = () => reject(new Error("Failed to load Square SDK"))
-      document.head.appendChild(script)
-    })
+      const script = document.createElement('script');
+      script.src = sdkUrl;
+      script.onload = () => resolve();
+      script.onerror = () => reject(new Error('Failed to load Square SDK'));
+      document.head.appendChild(script);
+    });
   }
 
   // ── Payments Initialization ────────────────────────────────────────
 
   async #initializePayments() {
-    if (!window.Square) throw new Error("Square SDK not loaded")
+    if (!window.Square) throw new Error('Square SDK not loaded');
 
-    this.payments = window.Square.payments(
-      this.applicationIdValue,
-      this.locationIdValue
-    )
+    this.payments = window.Square.payments(this.applicationIdValue, this.locationIdValue);
 
     // Card
     if (this.hasCardContainerTarget) {
-      this.card = await this.payments.card()
-      await this.card.attach(this.cardContainerTarget)
+      this.card = await this.payments.card();
+      await this.card.attach(this.cardContainerTarget);
     }
 
     // Apple Pay
     if (this.hasApplePayContainerTarget) {
       try {
-        const request = this.#buildPaymentRequest()
-        this.applePay = await this.payments.applePay(request)
+        const request = this.#buildPaymentRequest();
+        this.applePay = await this.payments.applePay(request);
         // Apple Pay renders its own button inside the container
-        this.applePayContainerTarget.classList.remove("d-none")
+        this.applePayContainerTarget.classList.remove('d-none');
       } catch (e) {
-        console.info("[SquarePayment] Apple Pay not available:", e.message)
-        this.applePayContainerTarget.classList.add("d-none")
+        console.info('[SquarePayment] Apple Pay not available:', e.message);
+        this.applePayContainerTarget.classList.add('d-none');
       }
     }
 
     // Google Pay
     if (this.hasGooglePayContainerTarget) {
       try {
-        const request = this.#buildPaymentRequest()
-        this.googlePay = await this.payments.googlePay(request)
-        await this.googlePay.attach(this.googlePayContainerTarget)
-        this.googlePayContainerTarget.classList.remove("d-none")
+        const request = this.#buildPaymentRequest();
+        this.googlePay = await this.payments.googlePay(request);
+        await this.googlePay.attach(this.googlePayContainerTarget);
+        this.googlePayContainerTarget.classList.remove('d-none');
       } catch (e) {
-        console.info("[SquarePayment] Google Pay not available:", e.message)
-        this.googlePayContainerTarget.classList.add("d-none")
+        console.info('[SquarePayment] Google Pay not available:', e.message);
+        this.googlePayContainerTarget.classList.add('d-none');
       }
     }
   }
 
   #buildPaymentRequest() {
     return this.payments.paymentRequest({
-      countryCode: "IE",
+      countryCode: 'IE',
       currencyCode: this.currencyValue.toUpperCase(),
       total: {
         amount: (this.amountCentsValue / 100).toFixed(2),
-        label: "Total",
+        label: 'Total',
       },
-    })
+    });
   }
 
   // ── Buyer Verification (SCA) ───────────────────────────────────────
 
   async #verifyBuyer(sourceId) {
-    if (!this.payments?.verifyBuyer) return null
+    if (!this.payments?.verifyBuyer) return null;
 
     const result = await this.payments.verifyBuyer(sourceId, {
       amount: (this.amountCentsValue / 100).toFixed(2),
       billingContact: {},
       currencyCode: this.currencyValue.toUpperCase(),
-      intent: "CHARGE",
-    })
+      intent: 'CHARGE',
+    });
 
-    return result?.token || null
+    return result?.token || null;
   }
 
   // ── Server Submission ──────────────────────────────────────────────
 
   async #submitPayment(sourceId, verificationToken) {
-    let tipCents = this.hasTipInputTarget
-      ? parseInt(this.tipInputTarget.value || "0", 10)
-      : 0
+    let tipCents = this.hasTipInputTarget ? parseInt(this.tipInputTarget.value || '0', 10) : 0;
     // Fall back to the shared tip input on the pay section
     if (!tipCents) {
-      const tipField = document.getElementById("tipNumberField")
-      if (tipField) tipCents = Math.round(parseFloat(tipField.value || "0") * 100)
+      const tipField = document.getElementById('tipNumberField');
+      if (tipField) tipCents = Math.round(parseFloat(tipField.value || '0') * 100);
     }
 
-    const url = this.paymentUrlValue ||
-      `/smartmenu/orders/${this.orderIdValue}/payments`
+    const url = this.paymentUrlValue || `/smartmenu/orders/${this.orderIdValue}/payments`;
 
-    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
 
     const body = {
       source_id: sourceId,
@@ -228,24 +227,24 @@ export default class extends Controller {
       tip_cents: tipCents,
       amount_cents: this.amountCentsValue,
       currency: this.currencyValue,
-    }
+    };
 
     const response = await fetch(url, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
-        "X-CSRF-Token": csrfToken || "",
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': csrfToken || '',
       },
       body: JSON.stringify(body),
-    })
+    });
 
-    const data = await response.json()
+    const data = await response.json();
 
-    if (data.ok || data.status === "succeeded") {
-      this.#showSuccess()
+    if (data.ok || data.status === 'succeeded') {
+      this.#showSuccess();
     } else {
-      this.#showError(data.error || "Payment was not completed.")
-      this.#setProcessing(false)
+      this.#showError(data.error || 'Payment was not completed.');
+      this.#setProcessing(false);
     }
   }
 
@@ -254,46 +253,42 @@ export default class extends Controller {
   #setProcessing(active) {
     const btn = this.hasSubmitButtonTarget
       ? this.submitButtonTarget
-      : document.getElementById("pay-order-confirm")
+      : document.getElementById('pay-order-confirm');
     if (btn) {
-      btn.disabled = active
-      btn.innerHTML = active
-        ? 'Processing…'
-        : '<i class="bi bi-credit-card"></i> Pay'
+      btn.disabled = active;
+      btn.innerHTML = active ? 'Processing…' : '<i class="bi bi-credit-card"></i> Pay';
     }
     if (this.hasProcessingOverlayTarget) {
-      this.processingOverlayTarget.classList.toggle("d-none", !active)
+      this.processingOverlayTarget.classList.toggle('d-none', !active);
     }
   }
 
   #showError(message) {
     if (this.hasErrorMessageTarget) {
-      this.errorMessageTarget.textContent = message
-      this.errorMessageTarget.classList.remove("d-none")
+      this.errorMessageTarget.textContent = message;
+      this.errorMessageTarget.classList.remove('d-none');
     }
   }
 
   #clearError() {
     if (this.hasErrorMessageTarget) {
-      this.errorMessageTarget.textContent = ""
-      this.errorMessageTarget.classList.add("d-none")
+      this.errorMessageTarget.textContent = '';
+      this.errorMessageTarget.classList.add('d-none');
     }
   }
 
   #showSuccess() {
-    this.#setProcessing(false)
+    this.#setProcessing(false);
     const btn = this.hasSubmitButtonTarget
       ? this.submitButtonTarget
-      : document.getElementById("pay-order-confirm")
+      : document.getElementById('pay-order-confirm');
     if (btn) {
-      btn.textContent = "Paid ✓"
-      btn.disabled = true
-      btn.classList.remove("btn-primary", "btn-touch-primary")
-      btn.classList.add("btn-success")
+      btn.textContent = 'Paid ✓';
+      btn.disabled = true;
+      btn.classList.remove('btn-primary', 'btn-touch-primary');
+      btn.classList.add('btn-success');
     }
     // Dispatch custom event for other controllers to react
-    this.element.dispatchEvent(
-      new CustomEvent("square-payment:success", { bubbles: true })
-    )
+    this.element.dispatchEvent(new CustomEvent('square-payment:success', { bubbles: true }));
   }
 }

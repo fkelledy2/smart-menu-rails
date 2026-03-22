@@ -1,7 +1,8 @@
 export function initTestimonials() {
   if ($('#testimonial-table').length) {
     function status(cell, formatterParams) {
-      const s = cell.getRow().getData('data').status; return s ? s.toUpperCase() : '';;
+      const s = cell.getRow().getData('data').status;
+      return s ? s.toUpperCase() : '';
     }
     const testimonialTable = new Tabulator('#testimonial-table', {
       dataLoader: false,

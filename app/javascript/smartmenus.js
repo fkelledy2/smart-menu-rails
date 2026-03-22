@@ -1,7 +1,7 @@
 export function initSmartmenus() {
   // Initialize section tab auto-scroll on scroll spy
   initSectionTabAutoScroll();
-  
+
   // Initialize time-based menu restrictions
   initMenuTimeRestrictions();
 
@@ -17,14 +17,18 @@ export function initSmartmenus() {
         const allow = isCustomerView && allowOrdering && voiceOrderingEnabled;
         const tableOk = !!(ctx?.dataset?.tableId && String(ctx.dataset.tableId).trim().length);
         if (!(allow && tableOk)) {
-          try { document.getElementById('voice-menu-ui')?.remove(); } catch (_) {}
+          try {
+            document.getElementById('voice-menu-ui')?.remove();
+          } catch (_) {}
           return;
         }
 
         if (window.__VOICE_MENUS_INIT_REQUESTED) return;
         window.__VOICE_MENUS_INIT_REQUESTED = true;
         import('./voice_menus.js').then((m) => {
-          try { m.initVoiceMenus(); } catch (_) {}
+          try {
+            m.initVoiceMenus();
+          } catch (_) {}
         });
       } catch (_) {}
     };
@@ -51,27 +55,31 @@ export function initSmartmenus() {
     if (window.__SM_LOCALE_SWITCH_BOUND) return;
     window.__SM_LOCALE_SWITCH_BOUND = true;
 
-    document.addEventListener('click', (evt) => {
-      try {
-        const el = evt.target instanceof Element ? evt.target : null;
-        if (!el) return;
+    document.addEventListener(
+      'click',
+      (evt) => {
+        try {
+          const el = evt.target instanceof Element ? evt.target : null;
+          if (!el) return;
 
-        const img = el.closest && el.closest('.setparticipantlocale');
-        if (!img) return;
+          const img = el.closest && el.closest('.setparticipantlocale');
+          if (!img) return;
 
-        const locale = (img.getAttribute('data-locale') || '').toLowerCase();
-        if (!locale) return;
+          const locale = (img.getAttribute('data-locale') || '').toLowerCase();
+          if (!locale) return;
 
-        evt.preventDefault();
-        evt.stopPropagation();
+          evt.preventDefault();
+          evt.stopPropagation();
 
-        const url = new URL(window.location.href);
-        url.searchParams.set('locale', locale);
-        window.location.assign(url.toString());
-      } catch (_) {}
-    }, true);
+          const url = new URL(window.location.href);
+          url.searchParams.set('locale', locale);
+          window.location.assign(url.toString());
+        } catch (_) {}
+      },
+      true
+    );
   })();
-  
+
   function smlink(cell, formatterParams) {
     const id = cell.getValue();
     const name = cell.getRow();
@@ -140,42 +148,42 @@ export function initSmartmenus() {
 function initSectionTabAutoScroll() {
   const tabsContainer = document.querySelector('.sections-tabs-container');
   const scrollspyElement = document.querySelector('[data-bs-spy="scroll"]');
-  
+
   if (!tabsContainer || !scrollspyElement) return;
-  
+
   // Listen for Bootstrap scrollspy activation events
-  scrollspyElement.addEventListener('activate.bs.scrollspy', function(event) {
+  scrollspyElement.addEventListener('activate.bs.scrollspy', function (event) {
     // Small delay to ensure the active class has been applied
     setTimeout(() => {
       const activeTab = tabsContainer.querySelector('.section-tab.active');
-      
+
       if (activeTab) {
         // Calculate the position to scroll to
         const containerRect = tabsContainer.getBoundingClientRect();
         const tabRect = activeTab.getBoundingClientRect();
-        
+
         // Calculate how much we need to scroll
         const scrollLeft = tabsContainer.scrollLeft;
         const tabLeft = tabRect.left - containerRect.left;
         const tabWidth = tabRect.width;
         const containerWidth = containerRect.width;
-        
+
         // Center the active tab in the viewport if possible
-        const targetScroll = scrollLeft + tabLeft - (containerWidth / 2) + (tabWidth / 2);
-        
+        const targetScroll = scrollLeft + tabLeft - containerWidth / 2 + tabWidth / 2;
+
         // Smooth scroll to the active tab
         tabsContainer.scrollTo({
           left: targetScroll,
-          behavior: 'smooth'
+          behavior: 'smooth',
         });
       }
     }, 50);
   });
-  
+
   // Also handle manual clicks on section tabs
   const sectionTabs = tabsContainer.querySelectorAll('.section-tab');
-  sectionTabs.forEach(tab => {
-    tab.addEventListener('click', function(event) {
+  sectionTabs.forEach((tab) => {
+    tab.addEventListener('click', function (event) {
       // Let the default behavior happen, then scroll the tab into view
       setTimeout(() => {
         const containerRect = tabsContainer.getBoundingClientRect();
@@ -184,11 +192,11 @@ function initSectionTabAutoScroll() {
         const tabLeft = tabRect.left - containerRect.left;
         const tabWidth = tabRect.width;
         const containerWidth = containerRect.width;
-        const targetScroll = scrollLeft + tabLeft - (containerWidth / 2) + (tabWidth / 2);
-        
+        const targetScroll = scrollLeft + tabLeft - containerWidth / 2 + tabWidth / 2;
+
         tabsContainer.scrollTo({
           left: targetScroll,
-          behavior: 'smooth'
+          behavior: 'smooth',
         });
       }, 100);
     });
@@ -204,17 +212,17 @@ function initMenuTimeRestrictions() {
   // Get current time in minutes since midnight
   const date = new Date();
   const currentOffset = date.getHours() * 60 + date.getMinutes();
-  
+
   // Find all "Add to Order" buttons
   const addToOrderButtons = document.querySelectorAll('.addItemToOrder');
-  
+
   if (addToOrderButtons.length === 0) return;
-  
+
   // Check each button's time restrictions
-  addToOrderButtons.forEach(button => {
+  addToOrderButtons.forEach((button) => {
     const fromOffset = parseInt(button.getAttribute('data-bs-menusection_from_offset'));
     const toOffset = parseInt(button.getAttribute('data-bs-menusection_to_offset'));
-    
+
     // If button has time restrictions (from/to offsets are set)
     if (!isNaN(fromOffset) && !isNaN(toOffset)) {
       // Disable button if current time is outside the valid range
@@ -224,7 +232,7 @@ function initMenuTimeRestrictions() {
         button.style.opacity = '0.5';
         button.style.cursor = 'not-allowed';
         button.style.pointerEvents = 'none';
-        
+
         // Add tooltip to explain why it's disabled
         button.setAttribute('title', 'This item is not available at this time');
       } else {
@@ -243,16 +251,16 @@ function initMenuTimeRestrictions() {
       }
     }
   });
-  
+
   // Re-check restrictions every minute to update button states
   setInterval(() => {
     const date = new Date();
     const currentOffset = date.getHours() * 60 + date.getMinutes();
-    
-    addToOrderButtons.forEach(button => {
+
+    addToOrderButtons.forEach((button) => {
       const fromOffset = parseInt(button.getAttribute('data-bs-menusection_from_offset'));
       const toOffset = parseInt(button.getAttribute('data-bs-menusection_to_offset'));
-      
+
       if (!isNaN(fromOffset) && !isNaN(toOffset)) {
         if (currentOffset < fromOffset || currentOffset > toOffset) {
           button.disabled = true;

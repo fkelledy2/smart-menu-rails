@@ -1,11 +1,17 @@
-import { Controller } from "@hotwired/stimulus";
+import { Controller } from '@hotwired/stimulus';
 
 // Keeps bill/pay modals in sync with totals from state
 export default class extends Controller {
   static targets = [
-    "nettAmount", "serviceAmount", "taxAmount", "grossAmount",
-    "grandTotal", "currencySymbol", "requestBillBtn", "payOrderBtn"
-  ]
+    'nettAmount',
+    'serviceAmount',
+    'taxAmount',
+    'grossAmount',
+    'grandTotal',
+    'currencySymbol',
+    'requestBillBtn',
+    'payOrderBtn',
+  ];
 
   connect() {
     this._onStateChanged = (e) => this.applyState(e.detail);
@@ -17,7 +23,10 @@ export default class extends Controller {
       const state = this.extractState();
       // If this is the Pay modal, ensure we at least render current totals immediately
       if (this.element?.id === 'payOrderModal') {
-        try { if (typeof this.ensurePayModalContent === 'function') this.ensurePayModalContent(state?.totals || window.__SM_STATE?.totals || null); } catch (_) {}
+        try {
+          if (typeof this.ensurePayModalContent === 'function')
+            this.ensurePayModalContent(state?.totals || window.__SM_STATE?.totals || null);
+        } catch (_) {}
       }
       // If totals are missing or gross is not positive, force-refresh JSON state
       const gross = state?.totals?.gross;
@@ -28,7 +37,9 @@ export default class extends Controller {
           const slug = document.body?.dataset?.smartmenuId;
           if (slug) {
             const url = `/smartmenus/${encodeURIComponent(slug)}.json?ts=${Date.now()}`;
-            const res = await fetch(url, { headers: { Accept: 'application/json', 'Cache-Control': 'no-cache' } });
+            const res = await fetch(url, {
+              headers: { Accept: 'application/json', 'Cache-Control': 'no-cache' },
+            });
             if (res && res.ok) {
               const payload = await res.json();
               // Dispatch to central store and re-apply
@@ -55,14 +66,14 @@ export default class extends Controller {
     return {
       order: {
         // Prefer global state over dataset for dynamic fields like order id/status
-        id: (go.id || d.orderId || null),
-        status: ((go.status || d.orderStatus || '') || '').toLowerCase() || null,
+        id: go.id || d.orderId || null,
+        status: (go.status || d.orderStatus || '' || '').toLowerCase() || null,
         items: Array.isArray(go.items) ? go.items : [],
         addedCount: typeof go.addedCount !== 'undefined' ? go.addedCount : 0,
         orderedCount: typeof go.orderedCount !== 'undefined' ? go.orderedCount : 0,
-        openedCount: typeof go.openedCount !== 'undefined' ? go.openedCount : 0
+        openedCount: typeof go.openedCount !== 'undefined' ? go.openedCount : 0,
       },
-      totals: gs.totals || null
+      totals: gs.totals || null,
     };
   }
 
@@ -72,8 +83,11 @@ export default class extends Controller {
       // Deep-merge into the global state to avoid losing counts like openedCount
       const prev = window.__SM_STATE || {};
       const mergedOrder = Object.assign({}, prev.order || {}, state.order || {});
-      const mergedTotals = typeof state.totals !== 'undefined' ? state.totals : (prev.totals || null);
-      window.__SM_STATE = Object.assign({}, prev, state, { order: mergedOrder, totals: mergedTotals });
+      const mergedTotals = typeof state.totals !== 'undefined' ? state.totals : prev.totals || null;
+      window.__SM_STATE = Object.assign({}, prev, state, {
+        order: mergedOrder,
+        totals: mergedTotals,
+      });
       const totals = mergedTotals;
       const order = mergedOrder;
       if (this.element?.id === 'requestBillModal') {
@@ -122,19 +136,29 @@ export default class extends Controller {
     try {
       const body = this.element.querySelector('[data-testid="order-modal-body"]');
       if (!body) return;
-      if (!order) { body.innerHTML = ''; return; }
+      if (!order) {
+        body.innerHTML = '';
+        return;
+      }
       // If totals are not yet available, do not overwrite server-rendered content.
       // This preserves the server totals row with data-testid until JSON state hydrates.
-      if (typeof totals === 'undefined' || totals === null) { return; }
+      if (typeof totals === 'undefined' || totals === null) {
+        return;
+      }
       const currency = totals?.currency?.symbol || '';
 
-      const opened = (order.items || []).filter(i => (i.status || '').toLowerCase() === 'opened');
-      const submitted = (order.items || []).filter(i => ['ordered','preparing','ready','delivered','billrequested','paid'].includes((i.status||'').toLowerCase()));
+      const opened = (order.items || []).filter((i) => (i.status || '').toLowerCase() === 'opened');
+      const submitted = (order.items || []).filter((i) =>
+        ['ordered', 'preparing', 'ready', 'delivered', 'billrequested', 'paid'].includes(
+          (i.status || '').toLowerCase()
+        )
+      );
 
       const row = (cols) => `<div class="row">${cols}</div>`;
       const col = (n, html) => `<div class="col-${n}">${html}</div>`;
 
-      const price = (n) => `${currency}${(typeof n === 'number' ? n : parseFloat(n||0)).toFixed(2)}`;
+      const price = (n) =>
+        `${currency}${(typeof n === 'number' ? n : parseFloat(n || 0)).toFixed(2)}`;
 
       let html = '';
       // Header row
@@ -142,7 +166,7 @@ export default class extends Controller {
 
       if (opened.length > 0) {
         html += row(col(2, '<p>Selected</p>') + col(10, '<hr>'));
-        opened.forEach(it => {
+        opened.forEach((it) => {
           html += `<div id="ordritem_${it.id}" style="margin-top:5px" class="row" data-testid="order-item-${it.id}">
             <div class="col-8">
               <div class="d-flex w-100 overflow-hidden">
@@ -162,7 +186,7 @@ export default class extends Controller {
 
       if (submitted.length > 0) {
         html += row(col(2, '<p>Submitted</p>') + col(10, '<hr>'));
-        submitted.forEach(it => {
+        submitted.forEach((it) => {
           html += `<div id="ordritem_${it.id}" style="margin-top:5px" class="row">
             <div class="col-8">
               <div class="d-flex w-100 overflow-hidden">
@@ -184,8 +208,11 @@ export default class extends Controller {
       if (typeof totals?.gross !== 'undefined') {
         html += row(
           col(8, '') +
-          col(2, '<b>Total:</b>') +
-          col(2, `<span class="float-end" data-testid="order-total-amount"><b>${price(totals.gross)}</b></span>`)
+            col(2, '<b>Total:</b>') +
+            col(
+              2,
+              `<span class="float-end" data-testid="order-total-amount"><b>${price(totals.gross)}</b></span>`
+            )
         );
       }
 
@@ -200,8 +227,10 @@ export default class extends Controller {
       const body = this.element.querySelector('.modal-body');
       if (!body || !totals) return;
       const currency = totals?.currency?.symbol || '';
-      const price = (n) => `${currency}${(typeof n === 'number' ? n : parseFloat(n || 0)).toFixed(2)}`;
-      const line = (label, amount, cls) => `<div class="bill-line${cls ? ' ' + cls : ''}"><span>${label}</span><span class="bill-amount">${amount}</span></div>`;
+      const price = (n) =>
+        `${currency}${(typeof n === 'number' ? n : parseFloat(n || 0)).toFixed(2)}`;
+      const line = (label, amount, cls) =>
+        `<div class="bill-line${cls ? ' ' + cls : ''}"><span>${label}</span><span class="bill-amount">${amount}</span></div>`;
 
       let html = '';
       html += line('<b>Item</b>', '<b>Price</b>', 'bill-line-header');
@@ -216,7 +245,11 @@ export default class extends Controller {
         html += line('Tax', price(totals.tax));
       }
       html += '<hr>';
-      html += line('<b>Total</b> <i>(excluding tip)</i>', `<b>${price(totals.gross)}</b>`, 'bill-line-total');
+      html += line(
+        '<b>Total</b> <i>(excluding tip)</i>',
+        `<b>${price(totals.gross)}</b>`,
+        'bill-line-total'
+      );
 
       body.innerHTML = html;
     } catch (e) {
@@ -233,31 +266,48 @@ export default class extends Controller {
       const hasGross = !!this.element.querySelector('#orderGross');
       if (!hasGross) {
         const currency = totals?.currency?.symbol || this.element.dataset.currencySymbol || '';
-        const price = (n) => `${currency}${(typeof n === 'number' ? n : parseFloat(n || 0)).toFixed(2)}`;
+        const price = (n) =>
+          `${currency}${(typeof n === 'number' ? n : parseFloat(n || 0)).toFixed(2)}`;
         const line = (label, amount, cls, id) => {
           const idAttr = id ? ` id="${id}"` : '';
           return `<div class="bill-line${cls ? ' ' + cls : ''}"><span>${label}</span><span class="bill-amount"${idAttr}>${amount}</span></div>`;
         };
-        const grossVal = (typeof totals.gross === 'number' ? totals.gross : parseFloat(totals.gross || 0)).toFixed(2);
+        const grossVal = (
+          typeof totals.gross === 'number' ? totals.gross : parseFloat(totals.gross || 0)
+        ).toFixed(2);
         let html = '';
         html += `<span id="restaurantCurrency" style="display:none">${this.escape(currency)}</span>`;
         html += line('<b>Item</b>', '<b>Price</b>', 'bill-line-header');
-        html += line('Nett', `<span id="orderNett">${price(totals.nett||0)}</span>`);
-        if ((totals.service||0) > 0) html += line('Service', `<span id="orderService">${price(totals.service||0)}</span>`);
-        if ((totals.tax||0) > 0) html += line('Tax', `<span id="orderTax">${price(totals.tax||0)}</span>`);
+        html += line('Nett', `<span id="orderNett">${price(totals.nett || 0)}</span>`);
+        if ((totals.service || 0) > 0)
+          html += line('Service', `<span id="orderService">${price(totals.service || 0)}</span>`);
+        if ((totals.tax || 0) > 0)
+          html += line('Tax', `<span id="orderTax">${price(totals.tax || 0)}</span>`);
         html += '<hr>';
-        html += line('<b>Total</b> <i>(excluding tip)</i>', `<b>${currency}<span id="orderGross">${grossVal}</span></b>`, 'bill-line-total');
+        html += line(
+          '<b>Total</b> <i>(excluding tip)</i>',
+          `<b>${currency}<span id="orderGross">${grossVal}</span></b>`,
+          'bill-line-total'
+        );
         // Tip presets + manual input
         let tipPresets = [];
-        try { tipPresets = JSON.parse(this.element.dataset.tipPresets || '[]'); } catch (_) {}
-        html += '<div class="bill-tip-row"><div class="d-flex flex-wrap align-items-center justify-content-end gap-2 mt-3 mb-3">';
-        tipPresets.forEach(pct => {
+        try {
+          tipPresets = JSON.parse(this.element.dataset.tipPresets || '[]');
+        } catch (_) {}
+        html +=
+          '<div class="bill-tip-row"><div class="d-flex flex-wrap align-items-center justify-content-end gap-2 mt-3 mb-3">';
+        tipPresets.forEach((pct) => {
           html += `<button type="button" class="btn-touch-secondary btn-touch-sm tip-preset-btn"><span class="tipPreset">${pct}%</span></button>`;
         });
-        html += '<input id="tipNumberField" type="number" min="0.00" class="form-control form-control-sm text-end" style="width:80px" value="0.00">';
+        html +=
+          '<input id="tipNumberField" type="number" min="0.00" class="form-control form-control-sm text-end" style="width:80px" value="0.00">';
         html += '</div></div>';
         html += '<hr>';
-        html += line('<b>Total</b> <i>(including tip)</i>', `<b><span id="orderGrandTotal">${currency}${grossVal}</span></b>`, 'bill-line-total');
+        html += line(
+          '<b>Total</b> <i>(including tip)</i>',
+          `<b><span id="orderGrandTotal">${currency}${grossVal}</span></b>`,
+          'bill-line-total'
+        );
         body.innerHTML = html;
       }
     } catch (e) {
@@ -266,7 +316,10 @@ export default class extends Controller {
   }
 
   escape(s) {
-    return String(s).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]));
+    return String(s).replace(
+      /[&<>"']/g,
+      (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]
+    );
   }
 
   updateTextIfExists(selector, text) {
@@ -283,8 +336,12 @@ export default class extends Controller {
   setDisabledIfExists(selector, disabled) {
     // Prefer the element within this modal to avoid matching the header button
     let el = null;
-    try { el = this.element ? this.element.querySelector(selector) : null; } catch (_) {}
-    if (!el) { el = document.querySelector(selector); }
+    try {
+      el = this.element ? this.element.querySelector(selector) : null;
+    } catch (_) {}
+    if (!el) {
+      el = document.querySelector(selector);
+    }
     if (el) {
       if (disabled) el.setAttribute('disabled', 'disabled');
       else el.removeAttribute('disabled');

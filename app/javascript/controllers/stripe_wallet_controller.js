@@ -1,4 +1,4 @@
-import { Controller } from "@hotwired/stimulus";
+import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
   static values = {
@@ -95,11 +95,11 @@ export default class extends Controller {
   _loadStripeScript() {
     if (this._stripePromise) return this._stripePromise;
     this._stripePromise = new Promise((resolve, reject) => {
-      const script = document.createElement("script");
-      script.src = "https://js.stripe.com/v3";
+      const script = document.createElement('script');
+      script.src = 'https://js.stripe.com/v3';
       script.async = true;
       script.onload = () => resolve();
-      script.onerror = () => reject(new Error("Failed to load Stripe.js"));
+      script.onerror = () => reject(new Error('Failed to load Stripe.js'));
       document.head.appendChild(script);
     });
     return this._stripePromise;

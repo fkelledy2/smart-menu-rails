@@ -1,9 +1,20 @@
-import { post as commonsPost, getCurrentOrderId, getCurrentMenuId, getRestaurantId, initOrderBindings as commonsInitOrderBindings } from './ordr_commons';
+import {
+  post as commonsPost,
+  getCurrentOrderId,
+  getCurrentMenuId,
+  getRestaurantId,
+  initOrderBindings as commonsInitOrderBindings,
+} from './ordr_commons';
 
-function qs(sel) { return document.querySelector(sel); }
+function qs(sel) {
+  return document.querySelector(sel);
+}
 
 function normalizeUiLocale(raw) {
-  const s = String(raw || '').trim().toLowerCase().replace('_', '-');
+  const s = String(raw || '')
+    .trim()
+    .toLowerCase()
+    .replace('_', '-');
   const base = (s.split('-')[0] || '').trim();
   if (base === 'fr' || base === 'it' || base === 'es' || base === 'en') return base;
   return 'en';
@@ -31,20 +42,20 @@ const VOICE_UI_I18N = {
     no_matching_item_to_remove: 'No matching item to remove.',
   },
   fr: {
-    failed_submit: "Échec de l’envoi de la commande vocale.",
+    failed_submit: 'Échec de l’envoi de la commande vocale.',
     speech_failed: 'La reconnaissance vocale a échoué.',
     no_audio_recorded: 'Aucun audio enregistré.',
-    did_not_hear: "Je n’ai rien entendu.",
-    didnt_understand: "Désolé, je n’ai pas compris : %{transcript}",
-    couldnt_find_item: "Impossible de trouver un article correspondant : %{query}",
+    did_not_hear: 'Je n’ai rien entendu.',
+    didnt_understand: 'Désolé, je n’ai pas compris : %{transcript}',
+    couldnt_find_item: 'Impossible de trouver un article correspondant : %{query}',
     cannot_submit_order_yet: 'Impossible de valider la commande pour le moment.',
-    cannot_request_bill_yet: "Impossible de demander l’addition pour le moment.",
+    cannot_request_bill_yet: 'Impossible de demander l’addition pour le moment.',
     missing_context_refresh: 'Contexte manquant. Veuillez actualiser le menu.',
     cannot_start_order: 'Impossible de démarrer une commande sur cette page.',
     no_active_order_to_close: 'Aucune commande active à clôturer.',
-    please_start_order_first: "Veuillez d’abord démarrer une commande, puis réessayer.",
+    please_start_order_first: 'Veuillez d’abord démarrer une commande, puis réessayer.',
     no_items_to_remove: 'Aucun article à retirer.',
-    no_matching_item_to_remove: "Aucun article correspondant à retirer.",
+    no_matching_item_to_remove: 'Aucun article correspondant à retirer.',
   },
   it: {
     failed_submit: 'Invio del comando vocale non riuscito.',
@@ -103,7 +114,9 @@ function stopMicStream() {
 
   try {
     if (__voiceMicStream) {
-      try { __voiceMicStream.getTracks().forEach((t) => t.stop()); } catch (_) {}
+      try {
+        __voiceMicStream.getTracks().forEach((t) => t.stop());
+      } catch (_) {}
     }
   } finally {
     __voiceMicStream = null;
@@ -174,12 +187,18 @@ function ensureUi() {
         const hasTable = !!(ctx?.dataset?.tableId && String(ctx.dataset.tableId).trim().length);
         const wrap = document.getElementById('voice-menu-ui');
         if (!hasTable) {
-          try { wrap?.remove(); } catch (_) {}
-          try { stopMicStream(); } catch (_) {}
+          try {
+            wrap?.remove();
+          } catch (_) {}
+          try {
+            stopMicStream();
+          } catch (_) {}
         } else {
           // If the UI was removed and voice is enabled, re-init.
           if (!document.getElementById('voice-ptt')) {
-            try { initVoiceMenus(); } catch (_) {}
+            try {
+              initVoiceMenus();
+            } catch (_) {}
           }
         }
       } catch (_) {}
@@ -290,7 +309,8 @@ function setPttButtonState(listening) {
   const btn = document.getElementById('voice-ptt');
   if (!btn) return;
   if (listening) {
-    btn.innerHTML = '<span class="voice-wave" aria-hidden="true"><span></span><span></span><span></span><span></span></span><span>Speak</span>';
+    btn.innerHTML =
+      '<span class="voice-wave" aria-hidden="true"><span></span><span></span><span></span><span></span></span><span>Speak</span>';
   } else {
     btn.innerHTML = '<i class="bi bi-mic-fill" aria-hidden="true"></i><span>Speak</span>';
   }
@@ -306,22 +326,35 @@ function showMessage(msg) {
 function hideMessageSoon() {
   const out = document.getElementById('voice-output');
   if (!out) return;
-  setTimeout(() => { try { out.style.display = 'none'; } catch (_) {} }, 4500);
+  setTimeout(() => {
+    try {
+      out.style.display = 'none';
+    } catch (_) {}
+  }, 4500);
 }
 
 function getSmartmenuSlug() {
-  try { return document.body?.dataset?.smartmenuId || null; } catch (_) { return null; }
+  try {
+    return document.body?.dataset?.smartmenuId || null;
+  } catch (_) {
+    return null;
+  }
 }
 
 function stripPoliteness(text) {
-  let s = String(text || '').trim().toLowerCase();
+  let s = String(text || '')
+    .trim()
+    .toLowerCase();
   s = s.replace(/[\s.,!?]+$/g, '');
   // Remove common trailing politeness/filler phrases; repeat until stable
   // Examples: "please", "thanks", "thank you", "cheers".
   // Keep this conservative to avoid stripping legitimate menu words in the middle.
   while (true) {
     const before = s;
-    s = s.replace(/\s*(please|pls|plz|thanks|thank\s+you|thank\s+u|thx|cheers|ta|much\s+appreciated|appreciate\s+it)\s*$/g, '');
+    s = s.replace(
+      /\s*(please|pls|plz|thanks|thank\s+you|thank\s+u|thx|cheers|ta|much\s+appreciated|appreciate\s+it)\s*$/g,
+      ''
+    );
     s = s.replace(/[\s.,!?]+$/g, '');
     if (s === before) break;
   }
@@ -362,7 +395,7 @@ function diceCoefficient(a, b) {
     const c2 = b2.get(bg) || 0;
     overlap += Math.min(c1, c2);
   }
-  return (2 * overlap) / ((s1.length - 1) + (s2.length - 1));
+  return (2 * overlap) / (s1.length - 1 + (s2.length - 1));
 }
 
 function tokenOverlapScore(query, candidate) {
@@ -482,8 +515,16 @@ async function executeIntent(payload) {
   const intent = payload?.intent || {};
   const type = intent.type;
 
-  if (type === 'empty') { showMessage(tUi('did_not_hear')); hideMessageSoon(); return; }
-  if (type === 'unknown') { showMessage(tUi('didnt_understand', { transcript: payload.transcript || '' })); hideMessageSoon(); return; }
+  if (type === 'empty') {
+    showMessage(tUi('did_not_hear'));
+    hideMessageSoon();
+    return;
+  }
+  if (type === 'unknown') {
+    showMessage(tUi('didnt_understand', { transcript: payload.transcript || '' }));
+    hideMessageSoon();
+    return;
+  }
 
   if (type === 'start_order') {
     // Prefer clicking the visible Start Order CTA (it opens #openOrderModal)
@@ -495,7 +536,9 @@ async function executeIntent(payload) {
     // Fallback: show modal directly
     const openOrderModal = document.getElementById('openOrderModal');
     if (openOrderModal && window.bootstrap && window.bootstrap.Modal) {
-      const inst = window.bootstrap.Modal.getInstance(openOrderModal) || window.bootstrap.Modal.getOrCreateInstance(openOrderModal);
+      const inst =
+        window.bootstrap.Modal.getInstance(openOrderModal) ||
+        window.bootstrap.Modal.getOrCreateInstance(openOrderModal);
       inst.show();
       return;
     }
@@ -558,11 +601,14 @@ async function executeIntent(payload) {
         btn.click();
       } finally {
         // Allow any async handlers to start their requests.
-        setTimeout(() => { window.__SM_ORDER_SOURCE = null; }, 1500);
+        setTimeout(() => {
+          window.__SM_ORDER_SOURCE = null;
+        }, 1500);
       }
       return;
     }
-    showMessage(tUi('cannot_submit_order_yet')); hideMessageSoon();
+    showMessage(tUi('cannot_submit_order_yet'));
+    hideMessageSoon();
     return;
   }
 
@@ -573,11 +619,14 @@ async function executeIntent(payload) {
       try {
         btn.click();
       } finally {
-        setTimeout(() => { window.__SM_ORDER_SOURCE = null; }, 1500);
+        setTimeout(() => {
+          window.__SM_ORDER_SOURCE = null;
+        }, 1500);
       }
       return;
     }
-    showMessage(tUi('cannot_request_bill_yet')); hideMessageSoon();
+    showMessage(tUi('cannot_request_bill_yet'));
+    hideMessageSoon();
     return;
   }
 
@@ -591,7 +640,9 @@ async function executeIntent(payload) {
     let menuitemId = intent.menuitem_id;
     let ordritemprice = 0;
     if (!menuitemId) {
-      const resolved = resolveMenuItemByQuery(intent.query, { preferVisible: true }) || resolveMenuItemByQuery((payload.transcript || '').toLowerCase(), { preferVisible: true });
+      const resolved =
+        resolveMenuItemByQuery(intent.query, { preferVisible: true }) ||
+        resolveMenuItemByQuery((payload.transcript || '').toLowerCase(), { preferVisible: true });
       if (!resolved || !resolved.id) {
         showMessage(tUi('couldnt_find_item', { query: intent.query }));
         hideMessageSoon();
@@ -622,12 +673,23 @@ async function executeIntent(payload) {
 
   if (type === 'remove_item') {
     // Remove by matching existing state order items to the resolved query
-    const items = (window.__SM_STATE && window.__SM_STATE.order && Array.isArray(window.__SM_STATE.order.items)) ? window.__SM_STATE.order.items : [];
-    if (!items.length) { showMessage(tUi('no_items_to_remove')); hideMessageSoon(); return; }
+    const items =
+      window.__SM_STATE && window.__SM_STATE.order && Array.isArray(window.__SM_STATE.order.items)
+        ? window.__SM_STATE.order.items
+        : [];
+    if (!items.length) {
+      showMessage(tUi('no_items_to_remove'));
+      hideMessageSoon();
+      return;
+    }
 
     let targetMenuitemId = intent.menuitem_id;
     if (!targetMenuitemId) targetMenuitemId = findMenuItemIdByQuery(intent.query);
-    if (!targetMenuitemId) { showMessage(tUi('couldnt_find_item', { query: intent.query })); hideMessageSoon(); return; }
+    if (!targetMenuitemId) {
+      showMessage(tUi('couldnt_find_item', { query: intent.query }));
+      hideMessageSoon();
+      return;
+    }
 
     const qty = typeof intent.qty === 'number' ? intent.qty : 1;
     let removed = 0;
@@ -702,7 +764,9 @@ async function sendTranscript(transcript, locale) {
 }
 
 function canUseWebSpeech() {
-  return typeof window !== 'undefined' && (window.SpeechRecognition || window.webkitSpeechRecognition);
+  return (
+    typeof window !== 'undefined' && (window.SpeechRecognition || window.webkitSpeechRecognition)
+  );
 }
 
 function startWebSpeech(locale, onResult, onError) {
@@ -714,14 +778,21 @@ function startWebSpeech(locale, onResult, onError) {
 
   rec.onresult = (evt) => {
     try {
-      const t = evt.results && evt.results[0] && evt.results[0][0] ? evt.results[0][0].transcript : '';
+      const t =
+        evt.results && evt.results[0] && evt.results[0][0] ? evt.results[0][0].transcript : '';
       onResult(t);
-    } catch (e) { onError(e); }
+    } catch (e) {
+      onError(e);
+    }
   };
   rec.onerror = (e) => onError(e);
   rec.start();
 
-  return () => { try { rec.stop(); } catch (_) {} };
+  return () => {
+    try {
+      rec.stop();
+    } catch (_) {}
+  };
 }
 
 async function startRecording(locale) {
@@ -741,19 +812,25 @@ async function startRecording(locale) {
 
   // Mobile Safari often does not support audio/webm; forcing it causes MediaRecorder to throw.
   // Pick the first supported mimeType; if none are supported, omit the option and let the browser decide.
-  const candidates = [
-    'audio/webm;codecs=opus',
-    'audio/webm',
-    'audio/mp4',
-    'audio/aac',
-  ];
-  const supported = candidates.find((t) => {
-    try { return typeof MediaRecorder !== 'undefined' && MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(t); } catch (_) { return false; }
-  }) || null;
+  const candidates = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', 'audio/aac'];
+  const supported =
+    candidates.find((t) => {
+      try {
+        return (
+          typeof MediaRecorder !== 'undefined' &&
+          MediaRecorder.isTypeSupported &&
+          MediaRecorder.isTypeSupported(t)
+        );
+      } catch (_) {
+        return false;
+      }
+    }) || null;
 
   let recorder;
   try {
-    recorder = supported ? new MediaRecorder(stream, { mimeType: supported }) : new MediaRecorder(stream);
+    recorder = supported
+      ? new MediaRecorder(stream, { mimeType: supported })
+      : new MediaRecorder(stream);
   } catch (e) {
     // If MediaRecorder cannot be created, release mic so we don't leave it open.
     stopMicStream();
@@ -761,22 +838,29 @@ async function startRecording(locale) {
   }
   const chunks = [];
 
-  recorder.ondataavailable = (e) => { if (e.data && e.data.size) chunks.push(e.data); };
+  recorder.ondataavailable = (e) => {
+    if (e.data && e.data.size) chunks.push(e.data);
+  };
 
   recorder.start();
 
   return {
-    stop: () => new Promise((resolve) => {
-      recorder.onstop = () => {
-        // Do not stop the underlying mic stream immediately; keep it briefly to avoid
-        // repeated mobile permission banners on every press/hold.
-        scheduleMicRelease();
-        const blobType = supported || recorder.mimeType || '';
-        const blob = blobType ? new Blob(chunks, { type: blobType }) : new Blob(chunks);
-        resolve(blob);
-      };
-      try { recorder.stop(); } catch (_) { resolve(null); }
-    }),
+    stop: () =>
+      new Promise((resolve) => {
+        recorder.onstop = () => {
+          // Do not stop the underlying mic stream immediately; keep it briefly to avoid
+          // repeated mobile permission banners on every press/hold.
+          scheduleMicRelease();
+          const blobType = supported || recorder.mimeType || '';
+          const blob = blobType ? new Blob(chunks, { type: blobType }) : new Blob(chunks);
+          resolve(blob);
+        };
+        try {
+          recorder.stop();
+        } catch (_) {
+          resolve(null);
+        }
+      }),
   };
 }
 
@@ -789,8 +873,12 @@ export function initVoiceMenus() {
     const hasTableSelected = !!(ctx?.dataset?.tableId && String(ctx.dataset.tableId).trim().length);
 
     if (!(isCustomerView && allowOrdering && voiceOrderingEnabled && hasTableSelected)) {
-      try { document.getElementById('voice-menu-ui')?.remove(); } catch (_) {}
-      try { stopMicStream(); } catch (_) {}
+      try {
+        document.getElementById('voice-menu-ui')?.remove();
+      } catch (_) {}
+      try {
+        stopMicStream();
+      } catch (_) {}
       return;
     }
   } catch (_) {}
@@ -803,9 +891,13 @@ export function initVoiceMenus() {
   btn.__voiceBound = true;
 
   // Help mobile browsers treat this as a deliberate gesture (avoid scroll/pinch interfering).
-  try { btn.style.touchAction = 'none'; } catch (_) {}
+  try {
+    btn.style.touchAction = 'none';
+  } catch (_) {}
 
-  try { commonsInitOrderBindings(); } catch (_) {}
+  try {
+    commonsInitOrderBindings();
+  } catch (_) {}
 
   // Ensure we don't keep the mic stream alive when the page is backgrounded/navigated away.
   (function bindMicCleanup() {
@@ -813,12 +905,26 @@ export function initVoiceMenus() {
     window.__VOICE_MIC_CLEANUP_BOUND = true;
 
     try {
-      window.addEventListener('pagehide', () => { try { stopMicStream(); } catch (_) {} }, { passive: true });
-      document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState !== 'visible') {
-          try { stopMicStream(); } catch (_) {}
-        }
-      }, { passive: true });
+      window.addEventListener(
+        'pagehide',
+        () => {
+          try {
+            stopMicStream();
+          } catch (_) {}
+        },
+        { passive: true }
+      );
+      document.addEventListener(
+        'visibilitychange',
+        () => {
+          if (document.visibilityState !== 'visible') {
+            try {
+              stopMicStream();
+            } catch (_) {}
+          }
+        },
+        { passive: true }
+      );
     } catch (_) {}
   })();
 
@@ -833,15 +939,23 @@ export function initVoiceMenus() {
 
     try {
       if (canUseWebSpeech()) {
-        stopSpeech = startWebSpeech(locale, async (transcript) => {
-          const created = await sendTranscript(transcript, locale);
-          if (!created || !created.id) { showMessage(tUi('failed_submit')); hideMessageSoon(); return; }
-          const payload = await pollVoiceCommand(getSmartmenuSlug(), created.id);
-          await executeIntent(payload);
-        }, (e) => {
-          showMessage(tUi('speech_failed'));
-          hideMessageSoon();
-        });
+        stopSpeech = startWebSpeech(
+          locale,
+          async (transcript) => {
+            const created = await sendTranscript(transcript, locale);
+            if (!created || !created.id) {
+              showMessage(tUi('failed_submit'));
+              hideMessageSoon();
+              return;
+            }
+            const payload = await pollVoiceCommand(getSmartmenuSlug(), created.id);
+            await executeIntent(payload);
+          },
+          (e) => {
+            showMessage(tUi('speech_failed'));
+            hideMessageSoon();
+          }
+        );
       } else {
         recorder = await startRecording(locale);
       }
@@ -866,10 +980,18 @@ export function initVoiceMenus() {
       const blob = await recorder.stop();
       recorder = null;
 
-      if (!blob) { showMessage(tUi('no_audio_recorded')); hideMessageSoon(); return; }
+      if (!blob) {
+        showMessage(tUi('no_audio_recorded'));
+        hideMessageSoon();
+        return;
+      }
 
       const created = await sendAudio(blob, locale);
-      if (!created || !created.id) { showMessage(tUi('failed_submit')); hideMessageSoon(); return; }
+      if (!created || !created.id) {
+        showMessage(tUi('failed_submit'));
+        hideMessageSoon();
+        return;
+      }
 
       const payload = await pollVoiceCommand(getSmartmenuSlug(), created.id);
       await executeIntent(payload);
@@ -880,16 +1002,92 @@ export function initVoiceMenus() {
   };
 
   // Prefer Pointer Events; add touch/mouse fallbacks for older/mobile browsers.
-  const bind = (name, fn, opts) => { try { btn.addEventListener(name, fn, opts); } catch (_) {} };
+  const bind = (name, fn, opts) => {
+    try {
+      btn.addEventListener(name, fn, opts);
+    } catch (_) {}
+  };
 
-  bind('pointerdown', (e) => { try { e.preventDefault(); } catch (_) {} onDown(); }, { passive: false });
-  bind('pointerup', (e) => { try { e.preventDefault(); } catch (_) {} onUp(); }, { passive: false });
-  bind('pointercancel', (e) => { try { e.preventDefault(); } catch (_) {} onUp(); }, { passive: false });
+  bind(
+    'pointerdown',
+    (e) => {
+      try {
+        e.preventDefault();
+      } catch (_) {}
+      onDown();
+    },
+    { passive: false }
+  );
+  bind(
+    'pointerup',
+    (e) => {
+      try {
+        e.preventDefault();
+      } catch (_) {}
+      onUp();
+    },
+    { passive: false }
+  );
+  bind(
+    'pointercancel',
+    (e) => {
+      try {
+        e.preventDefault();
+      } catch (_) {}
+      onUp();
+    },
+    { passive: false }
+  );
 
-  bind('touchstart', (e) => { try { e.preventDefault(); } catch (_) {} onDown(); }, { passive: false });
-  bind('touchend', (e) => { try { e.preventDefault(); } catch (_) {} onUp(); }, { passive: false });
-  bind('touchcancel', (e) => { try { e.preventDefault(); } catch (_) {} onUp(); }, { passive: false });
+  bind(
+    'touchstart',
+    (e) => {
+      try {
+        e.preventDefault();
+      } catch (_) {}
+      onDown();
+    },
+    { passive: false }
+  );
+  bind(
+    'touchend',
+    (e) => {
+      try {
+        e.preventDefault();
+      } catch (_) {}
+      onUp();
+    },
+    { passive: false }
+  );
+  bind(
+    'touchcancel',
+    (e) => {
+      try {
+        e.preventDefault();
+      } catch (_) {}
+      onUp();
+    },
+    { passive: false }
+  );
 
-  bind('mousedown', (e) => { try { e.preventDefault(); } catch (_) {} onDown(); }, false);
-  bind('mouseup', (e) => { try { e.preventDefault(); } catch (_) {} onUp(); }, false);
+  bind(
+    'mousedown',
+    (e) => {
+      try {
+        e.preventDefault();
+      } catch (_) {}
+      onDown();
+    },
+    false
+  );
+  bind(
+    'mouseup',
+    (e) => {
+      try {
+        e.preventDefault();
+      } catch (_) {}
+      onUp();
+    },
+    false
+  );
 }
