@@ -27,6 +27,7 @@ class InventoryProfitAnalyzerServiceTest < ActiveSupport::TestCase
 
   test 'high_margin_low_stock_items items have expected keys when not empty' do
     result = @service.high_margin_low_stock_items
+    assert_kind_of Array, result
     result.each do |item|
       assert_includes item.keys, :menuitem
       assert_includes item.keys, :margin_percentage
@@ -39,6 +40,7 @@ class InventoryProfitAnalyzerServiceTest < ActiveSupport::TestCase
 
   test 'reorder_suggestions items have expected keys when not empty' do
     result = @service.reorder_suggestions
+    assert_kind_of Array, result
     result.each do |suggestion|
       assert_includes suggestion.keys, :menuitem
       assert_includes suggestion.keys, :suggested_quantity
@@ -49,6 +51,7 @@ class InventoryProfitAnalyzerServiceTest < ActiveSupport::TestCase
 
   test 'reorder_suggestions urgency values are valid' do
     result = @service.reorder_suggestions
+    assert_kind_of Array, result
     valid_urgencies = %w[high medium low]
     result.each do |suggestion|
       assert_includes valid_urgencies, suggestion[:urgency]
