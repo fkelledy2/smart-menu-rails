@@ -44,8 +44,7 @@ coverage
 /config/credentials/production.key
 /config/credentials/staging.key
 
-/config/credentials/test.key
-
+# test.key is intentionally committed — test credentials contain no real secrets
 # Archived documentation (historical session artifacts, not needed in repo)
 /docs/_archive
 
