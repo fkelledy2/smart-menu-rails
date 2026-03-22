@@ -1336,15 +1336,17 @@ export function initOrderBindings() {
       const spinner = modal.querySelector('#spinner');
       const placeholder = modal.querySelector('#placeholder');
 
-      // Bug A fix: hide image container in list view
       const layout = localStorage.getItem('smartmenu-layout') || 'list';
+      const newSrc = getAttr('data-bs-menuitem_image');
+
+      // Only show the image container when: card mode AND a valid image URL exists.
+      // Hide it upfront (no flash of empty placeholder/spinner) for list mode or items with no image.
+      const showContainer = imageContainer && layout === 'card' && !!newSrc;
       if (imageContainer) {
-        imageContainer.style.display = layout === 'card' ? '' : 'none';
+        imageContainer.style.display = showContainer ? '' : 'none';
       }
 
-      // Bug B fix: reset state then load image; hide spinner on load
-      const newSrc = getAttr('data-bs-menuitem_image');
-      if (imageElement) {
+      if (imageElement && showContainer) {
         imageElement.style.display = 'none';
         imageElement.style.opacity = '0';
         if (spinner) spinner.style.display = '';
@@ -1353,32 +1355,24 @@ export function initOrderBindings() {
         const showImage = () => {
           if (spinner) spinner.style.display = 'none';
           if (placeholder) placeholder.style.visibility = 'hidden';
-          // Explicitly set display first (jQuery fadeIn can't restore 'none→default' reliably
-          // for elements that were never shown by jQuery)
           imageElement.style.display = 'block';
           imageElement.style.opacity = '0';
           $(imageElement).animate({ opacity: 1 }, 800);
         };
 
-        if (newSrc) {
-          // Use a separate preloader so onload fires reliably for both fresh and cached images
-          const preloader = new Image();
-          preloader.onload = () => {
-            imageElement.src = newSrc;
-            imageElement.alt = getAttr('data-bs-menuitem_name');
-            showImage();
-          };
-          preloader.onerror = () => {
-            // Image failed — hide the whole container so a broken icon isn't shown
-            if (imageContainer) imageContainer.style.display = 'none';
-            if (spinner) spinner.style.display = 'none';
-          };
-          preloader.src = newSrc;
-        } else {
-          // No image URL on this item — hide the container
+        // Preloader ensures onload fires reliably for both fresh and cached images
+        const preloader = new Image();
+        preloader.onload = () => {
+          imageElement.src = newSrc;
+          imageElement.alt = getAttr('data-bs-menuitem_name');
+          showImage();
+        };
+        preloader.onerror = () => {
+          // Image failed to load — hide the container so nothing broken shows
           if (imageContainer) imageContainer.style.display = 'none';
           if (spinner) spinner.style.display = 'none';
-        }
+        };
+        preloader.src = newSrc;
       }
 
       const noteField = modal.querySelector('#a2o_item_note');
