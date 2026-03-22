@@ -14,7 +14,7 @@
 <% hide_add_button = local_assigns[:hide_add_button] || false %>
 
 <%# Cache the menu item content - exclude order-dependent elements %>
-<% cache ["menuitem-horizontal-v4", menuitem, I18n.locale, menuitem.updated_at] do %>
+<% cache ["menuitem-horizontal-v5", menuitem, I18n.locale, menuitem.updated_at] do %>
   <div class="menu-item-card-mobile" data-name="<%= menuitem.name.to_s.downcase %>" data-description="<%= menuitem.description.to_s.downcase %>" data-testid="menu-item-<%= menuitem.id %>">
       <div class="card">
           <% if menuitem.name? %>
@@ -23,7 +23,7 @@
             </div>
           <% end %>
           <% if menu.displayImages == true && menu.restaurant.displayImages == true && menuitem.image %>
-              <div class="mi-card-body">
+              <div class="mi-card-body card-body">
                   <div class="mi-card-img">
                       <%= picture_tag_with_webp(menuitem.image,
                         alt: menuitem.name,
@@ -41,9 +41,11 @@
                   </div>
               </div>
           <% else %>
-              <h6 class='padding-left-md padding-right-md padding-top-xs'>
-                  <small><%= localised_description(menuitem, ordrparticipant, menuparticipant) %></small>
-              </h6>
+              <div class="card-body py-2">
+                  <h6 class='mb-0'>
+                      <small><%= localised_description(menuitem, ordrparticipant, menuparticipant) %></small>
+                  </h6>
+              </div>
           <% end %>
           <% unless hide_add_button %>
             <%= render partial: "smartmenus/showMenuitemHorizontalActionBar", locals: { order: order, mi: menuitem, ordrparticipant: ordrparticipant, menuparticipant: menuparticipant, restaurantCurrency: restaurantCurrency, tablesetting: tablesetting } %>
