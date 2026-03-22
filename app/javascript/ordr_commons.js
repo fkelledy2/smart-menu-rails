@@ -1343,26 +1343,41 @@ export function initOrderBindings() {
       }
 
       // Bug B fix: reset state then load image; hide spinner on load
+      const newSrc = getAttr('data-bs-menuitem_image');
       if (imageElement) {
         imageElement.style.display = 'none';
+        imageElement.style.opacity = '0';
         if (spinner) spinner.style.display = '';
         if (placeholder) placeholder.style.visibility = 'visible';
 
         const showImage = () => {
           if (spinner) spinner.style.display = 'none';
           if (placeholder) placeholder.style.visibility = 'hidden';
-          $(imageElement).fadeIn(1000);
+          // Explicitly set display first (jQuery fadeIn can't restore 'none→default' reliably
+          // for elements that were never shown by jQuery)
+          imageElement.style.display = 'block';
+          imageElement.style.opacity = '0';
+          $(imageElement).animate({ opacity: 1 }, 800);
         };
 
-        imageElement.onload = showImage;
-        // Clear src first so setting the same URL on a cached image always re-triggers onload
-        imageElement.src = '';
-        imageElement.src = getAttr('data-bs-menuitem_image');
-        imageElement.alt = getAttr('data-bs-menuitem_name');
-
-        // Fallback: if image was already cached and onload already fired (complete before assignment)
-        if (imageElement.complete && imageElement.naturalWidth > 0) {
-          showImage();
+        if (newSrc) {
+          // Use a separate preloader so onload fires reliably for both fresh and cached images
+          const preloader = new Image();
+          preloader.onload = () => {
+            imageElement.src = newSrc;
+            imageElement.alt = getAttr('data-bs-menuitem_name');
+            showImage();
+          };
+          preloader.onerror = () => {
+            // Image failed — hide the whole container so a broken icon isn't shown
+            if (imageContainer) imageContainer.style.display = 'none';
+            if (spinner) spinner.style.display = 'none';
+          };
+          preloader.src = newSrc;
+        } else {
+          // No image URL on this item — hide the container
+          if (imageContainer) imageContainer.style.display = 'none';
+          if (spinner) spinner.style.display = 'none';
         }
       }
 
