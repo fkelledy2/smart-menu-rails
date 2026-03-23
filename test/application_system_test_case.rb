@@ -3,7 +3,15 @@ require 'test_helper'
 class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   include MenuTestHelpers
 
-  driven_by :selenium, using: :chrome, screen_size: [1400, 1400]
+  if ENV['CI']
+    driven_by :selenium, using: :headless_chrome, screen_size: [1400, 1400] do |opts|
+      opts.add_argument('--no-sandbox')
+      opts.add_argument('--disable-dev-shm-usage')
+      opts.add_argument('--disable-gpu')
+    end
+  else
+    driven_by :selenium, using: :chrome, screen_size: [1400, 1400]
+  end
 
   # System tests run in a separate thread, so transactional fixtures don't work
   # We need to manually clean up the database after each test
