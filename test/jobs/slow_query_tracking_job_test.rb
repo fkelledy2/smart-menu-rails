@@ -29,7 +29,7 @@ class SlowQueryTrackingJobTest < ActiveSupport::TestCase
   end
 
   test 'handles backtrace array' do
-    backtrace = ['line1', 'line2', 'line3']
+    backtrace = %w[line1 line2 line3]
     perform_job(backtrace: backtrace)
     assert_equal backtrace.join("\n"), SlowQuery.last.backtrace
   end
