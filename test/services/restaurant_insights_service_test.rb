@@ -63,11 +63,13 @@ class RestaurantInsightsServiceTest < ActiveSupport::TestCase
   end
 
   test 'returns empty array for future date range with no orders' do
+    Rails.cache.clear
     service = RestaurantInsightsService.new(
       restaurant: @restaurant,
       params: {
-        date_from: 1.year.from_now.to_date.to_s,
-        date_to: 2.years.from_now.to_date.to_s,
+        range: 'custom',
+        start: 1.year.from_now.to_date.to_s,
+        end: 2.years.from_now.to_date.to_s,
       },
     )
     result = service.top_performers
