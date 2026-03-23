@@ -73,7 +73,7 @@ class DiscoveredRestaurantRestaurantSyncServiceTest < ActiveSupport::TestCase
 
     attrs = service.sync_attributes
     attrs.each_value do |v|
-      assert_not_nil v, "sync_attributes should not contain nil values after compact"
+      assert_not_nil v, 'sync_attributes should not contain nil values after compact'
     end
   end
 

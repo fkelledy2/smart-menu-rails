@@ -10,7 +10,10 @@ class MaterializedViewRefreshJobTest < ActiveSupport::TestCase
   test 'calls MaterializedViewService.refresh_view when view_name provided' do
     called_with = nil
 
-    MaterializedViewService.stub(:refresh_view, ->(name, **_opts) { called_with = name; { success: true, duration: 0.5 } }) do
+    MaterializedViewService.stub(:refresh_view, lambda { |name, **_opts|
+      called_with = name
+      { success: true, duration: 0.5 }
+    },) do
       MaterializedViewRefreshJob.new.perform('dw_orders_mv')
     end
 
@@ -34,7 +37,10 @@ class MaterializedViewRefreshJobTest < ActiveSupport::TestCase
 
     MaterializedViewService.stub(
       :refresh_by_priority,
-      ->(priority, **_opts) { called_priority = priority; { 'view_a' => { success: true } } },
+      lambda { |priority, **_opts|
+        called_priority = priority
+        { 'view_a' => { success: true } }
+      },
     ) do
       MaterializedViewRefreshJob.new.perform(nil, 'low')
     end
@@ -72,7 +78,10 @@ class MaterializedViewRefreshJobTest < ActiveSupport::TestCase
     refresh_called = false
 
     MaterializedViewService.stub(:views_needing_refresh, []) do
-      MaterializedViewService.stub(:refresh_view, ->(_name, **_opts) { refresh_called = true; { success: true } }) do
+      MaterializedViewService.stub(:refresh_view, lambda { |_name, **_opts|
+        refresh_called = true
+        { success: true }
+      },) do
         MaterializedViewRefreshJob.new.perform
       end
     end

@@ -83,7 +83,7 @@ class VoiceCommandIntentServiceTest < ActiveSupport::TestCase
   end
 
   test 'detects place order intent' do
-    result = VoiceCommandIntentService.new(transcript: "place the order").parse
+    result = VoiceCommandIntentService.new(transcript: 'place the order').parse
     assert_equal 'submit_order', result[:type]
   end
 
@@ -125,7 +125,7 @@ class VoiceCommandIntentServiceTest < ActiveSupport::TestCase
   end
 
   test 'detects can i get intent' do
-    result = VoiceCommandIntentService.new(transcript: "can i get a salad").parse
+    result = VoiceCommandIntentService.new(transcript: 'can i get a salad').parse
     assert_equal 'add_item', result[:type]
   end
 

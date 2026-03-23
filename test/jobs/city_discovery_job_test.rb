@@ -6,7 +6,10 @@ class CityDiscoveryJobTest < ActiveSupport::TestCase
   test 'does nothing when city_query is blank' do
     called = false
 
-    GooglePlaces::CityDiscovery.stub(:new, -> { called = true; nil }) do
+    GooglePlaces::CityDiscovery.stub(:new, lambda {
+      called = true
+      nil
+    },) do
       CityDiscoveryJob.new.perform(city_query: '', place_types: ['restaurant'])
     end
 
@@ -16,7 +19,10 @@ class CityDiscoveryJobTest < ActiveSupport::TestCase
   test 'does nothing when city_query is whitespace only' do
     called = false
 
-    GooglePlaces::CityDiscovery.stub(:new, -> { called = true; nil }) do
+    GooglePlaces::CityDiscovery.stub(:new, lambda {
+      called = true
+      nil
+    },) do
       CityDiscoveryJob.new.perform(city_query: '   ', place_types: [])
     end
 

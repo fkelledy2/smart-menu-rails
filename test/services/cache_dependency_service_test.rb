@@ -227,8 +227,8 @@ class CacheDependencyServiceTest < ActiveSupport::TestCase
       end
     end
 
-    assert deleted_patterns.any? { |p| p.include?("restaurant:#{restaurant.id}") }
-    assert deleted_patterns.any? { |p| p.include?("restaurant_dashboard:#{restaurant.id}") }
+    assert(deleted_patterns.any? { |p| p.include?("restaurant:#{restaurant.id}") })
+    assert(deleted_patterns.any? { |p| p.include?("restaurant_dashboard:#{restaurant.id}") })
   end
 
   test 'invalidate_for_model_change for Ordr deletes order and restaurant_orders patterns' do
@@ -241,8 +241,8 @@ class CacheDependencyServiceTest < ActiveSupport::TestCase
       end
     end
 
-    assert deleted_patterns.any? { |p| p.include?("order:#{ordr.id}") }
-    assert deleted_patterns.any? { |p| p.include?("restaurant_dashboard:#{ordr.restaurant_id}") }
+    assert(deleted_patterns.any? { |p| p.include?("order:#{ordr.id}") })
+    assert(deleted_patterns.any? { |p| p.include?("restaurant_dashboard:#{ordr.restaurant_id}") })
   end
 
   test 'invalidate_for_model_change for unknown model class generates no patterns' do

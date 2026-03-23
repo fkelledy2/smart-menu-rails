@@ -9,7 +9,6 @@ class EstimateOcrItemCostsJobTest < ActiveSupport::TestCase
 
   test 'skips estimation when price is blank' do
     @ocr_item.update_column(:price, nil)
-    estimated = false
 
     AiCostEstimatorService.stub(:new, -> { raise 'should not be called' }) do
       assert_nothing_raised do

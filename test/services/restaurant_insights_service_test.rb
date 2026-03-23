@@ -56,7 +56,7 @@ class RestaurantInsightsServiceTest < ActiveSupport::TestCase
       restaurant: @restaurant,
       params: {
         date_from: 30.days.ago.to_date.to_s,
-        date_to: Date.today.to_s,
+        date_to: Time.zone.today.to_s,
       },
     )
     assert_nothing_raised { service.top_performers }

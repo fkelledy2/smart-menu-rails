@@ -7,7 +7,7 @@ class OnboardingSessionPolicyTest < ActiveSupport::TestCase
   def setup
     @owner = users(:one)
     @other_user = users(:two)
-    @session = onboarding_sessions(:one)   # user: one
+    @session = onboarding_sessions(:one) # user: one
     @other_session = onboarding_sessions(:two) # user: two
   end
 

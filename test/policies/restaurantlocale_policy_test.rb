@@ -6,7 +6,7 @@ class RestaurantlocalePolicyTest < ActiveSupport::TestCase
   def setup
     @owner = users(:one)
     @other_user = users(:two)
-    @restaurantlocale = restaurantlocales(:one)  # belongs to restaurant :one => user :one
+    @restaurantlocale = restaurantlocales(:one) # belongs to restaurant :one => user :one
   end
 
   test 'index is allowed for authenticated user' do

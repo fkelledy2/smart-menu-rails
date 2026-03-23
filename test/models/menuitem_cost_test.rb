@@ -9,7 +9,7 @@ class MenuitemCostTest < ActiveSupport::TestCase
       labor_cost: 2.50,
       packaging_cost: 0.50,
       overhead_cost: 1.00,
-      effective_date: Date.today,
+      effective_date: Time.zone.today,
       cost_source: 'manual',
       is_active: false,
     )
@@ -82,27 +82,27 @@ class MenuitemCostTest < ActiveSupport::TestCase
   test 'for_date scope returns costs on or before the given date' do
     @cost.effective_date = 3.days.ago.to_date
     @cost.save!
-    assert_includes MenuitemCost.for_date(Date.today), @cost
+    assert_includes MenuitemCost.for_date(Time.zone.today), @cost
   end
 
   test 'for_date scope excludes future costs' do
     @cost.effective_date = 3.days.from_now.to_date
     @cost.save!
-    assert_not_includes MenuitemCost.for_date(Date.today), @cost
+    assert_not_includes MenuitemCost.for_date(Time.zone.today), @cost
   end
 
   test 'saving an active cost deactivates other active costs for same menuitem' do
     first = MenuitemCost.create!(
       menuitem: @menuitem,
       ingredient_cost: 1, labor_cost: 1, packaging_cost: 0, overhead_cost: 0,
-      effective_date: Date.today, cost_source: 'manual', is_active: true,
+      effective_date: Time.zone.today, cost_source: 'manual', is_active: true,
     )
     assert first.is_active?
 
     second = MenuitemCost.create!(
       menuitem: @menuitem,
       ingredient_cost: 2, labor_cost: 2, packaging_cost: 0, overhead_cost: 0,
-      effective_date: Date.today, cost_source: 'manual', is_active: true,
+      effective_date: Time.zone.today, cost_source: 'manual', is_active: true,
     )
 
     first.reload

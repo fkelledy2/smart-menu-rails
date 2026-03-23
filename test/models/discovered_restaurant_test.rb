@@ -4,7 +4,7 @@ require 'test_helper'
 
 class DiscoveredRestaurantTest < ActiveSupport::TestCase
   def build_discovered(overrides = {})
-    dr = DiscoveredRestaurant.new({
+    DiscoveredRestaurant.new({
       name: 'Test Bistro',
       city_name: 'Dublin',
       google_place_id: "gp_#{SecureRandom.hex(6)}",
@@ -12,7 +12,6 @@ class DiscoveredRestaurantTest < ActiveSupport::TestCase
       metadata: {},
     }.merge(overrides))
     # Skip after_commit callbacks to avoid job enqueues during test setup
-    dr
   end
 
   def save_discovered(overrides = {})

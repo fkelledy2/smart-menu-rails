@@ -8,12 +8,16 @@ class SizeMappingCostServiceTest < ActiveSupport::TestCase
     # so tests are isolated from this naming discrepancy.
   end
 
-  def with_empty_mappings(&block)
+  def with_empty_mappings(&)
     empty = [].tap { |a| def a.any? = false }
     @menuitem.define_singleton_method(:menuitemsizemappings) { empty }
-    block.call
+    yield
   ensure
-    @menuitem.singleton_class.remove_method(:menuitemsizemappings) rescue nil
+    begin
+      @menuitem.singleton_class.remove_method(:menuitemsizemappings)
+    rescue StandardError
+      nil
+    end
   end
 
   test 'calculate_size_costs returns empty hash when no sizemappings exist' do
@@ -31,8 +35,16 @@ class SizeMappingCostServiceTest < ActiveSupport::TestCase
     service = SizeMappingCostService.new(@menuitem)
     assert_equal({}, service.calculate_size_costs)
   ensure
-    @menuitem.singleton_class.remove_method(:menuitemsizemappings) rescue nil
-    @menuitem.singleton_class.remove_method(:current_cost) rescue nil
+    begin
+      @menuitem.singleton_class.remove_method(:menuitemsizemappings)
+    rescue StandardError
+      nil
+    end
+    begin
+      @menuitem.singleton_class.remove_method(:current_cost)
+    rescue StandardError
+      nil
+    end
   end
 
   test 'most_profitable_size returns nil when no sizemappings' do

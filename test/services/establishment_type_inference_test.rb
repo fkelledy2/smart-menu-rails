@@ -8,7 +8,7 @@ class EstablishmentTypeInferenceTest < ActiveSupport::TestCase
   # === infer_from_google_places_types ===
 
   test 'infers restaurant from google places types' do
-    result = @service.infer_from_google_places_types(['restaurant', 'food'])
+    result = @service.infer_from_google_places_types(%w[restaurant food])
     assert_includes result, 'restaurant'
   end
 
@@ -43,23 +43,23 @@ class EstablishmentTypeInferenceTest < ActiveSupport::TestCase
   end
 
   test 'returns only allowed types' do
-    result = @service.infer_from_google_places_types(['restaurant', 'spa', 'lodging'])
+    result = @service.infer_from_google_places_types(%w[restaurant spa lodging])
     assert_equal ['restaurant'], result
   end
 
   test 'returns multiple types when applicable' do
-    result = @service.infer_from_google_places_types(['bar', 'food', 'restaurant'])
+    result = @service.infer_from_google_places_types(%w[bar food restaurant])
     assert_includes result, 'bar'
     assert_includes result, 'restaurant'
   end
 
   test 'deduplicates results' do
-    result = @service.infer_from_google_places_types(['restaurant', 'food'])
+    result = @service.infer_from_google_places_types(%w[restaurant food])
     assert_equal result.uniq, result
   end
 
   test 'handles mixed case types' do
-    result = @service.infer_from_google_places_types(['Restaurant', 'BAR'])
+    result = @service.infer_from_google_places_types(%w[Restaurant BAR])
     assert_includes result, 'restaurant'
     assert_includes result, 'bar'
   end
@@ -109,7 +109,7 @@ class EstablishmentTypeInferenceTest < ActiveSupport::TestCase
   # === labels_for ===
 
   test 'returns labels for known types' do
-    result = @service.labels_for(['restaurant', 'bar'])
+    result = @service.labels_for(%w[restaurant bar])
     assert_includes result, 'Restaurant'
     assert_includes result, 'Bar'
   end
@@ -125,7 +125,7 @@ class EstablishmentTypeInferenceTest < ActiveSupport::TestCase
   end
 
   test 'ignores unknown types in labels_for' do
-    result = @service.labels_for(['restaurant', 'unknown_type'])
+    result = @service.labels_for(%w[restaurant unknown_type])
     assert_equal ['Restaurant'], result
   end
 

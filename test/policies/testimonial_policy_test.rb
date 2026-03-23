@@ -5,7 +5,7 @@ class TestimonialPolicyTest < ActiveSupport::TestCase
     @admin = users(:admin)
     @owner = users(:one)
     @other_user = users(:two)
-    @testimonial = testimonials(:one)    # owned by user :one
+    @testimonial = testimonials(:one) # owned by user :one
     @other_testimonial = testimonials(:two) # owned by user :two
   end
 

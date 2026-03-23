@@ -6,7 +6,7 @@ class AllergynPolicyTest < ActiveSupport::TestCase
   def setup
     @owner = users(:one)
     @other_user = users(:two)
-    @allergyn = allergyns(:one)  # belongs to restaurant :one, owned by user :one
+    @allergyn = allergyns(:one) # belongs to restaurant :one, owned by user :one
   end
 
   test 'index is allowed publicly' do

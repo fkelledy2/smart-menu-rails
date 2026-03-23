@@ -21,12 +21,10 @@ class BackfillImageDerivativesJobTest < ActiveSupport::TestCase
   test 'does not raise for invalid record_class constant' do
     # constantize on an invalid class name raises NameError which should be rescued
     assert_nothing_raised do
-      begin
-        BackfillImageDerivativesJob.new.perform('NonExistentRecordClass99', 1)
-      rescue NameError
-        # Expected: constantize raises NameError for unknown class, re-raised by job
-        # This is acceptable — the job re-raises StandardError for Sidekiq retries
-      end
+      BackfillImageDerivativesJob.new.perform('NonExistentRecordClass99', 1)
+    rescue NameError
+      # Expected: constantize raises NameError for unknown class, re-raised by job
+      # This is acceptable — the job re-raises StandardError for Sidekiq retries
     end
   end
 

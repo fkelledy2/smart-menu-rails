@@ -18,7 +18,7 @@ class MenuSourceTest < ActiveSupport::TestCase
   test 'is valid with all required attributes' do
     source = build_source
     # skip file validation
-    assert source.valid? || source.errors.keys == [:latest_file], source.errors.full_messages.join(', ')
+    assert source.valid? || source.errors.attribute_names == [:latest_file], source.errors.full_messages.join(', ')
   end
 
   test 'is invalid without source_url' do
@@ -86,7 +86,7 @@ class MenuSourceTest < ActiveSupport::TestCase
     source.name = nil
     name = source.display_name
     # 'menu' and 'download' keywords should be stripped
-    refute_match(/\bmenu\b/i, name)
+    assert_no_match(/\bmenu\b/i, name)
   end
 
   test 'display_name returns Menu when derivation yields empty string' do

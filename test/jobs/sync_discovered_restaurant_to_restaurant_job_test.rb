@@ -27,7 +27,7 @@ class SyncDiscoveredRestaurantToRestaurantJobTest < ActiveSupport::TestCase
   end
 
   test 'calls sync! on the service when discovered restaurant and restaurant both exist' do
-    dr, restaurant = build_discovered_with_restaurant
+    dr, = build_discovered_with_restaurant
     synced = false
 
     # Stub the service at the class level to intercept instantiation

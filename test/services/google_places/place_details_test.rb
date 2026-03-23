@@ -40,7 +40,7 @@ class GooglePlaces::PlaceDetailsTest < ActiveSupport::TestCase
         'name' => 'Test Bistro',
         'website' => 'https://testbistro.com',
         'url' => 'https://maps.google.com/?cid=123',
-        'types' => ['restaurant', 'food'],
+        'types' => %w[restaurant food],
         'formatted_address' => '1 Main St, Dublin',
         'geometry' => { 'location' => { 'lat' => 53.3, 'lng' => -6.2 } },
         'opening_hours' => nil,
@@ -57,7 +57,7 @@ class GooglePlaces::PlaceDetailsTest < ActiveSupport::TestCase
       assert_equal 'ChIJ-abc123', result[:place_id]
       assert_equal 'Test Bistro', result[:name]
       assert_equal 'https://testbistro.com', result[:website]
-      assert_equal ['restaurant', 'food'], result[:types]
+      assert_equal %w[restaurant food], result[:types]
       assert_in_delta 53.3, result[:location][:lat], 0.001
       assert_nil result[:opening_hours]
     end

@@ -6,7 +6,7 @@ class GenimagePolicyTest < ActiveSupport::TestCase
   def setup
     @owner = users(:one)
     @other_user = users(:two)
-    @genimage = genimages(:one)  # belongs to restaurant :one => user :one
+    @genimage = genimages(:one) # belongs to restaurant :one => user :one
   end
 
   test 'index is allowed for authenticated user' do

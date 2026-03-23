@@ -9,7 +9,7 @@ class MenuparticipantPolicyTest < ActiveSupport::TestCase
     @owner = users(:one)
     @other_user = users(:two)
     @menuparticipant = menuparticipants(:one)
-    @anon_user = User.new  # unsaved, simulates anonymous customer
+    @anon_user = User.new # unsaved, simulates anonymous customer
   end
 
   test 'index is allowed for authenticated user' do

@@ -102,7 +102,10 @@ class OpenaiWhisperTranscriptionServiceTest < ActiveSupport::TestCase
     audio = create_temp_audio
     captured_options = nil
 
-    OpenaiWhisperTranscriptionService.stub(:post, ->(path, opts) { captured_options = opts; resp }) do
+    OpenaiWhisperTranscriptionService.stub(:post, lambda { |path, opts|
+      captured_options = opts
+      resp
+    },) do
       service.transcribe(file_path: audio.path, language: 'it')
     end
 

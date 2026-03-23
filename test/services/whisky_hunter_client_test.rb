@@ -4,7 +4,9 @@ class WhiskyHunterClientTest < ActiveSupport::TestCase
   def client_with_base_uri
     ClimateControl.modify(WHISKY_HUNTER_BASE_URI: 'https://api.whiskyhunter.net') do
       WhiskyHunterClient.new
-    end rescue WhiskyHunterClient.new(base_uri: 'https://api.whiskyhunter.net')
+    end
+  rescue StandardError
+    WhiskyHunterClient.new(base_uri: 'https://api.whiskyhunter.net')
   end
 
   test 'inherits from ExternalApiClient' do

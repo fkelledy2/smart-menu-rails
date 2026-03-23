@@ -70,7 +70,7 @@ class EstimatePrepTimesJobTest < ActiveSupport::TestCase
     item.update_column(:preptime, 15)
 
     menu = item.menusection.menu
-    original_updated_at = item.reload.updated_at
+    item.reload.updated_at
 
     EstimatePrepTimesJob.new.perform(menu.id)
 

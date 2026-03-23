@@ -205,7 +205,7 @@ class SmartmenuPolicyTest < ActiveSupport::TestCase
     # Use freshly-created records to avoid conflicting with existing smartmenu fixtures
     menu = Menu.create!(name: 'Policy Test Menu', restaurant: @restaurant, status: :active)
     tablesetting = Tablesetting.create!(name: 'Policy Test Table', restaurant: @restaurant,
-                                       capacity: 4, tabletype: :indoor, status: :free)
+                                        capacity: 4, tabletype: :indoor, status: :free,)
 
     configurations = [
       { slug: 'menu-only', menu: menu },
@@ -415,7 +415,7 @@ class SmartmenuPolicyTest < ActiveSupport::TestCase
 
     # Table assignment — use a fresh tablesetting to avoid fixture conflicts
     tablesetting = Tablesetting.create!(name: 'Lifecycle Test Table', restaurant: @restaurant,
-                                       capacity: 2, tabletype: :indoor, status: :free)
+                                        capacity: 2, tabletype: :indoor, status: :free,)
     new_smartmenu.update!(tablesetting: tablesetting)
     assert policy.update?, 'Owner should be able to manage smartmenus with table assignment'
     assert policy.destroy?, 'Owner should be able to destroy configured smartmenus'
