@@ -1,0 +1,40 @@
+# frozen_string_literal: true
+
+require 'test_helper'
+
+class MenusectionsControllerTest < ActionDispatch::IntegrationTest
+  def setup
+    @restaurant = restaurants(:one)
+    @menu = menus(:one)
+    @menusection = menusections(:one)
+  end
+
+  test 'GET index redirects unauthenticated' do
+    get restaurant_menu_menusections_path(@restaurant, @menu)
+    assert_redirected_to new_user_session_path
+  end
+
+  test 'GET index succeeds for restaurant owner as JSON' do
+    sign_in users(:one)
+    get restaurant_menu_menusections_path(@restaurant, @menu), as: :json
+    assert_response :success
+    assert_kind_of Array, response.parsed_body
+  end
+
+  test 'GET new redirects unauthenticated' do
+    get new_restaurant_menu_menusection_path(@restaurant, @menu)
+    assert_redirected_to new_user_session_path
+  end
+
+  test 'GET new succeeds for restaurant owner' do
+    sign_in users(:one)
+    get new_restaurant_menu_menusection_path(@restaurant, @menu)
+    assert_response :success
+  end
+
+  test 'GET show succeeds for restaurant owner' do
+    sign_in users(:one)
+    get restaurant_menu_menusection_path(@restaurant, @menu, @menusection)
+    assert_response :success
+  end
+end
