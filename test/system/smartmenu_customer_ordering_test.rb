@@ -40,14 +40,15 @@ class SmartmenuCustomerOrderingTest < ApplicationSystemTestCase
   test 'customer can see all menu sections' do
     visit smartmenu_path(@smartmenu.slug)
 
-    # Verify all sections are visible
-    assert_testid("menu-section-#{@starters.id}")
+    # Verify all sections are present. The menu-section-* elements are zero-height
+    # anchor spacers so we check presence (visible: :all); titles confirm visibility.
+    assert_testid("menu-section-#{@starters.id}", visible: :all)
     assert_testid("menu-section-title-#{@starters.id}")
 
-    assert_testid("menu-section-#{@mains.id}")
+    assert_testid("menu-section-#{@mains.id}", visible: :all)
     assert_testid("menu-section-title-#{@mains.id}")
 
-    assert_testid("menu-section-#{@desserts.id}")
+    assert_testid("menu-section-#{@desserts.id}", visible: :all)
     assert_testid("menu-section-title-#{@desserts.id}")
 
     # Verify section names
