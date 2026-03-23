@@ -163,7 +163,7 @@ jobs:
           CHROME_BIN: /usr/bin/google-chrome-stable
         run: |
           bundle exec rails test
-          bundle exec rails test:system
+          DISABLE_SIMPLECOV=1 bundle exec rails test:system
 
       - name: Run RSpec tests (if available)
         env:
