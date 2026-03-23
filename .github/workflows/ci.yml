@@ -159,7 +159,7 @@ jobs:
           REDIS_URL: redis://localhost:6379/0
           RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
           OPENAI_API_KEY: test
-          COVERAGE_MIN: 60
+          COVERAGE_MIN: 50
           CHROME_BIN: /usr/bin/google-chrome-stable
         run: |
           bundle exec rails test

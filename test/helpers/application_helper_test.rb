@@ -414,4 +414,151 @@ class ApplicationHelperTest < ActionView::TestCase
     first_restaurant = current_user.restaurants.first
     assert_equal first_restaurant.id, context_data['data-restaurant-id']
   end
+
+  # === CURRENCY ICON TESTS ===
+
+  test 'currency_icon returns dollar icon for USD' do
+    assert_equal 'bi-currency-dollar', currency_icon('USD')
+  end
+
+  test 'currency_icon returns euro icon for EUR' do
+    assert_equal 'bi-currency-euro', currency_icon('EUR')
+  end
+
+  test 'currency_icon returns pound icon for GBP' do
+    assert_equal 'bi-currency-pound', currency_icon('GBP')
+  end
+
+  test 'currency_icon returns yen icon for JPY' do
+    assert_equal 'bi-currency-yen', currency_icon('JPY')
+  end
+
+  test 'currency_icon returns yen icon for CNY' do
+    assert_equal 'bi-currency-yen', currency_icon('CNY')
+  end
+
+  test 'currency_icon returns generic icon for unknown currency' do
+    assert_equal 'bi-cash-coin', currency_icon('AUD')
+  end
+
+  test 'currency_icon is case-insensitive' do
+    assert_equal 'bi-currency-dollar', currency_icon('usd')
+  end
+
+  test 'currency_icon returns generic icon for nil' do
+    assert_equal 'bi-cash-coin', currency_icon(nil)
+  end
+
+  # === BUILD NUMBER TESTS ===
+
+  test 'build_number returns nil when no release env vars' do
+    old_release = ENV.delete('HEROKU_RELEASE_VERSION')
+    old_number = ENV.delete('HEROKU_RELEASE_NUMBER')
+    result = build_number
+    assert_nil result
+  ensure
+    ENV['HEROKU_RELEASE_VERSION'] = old_release if old_release
+    ENV['HEROKU_RELEASE_NUMBER'] = old_number if old_number
+  end
+
+  test 'build_number returns formatted string with HEROKU_RELEASE_VERSION' do
+    ENV['HEROKU_RELEASE_VERSION'] = 'v42'
+    ENV.delete('HEROKU_RELEASE_CREATED_AT')
+    result = build_number
+    assert_not_nil result
+    assert_match(/\d{8}-v42/, result)
+  ensure
+    ENV.delete('HEROKU_RELEASE_VERSION')
+  end
+
+  test 'build_number uses HEROKU_RELEASE_CREATED_AT for date' do
+    ENV['HEROKU_RELEASE_VERSION'] = 'v10'
+    ENV['HEROKU_RELEASE_CREATED_AT'] = '2024-06-15T12:00:00Z'
+    result = build_number
+    assert_equal '20240615-v10', result
+  ensure
+    ENV.delete('HEROKU_RELEASE_VERSION')
+    ENV.delete('HEROKU_RELEASE_CREATED_AT')
+  end
+
+  # === T_HTML TESTS ===
+
+  test 't_html returns raw empty string for blank key' do
+    result = t_html('')
+    assert_equal '', result
+  end
+
+  test 't_html returns translation for valid key' do
+    result = t_html('hello')
+    assert_kind_of String, result
+  end
+
+  test 'translate_html is an alias for t_html' do
+    assert_equal method(:t_html), method(:translate_html)
+  end
+
+  # === RESOLVE_PARTICIPANT_LOCALE TESTS ===
+
+  test 'resolve_participant_locale returns default locale with no args' do
+    result = resolve_participant_locale
+    assert_equal I18n.default_locale, result
+  end
+
+  test 'resolve_participant_locale prefers ordrparticipant locale' do
+    participant = OpenStruct.new(preferredlocale: :fr)
+    result = resolve_participant_locale(participant)
+    assert_equal :fr, result
+  end
+
+  test 'resolve_participant_locale falls back to menuparticipant locale' do
+    participant = OpenStruct.new(preferredlocale: nil)
+    menu_participant = OpenStruct.new(preferredlocale: :de)
+    result = resolve_participant_locale(participant, menu_participant)
+    assert_equal :de, result
+  end
+
+  test 'resolve_participant_locale uses instance variable ordrparticipant' do
+    @ordrparticipant = OpenStruct.new(preferredlocale: :es)
+    result = resolve_participant_locale
+    assert_equal :es, result
+  ensure
+    @ordrparticipant = nil
+  end
+
+  # === LOCALISED_NAME TESTS ===
+
+  test 'localised_name returns entity.name when entity has no localised_name method' do
+    entity = OpenStruct.new(name: 'Test Item')
+    result = localised_name(entity)
+    assert_equal 'Test Item', result
+  end
+
+  test 'localised_name calls localised_name on entity when method exists' do
+    entity = Object.new
+    entity.define_singleton_method(:name) { 'Default' }
+    entity.define_singleton_method(:localised_name) { |locale| "Localised(#{locale})" }
+    result = localised_name(entity)
+    assert_equal "Localised(#{I18n.default_locale})", result
+  end
+
+  # === LOCALISED_DESCRIPTION TESTS ===
+
+  test 'localised_description returns entity.description when no localised_description method' do
+    entity = OpenStruct.new(description: 'A fine item')
+    result = localised_description(entity)
+    assert_equal 'A fine item', result
+  end
+
+  # === PAGE_MODULES TESTS ===
+
+  test 'page_modules returns empty string by default' do
+    assert_equal '', page_modules
+  end
+
+  test 'page_modules returns @page_modules when set' do
+    @page_modules = 'some-module'
+    assert_equal 'some-module', page_modules
+  ensure
+    @page_modules = nil
+  end
 end
