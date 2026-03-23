@@ -202,10 +202,10 @@ class SmartmenuPolicyTest < ActiveSupport::TestCase
   # === BUSINESS LOGIC TESTS ===
 
   test 'should handle different smartmenu types' do
-    # Test with different smartmenu configurations
-    menu = @restaurant.menus.first || Menu.create!(name: 'Test Menu', restaurant: @restaurant, status: :active)
-    tablesetting = @restaurant.tablesettings.first || Tablesetting.create!(name: 'Test Table', restaurant: @restaurant,
-                                                                           capacity: 4, tabletype: :indoor, status: :free,)
+    # Use freshly-created records to avoid conflicting with existing smartmenu fixtures
+    menu = Menu.create!(name: 'Policy Test Menu', restaurant: @restaurant, status: :active)
+    tablesetting = Tablesetting.create!(name: 'Policy Test Table', restaurant: @restaurant,
+                                       capacity: 4, tabletype: :indoor, status: :free)
 
     configurations = [
       { slug: 'menu-only', menu: menu },
@@ -408,14 +408,14 @@ class SmartmenuPolicyTest < ActiveSupport::TestCase
     new_smartmenu.save!
     assert policy.update?, 'Owner should be able to update smartmenus'
 
-    # Menu assignment
-    menu = @restaurant.menus.first || Menu.create!(name: 'Test Menu', restaurant: @restaurant, status: :active)
+    # Menu assignment — use a fresh menu to avoid conflicting with existing smartmenu fixtures
+    menu = Menu.create!(name: 'Lifecycle Test Menu', restaurant: @restaurant, status: :active)
     new_smartmenu.update!(menu: menu)
     assert policy.update?, 'Owner should be able to manage smartmenus with menu assignment'
 
-    # Table assignment
-    tablesetting = @restaurant.tablesettings.first || Tablesetting.create!(name: 'Test Table', restaurant: @restaurant,
-                                                                           capacity: 4, tabletype: :indoor, status: :free,)
+    # Table assignment — use a fresh tablesetting to avoid fixture conflicts
+    tablesetting = Tablesetting.create!(name: 'Lifecycle Test Table', restaurant: @restaurant,
+                                       capacity: 2, tabletype: :indoor, status: :free)
     new_smartmenu.update!(tablesetting: tablesetting)
     assert policy.update?, 'Owner should be able to manage smartmenus with table assignment'
     assert policy.destroy?, 'Owner should be able to destroy configured smartmenus'
