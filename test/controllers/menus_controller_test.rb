@@ -29,5 +29,4 @@ class MenusControllerTest < ActionDispatch::IntegrationTest
     get new_restaurant_menu_path(@restaurant)
     assert_response :success
   end
-
 end
