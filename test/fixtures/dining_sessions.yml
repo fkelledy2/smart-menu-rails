@@ -1,0 +1,45 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+valid_session:
+  smartmenu: one
+  tablesetting: table_one
+  restaurant: one
+  session_token: eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+  ip_address: 127.0.0.1
+  user_agent_hash: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+  active: true
+  expires_at: <%= 1.hour.from_now %>
+  last_activity_at: <%= Time.current %>
+
+expired_ttl_session:
+  smartmenu: one
+  tablesetting: table_one
+  restaurant: one
+  session_token: 1111111111111111111111111111111111111111111111111111111111111111
+  ip_address: 127.0.0.1
+  user_agent_hash: 2222222222222222222222222222222222222222222222222222222222222222
+  active: true
+  expires_at: <%= 2.hours.ago %>
+  last_activity_at: <%= 2.hours.ago %>
+
+inactive_session:
+  smartmenu: one
+  tablesetting: table_one
+  restaurant: one
+  session_token: 3333333333333333333333333333333333333333333333333333333333333333
+  ip_address: 127.0.0.1
+  user_agent_hash: 4444444444444444444444444444444444444444444444444444444444444444
+  active: false
+  expires_at: <%= 1.hour.from_now %>
+  last_activity_at: <%= 31.minutes.ago %>
+
+stale_activity_session:
+  smartmenu: two
+  tablesetting: one
+  restaurant: one
+  session_token: 5555555555555555555555555555555555555555555555555555555555555555
+  ip_address: 10.0.0.1
+  user_agent_hash: 6666666666666666666666666666666666666666666666666666666666666666
+  active: true
+  expires_at: <%= 30.minutes.from_now %>
+  last_activity_at: <%= 35.minutes.ago %>

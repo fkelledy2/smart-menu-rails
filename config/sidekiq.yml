@@ -5,6 +5,10 @@
   - [low_priority, 1]
 
 :schedule:
+  expire_dining_sessions:
+    cron: "*/5 * * * *"  # every 5 minutes
+    class: "ExpireDiningSessionsJob"
+    queue: "default"
   product_enrichment_refresh:
     cron: "0 * * * *"  # hourly
     class: "ProductEnrichmentRefreshJob"

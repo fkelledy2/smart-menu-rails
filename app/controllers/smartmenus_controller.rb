@@ -1,10 +1,11 @@
 class SmartmenusController < ApplicationController
-  layout 'smartmenu', only: [:show]
-  before_action :authenticate_user!, except: %i[index show] # Public menu viewing
+  layout 'smartmenu', only: %i[show show_by_token]
+  before_action :authenticate_user!, except: %i[index show show_by_token] # Public menu viewing
   before_action :set_smartmenu, only: %i[show edit update destroy]
+  before_action :set_smartmenu_by_token, only: %i[show_by_token]
 
   # Pundit authorization
-  after_action :verify_authorized, except: %i[index show]
+  after_action :verify_authorized, except: %i[index show show_by_token]
   after_action :verify_policy_scoped, only: [:index]
 
   # GET /smartmenus or /smartmenus.json
@@ -16,146 +17,20 @@ class SmartmenusController < ApplicationController
       .limit(100)
   end
 
-  # GET /smartmenus/1 or /smartmenus/1.json
+  # GET /smartmenus/1 — legacy slug route, permanently redirected to token URL
   def show
-    load_menu_associations_for_show
-    set_seo_metadata
+    return redirect_to(root_url, status: :moved_permanently) unless @smartmenu&.public_token.present?
 
-    if @restaurant.respond_to?(:preview_published?) && @restaurant.preview_published? && @restaurant.unclaimed?
-      @meta_robots = @restaurant.preview_indexable? ? 'index, follow' : 'noindex, nofollow'
-      response.headers['X-Robots-Tag'] = @meta_robots
-    end
+    redirect_to table_link_path(@smartmenu.public_token), status: :moved_permanently
+  end
 
-    load_active_menu_version
-
-    # Cache-buster for the header/table selector.
-    # The header fragment cache key previously ignored newly created Smartmenus/Tablesettings,
-    # causing stale table dropdown contents (e.g., missing newly added tables).
-    load_header_cache_buster
-
-    unless @menu && (@menu.restaurant_id == @restaurant.id || RestaurantMenu.exists?(restaurant_id: @restaurant.id, menu_id: @menu.id))
-      redirect_to root_url and return
-    end
-
-    # Force customer view if query parameter is present
-    # Allows staff to preview menu as customers see it
-    @force_customer_view = params[:view] == 'customer'
-
-    load_table_smartmenus
-
-    load_restaurant_locales
-
-    load_allergyns
-
-    load_open_order_and_participant
-
-    begin
-      @needs_age_check = !(@openOrder && AlcoholOrderEvent.exists?(ordr_id: @openOrder.id, age_check_acknowledged: false)).nil?
-    rescue StandardError => e
-      Rails.logger.warn("[SmartmenusController#show] age check lookup failed: #{e.message}")
-      @needs_age_check = false
-    end
-
-    @menuparticipant = Menuparticipant.find_or_create_by(sessionid: safe_session_id) do |mp|
-      mp.smartmenu = @smartmenu
-    end
-    if @menuparticipant.persisted? && @menuparticipant.smartmenu_id != @smartmenu.id
-      @menuparticipant.update_column(:smartmenu_id, @smartmenu.id)
-    end
-
-    if params[:locale].present?
-      requested = params[:locale].to_s.downcase
-      if I18n.available_locales.map(&:to_s).include?(requested) && (@menuparticipant.preferredlocale.to_s.downcase != requested)
-        @menuparticipant.update(preferredlocale: requested)
-      end
-    end
-
-    # HTTP caching with ETags for better performance (HTML only).
-    # IMPORTANT: Include order context + session in cache key to avoid serving stale pages
-    # that drop order context after hard refresh.
-    # We intentionally skip conditional caching for JSON so the state endpoint always returns
-    # a fresh payload (and logs), avoiding 304 for XHRs.
-    if request.format.html?
-      participant_locale = @ordrparticipant&.preferredlocale || @menuparticipant&.preferredlocale
-
-      # Build conservative last_modified including order and items where possible
-      order_items_last_modified = nil
-      if @openOrder.respond_to?(:ordritems)
-        # Safe query for maximum updated_at across order items
-        order_items_last_modified = @openOrder.ordritems.maximum(:updated_at)
-      end
-
-      last_modified_candidates = [
-        @smartmenu&.updated_at,
-        @menu&.updated_at,
-        @restaurant&.updated_at,
-        @tablesetting&.updated_at,
-        @ordrparticipant&.updated_at,
-        @menuparticipant&.updated_at,
-        @openOrder&.updated_at,
-        order_items_last_modified,
-      ].compact
-
-      etag_parts = [
-        @smartmenu,
-        @menu,
-        @restaurant,
-        @tablesetting,
-        @openOrder,
-        @ordrparticipant,
-        participant_locale,
-        "sid:#{session.id}",
-        "build:#{BUILD_VERSION}",
-      ]
-
-      # Use public caching for menu-only views (no active order/session context).
-      # Keep private caching when order state is present to avoid stale order UI.
-      has_order_context = @openOrder.present? || @ordrparticipant.present?
-
-      if has_order_context
-        response.headers['Cache-Control'] = 'private, must-revalidate, max-age=0'
-        response.headers['Vary'] = [response.headers['Vary'], 'Cookie', 'Accept-Language'].compact.join(', ')
-      else
-        response.headers['Cache-Control'] = 'public, max-age=60, stale-while-revalidate=300'
-        response.headers['Vary'] = [response.headers['Vary'], 'Accept-Language'].compact.join(', ')
-      end
-
-      fresh_when(
-        etag: etag_parts,
-        last_modified: last_modified_candidates.max,
-        public: !has_order_context,
-      )
-    end
-
-    respond_to do |format|
-      format.html
-      format.json do
-        payload = SmartmenuState.for_context(
-          menu: @menu,
-          restaurant: @restaurant,
-          tablesetting: @tablesetting,
-          open_order: @openOrder,
-          ordrparticipant: @ordrparticipant,
-          menuparticipant: @menuparticipant,
-          session_id: safe_session_id,
-        )
-
-        if @active_menu_version
-          payload[:menuVersion] = {
-            id: @active_menu_version.id,
-            version_number: @active_menu_version.version_number,
-          }
-        end
-        begin
-          items_len = payload.dig(:order, :items)&.length || 0
-          item_ids = Array(payload.dig(:order, :items)).filter_map { |i| i[:id] }.take(20)
-          Rails.logger.info("[SmartmenusController#show][JSON] order_id=#{payload.dig(:order, :id)} items=#{items_len} ids=#{item_ids.inspect} totals=#{payload[:totals] ? 'present' : 'nil'}")
-        rescue StandardError => e
-          Rails.logger.warn("[SmartmenusController#show][JSON] logging failed: #{e.class}: #{e.message}")
-        end
-        render json: payload
-      end
-    end
+  # GET /t/:public_token — QR code entry point
+  # Creates or refreshes a DiningSession and renders the smartmenu show view.
+  # Returns 404 for invalid tokens (not 403, to avoid confirming token existence).
+  def show_by_token
+    create_or_refresh_dining_session!
+    # Delegate to the same rendering pipeline as show
+    call_show_pipeline
   end
 
   # GET /smartmenus/new
@@ -451,7 +326,7 @@ class SmartmenusController < ApplicationController
                         '. Prices, allergens, and descriptions.'
     @og_title = @page_title
     @og_description = @page_description
-    @og_url = "https://www.mellow.menu/smartmenus/#{@smartmenu.slug}"
+    @og_url = "https://www.mellow.menu/t/#{@smartmenu.public_token}"
     @og_image = @restaurant.try(:image_url) || 'https://www.mellow.menu/images/featured-dish.jpg'
     @canonical_url = @og_url
     @geo_lat = @restaurant.latitude
@@ -459,6 +334,170 @@ class SmartmenusController < ApplicationController
     @geo_city = @restaurant.city
   rescue StandardError => e
     Rails.logger.warn("[SmartmenusController#set_seo_metadata] #{e.class}: #{e.message}")
+  end
+
+  # Set smartmenu via public_token for the /t/:public_token route.
+  # Returns 404 for missing/invalid tokens.
+  def set_smartmenu_by_token
+    @smartmenu = Smartmenu.where(public_token: params[:public_token]).includes(
+      :tablesetting,
+      restaurant: %i[restaurantlocales tips alcohol_policy],
+      menu: [
+        { restaurant: %i[restaurantlocales tips alcohol_policy] },
+        :menulocales,
+        :menu_versions,
+        { menusections: [
+          :menusectionlocales,
+          { menuitems: [
+            :menuitemlocales,
+            :allergyns,
+            { menuitem_size_mappings: :size },
+          ] },
+        ] },
+      ],
+    ).first
+
+    if @smartmenu
+      @restaurant = @smartmenu.restaurant
+      @menu = @smartmenu.menu
+      @tablesetting = @smartmenu.tablesetting
+      @restaurantCurrency = ISO4217::Currency.from_code(@restaurant.currency || 'USD')
+    else
+      head :not_found
+    end
+  rescue ActiveRecord::RecordNotFound
+    head :not_found
+  end
+
+  def create_or_refresh_dining_session!
+    return unless @smartmenu && @tablesetting
+
+    existing_token = session[:dining_session_token]
+    dining_session = nil
+
+    if existing_token.present?
+      dining_session = DiningSession.find_by(
+        session_token: existing_token,
+        smartmenu_id: @smartmenu.id,
+        active: true,
+      )
+      dining_session&.touch_activity! unless dining_session&.expired?
+      dining_session = nil if dining_session&.expired?
+    end
+
+    unless dining_session
+      ua_hash = Digest::SHA256.hexdigest(request.user_agent.to_s)[0, 64]
+      dining_session = DiningSession.create!(
+        smartmenu: @smartmenu,
+        tablesetting: @tablesetting,
+        restaurant: @restaurant,
+        session_token: SecureRandom.hex(32),
+        ip_address: request.remote_ip,
+        user_agent_hash: ua_hash,
+      )
+      session[:dining_session_token] = dining_session.session_token
+    end
+
+    @dining_session = dining_session
+  rescue StandardError => e
+    Rails.logger.warn("[SmartmenusController#create_or_refresh_dining_session!] #{e.class}: #{e.message}")
+    @dining_session = nil
+  end
+
+  # Shared rendering pipeline used by both show and show_by_token.
+  # Extracted so token-based entry doesn't duplicate the full show body.
+  def call_show_pipeline
+    load_menu_associations_for_show
+    set_seo_metadata
+
+    if @restaurant.respond_to?(:preview_published?) && @restaurant.preview_published? && @restaurant.unclaimed?
+      @meta_robots = @restaurant.preview_indexable? ? 'index, follow' : 'noindex, nofollow'
+      response.headers['X-Robots-Tag'] = @meta_robots
+    end
+
+    load_active_menu_version
+    load_header_cache_buster
+
+    unless @menu && (@menu.restaurant_id == @restaurant.id || RestaurantMenu.exists?(restaurant_id: @restaurant.id, menu_id: @menu.id))
+      redirect_to root_url and return
+    end
+
+    @force_customer_view = params[:view] == 'customer'
+
+    load_table_smartmenus
+    load_restaurant_locales
+    load_allergyns
+    load_open_order_and_participant
+
+    begin
+      @needs_age_check = !(@openOrder && AlcoholOrderEvent.exists?(ordr_id: @openOrder.id, age_check_acknowledged: false)).nil?
+    rescue StandardError => e
+      Rails.logger.warn("[SmartmenusController#show] age check lookup failed: #{e.message}")
+      @needs_age_check = false
+    end
+
+    @menuparticipant = Menuparticipant.find_or_create_by(sessionid: safe_session_id) do |mp|
+      mp.smartmenu = @smartmenu
+    end
+    if @menuparticipant.persisted? && @menuparticipant.smartmenu_id != @smartmenu.id
+      @menuparticipant.update_column(:smartmenu_id, @smartmenu.id)
+    end
+
+    if params[:locale].present?
+      requested = params[:locale].to_s.downcase
+      if I18n.available_locales.map(&:to_s).include?(requested) && (@menuparticipant.preferredlocale.to_s.downcase != requested)
+        @menuparticipant.update(preferredlocale: requested)
+      end
+    end
+
+    if request.format.html?
+      participant_locale = @ordrparticipant&.preferredlocale || @menuparticipant&.preferredlocale
+      order_items_last_modified = nil
+      if @openOrder.respond_to?(:ordritems)
+        order_items_last_modified = @openOrder.ordritems.maximum(:updated_at)
+      end
+
+      last_modified_candidates = [
+        @smartmenu&.updated_at, @menu&.updated_at, @restaurant&.updated_at,
+        @tablesetting&.updated_at, @ordrparticipant&.updated_at,
+        @menuparticipant&.updated_at, @openOrder&.updated_at, order_items_last_modified,
+      ].compact
+
+      etag_parts = [
+        @smartmenu, @menu, @restaurant, @tablesetting, @openOrder, @ordrparticipant,
+        participant_locale, "sid:#{session.id}", "build:#{BUILD_VERSION}",
+      ]
+
+      has_order_context = @openOrder.present? || @ordrparticipant.present?
+      if has_order_context
+        response.headers['Cache-Control'] = 'private, must-revalidate, max-age=0'
+        response.headers['Vary'] = [response.headers['Vary'], 'Cookie', 'Accept-Language'].compact.join(', ')
+      else
+        response.headers['Cache-Control'] = 'public, max-age=60, stale-while-revalidate=300'
+        response.headers['Vary'] = [response.headers['Vary'], 'Accept-Language'].compact.join(', ')
+      end
+
+      fresh_when(etag: etag_parts, last_modified: last_modified_candidates.max, public: !has_order_context)
+    end
+
+    respond_to do |format|
+      format.html { render :show }
+      format.json do
+        payload = SmartmenuState.for_context(
+          menu: @menu,
+          restaurant: @restaurant,
+          tablesetting: @tablesetting,
+          open_order: @openOrder,
+          ordrparticipant: @ordrparticipant,
+          menuparticipant: @menuparticipant,
+          session_id: safe_session_id,
+        )
+        if @active_menu_version
+          payload[:menuVersion] = { id: @active_menu_version.id, version_number: @active_menu_version.version_number }
+        end
+        render json: payload
+      end
+    end
   end
 
   # Use callbacks to share common setup or constraints between actions.

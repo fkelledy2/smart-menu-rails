@@ -51,6 +51,7 @@ class OrdrsController < ApplicationController
   before_action :set_restaurant
   before_action :set_ordr, only: %i[show edit update destroy analytics ack_alcohol events]
   before_action :set_currency
+  before_action :require_valid_dining_session!, only: %i[create update], unless: :user_signed_in?
 
   # Pundit authorization
   after_action :verify_authorized, except: [:index]

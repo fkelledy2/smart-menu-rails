@@ -34,9 +34,15 @@ class TablesettingsController < ApplicationController
   # GET /tablesettings/1 or /tablesettings/1.json
   def show
     @restaurant = @tablesetting.restaurant
-    # Sanitize the status input to prevent XSS in QR code generation
-    sanitized_status = ActionController::Base.helpers.sanitize(@tablesetting.status.to_s)
-    @qr = RQRCode::QRCode.new(sanitized_status)
+    # Prefer the first smartmenu with a public_token for QR generation.
+    # Falls back to status string for legacy tables without smartmenus.
+    primary_smartmenu = Smartmenu.where(tablesetting_id: @tablesetting.id).where.not(public_token: nil).first
+    qr_content = if primary_smartmenu&.public_token
+                   table_link_url(public_token: primary_smartmenu.public_token, host: request.host_with_port)
+                 else
+                   ActionController::Base.helpers.sanitize(@tablesetting.status.to_s)
+                 end
+    @qr = RQRCode::QRCode.new(qr_content)
     @menus = Menu.joins(:restaurant).all
   end
 
@@ -242,6 +248,46 @@ class TablesettingsController < ApplicationController
         redirect_to edit_restaurant_path(restaurant, section: 'tables')
       end
     end
+  end
+
+  # POST /restaurants/:restaurant_id/tablesettings/:id/regenerate_qr
+  # Rotates public_token on all Smartmenus for this table, invalidating existing QR codes and sessions.
+  def regenerate_qr
+    @tablesetting = Tablesetting.find(params[:id])
+    authorize @tablesetting, :update?
+
+    @restaurant = @tablesetting.restaurant
+
+    smartmenus = Smartmenu.where(tablesetting_id: @tablesetting.id)
+    rotated_count = 0
+
+    smartmenus.find_each do |sm|
+      sm.rotate_token!
+      rotated_count += 1
+    end
+
+    Rails.logger.info(
+      "[TablesettingsController#regenerate_qr] Rotated #{rotated_count} QR token(s) " \
+      "for tablesetting=#{@tablesetting.id} restaurant=#{@restaurant.id} " \
+      "by user=#{current_user&.id}",
+    )
+
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.replace(
+          'restaurant_content',
+          partial: 'restaurants/sections/tables_2025',
+          locals: { restaurant: @restaurant, filter: 'all' },
+        )
+      end
+      format.html do
+        redirect_to edit_restaurant_path(id: @restaurant.id, section: 'tables'),
+                    notice: "QR code regenerated for #{@tablesetting.name}. All existing sessions have been invalidated."
+      end
+      format.json { render json: { status: 'ok', rotated: rotated_count } }
+    end
+  rescue ActiveRecord::RecordNotFound
+    head :not_found
   end
 
   # PATCH /restaurants/:restaurant_id/tablesettings/reorder

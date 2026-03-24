@@ -5,6 +5,7 @@ class Smartmenu < ApplicationRecord
   belongs_to :restaurant, touch: true
   belongs_to :menu, optional: true
   belongs_to :tablesetting, optional: true
+  has_many :dining_sessions, dependent: :destroy
 
   # IdentityCache configuration
   cache_index :id
@@ -16,6 +17,8 @@ class Smartmenu < ApplicationRecord
   cache_belongs_to :restaurant
   cache_belongs_to :menu
   cache_belongs_to :tablesetting
+
+  before_validation :generate_public_token, on: :create
 
   def menuName
     if menu
@@ -43,4 +46,18 @@ class Smartmenu < ApplicationRecord
 
   validates :slug, presence: true
   validates :restaurant, presence: false
+  validates :public_token, presence: true, uniqueness: true, length: { is: 64 }, allow_blank: false
+
+  # Rotate the public_token, invalidating the old QR code.
+  # Deactivates all active DiningSessions for this smartmenu.
+  def rotate_token!
+    DiningSession.where(smartmenu_id: id, active: true).update_all(active: false)
+    update!(public_token: SecureRandom.hex(32))
+  end
+
+  private
+
+  def generate_public_token
+    self.public_token ||= SecureRandom.hex(32)
+  end
 end

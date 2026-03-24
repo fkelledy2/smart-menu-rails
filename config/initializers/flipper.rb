@@ -20,6 +20,18 @@ Rails.application.config.after_initialize do
   unless Flipper.exist?(:square_payments)
     Flipper.add(:square_payments)
   end
+
+  # QR Security v1 — dining session enforcement. Enabled globally from day one.
+  # The backfill migration ensures all existing smartmenus have public_tokens.
+  unless Flipper.exist?(:qr_security_v1)
+    Flipper.enable(:qr_security_v1)
+  end
+
+  # Payment gating — per-restaurant flag to enforce pre-payment ordering.
+  # Disabled by default; enable per-restaurant via Flipper UI.
+  unless Flipper.exist?(:payment_gating)
+    Flipper.add(:payment_gating)
+  end
 rescue ActiveRecord::ConnectionNotEstablished, ActiveRecord::StatementInvalid, ActiveRecord::NoDatabaseError => e
   # DB may be unreachable (CI asset precompile), or tables may not exist yet (db:create / db:migrate)
   Rails.logger.warn "[Flipper] Skipping feature flag seeding: #{e.message}"

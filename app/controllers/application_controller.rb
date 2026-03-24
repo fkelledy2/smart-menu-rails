@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
   include Pundit::Authorization
   include AnalyticsTrackable
   include SentryContext
+  include DiningSessionGate
 
   helper_method :current_user_has_active_subscription?
   helper_method :user_has_active_subscription?
@@ -212,6 +213,11 @@ class ApplicationController < ActionController::Base
   # PWA offline page
   def offline
     render 'application/offline', layout: false
+  end
+
+  # Dining session expired — shown when a customer's QR session times out
+  def session_expired
+    render 'application/session_expired', layout: 'application'
   end
 
   protected

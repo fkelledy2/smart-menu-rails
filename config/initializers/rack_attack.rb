@@ -9,7 +9,7 @@ Rack::Attack.enabled = !Rails.env.test?
 # processes/dynos. MemoryStore is per-process and ineffective in production.
 Rack::Attack.cache.store = begin
   if Rails.env.production? && ENV['REDIS_URL'].present?
-    ActiveSupport::Cache::RedisCacheStore.new(url: ENV['REDIS_URL'], namespace: 'rack_attack')
+    ActiveSupport::Cache::RedisCacheStore.new(url: ENV.fetch('REDIS_URL', nil), namespace: 'rack_attack')
   else
     ActiveSupport::Cache::MemoryStore.new
   end
@@ -64,6 +64,38 @@ end
 # General request throttle: 300 per minute per IP
 Rack::Attack.throttle('requests/ip', limit: 300, period: 60.seconds) do |req|
   req.ip unless req.path.start_with?('/assets/', '/packs/')
+end
+
+# ----------------------------------------------------------------------------
+# QR Security throttles
+# ----------------------------------------------------------------------------
+
+# Order creation: 10 per IP per 5 minutes — prevents order flooding from a single IP
+Rack::Attack.throttle('orders/ip', limit: 10, period: 5.minutes) do |req|
+  req.ip if req.path.include?('/ordritems') && req.post?
+end
+
+# Order creation per dining session: 20 per 10 minutes — per-session order rate limit
+Rack::Attack.throttle('orders/session', limit: 20, period: 10.minutes) do |req|
+  if req.path.include?('/ordritems') && req.post?
+    # Extract dining session token from cookie-based session if present
+    # We use the raw cookie string since Rack::Attack runs before ActionDispatch
+    cookie_header = req.get_header('HTTP_COOKIE').to_s
+    match = cookie_header.match(/_session=([^;]+)/)
+    match ? "session:#{match[1][0, 32]}" : nil
+  end
+end
+
+# Smartmenu page loads: 30 per IP per minute — prevents scraping / rapid token enumeration
+Rack::Attack.throttle('smartmenus/ip', limit: 30, period: 60.seconds) do |req|
+  req.ip if req.path.start_with?('/smartmenus/', '/t/')
+end
+
+# QR token endpoint: 60 per IP per minute — prevents token brute-force while allowing
+# normal use (table switching, refreshes). Token space is 2^256 so enumeration is
+# computationally infeasible; this throttle is defence-in-depth only.
+Rack::Attack.throttle('table_tokens/ip', limit: 60, period: 60.seconds) do |req|
+  req.ip if req.path.start_with?('/t/') && req.get?
 end
 
 # ----------------------------------------------------------------------------

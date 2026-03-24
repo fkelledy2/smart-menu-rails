@@ -391,6 +391,45 @@ ALTER SEQUENCE public.crawl_source_rules_id_seq OWNED BY public.crawl_source_rul
 
 
 --
+-- Name: dining_sessions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.dining_sessions (
+    id bigint NOT NULL,
+    smartmenu_id bigint NOT NULL,
+    tablesetting_id bigint NOT NULL,
+    restaurant_id bigint NOT NULL,
+    session_token character varying(64) NOT NULL,
+    ip_address character varying,
+    user_agent_hash character varying(64),
+    active boolean DEFAULT true NOT NULL,
+    expires_at timestamp(6) without time zone NOT NULL,
+    last_activity_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: dining_sessions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.dining_sessions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: dining_sessions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.dining_sessions_id_seq OWNED BY public.dining_sessions.id;
+
+
+--
 -- Name: discovered_restaurants; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -706,7 +745,8 @@ CREATE TABLE public.restaurants (
     square_oauth_revoked_at timestamp(6) without time zone,
     platform_fee_type integer DEFAULT 0 NOT NULL,
     platform_fee_percent numeric(5,2),
-    platform_fee_fixed_cents integer
+    platform_fee_fixed_cents integer,
+    payment_gating_enabled boolean DEFAULT false NOT NULL
 );
 
 
@@ -4047,7 +4087,8 @@ CREATE TABLE public.smartmenus (
     menu_id bigint,
     tablesetting_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    public_token character varying(64) NOT NULL
 );
 
 
@@ -4668,6 +4709,13 @@ ALTER TABLE ONLY public.contacts ALTER COLUMN id SET DEFAULT nextval('public.con
 --
 
 ALTER TABLE ONLY public.crawl_source_rules ALTER COLUMN id SET DEFAULT nextval('public.crawl_source_rules_id_seq'::regclass);
+
+
+--
+-- Name: dining_sessions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dining_sessions ALTER COLUMN id SET DEFAULT nextval('public.dining_sessions_id_seq'::regclass);
 
 
 --
@@ -5470,6 +5518,14 @@ ALTER TABLE ONLY public.contacts
 
 ALTER TABLE ONLY public.crawl_source_rules
     ADD CONSTRAINT crawl_source_rules_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: dining_sessions dining_sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dining_sessions
+    ADD CONSTRAINT dining_sessions_pkey PRIMARY KEY (id);
 
 
 --
@@ -6645,6 +6701,55 @@ CREATE UNIQUE INDEX index_crawl_source_rules_on_domain ON public.crawl_source_ru
 --
 
 CREATE INDEX index_crawl_source_rules_on_rule_type ON public.crawl_source_rules USING btree (rule_type);
+
+
+--
+-- Name: index_dining_sessions_on_expires_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_dining_sessions_on_expires_at ON public.dining_sessions USING btree (expires_at);
+
+
+--
+-- Name: index_dining_sessions_on_restaurant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_dining_sessions_on_restaurant_id ON public.dining_sessions USING btree (restaurant_id);
+
+
+--
+-- Name: index_dining_sessions_on_session_token; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_dining_sessions_on_session_token ON public.dining_sessions USING btree (session_token);
+
+
+--
+-- Name: index_dining_sessions_on_smartmenu_active; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_dining_sessions_on_smartmenu_active ON public.dining_sessions USING btree (smartmenu_id, active);
+
+
+--
+-- Name: index_dining_sessions_on_smartmenu_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_dining_sessions_on_smartmenu_id ON public.dining_sessions USING btree (smartmenu_id);
+
+
+--
+-- Name: index_dining_sessions_on_tablesetting_active; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_dining_sessions_on_tablesetting_active ON public.dining_sessions USING btree (tablesetting_id, active);
+
+
+--
+-- Name: index_dining_sessions_on_tablesetting_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_dining_sessions_on_tablesetting_id ON public.dining_sessions USING btree (tablesetting_id);
 
 
 --
@@ -8923,6 +9028,13 @@ CREATE INDEX index_smartmenus_on_menu_id ON public.smartmenus USING btree (menu_
 
 
 --
+-- Name: index_smartmenus_on_public_token; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_smartmenus_on_public_token ON public.smartmenus USING btree (public_token);
+
+
+--
 -- Name: index_smartmenus_on_restaurant_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -9237,6 +9349,14 @@ ALTER TABLE ONLY public.ordr_split_item_assignments
 
 ALTER TABLE ONLY public.menu_imports
     ADD CONSTRAINT fk_rails_01b0b8d6ad FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: dining_sessions fk_rails_04d0a237df; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dining_sessions
+    ADD CONSTRAINT fk_rails_04d0a237df FOREIGN KEY (restaurant_id) REFERENCES public.restaurants(id);
 
 
 --
@@ -10024,6 +10144,14 @@ ALTER TABLE ONLY public.sizes
 
 
 --
+-- Name: dining_sessions fk_rails_ad7a6a606e; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dining_sessions
+    ADD CONSTRAINT fk_rails_ad7a6a606e FOREIGN KEY (smartmenu_id) REFERENCES public.smartmenus(id);
+
+
+--
 -- Name: ocr_menu_items fk_rails_ae1a643b10; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -10189,6 +10317,14 @@ ALTER TABLE ONLY public.ordrparticipant_allergyn_filters
 
 ALTER TABLE ONLY public.ocr_menu_sections
     ADD CONSTRAINT fk_rails_c5f9dbae67 FOREIGN KEY (menusection_id) REFERENCES public.menusections(id);
+
+
+--
+-- Name: dining_sessions fk_rails_c6bdf83dde; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dining_sessions
+    ADD CONSTRAINT fk_rails_c6bdf83dde FOREIGN KEY (tablesetting_id) REFERENCES public.tablesettings(id);
 
 
 --
@@ -10462,6 +10598,9 @@ ALTER TABLE ONLY public.voice_commands
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260324132133'),
+('20260324132112'),
+('20260324132048'),
 ('20260317090311'),
 ('20260317003953'),
 ('20260317003900'),

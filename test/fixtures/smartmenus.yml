@@ -2,24 +2,28 @@
 
 one:
   slug: test-menu-ordering
+  public_token: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
   restaurant: one
   menu: ordering_menu
   tablesetting: table_one
 
 two:
   slug: another-menu
+  public_token: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
   restaurant: one
   menu: two
   tablesetting: one
 
 three:
   slug: staff-test-menu
+  public_token: cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
   restaurant: two
   menu: three
   tablesetting: one
-  
+
 # Smartmenu for customer ordering tests (no table - general menu)
 customer_menu:
   slug: customer-test-menu
+  public_token: dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
   restaurant: one
   menu: ordering_menu

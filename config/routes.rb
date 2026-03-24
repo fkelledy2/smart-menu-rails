@@ -14,6 +14,10 @@ Rails.application.routes.draw do
   get '/privacy', to: 'home#privacy'
   get '/terms', to: 'home#terms'
   get '/offline', to: 'application#offline'
+  get '/session_expired', to: 'application#session_expired'
+
+  # QR token route — resolves smartmenu by rotating public_token
+  get '/t/:public_token', to: 'smartmenus#show_by_token', as: :table_link
 
   # Staff invitation accept (public — no auth required)
   get '/staff_invitations/:token/accept', to: 'staff_invitations#accept', as: :accept_staff_invitation
@@ -281,6 +285,9 @@ Rails.application.routes.draw do
         post :bulk_create
         patch :bulk_update
         patch :reorder
+      end
+      member do
+        post :regenerate_qr
       end
     end
     resources :restaurantavailabilities

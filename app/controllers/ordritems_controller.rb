@@ -51,6 +51,7 @@ class OrdritemsController < ApplicationController
   before_action :set_ordritem, only: %i[show edit update destroy]
   before_action :validate_guest_ordritem_ownership, only: %i[update destroy], unless: :user_signed_in?
   before_action :set_currency
+  before_action :require_valid_dining_session!, only: %i[create update destroy], unless: :user_signed_in?
 
   # Pundit authorization
   after_action :verify_authorized, except: [:index]
