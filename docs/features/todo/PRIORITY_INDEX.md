@@ -1,6 +1,6 @@
 # mellow.menu Feature Backlog — Priority Index
 
-**Last updated**: 2026-03-22 (revised: MenuVersion system confirmed as fully built; Menu Experiments elevated)
+**Last updated**: 2026-03-24 (revised: AI agent layer added — 8 new specs across agent framework and 7 individual agents; MCP wrapper renumbered)
 **Guiding principle**: Every decision is filtered through one question — does this get mellow.menu in front of paying customers faster?
 
 ---
@@ -18,16 +18,24 @@
 | #7 | Homepage Demo Booking & Video | Launch Enhancer | S | None | Minimum viable sales funnel; converts marketing traffic into bookable leads |
 | #8 | JWT Token Management (API) | Post-Launch | L | Existing admin auth | Enterprise and integration-partner access; revenue unlock for larger groups |
 | #9 | Partner Integrations (Event-Driven) | Post-Launch | M | #8, Stripe webhooks | Ecosystem play; required by workforce/CRM partners |
-| #10 | Menu Experiments (A/B Testing) | Post-Launch | M | #1 (DiningSession); MenuVersion BUILT | Elevated from #14: MenuVersion dependency resolved — only needs QR Security (#1) to ship first |
+| #10 | Menu Experiments (A/B Testing) | Post-Launch | M | #1 (DiningSession); MenuVersion BUILT | Elevated: MenuVersion dependency resolved — only needs QR Security (#1) to ship first |
 | #11 | Table Wait Time Estimation | Post-Launch | L | #5, Tablesetting | Operations win; differentiates for high-footfall walk-in restaurants |
 | #12 | Dynamic Pricing Plans (Cost-Indexed) | Post-Launch | L | #13, #14 | Sustainable margin management at scale |
 | #13 | Cost Insights + Pricing Model Publisher | Post-Launch | L | #14 | Admin system enabling #12; required before pricing models can be published |
 | #14 | Heroku Cost Inventory | Post-Launch | S | Admin auth, HEROKU_PLATFORM_API_TOKEN | Feeds #13 with accurate infra cost data |
-| #15 | MCP AI Agent Wrapper | Post-Launch | XL | #8, legal review | Future platform play; not revenue-critical at launch |
-| #16 | CDN Evaluation / Implementation | Post-Launch | S | Measured TTFB > 500ms | Deferred — revisit at traffic scale triggers |
-| #17+ | R&D Initiatives (Floor OS) | R&D | Various | Core product stable | Strategic vision; not sprint work until launch blockers ship |
+| #15 | Agent Framework — Shared Infrastructure | Post-Launch | L | OpenAI API, Sidekiq, PostgreSQL | Foundation for all AI agent work; must ship before any individual agent |
+| #16 | Menu Import Agent | Post-Launch | M | #15 Agent Framework | Highest-value onboarding accelerator; reduces time-to-first-menu from hours to minutes |
+| #17 | Restaurant Growth Agent | Post-Launch | M | #15 Agent Framework, analytics services | Weekly digest turns raw data into actionable owner insights; low risk, clear ROI |
+| #18 | Customer Concierge Agent | Post-Launch | M | #15 Agent Framework, SmartMenu view | Customer-facing differentiation; drives order value uplift via natural-language discovery |
+| #19 | Menu Optimization Agent | Post-Launch | M | #15, #17 patterns, 14+ days order data | Structured change-set proposals; builds on Growth Digest patterns; drives conversion |
+| #20 | Service Operations Agent | Post-Launch | M | #15, Kitchen/Station dashboards, ActionCable | Real-time ops intelligence; reduces kitchen congestion and service recovery lag |
+| #21 | Reputation & Feedback Agent | Post-Launch | M | #15, in-app rating system, email mailers | Protects revenue by surfacing and recovering negative signals before they compound |
+| #22 | Staff Copilot Agent | Post-Launch | L | #15, back-office service layer | NL interface to back office; biggest UX integration effort; ship after agent patterns proven |
+| #23 | MCP AI Agent Wrapper | Post-Launch | XL | #8 JWT, #15 Agent Framework, legal review | External AI agent ecosystem play; not revenue-critical until agent tier is proven internally |
+| #24 | CDN Evaluation / Implementation | Post-Launch | S | Measured TTFB > 500ms | Deferred — revisit at traffic scale triggers |
+| #25+ | R&D Initiatives (Floor OS) | R&D | Various | Core product stable | Strategic vision; not sprint work until launch blockers ship |
 
-> **Note on re-ranking**: Heroku Cost Inventory (#14), Cost Insights (#13), and Dynamic Pricing (#12) have been renumbered from their previous #13/#12/#11 positions following the Menu Experiments elevation to #10. The relative order within the group is unchanged.
+> **Note on March 2026 additions**: Ranks #15–#22 are new AI agent features added in the 2026-03-24 pass. The MCP AI Agent Wrapper, previously #15, is renumbered to #23 as it now correctly depends on both the JWT system (#8) and the Agent Framework (#15). CDN Evaluation moves from #16 to #24 accordingly.
 
 ---
 
@@ -107,6 +115,31 @@ Estimated: 1–2 developer weeks
 
 ---
 
+## AI Agent Tier — Build Sequence
+
+The AI agent features (#15–#22) form a coherent product tier that should be built as a sequential programme after the launch blockers and at least two launch enhancers (#4 and #5) have shipped. The internal build sequence is strict:
+
+### Phase 0: Agent Framework (#15) — prerequisite for all agents
+Build the shared infrastructure: workflow models, runner, toolbox, policy evaluator, artifact writer, approval router, Sidekiq queues, and the AI Workbench UI. Estimated: 4–6 developer weeks.
+
+### Phase 1: First Agents (can overlap; both build on the same toolbox)
+- **#16 Menu Import Agent** — highest onboarding value; extends existing OCR pipeline
+- **#17 Restaurant Growth Agent** — lowest risk first agent; read-only plus advisory
+- **#18 Customer Concierge Agent** — customer-facing differentiation; requires streaming LLM responses
+
+Ship Phase 1 agents once the framework is stable (at least one full run through the approval workflow in production). Estimated: 2–3 developer weeks per agent.
+
+### Phase 2: Operational Agents (ship in any order after Phase 1 is live)
+- **#19 Menu Optimization Agent** — extends Growth Digest with executable change sets
+- **#20 Service Operations Agent** — live order-flow intelligence; highest latency sensitivity
+- **#21 Reputation & Feedback Agent** — post-dining signals; requires review/rating system active
+- **#22 Staff Copilot Agent** — most complex UX integration; ship last in Phase 2
+
+### Phase 3: Ecosystem (ship after agent tier is proven)
+- **#23 MCP AI Agent Wrapper** — external API surface for third-party AI agents; requires #8 JWT and #15 Framework
+
+---
+
 ## Dependencies Graph
 
 ```
@@ -118,6 +151,8 @@ Estimated: 1–2 developer weeks
 #2 Branded Email Styling
   └─► #3 Branded Receipt Email (needs branded layout)
   └─► #7 Homepage Demo Booking (uses branded mailer)
+  └─► #17 Restaurant Growth Agent (digest email uses branded layout)
+  └─► #21 Reputation & Feedback Agent (recovery emails use branded layout)
 
 #3 Branded Receipt Email
   └─► #4 Auto Pay & Leave (sends receipt on successful capture)
@@ -127,7 +162,7 @@ Estimated: 1–2 developer weeks
 
 #8 JWT Token Management
   └─► #9 Partner Integrations (needs JWT auth for API endpoints)
-  └─► #15 MCP AI Agent Wrapper (needs JWT for agent API access)
+  └─► #23 MCP AI Agent Wrapper (needs JWT for agent API access)
 
 #13 Cost Insights + Pricing Publisher
   └─► #12 Dynamic Pricing Plans (needs cost data to compute prices)
@@ -137,6 +172,25 @@ Estimated: 1–2 developer weeks
 
 MenuVersion System (BUILT — no action required)
   └─► #10 Menu Experiments (dependency satisfied)
+
+#15 Agent Framework
+  └─► #16 Menu Import Agent
+  └─► #17 Restaurant Growth Agent
+  └─► #18 Customer Concierge Agent
+  └─► #19 Menu Optimization Agent
+  └─► #20 Service Operations Agent
+  └─► #21 Reputation & Feedback Agent
+  └─► #22 Staff Copilot Agent
+  └─► #23 MCP AI Agent Wrapper (also needs #8)
+
+#16 Menu Import Agent
+  └─► (extends existing OcrMenuImport pipeline — no new downstream deps)
+
+#17 Restaurant Growth Agent
+  └─► #19 Menu Optimization Agent (shares performance-read patterns and toolbox)
+
+#20 Service Operations Agent
+  └─► (requires Kitchen/Station dashboards and ActionCable channels — all exist)
 ```
 
 ---
@@ -161,6 +215,19 @@ MenuVersion System (BUILT — no action required)
 | M | 1–2 developer weeks |
 | L | 3–6 developer weeks |
 | XL | 7+ developer weeks |
+
+---
+
+## AI Agent Open Questions (require resolution before #15 enters development)
+
+The following questions must be resolved before the Agent Framework sprint begins. They affect DB schema, LLM provider selection, and GDPR posture:
+
+1. **LLM provider strategy**: OpenAI only in v1, or build a provider-agnostic adapter from the start? Recommendation: OpenAI-only with an abstraction layer. Decision needed.
+2. **AgentPolicy self-service**: Can restaurant owners modify their auto-approve/escalate policies from a self-service UI, or is this admin-managed in v1? Affects the back-office UI scope.
+3. **Audit log retention**: What is the retention period for `ToolInvocationLog` and `AgentWorkflowRun` records? Recommendation: 90 days. Legal/compliance input needed.
+4. **PgBouncer transaction pooling**: Is PgBouncer active in production? If yes, LISTEN/NOTIFY is unavailable for domain event dispatch. The polling approach (Sidekiq cron polls `agent_domain_events`) is the safe default.
+5. **GDPR / AI processing**: Passing restaurant order data and customer dietary preferences to OpenAI's API — is this covered by the current DPA with OpenAI, and does it require customer disclosure in the privacy policy? Requires legal review before any customer-facing agent (especially #18 Customer Concierge) goes live.
+6. **Review platform ingestion** (for #21 Reputation Agent): Does the platform currently receive Google/TripAdvisor reviews via API? If not, the Reputation Agent's `review.received` trigger is limited to in-app checkout ratings only in v1. Needs product confirmation.
 
 ---
 
@@ -204,7 +271,7 @@ The following R&D initiatives are documented in `r_and_d/` and are strategic bet
 
 ## Gap Analysis — Features Implied But Not Yet Specified
 
-The following requirements are implied by existing specs but do not yet have standalone feature files. They should be created before their dependent features enter development:
+The following requirements are implied by existing specs but do not yet have standalone feature files:
 
 | Implied Feature | Implied By | Urgency | Status |
 |----------------|-----------|---------| -------|
@@ -213,6 +280,11 @@ The following requirements are implied by existing specs but do not yet have sta
 | Twilio / SMS provider integration | Receipt Email (#3), Wait Time (#11) | Post-launch stretch | Open |
 | Ordr state machine documentation | Auto Pay (#4), Floorplan (#5) | Pre-development clarification | Open |
 | Restaurant onboarding checklist / progress tracking | Branded Email (#2) | Post-launch | Open |
+| In-app star rating at checkout | Reputation & Feedback Agent (#21) | Required before #21 enters development | Open — confirm whether this exists |
+| Review platform ingestion (Google/TripAdvisor API) | Reputation & Feedback Agent (#21) | Post-launch | Open |
+| Discount/promo code system | Reputation & Feedback Agent (#21) | Required for "offer discount" action | Open — confirm whether this exists |
+| `agent_domain_events` table | Agent Framework (#15) | Hard dependency for all agents | Specified in Agent Framework spec — new |
+| Domain event emitters on existing models | Agent Framework (#15) | Hard dependency | Specified per agent — extend existing callbacks |
 
 ---
 
@@ -222,7 +294,13 @@ The following requirements are implied by existing specs but do not yet have sta
 2. **Branded emails before receipts**: The receipt mailer inherits the branded layout. Building them in sequence avoids rework.
 3. **Admin JWT before Partner Integrations**: Partner API endpoints require the JWT authentication layer that #8 provides.
 4. **Heroku Inventory before Cost Publisher before Dynamic Pricing**: These three form a strict dependency chain. They cannot be built in parallel.
-5. **MenuVersion system is fully built**: Confirmed via codebase inspection — `app/models/menu_version.rb`, four services, controller, DB schema, and tests all exist. Menu Experiments (#10) only needs QR Security (#1) to ship first, not a new MenuVersion build.
+5. **MenuVersion system is fully built**: Confirmed via codebase inspection. Menu Experiments (#10) only needs QR Security (#1) to ship first.
 6. **R&D items explicitly excluded from sprint capacity** until launch blockers (#1, #2, #3) and at least two launch enhancers (#4, #5) are shipped.
-7. **Payments always via Orchestrator**: No direct Stripe/Square calls in any new feature. All payment flows route through `Payments::Orchestrator`.
+7. **Payments always via Orchestrator**: No direct Stripe/Square calls in any new feature.
 8. **Admin cost tooling in `Admin::` namespace, never Madmin**: Confirmed across #12 and #13 specs.
+9. **Agent Framework is a prerequisite for all agent work**: No individual agent ships before the framework's models, runner, toolbox, and approval UI are in place. Building agents on ad-hoc pipelines creates unmanageable technical debt.
+10. **Agent Framework placed at #15, not earlier**: The launch blockers (#1–#3) and high-value enhancers (#4–#7) must not be delayed to fund agent infrastructure. The agent tier is a post-launch competitive differentiator, not a launch requirement.
+11. **Service Operations Agent uses rule-based fast path for simple signals**: LLM calls for deterministic congestion thresholds (queue depth, stock levels) are wasteful. Reserve LLM calls for ambiguous multi-signal reasoning. This reduces cost and latency.
+12. **No agent ever writes to live data without either auto-approval (per policy) or an explicit human confirmation**: This is a non-negotiable architectural principle across all agents. Enforced at the `Agents::PolicyEvaluator` and `Agents::ArtifactWriter` level, not just the UI.
+13. **MCP Wrapper depends on both JWT (#8) and Agent Framework (#15)**: The external MCP surface exposes the same toolbox that internal agents use. Building it before the internal toolbox is proven would create a public API backed by unstable infrastructure. Renumbered from #15 to #23.
+14. **Customer-facing agents (Concierge #18) require GDPR review before launch**: Passing dietary preference data to OpenAI's API in a customer-facing context requires legal sign-off. This is a blocker for #18 specifically — log it as a pre-development gate.
