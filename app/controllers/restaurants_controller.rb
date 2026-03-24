@@ -436,11 +436,16 @@ class RestaurantsController < Restaurants::BaseController
         format.json do
           if request.xhr?
             onboarding_next = @restaurant.onboarding_next_section
+            checklist_html = render_to_string(
+              GoLiveChecklistComponent.new(restaurant: @restaurant, userplan: @userplan),
+              layout: false,
+            )
             render json: {
               success: true,
               message: 'Saved successfully',
               onboarding_next: onboarding_next,
               onboarding_required_text: onboarding_required_text_for(onboarding_next),
+              checklist_html: checklist_html,
             }, status: :ok
           else
             render :edit, status: :ok, location: @restaurant

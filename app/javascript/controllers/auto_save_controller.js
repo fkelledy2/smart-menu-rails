@@ -208,19 +208,11 @@ export default class extends Controller {
   updateOnboardingGuidance(data) {
     if (!data || typeof data !== 'object') return;
 
-    const banner = document.querySelector('[data-testid="onboarding-guidance"]');
-    if (!banner) return;
-
-    if (!data.onboarding_next) {
-      banner.remove();
-      return;
+    if (data.checklist_html !== undefined) {
+      const existing = document.querySelector('[data-testid="onboarding-guidance"]');
+      if (existing) {
+        existing.outerHTML = data.checklist_html;
+      }
     }
-
-    if (!data.onboarding_required_text) return;
-
-    const content = banner.querySelector('div');
-    if (!content) return;
-
-    content.innerHTML = `<strong>Required step</strong>: ${data.onboarding_required_text}`;
   }
 }
