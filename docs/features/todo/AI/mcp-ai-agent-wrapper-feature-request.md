@@ -1,10 +1,10 @@
 # MCP AI Agent Wrapper
 
 ## Status
-- Priority Rank: #15
-- Category: Post-Launch
+- Priority Rank: #23 (renumbered from #15 — Agent Framework (#15) and the full internal agent tier (#16–#22) must be built and proven before this external API surface is exposed)
+- Category: Post-Launch — ecosystem tier
 - Effort: XL
-- Dependencies: JWT Token Management (#8), Partner Integrations (#9), existing REST API surface, user consent infrastructure
+- Dependencies: JWT Token Management (#8), Agent Framework (#15) — the MCP server exposes the same Agents::Toolbox used internally; Partner Integrations (#9), existing REST API surface, user consent infrastructure, legal review (GDPR / AI agent DPA)
 
 ## Problem Statement
 As AI agents become mainstream tools for business automation, restaurant owners will expect mellow.menu to be accessible via AI assistants (Claude, ChatGPT, custom agents) for tasks like menu management, order monitoring, and analytics reporting. The Model Context Protocol (MCP) is an emerging standard for AI agent-to-service communication. Building an MCP server positions mellow.menu as AI-native and opens an ecosystem play where third-party agents can extend the platform's value.
