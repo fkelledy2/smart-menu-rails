@@ -1,423 +1,126 @@
-# Nearby Menus Map Feature
+# Nearby Menus Map
 
-## Overview
-Create an interactive marketing page showing restaurants and their menus on a map, allowing potential customers to discover nearby dining options and explore menus before visiting.
+## Status
+- Priority Rank: #30
+- Category: Post-Launch
+- Effort: L
+- Dependencies: Restaurant geocoding data (new), map provider API key (Google Maps or Mapbox), SmartMenu public menu URLs already exist
 
-## Business Value
-- **Customer Acquisition**: Helps potential customers discover restaurants in their area
-- **Marketing**: Showcases restaurant variety and availability to drive traffic
-- **Competitive Advantage**: Visual restaurant discovery differentiates from competitors
-- **Data Insights**: Collects location-based analytics for restaurant optimization
+## Problem Statement
+Potential customers who don't already know about mellow.menu-powered restaurants have no discovery surface. A map-based discovery page at `mellow.menu/discover` (or equivalent) lets diners find restaurants near them, preview their menus, and link directly into the SmartMenu experience. This creates an organic, consumer-facing acquisition channel and gives mellow.menu a public proof point of its restaurant network size.
+
+## Success Criteria
+- A visitor to the mellow.menu discovery page can see restaurants near their location plotted on a map
+- Clicking a restaurant marker shows a popup with basic restaurant details and a link to their SmartMenu
+- Restaurants can opt in or out of appearing on the map from their restaurant settings
+- The page loads in under 2 seconds on a 4G mobile connection
+- Restaurant owners can see how many users clicked through to their SmartMenu from the discovery map
 
 ## User Stories
+- As a potential diner, I want to see which nearby restaurants use mellow.menu so I can explore their menus before deciding where to eat.
+- As a restaurant owner, I want my restaurant to appear on the discovery map to attract new customers who aren't already aware of me.
+- As a restaurant owner, I want to opt out of appearing on the map if I prefer not to be publicly discoverable on the platform.
+- As a mellow.menu marketing manager, I want to feature selected restaurants on the map to support launch campaigns in new cities.
 
-### Potential Customer
-- As a potential customer, I want to see restaurants near me on a map so I can discover new dining options
-- As a potential customer, I want to filter restaurants by cuisine type, price range, and ratings
-- As a potential customer, I want to preview menus before deciding where to dine
-- As a potential customer, I want to see restaurant details like hours, photos, and contact information
+## Functional Requirements
+1. A publicly accessible discovery page at `/discover` renders an interactive map with markers for each opted-in restaurant.
+2. Restaurant data for the map is served from a JSON endpoint (`/api/v1/restaurants/nearby` or a dedicated map controller action) with results filtered by bounding box from the map viewport — not a full dataset dump.
+3. Each marker, when clicked, opens a popup showing: restaurant name, cuisine tags (if set), price range indicator, a thumbnail image (if available), and a "View Menu" link to their SmartMenu URL.
+4. A "Use my location" button requests browser geolocation and recentres the map.
+5. A text-based location search (geocoding) allows searching without geolocation.
+6. Restaurants opt in to map visibility via a toggle in their restaurant settings ("Appear on mellow.menu discover map"). Default: opt-in for new restaurants.
+7. A `map_featured` flag (admin-only) allows the mellow.menu team to highlight specific restaurants with a distinct marker style.
+8. Basic click-through analytics: when a visitor clicks "View Menu" from a map popup, an event is recorded. Restaurant owners can see a "Discover Map views" count in their analytics dashboard.
+9. The map respects the `robots.txt` and is indexable for SEO.
+10. Markers cluster automatically at low zoom levels to prevent overcrowding.
 
-### Restaurant Owner
-- As a restaurant owner, I want my restaurant to appear on the map to attract new customers
-- As a restaurant owner, I want to control what information is displayed (menu preview, photos, etc.)
-- As a restaurant owner, I want to see analytics about how many people view my restaurant on the map
-- As a restaurant owner, I want to highlight special offers or events on the map
+## Non-Functional Requirements
+- Frontend: the map component is rendered via a Stimulus controller wrapping the map provider's JS SDK — no React, no separate JS framework. The map JS is loaded lazily (dynamic import) to avoid blocking page load.
+- The `/discover` page must load its static shell in under 1 second; map tiles and restaurant data load asynchronously.
+- Database: use PostGIS `ST_DWithin` for bounding-box queries, OR use the existing pgvector extension with a precomputed `point` column — evaluate which is already available in the production schema before choosing. If PostGIS is not enabled, a bounding-box approximation using plain latitude/longitude comparisons is acceptable for v1 given the query volumes expected.
+- Analytics events are written to a lightweight `MapAnalytic` model asynchronously via a Sidekiq job — never blocking the API response.
+- Restaurant location data (lat/lng) is derived from their address via a geocoding job run once on opt-in, not on every page load.
+- Map API keys must be environment variables, never hardcoded. Restrict the browser key to the mellow.menu domain in the provider's dashboard.
 
-### Marketing Manager
-- As a marketing manager, I want to promote featured restaurants on the map
-- As a marketing manager, I want to track user engagement and conversion metrics
-- As a marketing manager, I want to A/B test different map features and layouts
+## Technical Notes
 
-## Technical Requirements
+### Stack alignment note — NO React
+The raw spec included React components (`RestaurantMap.jsx`, `RestaurantMarker.jsx`). The Smart Menu stack uses Hotwire (Turbo + Stimulus) with Bootstrap 5 and esbuild — no React. The map component must be a Stimulus controller.
 
-### Data Model Changes
+### Map provider recommendation
+Mapbox GL JS is preferable to Google Maps for v1:
+- Generous free tier (50,000 map loads/month)
+- Vector tiles load faster on mobile
+- No per-request billing on tile loads
+- Easily customisable without paying for premium Google styles
 
-#### RestaurantLocation Model (New)
+Load Mapbox GL JS via CDN in the Stimulus controller's `connect()` method (lazy load). If Google Maps is already contractually in use for another feature, reuse that key.
+
+### New migration: Restaurant location fields
+Rather than a separate `RestaurantLocation` model, add lat/lng directly to `Restaurant` for simplicity:
 ```ruby
-create_table :restaurant_locations do |t|
-  t.references :restaurant, null: false, foreign_key: true
-  t.decimal :latitude, precision: 10, scale: 6, null: false
-  t.decimal :longitude, precision: 10, scale: 6, null: false
-  t.string :address, null: false
-  t.string :city
-  t.string :state
-  t.string :postal_code
-  t.string :country
-  t.boolean :visible_on_map, default: true
-  t.datetime :verified_at
-  t.timestamps
-  
-  t.index :restaurant_id
-  t.index [:latitude, :longitude]
-  t.index :visible_on_map
-end
+add_column :restaurants, :latitude,       :decimal, precision: 10, scale: 6
+add_column :restaurants, :longitude,      :decimal, precision: 10, scale: 6
+add_column :restaurants, :map_visible,    :boolean, null: false, default: true
+add_column :restaurants, :map_featured,   :boolean, null: false, default: false
+add_column :restaurants, :cuisine_tags,   :string,  array: true, default: []
+add_column :restaurants, :price_range,    :integer  # 1–4 ($ to $$$$)
+add_index  :restaurants, [:latitude, :longitude]
+add_index  :restaurants, :map_visible
 ```
 
-#### MapAnalytics Model (New)
+If the data model grows (multi-location restaurant groups, each with their own address), extract to a `RestaurantLocation` model in v2.
+
+### Geocoding
+`app/jobs/geocode_restaurant_job.rb` — triggered when a restaurant opts in to map visibility or updates their address. Uses a geocoding service (Geocoder gem or direct Mapbox Geocoding API call) to set `latitude` and `longitude` on the `Restaurant`. Results are cached — do not re-geocode on every settings save.
+
+### Service: map data query
+`app/services/restaurants/map_discovery_service.rb`:
+- Accepts bounding box (sw_lat, sw_lng, ne_lat, ne_lng)
+- Returns opted-in restaurants within the bounding box
+- Applies a max of 100 results per request to prevent large data dumps
+- Uses read replica for this query (analytics/discovery pattern)
+
+### Analytics
+Lightweight `MapAnalytic` model (no index needed beyond `restaurant_id` and `created_at`):
 ```ruby
 create_table :map_analytics do |t|
-  t.references :restaurant, foreign_key: true
-  t.string :event_type  # 'view', 'click', 'menu_preview', 'directions'
-  t.string :session_id
-  t.string :ip_address
-  jsonb :metadata
-  t.datetime :created_at
-  
-  t.index :restaurant_id
-  t.index :event_type
-  t.index :created_at
+  t.references :restaurant, null: false, foreign_key: true
+  t.string     :event_type, null: false  # 'marker_click', 'menu_click'
+  t.string     :session_id
+  t.datetime   :created_at, null: false
+  t.index [:restaurant_id, :created_at]
 end
 ```
 
-#### Restaurant Model Enhancements
-```ruby
-# Add fields for map display
-add_column :restaurants, :map_featured, :boolean, default: false
-add_column :restaurants, :map_description, :text
-add_column :restaurants, :cuisine_tags, :string, array: true
-add_column :restaurants, :price_range, :integer  # 1: $, 2: $$, 3: $$$, 4: $$$$
-add_column :restaurants, :map_order_count, :integer, default: 0
-```
+Write via `RecordMapAnalyticJob` — fire and forget. No PII stored.
 
-### Map Integration
+### Pundit policy
+`MapAnalyticPolicy` — not needed (no user auth required for public discovery page). The restaurant settings toggle uses the existing `RestaurantPolicy`.
 
-#### Map Provider Options
-1. **Google Maps API** (Primary)
-   - Rich features and documentation
-   - Places API for restaurant search
-   - Street View integration
-   - Cost: $200/month free tier, then $7/1000 requests
+### Flipper flag
+- `nearby_menus_map` — gates the `/discover` page and the map visibility toggle in restaurant settings
 
-2. **Mapbox** (Alternative)
-   - Customizable styling
-   - Affordable pricing
-   - Good performance
-   - Cost: $200/month free tier, then $5/1000 requests
+## Acceptance Criteria
+1. The `/discover` page loads and renders the static shell (header, map container, search input) in under 1 second on a fast connection.
+2. Map markers appear for all `map_visible: true` restaurants with geocoded coordinates within the current viewport.
+3. Clicking a marker opens a popup with the restaurant name, a "View Menu" link, and at least one additional data point (cuisine tag or price range).
+4. The "View Menu" link navigates to the restaurant's SmartMenu URL.
+5. A restaurant that has set `map_visible: false` does not appear on the map even if the URL is queried directly.
+6. A restaurant admin toggling map visibility off in restaurant settings causes their marker to disappear on the next map data refresh (within 5 minutes, via cache expiry or immediate cache invalidation).
+7. A `MapAnalytic` record with `event_type: 'menu_click'` is created when a visitor clicks "View Menu" from a popup.
+8. The restaurant's analytics dashboard shows a non-zero "Discover Map views" count after a menu click event has been recorded.
+9. The `nearby_menus_map` Flipper flag, when disabled, returns a 404 for the `/discover` route.
+10. Map marker clustering is active at zoom levels below 12 — overlapping markers are grouped into a count badge.
 
-3. **OpenStreetMap** (Free)
-   - No cost
-   - Community-driven
-   - Limited features
-   - Self-hosting required
+## Out of Scope
+- User accounts on the discovery page (anonymous browsing only in v1)
+- Filtering by cuisine, price range, or dietary restrictions (v2)
+- Restaurant ratings or reviews on the map popup
+- Real-time table availability or current wait time on the map
 
-#### Initial Implementation: Google Maps
-```ruby
-# config/initializers/google_maps.rb
-Rails.application.config.google_maps_api_key = ENV['GOOGLE_MAPS_API_KEY']
-
-# app/services/geocoding_service.rb
-class GeocodingService
-  def self.geocode_address(address)
-    client = GoogleMaps::Client.new(key: Rails.application.config.google_maps_api_key)
-    result = client.geocode(address)
-    
-    {
-      latitude: result.first[:geometry][:location][:lat],
-      longitude: result.first[:geometry][:location][:lng],
-      formatted_address: result.first[:formatted_address]
-    }
-  rescue => e
-    Rails.logger.error "Geocoding failed: #{e.message}"
-    nil
-  end
-end
-```
-
-### API Changes
-
-#### Map Data Endpoints
-```ruby
-# GET /api/v1/restaurants/nearby
-# Query parameters: lat, lng, radius, cuisine, price_range, featured
-{
-  "restaurants": [
-    {
-      "id": 123,
-      "name": "The Steakhouse",
-      "latitude": 40.7128,
-      "longitude": -74.0060,
-      "address": "123 Main St, New York, NY",
-      "distance": 0.5,
-      "cuisine_tags": ["steakhouse", "american"],
-      "price_range": 3,
-      "rating": 4.5,
-      "review_count": 128,
-      "hours": {
-        "monday": "11:00-22:00",
-        "tuesday": "11:00-22:00",
-        # ...
-      },
-      "featured_menu_items": [
-        {
-          "name": "Ribeye Steak",
-          "price": 45.00,
-          "description": "12oz prime ribeye"
-        }
-      ],
-      "photos": [
-        "https://example.com/photo1.jpg"
-      ],
-      "map_featured": true,
-      "smartmenu_url": "https://mellow.menu/s/the-steakhouse"
-    }
-  ],
-  "total_count": 25,
-  "search_radius": 5.0
-}
-
-# GET /api/v1/restaurants/:id/map_preview
-# Response: Restaurant details for map popup
-
-# POST /api/v1/map_analytics
-# Track user interactions
-{
-  "restaurant_id": 123,
-  "event_type": "menu_preview",
-  "metadata": {
-    "source": "map_popup",
-    "user_location": "40.7128,-74.0060"
-  }
-}
-```
-
-### UI/UX Requirements
-
-#### Map Interface
-- Full-screen interactive map
-- Restaurant markers with custom icons
-- Cluster markers for dense areas
-- Search by location or address
-- Filter sidebar with options
-- Responsive design for mobile
-
-#### Restaurant Popup
-- Restaurant name and rating
-- Cuisine type and price range
-- Featured menu items (3-5 items)
-- Photo gallery
-- Hours of operation
-- Quick actions: View Menu, Get Directions, Call
-
-#### Filter Options
-- Cuisine type (multi-select)
-- Price range ($ to $$$$)
-- Distance radius
-- Rating threshold
-- Currently open
-- Featured restaurants
-- Dietary restrictions
-
-#### Search Functionality
-- Address search with autocomplete
-- "Near me" location detection
-- Search by restaurant name
-- Recent searches
-
-### Frontend Implementation
-
-#### React Component Structure
-```jsx
-// components/RestaurantMap.jsx
-const RestaurantMap = () => {
-  const [restaurants, setRestaurants] = useState([]);
-  const [filters, setFilters] = useState({});
-  const [userLocation, setUserLocation] = useState(null);
-  const [selectedRestaurant, setSelectedRestaurant] = useState(null);
-  
-  return (
-    <div className="restaurant-map">
-      <FilterPanel filters={filters} onChange={setFilters} />
-      <GoogleMap
-        restaurants={restaurants}
-        onRestaurantClick={setSelectedRestaurant}
-        userLocation={userLocation}
-      />
-      <RestaurantPopup restaurant={selectedRestaurant} />
-    </div>
-  );
-};
-
-// components/RestaurantMarker.jsx
-const RestaurantMarker = ({ restaurant, onClick }) => {
-  const iconUrl = getMarkerIcon(restaurant.cuisine_tags[0]);
-  
-  return (
-    <Marker
-      position={{ lat: restaurant.latitude, lng: restaurant.longitude }}
-      icon={{ url: iconUrl, scaledSize: { width: 32, height: 32 } }}
-      onClick={() => onClick(restaurant)}
-    />
-  );
-};
-```
-
-#### Map Styling
-```javascript
-// Custom map styles
-const mapStyles = [
-  {
-    featureType: "poi",
-    elementType: "labels",
-    stylers: [{ visibility: "off" }]
-  },
-  {
-    featureType: "transit",
-    elementType: "labels",
-    stylers: [{ visibility: "off" }]
-  }
-];
-```
-
-### Business Logic
-
-#### Location-Based Search
-```ruby
-class NearbyRestaurantsService
-  def self.find_nearby(lat, lng, radius = 5, filters = {})
-    restaurants = Restaurant.joins(:restaurant_location)
-      .where(restaurant_locations: { visible_on_map: true })
-      .where("ST_DWithin(restaurant_locations.coordinates, ST_MakePoint(?, ?), ?)", 
-             lng, lat, radius * 1609.34)  # Convert miles to meters
-    
-    # Apply filters
-    restaurants = filter_by_cuisine(restaurants, filters[:cuisine])
-    restaurants = filter_by_price_range(restaurants, filters[:price_range])
-    restaurants = filter_by_rating(restaurants, filters[:min_rating])
-    
-    # Calculate distances and sort
-    restaurants = restaurants.select(
-      "restaurants.*",
-      "ST_Distance(restaurant_locations.coordinates, ST_MakePoint(?, ?)) as distance",
-      "restaurant_locations.latitude",
-      "restaurant_locations.longitude"
-    ).order('distance ASC')
-    
-    # Format results
-    restaurants.map { |r| format_restaurant_for_map(r) }
-  end
-  
-  private
-  
-  def self.filter_by_cuisine(restaurants, cuisines)
-    return restaurants if cuisines.blank?
-    restaurants.where("cuisine_tags && ?", Array(cuisines))
-  end
-  
-  def self.filter_by_price_range(restaurants, price_ranges)
-    return restaurants if price_ranges.blank?
-    restaurants.where(price_range: price_ranges)
-  end
-  
-  def self.filter_by_rating(restaurants, min_rating)
-    return restaurants if min_rating.blank?
-    restaurants.where("average_rating >= ?", min_rating)
-  end
-  
-  def self.format_restaurant_for_map(restaurant)
-    {
-      id: restaurant.id,
-      name: restaurant.name,
-      latitude: restaurant.latitude,
-      longitude: restaurant.longitude,
-      distance: (restaurant.distance / 1609.34).round(2),  # Convert to miles
-      # ... other fields
-    }
-  end
-end
-```
-
-#### Analytics Tracking
-```ruby
-class MapAnalyticsService
-  def self.track_event(restaurant, event_type, metadata = {})
-    MapAnalytics.create!(
-      restaurant: restaurant,
-      event_type: event_type,
-      session_id: metadata[:session_id],
-      ip_address: metadata[:ip_address],
-      metadata: metadata.except(:session_id, :ip_address)
-    )
-    
-    # Update restaurant stats
-    restaurant.increment!(:map_order_count) if event_type == 'menu_preview'
-  end
-end
-```
-
-### Implementation Phases
-
-#### Phase 1: Basic Map
-1. Google Maps integration
-2. Restaurant location data
-3. Basic marker display
-4. Simple search functionality
-
-#### Phase 2: Enhanced Features
-1. Filter system
-2. Restaurant popups
-3. Menu previews
-4. Analytics tracking
-
-#### Phase 3: Advanced Features
-1. Clustering for dense areas
-2. Custom map styling
-3. Featured restaurants
-4. Mobile optimization
-
-#### Phase 4: Analytics & Marketing
-1. Detailed analytics dashboard
-2. A/B testing capabilities
-3. Promotional features
-4. Performance optimization
-
-### Testing Requirements
-
-#### Unit Tests
-- Geocoding service
-- Location-based queries
-- Analytics tracking
-- Filter logic
-
-#### Integration Tests
-- API endpoints
-- Database queries
-- External API integration
-- Data formatting
-
-#### System Tests
-- Complete map interactions
-- Search functionality
-- Filter combinations
-- Mobile responsiveness
-
-### Performance Considerations
-- Efficient spatial queries (PostGIS)
-- Restaurant data caching
-- Lazy loading for map data
-- Image optimization for photos
-- CDN for static assets
-
-### Security Considerations
-- API rate limiting
-- Location data privacy
-- Input validation for search
-- Secure API key management
-
-### Dependencies
-- Google Maps API key
-- PostGIS for spatial queries
-- Redis for caching
-- Image storage (AWS S3)
-
-### Cost Analysis
-- Google Maps API: ~$200/month for moderate traffic
-- Additional server resources for spatial queries
-- Image storage and CDN costs
-- Development and maintenance time
-
-### Rollout Strategy
-1. Internal testing with sample data
-2. Beta launch in limited geographic area
-3. Gradual rollout with performance monitoring
-4. Marketing campaign to drive traffic
-5. Continuous optimization based on analytics
+## Open Questions
+1. Is PostGIS already enabled in the production database? If not, a bounding-box approximation (WHERE latitude BETWEEN x AND y AND longitude BETWEEN a AND b) is the v1 fallback. Confirm with infra before writing the service.
+2. Which map provider is preferred — Mapbox or Google Maps? Does the team have an existing Google Maps API key for other features?
+3. Should the `/discover` page be crawled by search engines? If yes, server-side rendered restaurant cards (not just JS markers) are needed for SEO. Confirm with marketing.
+4. What is the expected number of mellow.menu restaurants at launch? This determines whether the 100-result-per-bounding-box limit is appropriate or too aggressive.

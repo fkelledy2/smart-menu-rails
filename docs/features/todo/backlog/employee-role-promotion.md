@@ -1,411 +1,127 @@
-# Employee Role Promotion System
+# Employee Role Promotion
 
-## Overview
-Implement a role promotion system allowing restaurant managers to promote staff members to higher roles (staff → manager → admin) with proper authorization, audit trails, and permissions management.
+## Status
+- Priority Rank: #27
+- Category: Post-Launch
+- Effort: S
+- Dependencies: Existing `Employee` model (role enum already present), `StaffInvitation` model (already exists), Pundit `EmployeePolicy`
 
-## Business Value
-- **Scalability**: Enables restaurants to grow their management team organically
-- **Empowerment**: Allows trusted staff to take on more responsibility
-- **Efficiency**: Reduces dependency on single administrators
-- **Accountability**: Clear audit trail for role changes and permissions
+## Problem Statement
+Restaurant managers currently cannot promote an existing staff member to a higher role without deleting and re-inviting them. The `Employee` model already holds a `role` enum (`staff: 0, manager: 1, admin: 2`), but there is no UI or audit trail for changing that role on an existing employee record. Restaurants with growing teams need a safe, audited mechanism to elevate trusted staff members without disrupting their account history or order records.
+
+## Success Criteria
+- A restaurant admin or manager can change the role of any employee in their restaurant from the staff management UI
+- Every role change is recorded in an immutable audit log
+- The employee being promoted receives an email notification of their new role
+- A restaurant admin cannot promote beyond `admin` (their own level)
+- A manager can promote `staff` to `manager` only; only an `admin` can promote to `admin`
+- Role changes are reflected immediately — the employee's Pundit permissions update on their next request
 
 ## User Stories
+- As a restaurant admin, I want to promote a trusted manager to admin so they can manage billing and restaurant settings while I'm away.
+- As a restaurant manager, I want to promote a capable staff member to manager so they can handle order edits and menu updates during busy periods.
+- As a restaurant admin, I want to see the full role history for any employee so I have an accountability trail.
+- As a promoted employee, I want to receive an email confirming my new role and what additional access it grants.
 
-### Restaurant Owner/Admin
-- As a restaurant owner, I want to promote a trusted staff member to manager so they can help manage daily operations
-- As a restaurant owner, I want to promote a manager to admin so they can handle sensitive business functions
-- As a restaurant owner, I want to see the history of role changes for accountability
-- As a restaurant owner, I want to set up approval workflows for role promotions
+## Functional Requirements
+1. The staff list UI (existing `/restaurants/:id/employees` or equivalent) gains a "Change Role" action for each employee visible to users with sufficient permission.
+2. Clicking "Change Role" opens a Turbo Modal (no new JS framework) with the current role displayed and a select input for the target role.
+3. A mandatory reason field (min 10 characters) must be completed before the change can be submitted.
+4. The system validates that the acting user has permission to make the change (see Pundit policy below).
+5. On submission, the `Employee#role` is updated in a transaction that also creates an `EmployeeRoleAudit` record.
+6. An email notification is sent to the promoted/demoted employee via `EmployeeMailer#role_changed`.
+7. The employee's active sessions are not invalidated (role is checked per-request via Pundit, so access changes are immediate).
+8. The staff list shows each employee's current role and a "Role history" link that opens a Turbo Frame panel listing all `EmployeeRoleAudit` records for that employee.
+9. An employee cannot change their own role.
+10. Demotion follows the same flow as promotion — an admin can demote any role; a manager can demote `manager` to `staff`.
 
-### Manager
-- As a manager, I want to request promotion to admin so I can access additional business features
-- As a manager, I want to see what permissions I'll gain at each role level
-- As a manager, I want to promote capable staff to help with daily tasks
+## Non-Functional Requirements
+- The `EmployeeRoleAudit` table must be append-only: no update or delete actions are permitted via the application (enforce at the Pundit policy level).
+- All role change actions are logged in the existing audit infrastructure.
+- The UI must use Hotwire Turbo Frames/Streams — no React or other JS framework.
+- Performance: changing a role must not trigger a full page reload; use Turbo Streams to update the employee row in place.
 
-### Staff Member
-- As a staff member, I want to be considered for promotion to manager based on my performance
-- As a staff member, I want to understand the responsibilities of higher roles
-- As a staff member, I want to receive proper training when promoted
+## Technical Notes
 
-### System Administrator
-- As a system admin, I want to monitor role changes across all restaurants
-- As a system admin, I want to enforce minimum requirements for role promotions
-- As a system admin, I want to review and audit role change requests
+### Architecture note — roles live on Employee, NOT User
+The raw spec proposed adding `role_level` to the `User` model. This is incorrect for the Smart Menu architecture. Roles are scoped per restaurant via the `Employee` model (`employee.role`). A `User` can be a `staff` at restaurant A and an `admin` at restaurant B simultaneously. Do not add role columns to `User`.
 
-## Technical Requirements
-
-### Data Model Changes
-
-#### User Model Enhancements
+### New model: EmployeeRoleAudit
 ```ruby
-# Add role hierarchy
-add_column :users, :role_level, :integer, default: 0  # 0: staff, 1: manager, 2: admin
-add_column :users, :role_promoted_at, :datetime
-add_column :users, :role_promoted_by_id, :bigint
-add_column :users, :role_requested_at, :datetime
-add_column :users, :role_requested_to, :integer  # Target role level
-add_column :users, :role_request_reason, :text
-
-# Indexes
-add_index :users, :role_level
-add_index :users, :role_promoted_by_id
+create_table :employee_role_audits do |t|
+  t.references :employee,    null: false, foreign_key: true
+  t.references :restaurant,  null: false, foreign_key: true
+  t.references :changed_by,  null: false, foreign_key: { to_table: :employees }
+  t.integer    :from_role,   null: false  # uses Employee role enum values
+  t.integer    :to_role,     null: false
+  t.text       :reason,      null: false
+  t.datetime   :created_at,  null: false
+  # No updated_at — this record is immutable once created
+end
+add_index :employee_role_audits, :employee_id
+add_index :employee_role_audits, :restaurant_id
+add_index :employee_role_audits, :created_at
 ```
 
-#### RolePromotion Model (New)
+### Service to create
+`app/services/employees/role_change_service.rb`:
+- Accepts: acting_employee, target_employee, to_role, reason
+- Validates authority (raise `Pundit::NotAuthorizedError` if not permitted)
+- Wraps `Employee#update!(role:)` and `EmployeeRoleAudit#create!` in a transaction
+- Enqueues `EmployeeRoleChangedJob` for email delivery (do not call mailer inline)
+
+### Pundit policy
+Extend `app/policies/employee_policy.rb`:
 ```ruby
-create_table :role_promotions do |t|
-  t.references :user, null: false, foreign_key: true
-  t.references :promoted_by, foreign_key: { to_table: :users }
-  t.integer :from_role, null: false
-  t.integer :to_role, null: false
-  t.text :reason
-  t.text :notes
-  t.datetime :effective_at
-  t.datetime :approved_at
-  t.datetime :rejected_at
-  t.references :approved_by, foreign_key: { to_table: :users }
-  t.references :rejected_by, foreign_key: { to_table: :users }
-  t.text :rejection_reason
-  t.timestamps
-  
-  t.index :user_id
-  t.index :promoted_by_id
-  t.index :effective_at
+def change_role?
+  # Admins can change any role (up or down) for employees in their restaurant
+  # Managers can only promote staff → manager (not to admin, not demote)
+  acting_employee = current_employee_for_restaurant(record.restaurant_id)
+  return false unless acting_employee
+  return false if acting_employee.id == record.id  # cannot change own role
+
+  acting_employee.admin? || (acting_employee.manager? && record.staff?)
+end
+
+def view_role_history?
+  acting_employee = current_employee_for_restaurant(record.restaurant_id)
+  acting_employee&.manager? || acting_employee&.admin?
 end
 ```
 
-#### RolePermission Model (New)
-```ruby
-create_table :role_permissions do |t|
-  t.string :role, null: false  # 'staff', 'manager', 'admin'
-  t.string :permission, null: false
-  t.text :description
-  t.timestamps
-  
-  t.index [:role, :permission], unique: true
-end
-```
+### Mailer
+`app/mailers/employee_mailer.rb` — `role_changed(employee_role_audit)`:
+- Uses the existing branded email layout (#2 must be complete)
+- States: old role, new role, changed by (name), reason, effective date
 
-### Role Hierarchy Definition
+### Flipper flag
+- `employee_role_promotion` — gates the "Change Role" UI; safe to roll out to a subset of restaurants
 
-#### Staff (Level 0)
-- View assigned menus and take orders
-- Manage own profile
-- View order history
-- Basic operational functions
+### No RolePermission model needed
+Permissions are enforced by Pundit policies already. A separate `RolePermission` database table would duplicate what Pundit already manages declaratively.
 
-#### Manager (Level 1)
-- All staff permissions
-- Manage menu items and pricing
-- View and edit orders
-- Manage staff schedules
-- Access basic reports
-- Promote staff to manager role
+### No "approval workflow" in v1
+The raw spec proposed a request/approval workflow. This is out of scope for v1 — direct promotion (with the acting user having sufficient Pundit authority) is the correct first iteration. Approval workflows can be added in a later iteration if multi-location restaurant groups require it.
 
-#### Admin (Level 2)
-- All manager permissions
-- Manage restaurant settings
-- Access financial reports
-- Manage billing and subscriptions
-- Promote managers to admin role
-- Full restaurant control
+## Acceptance Criteria
+1. An admin employee can change a staff employee's role to `manager` or `admin`; the change appears immediately in the staff list.
+2. A manager employee can change a staff employee's role to `manager`; the manager cannot set a role of `admin`.
+3. A manager employee cannot change another manager's role.
+4. An employee cannot change their own role.
+5. Every role change creates exactly one `EmployeeRoleAudit` record with the correct `from_role`, `to_role`, `changed_by`, and `reason`.
+6. After a role promotion, the promoted employee's Pundit permissions reflect the new role on their next request (no session invalidation required).
+7. The promoted employee receives an email notification via the branded mailer layout.
+8. The role history panel for an employee lists all audit records in reverse chronological order.
+9. Attempting to delete or update an `EmployeeRoleAudit` record via the application raises `Pundit::NotAuthorizedError`.
+10. The `employee_role_promotion` Flipper flag, when disabled, hides the "Change Role" action entirely — existing roles are unaffected.
 
-### Authorization System
+## Out of Scope
+- Employee self-service role requests (employee asks for promotion; manager approves)
+- Bulk role changes across multiple employees in one operation
+- Role changes for employees who belong to a different restaurant than the acting user's current restaurant context
+- Minimum time-in-role requirements before promotion eligibility
 
-#### Pundit Policy Updates
-```ruby
-# app/policies/user_policy.rb
-class UserPolicy < ApplicationPolicy
-  def promote_to_manager?
-    user.admin? || user.manager?
-  end
-  
-  def promote_to_admin?
-    user.admin?
-  end
-  
-  def view_role_history?
-    user.admin? || user.manager?
-  end
-  
-  def request_promotion?
-    user.staff? || user.manager?
-  end
-end
-
-# app/policies/role_promotion_policy.rb
-class RolePromotionPolicy < ApplicationPolicy
-  def create?
-    can_promote?
-  end
-  
-  def approve?
-    user.admin? && record.to_role <= 2
-  end
-  
-  private
-  
-  def can_promote?
-    case record.to_role
-    when 1  # to manager
-      user.admin? || user.manager?
-    when 2  # to admin
-      user.admin?
-    else
-      false
-    end
-  end
-end
-```
-
-### API Changes
-
-#### Role Management Endpoints
-```ruby
-# GET /api/v1/users/:id/role_history
-# Response: List of role promotions
-
-# POST /api/v1/users/:id/promote
-{
-  "to_role": 1,  # 1: manager, 2: admin
-  "reason": "Excellent performance and leadership",
-  "effective_at": "2024-01-01T00:00:00Z"
-}
-
-# POST /api/v1/users/request_promotion
-{
-  "requested_role": 1,
-  "reason": "Ready for more responsibility"
-}
-
-# GET /api/v1/role_permissions
-# Response: Available permissions for each role
-
-# GET /api/v1/users/:id/promotion_eligibility
-# Response: Whether user can be promoted and requirements
-```
-
-#### User Profile Enhancements
-```json
-{
-  "id": 123,
-  "name": "John Doe",
-  "email": "john@example.com",
-  "role": "manager",
-  "role_level": 1,
-  "role_promoted_at": "2024-01-15T10:30:00Z",
-  "can_promote_to": ["staff"],
-  "can_be_promoted_to": ["admin"],
-  "pending_promotion_request": {
-    "requested_role": 2,
-    "requested_at": "2024-02-01T09:00:00Z",
-    "status": "pending"
-  }
-}
-```
-
-### UI/UX Requirements
-
-#### User Management Interface
-- Role promotion buttons with proper authorization
-- Role history timeline
-- Promotion request forms
-- Approval/rejection workflows
-- Bulk promotion capabilities
-
-#### Role Promotion Modal
-- Target role selection
-- Reason input (required)
-- Effective date picker
-- Preview of new permissions
-- Confirmation step
-
-#### Promotion Request Interface
-- Available roles display
-- Role requirements and responsibilities
-- Request reason textarea
-- Status tracking
-- Withdrawal option
-
-#### Admin Dashboard
-- Pending promotion requests
-- Role distribution analytics
-- Promotion history reports
-- Approval workflows
-
-### Business Logic
-
-#### Promotion Eligibility
-```ruby
-class RolePromotionService
-  def can_promote?(promoter, target_user, to_role)
-    return false unless promoter && target_user
-    
-    case to_role
-    when 1  # to manager
-      promoter.admin? || promoter.manager?
-    when 2  # to admin
-      promoter.admin?
-    else
-      false
-    end && target_user.role_level < to_role
-  end
-  
-  def promote_user(promoter, target_user, to_role, reason, effective_at = Time.current)
-    return false unless can_promote?(promoter, target_user, to_role)
-    
-    ActiveRecord::Base.transaction do
-      # Create promotion record
-      promotion = RolePromotion.create!(
-        user: target_user,
-        promoted_by: promoter,
-        from_role: target_user.role_level,
-        to_role: to_role,
-        reason: reason,
-        effective_at: effective_at,
-        approved_at: Time.current,
-        approved_by: promoter
-      )
-      
-      # Update user role
-      target_user.update!(
-        role_level: to_role,
-        role_promoted_at: effective_at,
-        role_promoted_by: promoter
-      )
-      
-      # Send notifications
-      send_promotion_notifications(target_user, promoter, to_role)
-      
-      promotion
-    end
-  end
-end
-```
-
-#### Permission System
-```ruby
-class RolePermissionService
-  PERMISSIONS = {
-    'staff' => [
-      'view_menus',
-      'take_orders',
-      'manage_profile'
-    ],
-    'manager' => [
-      'view_menus',
-      'take_orders',
-      'manage_profile',
-      'manage_menu_items',
-      'manage_orders',
-      'view_reports',
-      'promote_staff'
-    ],
-    'admin' => [
-      'view_menus',
-      'take_orders',
-      'manage_profile',
-      'manage_menu_items',
-      'manage_orders',
-      'view_reports',
-      'promote_staff',
-      'manage_restaurant',
-      'manage_billing',
-      'promote_managers'
-    ]
-  }.freeze
-  
-  def self.permissions_for_role(role)
-    PERMISSIONS[role] || []
-  end
-  
-  def self.has_permission?(user, permission)
-    role = user.role_level
-    permissions_for_role(role).include?(permission)
-  end
-end
-```
-
-### Implementation Phases
-
-#### Phase 1: Foundation
-1. Database migrations
-2. Role hierarchy implementation
-3. Basic promotion service
-4. Authorization policies
-
-#### Phase 2: User Interface
-1. User management enhancements
-2. Promotion modals and forms
-3. Role history display
-4. Request system
-
-#### Phase 3: Advanced Features
-1. Approval workflows
-2. Bulk promotions
-3. Analytics dashboard
-4. Notification system
-
-#### Phase 4: Security & Audit
-1. Comprehensive audit trails
-2. Security monitoring
-3. Compliance reporting
-4. Admin override tools
-
-### Testing Requirements
-
-#### Unit Tests
-- Promotion eligibility logic
-- Permission system
-- Role validation
-- Notification sending
-
-#### Integration Tests
-- API endpoint security
-- Database transactions
-- Permission checks
-- Email delivery
-
-#### System Tests
-- Complete promotion workflows
-- Authorization boundaries
-- UI interactions
-- Multi-user scenarios
-
-### Security Considerations
-
-#### Authorization Controls
-- Strict role-based access control
-- Promotion limits based on current role
-- Audit logging for all role changes
-- Session invalidation on role change
-
-#### Validation Rules
-- Cannot promote to equal or lower role
-- Cannot promote self
-- Minimum time in current role
-- Required reason for promotion
-
-#### Audit Trail
-- Complete history of all role changes
-- Who initiated the change
-- When and why it occurred
-- Approval/rejection tracking
-
-### Performance Considerations
-- Efficient permission checking (cached)
-- Minimal database queries for role validation
-- Optimized audit trail queries
-- Scalable notification system
-
-### Dependencies
-- No external dependencies required
-- Integrates with existing user system
-- Compatible with current authorization framework
-
-### Rollout Strategy
-1. Internal testing with admin users
-2. Beta with select restaurants
-3. Gradual rollout to all restaurants
-4. Training materials and documentation
-5. Support and monitoring
+## Open Questions
+1. Should demotion (e.g. admin → staff) require a two-step confirmation given the severity? Recommend yes — a confirmation modal for demotions.
+2. Does the existing `EmployeePolicy` already handle the `manager?` / `admin?` helper, or does it rely on a `current_employee` context passed from the controller? Confirm before writing service.
+3. Should the `changed_by` reference use the `Employee` record or the `User` record? Recommend `Employee` to keep everything restaurant-scoped.

@@ -1,6 +1,6 @@
 # mellow.menu Feature Backlog — Priority Index
 
-**Last updated**: 2026-03-24 (revised: AI agent layer added — 8 new specs across agent framework and 7 individual agents; MCP wrapper renumbered)
+**Last updated**: 2026-03-24 (revised: 6 new product specs added — 2FA, Employee Role Promotion, Bulk Employee Invite, Weight-Based Pricing, Nearby Menus Map, Strikepay Integration; 9 marketing/analysis documents classified and dispositioned)
 **Guiding principle**: Every decision is filtered through one question — does this get mellow.menu in front of paying customers faster?
 
 ---
@@ -34,8 +34,16 @@
 | #23 | MCP AI Agent Wrapper | Post-Launch | XL | #8 JWT, #15 Agent Framework, legal review | External AI agent ecosystem play; not revenue-critical until agent tier is proven internally |
 | #24 | CDN Evaluation / Implementation | Post-Launch | S | Measured TTFB > 500ms | Deferred — revisit at traffic scale triggers |
 | #25+ | R&D Initiatives (Floor OS) | R&D | Various | Core product stable | Strategic vision; not sprint work until launch blockers ship |
+| #26 | Two-Factor Authentication | Post-Launch | M | Devise (built), Redis (built) | Security hardening for accounts controlling payments; increasingly expected by enterprise customers |
+| #27 | Employee Role Promotion | Post-Launch | S | Employee model (built), StaffInvitation (built) | Enables restaurant teams to grow organically without manual admin intervention; audit trail included |
+| #28 | Bulk Employee Invitation | Post-Launch | M | StaffInvitation (built), Sidekiq (built) | Reduces onboarding friction for multi-staff restaurants; leverages existing invitation infrastructure |
+| #29 | Weight-Based Menu Item Pricing | Post-Launch | M | Menuitem model, Ordritem model, KDS | Unlocks premium dining and butcher/seafood segments that require per-weight pricing |
+| #30 | Nearby Menus Map | Post-Launch | L | Geocoding data, map provider API key | Consumer-facing discovery surface; organic acquisition channel for new restaurant sign-ups |
+| #31 | Strikepay Integration (Staff Tipping) | Post-Launch | L | Payments::Orchestrator, Strikepay API agreement | Staff satisfaction and retention differentiator; compliance-heavy — Strikepay platform API confirmation required before build |
 
-> **Note on March 2026 additions**: Ranks #15–#22 are new AI agent features added in the 2026-03-24 pass. The MCP AI Agent Wrapper, previously #15, is renumbered to #23 as it now correctly depends on both the JWT system (#8) and the Agent Framework (#15). CDN Evaluation moves from #16 to #24 accordingly.
+> **Note on March 2026 additions (first pass)**: Ranks #15–#22 are new AI agent features added in the 2026-03-24 pass. The MCP AI Agent Wrapper, previously #15, is renumbered to #23 as it now correctly depends on both the JWT system (#8) and the Agent Framework (#15). CDN Evaluation moves from #16 to #24 accordingly.
+
+> **Note on March 2026 additions (second pass)**: Ranks #26–#31 are six new product specs (2FA, Employee Role Promotion, Bulk Employee Invite, Weight-Based Pricing, Nearby Menus Map, Strikepay Integration) refined from raw requirements added to the backlog on 2026-03-23. All are classified Post-Launch. Key architectural corrections applied during refinement: (1) Employee Role Promotion was re-scoped to target the `Employee` model's existing role enum — not the `User` model as the raw spec proposed; (2) Bulk Employee Invite was designed to extend the existing `StaffInvitation` model rather than replace it; (3) Nearby Menus Map had React components replaced with Stimulus/Hotwire pattern; (4) Strikepay Integration had direct API calls replaced with `Payments::Orchestrator` / `Payments::StrikepayAdapter` pattern, and a hard pre-development gate added pending Strikepay platform API confirmation. Nine marketing/analysis documents were also classified and dispositioned (not dev specs; no new engineering tickets derived).
 
 ---
 
@@ -191,6 +199,27 @@ MenuVersion System (BUILT — no action required)
 
 #20 Service Operations Agent
   └─► (requires Kitchen/Station dashboards and ActionCable channels — all exist)
+
+#26 Two-Factor Authentication
+  └─► (no downstream dependents in v1; Devise + Redis already present)
+
+#27 Employee Role Promotion
+  └─► (depends on Employee model — already built; EmployeeRoleAudit is new)
+  └─► #2 Branded Email (uses branded mailer for role-change notification)
+
+#28 Bulk Employee Invitation
+  └─► (depends on StaffInvitation model — already built)
+  └─► #2 Branded Email (invitation emails use branded layout)
+
+#29 Weight-Based Pricing
+  └─► (no upstream blockers; Menuitem + Ordritem already exist)
+
+#30 Nearby Menus Map
+  └─► (no upstream blockers; PostGIS availability must be confirmed)
+
+#31 Strikepay Integration
+  └─► #3 Branded Receipt Email (post-payment tipping prompt appears on receipt/post-payment screen)
+  └─► (Strikepay platform API agreement is a hard pre-development gate)
 ```
 
 ---
@@ -285,6 +314,12 @@ The following requirements are implied by existing specs but do not yet have sta
 | Discount/promo code system | Reputation & Feedback Agent (#21) | Required for "offer discount" action | Open — confirm whether this exists |
 | `agent_domain_events` table | Agent Framework (#15) | Hard dependency for all agents | Specified in Agent Framework spec — new |
 | Domain event emitters on existing models | Agent Framework (#15) | Hard dependency | Specified per agent — extend existing callbacks |
+| `EmployeeRoleAudit` model | Employee Role Promotion (#27) | Hard dependency | New — specified in #27 spec |
+| PostGIS availability in production | Nearby Menus Map (#30) | Must confirm before building spatial query service | Open — confirm with infra |
+| Strikepay platform API model (marketplace vs standalone) | Strikepay Integration (#31) | Hard pre-development gate | Open — confirm with Strikepay BD before any dev |
+| `calculated_price` vs `unit_price` column on Ordritem | Weight-Based Pricing (#29) | Affects migration design | Open — confirm exact column name in schema |
+| Blog CMS implementation decision | mellow-menu-blog.md (marketing) | Engineering decision needed before build | Open — Rails ActionText vs headless CMS |
+| AI feature landing pages (Sommelier, Whiskey Ambassador) | Marketing briefs | S-effort Rails views when marketing is ready | Open — awaiting marketing sign-off |
 
 ---
 
@@ -304,3 +339,7 @@ The following requirements are implied by existing specs but do not yet have sta
 12. **No agent ever writes to live data without either auto-approval (per policy) or an explicit human confirmation**: This is a non-negotiable architectural principle across all agents. Enforced at the `Agents::PolicyEvaluator` and `Agents::ArtifactWriter` level, not just the UI.
 13. **MCP Wrapper depends on both JWT (#8) and Agent Framework (#15)**: The external MCP surface exposes the same toolbox that internal agents use. Building it before the internal toolbox is proven would create a public API backed by unstable infrastructure. Renumbered from #15 to #23.
 14. **Customer-facing agents (Concierge #18) require GDPR review before launch**: Passing dietary preference data to OpenAI's API in a customer-facing context requires legal sign-off. This is a blocker for #18 specifically — log it as a pre-development gate.
+15. **Employee roles live on `Employee`, not `User`**: The Employee Role Promotion spec (#27) was corrected during refinement — roles (`staff/manager/admin`) are scoped per restaurant on the `Employee` model. Adding role columns to `User` would break the multi-restaurant model where one user can be staff at restaurant A and admin at restaurant B.
+16. **Strikepay requires `Payments::Orchestrator` adapter, not direct API calls**: All third-party payment API calls go through the Orchestrator. A `Payments::StrikepayAdapter` must be created before any Strikepay API calls are made. The Strikepay platform API model (marketplace vs standalone accounts) must be confirmed before architecture is finalised.
+17. **Nearby Menus Map uses Stimulus, not React**: The raw spec proposed React components. All frontend work uses Hotwire (Turbo + Stimulus). The map provider JS SDK is wrapped in a Stimulus controller loaded lazily.
+18. **Marketing/analysis documents are not dev specs**: Nine documents in `backlog/marketing/`, `backlog/competitor-analysis/`, and `marketing/` are strategy briefs and vendor evaluations. They have been dispositioned with classification headers but do not generate engineering tickets directly. The blog CMS and AI feature landing pages (S effort each) will enter the backlog as small engineering tickets when marketing is ready to execute.
