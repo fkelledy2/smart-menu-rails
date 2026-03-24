@@ -46,6 +46,7 @@ import SubmitOnEnterController from './submit_on_enter_controller';
 import CharCounterController from './char_counter_controller';
 import WelcomeModalController from './welcome_modal_controller';
 import AllergenFilterController from './allergen_filter_controller';
+import AddressAutocompleteController from './address_autocomplete_controller';
 
 application.register('sortable', SortableController);
 application.register('auto-save', AutoSaveController);
@@ -91,6 +92,7 @@ application.register('submit-on-enter', SubmitOnEnterController);
 application.register('char-counter', CharCounterController);
 application.register('welcome-modal', WelcomeModalController);
 application.register('allergen-filter', AllergenFilterController);
+application.register('address-autocomplete', AddressAutocompleteController);
 
 console.log('[Stimulus] Controllers registered:', [
   'sortable',

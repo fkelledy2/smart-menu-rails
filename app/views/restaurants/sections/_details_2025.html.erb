@@ -237,7 +237,7 @@
 </div>
 
 <!-- Address & Location -->
-<div class="mb-3 p-3" data-testid="restaurant-address-card">
+<div class="mb-3 p-3" data-testid="restaurant-address-card" data-controller="address-autocomplete">
     <h2 class="h5 mb-3">
       <i class="bi bi-geo-alt"></i>
       <%= t('.location') %>
@@ -254,6 +254,7 @@
           class: 'form-control',
           placeholder: t('.address_placeholder'),
           required: true,
+          autocomplete: 'off',
           data: { testid: 'restaurant-address1-input' } %>
       <%= form.hidden_field :latitude %>
       <%= form.hidden_field :longitude %>
