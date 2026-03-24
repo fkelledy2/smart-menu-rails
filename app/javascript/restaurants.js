@@ -294,15 +294,21 @@ export function initRestaurants() {
       }
     };
 
-    if (!window.google.maps.places && typeof window.google.maps.importLibrary === 'function') {
+    // Resolve the Autocomplete constructor — prefer window.google.maps.places (legacy
+    // loading with libraries=places) but fall back to importLibrary return value which
+    // is required when loading=async doesn't eagerly populate google.maps.places.
+    let AutocompleteClass = window.google.maps.places?.Autocomplete;
+
+    if (!AutocompleteClass && typeof window.google.maps.importLibrary === 'function') {
       try {
-        await window.google.maps.importLibrary('places');
+        const placesLib = await window.google.maps.importLibrary('places');
+        AutocompleteClass = placesLib?.Autocomplete || window.google.maps.places?.Autocomplete;
       } catch (e) {
         console.warn('[Restaurants] google.maps.importLibrary("places") failed', e);
       }
     }
 
-    if (!window.google.maps.places) return false;
+    if (!AutocompleteClass) return false;
 
     const addressInput = document.getElementById('restaurant_address1');
     if (!addressInput) return true;
@@ -320,7 +326,7 @@ export function initRestaurants() {
     }
 
     // Create the Autocomplete (stable API)
-    const autocomplete = new google.maps.places.Autocomplete(addressInput, {
+    const autocomplete = new AutocompleteClass(addressInput, {
       fields: ['address_components', 'formatted_address', 'geometry'],
     });
 

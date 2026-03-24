@@ -31,7 +31,7 @@
         <span class="float-md-end"><%= form.label :currency, class: 'col-form-label' %></span>
     </div>
     <div class="col-9">
-      <%= currency_select(form, :currency) %>
+      <%= currency_select(form, :currency, %w[USD EUR GBP CAD AUD], { include_blank: '— Select currency —' }, { class: 'form-control' }) %>
     </div>
   </div>
   <div class="form-group row">

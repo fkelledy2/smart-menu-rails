@@ -350,7 +350,7 @@
         <%= t('activerecord.attributes.restaurant.currency') %>
         <span class="form-autosave-inline small text-muted"></span>
       <% end %>
-      <%= currency_select(form, :currency) %>
+      <%= currency_select(form, :currency, %w[USD EUR GBP CAD AUD], { include_blank: '— Select currency —' }, { class: 'form-select' }) %>
       <div class="form-text">
         <%= t('.currency_help') %>
       </div>
