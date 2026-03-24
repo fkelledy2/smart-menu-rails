@@ -1,5 +1,13 @@
 # AI Whiskey Ambassador Marketing Landing Page
 
+## Disposition
+- Type: Marketing Strategy Brief (not a dev spec)
+- Category: Post-Launch
+- Owner: Marketing
+- Engineering effort: S (same pattern as AI Sommelier landing page — static marketing view in the existing Rails app)
+- Status: Awaiting marketing copywriter, design, and proof-of-revenue from initial whiskey ambassador restaurant customers.
+- Note: Build this as a Rails view/partial alongside the AI Sommelier landing page, not a separate premium Next.js site. The "premium/luxury" aesthetic is achievable with Bootstrap 5 custom theming and does not require a new frontend framework.
+
 ## Overview
 Create a sophisticated marketing landing page showcasing mellow.menu's AI Whiskey Ambassador functionality to attract premium bars, whiskey lounges, and high-end restaurants.
 

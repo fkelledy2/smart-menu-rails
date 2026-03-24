@@ -4,7 +4,7 @@ description: Architectural decisions and patterns that recur across multiple fea
 type: project
 ---
 
-Patterns observed across the full feature backlog (25 ranked features, 41+ files, March 2026 analysis).
+Patterns observed across the full feature backlog (31 ranked features, 50+ files, March 2026 analysis — updated 2026-03-24 second pass).
 
 **Why:** These patterns must be respected when writing or reviewing any future spec for mellow.menu. Violations create technical debt and inconsistency.
 
@@ -57,3 +57,12 @@ Patterns observed across the full feature backlog (25 ranked features, 41+ files
 - **Domain events via AgentDomainEvent table**: Events are written to the agent_domain_events table (with idempotency_key). Agents::Dispatcher polls this table — it does not use LISTEN/NOTIFY (incompatible with PgBouncer).
 - **Allergen enforcement at tool level, not LLM level**: In the Customer Concierge, allergen filters are applied by the search_menu_items tool in Ruby/SQL before the item list reaches the LLM. The LLM is never trusted for allergen safety.
 - **GDPR pre-development gate for #18**: Customer dietary preference data passing to OpenAI requires legal sign-off before the Customer Concierge goes live. This is a hard pre-development gate.
+
+## New Patterns From March 2026 Second-Pass Specs
+
+- **Roles on Employee, not User**: Role enums (`staff/manager/admin`) live on `Employee`, scoped per restaurant. `User` has no role column. One user can be admin at restaurant A and staff at restaurant B. Any spec proposing role columns on `User` must be corrected.
+- **Third-party payment adapters always via Orchestrator**: When adding new payment-adjacent providers (Strikepay, StrikePay, etc.), create a `Payments::XxxAdapter` and route through `Payments::Orchestrator`. Never call a payment API directly from a controller, model, or arbitrary service.
+- **Stimulus controller wraps external map/widget SDKs**: When integrating third-party JS SDKs (map providers, widget libraries), wrap them in a Stimulus controller loaded lazily in `connect()`. No React, no standalone JS components.
+- **Existing models as extension points, not replacements**: New features build on existing models where possible. `StaffInvitation` is extended for bulk invites (not replaced). `Employee` role enum is the source of truth for role promotion (not a new `RolePermission` table). Check for existing models before proposing new ones.
+- **Append-only audit tables**: Audit/history tables (`EmployeeRoleAudit`, `ImpersonationAudit`) are append-only. Pundit policies must block `update?` and `destroy?`. No `updated_at` column.
+- **Marketing documents are not dev specs**: Files describing landing page strategies, SEO agency analyses, competitor research, and content marketing are reference/strategy documents. They are classified with a Disposition header and do not generate engineering tickets directly. The engineering tickets they imply (if any) are captured as small feature specs or in the Gap Analysis section of PRIORITY_INDEX.

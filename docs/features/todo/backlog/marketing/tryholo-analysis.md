@@ -1,5 +1,12 @@
 # tryholo.ai Analysis for mellow.menu Integration
 
+## Disposition
+- Type: R&D Vendor Evaluation (not a dev spec — no near-term engineering work)
+- Category: R&D / Horizon 3
+- Owner: Product / Founder
+- Status: Speculative evaluation. Holographic display hardware is an emerging technology with high cost and limited restaurant adoption. No engineering integration work is warranted at this stage. Revisit when the technology has ≥3 established reference customers in the restaurant sector and hardware costs are under $5,000 per unit.
+- Note: This belongs closer to the `r_and_d/requires-external-advancement/` category than the product backlog. The primary integration risk is not technical but commercial — the hardware must be widely adopted before a software integration creates value.
+
 ## Overview
 Analysis of tryholo.ai's holographic display technology and its potential applications for mellow.menu's restaurant platform and marketing initiatives.
 

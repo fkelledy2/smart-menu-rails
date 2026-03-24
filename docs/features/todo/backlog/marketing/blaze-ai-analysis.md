@@ -1,5 +1,12 @@
 # Blaze.ai Analysis for mellow.menu
 
+## Disposition
+- Type: Vendor Evaluation (not a dev spec)
+- Category: Post-Launch / Marketing Decision
+- Owner: Marketing
+- Status: Tool evaluation only. No engineering work required. If Blaze.ai is adopted for content creation, the only engineering touch-point is ensuring the blog CMS integration (mellow-menu-blog.md) can accept content produced by AI tooling.
+- Note: AI content generation tools like Blaze.ai are marketing workflow tools, not platform integrations. No API integration is needed — content is produced externally and published through the CMS.
+
 ## Overview
 Analysis of Blaze.ai's AI-powered content creation and marketing automation platform and its potential applications for mellow.menu's marketing efforts and content strategy.
 

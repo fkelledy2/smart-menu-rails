@@ -1,5 +1,12 @@
 # Competitor Analysis: guest.opentable.com
 
+## Disposition
+- Type: Competitive Intelligence (not a dev spec)
+- Category: Reference / Strategy
+- Owner: Product / Founder
+- Engineering impact: Reservations/waitlist management (OpenTable's core) is not currently in the mellow.menu backlog. The competitive gap identified here (deeper menu engagement, AI recommendations vs OpenTable's basic menu display) is already addressed by the core product and AI agent tier. No new engineering work is derived directly from this analysis.
+- Status: Reference document. Review when scoping table/reservation management features — those are currently R&D horizon items.
+
 ## Overview
 Analysis of OpenTable's guest experience platform to identify strengths, weaknesses, and opportunities for mellow.menu differentiation.
 

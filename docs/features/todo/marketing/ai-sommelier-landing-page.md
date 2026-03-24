@@ -1,5 +1,13 @@
 # AI Sommelier Marketing Landing Page
 
+## Disposition
+- Type: Marketing Strategy Brief (not a dev spec)
+- Category: Post-Launch
+- Owner: Marketing
+- Engineering effort: S (the landing page itself — static or CMS-managed; the AI Sommelier feature it markets already exists in the product)
+- Status: Awaiting marketing copywriter and design sign-off. No sprint work until the AI Sommelier feature is publicly accessible and at least 2–3 reference restaurants are using it.
+- Note: This document describes the *marketing page* strategy, not the AI Sommelier product feature. The landing page should be built in the existing Rails app as a static marketing view, not a separate Next.js application. No new JS framework is warranted for a marketing page.
+
 ## Overview
 Create a compelling marketing landing page showcasing mellow.menu's AI Sommelier functionality to attract wine enthusiasts and premium restaurants.
 

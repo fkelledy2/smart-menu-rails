@@ -1,5 +1,12 @@
 # RankPill SEO Analysis for mellow.menu
 
+## Disposition
+- Type: Vendor Evaluation (not a dev spec)
+- Category: Post-Launch / Marketing Decision
+- Owner: Marketing / Founder
+- Status: Awaiting decision on SEO agency selection. Consider alongside Outrank (outrank-analysis.md) and in-house options. No engineering action required until vendor selected.
+- Note: Same recommendation as Outrank analysis — ensure content assets exist before committing to a link-building retainer.
+
 ## Overview
 Analysis of RankPill SEO services and their potential to improve mellow.menu's search engine rankings, organic traffic, and online visibility.
 

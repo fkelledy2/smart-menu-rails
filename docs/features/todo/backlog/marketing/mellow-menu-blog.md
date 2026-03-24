@@ -1,5 +1,13 @@
 # mellow.menu Blog Strategy & Implementation
 
+## Disposition
+- Type: Content Marketing Strategy (not a dev spec)
+- Category: Post-Launch
+- Owner: Marketing / Content
+- Engineering effort: S (integrate a blog into the existing Rails app — either a simple `Post` model with a CMS view, or configure a headless CMS. The technical decision should be made by engineering, not assumed as WordPress/Next.js as this doc implies.)
+- Status: Strategy document only. Engineering work should not begin until at least 3 launch-blocker and launch-enhancer features (#1–#5) have shipped and there is a content writer to maintain the cadence. A blog with no content is worse than no blog.
+- Note: This document uses WordPress as the CMS recommendation. The engineering decision is whether to build a lightweight blog directly in Rails (Posts controller + ActionText) or use a headless CMS (Contentful, Sanity) and render via Rails. Do NOT spin up a separate WordPress instance — it creates a security and infrastructure burden. Raise this as a product/engineering decision before any build work begins.
+
 ## Overview
 Develop a comprehensive blog strategy to establish mellow.menu as a thought leader in restaurant technology, drive organic traffic, generate qualified leads, and support overall marketing objectives.
 

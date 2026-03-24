@@ -84,6 +84,40 @@ Open questions identified during the March 2026 full backlog refinement pass (in
 ### Restaurant Growth Agent (#17) / Menu Optimization Agent (#19)
 - **Minimum data threshold**: 5 orders in 7 days — is this the right threshold for Growth Digest? 14 days for Menu Optimization? Product validation needed to avoid empty or low-quality digests for new restaurants.
 
+## New Post-Launch Product Features (added 2026-03-24 second pass)
+
+### Two-Factor Authentication (#26)
+- **Enforcement scope**: Should `two_factor_enforcement` Flipper flag require 2FA for `manager` role as well as `admin`, or admin-only? Spec assumes admin-only in v1 — confirm.
+- **OTP lockout duration**: Spec assumes 15 minutes after 5 failed attempts. Confirm acceptable lockout duration with product.
+- **Trusted device window**: 30-day trusted-device cookie — is this an acceptable security/convenience tradeoff? Some customers may prefer shorter (7 days).
+
+### Employee Role Promotion (#27)
+- **Demotion confirmation**: Should demotion (e.g. admin → staff) require a separate two-step confirmation modal given severity? Recommend yes — confirm with product.
+- **`changed_by` reference scope**: Should `EmployeeRoleAudit#changed_by` reference the `Employee` record or the `User` record? Spec recommends `Employee` (restaurant-scoped) — confirm.
+- **EmployeePolicy context**: Does the existing `EmployeePolicy` already have a `current_employee_for_restaurant` helper pattern, or does it rely on `current_user`? Confirm before writing the service.
+
+### Bulk Employee Invitation (#28)
+- **Plan tier gating**: Should bulk invite be restricted to Pro+ plan tier, or gated solely by Flipper in v1? Confirm.
+- **Maximum batch size**: Spec assumes 500 rows. Confirm with infra.
+- **Manager bulk invites**: Can managers bulk-invite other managers? Or should admin-only be required for manager-tier invites in bulk batches?
+
+### Weight-Based Pricing (#29)
+- **Plan tier gating**: Should weight-based pricing require a specific plan tier (e.g. Pro+)? Confirm.
+- **Weight units**: Grams-based only in v1 (`50g`, `100g`, `1kg`)? Or should ounces/pounds be supported for non-metric markets?
+- **`calculated_price` column on Ordritem**: Confirm exact column name in the DB schema before writing the migration. Check if it's `calculated_price`, `unit_price`, or computed differently.
+
+### Nearby Menus Map (#30)
+- **PostGIS availability**: Is PostGIS enabled in production? Determines whether spatial queries use `ST_DWithin` or a bounding-box approximation. MUST confirm with infra before writing the service.
+- **Map provider**: Mapbox or Google Maps? Does an existing Google Maps API key exist in the project?
+- **SSR for SEO**: Should the `/discover` page include server-side rendered restaurant cards for search engine indexing? Requires Hotwire initial-page render with restaurant data embedded, not purely JS-rendered markers.
+- **Network size at launch**: How many restaurants will be geocoded at launch? Affects caching strategy and whether the 100-result bounding-box cap is appropriate.
+
+### Strikepay Integration (#31)
+- **HARD GATE — Platform API model**: Does Strikepay offer a marketplace/platform mode where mellow.menu is the platform? Or does each staff member need a standalone Strikepay account? This determines the entire auth architecture. DO NOT begin development until confirmed with Strikepay BD.
+- **Supported markets**: Which countries is Strikepay operational in? Feature should only be offered to restaurants in those markets.
+- **Tip income reporting obligation**: Is mellow.menu responsible for any tax reporting on tips, or does Strikepay handle this entirely? Legal/compliance confirmation required.
+- **Webhook reliability**: Does Strikepay offer retry guarantees for webhook delivery?
+
 ## Resolved Questions
 
 ### MenuVersion System — RESOLVED 2026-03-22

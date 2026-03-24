@@ -1,5 +1,12 @@
 # Competitor Analysis: Quandoo
 
+## Disposition
+- Type: Competitive Intelligence (not a dev spec)
+- Category: Reference / Strategy
+- Owner: Product / Founder
+- Engineering impact: Quandoo competes primarily on restaurant discovery and reservations in European markets. mellow.menu's discovery angle is partially addressed by the Nearby Menus Map (#30). Reservation management is not currently in the sprint backlog. No engineering work derived directly from this analysis.
+- Status: Reference document. The European market focus is relevant — review when scoping geographic expansion and localisation priorities.
+
 ## Overview
 Analysis of Quandoo's restaurant discovery and booking platform to identify competitive advantages and opportunities for mellow.menu differentiation.
 

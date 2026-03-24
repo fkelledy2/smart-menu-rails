@@ -1,5 +1,13 @@
 # Outrank SEO Analysis for mellow.menu
 
+## Disposition
+- Type: Vendor Evaluation (not a dev spec — no engineering work derived directly from this document)
+- Category: Post-Launch / Marketing Decision
+- Owner: Marketing / Founder
+- Engineering dependency: Technical SEO fixes (Core Web Vitals, schema markup, site speed) are engineering work, but they arise from a site audit rather than from this vendor analysis. If Outrank or any SEO agency is engaged, the engineering tasks they identify should be added to the backlog as individual specs.
+- Status: Awaiting decision on SEO agency engagement. No engineering action required until a vendor is selected and a technical audit is completed.
+- Recommendation: Before committing to an SEO agency retainer at $4k–$10k/month, ensure the blog content engine (mellow-menu-blog.md) is operational and at least 10 pieces of SEO content exist. Paying for link-building before having linkable assets is premature.
+
 ## Overview
 Analysis of Outrank's SEO and digital marketing services and their potential to improve mellow.menu's search engine rankings, online visibility, and competitive positioning in the restaurant technology market.
 

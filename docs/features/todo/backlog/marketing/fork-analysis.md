@@ -1,5 +1,12 @@
 # Competitor Analysis: Fork
 
+## Disposition
+- Type: Competitive Intelligence (not a dev spec)
+- Category: Reference / Strategy
+- Owner: Product / Founder
+- Engineering impact: The "Short-term recommendations" section (0–6 months) overlap with features already in the mellow.menu backlog (AI recommendations, wine features). No new engineering tickets are needed from this document — the relevant work is already tracked in the main backlog.
+- Status: Reference document. Review alongside opentable-guest-analysis.md and quandoo-analysis.md when prioritising post-launch differentiation features.
+
 ## Overview
 Analysis of Fork's restaurant platform and ordering system to identify competitive advantages and opportunities for mellow.menu differentiation.
 
