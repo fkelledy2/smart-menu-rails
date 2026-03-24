@@ -1,10 +1,10 @@
 ---
 name: mellow.menu architectural patterns recurring across feature specs
-description: Architectural decisions and patterns that recur across multiple feature specs in the backlog
+description: Architectural decisions and patterns that recur across multiple feature specs in the backlog, updated to include AI agent tier patterns
 type: project
 ---
 
-Patterns observed across the full feature backlog (41 files, March 2026 analysis).
+Patterns observed across the full feature backlog (25 ranked features, 41+ files, March 2026 analysis).
 
 **Why:** These patterns must be respected when writing or reviewing any future spec for mellow.menu. Violations create technical debt and inconsistency.
 
@@ -29,6 +29,7 @@ Patterns observed across the full feature backlog (41 files, March 2026 analysis
 ## Realtime Patterns
 - **ActionCable for realtime updates**: Use existing channels or create new ones (e.g. FloorplanChannel). Stream names follow pattern: `"feature:resource:#{id}"`.
 - **Turbo Streams for partial updates**: Broadcast partial re-renders of tiles/components rather than full page reloads.
+- **Existing ActionCable channels**: kitchen_channel, menu_editing_channel, ordr_channel, presence_channel, station_channel, user_channel — check before creating new ones.
 
 ## API Patterns
 - **JWT for third-party API access**: All partner/third-party API access uses JWT tokens managed by the JWT Token Management system (#8).
@@ -36,5 +37,23 @@ Patterns observed across the full feature backlog (41 files, March 2026 analysis
 
 ## Database Patterns
 - **Statement timeouts**: 5s primary DB, 15s replica. Analytics/reporting queries must use the replica.
-- **jsonb for flexible data**: Cost inputs, addon metadata, agent capabilities — all use jsonb columns.
-- **Idempotency**: Jobs and webhooks must be idempotent. Duplicate executions must not cause double-charges or duplicate records.
+- **jsonb for flexible data**: Cost inputs, addon metadata, agent capabilities, workflow step state — all use jsonb columns.
+- **Idempotency**: Jobs and webhooks must be idempotent. Duplicate executions must not cause double-charges or duplicate records. Use idempotency_key columns where needed.
+
+## AI Agent Tier Patterns (added 2026-03-24)
+
+- **Agent Framework is a prerequisite**: No individual agent ships before `app/services/agents/` framework services (Dispatcher, Runner, Toolbox, PolicyEvaluator, ArtifactWriter, ApprovalRouter) are in place.
+- **agent_framework Flipper flag**: Master switch for all agent work. Must be enabled per restaurant before any workflow runs. Every individual agent also has its own flag (e.g. agent_menu_import, agent_growth_digest).
+- **Agents never write to live data directly**: All agent writes go through `Agents::ArtifactWriter` which writes to `AgentArtifact`. Promotion to live records only happens after policy approval and through existing service objects — never direct SQL or bypassing controllers.
+- **Policy gate is non-negotiable**: Every write action goes through `Agents::PolicyEvaluator`. The result is auto_approve, require_approval, or blocked. There is no path to bypass this gate.
+- **Agent Sidekiq queues**: Five queues with strict priority — agent_critical > agent_realtime > agent_high > agent_default > agent_low. Service Operations uses agent_realtime; Growth Digest uses agent_default; Reputation/Import use agent_high.
+- **No agent work in web requests**: Background agents run on worker dynos via Sidekiq. The only exceptions are the Customer Concierge (#18) and Staff Copilot (#22), which are synchronous request-response services (not background jobs) — but they must not hold Puma threads beyond 5 seconds.
+- **Streaming LLM responses for customer-facing agents**: The Customer Concierge (#18) and Staff Copilot (#22) must stream LLM output to the browser. Target: first visible token < 800ms.
+- **Rule-based fast paths before LLM**: For deterministic signals (queue depth thresholds, stock levels), use rule-based logic. Reserve LLM calls for ambiguous reasoning. This applies especially to Service Operations Agent (#20).
+- **Tool objects in app/services/agents/tools/**: Each tool wraps an existing service object. Tools are registered in Agents::Toolbox. Tools do not contain business logic — they delegate to existing services.
+- **ToolInvocationLog for every tool call**: Every call to a tool through the Toolbox creates a ToolInvocationLog record. No silent tool mutations.
+- **OpenAI via openai_client.rb extension**: The existing openai_client.rb is extended to support the Responses API / tool-use format. Do not create a parallel OpenAI client.
+- **No DB transactions spanning LLM calls**: Fetch step → LLM reason step → write step are separate AgentWorkflowStep records. Never open a transaction before an LLM call and commit it after.
+- **Domain events via AgentDomainEvent table**: Events are written to the agent_domain_events table (with idempotency_key). Agents::Dispatcher polls this table — it does not use LISTEN/NOTIFY (incompatible with PgBouncer).
+- **Allergen enforcement at tool level, not LLM level**: In the Customer Concierge, allergen filters are applied by the search_menu_items tool in Ruby/SQL before the item list reaches the LLM. The LLM is never trusted for allergen safety.
+- **GDPR pre-development gate for #18**: Customer dietary preference data passing to OpenAI requires legal sign-off before the Customer Concierge goes live. This is a hard pre-development gate.
