@@ -3548,6 +3548,47 @@ ALTER SEQUENCE public.push_subscriptions_id_seq OWNED BY public.push_subscriptio
 
 
 --
+-- Name: receipt_deliveries; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.receipt_deliveries (
+    id bigint NOT NULL,
+    ordr_id bigint NOT NULL,
+    restaurant_id bigint NOT NULL,
+    created_by_user_id bigint,
+    recipient_email character varying,
+    recipient_phone character varying,
+    delivery_method character varying DEFAULT 'email'::character varying NOT NULL,
+    status character varying DEFAULT 'pending'::character varying NOT NULL,
+    sent_at timestamp(6) without time zone,
+    error_message text,
+    retry_count integer DEFAULT 0 NOT NULL,
+    secure_token character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: receipt_deliveries_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.receipt_deliveries_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: receipt_deliveries_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.receipt_deliveries_id_seq OWNED BY public.receipt_deliveries.id;
+
+
+--
 -- Name: resource_locks; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -5251,6 +5292,13 @@ ALTER TABLE ONLY public.push_subscriptions ALTER COLUMN id SET DEFAULT nextval('
 
 
 --
+-- Name: receipt_deliveries id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.receipt_deliveries ALTER COLUMN id SET DEFAULT nextval('public.receipt_deliveries_id_seq'::regclass);
+
+
+--
 -- Name: resource_locks id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -6142,6 +6190,14 @@ ALTER TABLE ONLY public.provider_accounts
 
 ALTER TABLE ONLY public.push_subscriptions
     ADD CONSTRAINT push_subscriptions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: receipt_deliveries receipt_deliveries_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.receipt_deliveries
+    ADD CONSTRAINT receipt_deliveries_pkey PRIMARY KEY (id);
 
 
 --
@@ -8748,6 +8804,41 @@ CREATE INDEX index_push_subscriptions_on_user_id_and_active ON public.push_subsc
 
 
 --
+-- Name: index_receipt_deliveries_on_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_receipt_deliveries_on_created_at ON public.receipt_deliveries USING btree (created_at);
+
+
+--
+-- Name: index_receipt_deliveries_on_ordr_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_receipt_deliveries_on_ordr_id ON public.receipt_deliveries USING btree (ordr_id);
+
+
+--
+-- Name: index_receipt_deliveries_on_ordr_id_and_status; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_receipt_deliveries_on_ordr_id_and_status ON public.receipt_deliveries USING btree (ordr_id, status);
+
+
+--
+-- Name: index_receipt_deliveries_on_restaurant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_receipt_deliveries_on_restaurant_id ON public.receipt_deliveries USING btree (restaurant_id);
+
+
+--
+-- Name: index_receipt_deliveries_on_secure_token; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_receipt_deliveries_on_secure_token ON public.receipt_deliveries USING btree (secure_token);
+
+
+--
 -- Name: index_resource_locks_on_expires_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -9392,6 +9483,14 @@ ALTER TABLE ONLY public.features_plans
 
 
 --
+-- Name: receipt_deliveries fk_rails_1651c34dcb; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.receipt_deliveries
+    ADD CONSTRAINT fk_rails_1651c34dcb FOREIGN KEY (ordr_id) REFERENCES public.ordrs(id);
+
+
+--
 -- Name: onboarding_sessions fk_rails_16ce28a5c1; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -9501,6 +9600,14 @@ ALTER TABLE ONLY public.menuitem_size_mappings
 
 ALTER TABLE ONLY public.restaurant_removal_requests
     ADD CONSTRAINT fk_rails_2e8cf9d8ec FOREIGN KEY (restaurant_id) REFERENCES public.restaurants(id);
+
+
+--
+-- Name: receipt_deliveries fk_rails_3009604927; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.receipt_deliveries
+    ADD CONSTRAINT fk_rails_3009604927 FOREIGN KEY (restaurant_id) REFERENCES public.restaurants(id);
 
 
 --
@@ -10598,6 +10705,7 @@ ALTER TABLE ONLY public.voice_commands
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260325094758'),
 ('20260324132133'),
 ('20260324132112'),
 ('20260324132048'),

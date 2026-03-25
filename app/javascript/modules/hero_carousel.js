@@ -35,7 +35,6 @@ export class HeroCarousel {
       try {
         const backendImages = JSON.parse(heroImagesData);
         if (backendImages && backendImages.length > 0) {
-          console.log('[HeroCarousel] Using', backendImages.length, 'backend-approved images');
           // Extract URLs from backend data and randomize
           const imageUrls = backendImages.map((img) => img.url);
           return this.shuffleArray(imageUrls);
@@ -46,7 +45,6 @@ export class HeroCarousel {
     }
 
     // Fallback to hardcoded Pexels images if no backend images
-    console.log('[HeroCarousel] Using fallback Pexels images');
     const images = [
       'https://images.pexels.com/photos/1581384/pexels-photo-1581384.jpeg?auto=compress&cs=tinysrgb&w=1920',
       'https://images.pexels.com/photos/696218/pexels-photo-696218.jpeg?auto=compress&cs=tinysrgb&w=1920',
@@ -91,19 +89,12 @@ export class HeroCarousel {
   }
 
   init() {
-    console.log('[HeroCarousel] Creating background layers...');
     this.createBackgroundLayers();
-    console.log('[HeroCarousel] Starting carousel with', this.backgrounds.length, 'images');
     this.startCarousel();
 
     // Pause on hover (optional)
     this.container.addEventListener('mouseenter', () => this.pause());
     this.container.addEventListener('mouseleave', () => this.resume());
-
-    console.log('[HeroCarousel] Init complete. CTA elements:', {
-      title: this.ctaTitle,
-      body: this.ctaBody,
-    });
   }
 
   createBackgroundLayers() {
@@ -124,12 +115,6 @@ export class HeroCarousel {
   }
 
   startCarousel() {
-    console.log(
-      '[HeroCarousel] Starting timers - Images:',
-      this.options.imageInterval + 'ms, CTA:',
-      this.options.ctaInterval + 'ms'
-    );
-
     // Start image carousel
     this.imageIntervalId = setInterval(() => {
       this.nextImage();
@@ -142,8 +127,6 @@ export class HeroCarousel {
   }
 
   nextImage() {
-    console.log('[HeroCarousel] Transitioning from image', this.currentImageIndex, 'to next image');
-
     // Remove active class from current image
     this.backgrounds[this.currentImageIndex].classList.remove('active');
 
@@ -152,13 +135,9 @@ export class HeroCarousel {
 
     // Add active class to next image
     this.backgrounds[this.currentImageIndex].classList.add('active');
-
-    console.log('[HeroCarousel] Now showing image', this.currentImageIndex);
   }
 
   nextCTA() {
-    console.log('[HeroCarousel] Changing CTA from index', this.currentCtaIndex);
-
     // Move to next CTA
     this.currentCtaIndex = (this.currentCtaIndex + 1) % this.options.ctaContent.length;
 
@@ -171,13 +150,6 @@ export class HeroCarousel {
 
     // Get current CTA content
     const currentCTA = this.options.ctaContent[this.currentCtaIndex];
-
-    console.log(
-      '[HeroCarousel] Updating CTA to index',
-      this.currentCtaIndex,
-      ':',
-      currentCTA.title
-    );
 
     // Fade out
     this.ctaTitle.style.opacity = '0';
@@ -195,7 +167,6 @@ export class HeroCarousel {
   }
 
   pause() {
-    console.log('[HeroCarousel] Pausing carousel');
     if (this.imageIntervalId) {
       clearInterval(this.imageIntervalId);
       this.imageIntervalId = null;
@@ -207,7 +178,6 @@ export class HeroCarousel {
   }
 
   resume() {
-    console.log('[HeroCarousel] Resuming carousel');
     if (!this.imageIntervalId && !this.ctaIntervalId) {
       this.startCarousel();
     }
@@ -222,21 +192,14 @@ export class HeroCarousel {
 
 // Auto-initialize on DOM ready
 function initHeroCarousel() {
-  console.log('[HeroCarousel] Initializing...');
   const container = document.querySelector('.hero-carousel');
+  if (!container) return;
 
-  if (!container) {
-    console.log('[HeroCarousel] Container not found, skipping initialization');
-    return;
-  }
-
-  console.log('[HeroCarousel] Container found, creating carousel');
-  const heroCarousel = new HeroCarousel('.hero-carousel', {
+  new HeroCarousel('.hero-carousel', {
     imageInterval: 10000, // 10 seconds for background images
     ctaInterval: 5000, // 5 seconds for CTA text
     transitionDuration: 2000, // 2 second dissolve
   });
-  console.log('[HeroCarousel] Carousel initialized successfully');
 }
 
 // Try multiple initialization methods for compatibility

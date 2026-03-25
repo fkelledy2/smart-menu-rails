@@ -5,6 +5,8 @@ class Api::V1::MenuItemsController < Api::V1::BaseController
 
   # GET /api/v1/menus/:menu_id/items
   def index
+    authorize @menu, :show?
+
     @pagy, @menu_items = pagy(@menu.menuitems.includes(:menusection))
 
     render json: {
@@ -16,7 +18,10 @@ class Api::V1::MenuItemsController < Api::V1::BaseController
   private
 
   def set_menu
-    @menu = Menu.find(params[:menu_id])
+    # Scope the menu lookup to the current user's accessible restaurants so
+    # that a JWT token for restaurant A cannot enumerate items from restaurant B.
+    accessible_restaurant_ids = current_user.restaurants.select(:id)
+    @menu = Menu.where(restaurant_id: accessible_restaurant_ids).find(params[:menu_id])
   rescue ActiveRecord::RecordNotFound
     render json: { error: { code: 'NOT_FOUND', message: 'Menu not found' } }, status: :not_found
   end

@@ -26,7 +26,7 @@ class RestaurantsController < Restaurants::BaseController
         end
 
         q = params[:q].to_s.strip
-        scope = scope.where('restaurants.name ILIKE ?', "%#{q}%") if q.present?
+        scope = scope.where('restaurants.name ILIKE ?', "%#{Restaurant.sanitize_sql_like(q)}%") if q.present?
 
         @q = q
         @restaurants = scope.order(:sequence)

@@ -13,8 +13,6 @@ export class AnalyticsModule extends ComponentBase {
   }
 
   init() {
-    console.log('[AnalyticsModule] Initializing analytics functionality');
-
     // Initialize analytics components
     this.initializeCharts();
     this.setupEventListeners();
@@ -44,7 +42,6 @@ export class AnalyticsModule extends ComponentBase {
       });
 
       this.charts.set(element.id, chart);
-      console.log(`[AnalyticsModule] Created ${chartType} chart`);
     } catch (error) {
       console.error('[AnalyticsModule] Failed to create chart:', error);
     }
@@ -112,12 +109,10 @@ export class AnalyticsModule extends ComponentBase {
     if (chart) {
       // Refresh chart data
       chart.update();
-      console.log(`[AnalyticsModule] Refreshed chart: ${chartId}`);
     }
   }
 
   exportData(exportType) {
-    console.log(`[AnalyticsModule] Exporting data as: ${exportType}`);
     // Implement data export functionality
   }
 

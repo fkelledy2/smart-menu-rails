@@ -13,8 +13,6 @@ export class CustomerMenuModule extends ComponentBase {
   }
 
   init() {
-    console.log('[CustomerMenuModule] Initializing customer menu functionality');
-
     this.setupEventListeners();
     this.initializeMenuItems();
 
@@ -95,16 +93,12 @@ export class CustomerMenuModule extends ComponentBase {
 
     this.selectedItems.set(itemId, itemData);
     this.updateOrderSummary();
-
-    console.log(`[CustomerMenuModule] Selected item: ${itemData.name}`);
   }
 
   deselectMenuItem(itemId, itemElement) {
     itemElement.classList.remove('selected');
     this.selectedItems.delete(itemId);
     this.updateOrderSummary();
-
-    console.log(`[CustomerMenuModule] Deselected item: ${itemId}`);
   }
 
   handleAddToOrder(event) {

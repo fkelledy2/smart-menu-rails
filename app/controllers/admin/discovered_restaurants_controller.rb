@@ -20,7 +20,7 @@ module Admin
       end
 
       city = params[:city].to_s.strip
-      base_scope = base_scope.where('city_name ILIKE ?', "%#{city}%") if city.present?
+      base_scope = base_scope.where('city_name ILIKE ?', "%#{DiscoveredRestaurant.sanitize_sql_like(city)}%") if city.present?
 
       sort = params[:sort].to_s.presence || 'discovered_at'
       direction = params[:direction].to_s.downcase == 'asc' ? 'asc' : 'desc'
@@ -385,7 +385,7 @@ module Admin
         .order(updated_at: :desc)
 
       city = params[:city].to_s.strip
-      scope = scope.where('city_name ILIKE ?', "%#{city}%") if city.present?
+      scope = scope.where('city_name ILIKE ?', "%#{DiscoveredRestaurant.sanitize_sql_like(city)}%") if city.present?
 
       @city = city
       @approved = scope.limit(200)

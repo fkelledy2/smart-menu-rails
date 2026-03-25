@@ -33,6 +33,7 @@ class Restaurant < ApplicationRecord
   has_many :provider_accounts, dependent: :destroy
   has_many :payment_attempts, dependent: :destroy
   has_many :payment_refunds, dependent: :destroy
+  has_many :receipt_deliveries, dependent: :destroy
   has_one :restaurant_subscription, dependent: :destroy
   has_many :restaurantavailabilities, dependent: :delete_all
   has_many :menusections, through: :menus
