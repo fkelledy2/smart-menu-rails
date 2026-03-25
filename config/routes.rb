@@ -21,6 +21,9 @@ Rails.application.routes.draw do
 
   # Staff invitation accept (public — no auth required)
   get '/staff_invitations/:token/accept', to: 'staff_invitations#accept', as: :accept_staff_invitation
+
+  # Receipt self-service — customer-facing, rate-limited via RackAttack
+  post '/receipts/request', to: 'receipt_deliveries#self_service', as: :self_service_receipt
   
   # ============================================================================
   # HEALTH AND MONITORING
@@ -161,11 +164,8 @@ Rails.application.routes.draw do
   resources :announcements, only: [:index]
   
   # Push notification subscriptions
-  resources :push_subscriptions, only: [:create, :destroy] do
-    collection do
-      post :test
-    end
-  end
+  resources :push_subscriptions, only: [:create, :destroy]
+  post 'push_subscriptions/test', to: 'push_subscriptions#test', as: 'push_subscription_probe'
   
   # ============================================================================
   # SUBSCRIPTION AND BILLING
@@ -365,6 +365,9 @@ Rails.application.routes.draw do
         patch :split_plan, to: 'ordr_payments#split_plan'
         post 'payments/checkout_session', to: 'ordr_payments#checkout_session'
         post 'payments/inline', to: 'ordr_payments#create_inline_payment'
+        post 'payments/cash', to: 'ordr_payments#cash_payment'
+        post 'payments/checkout_qr', to: 'ordr_payments#checkout_qr'
+        post :send_receipt, to: 'receipt_deliveries#create'
       end
       
       resources :ordrnotes

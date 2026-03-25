@@ -414,6 +414,165 @@ class OrdrPaymentsControllerTest < ActionDispatch::IntegrationTest
     assert_not OrderEvent.exists?(ordr_id: @ordr.id, event_type: 'paid')
   end
 
+  # ─── cash_payment ──────────────────────────────────────────────────────
+
+  test 'cash_payment rejects unauthenticated request' do
+    sign_out @user
+
+    post payments_cash_restaurant_ordr_url(@restaurant, @ordr)
+    assert_response :forbidden
+
+    body = response.parsed_body
+    assert_not body['ok']
+    assert_match(/Staff authentication required/, body['error'])
+  end
+
+  test 'cash_payment rejects order not in billrequested status' do
+    @ordr.update!(status: 'opened')
+
+    post payments_cash_restaurant_ordr_url(@restaurant, @ordr)
+    assert_response :unprocessable_content
+
+    body = response.parsed_body
+    assert_not body['ok']
+    assert_match(/billrequested/, body['error'])
+  end
+
+  test 'cash_payment records paid and closed events and transitions order' do
+    assert_difference -> { OrderEvent.where(ordr: @ordr).count }, 2 do
+      post payments_cash_restaurant_ordr_url(@restaurant, @ordr)
+    end
+
+    assert_response :ok
+
+    body = response.parsed_body
+    assert body['ok']
+    assert_equal 'closed', body['status']
+
+    @ordr.reload
+    assert_equal 'closed', @ordr.status
+
+    assert OrderEvent.exists?(ordr: @ordr, event_type: 'paid')
+    assert OrderEvent.exists?(ordr: @ordr, event_type: 'closed')
+  end
+
+  test 'cash_payment is idempotent — second call on closed order is rejected gracefully' do
+    post payments_cash_restaurant_ordr_url(@restaurant, @ordr)
+    assert_response :ok
+
+    @ordr.reload
+    assert_equal 'closed', @ordr.status
+
+    post payments_cash_restaurant_ordr_url(@restaurant, @ordr)
+    assert_response :unprocessable_content
+  end
+
+  # ─── checkout_qr ───────────────────────────────────────────────────────
+
+  test 'checkout_qr rejects unauthenticated request' do
+    sign_out @user
+
+    post payments_checkout_qr_restaurant_ordr_url(@restaurant, @ordr)
+    assert_response :forbidden
+
+    body = response.parsed_body
+    assert_not body['ok']
+    assert_match(/Staff authentication required/, body['error'])
+  end
+
+  test 'checkout_qr rejects order not in billrequested status' do
+    @ordr.update!(status: 'opened')
+
+    post payments_checkout_qr_restaurant_ordr_url(@restaurant, @ordr)
+    assert_response :unprocessable_content
+
+    body = response.parsed_body
+    assert_not body['ok']
+    assert_match(/billrequested/, body['error'])
+  end
+
+  test 'checkout_qr rejects when order total is zero' do
+    @ordr.update!(gross: 0, tip: 0)
+    @ordr.ordritems.delete_all
+
+    post payments_checkout_qr_restaurant_ordr_url(@restaurant, @ordr)
+    assert_response :unprocessable_content
+
+    body = response.parsed_body
+    assert_not body['ok']
+    assert_match(/zero/, body['error'])
+  end
+
+  test 'checkout_qr returns checkout_url and SVG QR code for Stripe restaurant' do
+    fake_session = OpenStruct.new(
+      id: 'cs_test_qr_123',
+      url: 'https://checkout.stripe.com/pay/cs_test_qr_123',
+      payment_intent: 'pi_test_qr',
+    )
+
+    original_key = Stripe.api_key
+    Stripe.api_key = 'sk_test_fake_key'
+
+    Stripe::Checkout::Session.stub :create, fake_session do
+      post payments_checkout_qr_restaurant_ordr_url(@restaurant, @ordr),
+           params: { success_url: 'https://example.com/ok', cancel_url: 'https://example.com/cancel' }
+    end
+
+    assert_response :ok
+
+    body = response.parsed_body
+    assert body['ok']
+    assert_equal 'https://checkout.stripe.com/pay/cs_test_qr_123', body['checkout_url']
+    assert_includes body['qr_svg'], '<svg'
+    assert_includes body['qr_svg'], '</svg>'
+  ensure
+    Stripe.api_key = original_key
+  end
+
+  test 'checkout_qr returns checkout_url and SVG QR code for Square restaurant' do
+    @restaurant.update!(
+      payment_provider: 'square',
+      payment_provider_status: :connected,
+      square_location_id: 'LOC_QR',
+      square_merchant_id: 'MERCH_QR',
+      platform_fee_type: :none,
+    )
+
+    ProviderAccount.create!(
+      restaurant: @restaurant,
+      provider: :square,
+      access_token: 'test-token',
+      refresh_token: 'test-refresh',
+      token_expires_at: 30.days.from_now,
+      status: :enabled,
+      connected_at: 1.day.ago,
+      environment: 'sandbox',
+    )
+
+    fake_response = {
+      'payment_link' => {
+        'id' => 'sq_qr_link_1',
+        'url' => 'https://square.link/u/qr_test',
+      },
+      'related_resources' => { 'orders' => [] },
+    }
+
+    mock_client = Minitest::Mock.new
+    mock_client.expect :post, fake_response, ['/online-checkout/payment-links'], body: Hash
+
+    Payments::Providers::SquareHttpClient.stub :new, mock_client do
+      post payments_checkout_qr_restaurant_ordr_url(@restaurant, @ordr),
+           params: { success_url: 'https://example.com/ok', cancel_url: 'https://example.com/cancel' }
+    end
+
+    assert_response :ok
+
+    body = response.parsed_body
+    assert body['ok']
+    assert_equal 'https://square.link/u/qr_test', body['checkout_url']
+    assert_includes body['qr_svg'], '<svg'
+  end
+
   # ─── create_inline_payment (Square Web Payments SDK) ───────────────
 
   test 'create_inline_payment rejects when source_id is missing' do

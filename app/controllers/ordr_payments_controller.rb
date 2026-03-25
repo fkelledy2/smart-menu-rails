@@ -5,7 +5,8 @@ class OrdrPaymentsController < ApplicationController
   require 'digest'
 
   skip_before_action :verify_authenticity_token,
-                     only: %i[request_bill split_evenly split_plan checkout_session create_inline_payment]
+                     only: %i[request_bill split_evenly split_plan checkout_session create_inline_payment
+                              cash_payment checkout_qr]
 
   before_action :set_restaurant
   before_action :set_ordr
@@ -191,6 +192,134 @@ class OrdrPaymentsController < ApplicationController
     end
   end
 
+  def cash_payment
+    unless current_user || @current_employee
+      skip_authorization
+      render json: { ok: false, error: 'Staff authentication required' }, status: :forbidden
+      return
+    end
+
+    authorize @ordr, :update?
+
+    unless %w[billrequested].include?(@ordr.status.to_s)
+      render json: { ok: false, error: 'Order must be in billrequested status to mark as cash paid' },
+             status: :unprocessable_content
+      return
+    end
+
+    OrderEvent.emit!(
+      ordr: @ordr,
+      event_type: 'paid',
+      entity_type: 'order',
+      entity_id: @ordr.id,
+      source: 'staff',
+      idempotency_key: "cash_paid:#{@ordr.id}",
+      payload: { method: 'cash', recorded_by: current_user&.id || current_employee&.id },
+    )
+
+    OrderEvent.emit!(
+      ordr: @ordr,
+      event_type: 'closed',
+      entity_type: 'order',
+      entity_id: @ordr.id,
+      source: 'staff',
+      idempotency_key: "cash_closed:#{@ordr.id}",
+      payload: { method: 'cash' },
+    )
+
+    OrderEventProjector.project!(@ordr.id)
+    @ordr.reload
+    broadcast_state(@ordr)
+
+    render json: { ok: true, status: @ordr.status.to_s }, status: :ok
+  rescue StandardError => e
+    Rails.logger.error("[CashPayment] Failed for ordr=#{@ordr.id}: #{e.class}: #{e.message}")
+    render json: { ok: false, error: 'Failed to record cash payment' }, status: :service_unavailable
+  end
+
+  def checkout_qr
+    unless current_user || @current_employee
+      skip_authorization
+      render json: { ok: false, error: 'Staff authentication required' }, status: :forbidden
+      return
+    end
+
+    authorize @ordr, :update?
+
+    unless @ordr.status.to_s == 'billrequested'
+      render json: { ok: false, error: 'Order must be billrequested to generate payment QR' },
+             status: :unprocessable_content
+      return
+    end
+
+    currency = @ordr.restaurant.currency.presence || 'USD'
+    amount_cents = total_amount_cents(@ordr)
+
+    if amount_cents <= 0
+      render json: { ok: false, error: 'Order total is zero' }, status: :unprocessable_content
+      return
+    end
+
+    success_url = params[:success_url].presence || root_url
+    cancel_url  = params[:cancel_url].presence  || root_url
+
+    checkout_url = if @ordr.restaurant.square_provider?
+                     result = Payments::Providers::SquareAdapter.new(restaurant: @ordr.restaurant)
+                       .create_checkout_session!(
+                         payment_attempt: PaymentAttempt.create!(
+                           ordr: @ordr, restaurant: @ordr.restaurant,
+                           provider: :square, amount_cents: amount_cents,
+                           currency: currency, status: :requires_action,
+                           charge_pattern: :direct, merchant_model: :restaurant_mor,
+                           idempotency_key: SecureRandom.uuid,
+                         ),
+                         ordr: @ordr, amount_cents: amount_cents,
+                         currency: currency, success_url: success_url, cancel_url: cancel_url,
+                       )
+                     result[:checkout_url]
+                   else
+                     stripe_key = Stripe.api_key.presence ||
+                                  Rails.application.credentials.dig(:stripe, :secret_key) ||
+                                  ENV.fetch('STRIPE_SECRET_KEY', nil)
+                     if stripe_key.blank?
+                       render json: { ok: false, error: 'Payment provider not configured' }, status: :service_unavailable
+                       return
+                     end
+                     Stripe.api_key = stripe_key
+
+                     session = Stripe::Checkout::Session.create(
+                       mode: 'payment',
+                       success_url: success_url,
+                       cancel_url: cancel_url,
+                       client_reference_id: @ordr.id.to_s,
+                       line_items: [{
+                         quantity: 1,
+                         price_data: {
+                           currency: currency.to_s.downcase,
+                           unit_amount: amount_cents,
+                           product_data: { name: "#{@ordr.restaurant.name} Order #{@ordr.id}" },
+                         },
+                       }],
+                       metadata: { order_id: @ordr.id, restaurant_id: @ordr.restaurant_id },
+                     )
+                     session.url
+                   end
+
+    qr = RQRCode::QRCode.new(checkout_url)
+    svg = qr.as_svg(
+      color: '000',
+      shape_rendering: 'crispEdges',
+      module_size: 6,
+      standalone: true,
+      use_path: true,
+    )
+
+    render json: { ok: true, checkout_url: checkout_url, qr_svg: svg }, status: :ok
+  rescue StandardError => e
+    Rails.logger.error("[CheckoutQR] Failed for ordr=#{@ordr.id}: #{e.class}: #{e.message}")
+    render json: { ok: false, error: 'Failed to generate payment QR code' }, status: :service_unavailable
+  end
+
   def create_inline_payment
     authorize @ordr, :update?
 
@@ -268,7 +397,8 @@ class OrdrPaymentsController < ApplicationController
   private
 
   def csrf_skipped_action?
-    %w[request_bill split_evenly split_plan checkout_session create_inline_payment].include?(action_name)
+    %w[request_bill split_evenly split_plan checkout_session create_inline_payment
+       cash_payment checkout_qr].include?(action_name)
   end
 
   def safe_session_id

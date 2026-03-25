@@ -11,7 +11,7 @@ class PushSubscriptionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'POST test redirects unauthenticated' do
-    post test_push_subscriptions_path, as: :json
+    post push_subscription_probe_path, as: :json
     assert_response :unauthorized
   end
 

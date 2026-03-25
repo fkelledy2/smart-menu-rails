@@ -1,0 +1,30 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  ordr: one
+  restaurant: one
+  recipient_email: customer@example.com
+  delivery_method: email
+  status: pending
+  retry_count: 0
+  secure_token: secure_token_one_abcdefghij1234567890abcdefghij
+
+two:
+  ordr: one
+  restaurant: one
+  recipient_email: another@example.com
+  delivery_method: email
+  status: sent
+  sent_at: <%= 1.hour.ago %>
+  retry_count: 0
+  secure_token: secure_token_two_abcdefghij1234567890abcdefghij
+
+three:
+  ordr: one
+  restaurant: one
+  recipient_email: failed@example.com
+  delivery_method: email
+  status: failed
+  error_message: SMTP connection refused
+  retry_count: 1
+  secure_token: secure_token_three_bcdefghij1234567890abcdefghij
