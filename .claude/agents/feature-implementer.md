@@ -141,6 +141,7 @@ Do not proceed if Brakeman reports new high-severity findings — investigate an
 ## STEP 8 — Move to Completed
 
 Once all tests pass and linting is clean, move the requirements `.md` file(s) from `docs/features/in_progress/` to `docs/features/completed/`. Preserve the filename exactly.
+Also create a companiion feature-README.md in the same completed folder informing the user how to use this new feature. A user guide, if you will.
 
 ---
 
