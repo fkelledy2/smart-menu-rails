@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Print QR — <%= @qr_code.name.presence || @qr_code.token %></title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body {
+      margin: 0; padding: 0;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: #fff; color: #111;
+    }
+    body {
+      display: flex; align-items: center; justify-content: center;
+      min-height: 100vh; padding: 24px;
+    }
+    .qr-card {
+      border: 1px solid #e5e7eb; border-radius: 12px;
+      padding: 24px; text-align: center;
+      max-width: 320px; width: 100%;
+    }
+    .qr-brand { font-size: 0.75rem; color: #6b7280; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px; }
+    .qr-name  { font-size: 1.1rem; font-weight: 700; color: #111827; margin-bottom: 4px; }
+    .qr-sub   { font-size: 0.85rem; color: #6b7280; margin-bottom: 16px; }
+    #print-qr-container { display: flex; align-items: center; justify-content: center; min-height: 240px; }
+    .qr-footer { font-size: 0.7rem; color: #9ca3af; margin-top: 16px; }
+
+    @media print {
+      body   { min-height: auto; padding: 0; }
+      a[href]::after { content: none !important; }
+      @page  { margin: 12mm; }
+    }
+  </style>
+</head>
+<body>
+  <div class="qr-card">
+    <div class="qr-brand">mellow.menu</div>
+    <% if @qr_code.name.present? %>
+      <div class="qr-name"><%= @qr_code.name %></div>
+    <% end %>
+    <% if @qr_code.campaign.present? %>
+      <div class="qr-sub"><%= @qr_code.campaign %></div>
+    <% end %>
+
+    <div id="print-qr-container">
+      <p style="color:#9ca3af;font-size:0.8rem;">Loading QR&hellip;</p>
+    </div>
+
+    <div class="qr-footer">Scan to view menu &bull; mellow.menu</div>
+  </div>
+
+  <script>
+    (function() {
+      var token    = '<%= j @qr_code.token %>';
+      var host     = '<%= j request.host_with_port %>';
+      var protocol = '<%= j request.protocol.chomp("://") %>';
+      var url      = protocol + '://' + host + '/m/' + token;
+      var container = document.getElementById('print-qr-container');
+
+      function tryRender() {
+        if (typeof QRCodeStyling !== 'undefined') {
+          container.innerHTML = '';
+          var qr = new QRCodeStyling({
+            width: 240, height: 240,
+            data: url,
+            dotsOptions: { color: '#111827', type: 'rounded' },
+            backgroundOptions: { color: '#ffffff' },
+          });
+          qr.append(container);
+          return true;
+        }
+        return false;
+      }
+
+      if (!tryRender()) {
+        // Fallback: use rqrcode-based SVG if available
+        container.innerHTML = '<p style="color:#9ca3af;font-size:0.8rem;">QR rendering unavailable</p>';
+      }
+
+      // Auto-print when ready
+      window.addEventListener('load', function() { window.print(); });
+    })();
+  </script>
+</body>
+</html>

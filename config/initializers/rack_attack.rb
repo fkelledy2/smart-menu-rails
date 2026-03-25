@@ -126,6 +126,17 @@ Rack::Attack.throttle('auto_pay/capture/ip', limit: 20, period: 10.minutes) do |
 end
 
 # ----------------------------------------------------------------------------
+# Marketing QR code throttles
+# ----------------------------------------------------------------------------
+
+# Marketing QR resolve: 60 per IP per minute — prevents token scraping.
+# Token space is UUID (128-bit) so enumeration is computationally infeasible;
+# this throttle is defence-in-depth only.
+Rack::Attack.throttle('marketing_qr/ip', limit: 60, period: 60.seconds) do |req|
+  req.ip if req.path.start_with?('/m/') && req.get?
+end
+
+# ----------------------------------------------------------------------------
 # Blocklists
 # ----------------------------------------------------------------------------
 
