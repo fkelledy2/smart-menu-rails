@@ -25,11 +25,11 @@ RSpec.describe 'Smartmenus tasting bundle rendering' do
       Rails.cache.clear
 
       begin
-        get "/smartmenus/#{smartmenu.slug}", params: { view: 'customer', locale: 'it' }
+        get "/t/#{smartmenu.public_token}", params: { view: 'customer', locale: 'it' }
         expect(response).to have_http_status(:ok)
         expect(response.body).to include('Acqua')
 
-        get "/smartmenus/#{smartmenu.slug}", params: { view: 'customer', locale: 'en' }
+        get "/t/#{smartmenu.public_token}", params: { view: 'customer', locale: 'en' }
         expect(response).to have_http_status(:ok)
         expect(response.body).to include('Water')
       ensure
@@ -44,7 +44,7 @@ RSpec.describe 'Smartmenus tasting bundle rendering' do
       carrier = create(:menuitem, :carrier, menusection: section, name: 'Carrier Item')
       create(:menuitem, menusection: section, name: 'Included Course')
 
-      get "/smartmenus/#{smartmenu.slug}", params: { view: 'customer' }
+      get "/t/#{smartmenu.public_token}", params: { view: 'customer' }
       expect(response).to have_http_status(:ok)
 
       body = response.body
@@ -61,7 +61,7 @@ RSpec.describe 'Smartmenus tasting bundle rendering' do
       create(:menuitem, :carrier, menusection: section)
       create(:menuitem, menusection: section)
 
-      get "/smartmenus/#{smartmenu.slug}", params: { view: 'staff' }
+      get "/t/#{smartmenu.public_token}", params: { view: 'staff' }
       expect(response).to have_http_status(:ok)
 
       body = response.body

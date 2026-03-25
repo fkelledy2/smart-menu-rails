@@ -119,7 +119,7 @@ RSpec.describe 'Shared menus' do
     it 'renders smartmenu show for the attached restaurant context (no redirect to root)' do
       smartmenu = Smartmenu.find_by!(restaurant: restaurant_b, menu: menu, tablesetting_id: nil)
 
-      get "/smartmenus/#{smartmenu.slug}", params: { view: 'staff' }
+      get "/t/#{smartmenu.public_token}", params: { view: 'staff' }
       expect(response).to have_http_status(:ok)
     end
   end
