@@ -67,6 +67,22 @@ Rack::Attack.throttle('requests/ip', limit: 300, period: 60.seconds) do |req|
 end
 
 # ----------------------------------------------------------------------------
+# Receipt delivery throttles
+# ----------------------------------------------------------------------------
+
+# Self-service receipt request: 5 per email per 10 minutes — prevents receipt spamming
+Rack::Attack.throttle('receipts/email', limit: 5, period: 10.minutes) do |req|
+  if req.path == '/receipts/request' && req.post?
+    req.params['recipient_email']&.to_s&.downcase&.strip
+  end
+end
+
+# Self-service receipt request: 10 per IP per 10 minutes
+Rack::Attack.throttle('receipts/ip', limit: 10, period: 10.minutes) do |req|
+  req.ip if req.path == '/receipts/request' && req.post?
+end
+
+# ----------------------------------------------------------------------------
 # QR Security throttles
 # ----------------------------------------------------------------------------
 

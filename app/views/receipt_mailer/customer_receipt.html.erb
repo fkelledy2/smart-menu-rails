@@ -1,0 +1,104 @@
+<%# Receipt email — uses the shared branded mailer layout (layouts/mailer.html.erb) %>
+<%# All CSS is inline for email client compatibility. %>
+
+<!-- Restaurant header -->
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+  <tr>
+    <td align="center" style="padding-bottom: 24px;">
+      <% if @renderer.restaurant_image_url.present? %>
+        <img src="<%= @renderer.restaurant_image_url %>"
+             alt="<%= @restaurant.name %>"
+             width="80"
+             height="80"
+             style="display: block; border-radius: 8px; border: 0; object-fit: cover; margin: 0 auto 12px auto;">
+      <% end %>
+      <h2 style="margin: 0; font-size: 20px; font-weight: 700; color: #111827;">
+        <%= @restaurant.name %>
+      </h2>
+      <% if @renderer.restaurant_address.present? %>
+        <p style="margin: 4px 0 0 0; font-size: 14px; color: #6B7280;">
+          <%= @renderer.restaurant_address %>
+        </p>
+      <% end %>
+    </td>
+  </tr>
+</table>
+
+<!-- Divider -->
+<hr style="border: 0; border-top: 1px solid #E5E7EB; margin: 0 0 24px 0;">
+
+<!-- Receipt header -->
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+  <tr>
+    <td style="padding-bottom: 20px;">
+      <h1 style="margin: 0 0 4px 0; font-size: 22px; font-weight: 700; color: #111827;">
+        Your Receipt
+      </h1>
+      <p style="margin: 0; font-size: 14px; color: #6B7280;">
+        Order #<%= @renderer.order_number %> &middot; <%= @renderer.order_date %>
+      </p>
+    </td>
+  </tr>
+</table>
+
+<!-- Order items -->
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom: 24px;">
+  <thead>
+    <tr>
+      <th align="left" style="font-size: 12px; font-weight: 600; color: #6B7280; text-transform: uppercase; letter-spacing: 0.05em; padding: 0 0 8px 0; border-bottom: 1px solid #E5E7EB;">Item</th>
+      <th align="center" style="font-size: 12px; font-weight: 600; color: #6B7280; text-transform: uppercase; letter-spacing: 0.05em; padding: 0 0 8px 0; border-bottom: 1px solid #E5E7EB; width: 40px;">Qty</th>
+      <th align="right" style="font-size: 12px; font-weight: 600; color: #6B7280; text-transform: uppercase; letter-spacing: 0.05em; padding: 0 0 8px 0; border-bottom: 1px solid #E5E7EB;">Price</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @renderer.receipt_items.each do |item| %>
+      <tr>
+        <td style="font-size: 15px; color: #374151; padding: 10px 0; border-bottom: 1px solid #F3F4F6;">
+          <%= item[:name] %>
+        </td>
+        <td align="center" style="font-size: 15px; color: #374151; padding: 10px 0; border-bottom: 1px solid #F3F4F6;">
+          <%= item[:quantity] %>
+        </td>
+        <td align="right" style="font-size: 15px; color: #374151; padding: 10px 0; border-bottom: 1px solid #F3F4F6;">
+          <%= @renderer.format_currency(item[:line_total]) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<!-- Totals -->
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom: 24px;">
+  <tr>
+    <td style="font-size: 14px; color: #6B7280; padding: 4px 0;">Subtotal</td>
+    <td align="right" style="font-size: 14px; color: #374151; padding: 4px 0;"><%= @renderer.format_currency(@renderer.subtotal) %></td>
+  </tr>
+  <% if @renderer.tax_amount > 0 %>
+    <tr>
+      <td style="font-size: 14px; color: #6B7280; padding: 4px 0;">Tax</td>
+      <td align="right" style="font-size: 14px; color: #374151; padding: 4px 0;"><%= @renderer.format_currency(@renderer.tax_amount) %></td>
+    </tr>
+  <% end %>
+  <% if @renderer.tip_amount > 0 %>
+    <tr>
+      <td style="font-size: 14px; color: #6B7280; padding: 4px 0;">Tip</td>
+      <td align="right" style="font-size: 14px; color: #374151; padding: 4px 0;"><%= @renderer.format_currency(@renderer.tip_amount) %></td>
+    </tr>
+  <% end %>
+  <tr>
+    <td style="font-size: 17px; font-weight: 700; color: #111827; padding: 12px 0 0 0; border-top: 2px solid #E5E7EB;">Total</td>
+    <td align="right" style="font-size: 17px; font-weight: 700; color: #111827; padding: 12px 0 0 0; border-top: 2px solid #E5E7EB;"><%= @renderer.format_currency(@renderer.grand_total) %></td>
+  </tr>
+</table>
+
+<!-- Thank you message -->
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+  <tr>
+    <td align="center" style="padding: 8px 0 0 0;">
+      <p style="margin: 0; font-size: 16px; color: #374151; line-height: 1.6;">
+        Thank you for your visit!<br>
+        <span style="color: #6B7280; font-size: 14px;">We hope to see you again soon.</span>
+      </p>
+    </td>
+  </tr>
+</table>

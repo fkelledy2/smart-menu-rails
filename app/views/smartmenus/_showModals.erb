@@ -170,24 +170,152 @@
                     </div>
                     <hr>
                     <div class="bill-line bill-line-total"><span><b><%= t('.total') %></b> <i>(<%= t('.including_tip') %>)</i></span><span class="bill-amount"><b><span id="orderGrandTotal"><%= number_to_currency(order.gross, unit: cur) %></span></b></span></div>
-                    <div class="d-flex flex-column align-items-center gap-3 mt-4">
-                      <% if restaurant&.square_provider? && restaurant&.square_inline? %>
-                        <%= render partial: 'smartmenus/square_inline_payment',
-                                   locals: { order: order, restaurant: restaurant, restaurantCurrency: restaurantCurrency } %>
-                      <% else %>
-                        <% unless restaurant&.square_provider? %>
-                          <div id="wallet-button-container" data-controller="stripe-wallet" data-stripe-wallet-open-order-id-value="<%= order&.id %>" data-stripe-wallet-amount-cents-value="<%= order&.grossInCents %>" data-stripe-wallet-currency-value="<%= restaurantCurrency.code %>"></div>
+
+                    <%# Hidden inputs for existing payment JS %>
+                    <input type="hidden" id="openOrderId" value="<%= order.id %>">
+                    <input type="hidden" id="paymentAmount" value="<%= order.grossInCents %>">
+                    <input type="hidden" id="paymentCurrency" value="<%= restaurantCurrency.code %>">
+                    <input type="hidden" id="paymentRestaurantName" value="<%= t('.bill_prefix') %> <%= order.restaurant.name %>">
+                    <input type="hidden" id="paymentRestaurantId" value="<%= order.restaurant.id %>">
+
+                    <%# Payment method tabs %>
+                    <% sq_app_id = restaurant.try(:square_application_id).presence || (defined?(SquareConfig) ? SquareConfig.app_id : '') %>
+                    <div class="mt-4"
+                         data-controller="collect-payment"
+                         data-collect-payment-cash-url-value="<%= payments_cash_restaurant_ordr_path(restaurant, order) %>"
+                         data-collect-payment-qr-url-value="<%= payments_checkout_qr_restaurant_ordr_path(restaurant, order) %>"
+                         data-collect-payment-amount-cents-value="<%= order.grossInCents %>"
+                         data-collect-payment-currency-value="<%= restaurantCurrency.code %>"
+                         data-collect-payment-order-id-value="<%= order.id %>"
+                         data-collect-payment-square-app-id-value="<%= sq_app_id %>"
+                         data-collect-payment-square-pos-available-value="<%= restaurant&.square_provider? ? 'true' : 'false' %>">
+
+                      <ul class="nav nav-pills nav-fill mb-3" role="tablist" id="collectPaymentTabs">
+                        <% unless restaurant&.square_provider? && !restaurant&.square_inline? %>
+                          <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="collect-card-tab"
+                                    data-bs-toggle="tab" data-bs-target="#collect-card-pane"
+                                    type="button" role="tab"
+                                    aria-controls="collect-card-pane" aria-selected="true">
+                              <i class="bi bi-credit-card me-1"></i><%= t('smartmenus.showModals.payment_method_card', default: 'Card') %>
+                            </button>
+                          </li>
                         <% end %>
-                      <% end %>
-                      <input type="hidden" id="openOrderId" value="<%= order.id %>">
-                      <input type="hidden" id="paymentAmount" value="<%= order.grossInCents %>">
-                      <input type="hidden" id="paymentCurrency" value="<%= restaurantCurrency.code %>">
-                      <input type="hidden" id="paymentRestaurantName" value="<%= t('.bill_prefix') %> <%= order.restaurant.name %>">
-                      <input type="hidden" id="paymentRestaurantId" value="<%= order.restaurant.id %>">
+                        <li class="nav-item" role="presentation">
+                          <button class="nav-link <%= 'active' if restaurant&.square_provider? && !restaurant&.square_inline? %>"
+                                  id="collect-qr-tab"
+                                  data-bs-toggle="tab" data-bs-target="#collect-qr-pane"
+                                  type="button" role="tab"
+                                  aria-controls="collect-qr-pane" aria-selected="false"
+                                  data-action="click->collect-payment#loadQr">
+                            <i class="bi bi-qr-code me-1"></i><%= t('smartmenus.showModals.payment_method_qr', default: 'Customer QR') %>
+                          </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                          <button class="nav-link"
+                                  id="collect-cash-tab"
+                                  data-bs-toggle="tab" data-bs-target="#collect-cash-pane"
+                                  type="button" role="tab"
+                                  aria-controls="collect-cash-pane" aria-selected="false">
+                            <i class="bi bi-cash me-1"></i><%= t('smartmenus.showModals.payment_method_cash', default: 'Cash') %>
+                          </button>
+                        </li>
+                        <% if restaurant&.square_provider? %>
+                          <li class="nav-item" role="presentation">
+                            <button class="nav-link"
+                                    id="collect-square-pos-tab"
+                                    data-bs-toggle="tab" data-bs-target="#collect-square-pos-pane"
+                                    type="button" role="tab"
+                                    aria-controls="collect-square-pos-pane" aria-selected="false">
+                              <i class="bi bi-phone me-1"></i><%= t('smartmenus.showModals.payment_method_pos', default: 'Square POS') %>
+                            </button>
+                          </li>
+                        <% end %>
+                      </ul>
+
+                      <div class="tab-content">
+                        <%# Card tab: existing inline payment form (Stripe wallet or Square inline) %>
+                        <% unless restaurant&.square_provider? && !restaurant&.square_inline? %>
+                          <div class="tab-pane fade show active" id="collect-card-pane" role="tabpanel" aria-labelledby="collect-card-tab">
+                            <div class="d-flex flex-column align-items-center gap-3 pt-2">
+                              <% if restaurant&.square_provider? && restaurant&.square_inline? %>
+                                <%= render partial: 'smartmenus/square_inline_payment',
+                                           locals: { order: order, restaurant: restaurant, restaurantCurrency: restaurantCurrency } %>
+                              <% else %>
+                                <div id="wallet-button-container" data-controller="stripe-wallet" data-stripe-wallet-open-order-id-value="<%= order&.id %>" data-stripe-wallet-amount-cents-value="<%= order&.grossInCents %>" data-stripe-wallet-currency-value="<%= restaurantCurrency.code %>"></div>
+                              <% end %>
+                            </div>
+                          </div>
+                        <% end %>
+
+                        <%# QR Code tab: generate hosted checkout link, show as scannable QR %>
+                        <div class="tab-pane fade <%= 'show active' if restaurant&.square_provider? && !restaurant&.square_inline? %>"
+                             id="collect-qr-pane" role="tabpanel" aria-labelledby="collect-qr-tab">
+                          <div class="text-center py-3">
+                            <p class="text-muted small mb-3">
+                              <%= t('smartmenus.showModals.qr_instructions', default: 'Show this QR code to the customer. They can scan it and pay on their own device.') %>
+                            </p>
+                            <div data-collect-payment-target="qrSpinner" class="py-3">
+                              <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading…</span>
+                              </div>
+                              <p class="text-muted small mt-2"><%= t('smartmenus.showModals.qr_generating', default: 'Generating payment link…') %></p>
+                            </div>
+                            <div data-collect-payment-target="qrImage" class="d-none mx-auto" style="max-width: 260px;"></div>
+                            <div data-collect-payment-target="qrError" class="d-none alert alert-danger small mt-2"></div>
+                          </div>
+                        </div>
+
+                        <%# Cash tab: one-tap cash confirmation %>
+                        <div class="tab-pane fade" id="collect-cash-pane" role="tabpanel" aria-labelledby="collect-cash-tab">
+                          <div class="text-center py-4">
+                            <p class="text-muted mb-4">
+                              <%= t('smartmenus.showModals.cash_instructions', default: 'Confirm that the customer has paid in cash. This will close the order.') %>
+                            </p>
+                            <button type="button"
+                                    class="btn btn-success btn-lg"
+                                    data-collect-payment-target="cashButton"
+                                    data-action="click->collect-payment#cashPayment">
+                              <i class="bi bi-cash-coin me-1"></i><%= t('smartmenus.showModals.cash_confirm_btn', default: 'Mark as Cash Paid') %>
+                            </button>
+                            <div data-collect-payment-target="cashSpinner" class="d-none mt-3">
+                              <div class="spinner-border spinner-border-sm text-success" role="status"></div>
+                              <span class="text-muted small ms-2"><%= t('smartmenus.showModals.cash_recording', default: 'Recording…') %></span>
+                            </div>
+                            <div data-collect-payment-target="cashSuccess" class="d-none alert alert-success mt-3 small">
+                              <i class="bi bi-check-circle me-1"></i><%= t('smartmenus.showModals.cash_success', default: 'Cash payment recorded. Order closed.') %>
+                            </div>
+                          </div>
+                        </div>
+
+                        <%# Square POS tab: deep-link into Square POS app for Tap to Pay %>
+                        <% if restaurant&.square_provider? %>
+                          <div class="tab-pane fade" id="collect-square-pos-pane" role="tabpanel" aria-labelledby="collect-square-pos-tab">
+                            <div class="text-center py-4">
+                              <p class="text-muted mb-3">
+                                <%= t('smartmenus.showModals.square_pos_instructions', default: 'Opens the Square Point of Sale app on this device for Tap to Pay or card-present payment.') %>
+                              </p>
+                              <button type="button"
+                                      class="btn btn-warning btn-lg"
+                                      data-collect-payment-target="squarePosButton"
+                                      data-action="click->collect-payment#openSquarePos">
+                                <i class="bi bi-phone me-1"></i><%= t('smartmenus.showModals.square_pos_btn', default: 'Open Square POS') %>
+                              </button>
+                              <p class="text-muted small mt-3">
+                                <%= t('smartmenus.showModals.square_pos_note', default: 'Requires the Square Point of Sale app installed on this device.') %>
+                              </p>
+                            </div>
+                          </div>
+                        <% end %>
+                      </div>
                     </div>
                   <% end %>
                 </div>
-                <%= render partial: "smartmenus/modal_footer_primary", locals: { primary_id: 'pay-order-confirm', primary_text: t('.confirmPayment'), disabled: !(order && order.gross.to_f > 0) } %>
+                <%# Footer: only shown when card tab is active — hidden by collect-payment controller for other tabs %>
+                <div class="modal-footer gap-2" id="payOrderModalFooter">
+                  <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" aria-label="<%= t('common.close') %>"><%= t('smartmenus.showModals.cancel') %></button>
+                  <button id="pay-order-confirm" type="button" class="btn btn-primary" data-bs-dismiss="modal" <%= 'disabled' unless order && order.gross.to_f > 0 %>><%= t('.confirmPayment') %></button>
+                </div>
             </div>
         </div>
     </div>

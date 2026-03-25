@@ -47,6 +47,8 @@ import CharCounterController from './char_counter_controller';
 import WelcomeModalController from './welcome_modal_controller';
 import AllergenFilterController from './allergen_filter_controller';
 import AddressAutocompleteController from './address_autocomplete_controller';
+import ReceiptRequestController from './receipt_request_controller';
+import CollectPaymentController from './collect_payment_controller';
 
 application.register('sortable', SortableController);
 application.register('auto-save', AutoSaveController);
@@ -93,6 +95,8 @@ application.register('char-counter', CharCounterController);
 application.register('welcome-modal', WelcomeModalController);
 application.register('allergen-filter', AllergenFilterController);
 application.register('address-autocomplete', AddressAutocompleteController);
+application.register('receipt-request', ReceiptRequestController);
+application.register('collect-payment', CollectPaymentController);
 
 console.log('[Stimulus] Controllers registered:', [
   'sortable',
@@ -133,4 +137,5 @@ console.log('[Stimulus] Controllers registered:', [
   'quick-add',
   'split-bill',
   'order-notes',
+  'receipt-request',
 ]);

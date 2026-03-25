@@ -4,6 +4,7 @@
 //= link kitchen_dashboard_bootstrap.css
 //= link controllers/application.js
 //= link controllers/menu_import_controller.js
+//= link controllers/collect_payment_controller.js
 //= link allergyns.js
 //= link employees.js
 //= link metrics.js
@@ -80,6 +81,7 @@
 //= link controllers/allergen_filter_controller.js
 //= link controllers/char_counter_controller.js
 //= link controllers/welcome_modal_controller.js
+//= link controllers/receipt_request_controller.js
 
 // Application entry point
 //= link application.js

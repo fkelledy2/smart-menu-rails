@@ -1,0 +1,9 @@
+<%# Turbo Stream replacement shown when receipt delivery fails %>
+<div id="send_receipt_modal_<%= ordr.id %>">
+  <div class="alert alert-danger alert-dismissible fade show py-2 mb-0" role="alert">
+    <i class="bi bi-exclamation-triangle"></i>
+    <%= error %>
+    <button type="button" class="btn-close btn-sm" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  <%= render partial: 'ordrs/send_receipt_modal', locals: { ordr: ordr } %>
+</div>

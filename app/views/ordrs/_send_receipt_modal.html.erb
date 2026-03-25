@@ -1,0 +1,58 @@
+<%# Turbo-frame modal for staff to send a receipt from the order management view.
+    Usage: render partial: 'ordrs/send_receipt_modal', locals: { ordr: @ordr }
+    Only render when the order is in paid or closed state. %>
+
+<% return unless ordr.paid? || ordr.closed? %>
+<% return unless Flipper.enabled?(:receipt_email, current_user) %>
+
+<div id="send_receipt_modal_<%= ordr.id %>">
+  <!-- Trigger button -->
+  <button type="button"
+          class="btn btn-sm btn-outline-secondary"
+          data-bs-toggle="modal"
+          data-bs-target="#send-receipt-modal-<%= ordr.id %>">
+    <i class="bi bi-envelope"></i>
+    Email Receipt
+  </button>
+
+  <!-- Bootstrap modal -->
+  <div class="modal fade" id="send-receipt-modal-<%= ordr.id %>" tabindex="-1"
+       aria-labelledby="send-receipt-label-<%= ordr.id %>" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="send-receipt-label-<%= ordr.id %>">
+            Email Receipt — Order #<%= ordr.id %>
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <%= form_with url: send_receipt_restaurant_ordr_path(ordr.restaurant, ordr),
+                      method: :post,
+                      data: { controller: 'receipt-request', turbo: true } do |f| %>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="receipt-email-<%= ordr.id %>" class="form-label fw-semibold">
+                Customer email address
+              </label>
+              <input type="email"
+                     id="receipt-email-<%= ordr.id %>"
+                     name="recipient_email"
+                     class="form-control"
+                     placeholder="customer@example.com"
+                     required>
+            </div>
+            <input type="hidden" name="delivery_method" value="email">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary">
+              <i class="bi bi-send"></i>
+              Send Receipt
+            </button>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

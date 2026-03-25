@@ -32,6 +32,18 @@ Rails.application.config.after_initialize do
   unless Flipper.exist?(:payment_gating)
     Flipper.add(:payment_gating)
   end
+
+  # Receipt email — enables email receipt delivery for staff and customers.
+  # Disabled by default; enable per-restaurant or globally via Flipper UI.
+  unless Flipper.exist?(:receipt_email)
+    Flipper.add(:receipt_email)
+  end
+
+  # Receipt SMS — stretch goal; enables SMS delivery path via Twilio.
+  # Disabled by default. Requires TWILIO_* env vars before enabling.
+  unless Flipper.exist?(:receipt_sms)
+    Flipper.add(:receipt_sms)
+  end
 rescue ActiveRecord::ConnectionNotEstablished, ActiveRecord::StatementInvalid, ActiveRecord::NoDatabaseError => e
   # DB may be unreachable (CI asset precompile), or tables may not exist yet (db:create / db:migrate)
   Rails.logger.warn "[Flipper] Skipping feature flag seeding: #{e.message}"
