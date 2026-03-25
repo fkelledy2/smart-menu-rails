@@ -117,6 +117,6 @@ class SchemaOrgSerializer
   end
 
   def smartmenu_url
-    "https://www.mellow.menu/smartmenus/#{@smartmenu.slug}"
+    "https://www.mellow.menu/t/#{@smartmenu.public_token}"
   end
 end

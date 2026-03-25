@@ -1,35 +1,34 @@
 class UserMailer < Devise::Mailer
   layout 'mailer'
-  helper :application # Allows using view helpers in email templates
-  include Devise::Controllers::UrlHelpers # Enables Devise URL helpers
+  helper :application
+  include Devise::Controllers::UrlHelpers
 
-  default template_path: 'user_mailer' # Points to custom view folder
-
-  default from: 'admin@mellow.menu'
+  default template_path: 'user_mailer'
+  default from: 'Mellow Menu <hello@mellow.menu>'
 
   def welcome_email(user)
     @user = user
     mail(to: @user.email, subject: 'Welcome to Mellow Menu')
   end
 
-  # Override confirmation instructions
-  def confirmation_instructions(record, token, opts = {})
-    opts[:subject] = 'Confirm Your Account'
+  def reset_password_instructions(record, token, opts = {})
+    @resource = record
+    @token = token
+    mail(to: record.email, subject: 'Reset your Mellow Menu password')
+  end
+
+  def unlock_instructions(record, token, opts = {})
+    opts[:subject] = 'Unlock your Mellow Menu account'
     super
   end
 
-  # Override reset password email
-  def reset_password_instructions(record, token, opts = {})
-    opts[:subject] = 'Reset Your Password'
-    @resource = record
-    @token = token
-    Rails.logger.debug record.email
-    mail(to: record.email, subject: opts[:subject])
+  def email_changed(record, opts = {})
+    opts[:subject] = 'Your Mellow Menu email address has been updated'
+    super
   end
 
-  # Override unlock instructions (if using :lockable)
-  def unlock_instructions(record, token, opts = {})
-    opts[:subject] = 'Unlock Your Account'
+  def password_change(record, opts = {})
+    opts[:subject] = 'Your Mellow Menu password has been changed'
     super
   end
 end

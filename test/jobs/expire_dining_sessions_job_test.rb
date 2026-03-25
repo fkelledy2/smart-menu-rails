@@ -45,7 +45,7 @@ class ExpireDiningSessionsJobTest < ActiveSupport::TestCase
     already_inactive = create_session(active: false, expires_at: 1.minute.ago, last_activity_at: 2.minutes.ago)
 
     # Count updates before
-    update_count_before = already_inactive.updated_at
+    already_inactive.updated_at
 
     ExpireDiningSessionsJob.new.perform
 

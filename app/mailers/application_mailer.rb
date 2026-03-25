@@ -1,4 +1,4 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: 'admin@mellow.menu'
+  default from: 'Mellow Menu <hello@mellow.menu>'
   layout 'mailer'
 end

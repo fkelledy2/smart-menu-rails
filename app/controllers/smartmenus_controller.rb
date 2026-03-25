@@ -19,7 +19,7 @@ class SmartmenusController < ApplicationController
 
   # GET /smartmenus/1 — legacy slug route, permanently redirected to token URL
   def show
-    return redirect_to(root_url, status: :moved_permanently) unless @smartmenu&.public_token.present?
+    return redirect_to(root_url, status: :moved_permanently) if @smartmenu&.public_token.blank?
 
     redirect_to table_link_path(@smartmenu.public_token), status: :moved_permanently
   end

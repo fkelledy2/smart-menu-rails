@@ -1,3 +1,24 @@
-<h1>New Contact Form Submission</h1>
-<p><strong>Email:</strong> <%= @contact.email %></p>
-<p><strong>Message:</strong> <%= @contact.message %></p>
+<h1 style="margin: 0 0 16px 0; font-size: 24px; font-weight: 700; color: #111827; line-height: 1.3;">
+  New Contact Form Submission
+</h1>
+
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border: 1px solid #E5E7EB; border-radius: 8px; overflow: hidden; margin-bottom: 24px;">
+  <tr>
+    <td style="padding: 16px 20px; background-color: #F9FAFB; border-bottom: 1px solid #E5E7EB;">
+      <p style="margin: 0; font-size: 13px; font-weight: 600; color: #6B7280; text-transform: uppercase; letter-spacing: 0.05em;">From</p>
+      <p style="margin: 4px 0 0 0; font-size: 16px; color: #111827;">
+        <a href="mailto:<%= @contact.email %>" style="color: #2563EB; text-decoration: none;"><%= @contact.email %></a>
+      </p>
+    </td>
+  </tr>
+  <tr>
+    <td style="padding: 16px 20px;">
+      <p style="margin: 0; font-size: 13px; font-weight: 600; color: #6B7280; text-transform: uppercase; letter-spacing: 0.05em;">Message</p>
+      <p style="margin: 8px 0 0 0; font-size: 16px; color: #374151; line-height: 1.6; white-space: pre-wrap;"><%= @contact.message %></p>
+    </td>
+  </tr>
+</table>
+
+<p style="margin: 0; font-size: 14px; color: #6B7280; line-height: 1.6;">
+  Reply directly to this email to respond to <%= @contact.email %>.
+</p>

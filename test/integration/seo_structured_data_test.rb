@@ -7,14 +7,14 @@ class SeoStructuredDataTest < ActionDispatch::IntegrationTest
 
   test 'smartmenu page includes JSON-LD script block' do
     sm = smartmenus(:customer_menu)
-    get "/smartmenus/#{sm.slug}"
+    get table_link_path(public_token: sm.public_token)
     assert_response :success
     assert_match 'application/ld+json', response.body
   end
 
   test 'smartmenu JSON-LD contains Restaurant type and name' do
     sm = smartmenus(:customer_menu)
-    get "/smartmenus/#{sm.slug}"
+    get table_link_path(public_token: sm.public_token)
     json_ld = extract_json_ld(response.body)
     assert_equal 'https://schema.org', json_ld['@context']
     assert_equal 'Restaurant', json_ld['@type']
@@ -23,7 +23,7 @@ class SeoStructuredDataTest < ActionDispatch::IntegrationTest
 
   test 'smartmenu JSON-LD contains Menu with sections' do
     sm = smartmenus(:customer_menu)
-    get "/smartmenus/#{sm.slug}"
+    get table_link_path(public_token: sm.public_token)
     json_ld = extract_json_ld(response.body)
     menu = json_ld['menu']
     assert_equal 'Menu', menu['@type']
@@ -32,16 +32,16 @@ class SeoStructuredDataTest < ActionDispatch::IntegrationTest
 
   test 'smartmenu JSON-LD includes correct URL' do
     sm = smartmenus(:customer_menu)
-    get "/smartmenus/#{sm.slug}"
+    get table_link_path(public_token: sm.public_token)
     json_ld = extract_json_ld(response.body)
-    assert_equal "https://www.mellow.menu/smartmenus/#{sm.slug}", json_ld['url']
+    assert_equal "https://www.mellow.menu/t/#{sm.public_token}", json_ld['url']
   end
 
   # ── Phase 1: Dynamic meta tags ──────────────────────────────────────────
 
   test 'smartmenu page has restaurant-specific og:title' do
     sm = smartmenus(:customer_menu)
-    get "/smartmenus/#{sm.slug}"
+    get table_link_path(public_token: sm.public_token)
     assert_select 'meta[property="og:title"]' do |tags|
       assert_match sm.restaurant.name, tags.first['content']
     end
@@ -49,9 +49,9 @@ class SeoStructuredDataTest < ActionDispatch::IntegrationTest
 
   test 'smartmenu page has canonical URL pointing to smartmenu' do
     sm = smartmenus(:customer_menu)
-    get "/smartmenus/#{sm.slug}"
+    get table_link_path(public_token: sm.public_token)
     assert_select 'link[rel="canonical"]' do |tags|
-      assert_match "smartmenus/#{sm.slug}", tags.first['href']
+      assert_match "/t/#{sm.public_token}", tags.first['href']
     end
   end
 

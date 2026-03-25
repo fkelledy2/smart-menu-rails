@@ -49,7 +49,7 @@ class DiningSessionPolicyTest < ActiveSupport::TestCase
   test 'scope returns sessions for restaurants owned by user' do
     scope = DiningSessionPolicy::Scope.new(@owner, DiningSession).resolve
     restaurant_ids = restaurants(:one).id
-    assert scope.all? { |ds| ds.restaurant_id == restaurant_ids }
+    assert(scope.all? { |ds| ds.restaurant_id == restaurant_ids })
   end
 
   test 'scope returns all sessions for super_admin' do

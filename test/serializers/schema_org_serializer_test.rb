@@ -31,7 +31,7 @@ class SchemaOrgSerializerTest < ActiveSupport::TestCase
 
     @menu = Menu.new(id: 10, name: 'Lunch Menu')
 
-    @smartmenu = Smartmenu.new(slug: 'da-mimmo-lunch')
+    @smartmenu = Smartmenu.new(slug: 'da-mimmo-lunch', public_token: ('abc123token' * 5) + 'abc1')
 
     @item1 = MockItem.new(
       name: 'Bruschetta',
@@ -170,7 +170,7 @@ class SchemaOrgSerializerTest < ActiveSupport::TestCase
 
   test 'includes correct smartmenu URL' do
     data = parsed_json
-    assert_equal 'https://www.mellow.menu/smartmenus/da-mimmo-lunch', data['url']
+    assert_equal "https://www.mellow.menu/t/#{@smartmenu.public_token}", data['url']
   end
 
   test 'falls back to EUR when restaurant currency is nil' do

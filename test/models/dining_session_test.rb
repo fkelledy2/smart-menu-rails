@@ -52,7 +52,7 @@ class DiningSessionTest < ActiveSupport::TestCase
       restaurant: @restaurant,
       session_token: SecureRandom.hex(32),
     )
-    assert ds.valid?, "Expected new session without explicit expires_at to be valid (callback sets it)"
+    assert ds.valid?, 'Expected new session without explicit expires_at to be valid (callback sets it)'
     assert_not_nil ds.expires_at
   end
 
