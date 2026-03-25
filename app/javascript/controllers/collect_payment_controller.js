@@ -27,7 +27,17 @@ import { Controller } from '@hotwired/stimulus';
 export default class extends Controller {
   #qrLoaded = false;
 
-  static targets = ['qrContainer', 'qrImage', 'qrSpinner', 'qrError', 'cashButton', 'cashSpinner', 'cashSuccess', 'squarePosButton', 'statusMessage'];
+  static targets = [
+    'qrContainer',
+    'qrImage',
+    'qrSpinner',
+    'qrError',
+    'cashButton',
+    'cashSpinner',
+    'cashSuccess',
+    'squarePosButton',
+    'statusMessage',
+  ];
 
   static values = {
     cashUrl: String,
@@ -227,7 +237,13 @@ export default class extends Controller {
       version: '1.3',
       note: `Order #${orderId}`,
       options: {
-        supported_tender_types: ['CREDIT_CARD', 'CASH', 'OTHER', 'SQUARE_GIFT_CARD', 'CARD_ON_FILE'],
+        supported_tender_types: [
+          'CREDIT_CARD',
+          'CASH',
+          'OTHER',
+          'SQUARE_GIFT_CARD',
+          'CARD_ON_FILE',
+        ],
       },
     });
 
