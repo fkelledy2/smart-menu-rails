@@ -18,13 +18,14 @@ class ApplicationController < ActionController::Base
   # Authorization monitoring
   rescue_from Pundit::NotAuthorizedError, with: :handle_authorization_failure
 
-  # Redirect to restaurants index after sign in (or back to claim flow if pending)
+  # Redirect back to the page the user was on when their session expired,
+  # or fall back to the staff invitation / claim flow / restaurants index.
   def after_sign_in_path_for(resource)
     if (path = accept_staff_invitation_from_session(resource))
       return path
     end
 
-    claim_redirect_or(restaurants_path)
+    stored_location_for(resource) || claim_redirect_or(restaurants_path)
   end
 
   def after_sign_up_path_for(resource)
