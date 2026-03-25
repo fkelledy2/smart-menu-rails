@@ -14,6 +14,14 @@ class Ordraction < ApplicationRecord
     removeitem: 3,
     requestbill: 4,
     closeorder: 5,
+    payment_method_added: 6,
+    payment_method_removed: 7,
+    auto_pay_enabled: 8,
+    auto_pay_disabled: 9,
+    auto_pay_succeeded: 10,
+    auto_pay_failed: 11,
+    bill_viewed: 12,
+    manual_capture: 13,
   }
 
   # Validations

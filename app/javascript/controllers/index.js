@@ -49,6 +49,9 @@ import AllergenFilterController from './allergen_filter_controller';
 import AddressAutocompleteController from './address_autocomplete_controller';
 import ReceiptRequestController from './receipt_request_controller';
 import CollectPaymentController from './collect_payment_controller';
+import AutoPayController from './auto_pay_controller';
+import CustomerAutoPayController from './customer_auto_pay_controller';
+import FloorplanController from './floorplan_controller';
 
 application.register('sortable', SortableController);
 application.register('auto-save', AutoSaveController);
@@ -97,6 +100,9 @@ application.register('allergen-filter', AllergenFilterController);
 application.register('address-autocomplete', AddressAutocompleteController);
 application.register('receipt-request', ReceiptRequestController);
 application.register('collect-payment', CollectPaymentController);
+application.register('auto-pay', AutoPayController);
+application.register('customer-auto-pay', CustomerAutoPayController);
+application.register('floorplan', FloorplanController);
 
 console.log('[Stimulus] Controllers registered:', [
   'sortable',

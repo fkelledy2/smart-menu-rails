@@ -630,6 +630,9 @@ class OrdrsController < ApplicationController
     ordr.tax = total_tax
     ordr.service = total_service
     ordr.gross = ordr.nett + ordr.covercharge + ordr.tip + ordr.service + ordr.tax
+
+    # If auto-pay is armed and totals have changed, disarm it so the customer must re-confirm
+    ordr.disarm_auto_pay_if_totals_changed!
   end
 
   def update_tablesetting_status(tablesetting, status)

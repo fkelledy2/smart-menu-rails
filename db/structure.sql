@@ -671,7 +671,17 @@ CREATE TABLE public.ordrs (
     paymentstatus integer DEFAULT 0,
     last_projected_order_event_sequence bigint DEFAULT 0 NOT NULL,
     ordritems_count integer DEFAULT 0,
-    ordrparticipants_count integer DEFAULT 0
+    ordrparticipants_count integer DEFAULT 0,
+    payment_on_file boolean DEFAULT false NOT NULL,
+    payment_method_ref character varying,
+    payment_provider character varying,
+    payment_on_file_at timestamp(6) without time zone,
+    viewed_bill_at timestamp(6) without time zone,
+    auto_pay_enabled boolean DEFAULT false NOT NULL,
+    auto_pay_consent_at timestamp(6) without time zone,
+    auto_pay_attempted_at timestamp(6) without time zone,
+    auto_pay_status character varying,
+    auto_pay_failure_reason text
 );
 
 
@@ -8377,6 +8387,20 @@ CREATE INDEX index_ordrparticipants_on_session_locale ON public.ordrparticipants
 
 
 --
+-- Name: index_ordrs_on_auto_pay_enabled; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ordrs_on_auto_pay_enabled ON public.ordrs USING btree (auto_pay_enabled) WHERE (auto_pay_enabled = true);
+
+
+--
+-- Name: index_ordrs_on_auto_pay_status; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ordrs_on_auto_pay_status ON public.ordrs USING btree (auto_pay_status);
+
+
+--
 -- Name: index_ordrs_on_created_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -8423,6 +8447,13 @@ CREATE INDEX index_ordrs_on_menu_table_status ON public.ordrs USING btree (menu_
 --
 
 CREATE INDEX index_ordrs_on_ordritems_count ON public.ordrs USING btree (ordritems_count);
+
+
+--
+-- Name: index_ordrs_on_payment_on_file; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ordrs_on_payment_on_file ON public.ordrs USING btree (payment_on_file) WHERE (payment_on_file = true);
 
 
 --
@@ -10705,6 +10736,7 @@ ALTER TABLE ONLY public.voice_commands
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260325120000'),
 ('20260325094758'),
 ('20260324132133'),
 ('20260324132112'),

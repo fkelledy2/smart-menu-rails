@@ -42,6 +42,46 @@ module Payments
         }
       end
 
+      # Create and immediately capture a PaymentIntent using a stored payment method.
+      # This is used by Auto Pay — the customer has already saved a Stripe PaymentMethod ID.
+      # Returns { payment_intent_id: String }
+      def create_and_capture_intent!(payment_attempt:, ordr:, payment_method_id:,
+                                     amount_cents:, currency:)
+        ensure_api_key!
+
+        metadata = {
+          order_id: ordr.id,
+          restaurant_id: ordr.restaurant_id,
+          payment_attempt_id: payment_attempt.id,
+          source: 'auto_pay',
+        }
+
+        intent = Stripe::PaymentIntent.create(
+          amount: amount_cents,
+          currency: currency.to_s.downcase,
+          payment_method: payment_method_id,
+          confirm: true,
+          capture_method: 'automatic',
+          confirmation_method: 'automatic',
+          off_session: true,
+          metadata: metadata,
+          description: "#{ordr.restaurant.name} Order #{ordr.id} (Auto Pay)",
+        )
+
+        payment_attempt.update!(
+          provider_payment_id: intent.id,
+          status: :succeeded,
+        )
+
+        { payment_intent_id: intent.id }
+      rescue Stripe::CardError => e
+        payment_attempt.update!(status: :failed)
+        raise Payments::Orchestrator::CaptureError, "Card declined: #{e.message}"
+      rescue Stripe::StripeError => e
+        payment_attempt.update!(status: :failed)
+        raise Payments::Orchestrator::CaptureError, "Stripe error: #{e.message}"
+      end
+
       def create_full_refund!(payment_attempt:)
         ensure_api_key!
 

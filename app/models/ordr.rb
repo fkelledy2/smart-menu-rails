@@ -24,6 +24,9 @@ class Ordr < ApplicationRecord
 
     event :requestbill do
       transitions from: %i[opened ordered preparing ready delivered], to: :billrequested
+      after do
+        enqueue_auto_pay_capture_if_armed
+      end
     end
 
     event :paybill do
@@ -40,6 +43,9 @@ class Ordr < ApplicationRecord
   after_update :broadcast_status_change, if: :saved_change_to_status?
   after_update :cascade_status_to_items, if: :saved_change_to_status?
   after_update :clear_station_tickets_if_terminal, if: :saved_change_to_status?
+
+  # Floorplan dashboard real-time tile updates
+  after_commit :broadcast_floorplan_tile_update, on: %i[create update]
 
   # Standard ActiveRecord associations
   belongs_to :employee, optional: true
@@ -131,6 +137,15 @@ class Ordr < ApplicationRecord
     ordr_station_tickets.destroy_all
   end
 
+  # Auto Pay helpers
+  def auto_pay_armed?
+    payment_on_file? && auto_pay_enabled?
+  end
+
+  def auto_pay_capturable?
+    auto_pay_armed? && gross.to_f.positive? && auto_pay_status != 'succeeded'
+  end
+
   def grossInCents
     (gross || 0) * 100
   end
@@ -212,7 +227,40 @@ class Ordr < ApplicationRecord
     end
   end
 
+  # When auto_pay is armed and gross changes (totals recalculated), disable auto_pay
+  # so the customer must re-confirm. Called from OrdrsController#update -> calculate_order_totals.
+  def disarm_auto_pay_if_totals_changed!
+    return unless auto_pay_enabled?
+    return unless will_save_change_to_gross? || will_save_change_to_tip?
+
+    self.auto_pay_enabled = false
+    self.auto_pay_consent_at = nil
+  end
+
   private
+
+  def enqueue_auto_pay_capture_if_armed
+    return unless auto_pay_capturable?
+
+    AutoPayCaptureJob.perform_later(id)
+  rescue StandardError => e
+    Rails.logger.warn(
+      "[Ordr#enqueue_auto_pay_capture_if_armed] Failed to enqueue for ordr=#{id}: #{e.class}: #{e.message}",
+    )
+  end
+
+  def broadcast_floorplan_tile_update
+    return unless tablesetting_id && restaurant_id
+
+    FloorplanBroadcastService.broadcast_tile(
+      tablesetting_id: tablesetting_id,
+      restaurant_id: restaurant_id,
+    )
+  rescue StandardError => e
+    Rails.logger.warn(
+      "[Ordr#broadcast_floorplan_tile_update] Failed for ordr=#{id}: #{e.class}: #{e.message}",
+    )
+  end
 
   def broadcast_new_order
     # Only broadcast kitchen-relevant statuses

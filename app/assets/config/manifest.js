@@ -82,6 +82,9 @@
 //= link controllers/char_counter_controller.js
 //= link controllers/welcome_modal_controller.js
 //= link controllers/receipt_request_controller.js
+//= link controllers/auto_pay_controller.js
+//= link controllers/customer_auto_pay_controller.js
+//= link controllers/floorplan_controller.js
 
 // Application entry point
 //= link application.js

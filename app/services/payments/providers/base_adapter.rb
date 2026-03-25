@@ -20,6 +20,14 @@ module Payments
       def refresh_credentials!(provider_account:)
         raise NotImplementedError
       end
+
+      # Create a PaymentIntent and immediately confirm+capture in one step.
+      # Used by Auto Pay & Leave when a stored payment_method_ref is on file.
+      # Returns { payment_intent_id: String }
+      def create_and_capture_intent!(payment_attempt:, ordr:, payment_method_id:,
+                                     amount_cents:, currency:)
+        raise NotImplementedError
+      end
     end
   end
 end

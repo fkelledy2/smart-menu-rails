@@ -1,6 +1,6 @@
 # mellow.menu Feature Backlog — Priority Index
 
-**Last updated**: 2026-03-25 (Branded Receipt Email completed; Auto Pay & Leave is now #1 active launch enhancer)
+**Last updated**: 2026-03-25 (Floorplan Dashboard completed; Pre-Configured Marketing QRs is now #1 active launch enhancer)
 **QR Code Security (#1)**: COMPLETED 2026-03-24 — Phase 1 shipped; spec at `docs/features/completed/qr-security.md`
 **Branded Email Styling (#1)**: COMPLETED 2026-03-24 — spec at `docs/features/completed/branded-email-styling-feature-request.md`
 **Branded Receipt Email (#2)**: COMPLETED 2026-03-25 — spec at `docs/features/completed/branded-receipt-email-feature-request.md`
@@ -15,8 +15,8 @@
 | ~~#1~~ | ~~QR Code Security~~ | ~~Launch Blocker~~ | M | — | COMPLETED 2026-03-24 — Phase 1 shipped |
 | ~~#1~~ | ~~Branded Email Styling~~ | ~~Launch Blocker~~ | S | — | COMPLETED 2026-03-24 — spec at `docs/features/completed/branded-email-styling-feature-request.md` |
 | ~~#2~~ | ~~Branded Receipt Email~~ | ~~Launch Blocker~~ | M | Branded Email (#1 done), Stripe/Ordr | COMPLETED 2026-03-25 — spec at `docs/features/completed/branded-receipt-email-feature-request.md` |
-| #4 | Auto Pay & Leave | Launch Enhancer | L | #1, #3, Stripe | Closes the payment loop; key differentiator vs basic digital menu tools |
-| #5 | Floorplan Dashboard | Launch Enhancer | M | Existing Tablesetting/Ordr | Single-glance ops view; staff adoption driver; differentiates from competitors |
+| ~~#4~~ | ~~Auto Pay & Leave~~ | ~~Launch Enhancer~~ | L | — | COMPLETED 2026-03-25 — spec at `docs/features/completed/auto-pay-and-leave-combined.md` |
+| ~~#5~~ | ~~Floorplan Dashboard~~ | ~~Launch Enhancer~~ | M | — | COMPLETED 2026-03-25 — spec at `docs/features/completed/floorplan.md` |
 | #6 | Pre-Configured Marketing QRs | Launch Enhancer | M | #1 (token infra) | Decouples print production from menu deployment; unblocks restaurant onboarding |
 | #7 | Homepage Demo Booking & Video | Launch Enhancer | S | None | Minimum viable sales funnel; converts marketing traffic into bookable leads |
 | #8 | JWT Token Management (API) | Post-Launch | L | Existing admin auth | Enterprise and integration-partner access; revenue unlock for larger groups |

@@ -21,7 +21,7 @@ class SmartmenusController < ApplicationController
   def show
     return redirect_to(root_url, status: :moved_permanently) if @smartmenu&.public_token.blank?
 
-    redirect_to table_link_path(@smartmenu.public_token), status: :moved_permanently
+    redirect_to table_link_path(@smartmenu.public_token, request.query_parameters), status: :moved_permanently
   end
 
   # GET /t/:public_token — QR code entry point
