@@ -36,7 +36,7 @@ export default class extends Controller {
   _restore() {
     try {
       const saved = JSON.parse(localStorage.getItem(this.storageKeyValue));
-      if (Array.isArray(saved)) saved.forEach(c => this.selected.add(c));
+      if (Array.isArray(saved)) saved.forEach((c) => this.selected.add(c));
     } catch (_) {}
   }
 
@@ -47,7 +47,7 @@ export default class extends Controller {
   }
 
   _renderRows() {
-    this.rowTargets.forEach(row => {
+    this.rowTargets.forEach((row) => {
       const code = row.dataset.allergenCode;
       const icon = row.querySelector('.allergen-check-icon');
       const isOn = this.selected.has(code);
@@ -64,14 +64,14 @@ export default class extends Controller {
   }
 
   _applyFilter() {
-    document.querySelectorAll('.menu-item-card-mobile').forEach(card => {
+    document.querySelectorAll('.menu-item-card-mobile').forEach((card) => {
       if (this.selected.size === 0) {
         card.style.display = '';
         return;
       }
       const badges = card.querySelectorAll('.allergen-badges .badge.bg-warning');
-      const cardAllergens = [...badges].map(b => b.textContent.trim());
-      card.style.display = cardAllergens.some(c => this.selected.has(c)) ? 'none' : '';
+      const cardAllergens = [...badges].map((b) => b.textContent.trim());
+      card.style.display = cardAllergens.some((c) => this.selected.has(c)) ? 'none' : '';
     });
     const triggerBadge = document.querySelector('[data-bs-target="#allergenModal"] .filter-badge');
     if (triggerBadge) {
