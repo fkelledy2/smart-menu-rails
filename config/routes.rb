@@ -24,6 +24,9 @@ Rails.application.routes.draw do
 
   # Receipt self-service — customer-facing, rate-limited via RackAttack
   post '/receipts/request', to: 'receipt_deliveries#self_service', as: :self_service_receipt
+
+  # Marketing QR code public resolve endpoint — rate-limited via RackAttack
+  get '/m/:token', to: 'marketing_qr_codes#resolve', as: :marketing_qr_code_resolve
   
   # ============================================================================
   # HEALTH AND MONITORING
@@ -48,6 +51,16 @@ Rails.application.routes.draw do
 
   namespace :admin do
     resource :impersonation, only: [:new, :create, :destroy]
+
+    # Marketing QR codes — mellow.menu admin only
+    resources :marketing_qr_codes do
+      member do
+        patch :link
+        patch :unlink
+        get   :print
+      end
+    end
+
     resources :city_crawls, only: %i[new create]
     resources :discovered_restaurants, only: %i[index show update create] do
       collection do

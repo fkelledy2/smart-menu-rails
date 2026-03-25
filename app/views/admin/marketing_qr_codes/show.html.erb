@@ -1,0 +1,146 @@
+<%# Admin: Marketing QR Code detail %>
+<% content_for :title, "QR: #{@qr_code.name.presence || @qr_code.token}" %>
+
+<div class="container-fluid py-4" style="max-width: 900px;">
+  <div class="d-flex align-items-center gap-2 mb-4">
+    <%= link_to '← All QR Codes', admin_marketing_qr_codes_path, class: 'btn btn-sm btn-outline-secondary' %>
+    <h1 class="h4 mb-0 ms-2"><%= @qr_code.name.presence || '(unnamed)' %></h1>
+    <% badge_class = { 'unlinked' => 'bg-warning text-dark', 'linked' => 'bg-success', 'archived' => 'bg-secondary' }[@qr_code.status] %>
+    <span class="badge <%= badge_class %> ms-1"><%= @qr_code.status.capitalize %></span>
+  </div>
+
+  <div class="row g-4">
+    <!-- Details card -->
+    <div class="col-md-7">
+      <div class="card">
+        <div class="card-header"><strong>Details</strong></div>
+        <div class="card-body">
+          <dl class="row mb-0">
+            <dt class="col-sm-4">Token</dt>
+            <dd class="col-sm-8"><code><%= @qr_code.token %></code></dd>
+
+            <dt class="col-sm-4">Public URL</dt>
+            <dd class="col-sm-8">
+              <% public_url = @qr_code.public_url(host: request.host_with_port, protocol: request.protocol.chomp('://')) %>
+              <a href="<%= public_url %>" target="_blank" rel="noopener"><%= public_url %></a>
+            </dd>
+
+            <dt class="col-sm-4">Name</dt>
+            <dd class="col-sm-8"><%= @qr_code.name.presence || '—' %></dd>
+
+            <dt class="col-sm-4">Campaign</dt>
+            <dd class="col-sm-8"><%= @qr_code.campaign.presence || '—' %></dd>
+
+            <dt class="col-sm-4">Holding URL</dt>
+            <dd class="col-sm-8"><%= @qr_code.holding_url.presence || 'https://mellow.menu (default)' %></dd>
+
+            <dt class="col-sm-4">Restaurant</dt>
+            <dd class="col-sm-8"><%= @qr_code.restaurant&.name || '—' %></dd>
+
+            <dt class="col-sm-4">Menu</dt>
+            <dd class="col-sm-8"><%= @qr_code.menu&.name || '—' %></dd>
+
+            <dt class="col-sm-4">Table</dt>
+            <dd class="col-sm-8"><%= @qr_code.tablesetting&.name || '—' %></dd>
+
+            <dt class="col-sm-4">Created by</dt>
+            <dd class="col-sm-8"><%= @qr_code.created_by_user&.email || '—' %></dd>
+
+            <dt class="col-sm-4">Created</dt>
+            <dd class="col-sm-8"><%= @qr_code.created_at.strftime('%d %b %Y %H:%M') %></dd>
+
+            <dt class="col-sm-4">Updated</dt>
+            <dd class="col-sm-8"><%= @qr_code.updated_at.strftime('%d %b %Y %H:%M') %></dd>
+          </dl>
+        </div>
+        <div class="card-footer d-flex gap-2">
+          <%= link_to 'Edit', edit_admin_marketing_qr_code_path(@qr_code), class: 'btn btn-sm btn-outline-secondary' %>
+          <%= link_to 'Print', print_admin_marketing_qr_code_path(@qr_code), class: 'btn btn-sm btn-outline-secondary', target: '_blank', rel: 'noopener' %>
+          <% if @qr_code.linked? %>
+            <%= button_to 'Unlink', unlink_admin_marketing_qr_code_path(@qr_code), method: :patch, class: 'btn btn-sm btn-outline-warning',
+                data: { confirm: 'Scanning this QR will show the holding page after unlinking. Continue?' } %>
+          <% end %>
+          <% unless @qr_code.archived? %>
+            <%= button_to 'Archive', admin_marketing_qr_code_path(@qr_code), method: :delete, class: 'btn btn-sm btn-outline-danger ms-auto',
+                data: { confirm: 'Archive this QR code? It will no longer resolve.' } %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Link card -->
+    <div class="col-md-5">
+      <div class="card">
+        <div class="card-header"><strong>Link to Restaurant</strong></div>
+        <div class="card-body">
+          <% unless @qr_code.archived? %>
+            <%= form_with url: link_admin_marketing_qr_code_path(@qr_code), method: :patch do |f| %>
+              <div class="mb-3">
+                <%= f.label :restaurant_id, 'Restaurant', class: 'form-label fw-semibold' %>
+                <%= f.select :restaurant_id,
+                    options_from_collection_for_select(Restaurant.order(:name), :id, :name, @qr_code.restaurant_id),
+                    { include_blank: '— Select restaurant —' },
+                    class: 'form-select', id: 'link_restaurant_id' %>
+              </div>
+              <div class="mb-3">
+                <%= f.label :menu_id, 'Menu (optional)', class: 'form-label fw-semibold' %>
+                <%= f.select :menu_id,
+                    [],
+                    { include_blank: '— Any menu —' },
+                    class: 'form-select', id: 'link_menu_id' %>
+              </div>
+              <div class="mb-3">
+                <%= f.label :tablesetting_id, 'Table (optional)', class: 'form-label fw-semibold' %>
+                <%= f.select :tablesetting_id,
+                    [],
+                    { include_blank: '— Any table —' },
+                    class: 'form-select', id: 'link_tablesetting_id' %>
+              </div>
+              <%= f.submit 'Link QR Code', class: 'btn btn-primary w-100' %>
+            <% end %>
+          <% else %>
+            <p class="text-muted mb-0">This QR code is archived and cannot be linked.</p>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- QR Preview -->
+      <div class="card mt-3">
+        <div class="card-header"><strong>QR Preview</strong></div>
+        <div class="card-body text-center">
+          <div id="qrHost" class="d-none"><%= request.host_with_port %></div>
+          <div id="qrProtocol" class="d-none"><%= request.protocol.chomp('://') %></div>
+          <div id="admin-qr-container" style="min-height: 200px; display: flex; align-items: center; justify-content: center;">
+            <span class="text-muted small">Loading QR&hellip;</span>
+          </div>
+          <p class="text-muted small mt-2 mb-0">Encodes: <code><%= @qr_code.public_url(host: request.host_with_port, protocol: request.protocol.chomp('://')) %></code></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var container = document.getElementById('admin-qr-container');
+    var host      = document.getElementById('qrHost').textContent.trim();
+    var protocol  = document.getElementById('qrProtocol').textContent.trim();
+    var url       = protocol + '://' + host + '/m/<%= j @qr_code.token %>';
+
+    if (typeof QRCodeStyling !== 'undefined') {
+      var qr = new QRCodeStyling({
+        width: 200, height: 200,
+        data: url,
+        dotsOptions: { color: '#111827', type: 'rounded' },
+        backgroundOptions: { color: '#ffffff' },
+      });
+      container.innerHTML = '';
+      qr.append(container);
+    } else if (typeof initialiseSlugs === 'function') {
+      container.innerHTML = '<div class="d-none qrSlug"><%= j @qr_code.token %></div><div id="<%= j @qr_code.token %>" class="qr-code-container" style="width:200px;height:200px;"></div>';
+      initialiseSlugs();
+    } else {
+      container.innerHTML = '<p class="text-muted small">QR preview unavailable in this environment.</p>';
+    }
+  });
+</script>

@@ -1,0 +1,32 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+unlinked_qr:
+  token: 11111111-1111-1111-1111-111111111111
+  status: 0
+  name: Unlinked Test QR
+  campaign: test-campaign
+  created_by_user: super_admin
+
+linked_qr:
+  token: 22222222-2222-2222-2222-222222222222
+  status: 1
+  name: Linked Test QR
+  campaign: test-campaign
+  restaurant: one
+  menu: one
+  tablesetting: one
+  smartmenu: one
+  created_by_user: super_admin
+
+archived_qr:
+  token: 33333333-3333-3333-3333-333333333333
+  status: 2
+  name: Archived Test QR
+  created_by_user: super_admin
+
+holding_url_qr:
+  token: 44444444-4444-4444-4444-444444444444
+  status: 0
+  name: Custom Holding URL QR
+  holding_url: https://example.com/coming-soon
+  created_by_user: super_admin

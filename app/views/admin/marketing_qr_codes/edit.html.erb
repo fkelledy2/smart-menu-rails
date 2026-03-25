@@ -1,0 +1,15 @@
+<%# Admin: Edit Marketing QR Code form %>
+<% content_for :title, "Edit QR: #{@qr_code.name.presence || @qr_code.token}" %>
+
+<div class="container-fluid py-4" style="max-width: 600px;">
+  <div class="d-flex align-items-center gap-2 mb-4">
+    <%= link_to '← Back', admin_marketing_qr_code_path(@qr_code), class: 'btn btn-sm btn-outline-secondary' %>
+    <h1 class="h4 mb-0 ms-2">Edit QR Code</h1>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <%= render 'form', qr_code: @qr_code %>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,15 @@
+<%# Admin: New Marketing QR Code form %>
+<% content_for :title, 'New Marketing QR Code — Admin' %>
+
+<div class="container-fluid py-4" style="max-width: 600px;">
+  <div class="d-flex align-items-center gap-2 mb-4">
+    <%= link_to '← All QR Codes', admin_marketing_qr_codes_path, class: 'btn btn-sm btn-outline-secondary' %>
+    <h1 class="h4 mb-0 ms-2">New Marketing QR Code</h1>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <%= render 'form', qr_code: @qr_code %>
+    </div>
+  </div>
+</div>

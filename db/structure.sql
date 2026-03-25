@@ -1355,6 +1355,46 @@ ALTER SEQUENCE public.local_guides_id_seq OWNED BY public.local_guides.id;
 
 
 --
+-- Name: marketing_qr_codes; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.marketing_qr_codes (
+    id bigint NOT NULL,
+    token character varying NOT NULL,
+    status integer DEFAULT 0 NOT NULL,
+    holding_url character varying,
+    restaurant_id bigint,
+    menu_id bigint,
+    tablesetting_id bigint,
+    smartmenu_id bigint,
+    created_by_user_id bigint NOT NULL,
+    name character varying,
+    campaign character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: marketing_qr_codes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.marketing_qr_codes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: marketing_qr_codes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.marketing_qr_codes_id_seq OWNED BY public.marketing_qr_codes.id;
+
+
+--
 -- Name: memory_metrics; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -4201,128 +4241,20 @@ ALTER SEQUENCE public.staff_invitations_id_seq OWNED BY public.staff_invitations
 
 
 --
--- Name: users; Type: TABLE; Schema: public; Owner: -
+-- Name: system_analytics_mv; Type: VIEW; Schema: public; Owner: -
 --
 
-CREATE TABLE public.users (
-    id bigint NOT NULL,
-    email character varying DEFAULT ''::character varying NOT NULL,
-    encrypted_password character varying DEFAULT ''::character varying NOT NULL,
-    reset_password_token character varying,
-    reset_password_sent_at timestamp(6) without time zone,
-    remember_created_at timestamp(6) without time zone,
-    first_name character varying,
-    last_name character varying,
-    announcements_last_read_at timestamp(6) without time zone,
-    admin boolean DEFAULT false NOT NULL,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    plan_id bigint,
-    confirmation_token character varying,
-    confirmed_at timestamp(6) without time zone,
-    confirmation_sent_at timestamp(6) without time zone,
-    unconfirmed_email character varying,
-    restaurants_count integer DEFAULT 0,
-    employees_count integer DEFAULT 0,
-    super_admin boolean DEFAULT false NOT NULL,
-    failed_attempts integer DEFAULT 0 NOT NULL,
-    unlock_token character varying,
-    locked_at timestamp(6) without time zone,
-    password_changed_at timestamp(6) without time zone,
-    encrypted_password_salt character varying,
-    encrypted_password_iv character varying,
-    session_limitable integer,
-    unique_session_id character varying,
-    last_activity_at timestamp(6) without time zone,
-    expired_at timestamp(6) without time zone
-);
-
-
---
--- Name: system_analytics_mv; Type: MATERIALIZED VIEW; Schema: public; Owner: -
---
-
-CREATE MATERIALIZED VIEW public.system_analytics_mv AS
- SELECT date_trunc('day'::text, created_at) AS date,
-    date_trunc('week'::text, created_at) AS week,
-    date_trunc('month'::text, created_at) AS month,
-    count(DISTINCT
-        CASE
-            WHEN (entity_type = 'restaurant'::text) THEN entity_id
-            ELSE NULL::bigint
-        END) AS new_restaurants,
-    count(DISTINCT
-        CASE
-            WHEN (entity_type = 'user'::text) THEN entity_id
-            ELSE NULL::bigint
-        END) AS new_users,
-    count(DISTINCT
-        CASE
-            WHEN (entity_type = 'menu'::text) THEN entity_id
-            ELSE NULL::bigint
-        END) AS new_menus,
-    count(DISTINCT
-        CASE
-            WHEN (entity_type = 'menuitem'::text) THEN entity_id
-            ELSE NULL::bigint
-        END) AS new_menuitems,
-    count(DISTINCT
-        CASE
-            WHEN (entity_type = 'order'::text) THEN entity_id
-            ELSE NULL::bigint
-        END) AS total_orders,
-    COALESCE(sum(
-        CASE
-            WHEN (entity_type = 'order'::text) THEN revenue
-            ELSE NULL::double precision
-        END), (0)::double precision) AS total_revenue,
-    count(DISTINCT
-        CASE
-            WHEN (entity_type = 'active_restaurant'::text) THEN entity_id
-            ELSE NULL::bigint
-        END) AS active_restaurants
-   FROM ( SELECT restaurants.id AS entity_id,
-            'restaurant'::text AS entity_type,
-            restaurants.created_at,
-            0 AS revenue
-           FROM public.restaurants
-        UNION ALL
-         SELECT users.id AS entity_id,
-            'user'::text AS entity_type,
-            users.created_at,
-            0 AS revenue
-           FROM public.users
-        UNION ALL
-         SELECT menus.id AS entity_id,
-            'menu'::text AS entity_type,
-            menus.created_at,
-            0 AS revenue
-           FROM public.menus
-        UNION ALL
-         SELECT menuitems.id AS entity_id,
-            'menuitem'::text AS entity_type,
-            menuitems.created_at,
-            0 AS revenue
-           FROM public.menuitems
-        UNION ALL
-         SELECT o.id AS entity_id,
-            'order'::text AS entity_type,
-            o.created_at,
-            COALESCE(sum((oi.ordritemprice * (oi.quantity)::double precision)), (0)::double precision) AS revenue
-           FROM (public.ordrs o
-             LEFT JOIN public.ordritems oi ON ((o.id = oi.ordr_id)))
-          WHERE (o.status = ANY (ARRAY[35, 40]))
-          GROUP BY o.id, o.created_at
-        UNION ALL
-         SELECT DISTINCT r.id AS entity_id,
-            'active_restaurant'::text AS entity_type,
-            o.created_at,
-            0 AS revenue
-           FROM (public.restaurants r
-             JOIN public.ordrs o ON ((r.id = o.restaurant_id)))
-          WHERE (o.created_at >= (CURRENT_DATE - '30 days'::interval))) combined_data
-  GROUP BY (date_trunc('day'::text, created_at)), (date_trunc('week'::text, created_at)), (date_trunc('month'::text, created_at))
-  WITH NO DATA;
+CREATE VIEW public.system_analytics_mv AS
+ SELECT CURRENT_DATE AS date,
+    (date_trunc('month'::text, (CURRENT_DATE)::timestamp with time zone))::date AS month,
+    0 AS new_restaurants,
+    0 AS new_users,
+    0 AS new_menus,
+    0 AS new_menuitems,
+    0 AS total_orders,
+    (0)::numeric AS total_revenue,
+    0 AS active_restaurants
+  WHERE false;
 
 
 --
@@ -4592,6 +4524,44 @@ CREATE SEQUENCE public.userplans_id_seq
 --
 
 ALTER SEQUENCE public.userplans_id_seq OWNED BY public.userplans.id;
+
+
+--
+-- Name: users; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.users (
+    id bigint NOT NULL,
+    email character varying DEFAULT ''::character varying NOT NULL,
+    encrypted_password character varying DEFAULT ''::character varying NOT NULL,
+    reset_password_token character varying,
+    reset_password_sent_at timestamp(6) without time zone,
+    remember_created_at timestamp(6) without time zone,
+    first_name character varying,
+    last_name character varying,
+    announcements_last_read_at timestamp(6) without time zone,
+    admin boolean DEFAULT false NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    plan_id bigint,
+    confirmation_token character varying,
+    confirmed_at timestamp(6) without time zone,
+    confirmation_sent_at timestamp(6) without time zone,
+    unconfirmed_email character varying,
+    restaurants_count integer DEFAULT 0,
+    employees_count integer DEFAULT 0,
+    super_admin boolean DEFAULT false NOT NULL,
+    failed_attempts integer DEFAULT 0 NOT NULL,
+    unlock_token character varying,
+    locked_at timestamp(6) without time zone,
+    password_changed_at timestamp(6) without time zone,
+    encrypted_password_salt character varying,
+    encrypted_password_iv character varying,
+    session_limitable integer,
+    unique_session_id character varying,
+    last_activity_at timestamp(6) without time zone,
+    expired_at timestamp(6) without time zone
+);
 
 
 --
@@ -4879,6 +4849,13 @@ ALTER TABLE ONLY public.ledger_events ALTER COLUMN id SET DEFAULT nextval('publi
 --
 
 ALTER TABLE ONLY public.local_guides ALTER COLUMN id SET DEFAULT nextval('public.local_guides_id_seq'::regclass);
+
+
+--
+-- Name: marketing_qr_codes id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.marketing_qr_codes ALTER COLUMN id SET DEFAULT nextval('public.marketing_qr_codes_id_seq'::regclass);
 
 
 --
@@ -5712,6 +5689,14 @@ ALTER TABLE ONLY public.ledger_events
 
 ALTER TABLE ONLY public.local_guides
     ADD CONSTRAINT local_guides_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: marketing_qr_codes marketing_qr_codes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.marketing_qr_codes
+    ADD CONSTRAINT marketing_qr_codes_pkey PRIMARY KEY (id);
 
 
 --
@@ -6602,20 +6587,6 @@ CREATE INDEX idx_staff_invitations_restaurant_email ON public.staff_invitations 
 
 
 --
--- Name: idx_system_analytics_date; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_system_analytics_date ON public.system_analytics_mv USING btree (date);
-
-
---
--- Name: idx_system_analytics_month; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_system_analytics_month ON public.system_analytics_mv USING btree (month);
-
-
---
 -- Name: index_active_storage_attachments_on_blob_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -7159,6 +7130,34 @@ CREATE UNIQUE INDEX index_local_guides_on_slug ON public.local_guides USING btre
 --
 
 CREATE INDEX index_local_guides_on_status ON public.local_guides USING btree (status);
+
+
+--
+-- Name: index_marketing_qr_codes_on_created_by_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_marketing_qr_codes_on_created_by_user_id ON public.marketing_qr_codes USING btree (created_by_user_id);
+
+
+--
+-- Name: index_marketing_qr_codes_on_restaurant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_marketing_qr_codes_on_restaurant_id ON public.marketing_qr_codes USING btree (restaurant_id);
+
+
+--
+-- Name: index_marketing_qr_codes_on_status; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_marketing_qr_codes_on_status ON public.marketing_qr_codes USING btree (status);
+
+
+--
+-- Name: index_marketing_qr_codes_on_token; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_marketing_qr_codes_on_token ON public.marketing_qr_codes USING btree (token);
 
 
 --
@@ -9474,6 +9473,14 @@ ALTER TABLE ONLY public.menu_imports
 
 
 --
+-- Name: marketing_qr_codes fk_rails_03049c5671; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.marketing_qr_codes
+    ADD CONSTRAINT fk_rails_03049c5671 FOREIGN KEY (restaurant_id) REFERENCES public.restaurants(id) ON DELETE SET NULL;
+
+
+--
 -- Name: dining_sessions fk_rails_04d0a237df; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -9610,6 +9617,14 @@ ALTER TABLE ONLY public.tracks
 
 
 --
+-- Name: marketing_qr_codes fk_rails_2b27d975bd; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.marketing_qr_codes
+    ADD CONSTRAINT fk_rails_2b27d975bd FOREIGN KEY (smartmenu_id) REFERENCES public.smartmenus(id) ON DELETE SET NULL;
+
+
+--
 -- Name: profit_margin_targets fk_rails_2b36597cda; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -9671,6 +9686,14 @@ ALTER TABLE ONLY public.menusectionlocales
 
 ALTER TABLE ONLY public.payment_profiles
     ADD CONSTRAINT fk_rails_3b1e3db4e4 FOREIGN KEY (restaurant_id) REFERENCES public.restaurants(id);
+
+
+--
+-- Name: marketing_qr_codes fk_rails_408cb1de08; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.marketing_qr_codes
+    ADD CONSTRAINT fk_rails_408cb1de08 FOREIGN KEY (tablesetting_id) REFERENCES public.tablesettings(id) ON DELETE SET NULL;
 
 
 --
@@ -9994,6 +10017,14 @@ ALTER TABLE ONLY public.beverage_pipeline_runs
 
 
 --
+-- Name: marketing_qr_codes fk_rails_78dcd93826; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.marketing_qr_codes
+    ADD CONSTRAINT fk_rails_78dcd93826 FOREIGN KEY (created_by_user_id) REFERENCES public.users(id);
+
+
+--
 -- Name: similar_product_recommendations fk_rails_7be23a6159; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -10031,6 +10062,14 @@ ALTER TABLE ONLY public.alcohol_order_events
 
 ALTER TABLE ONLY public.ordr_station_tickets
     ADD CONSTRAINT fk_rails_7ef0e690e7 FOREIGN KEY (restaurant_id) REFERENCES public.restaurants(id);
+
+
+--
+-- Name: marketing_qr_codes fk_rails_7f847c7d02; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.marketing_qr_codes
+    ADD CONSTRAINT fk_rails_7f847c7d02 FOREIGN KEY (menu_id) REFERENCES public.menus(id) ON DELETE SET NULL;
 
 
 --
@@ -10736,6 +10775,7 @@ ALTER TABLE ONLY public.voice_commands
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260325195401'),
 ('20260325120000'),
 ('20260325094758'),
 ('20260324132133'),

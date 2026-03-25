@@ -1,0 +1,66 @@
+<%# Admin: Marketing QR Codes index %>
+<% content_for :title, 'Marketing QR Codes — Admin' %>
+
+<div class="container-fluid py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="h3 mb-1">Marketing QR Codes</h1>
+      <p class="text-muted mb-0">Pre-configured QR codes for print production. Scan before linking shows a holding page.</p>
+    </div>
+    <%= link_to 'New QR Code', new_admin_marketing_qr_code_path, class: 'btn btn-primary' %>
+  </div>
+
+  <% if @qr_codes.any? %>
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>Name</th>
+            <th>Campaign</th>
+            <th>Status</th>
+            <th>Linked To</th>
+            <th>Token</th>
+            <th>Created</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @qr_codes.each do |qr| %>
+            <tr>
+              <td>
+                <%= link_to qr.name.presence || '(unnamed)', admin_marketing_qr_code_path(qr) %>
+              </td>
+              <td><%= qr.campaign.presence || '—' %></td>
+              <td>
+                <% badge_class = { 'unlinked' => 'bg-warning text-dark', 'linked' => 'bg-success', 'archived' => 'bg-secondary' }[qr.status] %>
+                <span class="badge <%= badge_class %>"><%= qr.status.capitalize %></span>
+              </td>
+              <td>
+                <% if qr.restaurant %>
+                  <%= qr.restaurant.name %>
+                  <% if qr.menu %><br><small class="text-muted"><%= qr.menu.name %></small><% end %>
+                  <% if qr.tablesetting %><br><small class="text-muted"><%= qr.tablesetting.name %></small><% end %>
+                <% else %>
+                  <span class="text-muted">—</span>
+                <% end %>
+              </td>
+              <td>
+                <code class="small"><%= qr.token %></code>
+              </td>
+              <td class="text-nowrap"><%= qr.created_at.strftime('%d %b %Y') %></td>
+              <td class="text-end text-nowrap">
+                <%= link_to 'View', admin_marketing_qr_code_path(qr), class: 'btn btn-sm btn-outline-secondary' %>
+                <%= link_to 'Print', print_admin_marketing_qr_code_path(qr), class: 'btn btn-sm btn-outline-secondary', target: '_blank', rel: 'noopener' %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <div class="text-center py-5 text-muted">
+      <i class="bi bi-qr-code fs-1 d-block mb-3"></i>
+      <p class="mb-0">No marketing QR codes yet. <%= link_to 'Create the first one', new_admin_marketing_qr_code_path %>.</p>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,35 @@
+<%# Shared form partial for Marketing QR Code create/edit %>
+<% qr_code = local_assigns[:qr_code] %>
+
+<%= form_with model: [:admin, qr_code], local: true do |f| %>
+  <% if qr_code.errors.any? %>
+    <div class="alert alert-danger mb-3">
+      <ul class="mb-0">
+        <% qr_code.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= f.label :name, 'Name', class: 'form-label fw-semibold' %>
+    <%= f.text_field :name, class: 'form-control', placeholder: 'e.g. Table Tent — Dublin Launch' %>
+    <div class="form-text">A human-readable label for this QR code. Not shown to customers.</div>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :campaign, 'Campaign', class: 'form-label fw-semibold' %>
+    <%= f.text_field :campaign, class: 'form-control', placeholder: 'e.g. Q1-2026-Dublin' %>
+    <div class="form-text">Optional campaign tag for grouping QR codes.</div>
+  </div>
+
+  <div class="mb-4">
+    <%= f.label :holding_url, 'Holding URL (optional)', class: 'form-label fw-semibold' %>
+    <%= f.url_field :holding_url, class: 'form-control', placeholder: 'https://mellow.menu' %>
+    <div class="form-text">Where to redirect before this QR is linked. Leave blank to show the default "Menu launching soon" page.</div>
+  </div>
+
+  <%= f.submit qr_code.new_record? ? 'Create QR Code' : 'Save Changes', class: 'btn btn-primary' %>
+  <%= link_to 'Cancel', qr_code.new_record? ? admin_marketing_qr_codes_path : admin_marketing_qr_code_path(qr_code), class: 'btn btn-outline-secondary ms-2' %>
+<% end %>
