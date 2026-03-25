@@ -1,0 +1,15 @@
+Email address update
+--------------------
+
+Hi <%= @email %>,
+
+<% if @resource.try(:unconfirmed_email?) %>
+A request has been made to change the email address on your Mellow Menu account to <%= @resource.unconfirmed_email %>.
+
+You'll receive a confirmation email at the new address before the change takes effect.
+<% else %>
+The email address on your Mellow Menu account has been successfully changed to <%= @resource.email %>.
+<% end %>
+
+If you did not make this change, please contact our support team immediately:
+https://www.mellow.menu/support
