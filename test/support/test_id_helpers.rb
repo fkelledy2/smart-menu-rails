@@ -412,8 +412,8 @@ module TestIdHelpers
     ensure_order_dom_context!
 
     # Directly create the ordritem in the database using Smartmenu context
-    slug = URI.parse(current_url).path.split('/').last
-    sm = Smartmenu.find_by!(slug: slug)
+    sm = smartmenu_from_current_url
+    raise ActiveRecord::RecordNotFound, "Couldn't find Smartmenu at #{current_url}" unless sm
     restaurant_id = sm.restaurant_id
     table_id = sm.tablesetting_id
     menu_id = sm.menu_id
@@ -455,8 +455,7 @@ module TestIdHelpers
       return
     end
 
-    slug = URI.parse(current_url).path.split('/').last
-    sm = Smartmenu.find_by(slug: slug)
+    sm = smartmenu_from_current_url
     return unless sm
 
     # Remove any existing open-ish orders for this context
@@ -503,8 +502,7 @@ module TestIdHelpers
   # Explicitly start an order if the Start Order modal is present
   def start_order_if_needed
     # Deterministic DB ensure: create an 'opened' order for current smartmenu if none exists
-    slug = URI.parse(current_url).path.split('/').last
-    sm = Smartmenu.find_by(slug: slug)
+    sm = smartmenu_from_current_url
     return unless sm
 
     order = Ordr.where(restaurant_id: sm.restaurant_id, tablesetting_id: sm.tablesetting_id, menu_id: sm.menu_id, status: [0, 20, 22, 24, 25, 30]).order(:created_at).last
@@ -528,8 +526,7 @@ module TestIdHelpers
     order = Ordr.where(restaurant_id: restaurant_id, tablesetting_id: table_id, menu_id: menu_id, status: [0, 20, 22, 24, 25, 30]).order(:created_at).last
     # Also ensure a Menuparticipant exists for this smartmenu/session to allow pre-order locale persistence
     begin
-      slug = URI.parse(current_url).path.split('/').last
-      sm = Smartmenu.find_by(slug: slug)
+      sm = smartmenu_from_current_url
       if sm
         menup = Menuparticipant.find_or_create_by!(smartmenu_id: sm.id, sessionid: session.id.to_s)
         @__menu_participant_id = menup.id
@@ -667,8 +664,7 @@ module TestIdHelpers
     # Wait for bottom sheet content to load
     # The bottom sheet renders server-side, so we just need to wait for it to be visible
     begin
-      slug = URI.parse(current_url).path.split('/').last
-      sm = Smartmenu.find_by(slug: slug)
+      sm = smartmenu_from_current_url
       if sm
         order = Ordr.where(restaurant_id: sm.restaurant_id, tablesetting_id: sm.tablesetting_id, menu_id: sm.menu_id, status: [0, 20, 22, 24, 25, 30]).order(:created_at).last
         if order&.ordritems&.exists?
@@ -780,6 +776,18 @@ module TestIdHelpers
     wait_for_order_item_added(timeout: 10)
 
     # Modal should auto-close after update
+  end
+  # Resolve the current Smartmenu from the browser URL.
+  # Handles both /t/:public_token (post-redirect) and /smartmenus/:slug (legacy).
+  def smartmenu_from_current_url
+    path_parts = URI.parse(current_url).path.split('/')
+    if path_parts.include?('t')
+      token = path_parts.last
+      Smartmenu.find_by(public_token: token)
+    else
+      slug = path_parts.last
+      Smartmenu.find_by(slug: slug)
+    end
   end
 end
 

@@ -226,10 +226,11 @@ Rails.application.routes.draw do
       patch :reorder
     end
 
-    # Kitchen Dashboard
+    # Kitchen Dashboard and Floorplan Dashboard
     member do
       get 'kitchen', to: 'kitchen_dashboard#index', as: :kitchen_dashboard
       get 'bar', to: 'bar_dashboard#index', as: :bar_dashboard
+      get 'floorplan', to: 'floorplans#show', as: :floorplan
       patch :archive, to: 'restaurants/lifecycle#archive'
       patch :restore, to: 'restaurants/lifecycle#restore'
       patch 'update_hours', to: 'restaurants/hours#update_hours'
@@ -368,6 +369,14 @@ Rails.application.routes.draw do
         post 'payments/cash', to: 'ordr_payments#cash_payment'
         post 'payments/checkout_qr', to: 'ordr_payments#checkout_qr'
         post :send_receipt, to: 'receipt_deliveries#create'
+
+        # Auto Pay & Leave
+        post   'payment_methods',            to: 'auto_pay#store_payment_method'
+        delete 'payment_methods',            to: 'auto_pay#remove_payment_method'
+        post   'auto_pay',                   to: 'auto_pay#toggle_auto_pay'
+        post   'view_bill',                  to: 'auto_pay#view_bill'
+        post   'capture',                    to: 'auto_pay#capture'
+        post   'payments/setup_intent',      to: 'auto_pay#setup_intent'
       end
       
       resources :ordrnotes

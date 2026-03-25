@@ -41,6 +41,33 @@ class OrdrPolicy < ApplicationPolicy
     owner? || employee_admin?
   end
 
+  # Customer-facing: store / remove a payment method for auto-pay.
+  # Allows anonymous session-linked customers and authenticated staff.
+  def payment_method?
+    return true if user.id.nil?
+
+    owner? || authorized_employee?
+  end
+
+  # Customer-facing: enable / disable auto-pay toggle.
+  def auto_pay?
+    return true if user.id.nil?
+
+    owner? || authorized_employee?
+  end
+
+  # Customer-facing: record that the bill was viewed (idempotent event).
+  def view_bill?
+    return true if user.id.nil?
+
+    owner? || authorized_employee?
+  end
+
+  # Staff-only: manual capture (Charge Now button).
+  def capture?
+    owner? || authorized_employee?
+  end
+
   def performance?
     owner? || employee_admin?
   end

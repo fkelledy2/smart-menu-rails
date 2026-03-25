@@ -1,0 +1,110 @@
+<% content_for :title, "Floorplan — #{@restaurant.name}" %>
+
+<div class="container-fluid py-3"
+     data-controller="floorplan"
+     data-floorplan-restaurant-id-value="<%= @restaurant.id %>">
+
+  <%# Header %>
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+      <h4 class="mb-0 fw-bold">
+        <i class="bi bi-grid-fill me-2 text-primary" aria-hidden="true"></i>
+        Floorplan
+      </h4>
+      <p class="text-muted small mb-0"><%= @restaurant.name %></p>
+    </div>
+    <div class="d-flex gap-2">
+      <%= link_to kitchen_dashboard_restaurant_path(@restaurant), class: 'btn btn-sm btn-outline-secondary' do %>
+        <i class="bi bi-columns-gap me-1" aria-hidden="true"></i>Kitchen
+      <% end %>
+    </div>
+  </div>
+
+  <%# Filter bar %>
+  <div class="d-flex flex-wrap gap-2 mb-4" role="group" aria-label="Filter tables">
+    <button type="button"
+            class="btn btn-sm btn-primary"
+            data-floorplan-target="filterBtn"
+            data-filter="all"
+            data-action="click->floorplan#applyFilter">
+      All tables
+    </button>
+    <button type="button"
+            class="btn btn-sm btn-outline-secondary"
+            data-floorplan-target="filterBtn"
+            data-filter="active"
+            data-action="click->floorplan#applyFilter">
+      Active only
+    </button>
+    <button type="button"
+            class="btn btn-sm btn-outline-secondary"
+            data-floorplan-target="filterBtn"
+            data-filter="billrequested"
+            data-action="click->floorplan#applyFilter">
+      Bill requested
+    </button>
+    <button type="button"
+            class="btn btn-sm btn-outline-secondary"
+            data-floorplan-target="filterBtn"
+            data-filter="delayed"
+            data-action="click->floorplan#applyFilter">
+      Delayed
+    </button>
+  </div>
+
+  <%# Summary bar %>
+  <div class="row g-2 mb-4">
+    <div class="col-6 col-md-3">
+      <div class="card border-0 bg-light text-center py-2">
+        <div class="fw-bold fs-5"><%= @table_tiles.count %></div>
+        <div class="text-muted small">Total Tables</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="card border-0 bg-light text-center py-2">
+        <div class="fw-bold fs-5"><%= @table_tiles.count { |t| t[:ordr].present? } %></div>
+        <div class="text-muted small">Occupied</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="card border-0 bg-light text-center py-2">
+        <div class="fw-bold fs-5"><%= @table_tiles.count { |t| t[:ordr]&.billrequested? } %></div>
+        <div class="text-muted small">Bill Requested</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="card border-0 bg-light text-center py-2">
+        <div class="fw-bold fs-5"><%= @table_tiles.count { |t| t[:ordr] && floorplan_tile_delayed?(t[:ordr]) } %></div>
+        <div class="text-muted small">Delayed</div>
+      </div>
+    </div>
+  </div>
+
+  <%# Table grid %>
+  <div class="row g-3" data-floorplan-target="tileGrid">
+    <% if @table_tiles.empty? %>
+      <div class="col-12 text-center py-5 text-muted">
+        <i class="bi bi-layout-three-columns display-4" aria-hidden="true"></i>
+        <p class="mt-3">No tables configured for this restaurant.</p>
+        <%= link_to 'Add Tables', new_restaurant_tablesetting_path(@restaurant), class: 'btn btn-primary' %>
+      </div>
+    <% else %>
+      <% @table_tiles.each do |tile| %>
+        <div class="col-6 col-sm-4 col-md-3 col-xl-2"
+             data-floorplan-target="tileWrapper"
+             data-status="<%= tile[:ordr] ? tile[:ordr].status : 'available' %>"
+             data-delayed="<%= floorplan_tile_delayed?(tile[:ordr]) ? 'true' : 'false' %>">
+          <%= render 'floorplans/table_tile',
+                     tablesetting: tile[:tablesetting],
+                     ordr: tile[:ordr] %>
+          <% if tile[:multi_order_warning] %>
+            <div class="small text-warning text-center mt-1">
+              <i class="bi bi-exclamation-circle" aria-hidden="true"></i>
+              Multiple active orders
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</div>

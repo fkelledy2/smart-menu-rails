@@ -108,6 +108,10 @@ class SmartmenuLocaleSwitchingTest < ApplicationSystemTestCase
     visit smartmenu_path(@smartmenu.slug)
     assert_testid('smartmenu-customer-view', wait: 10)
 
+    wait_until_locale_persisted(timeout: 10) do
+      order.reload.ordrparticipants.where(role: 0).any? { |p| p.preferredlocale.present? }
+    end
+
     op = order.reload.ordrparticipants.where(role: 0).find { |p| p.preferredlocale.present? }
     assert op.present?, 'Ordrparticipant with preferredlocale should exist'
     assert_equal chosen, op.preferredlocale&.downcase

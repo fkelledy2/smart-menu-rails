@@ -1,5 +1,8 @@
 module Payments
   class Orchestrator
+    # Raised by adapters when a capture fails (card declined, Stripe error, etc.)
+    class CaptureError < StandardError; end
+
     def initialize(provider: nil)
       @provider = provider&.to_sym
     end
@@ -55,6 +58,60 @@ module Payments
         },
         provider_reference: created,
       }
+    end
+
+    # Create and immediately capture a PaymentIntent using a stored PaymentMethod reference.
+    # Used by Auto Pay & Leave when auto_pay is armed and the order reaches billrequested.
+    # Always routes through the adapter — never calls Stripe directly.
+    def create_and_capture_payment_intent!(ordr:, payment_method_id:, amount_cents:, currency:)
+      profile = PaymentProfile.find_or_create_by!(restaurant: ordr.restaurant) do |p|
+        p.merchant_model = :restaurant_mor
+        p.primary_provider = :stripe
+      end
+
+      provider = (@provider || profile.primary_provider).to_sym
+
+      charge_pattern = Payments::FundsFlowRouter.charge_pattern_for(
+        provider: provider,
+        merchant_model: profile.merchant_model,
+        restaurant: ordr.restaurant,
+      )
+
+      payment_attempt = PaymentAttempt.create!(
+        ordr: ordr,
+        restaurant: ordr.restaurant,
+        provider: provider,
+        amount_cents: amount_cents,
+        currency: currency,
+        status: :processing,
+        charge_pattern: charge_pattern,
+        merchant_model: profile.merchant_model,
+        idempotency_key: "auto_pay:#{ordr.id}:#{SecureRandom.hex(8)}",
+      )
+
+      adapter = provider_adapter(provider)
+      result = adapter.create_and_capture_intent!(
+        payment_attempt: payment_attempt,
+        ordr: ordr,
+        payment_method_id: payment_method_id,
+        amount_cents: amount_cents,
+        currency: currency,
+      )
+
+      Payments::Ledger.append!(
+        provider: provider.to_s,
+        provider_event_id: result.fetch(:payment_intent_id),
+        provider_event_type: 'payment_intent.succeeded',
+        occurred_at: Time.current,
+        entity_type: 'Ordr',
+        entity_id: ordr.id,
+        event_type: 'auto_pay_captured',
+        amount_cents: amount_cents,
+        currency: currency,
+        raw_event_payload: { payment_intent_id: result.fetch(:payment_intent_id) },
+      )
+
+      { payment_attempt: payment_attempt }.merge(result)
     end
 
     private

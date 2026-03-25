@@ -4,13 +4,16 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   include MenuTestHelpers
 
   if ENV['CI']
-    driven_by :selenium, using: :headless_chrome, screen_size: [1400, 1400] do |opts|
+    driven_by :selenium, using: :headless_chrome, screen_size: [1400, 900] do |opts|
       opts.add_argument('--no-sandbox')
       opts.add_argument('--disable-dev-shm-usage')
       opts.add_argument('--disable-gpu')
+      opts.add_argument('--window-size=1400,900')
     end
   else
-    driven_by :selenium, using: :chrome, screen_size: [1400, 1400]
+    driven_by :selenium, using: :chrome, screen_size: [1400, 900] do |opts|
+      opts.add_argument('--window-size=1400,900')
+    end
   end
 
   # System tests run in a separate thread, so transactional fixtures don't work

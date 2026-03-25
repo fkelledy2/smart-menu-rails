@@ -37,10 +37,25 @@ class Ordrparticipant < ApplicationRecord
 
   # Normalize locale to lowercase before save (I18n expects :en, :it, not :EN, :IT)
   before_save :normalize_locale
+  # Floorplan real-time tile update when participant count changes
+  after_commit :broadcast_floorplan_tile_update, on: %i[create destroy]
 
   private
 
   def normalize_locale
     self.preferredlocale = preferredlocale.downcase if preferredlocale.present?
+  end
+
+  def broadcast_floorplan_tile_update
+    return unless ordr&.tablesetting_id && ordr.restaurant_id
+
+    FloorplanBroadcastService.broadcast_tile(
+      tablesetting_id: ordr.tablesetting_id,
+      restaurant_id: ordr.restaurant_id,
+    )
+  rescue StandardError => e
+    Rails.logger.warn(
+      "[Ordrparticipant#broadcast_floorplan_tile_update] Failed for ordrparticipant=#{id}: #{e.class}: #{e.message}",
+    )
   end
 end

@@ -16,8 +16,13 @@ class SmartmenuStaffOrderingTest < ApplicationSystemTestCase
     @pasta = menuitems(:pasta)
     @spring_rolls = menuitems(:spring_rolls)
 
-    # Sign in as staff
-    sign_in(@employee.user)
+    # Warden test mode must be explicitly activated per-test for system tests
+    Warden.test_mode!
+    login_as(@employee.user, scope: :user)
+  end
+
+  teardown do
+    Warden.test_reset!
   end
 
   # ===================

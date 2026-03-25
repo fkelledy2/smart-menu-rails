@@ -3,6 +3,7 @@ class Tablesetting < ApplicationRecord
 
   # Standard ActiveRecord associations
   belongs_to :restaurant, touch: true
+  has_many :ordrs, dependent: :nullify
 
   # Enums
   enum :status, {

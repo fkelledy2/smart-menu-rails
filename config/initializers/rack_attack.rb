@@ -114,6 +114,17 @@ Rack::Attack.throttle('table_tokens/ip', limit: 60, period: 60.seconds) do |req|
   req.ip if req.path.start_with?('/t/') && req.get?
 end
 
+# Auto Pay: payment method storage — 10 per IP per 5 minutes
+# Prevents automated card enumeration via the payment_method_ref endpoint.
+Rack::Attack.throttle('auto_pay/payment_methods/ip', limit: 10, period: 5.minutes) do |req|
+  req.ip if req.path =~ %r{/payment_methods$} && req.post?
+end
+
+# Auto Pay: capture — 20 per IP per 10 minutes
+Rack::Attack.throttle('auto_pay/capture/ip', limit: 20, period: 10.minutes) do |req|
+  req.ip if req.path =~ %r{/capture$} && req.post?
+end
+
 # ----------------------------------------------------------------------------
 # Blocklists
 # ----------------------------------------------------------------------------
