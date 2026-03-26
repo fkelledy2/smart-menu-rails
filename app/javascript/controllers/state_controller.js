@@ -466,8 +466,8 @@ export default class extends Controller {
       const totals = this.state.totals;
       const symbol = (totals && totals.currency && totals.currency.symbol) || '';
       if (totals) {
-        const gross = Number(totals.gross || 0);
-        const formatted = symbol + gross.toFixed(2);
+        const net = Number(totals.nett || 0);
+        const formatted = symbol + net.toFixed(2);
         const totalAmountEl = document.getElementById('cartTotalAmount');
         if (totalAmountEl) {
           totalAmountEl.textContent = formatted;

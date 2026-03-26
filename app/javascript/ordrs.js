@@ -140,28 +140,6 @@ export function initOrders() {
     $(document).off('click.addNameToParticipant');
   }
 
-  // Size pill selector: clicking a pill updates selection and the [+] button data (works for all sized items: wine, coffee, etc.)
-  $(document)
-    .off('click.sizePill')
-    .on('click.sizePill', '.size-pill', function () {
-      const pill = this;
-      const selector = pill.closest('.size-selector');
-      if (!selector) return;
-      // Update pill visual state
-      selector.querySelectorAll('.size-pill').forEach((p) => {
-        p.classList.remove('btn-dark');
-        p.classList.add('btn-outline-dark');
-      });
-      pill.classList.remove('btn-outline-dark');
-      pill.classList.add('btn-dark');
-      // Update the [+] add button with selected size data
-      const addBtn = selector.querySelector('.size-add-btn');
-      if (addBtn) {
-        addBtn.setAttribute('data-bs-menuitem_price', pill.getAttribute('data-size-price'));
-        addBtn.setAttribute('data-bs-menuitem_size_name', pill.getAttribute('data-size-name'));
-      }
-    });
-
   function refreshOrderJSLogic() {
     // Table selector: search filter (idempotent)
     (function bindTableSelectorSearch() {
@@ -342,6 +320,13 @@ export function initOrders() {
     if ($('#addItemToOrderModal').length) {
       const addItemToOrderModal = document.getElementById('addItemToOrderModal');
       addItemToOrderModal.addEventListener('show.bs.modal', (event) => {
+        // Close any open size dropdowns when the modal opens
+        try {
+          document.querySelectorAll('.size-add-group [data-bs-toggle="dropdown"]').forEach((toggle) => {
+            bootstrap.Dropdown.getInstance(toggle)?.hide();
+          });
+        } catch (_) {}
+
         const button = event.relatedTarget;
         const setTastingControlsVisible = (modalEl, visible, opts = {}) => {
           try {
