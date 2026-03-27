@@ -85,6 +85,8 @@
 //= link controllers/auto_pay_controller.js
 //= link controllers/customer_auto_pay_controller.js
 //= link controllers/floorplan_controller.js
+//= link controllers/demo_booking_controller.js
+//= link controllers/video_analytics_controller.js
 
 // Application entry point
 //= link application.js

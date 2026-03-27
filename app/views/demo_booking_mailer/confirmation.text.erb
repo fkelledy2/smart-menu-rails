@@ -1,0 +1,46 @@
+You're booked in, <%= @demo_booking.contact_name %>!
+
+Thanks for your interest in Mellow Menu. We're excited to show you how we
+can help <%= @demo_booking.restaurant_name %> serve more guests and grow
+revenue — all from a beautifully simple digital menu.
+
+---
+
+WHAT TO EXPECT ON YOUR DEMO
+
+- A live walkthrough of your digital menu — personalised to your venue type
+- See how QR ordering, auto-pay, and real-time kitchen updates work together
+- Honest pricing discussion — no surprises, no lock-in
+- Time to ask any questions about your specific setup
+
+---
+
+SCHEDULE YOUR CALL
+
+Pick a time that works for you:
+<%= @calendly_url %>
+
+We've attached a calendar invite (.ics) to this email. If your email client
+doesn't show it, you can also add the placeholder to Google Calendar:
+<%= @google_cal_url %>
+
+---
+
+YOUR SUBMISSION DETAILS
+
+Restaurant:   <%= @demo_booking.restaurant_name %>
+Contact:      <%= @demo_booking.contact_name %>
+Email:        <%= @demo_booking.email %>
+<% if @demo_booking.restaurant_type.present? %>
+Venue type:   <%= @demo_booking.restaurant_type.humanize %>
+<% end %>
+<% if @demo_booking.location_count.present? %>
+Locations:    <%= @demo_booking.location_count %>
+<% end %>
+
+---
+
+You received this email because you requested a Mellow Menu demo.
+If you didn't submit this form, you can safely ignore this email.
+
+mellow.menu | Terms: https://www.mellow.menu/terms | Privacy: https://www.mellow.menu/privacy

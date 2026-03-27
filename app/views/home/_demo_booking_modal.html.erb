@@ -1,0 +1,144 @@
+<%# Demo booking modal — triggered by "Book Live Demo" CTA buttons.
+    Submits via fetch (Stimulus). On success shows the Calendly widget. %>
+
+<div class="modal fade" id="demoBookingModal" tabindex="-1"
+     aria-labelledby="demoBookingModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content"
+         data-controller="demo-booking"
+         data-demo-booking-url-value="<%= demo_bookings_path %>"
+         data-demo-booking-csrf-value="<%= form_authenticity_token %>">
+
+      <!-- Form step -->
+      <div data-demo-booking-target="formStep">
+        <div class="modal-header border-0 pb-0">
+          <div>
+            <h4 class="modal-title fw-bold" id="demoBookingModalLabel">Book your live demo</h4>
+            <p class="text-muted mb-0" style="font-size: 0.9rem;">
+              Takes 2 minutes &middot; We'll reach out within one business day
+            </p>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body pt-3">
+          <div class="alert alert-danger d-none" data-demo-booking-target="errorBox" role="alert"></div>
+
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label for="demo_contact_name" class="form-label fw-semibold">
+                Your name <span class="text-danger">*</span>
+              </label>
+              <input type="text" id="demo_contact_name" class="form-control"
+                     placeholder="Jane Smith"
+                     data-demo-booking-target="contactName"
+                     autocomplete="name" required>
+            </div>
+
+            <div class="col-md-6">
+              <label for="demo_restaurant_name" class="form-label fw-semibold">
+                Restaurant name <span class="text-danger">*</span>
+              </label>
+              <input type="text" id="demo_restaurant_name" class="form-control"
+                     placeholder="The Harbour Kitchen"
+                     data-demo-booking-target="restaurantName"
+                     required>
+            </div>
+
+            <div class="col-md-6">
+              <label for="demo_email" class="form-label fw-semibold">
+                Work email <span class="text-danger">*</span>
+              </label>
+              <input type="email" id="demo_email" class="form-control"
+                     placeholder="jane@therestaurant.com"
+                     data-demo-booking-target="email"
+                     autocomplete="email" required>
+            </div>
+
+            <div class="col-md-6">
+              <label for="demo_phone" class="form-label fw-semibold">Phone (optional)</label>
+              <input type="tel" id="demo_phone" class="form-control"
+                     placeholder="+353 1 234 5678"
+                     data-demo-booking-target="phone"
+                     autocomplete="tel">
+            </div>
+
+            <div class="col-md-6">
+              <label for="demo_restaurant_type" class="form-label fw-semibold">Venue type</label>
+              <select id="demo_restaurant_type" class="form-select"
+                      data-demo-booking-target="restaurantType">
+                <option value="">Select venue type…</option>
+                <% DemoBooking::RESTAURANT_TYPES.each do |type| %>
+                  <option value="<%= type %>"><%= type.humanize %></option>
+                <% end %>
+              </select>
+            </div>
+
+            <div class="col-md-6">
+              <label for="demo_location_count" class="form-label fw-semibold">Number of locations</label>
+              <select id="demo_location_count" class="form-select"
+                      data-demo-booking-target="locationCount">
+                <option value="">Select…</option>
+                <% DemoBooking::LOCATION_COUNTS.each do |count| %>
+                  <option value="<%= count %>"><%= count %></option>
+                <% end %>
+              </select>
+            </div>
+
+            <div class="col-12">
+              <label for="demo_interests" class="form-label fw-semibold">
+                Anything specific you'd like to see? (optional)
+              </label>
+              <textarea id="demo_interests" class="form-control" rows="3"
+                        placeholder="e.g. QR ordering, kitchen display, bill splitting…"
+                        data-demo-booking-target="interests"
+                        maxlength="2000"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer flex-column align-items-start border-0 pt-0">
+          <button type="button" class="btn btn-danger w-100 fw-semibold py-2"
+                  data-action="click->demo-booking#submit"
+                  data-demo-booking-target="submitBtn">
+            Book my demo &rarr;
+          </button>
+          <p class="text-muted mt-2 mb-0" style="font-size: 0.8rem;">
+            By submitting this form you agree to our
+            <a href="<%= privacy_path %>" target="_blank">Privacy Policy</a>.
+            We will never sell your data.
+          </p>
+        </div>
+      </div>
+
+      <!-- Success / Calendly step -->
+      <div class="d-none" data-demo-booking-target="successStep">
+        <div class="modal-header border-0">
+          <h4 class="modal-title fw-bold">You're in! Pick a time below</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-muted mb-3">
+            We've emailed your confirmation. Select a slot to lock in your live demo.
+          </p>
+          <!-- Calendly inline widget placeholder -->
+          <div data-demo-booking-target="calendlyContainer"
+               style="min-height: 380px; border-radius: 8px; overflow: hidden; border: 1px solid #E5E7EB;">
+            <div class="d-flex align-items-center justify-content-center h-100 p-4 text-center">
+              <div>
+                <a href="#" target="_blank" class="btn btn-danger btn-lg fw-semibold"
+                   data-demo-booking-target="calendlyLink">
+                  Open Calendly to schedule &rarr;
+                </a>
+                <p class="text-muted mt-2 mb-0" style="font-size: 0.85rem;">
+                  Opens in a new tab if your browser blocks embedded calendars.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

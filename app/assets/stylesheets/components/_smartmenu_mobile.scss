@@ -27,6 +27,7 @@
     }
 
     border: 1px solid #e5e5e5;
+
     // overflow: hidden removed — it clips dropdowns when combined with transform
     display: flex;
     flex-direction: column;
@@ -80,6 +81,7 @@
     max-width: 40%;
     overflow: hidden;
     position: relative;
+
     // Round left corners (horizontal card) since card overflow:hidden is removed
     border-top-left-radius: 11px;
     border-bottom-left-radius: 11px;
@@ -112,6 +114,7 @@
     position: relative;
     width: 100%;
     overflow: hidden;
+
     // Round top corners to compensate for card overflow:hidden being removed
     border-top-left-radius: 11px;
     border-top-right-radius: 11px;
@@ -297,16 +300,14 @@
         }
       }
 
-      // Size dropstart: list mode uses left/right chevron (override card-mode rotation)
-      .size-add-group {
-        .size-toggle-btn .size-chevron { transform: rotate(0deg); }
-        .size-toggle-btn[aria-expanded='true'] .size-chevron { transform: rotate(180deg); }
-      }
-
-      // Size dropstart button and options match regular add button in list mode
+      // Size dropstart: list mode sizing + left/right chevron
       .size-add-group {
         display: flex;
         align-items: center;
+
+        // Chevron: left/right in list mode (override card-mode up/down)
+        .size-toggle-btn .size-chevron { transform: rotate(0deg); }
+        .size-toggle-btn[aria-expanded='true'] .size-chevron { transform: rotate(180deg); }
 
         .size-toggle-btn {
           font-size: 0.8125rem;
@@ -1345,9 +1346,11 @@
 .size-add-group {
   .dropdown-menu {
     --bs-dropdown-padding-y: 0;
+
     padding-top: 0 !important;
     padding-bottom: 0 !important;
   }
+
   // Toggle button: card mode uses up/down chevron, list mode uses left/right
   .size-toggle-btn {
     bottom: 0 !important;
@@ -1356,6 +1359,7 @@
     .size-chevron {
       display: inline-block;
       transition: transform 0.2s ease;
+
       // Card mode default: rotate bi-chevron-left -90° → points up
       transform: rotate(-90deg);
     }

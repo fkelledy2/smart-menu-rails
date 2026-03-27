@@ -414,6 +414,7 @@ module TestIdHelpers
     # Directly create the ordritem in the database using Smartmenu context
     sm = smartmenu_from_current_url
     raise ActiveRecord::RecordNotFound, "Couldn't find Smartmenu at #{current_url}" unless sm
+
     restaurant_id = sm.restaurant_id
     table_id = sm.tablesetting_id
     menu_id = sm.menu_id
@@ -777,6 +778,7 @@ module TestIdHelpers
 
     # Modal should auto-close after update
   end
+
   # Resolve the current Smartmenu from the browser URL.
   # Handles both /t/:public_token (post-redirect) and /smartmenus/:slug (legacy).
   def smartmenu_from_current_url

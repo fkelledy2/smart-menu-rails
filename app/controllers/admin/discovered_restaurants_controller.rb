@@ -51,7 +51,9 @@ module Admin
 
       if @sort == 'menus_count'
         pdf_type = MenuSource.source_types[:pdf]
-        count_expr = "COUNT(CASE WHEN menu_sources.source_type = #{pdf_type} THEN 1 END)"
+        count_expr = ActiveRecord::Base.sanitize_sql(
+          ['COUNT(CASE WHEN menu_sources.source_type = ? THEN 1 END)', pdf_type],
+        )
 
         scope = base_scope
           .left_joins(:menu_sources)

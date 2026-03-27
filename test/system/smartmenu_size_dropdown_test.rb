@@ -55,8 +55,7 @@ class SmartmenuSizeDropdownTest < ApplicationSystemTestCase
 
     find_testid("add-item-btn-#{@item_with_sizes.id}", wait: 5).click
 
-    assert_selector('.size-add-group .dropdown-menu.show', wait: 3),
-      'Size dropdown should open with .show class after clicking toggle'
+    assert_selector('.size-add-group .dropdown-menu.show', wait: 3)
   end
 
   test 'size dropdown is not clipped — menu is fully visible' do
@@ -88,8 +87,7 @@ class SmartmenuSizeDropdownTest < ApplicationSystemTestCase
 
     find('.size-add-group .dropdown-menu.show .size-option', wait: 3).click
 
-    assert_selector('#addItemToOrderModal.show', wait: 5),
-      'Clicking a size option should open the add-to-order modal'
+    assert_selector('#addItemToOrderModal.show', wait: 5)
   end
 
   test 'size toggle is disabled when no table is set' do

@@ -322,9 +322,11 @@ export function initOrders() {
       addItemToOrderModal.addEventListener('show.bs.modal', (event) => {
         // Close any open size dropdowns when the modal opens
         try {
-          document.querySelectorAll('.size-add-group [data-bs-toggle="dropdown"]').forEach((toggle) => {
-            bootstrap.Dropdown.getInstance(toggle)?.hide();
-          });
+          document
+            .querySelectorAll('.size-add-group [data-bs-toggle="dropdown"]')
+            .forEach((toggle) => {
+              bootstrap.Dropdown.getInstance(toggle)?.hide();
+            });
         } catch (_) {}
 
         const button = event.relatedTarget;
