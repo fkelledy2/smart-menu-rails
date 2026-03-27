@@ -1,0 +1,19 @@
+play_event:
+  video_id: homepage-demo
+  session_id: va-001
+  event_type: play
+  timestamp_seconds: 0
+  ip_address: "127.0.0.1"
+  user_agent: "Mozilla/5.0"
+  referrer: "https://www.mellow.menu"
+  created_at: "<%= 1.day.ago.iso8601 %>"
+
+completion_75_event:
+  video_id: homepage-demo
+  session_id: va-001
+  event_type: completion_75
+  timestamp_seconds: 225
+  ip_address: "127.0.0.1"
+  user_agent: "Mozilla/5.0"
+  referrer: "https://www.mellow.menu"
+  created_at: "<%= 1.day.ago.iso8601 %>"

@@ -1,0 +1,25 @@
+pending_lead:
+  restaurant_name: The Harbour Kitchen
+  contact_name: Jane Smith
+  email: jane@therestaurant.com
+  phone: "+353 1 234 5678"
+  restaurant_type: casual_dining
+  location_count: "2-5"
+  interests: QR ordering and auto-pay
+  calendly_event_id:
+  conversion_status: pending
+  created_at: "<%= 2.days.ago.iso8601 %>"
+  updated_at: "<%= 2.days.ago.iso8601 %>"
+
+converted_lead:
+  restaurant_name: "Burger Palace"
+  contact_name: John Doe
+  email: john@burgerpalace.com
+  phone:
+  restaurant_type: quick_service
+  location_count: "1"
+  interests:
+  calendly_event_id: abc123xyz
+  conversion_status: converted
+  created_at: "<%= 10.days.ago.iso8601 %>"
+  updated_at: "<%= 8.days.ago.iso8601 %>"

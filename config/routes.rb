@@ -27,6 +27,14 @@ Rails.application.routes.draw do
 
   # Marketing QR code public resolve endpoint — rate-limited via RackAttack
   get '/m/:token', to: 'marketing_qr_codes#resolve', as: :marketing_qr_code_resolve
+
+  # Demo booking — public lead capture, rate-limited via RackAttack
+  resources :demo_bookings, only: [:create] do
+    collection { post :video_analytics }
+  end
+
+  # Standalone demo landing page
+  get '/demo', to: 'home#demo', as: :demo
   
   # ============================================================================
   # HEALTH AND MONITORING
@@ -102,6 +110,8 @@ Rails.application.routes.draw do
         patch :reject
       end
     end
+
+    resources :demo_bookings, only: %i[index show update]
 
     resources :crawl_source_rules
 

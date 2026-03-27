@@ -1,0 +1,56 @@
+<%# Recorded demo video modal — triggered by "Watch Demo" CTA buttons.
+    Video analytics tracked via Stimulus video-analytics controller.
+
+    Set DEMO_VIDEO_URL env var or credential to the hosted video file / embed.
+    Falls back to a friendly placeholder when no video is configured. %>
+
+<% demo_video_url = ENV.fetch('DEMO_VIDEO_URL', nil) %>
+
+<div class="modal fade" id="videoDemoModal" tabindex="-1"
+     aria-labelledby="videoDemoModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content bg-dark">
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title text-white" id="videoDemoModalLabel">
+          Mellow Menu — Product Demo
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body p-2 p-md-3">
+        <% if demo_video_url.present? %>
+          <div data-controller="video-analytics"
+               data-video-analytics-video-id-value="homepage-demo"
+               data-video-analytics-endpoint-value="<%= video_analytics_demo_bookings_path %>">
+            <video controls preload="metadata"
+                   class="w-100 rounded"
+                   style="max-height: 70vh; background: #000;"
+                   data-video-analytics-target="player"
+                   data-action="play->video-analytics#trackPlay pause->video-analytics#trackPause ended->video-analytics#trackEnded timeupdate->video-analytics#trackProgress">
+              <source src="<%= demo_video_url %>" type="video/mp4">
+              Your browser does not support HTML5 video.
+            </video>
+          </div>
+        <% else %>
+          <div class="d-flex align-items-center justify-content-center rounded bg-secondary"
+               style="min-height: 360px;">
+            <div class="text-center text-white px-4">
+              <i class="bi bi-play-circle" style="font-size: 4rem; opacity: 0.6;"></i>
+              <h4 class="mt-3">Demo video coming soon</h4>
+              <p class="text-white-50 mb-4">
+                Our recorded walkthrough is being produced. Book a live demo and
+                we'll give you a personalised tour right now.
+              </p>
+              <button type="button" class="btn btn-danger fw-semibold"
+                      data-bs-dismiss="modal"
+                      data-bs-toggle="modal"
+                      data-bs-target="#demoBookingModal">
+                Book a live demo instead &rarr;
+              </button>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

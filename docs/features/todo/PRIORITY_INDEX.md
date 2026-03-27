@@ -1,6 +1,6 @@
 # mellow.menu Feature Backlog — Priority Index
 
-**Last updated**: 2026-03-25 (Pre-Configured Marketing QRs completed; Homepage Demo Booking & Video is now #1 active launch enhancer)
+**Last updated**: 2026-03-26 (Homepage Demo Booking & Video completed; JWT Token Management is now #1 active item)
 **QR Code Security (#1)**: COMPLETED 2026-03-24 — Phase 1 shipped; spec at `docs/features/completed/qr-security.md`
 **Branded Email Styling (#1)**: COMPLETED 2026-03-24 — spec at `docs/features/completed/branded-email-styling-feature-request.md`
 **Branded Receipt Email (#2)**: COMPLETED 2026-03-25 — spec at `docs/features/completed/branded-receipt-email-feature-request.md`
@@ -18,7 +18,7 @@
 | ~~#4~~ | ~~Auto Pay & Leave~~ | ~~Launch Enhancer~~ | L | — | COMPLETED 2026-03-25 — spec at `docs/features/completed/auto-pay-and-leave-combined.md` |
 | ~~#5~~ | ~~Floorplan Dashboard~~ | ~~Launch Enhancer~~ | M | — | COMPLETED 2026-03-25 — spec at `docs/features/completed/floorplan.md` |
 | ~~#6~~ | ~~Pre-Configured Marketing QRs~~ | ~~Launch Enhancer~~ | M | #1 (token infra) | COMPLETED 2026-03-25 — spec at `docs/features/completed/pre-config-qrs.md` |
-| #7 | Homepage Demo Booking & Video | Launch Enhancer | S | None | Minimum viable sales funnel; converts marketing traffic into bookable leads |
+| ~~#7~~ | ~~Homepage Demo Booking & Video~~ | ~~Launch Enhancer~~ | S | None | COMPLETED 2026-03-26 — spec at `docs/features/completed/homepage-demo-booking-feature-request.md` |
 | #8 | JWT Token Management (API) | Post-Launch | L | Existing admin auth | Enterprise and integration-partner access; revenue unlock for larger groups |
 | #9 | Partner Integrations (Event-Driven) | Post-Launch | M | #8, Stripe webhooks | Ecosystem play; required by workforce/CRM partners |
 | #10 | Menu Experiments (A/B Testing) | Post-Launch | M | #1 (DiningSession); MenuVersion BUILT | Elevated: MenuVersion dependency resolved — only needs QR Security (#1) to ship first |

@@ -75,7 +75,13 @@
       <p data-cta-body><strong><%= t(".ctaBody1") %></strong></p>
       <div class="hero-actions d-flex flex-wrap gap-2">
         <%= link_to t('.heroPrimaryCta'), new_user_registration_path, class: "btn btn-danger" %>
-        <%= link_to t('.heroSecondaryCta'), '#demo-table', class: "btn btn-outline-light" %>
+        <%= link_to demo_path, class: 'btn btn-danger' do %>
+          <i class="bi bi-calendar-check me-1"></i><%= t('.bookDemo') %>
+        <% end %>
+        <button type="button" class="btn btn-outline-light"
+                data-bs-toggle="modal" data-bs-target="#videoDemoModal">
+          <i class="bi bi-play-circle me-1"></i><%= t('.watchDemo') %>
+        </button>
       </div>
     </div>
   </div>
@@ -617,4 +623,7 @@
       </div>
     </div>
   </div>
+
+  <%= render 'home/demo_booking_modal' %>
+  <%= render 'home/video_demo_modal' %>
 <% end %>

@@ -126,6 +126,20 @@ Rack::Attack.throttle('auto_pay/capture/ip', limit: 20, period: 10.minutes) do |
 end
 
 # ----------------------------------------------------------------------------
+# Demo booking throttles
+# ----------------------------------------------------------------------------
+
+# Demo booking submission: 5 per IP per hour — prevents automated lead spam
+Rack::Attack.throttle('demo_bookings/ip', limit: 5, period: 1.hour) do |req|
+  req.ip if req.path == '/demo_bookings' && req.post?
+end
+
+# Video analytics: 60 per IP per minute — generous to allow rapid event firing
+Rack::Attack.throttle('video_analytics/ip', limit: 60, period: 60.seconds) do |req|
+  req.ip if req.path == '/demo_bookings/video_analytics' && req.post?
+end
+
+# ----------------------------------------------------------------------------
 # Marketing QR code throttles
 # ----------------------------------------------------------------------------
 

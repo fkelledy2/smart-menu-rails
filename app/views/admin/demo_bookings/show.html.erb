@@ -1,0 +1,83 @@
+<%# Admin: Demo Booking detail view %>
+<% content_for :title, "Demo Booking ##{@demo_booking.id} — Admin" %>
+
+<div class="container py-4" style="max-width: 760px;">
+  <div class="mb-3">
+    <%= link_to '&larr; All Demo Bookings'.html_safe, admin_demo_bookings_path,
+                class: 'btn btn-sm btn-outline-secondary' %>
+  </div>
+
+  <div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h2 class="h5 mb-0">
+        <%= @demo_booking.contact_name %> &mdash; <%= @demo_booking.restaurant_name %>
+      </h2>
+      <small class="text-muted">ID #<%= @demo_booking.id %></small>
+    </div>
+
+    <div class="card-body">
+      <dl class="row">
+        <dt class="col-sm-4">Restaurant</dt>
+        <dd class="col-sm-8"><%= @demo_booking.restaurant_name %></dd>
+
+        <dt class="col-sm-4">Contact</dt>
+        <dd class="col-sm-8"><%= @demo_booking.contact_name %></dd>
+
+        <dt class="col-sm-4">Email</dt>
+        <dd class="col-sm-8">
+          <a href="mailto:<%= @demo_booking.email %>"><%= @demo_booking.email %></a>
+        </dd>
+
+        <dt class="col-sm-4">Phone</dt>
+        <dd class="col-sm-8"><%= @demo_booking.phone.presence || '—' %></dd>
+
+        <dt class="col-sm-4">Venue type</dt>
+        <dd class="col-sm-8"><%= @demo_booking.restaurant_type&.humanize || '—' %></dd>
+
+        <dt class="col-sm-4">Locations</dt>
+        <dd class="col-sm-8"><%= @demo_booking.location_count.presence || '—' %></dd>
+
+        <dt class="col-sm-4">Interests</dt>
+        <dd class="col-sm-8"><%= @demo_booking.interests.presence || '—' %></dd>
+
+        <dt class="col-sm-4">Calendly event</dt>
+        <dd class="col-sm-8"><%= @demo_booking.calendly_event_id.presence || '—' %></dd>
+
+        <dt class="col-sm-4">Submitted</dt>
+        <dd class="col-sm-8"><%= @demo_booking.created_at.strftime('%d %B %Y at %H:%M UTC') %></dd>
+      </dl>
+    </div>
+  </div>
+
+  <!-- Status update form -->
+  <div class="card mt-4">
+    <div class="card-header"><h3 class="h6 mb-0">Update status</h3></div>
+    <div class="card-body">
+      <%= form_with url: admin_demo_booking_path(@demo_booking), method: :patch, local: true do |_f| %>
+        <div class="row g-3 align-items-end">
+          <div class="col-sm-5">
+            <label class="form-label fw-semibold">Conversion status</label>
+            <select name="demo_booking[conversion_status]" class="form-select">
+              <% DemoBooking::CONVERSION_STATUSES.each do |status| %>
+                <option value="<%= status %>"
+                  <%= 'selected' if status == @demo_booking.conversion_status %>>
+                  <%= status.capitalize %>
+                </option>
+              <% end %>
+            </select>
+          </div>
+          <div class="col-sm-5">
+            <label class="form-label fw-semibold">Calendly event ID (optional)</label>
+            <input type="text" name="demo_booking[calendly_event_id]"
+                   class="form-control"
+                   value="<%= @demo_booking.calendly_event_id %>"
+                   placeholder="e.g. abc123xyz">
+          </div>
+          <div class="col-sm-2">
+            <button type="submit" class="btn btn-primary w-100">Save</button>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

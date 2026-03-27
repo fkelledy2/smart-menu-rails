@@ -391,6 +391,45 @@ ALTER SEQUENCE public.crawl_source_rules_id_seq OWNED BY public.crawl_source_rul
 
 
 --
+-- Name: demo_bookings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.demo_bookings (
+    id bigint NOT NULL,
+    restaurant_name character varying NOT NULL,
+    contact_name character varying NOT NULL,
+    email character varying NOT NULL,
+    phone character varying,
+    restaurant_type character varying,
+    location_count character varying,
+    interests text,
+    calendly_event_id character varying,
+    conversion_status character varying DEFAULT 'pending'::character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: demo_bookings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.demo_bookings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: demo_bookings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.demo_bookings_id_seq OWNED BY public.demo_bookings.id;
+
+
+--
 -- Name: dining_sessions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -4241,20 +4280,128 @@ ALTER SEQUENCE public.staff_invitations_id_seq OWNED BY public.staff_invitations
 
 
 --
--- Name: system_analytics_mv; Type: VIEW; Schema: public; Owner: -
+-- Name: users; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE VIEW public.system_analytics_mv AS
- SELECT CURRENT_DATE AS date,
-    (date_trunc('month'::text, (CURRENT_DATE)::timestamp with time zone))::date AS month,
-    0 AS new_restaurants,
-    0 AS new_users,
-    0 AS new_menus,
-    0 AS new_menuitems,
-    0 AS total_orders,
-    (0)::numeric AS total_revenue,
-    0 AS active_restaurants
-  WHERE false;
+CREATE TABLE public.users (
+    id bigint NOT NULL,
+    email character varying DEFAULT ''::character varying NOT NULL,
+    encrypted_password character varying DEFAULT ''::character varying NOT NULL,
+    reset_password_token character varying,
+    reset_password_sent_at timestamp(6) without time zone,
+    remember_created_at timestamp(6) without time zone,
+    first_name character varying,
+    last_name character varying,
+    announcements_last_read_at timestamp(6) without time zone,
+    admin boolean DEFAULT false NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    plan_id bigint,
+    confirmation_token character varying,
+    confirmed_at timestamp(6) without time zone,
+    confirmation_sent_at timestamp(6) without time zone,
+    unconfirmed_email character varying,
+    restaurants_count integer DEFAULT 0,
+    employees_count integer DEFAULT 0,
+    super_admin boolean DEFAULT false NOT NULL,
+    failed_attempts integer DEFAULT 0 NOT NULL,
+    unlock_token character varying,
+    locked_at timestamp(6) without time zone,
+    password_changed_at timestamp(6) without time zone,
+    encrypted_password_salt character varying,
+    encrypted_password_iv character varying,
+    session_limitable integer,
+    unique_session_id character varying,
+    last_activity_at timestamp(6) without time zone,
+    expired_at timestamp(6) without time zone
+);
+
+
+--
+-- Name: system_analytics_mv; Type: MATERIALIZED VIEW; Schema: public; Owner: -
+--
+
+CREATE MATERIALIZED VIEW public.system_analytics_mv AS
+ SELECT date_trunc('day'::text, created_at) AS date,
+    date_trunc('week'::text, created_at) AS week,
+    date_trunc('month'::text, created_at) AS month,
+    count(DISTINCT
+        CASE
+            WHEN (entity_type = 'restaurant'::text) THEN entity_id
+            ELSE NULL::bigint
+        END) AS new_restaurants,
+    count(DISTINCT
+        CASE
+            WHEN (entity_type = 'user'::text) THEN entity_id
+            ELSE NULL::bigint
+        END) AS new_users,
+    count(DISTINCT
+        CASE
+            WHEN (entity_type = 'menu'::text) THEN entity_id
+            ELSE NULL::bigint
+        END) AS new_menus,
+    count(DISTINCT
+        CASE
+            WHEN (entity_type = 'menuitem'::text) THEN entity_id
+            ELSE NULL::bigint
+        END) AS new_menuitems,
+    count(DISTINCT
+        CASE
+            WHEN (entity_type = 'order'::text) THEN entity_id
+            ELSE NULL::bigint
+        END) AS total_orders,
+    COALESCE(sum(
+        CASE
+            WHEN (entity_type = 'order'::text) THEN revenue
+            ELSE NULL::double precision
+        END), (0)::double precision) AS total_revenue,
+    count(DISTINCT
+        CASE
+            WHEN (entity_type = 'active_restaurant'::text) THEN entity_id
+            ELSE NULL::bigint
+        END) AS active_restaurants
+   FROM ( SELECT restaurants.id AS entity_id,
+            'restaurant'::text AS entity_type,
+            restaurants.created_at,
+            0 AS revenue
+           FROM public.restaurants
+        UNION ALL
+         SELECT users.id AS entity_id,
+            'user'::text AS entity_type,
+            users.created_at,
+            0 AS revenue
+           FROM public.users
+        UNION ALL
+         SELECT menus.id AS entity_id,
+            'menu'::text AS entity_type,
+            menus.created_at,
+            0 AS revenue
+           FROM public.menus
+        UNION ALL
+         SELECT menuitems.id AS entity_id,
+            'menuitem'::text AS entity_type,
+            menuitems.created_at,
+            0 AS revenue
+           FROM public.menuitems
+        UNION ALL
+         SELECT o.id AS entity_id,
+            'order'::text AS entity_type,
+            o.created_at,
+            COALESCE(sum((oi.ordritemprice * (oi.quantity)::double precision)), (0)::double precision) AS revenue
+           FROM (public.ordrs o
+             LEFT JOIN public.ordritems oi ON ((o.id = oi.ordr_id)))
+          WHERE (o.status = ANY (ARRAY[35, 40]))
+          GROUP BY o.id, o.created_at
+        UNION ALL
+         SELECT DISTINCT r.id AS entity_id,
+            'active_restaurant'::text AS entity_type,
+            o.created_at,
+            0 AS revenue
+           FROM (public.restaurants r
+             JOIN public.ordrs o ON ((r.id = o.restaurant_id)))
+          WHERE (o.created_at >= (CURRENT_DATE - '30 days'::interval))) combined_data
+  GROUP BY (date_trunc('day'::text, created_at)), (date_trunc('week'::text, created_at)), (date_trunc('month'::text, created_at))
+  WITH NO DATA;
 
 
 --
@@ -4527,44 +4674,6 @@ ALTER SEQUENCE public.userplans_id_seq OWNED BY public.userplans.id;
 
 
 --
--- Name: users; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.users (
-    id bigint NOT NULL,
-    email character varying DEFAULT ''::character varying NOT NULL,
-    encrypted_password character varying DEFAULT ''::character varying NOT NULL,
-    reset_password_token character varying,
-    reset_password_sent_at timestamp(6) without time zone,
-    remember_created_at timestamp(6) without time zone,
-    first_name character varying,
-    last_name character varying,
-    announcements_last_read_at timestamp(6) without time zone,
-    admin boolean DEFAULT false NOT NULL,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    plan_id bigint,
-    confirmation_token character varying,
-    confirmed_at timestamp(6) without time zone,
-    confirmation_sent_at timestamp(6) without time zone,
-    unconfirmed_email character varying,
-    restaurants_count integer DEFAULT 0,
-    employees_count integer DEFAULT 0,
-    super_admin boolean DEFAULT false NOT NULL,
-    failed_attempts integer DEFAULT 0 NOT NULL,
-    unlock_token character varying,
-    locked_at timestamp(6) without time zone,
-    password_changed_at timestamp(6) without time zone,
-    encrypted_password_salt character varying,
-    encrypted_password_iv character varying,
-    session_limitable integer,
-    unique_session_id character varying,
-    last_activity_at timestamp(6) without time zone,
-    expired_at timestamp(6) without time zone
-);
-
-
---
 -- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -4581,6 +4690,42 @@ CREATE SEQUENCE public.users_id_seq
 --
 
 ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
+
+
+--
+-- Name: video_analytics; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.video_analytics (
+    id bigint NOT NULL,
+    video_id character varying NOT NULL,
+    session_id character varying,
+    event_type character varying NOT NULL,
+    timestamp_seconds integer,
+    ip_address inet,
+    user_agent text,
+    referrer character varying,
+    created_at timestamp(6) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+
+--
+-- Name: video_analytics_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.video_analytics_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: video_analytics_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.video_analytics_id_seq OWNED BY public.video_analytics.id;
 
 
 --
@@ -4730,6 +4875,13 @@ ALTER TABLE ONLY public.contacts ALTER COLUMN id SET DEFAULT nextval('public.con
 --
 
 ALTER TABLE ONLY public.crawl_source_rules ALTER COLUMN id SET DEFAULT nextval('public.crawl_source_rules_id_seq'::regclass);
+
+
+--
+-- Name: demo_bookings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.demo_bookings ALTER COLUMN id SET DEFAULT nextval('public.demo_bookings_id_seq'::regclass);
 
 
 --
@@ -5454,6 +5606,13 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 
 
 --
+-- Name: video_analytics id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.video_analytics ALTER COLUMN id SET DEFAULT nextval('public.video_analytics_id_seq'::regclass);
+
+
+--
 -- Name: voice_commands id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -5553,6 +5712,14 @@ ALTER TABLE ONLY public.contacts
 
 ALTER TABLE ONLY public.crawl_source_rules
     ADD CONSTRAINT crawl_source_rules_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: demo_bookings demo_bookings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.demo_bookings
+    ADD CONSTRAINT demo_bookings_pkey PRIMARY KEY (id);
 
 
 --
@@ -6396,6 +6563,14 @@ ALTER TABLE ONLY public.users
 
 
 --
+-- Name: video_analytics video_analytics_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.video_analytics
+    ADD CONSTRAINT video_analytics_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: voice_commands voice_commands_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6587,6 +6762,20 @@ CREATE INDEX idx_staff_invitations_restaurant_email ON public.staff_invitations 
 
 
 --
+-- Name: idx_system_analytics_date; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_system_analytics_date ON public.system_analytics_mv USING btree (date);
+
+
+--
+-- Name: idx_system_analytics_month; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_system_analytics_month ON public.system_analytics_mv USING btree (month);
+
+
+--
 -- Name: index_active_storage_attachments_on_blob_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6738,6 +6927,27 @@ CREATE UNIQUE INDEX index_crawl_source_rules_on_domain ON public.crawl_source_ru
 --
 
 CREATE INDEX index_crawl_source_rules_on_rule_type ON public.crawl_source_rules USING btree (rule_type);
+
+
+--
+-- Name: index_demo_bookings_on_conversion_status; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_demo_bookings_on_conversion_status ON public.demo_bookings USING btree (conversion_status);
+
+
+--
+-- Name: index_demo_bookings_on_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_demo_bookings_on_created_at ON public.demo_bookings USING btree (created_at);
+
+
+--
+-- Name: index_demo_bookings_on_email; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_demo_bookings_on_email ON public.demo_bookings USING btree (email);
 
 
 --
@@ -9394,6 +9604,20 @@ CREATE UNIQUE INDEX index_users_on_unlock_token ON public.users USING btree (unl
 
 
 --
+-- Name: index_video_analytics_on_event_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_video_analytics_on_event_type ON public.video_analytics USING btree (event_type);
+
+
+--
+-- Name: index_video_analytics_on_video_id_and_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_video_analytics_on_video_id_and_created_at ON public.video_analytics USING btree (video_id, created_at);
+
+
+--
 -- Name: index_voice_commands_on_smartmenu_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -10775,6 +10999,8 @@ ALTER TABLE ONLY public.voice_commands
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260326194824'),
+('20260326194817'),
 ('20260325195401'),
 ('20260325120000'),
 ('20260325094758'),

@@ -1,0 +1,119 @@
+<%# Demo booking confirmation email — uses the shared branded mailer layout. %>
+<%# All CSS is inline for email client compatibility. %>
+
+<!-- Greeting -->
+<h1 style="margin: 0 0 16px 0; font-size: 24px; font-weight: 700; color: #111827;">
+  You're booked in, <%= @demo_booking.contact_name %>!
+</h1>
+<p style="margin: 0 0 20px 0; font-size: 16px; color: #374151; line-height: 1.6;">
+  Thanks for your interest in Mellow Menu. We're excited to show you how we
+  can help <strong><%= @demo_booking.restaurant_name %></strong> serve more
+  guests and grow revenue — all from a beautifully simple digital menu.
+</p>
+
+<!-- Divider -->
+<hr style="border: 0; border-top: 1px solid #E5E7EB; margin: 0 0 24px 0;">
+
+<!-- What to expect -->
+<h2 style="margin: 0 0 12px 0; font-size: 18px; font-weight: 600; color: #111827;">
+  What to expect on your demo
+</h2>
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom: 24px;">
+  <tr>
+    <td style="padding: 8px 0; font-size: 15px; color: #374151;">
+      <span style="color: #EF4444; font-weight: 700; margin-right: 8px;">&#x2714;</span>
+      A live walkthrough of your digital menu — personalised to your venue type
+    </td>
+  </tr>
+  <tr>
+    <td style="padding: 8px 0; font-size: 15px; color: #374151;">
+      <span style="color: #EF4444; font-weight: 700; margin-right: 8px;">&#x2714;</span>
+      See how QR ordering, auto-pay, and real-time kitchen updates work together
+    </td>
+  </tr>
+  <tr>
+    <td style="padding: 8px 0; font-size: 15px; color: #374151;">
+      <span style="color: #EF4444; font-weight: 700; margin-right: 8px;">&#x2714;</span>
+      Honest pricing discussion — no surprises, no lock-in
+    </td>
+  </tr>
+  <tr>
+    <td style="padding: 8px 0; font-size: 15px; color: #374151;">
+      <span style="color: #EF4444; font-weight: 700; margin-right: 8px;">&#x2714;</span>
+      Time to ask any questions about your specific setup
+    </td>
+  </tr>
+</table>
+
+<!-- Schedule CTA -->
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom: 16px;">
+  <tr>
+    <td align="center">
+      <a href="<%= @calendly_url %>"
+         style="display: inline-block; background-color: #EF4444; color: #ffffff; font-size: 16px; font-weight: 600; text-decoration: none; padding: 14px 32px; border-radius: 8px;"
+         target="_blank">
+        Pick a time that works for you &rarr;
+      </a>
+    </td>
+  </tr>
+</table>
+
+<!-- Calendar note -->
+<p style="margin: 0 0 8px 0; font-size: 14px; color: #374151; line-height: 1.6; text-align: center;">
+  We've attached a calendar invite (.ics) to this email. Can't see it?
+</p>
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom: 24px;">
+  <tr>
+    <td align="center">
+      <a href="<%= @google_cal_url %>"
+         style="display: inline-block; background-color: #ffffff; color: #2563EB; font-size: 14px; font-weight: 600; text-decoration: none; padding: 10px 24px; border-radius: 8px; border: 1px solid #2563EB;"
+         target="_blank">
+        Add to Google Calendar
+      </a>
+    </td>
+  </tr>
+</table>
+
+<p style="margin: 0 0 24px 0; font-size: 14px; color: #6B7280; line-height: 1.6;">
+  If the Calendly link above doesn't work, copy and paste this URL into your browser:<br>
+  <a href="<%= @calendly_url %>" style="color: #2563EB; word-break: break-all;"><%= @calendly_url %></a>
+</p>
+
+<!-- Divider -->
+<hr style="border: 0; border-top: 1px solid #E5E7EB; margin: 0 0 24px 0;">
+
+<!-- Details recap -->
+<h2 style="margin: 0 0 12px 0; font-size: 16px; font-weight: 600; color: #111827;">
+  Your submission details
+</h2>
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom: 24px;">
+  <tr>
+    <td width="40%" style="padding: 6px 0; font-size: 14px; color: #6B7280;">Restaurant</td>
+    <td style="padding: 6px 0; font-size: 14px; color: #111827;"><%= @demo_booking.restaurant_name %></td>
+  </tr>
+  <tr>
+    <td style="padding: 6px 0; font-size: 14px; color: #6B7280;">Contact</td>
+    <td style="padding: 6px 0; font-size: 14px; color: #111827;"><%= @demo_booking.contact_name %></td>
+  </tr>
+  <tr>
+    <td style="padding: 6px 0; font-size: 14px; color: #6B7280;">Email</td>
+    <td style="padding: 6px 0; font-size: 14px; color: #111827;"><%= @demo_booking.email %></td>
+  </tr>
+  <% if @demo_booking.restaurant_type.present? %>
+  <tr>
+    <td style="padding: 6px 0; font-size: 14px; color: #6B7280;">Venue type</td>
+    <td style="padding: 6px 0; font-size: 14px; color: #111827;"><%= @demo_booking.restaurant_type.humanize %></td>
+  </tr>
+  <% end %>
+  <% if @demo_booking.location_count.present? %>
+  <tr>
+    <td style="padding: 6px 0; font-size: 14px; color: #6B7280;">Locations</td>
+    <td style="padding: 6px 0; font-size: 14px; color: #111827;"><%= @demo_booking.location_count %></td>
+  </tr>
+  <% end %>
+</table>
+
+<p style="margin: 0; font-size: 14px; color: #6B7280; line-height: 1.6;">
+  You received this email because you requested a Mellow Menu demo.
+  If you didn't submit this form, you can safely ignore this email.
+</p>

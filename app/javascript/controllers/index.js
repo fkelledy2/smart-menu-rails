@@ -52,6 +52,8 @@ import CollectPaymentController from './collect_payment_controller';
 import AutoPayController from './auto_pay_controller';
 import CustomerAutoPayController from './customer_auto_pay_controller';
 import FloorplanController from './floorplan_controller';
+import DemoBookingController from './demo_booking_controller';
+import VideoAnalyticsController from './video_analytics_controller';
 
 application.register('sortable', SortableController);
 application.register('auto-save', AutoSaveController);
@@ -103,6 +105,8 @@ application.register('collect-payment', CollectPaymentController);
 application.register('auto-pay', AutoPayController);
 application.register('customer-auto-pay', CustomerAutoPayController);
 application.register('floorplan', FloorplanController);
+application.register('demo-booking', DemoBookingController);
+application.register('video-analytics', VideoAnalyticsController);
 
 console.log('[Stimulus] Controllers registered:', [
   'sortable',

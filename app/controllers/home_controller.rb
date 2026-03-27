@@ -1,5 +1,5 @@
 class HomeController < ApplicationController
-  layout 'marketing', only: %i[index terms privacy]
+  layout 'marketing', only: %i[index terms privacy demo]
 
   def index
     # Redirect logged-in users to restaurants index
@@ -48,6 +48,17 @@ class HomeController < ApplicationController
   rescue StandardError => e
     logger.error "Error in HomeController#index: #{e.message}\n#{e.backtrace.join("\n")}"
     render plain: t('.error', message: e.message), status: :internal_server_error, content_type: 'text/plain'
+  end
+
+  def demo
+    @page_title = 'Book a Mellow Menu Demo'
+    @page_description = 'Book a live demo or watch a recorded walkthrough of Mellow Menu — the digital ordering platform built for modern restaurants.'
+    @demo_booking = DemoBooking.new
+
+    render :demo, layout: 'marketing', content_type: 'text/html'
+  rescue StandardError => e
+    logger.error "Error in HomeController#demo: #{e.message}\n#{e.backtrace.join("\n")}"
+    render 'errors/500', status: :internal_server_error
   end
 
   def terms

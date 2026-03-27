@@ -7,3 +7,4 @@
 - [project_auto_pay_v1.md](project_auto_pay_v1.md) — Auto Pay & Leave v1: Stripe SetupIntent/PaymentIntent, CaptureService, AASM hook, Flipper flag, route param gotchas (March 2026)
 - [project_floorplan_v1.md](project_floorplan_v1.md) — Floorplan Dashboard v1: real-time table tiles, FloorplanChannel, DISTINCT ON gotcha, kitchen_dashboard route helper, Employee eid requirement (March 2026)
 - [project_marketing_qr_v1.md](project_marketing_qr_v1.md) — Pre-Configured Marketing QRs v1: resolve endpoint, link/unlink services, mellow.menu email gate, attr_readonly gotcha, fixture alignment notes (March 2026)
+- [project_homepage_demo_booking_v1.md](project_homepage_demo_booking_v1.md) — Demo Booking v1: public controller pattern, video analytics, admin CRM, asset manifest gotcha, Calendly pre-fill URL, video placeholder fallback (March 2026)

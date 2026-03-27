@@ -1,0 +1,75 @@
+<%# Admin: Demo Bookings CRM index — mellow.menu staff only %>
+<% content_for :title, 'Demo Bookings — Admin' %>
+
+<div class="container-fluid py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="h3 mb-1">Demo Bookings</h1>
+      <p class="text-muted mb-0">
+        Lead capture from the homepage demo form.
+        <%= pluralize(@demo_bookings.count, 'lead') %> total.
+      </p>
+    </div>
+    <%= link_to 'Export CSV',
+                admin_demo_bookings_path(format: :csv),
+                class: 'btn btn-outline-secondary' %>
+  </div>
+
+  <% if @demo_bookings.any? %>
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>Contact</th>
+            <th>Restaurant</th>
+            <th>Type</th>
+            <th>Locations</th>
+            <th>Status</th>
+            <th>Submitted</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @demo_bookings.each do |booking| %>
+            <tr>
+              <td>
+                <strong><%= booking.contact_name %></strong><br>
+                <small class="text-muted"><%= booking.email %></small>
+                <% if booking.phone.present? %>
+                  <br><small class="text-muted"><%= booking.phone %></small>
+                <% end %>
+              </td>
+              <td><%= booking.restaurant_name %></td>
+              <td><%= booking.restaurant_type&.humanize || '—' %></td>
+              <td><%= booking.location_count.presence || '—' %></td>
+              <td>
+                <%
+                  badge_class = {
+                    'pending'   => 'bg-warning text-dark',
+                    'contacted' => 'bg-info text-dark',
+                    'booked'    => 'bg-primary',
+                    'converted' => 'bg-success',
+                    'lost'      => 'bg-secondary',
+                  }[booking.conversion_status] || 'bg-light text-dark'
+                %>
+                <span class="badge <%= badge_class %>">
+                  <%= booking.conversion_status.capitalize %>
+                </span>
+              </td>
+              <td class="text-nowrap"><%= booking.created_at.strftime('%d %b %Y') %></td>
+              <td class="text-end text-nowrap">
+                <%= link_to 'View', admin_demo_booking_path(booking),
+                            class: 'btn btn-sm btn-outline-secondary' %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <div class="text-center py-5 text-muted">
+      <i class="bi bi-person-lines-fill fs-1 d-block mb-3"></i>
+      <p class="mb-0">No demo bookings yet. Once restaurant owners submit the form they'll appear here.</p>
+    </div>
+  <% end %>
+</div>

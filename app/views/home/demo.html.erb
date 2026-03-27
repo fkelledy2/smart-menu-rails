@@ -1,0 +1,93 @@
+<%# Standalone /demo landing page — used for direct campaign links.
+    Reuses the same modal partials as the homepage. %>
+
+<div class="container px-3 px-md-4 py-5">
+  <div class="row align-items-center g-4">
+
+    <!-- Left: hero copy -->
+    <div class="col-lg-6">
+      <div class="mellow-kicker text-uppercase">See it in action</div>
+      <h1 class="mellow-feature-title mt-2">
+        Book a live demo of Mellow Menu
+      </h1>
+      <p class="text-muted mt-3" style="font-size: 1.1rem; line-height: 1.7;">
+        Discover how restaurants use Mellow Menu to take QR orders, process
+        payments instantly, and keep their kitchen running smoothly — all
+        without expensive hardware or complex setup.
+      </p>
+
+      <ul class="mellow-feature-bullets mt-4">
+        <li>Personal walkthrough tailored to your venue type</li>
+        <li>Live Q&amp;A with the founding team</li>
+        <li>Honest pricing — no sales pressure</li>
+        <li>Takes 30 minutes. Fully remote.</li>
+      </ul>
+
+      <div class="d-flex flex-wrap gap-3 mt-4">
+        <button type="button" class="btn btn-danger btn-lg fw-semibold"
+                data-bs-toggle="modal" data-bs-target="#demoBookingModal">
+          <i class="bi bi-calendar-check me-2"></i>Book live demo
+        </button>
+        <button type="button" class="btn btn-outline-secondary btn-lg"
+                data-bs-toggle="modal" data-bs-target="#videoDemoModal">
+          <i class="bi bi-play-circle me-2"></i>Watch recorded demo
+        </button>
+      </div>
+
+      <p class="text-muted mt-3 mb-0" style="font-size: 0.85rem;">
+        No credit card required to book &middot; Free 14-day trial available
+      </p>
+    </div>
+
+    <!-- Right: trust panel -->
+    <div class="col-lg-6">
+      <div class="mellow-trust-card p-4 p-lg-5 h-100">
+        <h3 class="h5 fw-bold mb-4">What happens after you book?</h3>
+
+        <div class="d-flex gap-3 mb-4">
+          <div class="mellow-step-number flex-shrink-0" style="width: 36px; height: 36px; font-size: 0.9rem;">1</div>
+          <div>
+            <strong>Confirm your slot</strong>
+            <p class="text-muted mb-0" style="font-size: 0.9rem;">
+              Pick a time on Calendly that suits you — same day or later this week.
+            </p>
+          </div>
+        </div>
+
+        <div class="d-flex gap-3 mb-4">
+          <div class="mellow-step-number flex-shrink-0" style="width: 36px; height: 36px; font-size: 0.9rem;">2</div>
+          <div>
+            <strong>We prep for your venue</strong>
+            <p class="text-muted mb-0" style="font-size: 0.9rem;">
+              We review your restaurant type and tailor the demo to scenarios that matter to you.
+            </p>
+          </div>
+        </div>
+
+        <div class="d-flex gap-3 mb-4">
+          <div class="mellow-step-number flex-shrink-0" style="width: 36px; height: 36px; font-size: 0.9rem;">3</div>
+          <div>
+            <strong>Live demo — 30 minutes</strong>
+            <p class="text-muted mb-0" style="font-size: 0.9rem;">
+              See the full ordering flow, kitchen display, and reporting — then ask anything.
+            </p>
+          </div>
+        </div>
+
+        <div class="d-flex gap-3">
+          <div class="mellow-step-number flex-shrink-0" style="width: 36px; height: 36px; font-size: 0.9rem;">4</div>
+          <div>
+            <strong>Start your free trial</strong>
+            <p class="text-muted mb-0" style="font-size: 0.9rem;">
+              If it's a fit, we'll set up your first menu together — live on the same call.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<%= render 'home/demo_booking_modal' %>
+<%= render 'home/video_demo_modal' %>
