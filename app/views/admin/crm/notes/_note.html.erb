@@ -1,0 +1,15 @@
+<%# Single CRM note partial %>
+<div id="crm-note-<%= note.id %>" class="border rounded p-3 mb-2 bg-light">
+  <div class="d-flex justify-content-between align-items-start">
+    <p class="mb-1" style="font-size: 13px; white-space: pre-wrap;"><%= note.body %></p>
+    <%= button_to 'Delete',
+          admin_crm_lead_note_path(lead, note),
+          method: :delete,
+          class: 'btn btn-link btn-sm text-danger p-0',
+          data: { confirm: 'Delete this note?' },
+          form: { data: { turbo: true } } %>
+  </div>
+  <p class="text-muted mb-0" style="font-size: 11px;">
+    <%= note.author.email %> &bull; <%= time_ago_in_words(note.created_at) %> ago
+  </p>
+</div>

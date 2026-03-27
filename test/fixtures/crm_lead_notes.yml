@@ -1,0 +1,9 @@
+first_note:
+  crm_lead: new_lead
+  author: super_admin
+  body: "Called them today, they're interested."
+
+second_note:
+  crm_lead: new_lead
+  author: super_admin
+  body: "Following up next week."

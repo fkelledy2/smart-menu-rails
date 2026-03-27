@@ -54,6 +54,8 @@ import CustomerAutoPayController from './customer_auto_pay_controller';
 import FloorplanController from './floorplan_controller';
 import DemoBookingController from './demo_booking_controller';
 import VideoAnalyticsController from './video_analytics_controller';
+import CrmKanbanController from './crm_kanban_controller';
+import CrmLeadDetailController from './crm_lead_detail_controller';
 
 application.register('sortable', SortableController);
 application.register('auto-save', AutoSaveController);
@@ -107,6 +109,8 @@ application.register('customer-auto-pay', CustomerAutoPayController);
 application.register('floorplan', FloorplanController);
 application.register('demo-booking', DemoBookingController);
 application.register('video-analytics', VideoAnalyticsController);
+application.register('crm-kanban', CrmKanbanController);
+application.register('crm-lead-detail', CrmLeadDetailController);
 
 console.log('[Stimulus] Controllers registered:', [
   'sortable',
@@ -148,4 +152,6 @@ console.log('[Stimulus] Controllers registered:', [
   'split-bill',
   'order-notes',
   'receipt-request',
+  'crm-kanban',
+  'crm-lead-detail',
 ]);

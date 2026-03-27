@@ -1,0 +1,30 @@
+<%# Single Kanban lead card %>
+<div class="crm-lead-card"
+     data-lead-id="<%= lead.id %>"
+     data-crm-kanban-target="card"
+     id="crm-lead-card-<%= lead.id %>">
+  <div class="d-flex justify-content-between align-items-start mb-1">
+    <%= link_to lead.restaurant_name,
+          admin_crm_lead_path(lead),
+          class: 'fw-semibold text-decoration-none text-dark stretched-link',
+          style: 'font-size: 13px;' %>
+  </div>
+
+  <% if lead.contact_name.present? %>
+    <p class="text-muted mb-1" style="font-size: 12px;"><%= lead.contact_name %></p>
+  <% end %>
+
+  <div class="d-flex justify-content-between align-items-center mt-2">
+    <% if lead.assigned_to %>
+      <span class="badge bg-light text-dark border" style="font-size: 10px;">
+        <%= lead.assigned_to.email.split('@').first %>
+      </span>
+    <% else %>
+      <span class="badge bg-warning text-dark" style="font-size: 10px;">Unassigned</span>
+    <% end %>
+
+    <span class="text-muted" style="font-size: 10px;">
+      <%= lead.last_activity_at ? time_ago_in_words(lead.last_activity_at) + ' ago' : '—' %>
+    </span>
+  </div>
+</div>

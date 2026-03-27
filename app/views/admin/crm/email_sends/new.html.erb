@@ -1,0 +1,37 @@
+<%# Admin CRM: Email compose form %>
+<% content_for :title, "Send Email — #{@lead.restaurant_name}" %>
+
+<div class="container-fluid py-4" style="max-width: 640px;">
+  <div class="mb-3">
+    <%= link_to 'Pipeline', admin_crm_leads_path, class: 'text-muted text-decoration-none' %>
+    <span class="text-muted mx-1">/</span>
+    <%= link_to @lead.restaurant_name, admin_crm_lead_path(@lead), class: 'text-muted text-decoration-none' %>
+    <span class="text-muted mx-1">/</span>
+    <span>Send Email</span>
+  </div>
+
+  <h2 class="h3 mb-4">Compose Follow-up Email</h2>
+
+  <%= form_with model: @email_send, url: admin_crm_lead_email_sends_path(@lead) do |f| %>
+    <div class="mb-3">
+      <%= f.label :to_email, 'To', class: 'form-label fw-semibold' %>
+      <%= f.email_field :to_email, class: 'form-control' %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :subject, 'Subject', class: 'form-label fw-semibold' %>
+      <%= f.text_field :subject, class: 'form-control' %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :body_html, 'Message', class: 'form-label fw-semibold' %>
+      <%= f.text_area :body_html, class: 'form-control', rows: 10, placeholder: 'Write your message here...' %>
+      <div class="form-text">HTML is supported. Plain text will be auto-generated.</div>
+    </div>
+
+    <div class="d-flex gap-2">
+      <%= f.submit 'Send Email', class: 'btn btn-primary' %>
+      <%= link_to 'Cancel', admin_crm_lead_path(@lead), class: 'btn btn-outline-secondary' %>
+    </div>
+  <% end %>
+</div>

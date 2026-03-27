@@ -51,6 +51,12 @@ Rails.application.config.after_initialize do
   unless Flipper.exist?(:jwt_api_access)
     Flipper.add(:jwt_api_access)
   end
+
+  # CRM Sales Funnel — internal sales pipeline tool.
+  # Disabled by default; enable for @mellow.menu admin users via Flipper UI.
+  unless Flipper.exist?(:crm_sales_funnel)
+    Flipper.add(:crm_sales_funnel)
+  end
 rescue ActiveRecord::ConnectionNotEstablished, ActiveRecord::StatementInvalid, ActiveRecord::NoDatabaseError => e
   # DB may be unreachable (CI asset precompile), or tables may not exist yet (db:create / db:migrate)
   Rails.logger.warn "[Flipper] Skipping feature flag seeding: #{e.message}"

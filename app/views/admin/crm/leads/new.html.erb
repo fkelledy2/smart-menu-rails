@@ -1,0 +1,14 @@
+<%# Admin CRM: New lead form %>
+<% content_for :title, 'New Lead — CRM' %>
+
+<div class="container-fluid py-4" style="max-width: 640px;">
+  <div class="mb-3">
+    <%= link_to 'Pipeline', admin_crm_leads_path, class: 'text-muted text-decoration-none' %>
+    <span class="text-muted mx-1">/</span>
+    <span>New Lead</span>
+  </div>
+
+  <h2 class="h3 mb-4">New Lead</h2>
+
+  <%= render 'form', lead: @lead %>
+</div>

@@ -1,0 +1,52 @@
+new_lead:
+  restaurant_name: "The Blue Duck"
+  contact_name: "Jane Smith"
+  contact_email: "jane@blueduck.com"
+  contact_phone: "+353 87 123 4567"
+  stage: "new"
+  source: "manual"
+  notes_count: 0
+  last_activity_at: "2026-03-27 10:00:00"
+
+contacted_lead:
+  restaurant_name: "La Maison"
+  contact_name: "Pierre Dupont"
+  contact_email: "pierre@lamaison.fr"
+  stage: "contacted"
+  source: "referral"
+  notes_count: 0
+  last_activity_at: "2026-03-26 09:00:00"
+  assigned_to: super_admin
+
+demo_booked_lead:
+  restaurant_name: "Sushi Nori"
+  contact_name: "Kenji Tanaka"
+  contact_email: "kenji@sushinori.com"
+  stage: "demo_booked"
+  source: "calendly"
+  calendly_event_uuid: "abc-123-existing-uuid"
+  notes_count: 0
+  last_activity_at: "2026-03-25 15:00:00"
+
+lost_lead:
+  restaurant_name: "Pizza Palace"
+  contact_name: "Tony Ricci"
+  contact_email: "tony@pizzapalace.com"
+  stage: "lost"
+  source: "manual"
+  lost_reason: "price"
+  lost_reason_notes: "Too expensive for their budget"
+  notes_count: 0
+  last_activity_at: "2026-03-20 12:00:00"
+  lost_at: "2026-03-20 12:00:00"
+
+converted_lead:
+  restaurant_name: "MyString"
+  contact_name: "Owner One"
+  contact_email: "owner@test.com"
+  stage: "converted"
+  source: "manual"
+  notes_count: 0
+  last_activity_at: "2026-03-15 10:00:00"
+  converted_at: "2026-03-15 10:00:00"
+  restaurant: one

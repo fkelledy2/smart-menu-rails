@@ -1,0 +1,22 @@
+<%# Notes tab partial — rendered via Turbo Stream after note create %>
+<%= form_with model: CrmLeadNote.new,
+      url: admin_crm_lead_notes_path(lead),
+      data: { turbo_frame: 'crm_notes' },
+      class: 'mb-3' do |f| %>
+  <div class="mb-2">
+    <%= f.text_area :body,
+          class: 'form-control',
+          placeholder: 'Add a note...',
+          rows: 3 %>
+  </div>
+  <%= f.submit 'Add Note', class: 'btn btn-primary btn-sm' %>
+<% end %>
+
+<div id="crm-notes-list">
+  <% notes.each do |note| %>
+    <%= render 'admin/crm/notes/note', note: note, lead: lead %>
+  <% end %>
+  <% if notes.empty? %>
+    <p class="text-muted">No notes yet.</p>
+  <% end %>
+</div>
