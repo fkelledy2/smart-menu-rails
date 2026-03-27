@@ -1,0 +1,12 @@
+API TOKEN EXPIRING IN 7 DAYS
+==============================
+
+The following API token will expire in 7 days. Log in to the mellow.menu admin
+panel to issue a replacement and notify the restaurant.
+
+Token name:  <%= @jwt_token.name %>
+Restaurant:  <%= @restaurant.name %>
+Expires:     <%= @jwt_token.expires_at.strftime('%d %B %Y') %>
+Scopes:      <%= @jwt_token.scopes.join(', ') %>
+
+This is an automated reminder from the mellow.menu platform.

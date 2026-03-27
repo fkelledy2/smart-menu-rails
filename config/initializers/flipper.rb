@@ -44,6 +44,13 @@ Rails.application.config.after_initialize do
   unless Flipper.exist?(:receipt_sms)
     Flipper.add(:receipt_sms)
   end
+
+  # JWT API access — enables admin-issued JWT tokens for the REST API.
+  # Disabled by default; enable globally or per-restaurant via Flipper UI
+  # once the admin has issued at least one token and tested it.
+  unless Flipper.exist?(:jwt_api_access)
+    Flipper.add(:jwt_api_access)
+  end
 rescue ActiveRecord::ConnectionNotEstablished, ActiveRecord::StatementInvalid, ActiveRecord::NoDatabaseError => e
   # DB may be unreachable (CI asset precompile), or tables may not exist yet (db:create / db:migrate)
   Rails.logger.warn "[Flipper] Skipping feature flag seeding: #{e.message}"

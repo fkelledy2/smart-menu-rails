@@ -4,6 +4,21 @@ class Api::V1::OrdersController < Api::V1::BaseController
   before_action :set_restaurant, only: %i[index create]
   before_action :set_order, only: %i[show update destroy]
   before_action :authenticate_user!, except: %i[create show]
+  before_action :enforce_orders_scope!, only: %i[index show create update destroy]
+
+  private
+
+  def enforce_orders_scope!
+    return unless api_jwt_request?
+
+    if request.get? || request.head?
+      enforce_scope!('orders:read')
+    else
+      enforce_scope!('orders:write')
+    end
+  end
+
+  public
 
   # GET /api/v1/restaurants/:restaurant_id/orders
   def index

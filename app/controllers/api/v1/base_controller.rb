@@ -37,16 +37,54 @@ module Api
       private
 
       def authenticate_api_user!
-        token = extract_token_from_header
-        @current_user = JwtService.user_from_token(token)
+        raw_token = extract_token_from_header
 
-        unless @current_user
-          render json: error_response('unauthorized', 'Invalid or missing authentication token'),
-                 status: :unauthorized
+        # Attempt admin-issued JWT authentication first (when flag is enabled)
+        if Flipper.enabled?(:jwt_api_access) && raw_token.present?
+          result = Jwt::TokenValidator.call(raw_jwt: raw_token)
+          if result.valid?
+            @current_api_token      = result.token
+            @current_api_restaurant = result.token.restaurant
+            # Set current_user to the admin who issued the token so Pundit works
+            @current_user = result.token.admin_user
+            return
+          end
         end
+
+        # Fall back to session-based JWT (existing behaviour)
+        @current_user = JwtService.user_from_token(raw_token)
+        return if @current_user
+
+        render json: error_response('unauthorized', 'Invalid or missing authentication token'),
+               status: :unauthorized
       end
 
-      attr_reader :current_user
+      attr_reader :current_user, :current_api_token, :current_api_restaurant
+
+      def api_jwt_request?
+        @current_api_token.present?
+      end
+
+      def enforce_scope!(required_scope)
+        return unless api_jwt_request?
+        return if Jwt::ScopeEnforcer.permitted?(token: @current_api_token, required_scope: required_scope)
+
+        render json: error_response('forbidden', "Scope '#{required_scope}' is required for this endpoint"),
+               status: :forbidden
+      end
+
+      def log_api_usage_for_current_request(response_status)
+        return unless @current_api_token
+
+        @current_api_token.record_usage!(
+          endpoint: request.path,
+          http_method: request.method,
+          ip_address: request.remote_ip,
+          response_status: response_status,
+        )
+      rescue StandardError => e
+        Rails.logger.error "[Api::V1::BaseController] JWT usage log failed: #{e.message}"
+      end
 
       def user_signed_in?
         @current_user.present?

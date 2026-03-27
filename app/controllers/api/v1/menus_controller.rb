@@ -4,6 +4,21 @@ class Api::V1::MenusController < Api::V1::BaseController
   before_action :set_restaurant, only: %i[index create]
   before_action :set_menu, only: %i[show update destroy]
   before_action :authenticate_user!, except: %i[show index]
+  before_action :enforce_menu_scope!, only: %i[index show create update destroy]
+
+  private
+
+  def enforce_menu_scope!
+    return unless api_jwt_request?
+
+    if request.get? || request.head?
+      enforce_scope!('menu:read')
+    else
+      enforce_scope!('menu:write')
+    end
+  end
+
+  public
 
   # GET /api/v1/restaurants/:restaurant_id/menus
   def index

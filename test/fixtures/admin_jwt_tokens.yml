@@ -1,0 +1,34 @@
+active_token:
+  admin_user: super_admin
+  restaurant: one
+  token_hash: abc123def456abc123def456abc123def456abc123def456abc123def456abcd
+  name: Active POS Token
+  description: Used by the POS integration
+  scopes: <%= ['menu:read', 'orders:read'].to_json %>
+  rate_limit_per_minute: 60
+  rate_limit_per_hour: 1000
+  expires_at: <%= 30.days.from_now %>
+  usage_count: 5
+
+revoked_token:
+  admin_user: super_admin
+  restaurant: one
+  token_hash: dead0000dead0000dead0000dead0000dead0000dead0000dead0000dead0001
+  name: Revoked Token
+  scopes: <%= ['menu:read'].to_json %>
+  rate_limit_per_minute: 60
+  rate_limit_per_hour: 1000
+  expires_at: <%= 30.days.from_now %>
+  revoked_at: <%= 1.day.ago %>
+  usage_count: 0
+
+expired_token:
+  admin_user: super_admin
+  restaurant: two
+  token_hash: fade0000fade0000fade0000fade0000fade0000fade0000fade0000fade0002
+  name: Expired Token
+  scopes: <%= ['analytics:read'].to_json %>
+  rate_limit_per_minute: 60
+  rate_limit_per_hour: 1000
+  expires_at: <%= 1.day.ago %>
+  usage_count: 0
