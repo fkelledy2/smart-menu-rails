@@ -1,10 +1,10 @@
 # Service Operations Agent
 
 ## Status
-- Priority Rank: #20 (Phase 2 agent — requires live order volume to be meaningful; highest latency sensitivity of all agents)
+- Priority Rank: #21 (Phase 2 agent — requires live order volume to be meaningful; highest latency sensitivity of all agents)
 - Category: Post-Launch — agent tier, Phase 2
 - Effort: M
-- Dependencies: Agent Framework (#15), Kitchen/Station dashboard (existing), `OrdrChannel` ActionCable (existing), `KitchenChannel` (existing), OpenAI API
+- Dependencies: Agent Framework (#16), Kitchen/Station dashboard (existing), `OrdrChannel` ActionCable (existing), `KitchenChannel` (existing), OpenAI API
 
 ## Problem Statement
 During peak service, kitchen and floor staff are overwhelmed with concurrent demands and have no automated system to detect brewing problems before they escalate. A rising queue of prep-heavy dishes, a bar order surge, an item running out of stock, or a table that has been waiting unusually long — these are all detectable signals that currently require a manager to notice manually. By the time they are noticed, the damage to service quality is often already done. The Service Operations Agent monitors live order flow events and surfaces targeted, real-time operational recommendations to staff in the right dashboard at the right moment — reducing congestion, protecting the customer experience, and giving managers early warning on service recovery situations.
@@ -108,7 +108,7 @@ Reserve LLM for: multi-signal combinations, bar surge pattern detection, and con
 - Autonomous order cancellation or status mutation — never in scope for this agent.
 - Autonomous refund or compensation issuance — manager only.
 - Integration with third-party inventory management systems (in-app stock signal only in v1).
-- Customer-facing wait time display (see Table Wait Time Estimation spec #11 — that is a separate feature).
+- Customer-facing wait time display (see Table Wait Time Estimation spec #12 — that is a separate feature).
 - Shift scheduling or labour optimisation recommendations.
 
 ## Open Questions

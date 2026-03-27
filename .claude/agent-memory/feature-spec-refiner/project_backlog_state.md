@@ -4,78 +4,62 @@ description: Current state of the feature backlog after all March 2026 prioritis
 type: project
 ---
 
-Full spec refinement and prioritisation pass completed 2026-03-22. AI agent layer added 2026-03-24 (first pass): 8 new specs (Agent Framework + 7 individual agents). Six additional product specs refined 2026-03-24 (second pass): 2FA, Employee Role Promotion, Bulk Employee Invite, Weight-Based Pricing, Nearby Menus Map, Strikepay Integration. Total backlog: 31 ranked features.
+Full spec refinement and prioritisation pass completed 2026-03-22. AI agent layer added 2026-03-24 (first pass): 8 new specs (Agent Framework + 7 individual agents). Six additional product specs refined 2026-03-24 (second pass): 2FA, Employee Role Promotion, Bulk Employee Invite, Weight-Based Pricing, Nearby Menus Map, Strikepay Integration. CRM Sales Funnel inserted at #9 on 2026-03-27 (third pass). Square Integration and Profit Margin Tracking classified and dispositioned on 2026-03-27 (fourth pass). Total backlog: 32 ranked features + 2 in-progress/partially-built items.
 
 **Why:** Preparing the backlog for sprint execution — needed dev-ready specs and a clear priority order before engineering begins.
 
-**How to apply:** Use PRIORITY_INDEX.md as the canonical source of truth for sprint planning. Never skip ahead to post-launch items while launch blockers remain open. The AI agent tier (#15–#22) is explicitly post-launch and should not consume capacity until blockers #1–#3 and enhancers #4–#5 have shipped. Features #26–#31 are the newest post-launch additions and sit behind all existing post-launch work in priority order.
+**How to apply:** Use PRIORITY_INDEX.md as the canonical source of truth for sprint planning. All launch blockers (#1–#7) are completed. Current focus: CRM Sales Funnel (#9) and JWT Token Management (#8) are the highest-value next items. AI agent tier (#16–#23) is post-launch and should not consume capacity until #8–#9 have shipped.
 
-## Launch Blockers (must ship before first live restaurant)
-1. QR Code Security — rotating tokens, DiningSession model, order-mutation session gate, Rack::Attack throttles, admin QR regeneration
-2. Branded Email Styling — shared branded mailer layout for all outgoing emails
-3. Branded Receipt Email — staff-initiated and customer self-service receipt delivery after payment
+## COMPLETED — Launch Blockers + Enhancers
+1. QR Code Security — COMPLETED 2026-03-24
+2. Branded Email Styling — COMPLETED 2026-03-24
+3. Branded Receipt Email — COMPLETED 2026-03-25
+4. Auto Pay & Leave — COMPLETED 2026-03-25
+5. Floorplan Dashboard — COMPLETED 2026-03-25
+6. Pre-Configured Marketing QRs — COMPLETED 2026-03-25
+7. Homepage Demo Booking & Video — COMPLETED 2026-03-26
 
-## Launch Enhancers (high-value but not blocking)
-4. Auto Pay & Leave — customer payment on file + auto-capture on bill request
-5. Floorplan Dashboard — real-time table status grid for staff
-6. Pre-Configured Marketing QRs — decouple print production from menu deployment
-7. Homepage Demo Booking & Video — minimum viable sales funnel
+## IN PROGRESS (not ranked — active development)
+- Square Integration (Epics 1–6 complete; Epic 7 finalisation + Epic 8 alpha testing in progress)
+- Menu Item Profit Margin Tracking (Phases 1–3 complete 2026-03-17; Phase 4 ready for implementation)
 
-## Post-Launch: Product Features
+## Post-Launch: Product Features (current sprint targets)
 8. JWT Token Management (API access for integrations)
-9. Partner Integrations (event-driven, workforce/CRM signals)
-10. Menu Experiments (A/B testing) — MenuVersion dependency RESOLVED
-11. Table Wait Time Estimation
-12. Dynamic Pricing Plans (cost-indexed, price-locked at signup)
-13. Cost Insights + Pricing Model Publisher
-14. Heroku Cost Inventory
+9. CRM Sales Funnel — internal sales pipeline; directly drives restaurant acquisition
+10. Partner Integrations (event-driven, workforce/CRM signals)
+11. Menu Experiments (A/B testing) — all dependencies resolved
+12. Table Wait Time Estimation
+13. Dynamic Pricing Plans (cost-indexed, price-locked at signup)
+14. Cost Insights + Pricing Model Publisher
+15. Heroku Cost Inventory
 
-## Post-Launch: AI Agent Tier (sequential build programme)
-15. Agent Framework — shared infrastructure; prerequisite for all agents
-    - 7 new models: AgentWorkflowRun, AgentWorkflowStep, AgentArtifact, AgentApproval, AgentPolicy, ToolInvocationLog, AgentDomainEvent
-    - 6 core services in app/services/agents/
-    - 5 Sidekiq queues: agent_critical, agent_realtime, agent_high, agent_default, agent_low
-    - AI Workbench UI at /restaurants/:id/agent_workbench
-    - Flipper flag: agent_framework (master switch)
-16. Menu Import Agent — Phase 1; extends existing OcrMenuImport pipeline; highest onboarding value
-17. Restaurant Growth Agent — Phase 1; weekly digest; read-only + advisory; lowest risk first agent
-18. Customer Concierge Agent — Phase 1; customer-facing NL discovery; streaming LLM; GDPR review required
-19. Menu Optimization Agent — Phase 2; structured change-set proposals; executable (with approval)
-20. Service Operations Agent — Phase 2; real-time kitchen ops; rule-based fast path; agent_realtime queue
-21. Reputation & Feedback Agent — Phase 2; post-dining signals; all outbound requires manager approval
-22. Staff Copilot Agent — Phase 2; NL back-office interface; most complex UX integration; ship last
+## Post-Launch: AI Agent Tier (sequential build programme, all ranks shifted +1 from CRM insertion)
+16. Agent Framework — shared infrastructure; prerequisite for all agents
+17. Menu Import Agent — Phase 1; extends existing OcrMenuImport pipeline
+18. Restaurant Growth Agent — Phase 1; weekly digest; read-only + advisory
+19. Customer Concierge Agent — Phase 1; GDPR review required before dev
+20. Menu Optimization Agent — Phase 2; executable change-set proposals
+21. Service Operations Agent — Phase 2; rule-based fast path; agent_realtime queue
+22. Reputation & Feedback Agent — Phase 2; all outbound requires manager approval
+23. Staff Copilot Agent — Phase 2; most complex UX; ship last
 
 ## Post-Launch: Ecosystem
-23. MCP AI Agent Wrapper — previously #15; renumbered; requires #8 JWT + #15 Framework
-24. CDN Evaluation (deferred until traffic triggers)
+24. MCP AI Agent Wrapper — requires #8 JWT + #16 Framework
+25. CDN Evaluation (deferred until traffic triggers)
 
-## Post-Launch: New Product Features (#26–#31, added 2026-03-24 second pass)
-26. Two-Factor Authentication — TOTP-based via rotp gem; trusts existing Devise + Redis; no LoginAttempt model in v1; roles enforced via Employee not User
-27. Employee Role Promotion — changes Employee#role via EmployeeRoleAudit audit table; Pundit scoped to restaurant; NO role columns on User
-28. Bulk Employee Invitation — extends existing StaffInvitation model; CSV upload; Sidekiq delivery; BulkInvitation + BulkInvitationItem models
-29. Weight-Based Pricing — pricing_type enum on Menuitem; ordered_weight on Ordritem; server-side price re-validation; Stimulus weight selector
-30. Nearby Menus Map — /discover page; Stimulus + Mapbox; bounding-box spatial query; opt-in per restaurant; PostGIS availability TBC
-31. Strikepay Integration — Payments::StrikepayAdapter via Orchestrator; webhook-confirmed tips only; NO direct API calls; hard pre-dev gate on Strikepay platform API model
-
-## R&D Items (not sprint-ready)
-All items in r_and_d/ directory. Horizon 1 (currently feasible): Table Digital Twin, Ultra-Low Latency Runtime, Recommendation Graph, Context-Aware Menus, Social Dining Intelligence, Staff Assistance, Presence/Identity, Voice Ordering, Distributed Operating Surface.
-
-## Marketing/Analysis Documents (classified 2026-03-24, no engineering tickets)
-- marketing/ai-sommelier-landing-page.md — S-effort Rails marketing view; awaiting marketing sign-off
-- marketing/ai-whiskey-ambassador-landing-page.md — S-effort Rails marketing view; same as above
-- backlog/marketing/mellow-menu-blog.md — content strategy; engineering decision needed (ActionText vs headless CMS); not WordPress
-- backlog/marketing/outrank-analysis.md, rankpill-seo-analysis.md — SEO agency evaluations; no engineering tickets
-- backlog/marketing/blaze-ai-analysis.md — AI content tool evaluation; no engineering tickets
-- backlog/marketing/tryholo-analysis.md — R&D horizon 3 hardware evaluation
-- backlog/marketing/fork-analysis.md — competitor analysis reference
-- backlog/competitor-analysis/opentable-guest-analysis.md — competitor analysis reference
-- backlog/competitor-analysis/quandoo-analysis.md — competitor analysis reference
+## Post-Launch: New Product Features (ranks shifted +1 from CRM insertion)
+27. Two-Factor Authentication — TOTP via rotp gem; Devise + Redis
+28. Employee Role Promotion — Employee#role via EmployeeRoleAudit; NO role columns on User
+29. Bulk Employee Invitation — extends StaffInvitation; CSV upload; Sidekiq delivery
+30. Weight-Based Pricing — pricing_type enum on Menuitem; Stimulus weight selector
+31. Nearby Menus Map — /discover page; Stimulus + Mapbox; PostGIS TBC
+32. Strikepay Integration — hard pre-dev gate on Strikepay platform API model
 
 ## MenuVersion System — Confirmed Fully Built (2026-03-22)
-app/models/menu_version.rb, four services, controller, DB schema, and tests all exist. Reference spec at docs/features/todo/features/menu-enhancements/menu-versioning-system.md. No new build required.
+Reference spec at docs/features/todo/features/menu-enhancements/menu-versioning-system.md. No new build required.
 
-## Key Pre-Development Gates (as of 2026-03-24)
-- AI Agent tier (#15–#22): LLM provider strategy, AgentPolicy self-service scope, audit log retention, PgBouncer status, GDPR DPA for #18, review platform ingestion for #21
-- Strikepay (#31): platform API model (marketplace vs standalone) — HARD BLOCKER before any development
-- PostGIS availability — affects Nearby Menus Map (#30) spatial query design
-- Ordritem column name (`calculated_price` vs `unit_price`) — affects Weight-Based Pricing (#29) migration
+## Key Pre-Development Gates (as of 2026-03-27)
+- AI Agent tier (#16–#23): LLM provider strategy, AgentPolicy self-service scope, audit log retention, PgBouncer status, GDPR DPA for #19, review platform ingestion for #22
+- Strikepay (#32): platform API model (marketplace vs standalone) — HARD BLOCKER before any development
+- PostGIS availability — affects Nearby Menus Map (#31) spatial query design
+- Ordritem column name (`calculated_price` vs `unit_price`) — affects Weight-Based Pricing (#30) migration

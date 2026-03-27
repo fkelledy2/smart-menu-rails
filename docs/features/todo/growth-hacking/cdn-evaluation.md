@@ -1,7 +1,7 @@
 # CDN Evaluation — mellow.menu
 
 ## Status
-- Priority Rank: #16
+- Priority Rank: #25
 - Category: Post-Launch (deferred — revisit at scale triggers)
 - Effort: S
 - Dependencies: Sufficient production traffic to measure TTFB meaningfully

@@ -1,6 +1,6 @@
 # mellow.menu Feature Backlog — Priority Index
 
-**Last updated**: 2026-03-26 (Homepage Demo Booking & Video completed; JWT Token Management is now #1 active item)
+**Last updated**: 2026-03-27 (CRM Sales Funnel added at #9; Square Integration and Profit Margin Tracking classified; all downstream ranks corrected)
 **QR Code Security (#1)**: COMPLETED 2026-03-24 — Phase 1 shipped; spec at `docs/features/completed/qr-security.md`
 **Branded Email Styling (#1)**: COMPLETED 2026-03-24 — spec at `docs/features/completed/branded-email-styling-feature-request.md`
 **Branded Receipt Email (#2)**: COMPLETED 2026-03-25 — spec at `docs/features/completed/branded-receipt-email-feature-request.md`
@@ -20,33 +20,38 @@
 | ~~#6~~ | ~~Pre-Configured Marketing QRs~~ | ~~Launch Enhancer~~ | M | #1 (token infra) | COMPLETED 2026-03-25 — spec at `docs/features/completed/pre-config-qrs.md` |
 | ~~#7~~ | ~~Homepage Demo Booking & Video~~ | ~~Launch Enhancer~~ | S | None | COMPLETED 2026-03-26 — spec at `docs/features/completed/homepage-demo-booking-feature-request.md` |
 | #8 | JWT Token Management (API) | Post-Launch | L | Existing admin auth | Enterprise and integration-partner access; revenue unlock for larger groups |
-| #9 | Partner Integrations (Event-Driven) | Post-Launch | M | #8, Stripe webhooks | Ecosystem play; required by workforce/CRM partners |
-| #10 | Menu Experiments (A/B Testing) | Post-Launch | M | #1 (DiningSession); MenuVersion BUILT | Elevated: MenuVersion dependency resolved — only needs QR Security (#1) to ship first |
-| #11 | Table Wait Time Estimation | Post-Launch | L | #5, Tablesetting | Operations win; differentiates for high-footfall walk-in restaurants |
-| #12 | Dynamic Pricing Plans (Cost-Indexed) | Post-Launch | L | #13, #14 | Sustainable margin management at scale |
-| #13 | Cost Insights + Pricing Model Publisher | Post-Launch | L | #14 | Admin system enabling #12; required before pricing models can be published |
-| #14 | Heroku Cost Inventory | Post-Launch | S | Admin auth, HEROKU_PLATFORM_API_TOKEN | Feeds #13 with accurate infra cost data |
-| #15 | Agent Framework — Shared Infrastructure | Post-Launch | L | OpenAI API, Sidekiq, PostgreSQL | Foundation for all AI agent work; must ship before any individual agent |
-| #16 | Menu Import Agent | Post-Launch | M | #15 Agent Framework | Highest-value onboarding accelerator; reduces time-to-first-menu from hours to minutes |
-| #17 | Restaurant Growth Agent | Post-Launch | M | #15 Agent Framework, analytics services | Weekly digest turns raw data into actionable owner insights; low risk, clear ROI |
-| #18 | Customer Concierge Agent | Post-Launch | M | #15 Agent Framework, SmartMenu view | Customer-facing differentiation; drives order value uplift via natural-language discovery |
-| #19 | Menu Optimization Agent | Post-Launch | M | #15, #17 patterns, 14+ days order data | Structured change-set proposals; builds on Growth Digest patterns; drives conversion |
-| #20 | Service Operations Agent | Post-Launch | M | #15, Kitchen/Station dashboards, ActionCable | Real-time ops intelligence; reduces kitchen congestion and service recovery lag |
-| #21 | Reputation & Feedback Agent | Post-Launch | M | #15, in-app rating system, email mailers | Protects revenue by surfacing and recovering negative signals before they compound |
-| #22 | Staff Copilot Agent | Post-Launch | L | #15, back-office service layer | NL interface to back office; biggest UX integration effort; ship after agent patterns proven |
-| #23 | MCP AI Agent Wrapper | Post-Launch | XL | #8 JWT, #15 Agent Framework, legal review | External AI agent ecosystem play; not revenue-critical until agent tier is proven internally |
-| #24 | CDN Evaluation / Implementation | Post-Launch | S | Measured TTFB > 500ms | Deferred — revisit at traffic scale triggers |
-| #25+ | R&D Initiatives (Floor OS) | R&D | Various | Core product stable | Strategic vision; not sprint work until launch blockers ship |
-| #26 | Two-Factor Authentication | Post-Launch | M | Devise (built), Redis (built) | Security hardening for accounts controlling payments; increasingly expected by enterprise customers |
-| #27 | Employee Role Promotion | Post-Launch | S | Employee model (built), StaffInvitation (built) | Enables restaurant teams to grow organically without manual admin intervention; audit trail included |
-| #28 | Bulk Employee Invitation | Post-Launch | M | StaffInvitation (built), Sidekiq (built) | Reduces onboarding friction for multi-staff restaurants; leverages existing invitation infrastructure |
-| #29 | Weight-Based Menu Item Pricing | Post-Launch | M | Menuitem model, Ordritem model, KDS | Unlocks premium dining and butcher/seafood segments that require per-weight pricing |
-| #30 | Nearby Menus Map | Post-Launch | L | Geocoding data, map provider API key | Consumer-facing discovery surface; organic acquisition channel for new restaurant sign-ups |
-| #31 | Strikepay Integration (Staff Tipping) | Post-Launch | L | Payments::Orchestrator, Strikepay API agreement | Staff satisfaction and retention differentiator; compliance-heavy — Strikepay platform API confirmation required before build |
+| #9 | CRM Sales Funnel | Growth | L | Admin auth, ActionMailer, Calendly webhook | Internal sales pipeline tool; directly accelerates restaurant acquisition and conversion tracking |
+| #10 | Partner Integrations (Event-Driven) | Post-Launch | M | #8, Stripe webhooks | Ecosystem play; required by workforce/CRM partners |
+| #11 | Menu Experiments (A/B Testing) | Post-Launch | M | #1 (DiningSession built); MenuVersion BUILT | Elevated: MenuVersion dependency resolved — all blockers done |
+| #12 | Table Wait Time Estimation | Post-Launch | L | #5 (completed), Tablesetting | Operations win; differentiates for high-footfall walk-in restaurants |
+| #13 | Dynamic Pricing Plans (Cost-Indexed) | Post-Launch | L | #14, #15 | Sustainable margin management at scale |
+| #14 | Cost Insights + Pricing Model Publisher | Post-Launch | L | #15 | Admin system enabling #13; required before pricing models can be published |
+| #15 | Heroku Cost Inventory | Post-Launch | S | Admin auth, HEROKU_PLATFORM_API_TOKEN | Feeds #14 with accurate infra cost data |
+| #16 | Agent Framework — Shared Infrastructure | Post-Launch | L | OpenAI API, Sidekiq, PostgreSQL | Foundation for all AI agent work; must ship before any individual agent |
+| #17 | Menu Import Agent | Post-Launch | M | #16 Agent Framework | Highest-value onboarding accelerator; reduces time-to-first-menu from hours to minutes |
+| #18 | Restaurant Growth Agent | Post-Launch | M | #16 Agent Framework, analytics services | Weekly digest turns raw data into actionable owner insights; low risk, clear ROI |
+| #19 | Customer Concierge Agent | Post-Launch | M | #16 Agent Framework, SmartMenu view | Customer-facing differentiation; drives order value uplift via natural-language discovery |
+| #20 | Menu Optimization Agent | Post-Launch | M | #16, #18 patterns, 14+ days order data | Structured change-set proposals; builds on Growth Digest patterns; drives conversion |
+| #21 | Service Operations Agent | Post-Launch | M | #16, Kitchen/Station dashboards, ActionCable | Real-time ops intelligence; reduces kitchen congestion and service recovery lag |
+| #22 | Reputation & Feedback Agent | Post-Launch | M | #16, in-app rating system, email mailers | Protects revenue by surfacing and recovering negative signals before they compound |
+| #23 | Staff Copilot Agent | Post-Launch | L | #16, back-office service layer | NL interface to back office; biggest UX integration effort; ship after agent patterns proven |
+| #24 | MCP AI Agent Wrapper | Post-Launch | XL | #8 JWT, #16 Agent Framework, legal review | External AI agent ecosystem play; not revenue-critical until agent tier is proven internally |
+| #25 | CDN Evaluation / Implementation | Post-Launch | S | Measured TTFB > 500ms | Deferred — revisit at traffic scale triggers |
+| #26+ | R&D Initiatives (Floor OS) | R&D | Various | Core product stable | Strategic vision; not sprint work until launch blockers ship |
+| #27 | Two-Factor Authentication | Post-Launch | M | Devise (built), Redis (built) | Security hardening for accounts controlling payments; increasingly expected by enterprise customers |
+| #28 | Employee Role Promotion | Post-Launch | S | Employee model (built) | Enables restaurant teams to grow organically without manual admin intervention; audit trail included |
+| #29 | Bulk Employee Invitation | Post-Launch | M | StaffInvitation (built), Sidekiq (built) | Reduces onboarding friction for multi-staff restaurants; leverages existing invitation infrastructure |
+| #30 | Weight-Based Menu Item Pricing | Post-Launch | M | Menuitem model, Ordritem model, KDS | Unlocks premium dining and butcher/seafood segments that require per-weight pricing |
+| #31 | Nearby Menus Map | Post-Launch | L | Geocoding data, map provider API key | Consumer-facing discovery surface; organic acquisition channel for new restaurant sign-ups |
+| #32 | Strikepay Integration (Staff Tipping) | Post-Launch | L | Payments::Orchestrator, Strikepay API agreement | Staff satisfaction and retention differentiator; compliance-heavy — Strikepay platform API confirmation required before build |
 
-> **Note on March 2026 additions (first pass)**: Ranks #15–#22 are new AI agent features added in the 2026-03-24 pass. The MCP AI Agent Wrapper, previously #15, is renumbered to #23 as it now correctly depends on both the JWT system (#8) and the Agent Framework (#15). CDN Evaluation moves from #16 to #24 accordingly.
+> **Note on March 2026 additions (fourth pass — 2026-03-27)**: Two previously unclassified items have been reviewed and dispositioned: (1) **Square Integration** (`backlog/square-integration.md`) is confirmed In Progress (Epics 1–6 complete, pending alpha testing). It is not ranked in the priority table because it is already under active development. It uses `Payments::Orchestrator` / `Payments::SquareAdapter` correctly. Completion unblocks Square-market restaurant acquisition. Track progress separately — alpha testing and Epic 8 finalisation are the immediate next steps. (2) **Menu Item Profit Margin Tracking** (`backlog/menu-item-profit-margin-tracking.md`) — Phases 1–3 are complete as of 2026-03-17. Phase 4 (advanced analytics + AI recommendations integration) is ready for implementation. This feeds Cost Insights (#14) and the Menu Optimization Agent (#20). It does not block any ranked item but Phase 4 should be scoped as part of #14 sprint planning.
 
-> **Note on March 2026 additions (second pass)**: Ranks #26–#31 are six new product specs (2FA, Employee Role Promotion, Bulk Employee Invite, Weight-Based Pricing, Nearby Menus Map, Strikepay Integration) refined from raw requirements added to the backlog on 2026-03-23. All are classified Post-Launch. Key architectural corrections applied during refinement: (1) Employee Role Promotion was re-scoped to target the `Employee` model's existing role enum — not the `User` model as the raw spec proposed; (2) Bulk Employee Invite was designed to extend the existing `StaffInvitation` model rather than replace it; (3) Nearby Menus Map had React components replaced with Stimulus/Hotwire pattern; (4) Strikepay Integration had direct API calls replaced with `Payments::Orchestrator` / `Payments::StrikepayAdapter` pattern, and a hard pre-development gate added pending Strikepay platform API confirmation. Nine marketing/analysis documents were also classified and dispositioned (not dev specs; no new engineering tickets derived).
+> **Note on March 2026 additions (third pass)**: CRM Sales Funnel inserted at #9 (2026-03-27). Rationale: the sales team needs a structured acquisition pipeline before launch to convert inbound interest into paying customers; this is a growth-critical internal tool, not a restaurant-facing feature. All downstream items shifted by one (#10–#32). Agent Framework internal references updated from #15 to #16. Spec at `docs/features/todo/backlog/crm-sales-funnel.md`.
+
+> **Note on March 2026 additions (first pass)**: AI agent tier (#16–#23) added 2026-03-24. The MCP AI Agent Wrapper depends on both JWT (#8) and Agent Framework (#16). CDN Evaluation deferred until traffic triggers at #25.
+
+> **Note on March 2026 additions (second pass)**: Ranks #27–#32 are six new product specs (2FA, Employee Role Promotion, Bulk Employee Invite, Weight-Based Pricing, Nearby Menus Map, Strikepay Integration) refined from raw requirements added 2026-03-23. All are classified Post-Launch. Key architectural corrections applied during refinement: (1) Employee Role Promotion re-scoped to target `Employee` model role enum, not `User`; (2) Bulk Employee Invite extended `StaffInvitation` model rather than replacing it; (3) Nearby Menus Map replaced React components with Stimulus/Hotwire pattern; (4) Strikepay Integration routes all API calls through `Payments::Orchestrator` / `Payments::StrikepayAdapter`, with a hard pre-development gate pending Strikepay platform API confirmation. Nine marketing/analysis documents were also classified and dispositioned (not dev specs; no new engineering tickets derived).
 
 ---
 
@@ -84,145 +89,153 @@ Note: The launch blockers are deliberately narrow. Features #4–#7 are strong l
 
 ## Sprint 1 Recommendation — Immediate Next Best Actions
 
-Start these in parallel or sequential order based on team capacity:
+All launch blockers (#1–#7) are completed. The platform is live-capable. The following represent the highest-value next actions, ordered by immediate impact on revenue and growth:
 
-### Track A: Security Foundation (Unblocks everything)
-**Feature #1 — QR Code Security, Phase 1**
+### Track A: Sales Velocity (Highest immediate business impact)
+**Feature #9 — CRM Sales Funnel**
+
+The sales team needs this now to convert inbound interest into paying customers. Without a structured pipeline, leads are being tracked manually. This is the single feature most likely to directly increase MRR in the next 30 days.
 
 Deliverables in priority order:
-1. Migration: `add_public_token_to_smartmenus` — backfill existing rows
-2. Update QR generation to use `/t/:public_token` URL
-3. Create `DiningSession` model + migration
-4. Add `require_valid_dining_session!` before_action to order mutation endpoints
-5. `ExpireDiningSessionsJob` (every 5 min via Sidekiq cron)
-6. Rack::Attack order-specific throttles
-7. Admin "Regenerate QR" button on table settings
+1. Migrations: `CrmLead`, `CrmLeadNote`, `CrmLeadAudit`, `CrmEmailSend`
+2. Pundit policies: `CrmLeadPolicy`, `CrmLeadNotePolicy`, `CrmEmailSendPolicy`
+3. `Crm::LeadTransitionService` — stage state machine
+4. Kanban board UI (`/admin/crm/leads`) with Stimulus + Sortable.js
+5. Lead detail panel with notes, activity log, email compose
+6. Calendly webhook handler + `Crm::CalendlyWebhookVerifier`
+7. `CrmMailer#lead_follow_up` using branded layout
 
-Estimated: 2–3 developer weeks
+Estimated: 3–4 developer weeks
 
-### Track B: Brand & Trust (Can run in parallel with Track A)
-**Feature #2 — Branded Email Styling**
+### Track B: API & Integrations Foundation (Unblocks #10 and enterprise sales)
+**Feature #8 — JWT Token Management**
+
+Enterprise restaurant groups and integration partners are asking for programmatic access. This also unblocks Partner Integrations (#10) and the MCP Wrapper (#24). Can run in parallel with Track A.
 
 Deliverables:
-1. Update `app/views/layouts/mailer.html.erb` with branded header/footer
-2. Inline CSS (or use a CSS inliner gem like `premailer-rails`)
-3. Update all Devise mailer views to use branded layout
-4. Create `UserMailer#welcome_email` if not already present
-5. Test all 5 critical email types in ActionMailer previews
+1. `create_admin_jwt_tokens` + `create_jwt_token_usage_logs` migrations
+2. `Jwt::TokenGenerator`, `Jwt::TokenValidator`, `Jwt::ScopeEnforcer` services
+3. `Admin::JwtTokensController` with revoke, send_email, download_link
+4. `JwtAuthenticated` concern for API endpoint protection
+5. `JwtTokenExpiryNotificationJob`
+6. Enable Flipper flag: `jwt_api_access`
+
+Estimated: 3–4 developer weeks
+
+### Track C: Quick Wins — Team Management (S-effort, high operational value)
+**Feature #28 — Employee Role Promotion** (S effort — can ship in days)
+
+Low complexity, high operational value for restaurants onboarding multi-role teams. Ship this between larger tracks to show momentum.
+
+Deliverables:
+1. `create_employee_role_audits` migration
+2. Extend `EmployeePolicy#change_role?` and `#view_role_history?`
+3. `Employees::RoleChangeService`
+4. `EmployeeMailer#role_changed` (uses built branded layout)
+5. "Change Role" UI with Turbo Modal
 
 Estimated: 3–5 developer days
-
-### Track C: Payment Closure (Depends on Track A session model)
-**Feature #3 — Branded Receipt Email, after #2 branded layout is done**
-
-Deliverables:
-1. `create_receipt_deliveries` migration
-2. `ReceiptMailer#customer_receipt` using branded layout
-3. `ReceiptDeliveryJob` with retry logic
-4. Staff UI: "Email Receipt" button on paid orders
-5. Customer self-service receipt form on SmartMenu
-
-Estimated: 1–2 developer weeks
 
 ---
 
 ## AI Agent Tier — Build Sequence
 
-The AI agent features (#15–#22) form a coherent product tier that should be built as a sequential programme after the launch blockers and at least two launch enhancers (#4 and #5) have shipped. The internal build sequence is strict:
+The AI agent features (#16–#23) form a coherent product tier that should be built as a sequential programme after the launch blockers (#1–#7, all completed) and at least the CRM (#9) and JWT (#8) work has shipped. The internal build sequence is strict:
 
-### Phase 0: Agent Framework (#15) — prerequisite for all agents
+### Phase 0: Agent Framework (#16) — prerequisite for all agents
 Build the shared infrastructure: workflow models, runner, toolbox, policy evaluator, artifact writer, approval router, Sidekiq queues, and the AI Workbench UI. Estimated: 4–6 developer weeks.
 
-### Phase 1: First Agents (can overlap; both build on the same toolbox)
-- **#16 Menu Import Agent** — highest onboarding value; extends existing OCR pipeline
-- **#17 Restaurant Growth Agent** — lowest risk first agent; read-only plus advisory
-- **#18 Customer Concierge Agent** — customer-facing differentiation; requires streaming LLM responses
+### Phase 1: First Agents (can overlap; all build on the same toolbox)
+- **#17 Menu Import Agent** — highest onboarding value; extends existing OCR pipeline
+- **#18 Restaurant Growth Agent** — lowest risk first agent; read-only plus advisory
+- **#19 Customer Concierge Agent** — customer-facing differentiation; requires streaming LLM responses
 
 Ship Phase 1 agents once the framework is stable (at least one full run through the approval workflow in production). Estimated: 2–3 developer weeks per agent.
 
 ### Phase 2: Operational Agents (ship in any order after Phase 1 is live)
-- **#19 Menu Optimization Agent** — extends Growth Digest with executable change sets
-- **#20 Service Operations Agent** — live order-flow intelligence; highest latency sensitivity
-- **#21 Reputation & Feedback Agent** — post-dining signals; requires review/rating system active
-- **#22 Staff Copilot Agent** — most complex UX integration; ship last in Phase 2
+- **#20 Menu Optimization Agent** — extends Growth Digest with executable change sets
+- **#21 Service Operations Agent** — live order-flow intelligence; highest latency sensitivity
+- **#22 Reputation & Feedback Agent** — post-dining signals; requires review/rating system active
+- **#23 Staff Copilot Agent** — most complex UX integration; ship last in Phase 2
 
 ### Phase 3: Ecosystem (ship after agent tier is proven)
-- **#23 MCP AI Agent Wrapper** — external API surface for third-party AI agents; requires #8 JWT and #15 Framework
+- **#24 MCP AI Agent Wrapper** — external API surface for third-party AI agents; requires #8 JWT and #16 Framework
 
 ---
 
 ## Dependencies Graph
 
 ```
-#1 QR Security
-  └─► #4 Auto Pay & Leave (needs DiningSession)
-  └─► #6 Pre-Configured Marketing QRs (needs token infrastructure)
-  └─► #10 Menu Experiments (needs DiningSession for assignment storage)
-
-#2 Branded Email Styling
-  └─► #3 Branded Receipt Email (needs branded layout)
-  └─► #7 Homepage Demo Booking (uses branded mailer)
-  └─► #17 Restaurant Growth Agent (digest email uses branded layout)
-  └─► #21 Reputation & Feedback Agent (recovery emails use branded layout)
-
-#3 Branded Receipt Email
-  └─► #4 Auto Pay & Leave (sends receipt on successful capture)
-
-#5 Floorplan Dashboard
-  └─► #11 Table Wait Time Estimation (shares table state model)
+All launch blockers (#1–#7) are COMPLETED. Dependencies below reflect the active backlog.
 
 #8 JWT Token Management
-  └─► #9 Partner Integrations (needs JWT auth for API endpoints)
-  └─► #23 MCP AI Agent Wrapper (needs JWT for agent API access)
+  └─► #10 Partner Integrations (needs JWT auth for API endpoints)
+  └─► #24 MCP AI Agent Wrapper (needs JWT for agent API access)
 
-#13 Cost Insights + Pricing Publisher
-  └─► #12 Dynamic Pricing Plans (needs cost data to compute prices)
+#9 CRM Sales Funnel
+  └─► (no downstream dependents — internal sales tool)
 
-#14 Heroku Cost Inventory
-  └─► #13 Cost Insights (feeds infra cost data)
+#11 Menu Experiments
+  └─► (all dependencies satisfied: DiningSession built by #1, MenuVersion built)
+
+#12 Table Wait Time Estimation
+  └─► (Floorplan Dashboard completed; Tablesetting model exists)
+
+#15 Heroku Cost Inventory
+  └─► #14 Cost Insights + Pricing Publisher (feeds infra cost data)
+
+#14 Cost Insights + Pricing Publisher
+  └─► #13 Dynamic Pricing Plans (needs cost data to compute prices)
 
 MenuVersion System (BUILT — no action required)
-  └─► #10 Menu Experiments (dependency satisfied)
+  └─► #11 Menu Experiments (dependency satisfied)
 
-#15 Agent Framework
-  └─► #16 Menu Import Agent
-  └─► #17 Restaurant Growth Agent
-  └─► #18 Customer Concierge Agent
-  └─► #19 Menu Optimization Agent
-  └─► #20 Service Operations Agent
-  └─► #21 Reputation & Feedback Agent
-  └─► #22 Staff Copilot Agent
-  └─► #23 MCP AI Agent Wrapper (also needs #8)
+Menu Item Profit Margin Tracking (Phases 1–3 BUILT — Phase 4 ready)
+  └─► #14 Cost Insights (Phase 4 analytics feed into cost insights)
+  └─► #20 Menu Optimization Agent (margin data used in optimization proposals)
 
-#16 Menu Import Agent
+Square Integration (IN PROGRESS — Epics 1–6 complete, alpha testing pending)
+  └─► (feeds Payments::Orchestrator — no dependency on ranked backlog items)
+
+#16 Agent Framework
+  └─► #17 Menu Import Agent
+  └─► #18 Restaurant Growth Agent
+  └─► #19 Customer Concierge Agent
+  └─► #20 Menu Optimization Agent
+  └─► #21 Service Operations Agent
+  └─► #22 Reputation & Feedback Agent
+  └─► #23 Staff Copilot Agent
+  └─► #24 MCP AI Agent Wrapper (also needs #8)
+
+#17 Menu Import Agent
   └─► (extends existing OcrMenuImport pipeline — no new downstream deps)
 
-#17 Restaurant Growth Agent
-  └─► #19 Menu Optimization Agent (shares performance-read patterns and toolbox)
+#18 Restaurant Growth Agent
+  └─► #20 Menu Optimization Agent (shares performance-read patterns and toolbox)
 
-#20 Service Operations Agent
+#21 Service Operations Agent
   └─► (requires Kitchen/Station dashboards and ActionCable channels — all exist)
 
-#26 Two-Factor Authentication
+#27 Two-Factor Authentication
   └─► (no downstream dependents in v1; Devise + Redis already present)
 
-#27 Employee Role Promotion
+#28 Employee Role Promotion
   └─► (depends on Employee model — already built; EmployeeRoleAudit is new)
-  └─► #2 Branded Email (uses branded mailer for role-change notification)
+  └─► Branded Email built — uses branded mailer for role-change notification
 
-#28 Bulk Employee Invitation
+#29 Bulk Employee Invitation
   └─► (depends on StaffInvitation model — already built)
-  └─► #2 Branded Email (invitation emails use branded layout)
+  └─► Branded Email built — invitation emails use branded layout
 
-#29 Weight-Based Pricing
+#30 Weight-Based Pricing
   └─► (no upstream blockers; Menuitem + Ordritem already exist)
 
-#30 Nearby Menus Map
-  └─► (no upstream blockers; PostGIS availability must be confirmed)
+#31 Nearby Menus Map
+  └─► (no upstream blockers; PostGIS availability must be confirmed with infra)
 
-#31 Strikepay Integration
-  └─► #3 Branded Receipt Email (post-payment tipping prompt appears on receipt/post-payment screen)
-  └─► (Strikepay platform API agreement is a hard pre-development gate)
+#32 Strikepay Integration
+  └─► Branded Receipt Email (built) — tipping prompt appears on post-payment screen
+  └─► (Strikepay platform API agreement is a hard pre-development gate — do not start without this)
 ```
 
 ---
@@ -250,7 +263,7 @@ MenuVersion System (BUILT — no action required)
 
 ---
 
-## AI Agent Open Questions (require resolution before #15 enters development)
+## AI Agent Open Questions (require resolution before #16 enters development)
 
 The following questions must be resolved before the Agent Framework sprint begins. They affect DB schema, LLM provider selection, and GDPR posture:
 
@@ -258,8 +271,8 @@ The following questions must be resolved before the Agent Framework sprint begin
 2. **AgentPolicy self-service**: Can restaurant owners modify their auto-approve/escalate policies from a self-service UI, or is this admin-managed in v1? Affects the back-office UI scope.
 3. **Audit log retention**: What is the retention period for `ToolInvocationLog` and `AgentWorkflowRun` records? Recommendation: 90 days. Legal/compliance input needed.
 4. **PgBouncer transaction pooling**: Is PgBouncer active in production? If yes, LISTEN/NOTIFY is unavailable for domain event dispatch. The polling approach (Sidekiq cron polls `agent_domain_events`) is the safe default.
-5. **GDPR / AI processing**: Passing restaurant order data and customer dietary preferences to OpenAI's API — is this covered by the current DPA with OpenAI, and does it require customer disclosure in the privacy policy? Requires legal review before any customer-facing agent (especially #18 Customer Concierge) goes live.
-6. **Review platform ingestion** (for #21 Reputation Agent): Does the platform currently receive Google/TripAdvisor reviews via API? If not, the Reputation Agent's `review.received` trigger is limited to in-app checkout ratings only in v1. Needs product confirmation.
+5. **GDPR / AI processing**: Passing restaurant order data and customer dietary preferences to OpenAI's API — is this covered by the current DPA with OpenAI, and does it require customer disclosure in the privacy policy? Requires legal review before any customer-facing agent (especially #19 Customer Concierge) goes live.
+6. **Review platform ingestion** (for #22 Reputation Agent): Does the platform currently receive Google/TripAdvisor reviews via API? If not, the Reputation Agent's `review.received` trigger is limited to in-app checkout ratings only in v1. Needs product confirmation.
 
 ---
 
@@ -307,42 +320,46 @@ The following requirements are implied by existing specs but do not yet have sta
 
 | Implied Feature | Implied By | Urgency | Status |
 |----------------|-----------|---------| -------|
-| MenuVersion System | Menu Experiments (#10) | High — hard dependency | RESOLVED — fully built; see `menu-versioning-system.md` |
-| Bill Splitting (referenced in Auto Pay) | Auto Pay & Leave (#4) | Post-launch | Open |
-| Twilio / SMS provider integration | Receipt Email (#3), Wait Time (#11) | Post-launch stretch | Open |
-| Ordr state machine documentation | Auto Pay (#4), Floorplan (#5) | Pre-development clarification | Open |
-| Restaurant onboarding checklist / progress tracking | Branded Email (#2) | Post-launch | Open |
-| In-app star rating at checkout | Reputation & Feedback Agent (#21) | Required before #21 enters development | Open — confirm whether this exists |
-| Review platform ingestion (Google/TripAdvisor API) | Reputation & Feedback Agent (#21) | Post-launch | Open |
-| Discount/promo code system | Reputation & Feedback Agent (#21) | Required for "offer discount" action | Open — confirm whether this exists |
-| `agent_domain_events` table | Agent Framework (#15) | Hard dependency for all agents | Specified in Agent Framework spec — new |
-| Domain event emitters on existing models | Agent Framework (#15) | Hard dependency | Specified per agent — extend existing callbacks |
-| `EmployeeRoleAudit` model | Employee Role Promotion (#27) | Hard dependency | New — specified in #27 spec |
-| PostGIS availability in production | Nearby Menus Map (#30) | Must confirm before building spatial query service | Open — confirm with infra |
-| Strikepay platform API model (marketplace vs standalone) | Strikepay Integration (#31) | Hard pre-development gate | Open — confirm with Strikepay BD before any dev |
-| `calculated_price` vs `unit_price` column on Ordritem | Weight-Based Pricing (#29) | Affects migration design | Open — confirm exact column name in schema |
+| MenuVersion System | Menu Experiments (#11) | High — hard dependency | RESOLVED — fully built; see `menu-versioning-system.md` |
+| Bill Splitting (referenced in Auto Pay) | Auto Pay & Leave (#4, completed) | Post-launch | Open |
+| Twilio / SMS provider integration | Receipt Email (#2, completed), Wait Time (#12) | Post-launch stretch | Open |
+| Ordr state machine documentation | Auto Pay (#4, completed), Floorplan (#5, completed) | Pre-development clarification | Open |
+| Restaurant onboarding checklist / progress tracking | Branded Email (#1, completed) | Post-launch | Open |
+| In-app star rating at checkout | Reputation & Feedback Agent (#22) | Required before #22 enters development | Open — confirm whether this exists |
+| Review platform ingestion (Google/TripAdvisor API) | Reputation & Feedback Agent (#22) | Post-launch | Open |
+| Discount/promo code system | Reputation & Feedback Agent (#22) | Required for "offer discount" action | Open — confirm whether this exists |
+| `agent_domain_events` table | Agent Framework (#16) | Hard dependency for all agents | Specified in Agent Framework spec — new |
+| Domain event emitters on existing models | Agent Framework (#16) | Hard dependency | Specified per agent — extend existing callbacks |
+| `EmployeeRoleAudit` model | Employee Role Promotion (#28) | Hard dependency | New — specified in #28 spec |
+| PostGIS availability in production | Nearby Menus Map (#31) | Must confirm before building spatial query service | Open — confirm with infra |
+| Strikepay platform API model (marketplace vs standalone) | Strikepay Integration (#32) | Hard pre-development gate | Open — confirm with Strikepay BD before any dev |
+| `calculated_price` vs `unit_price` column on Ordritem | Weight-Based Pricing (#30) | Affects migration design | Open — confirm exact column name in schema |
 | Blog CMS implementation decision | mellow-menu-blog.md (marketing) | Engineering decision needed before build | Open — Rails ActionText vs headless CMS |
 | AI feature landing pages (Sommelier, Whiskey Ambassador) | Marketing briefs | S-effort Rails views when marketing is ready | Open — awaiting marketing sign-off |
+| Square Integration alpha testing completion | `backlog/square-integration.md` | High — in progress; Epics 1–6 done | Active — Epic 7 finalisation + Epic 8 alpha sign-off |
+| Profit Margin Tracking Phase 4 | `backlog/menu-item-profit-margin-tracking.md` | Medium — feeds #14 Cost Insights | Ready for implementation; scope as part of #14 sprint |
 
 ---
 
 ## Key Architectural Decisions Made During Prioritisation
 
-1. **QR Security before Auto Pay**: A `DiningSession` is a prerequisite for safe payment method capture. Security cannot be retrofitted after payment flows are live.
-2. **Branded emails before receipts**: The receipt mailer inherits the branded layout. Building them in sequence avoids rework.
+1. **QR Security before Auto Pay**: A `DiningSession` is a prerequisite for safe payment method capture. Security cannot be retrofitted after payment flows are live. Both are now completed.
+2. **Branded emails before receipts**: The receipt mailer inherits the branded layout. Building them in sequence avoids rework. Both are now completed.
 3. **Admin JWT before Partner Integrations**: Partner API endpoints require the JWT authentication layer that #8 provides.
-4. **Heroku Inventory before Cost Publisher before Dynamic Pricing**: These three form a strict dependency chain. They cannot be built in parallel.
-5. **MenuVersion system is fully built**: Confirmed via codebase inspection. Menu Experiments (#10) only needs QR Security (#1) to ship first.
-6. **R&D items explicitly excluded from sprint capacity** until launch blockers (#1, #2, #3) and at least two launch enhancers (#4, #5) are shipped.
-7. **Payments always via Orchestrator**: No direct Stripe/Square calls in any new feature.
-8. **Admin cost tooling in `Admin::` namespace, never Madmin**: Confirmed across #12 and #13 specs.
-9. **Agent Framework is a prerequisite for all agent work**: No individual agent ships before the framework's models, runner, toolbox, and approval UI are in place. Building agents on ad-hoc pipelines creates unmanageable technical debt.
-10. **Agent Framework placed at #15, not earlier**: The launch blockers (#1–#3) and high-value enhancers (#4–#7) must not be delayed to fund agent infrastructure. The agent tier is a post-launch competitive differentiator, not a launch requirement.
+4. **Heroku Inventory (#15) before Cost Publisher (#14) before Dynamic Pricing (#13)**: These three form a strict dependency chain. They cannot be built in parallel.
+5. **MenuVersion system is fully built**: Confirmed via codebase inspection. Menu Experiments (#11) is unblocked — all dependencies resolved.
+6. **R&D items explicitly excluded from sprint capacity** until launch blockers (#1–#7, all completed) and core post-launch revenue features (#8–#9) have shipped.
+7. **Payments always via Orchestrator**: No direct Stripe/Square calls in any new feature. Square Integration follows this correctly via `Payments::SquareAdapter`.
+8. **Admin cost tooling in `Admin::` namespace, never Madmin**: Confirmed across #13 and #14 specs.
+9. **Agent Framework (#16) is a prerequisite for all agent work**: No individual agent ships before the framework's models, runner, toolbox, and approval UI are in place. Building agents on ad-hoc pipelines creates unmanageable technical debt.
+10. **Agent Framework placed at #16, after CRM (#9) and JWT (#8)**: The sales pipeline (CRM) and API access (JWT) deliver immediate revenue impact. The agent tier is a post-launch competitive differentiator and should not delay sales tooling.
 11. **Service Operations Agent uses rule-based fast path for simple signals**: LLM calls for deterministic congestion thresholds (queue depth, stock levels) are wasteful. Reserve LLM calls for ambiguous multi-signal reasoning. This reduces cost and latency.
 12. **No agent ever writes to live data without either auto-approval (per policy) or an explicit human confirmation**: This is a non-negotiable architectural principle across all agents. Enforced at the `Agents::PolicyEvaluator` and `Agents::ArtifactWriter` level, not just the UI.
-13. **MCP Wrapper depends on both JWT (#8) and Agent Framework (#15)**: The external MCP surface exposes the same toolbox that internal agents use. Building it before the internal toolbox is proven would create a public API backed by unstable infrastructure. Renumbered from #15 to #23.
-14. **Customer-facing agents (Concierge #18) require GDPR review before launch**: Passing dietary preference data to OpenAI's API in a customer-facing context requires legal sign-off. This is a blocker for #18 specifically — log it as a pre-development gate.
-15. **Employee roles live on `Employee`, not `User`**: The Employee Role Promotion spec (#27) was corrected during refinement — roles (`staff/manager/admin`) are scoped per restaurant on the `Employee` model. Adding role columns to `User` would break the multi-restaurant model where one user can be staff at restaurant A and admin at restaurant B.
-16. **Strikepay requires `Payments::Orchestrator` adapter, not direct API calls**: All third-party payment API calls go through the Orchestrator. A `Payments::StrikepayAdapter` must be created before any Strikepay API calls are made. The Strikepay platform API model (marketplace vs standalone accounts) must be confirmed before architecture is finalised.
-17. **Nearby Menus Map uses Stimulus, not React**: The raw spec proposed React components. All frontend work uses Hotwire (Turbo + Stimulus). The map provider JS SDK is wrapped in a Stimulus controller loaded lazily.
+13. **MCP Wrapper (#24) depends on both JWT (#8) and Agent Framework (#16)**: The external MCP surface exposes the same toolbox that internal agents use. Building it before the internal toolbox is proven would create a public API backed by unstable infrastructure.
+14. **Customer-facing agents (Concierge #19) require GDPR review before launch**: Passing dietary preference data to OpenAI's API in a customer-facing context requires legal sign-off. This is a hard pre-development gate for #19 specifically.
+15. **Employee roles live on `Employee`, not `User`**: The Employee Role Promotion spec (#28) was corrected during refinement — roles (`staff/manager/admin`) are scoped per restaurant on the `Employee` model. Adding role columns to `User` would break the multi-restaurant model where one user can be staff at restaurant A and admin at restaurant B.
+16. **Strikepay (#32) requires `Payments::Orchestrator` adapter, not direct API calls**: All third-party payment API calls go through the Orchestrator. A `Payments::StrikepayAdapter` must be created before any Strikepay API calls are made. The Strikepay platform API model (marketplace vs standalone accounts) must be confirmed before architecture is finalised. Do not start without this.
+17. **Nearby Menus Map (#31) uses Stimulus, not React**: The raw spec proposed React components. All frontend work uses Hotwire (Turbo + Stimulus). The map provider JS SDK is wrapped in a Stimulus controller loaded lazily.
 18. **Marketing/analysis documents are not dev specs**: Nine documents in `backlog/marketing/`, `backlog/competitor-analysis/`, and `marketing/` are strategy briefs and vendor evaluations. They have been dispositioned with classification headers but do not generate engineering tickets directly. The blog CMS and AI feature landing pages (S effort each) will enter the backlog as small engineering tickets when marketing is ready to execute.
+19. **Square Integration is in-progress and tracked separately**: Epics 1–6 are complete. The integration uses `Payments::Orchestrator` / `Payments::SquareAdapter` correctly. It does not appear in the ranked priority table because it is under active development — progress is tracked via Epic 7 finalisation and Epic 8 alpha sign-off, not via sprint priority order.
+20. **Profit Margin Tracking Phases 1–3 are built**: The `MenuitemCost` model, versioning, AI cost estimation, and basic reporting exist. Phase 4 (advanced analytics and AI recommendations integration) should be scoped as part of the Cost Insights (#14) sprint — the data it provides feeds the pricing model compiler.

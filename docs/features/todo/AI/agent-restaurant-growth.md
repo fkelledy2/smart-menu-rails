@@ -1,10 +1,10 @@
 # Restaurant Growth Agent
 
 ## Status
-- Priority Rank: #17 (Phase 1 agent — ship alongside or immediately after Menu Import Agent)
+- Priority Rank: #18 (Phase 1 agent — ship alongside or immediately after Menu Import Agent)
 - Category: Post-Launch — agent tier, Phase 1
 - Effort: M
-- Dependencies: Agent Framework (#15), `RestaurantInsightsService` (exists), `ProfitMarginAnalyticsService` (exists), `AnalyticsService` (exists), Sidekiq scheduler, OpenAI API
+- Dependencies: Agent Framework (#16), `RestaurantInsightsService` (exists), `ProfitMarginAnalyticsService` (exists), `AnalyticsService` (exists), Sidekiq scheduler, OpenAI API
 
 ## Problem Statement
 Restaurant owners are time-poor during service and rarely have capacity for strategic analysis. The platform already collects rich data — order volumes, item-level margin, cover counts, menu browse rates — but this data lives in raw analytics dashboards that require owners to interpret it themselves. The majority of restaurant owners do not have the time or analytical background to surface actionable insights from raw numbers. The Restaurant Growth Agent closes this gap by running a weekly synthesis pass over the restaurant's performance data and delivering a concise, opinionated digest: what worked, what didn't, what to change before the weekend, and ready-to-use marketing copy — all delivered to the manager's back office and inbox without them having to ask. This is the lowest-risk agent to ship first because it is read-only plus advisory: the agent never writes to live data autonomously.

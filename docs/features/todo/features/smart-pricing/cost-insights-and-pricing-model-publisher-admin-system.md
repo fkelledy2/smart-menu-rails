@@ -1,10 +1,10 @@
 # Cost Insights + Pricing Model Publisher (Admin System)
 
 ## Status
-- Priority Rank: #12
+- Priority Rank: #14
 - Category: Post-Launch
 - Effort: L
-- Dependencies: Heroku Cost Inventory (#13), existing `admin?` and `super_admin?` predicates, existing `Admin::` namespace pattern
+- Dependencies: Heroku Cost Inventory (#15), existing `admin?` and `super_admin?` predicates, existing `Admin::` namespace pattern
 
 ## Problem Statement
 mellow.menu has no consolidated view of its running costs across infrastructure, third-party APIs, and staff. Without this visibility, pricing decisions are made on gut feel rather than data, making it impossible to maintain sustainable gross margins as the platform scales. This admin system gives super admins a unified cost picture and the ability to publish versioned pricing models that drive subscription prices for new customers.

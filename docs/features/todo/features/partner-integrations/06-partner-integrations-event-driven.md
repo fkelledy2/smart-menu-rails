@@ -1,7 +1,7 @@
 # Partner Integrations (Event-Driven, Replaceable) (v1)
 
 ## Status
-- Priority Rank: #9
+- Priority Rank: #10
 - Category: Post-Launch
 - Effort: M
 - Dependencies: JWT Token Management (#8), existing ActionCable event infrastructure, Payments::Webhooks (Stripe/Square ingestors)

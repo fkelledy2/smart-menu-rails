@@ -1,10 +1,10 @@
 # Menu Optimization Agent
 
 ## Status
-- Priority Rank: #19 (Phase 2 agent — builds on Growth Digest patterns; requires order history depth)
+- Priority Rank: #20 (Phase 2 agent — builds on Growth Digest patterns; requires order history depth)
 - Category: Post-Launch — agent tier, Phase 2
 - Effort: M
-- Dependencies: Agent Framework (#15), Restaurant Growth Agent (#17) patterns, `ProfitMarginAnalyticsService` (exists), `AnalyticsService` (exists), `MenuOptimization` service/model (confirm existence), OpenAI API
+- Dependencies: Agent Framework (#16), Restaurant Growth Agent (#18) patterns, `ProfitMarginAnalyticsService` (exists), `AnalyticsService` (exists), `MenuOptimization` service/model (confirm existence), OpenAI API
 
 ## Problem Statement
 Restaurant menus are largely static between deliberate updates. The arrangement of sections, prominence of items, description quality, and item availability do not automatically adapt to what is actually selling, what has high margin, or what the kitchen is currently capable of delivering. Owners make these changes manually and infrequently — usually only after a noticeable problem. The Menu Optimization Agent performs a regular, data-driven analysis of the restaurant's menu performance and generates a concrete set of proposed changes — not just observations — that the manager can approve and apply in a single session. The key distinction from the Growth Digest (#17) is that this agent produces a structured **change set** (reorder, rename, suppress, feature, image-generate) that is applied to the live menu through the standard approval workflow, rather than just advisory text the owner must act on manually.
@@ -96,7 +96,7 @@ Restaurant menus are largely static between deliberate updates. The arrangement 
 - Price changes as executable actions — pricing suggestions are advisory text only.
 - Cross-restaurant learning or comparative benchmarking.
 - Real-time (intra-day) optimisation — this is a nightly/on-demand batch agent.
-- A/B testing of menu changes (see Menu Experiments spec #10 — that feature handles controlled experiments).
+- A/B testing of menu changes (see Menu Experiments spec #11 — that feature handles controlled experiments).
 
 ## Open Questions
 1. Does `app/services/menu_optimization_service.rb` or equivalent exist? Confirm before building step 1 data aggregation — reuse the existing service if it covers item-level performance tagging.
