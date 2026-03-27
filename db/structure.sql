@@ -127,6 +127,49 @@ ALTER SEQUENCE public.active_storage_variant_records_id_seq OWNED BY public.acti
 
 
 --
+-- Name: admin_jwt_tokens; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.admin_jwt_tokens (
+    id bigint NOT NULL,
+    admin_user_id bigint NOT NULL,
+    restaurant_id bigint NOT NULL,
+    token_hash character varying NOT NULL,
+    name character varying NOT NULL,
+    description text,
+    scopes jsonb DEFAULT '[]'::jsonb NOT NULL,
+    rate_limit_per_minute integer DEFAULT 60 NOT NULL,
+    rate_limit_per_hour integer DEFAULT 1000 NOT NULL,
+    expires_at timestamp(6) without time zone NOT NULL,
+    revoked_at timestamp(6) without time zone,
+    last_used_at timestamp(6) without time zone,
+    usage_count integer DEFAULT 0 NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    CONSTRAINT check_admin_jwt_tokens_scopes_is_array CHECK ((jsonb_typeof(scopes) = 'array'::text))
+);
+
+
+--
+-- Name: admin_jwt_tokens_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.admin_jwt_tokens_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: admin_jwt_tokens_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.admin_jwt_tokens_id_seq OWNED BY public.admin_jwt_tokens.id;
+
+
+--
 -- Name: alcohol_order_events; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1308,6 +1351,40 @@ CREATE SEQUENCE public.inventories_id_seq
 --
 
 ALTER SEQUENCE public.inventories_id_seq OWNED BY public.inventories.id;
+
+
+--
+-- Name: jwt_token_usage_logs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.jwt_token_usage_logs (
+    id bigint NOT NULL,
+    jwt_token_id bigint NOT NULL,
+    endpoint character varying NOT NULL,
+    http_method character varying NOT NULL,
+    ip_address character varying,
+    response_status integer NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: jwt_token_usage_logs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.jwt_token_usage_logs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: jwt_token_usage_logs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.jwt_token_usage_logs_id_seq OWNED BY public.jwt_token_usage_logs.id;
 
 
 --
@@ -4829,6 +4906,13 @@ ALTER TABLE ONLY public.active_storage_variant_records ALTER COLUMN id SET DEFAU
 
 
 --
+-- Name: admin_jwt_tokens id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.admin_jwt_tokens ALTER COLUMN id SET DEFAULT nextval('public.admin_jwt_tokens_id_seq'::regclass);
+
+
+--
 -- Name: alcohol_order_events id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4987,6 +5071,13 @@ ALTER TABLE ONLY public.ingredients ALTER COLUMN id SET DEFAULT nextval('public.
 --
 
 ALTER TABLE ONLY public.inventories ALTER COLUMN id SET DEFAULT nextval('public.inventories_id_seq'::regclass);
+
+
+--
+-- Name: jwt_token_usage_logs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.jwt_token_usage_logs ALTER COLUMN id SET DEFAULT nextval('public.jwt_token_usage_logs_id_seq'::regclass);
 
 
 --
@@ -5651,6 +5742,14 @@ ALTER TABLE ONLY public.active_storage_variant_records
 
 
 --
+-- Name: admin_jwt_tokens admin_jwt_tokens_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.admin_jwt_tokens
+    ADD CONSTRAINT admin_jwt_tokens_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: alcohol_order_events alcohol_order_events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5840,6 +5939,14 @@ ALTER TABLE ONLY public.ingredients
 
 ALTER TABLE ONLY public.inventories
     ADD CONSTRAINT inventories_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: jwt_token_usage_logs jwt_token_usage_logs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.jwt_token_usage_logs
+    ADD CONSTRAINT jwt_token_usage_logs_pkey PRIMARY KEY (id);
 
 
 --
@@ -6804,6 +6911,41 @@ CREATE UNIQUE INDEX index_active_storage_variant_records_uniqueness ON public.ac
 
 
 --
+-- Name: index_admin_jwt_tokens_on_admin_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_admin_jwt_tokens_on_admin_user_id ON public.admin_jwt_tokens USING btree (admin_user_id);
+
+
+--
+-- Name: index_admin_jwt_tokens_on_expires_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_admin_jwt_tokens_on_expires_at ON public.admin_jwt_tokens USING btree (expires_at);
+
+
+--
+-- Name: index_admin_jwt_tokens_on_restaurant_active; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_admin_jwt_tokens_on_restaurant_active ON public.admin_jwt_tokens USING btree (restaurant_id, revoked_at);
+
+
+--
+-- Name: index_admin_jwt_tokens_on_restaurant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_admin_jwt_tokens_on_restaurant_id ON public.admin_jwt_tokens USING btree (restaurant_id);
+
+
+--
+-- Name: index_admin_jwt_tokens_on_token_hash; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_admin_jwt_tokens_on_token_hash ON public.admin_jwt_tokens USING btree (token_hash);
+
+
+--
 -- Name: index_alcohol_events_on_ordr_ack; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -7291,6 +7433,20 @@ CREATE INDEX index_inventories_on_menuitem_updated_at ON public.inventories USIN
 --
 
 CREATE INDEX index_inventories_on_status ON public.inventories USING btree (status);
+
+
+--
+-- Name: index_jwt_token_usage_logs_on_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_jwt_token_usage_logs_on_created_at ON public.jwt_token_usage_logs USING btree (created_at);
+
+
+--
+-- Name: index_jwt_token_usage_logs_on_token_and_time; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_jwt_token_usage_logs_on_token_and_time ON public.jwt_token_usage_logs USING btree (jwt_token_id, created_at);
 
 
 --
@@ -10097,6 +10253,14 @@ ALTER TABLE ONLY public.ocr_menu_imports
 
 
 --
+-- Name: admin_jwt_tokens fk_rails_5c18e2067b; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.admin_jwt_tokens
+    ADD CONSTRAINT fk_rails_5c18e2067b FOREIGN KEY (restaurant_id) REFERENCES public.restaurants(id);
+
+
+--
 -- Name: userplans fk_rails_666174eb65; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -10158,6 +10322,14 @@ ALTER TABLE ONLY public.menu_items
 
 ALTER TABLE ONLY public.ingredients
     ADD CONSTRAINT fk_rails_6defac91a6 FOREIGN KEY (restaurant_id) REFERENCES public.restaurants(id);
+
+
+--
+-- Name: jwt_token_usage_logs fk_rails_6ec5557375; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.jwt_token_usage_logs
+    ADD CONSTRAINT fk_rails_6ec5557375 FOREIGN KEY (jwt_token_id) REFERENCES public.admin_jwt_tokens(id);
 
 
 --
@@ -10825,6 +10997,14 @@ ALTER TABLE ONLY public.ordritemnotes
 
 
 --
+-- Name: admin_jwt_tokens fk_rails_d9412e59ea; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.admin_jwt_tokens
+    ADD CONSTRAINT fk_rails_d9412e59ea FOREIGN KEY (admin_user_id) REFERENCES public.users(id);
+
+
+--
 -- Name: menuitem_ingredient_quantities fk_rails_da6c3805c1; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -10999,6 +11179,8 @@ ALTER TABLE ONLY public.voice_commands
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260327100002'),
+('20260327100001'),
 ('20260326194824'),
 ('20260326194817'),
 ('20260325195401'),

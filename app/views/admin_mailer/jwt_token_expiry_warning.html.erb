@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><title>API Token Expiry Warning</title></head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #1a1a1a; max-width: 600px; margin: 0 auto; padding: 24px;">
+
+  <h2 style="margin-top: 0; color: #b45309;">API token expiring in 7 days</h2>
+
+  <p>The following API token will expire in 7 days. Log in to the mellow.menu admin panel to issue a replacement and notify the restaurant.</p>
+
+  <table style="border-collapse: collapse; width: 100%; margin: 16px 0;">
+    <tr>
+      <td style="padding: 8px; border: 1px solid #e4e4e7; font-weight: 600;">Token name</td>
+      <td style="padding: 8px; border: 1px solid #e4e4e7;"><%= @jwt_token.name %></td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #e4e4e7; font-weight: 600;">Restaurant</td>
+      <td style="padding: 8px; border: 1px solid #e4e4e7;"><%= @restaurant.name %></td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #e4e4e7; font-weight: 600;">Expires</td>
+      <td style="padding: 8px; border: 1px solid #e4e4e7;"><%= @jwt_token.expires_at.strftime('%d %B %Y') %></td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #e4e4e7; font-weight: 600;">Scopes</td>
+      <td style="padding: 8px; border: 1px solid #e4e4e7;"><%= @jwt_token.scopes.join(', ') %></td>
+    </tr>
+  </table>
+
+  <p style="color: #71717a; font-size: 13px;">This is an automated reminder from the mellow.menu platform.</p>
+
+</body>
+</html>

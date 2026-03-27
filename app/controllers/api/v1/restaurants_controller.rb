@@ -3,6 +3,15 @@
 class Api::V1::RestaurantsController < Api::V1::BaseController
   before_action :set_restaurant, only: %i[show update destroy]
   before_action :authenticate_user!, except: %i[index show]
+  before_action :enforce_settings_read_scope!, only: %i[show index]
+
+  private
+
+  def enforce_settings_read_scope!
+    enforce_scope!('settings:read') if api_jwt_request?
+  end
+
+  public
 
   # GET /api/v1/restaurants
   def index

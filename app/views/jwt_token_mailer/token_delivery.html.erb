@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Your mellow.menu API Token</title>
+</head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #1a1a1a; max-width: 600px; margin: 0 auto; padding: 24px;">
+
+  <h2 style="margin-top: 0;">Your API token for <%= @restaurant.name %></h2>
+
+  <p>An API access token has been created for your restaurant. Keep this token secure — it grants programmatic access to your mellow.menu data.</p>
+
+  <p><strong>Token name:</strong> <%= @jwt_token.name %></p>
+  <p><strong>Expires:</strong> <%= @expires_at.strftime('%d %B %Y at %H:%M UTC') %></p>
+  <p><strong>Scopes:</strong> <%= @scopes.join(', ') %></p>
+
+  <div style="background: #f4f4f5; border-radius: 6px; padding: 16px; margin: 24px 0; word-break: break-all;">
+    <p style="margin: 0 0 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: #71717a;">Your API Token (shown once only)</p>
+    <code style="font-size: 13px; font-family: 'SFMono-Regular', Consolas, monospace; color: #18181b;"><%= @raw_jwt %></code>
+  </div>
+
+  <h3>How to use your token</h3>
+
+  <p>Include the token in the <code>Authorization</code> HTTP header for every API request:</p>
+
+  <pre style="background: #1e1e2e; color: #cdd6f4; border-radius: 6px; padding: 16px; font-size: 13px; overflow-x: auto;">Authorization: Bearer &lt;your-token&gt;</pre>
+
+  <h3>Example</h3>
+
+  <pre style="background: #1e1e2e; color: #cdd6f4; border-radius: 6px; padding: 16px; font-size: 13px; overflow-x: auto;">curl https://mellow.menu/api/v1/restaurants/<%= @restaurant.id %>/menus \
+  -H "Authorization: Bearer &lt;your-token&gt;"</pre>
+
+  <h3>Available endpoints</h3>
+
+  <ul>
+    <% if @scopes.include?('menu:read') || @scopes.include?('menu:write') %>
+      <li><code>GET /api/v1/restaurants/<%= @restaurant.id %>/menus</code> — list menus</li>
+    <% end %>
+    <% if @scopes.include?('orders:read') || @scopes.include?('orders:write') %>
+      <li><code>GET /api/v1/restaurants/<%= @restaurant.id %>/orders</code> — list orders</li>
+    <% end %>
+    <% if @scopes.include?('analytics:read') %>
+      <li><code>GET /api/v1/restaurants/<%= @restaurant.id %>/analytics/dashboard</code> — analytics</li>
+    <% end %>
+  </ul>
+
+  <p style="color: #71717a; font-size: 13px; margin-top: 32px;">This token was issued by the mellow.menu team. If you did not request it or believe it was issued in error, please contact <a href="mailto:hello@mellow.menu">hello@mellow.menu</a> immediately.</p>
+
+</body>
+</html>

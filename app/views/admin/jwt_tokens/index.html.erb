@@ -1,0 +1,60 @@
+<%# Admin: JWT Token Management — index %>
+<% content_for :title, 'API Token Management — Admin' %>
+
+<div class="container-fluid py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="h3 mb-1">API Token Management</h1>
+      <p class="text-muted mb-0">Manage JWT tokens for restaurant integrations. Tokens are shown once at creation.</p>
+    </div>
+    <%= link_to 'Issue New Token', new_admin_jwt_token_path, class: 'btn btn-primary' %>
+  </div>
+
+  <% if @tokens.any? %>
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>Name</th>
+            <th>Restaurant</th>
+            <th>Scopes</th>
+            <th>Status</th>
+            <th>Expires</th>
+            <th>Usage</th>
+            <th>Last Used</th>
+            <th>Issued By</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @tokens.each do |token| %>
+            <tr>
+              <td><%= link_to token.name, admin_jwt_token_path(token) %></td>
+              <td><%= token.restaurant&.name %></td>
+              <td>
+                <% token.scopes.each do |scope| %>
+                  <span class="badge bg-secondary me-1"><%= scope %></span>
+                <% end %>
+              </td>
+              <td>
+                <span class="badge <%= token.status_badge_class %>"><%= token.status.to_s.capitalize %></span>
+              </td>
+              <td class="text-nowrap"><%= token.expires_at.strftime('%d %b %Y') %></td>
+              <td><%= token.usage_count %></td>
+              <td class="text-nowrap"><%= token.last_used_at&.strftime('%d %b %Y') || '—' %></td>
+              <td><%= token.admin_user&.email %></td>
+              <td class="text-end text-nowrap">
+                <%= link_to 'View', admin_jwt_token_path(token), class: 'btn btn-sm btn-outline-secondary' %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <div class="text-center py-5 text-muted">
+      <i class="bi bi-key fs-1 d-block mb-3"></i>
+      <p class="mb-0">No API tokens issued yet. <%= link_to 'Issue the first token', new_admin_jwt_token_path %>.</p>
+    </div>
+  <% end %>
+</div>

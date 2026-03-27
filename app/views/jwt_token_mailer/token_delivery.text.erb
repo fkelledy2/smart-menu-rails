@@ -1,0 +1,27 @@
+Your API token for <%= @restaurant.name %>
+============================================
+
+An API access token has been created for your restaurant.
+
+Token name: <%= @jwt_token.name %>
+Expires: <%= @expires_at.strftime('%d %B %Y at %H:%M UTC') %>
+Scopes: <%= @scopes.join(', ') %>
+
+YOUR API TOKEN (shown once only)
+---------------------------------
+<%= @raw_jwt %>
+
+Keep this token secure. Do not share it publicly or commit it to version control.
+
+HOW TO USE YOUR TOKEN
+----------------------
+Include the token in the Authorization HTTP header for every API request:
+
+  Authorization: Bearer <your-token>
+
+Example:
+  curl https://mellow.menu/api/v1/restaurants/<%= @restaurant.id %>/menus \
+    -H "Authorization: Bearer <your-token>"
+
+If you did not request this token or believe it was issued in error, please
+contact hello@mellow.menu immediately.

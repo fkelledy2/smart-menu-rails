@@ -1,0 +1,81 @@
+<%# Admin: Issue new JWT token %>
+<% content_for :title, 'Issue API Token — Admin' %>
+
+<div class="container-fluid py-4" style="max-width: 680px;">
+  <div class="mb-4">
+    <%= link_to 'API Tokens', admin_jwt_tokens_path, class: 'text-muted text-decoration-none' %>
+    <span class="text-muted mx-1">/</span>
+    <span>Issue new token</span>
+  </div>
+
+  <h2 class="h3 mb-4">Issue API Token</h2>
+
+  <%= form_with model: [:admin, @token], url: admin_jwt_tokens_path, local: true do |f| %>
+    <% if @token.errors.any? %>
+      <div class="alert alert-danger">
+        <ul class="mb-0">
+          <% @token.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="mb-3">
+      <%= f.label :restaurant_id, 'Restaurant', class: 'form-label fw-semibold' %>
+      <%= f.select :restaurant_id,
+            @restaurants.map { |r| [r.name, r.id] },
+            { prompt: 'Select a restaurant...' },
+            class: 'form-select' %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :name, 'Token name', class: 'form-label fw-semibold' %>
+      <%= f.text_field :name, class: 'form-control', placeholder: 'e.g. Lightspeed POS Integration' %>
+      <div class="form-text">A descriptive name so the admin team can identify this token later.</div>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :description, 'Description (optional)', class: 'form-label fw-semibold' %>
+      <%= f.text_area :description, class: 'form-control', rows: 2,
+            placeholder: 'Optional notes about this token and its intended use' %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :expiry_preset, 'Expiry', class: 'form-label fw-semibold' %>
+      <%= f.select :expiry_preset,
+            [['30 days', '30_days'], ['60 days', '60_days'], ['90 days', '90_days']],
+            { selected: '30_days' },
+            class: 'form-select' %>
+    </div>
+
+    <div class="mb-3">
+      <span class="form-label fw-semibold d-block mb-1">Scopes</span>
+      <div class="form-text mb-2">Select the permissions this token should have.</div>
+      <% AdminJwtToken::VALID_SCOPES.each do |scope| %>
+        <div class="form-check">
+          <%= check_box_tag 'admin_jwt_token[scopes][]', scope, false,
+                id: "scope_#{scope.tr(':', '_')}",
+                class: 'form-check-input' %>
+          <%= label_tag "scope_#{scope.tr(':', '_')}", scope, class: 'form-check-label font-monospace' %>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <%= f.label :rate_limit_per_minute, 'Rate limit / minute', class: 'form-label fw-semibold' %>
+        <%= f.number_field :rate_limit_per_minute, value: 60, min: 1, max: 1000, class: 'form-control' %>
+      </div>
+      <div class="col-md-6">
+        <%= f.label :rate_limit_per_hour, 'Rate limit / hour', class: 'form-label fw-semibold' %>
+        <%= f.number_field :rate_limit_per_hour, value: 1000, min: 1, max: 10_000, class: 'form-control' %>
+      </div>
+    </div>
+
+    <div class="d-flex gap-2">
+      <%= f.submit 'Generate token', class: 'btn btn-primary' %>
+      <%= link_to 'Cancel', admin_jwt_tokens_path, class: 'btn btn-outline-secondary' %>
+    </div>
+  <% end %>
+</div>

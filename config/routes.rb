@@ -113,6 +113,15 @@ Rails.application.routes.draw do
 
     resources :demo_bookings, only: %i[index show update]
 
+    # JWT Token Management — mellow.menu admin only
+    resources :jwt_tokens, only: %i[index show new create] do
+      member do
+        post :revoke
+        post :send_email
+        get  :download_link
+      end
+    end
+
     resources :crawl_source_rules
 
     resources :local_guides do
@@ -138,9 +147,14 @@ Rails.application.routes.draw do
       resources :restaurants, only: [:index, :show, :create, :update, :destroy] do
         # Restaurant-specific menus
         resources :menus, only: [:index, :create]
-        
+
         # Restaurant-specific orders
         resources :orders, only: [:index, :create]
+
+        # Analytics dashboard (JWT-protected)
+        namespace :analytics do
+          get :dashboard
+        end
       end
       
       # Menu Management API
