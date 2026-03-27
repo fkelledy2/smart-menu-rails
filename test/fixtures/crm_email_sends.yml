@@ -1,0 +1,8 @@
+first_email:
+  crm_lead: contacted_lead
+  sender: super_admin
+  to_email: "pierre@lamaison.fr"
+  subject: "Follow up from mellow.menu"
+  body_html: "<p>Hi Pierre, following up on our call.</p>"
+  body_text: "Hi Pierre, following up on our call."
+  sent_at: "2026-03-26 11:00:00"

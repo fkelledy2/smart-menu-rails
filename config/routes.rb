@@ -131,6 +131,25 @@ Rails.application.routes.draw do
         post :regenerate
       end
     end
+
+    # CRM Sales Funnel — mellow.menu admin only
+    namespace :crm do
+      resources :leads do
+        member do
+          patch :transition
+          patch :convert
+          patch :reopen
+        end
+        resources :notes,       only: %i[create destroy]
+        resources :email_sends, only: %i[new create]
+        resources :audits,      only: %i[index]
+      end
+    end
+
+    # Webhook endpoints — bypass admin session auth; use HMAC verification
+    namespace :webhooks do
+      post :calendly, to: 'calendly#create'
+    end
   end
   
   # ============================================================================

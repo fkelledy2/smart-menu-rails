@@ -1,0 +1,235 @@
+<%# Admin CRM: Lead detail %>
+<% content_for :title, "#{@lead.restaurant_name} — CRM" %>
+
+<div class="container-fluid py-4" style="max-width: 960px;">
+  <div class="mb-3">
+    <%= link_to 'Pipeline', admin_crm_leads_path, class: 'text-muted text-decoration-none' %>
+    <span class="text-muted mx-1">/</span>
+    <span><%= @lead.restaurant_name %></span>
+  </div>
+
+  <div class="d-flex justify-content-between align-items-start mb-4">
+    <div>
+      <h1 class="h3 mb-1"><%= @lead.restaurant_name %></h1>
+      <span class="badge bg-primary"><%= @lead.stage.humanize %></span>
+      <% if @lead.source.present? %>
+        <span class="badge bg-secondary ms-1"><%= @lead.source %></span>
+      <% end %>
+    </div>
+    <div class="d-flex gap-2">
+      <%= link_to 'Edit', edit_admin_crm_lead_path(@lead), class: 'btn btn-outline-secondary btn-sm' %>
+      <% if @lead.stage == 'lost' %>
+        <%= button_to 'Reopen', reopen_admin_crm_lead_path(@lead),
+              method: :patch, class: 'btn btn-outline-warning btn-sm',
+              data: { confirm: 'Reopen this lead and move it back to Contacted?' } %>
+      <% end %>
+      <% unless %w[converted lost].include?(@lead.stage) %>
+        <%= link_to 'Mark Converted', convert_admin_crm_lead_path(@lead),
+              class: 'btn btn-success btn-sm',
+              data: { action: 'crm-lead-detail#openConvertModal' } %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <%# Left column — contact details %>
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm">
+        <div class="card-body">
+          <h6 class="card-title text-muted text-uppercase fw-semibold" style="font-size: 11px; letter-spacing: 0.08em;">Contact</h6>
+          <% if @lead.contact_name.present? %>
+            <p class="mb-1"><strong><%= @lead.contact_name %></strong></p>
+          <% end %>
+          <% if @lead.contact_email.present? %>
+            <p class="mb-1 text-muted"><%= mail_to @lead.contact_email %></p>
+          <% end %>
+          <% if @lead.contact_phone.present? %>
+            <p class="mb-1 text-muted"><%= @lead.contact_phone %></p>
+          <% end %>
+          <% if @lead.assigned_to %>
+            <hr class="my-2">
+            <p class="mb-0 text-muted" style="font-size: 13px;">
+              Assigned to: <strong><%= @lead.assigned_to.email %></strong>
+            </p>
+          <% end %>
+          <% if @lead.restaurant %>
+            <hr class="my-2">
+            <p class="mb-0" style="font-size: 13px;">
+              Restaurant: <%= link_to @lead.restaurant.name, [:admin, @lead.restaurant] rescue @lead.restaurant.name %>
+            </p>
+          <% end %>
+          <% if @lead.converted_at %>
+            <hr class="my-2">
+            <p class="mb-0 text-success" style="font-size: 12px;">
+              Converted: <%= @lead.converted_at.strftime('%d %b %Y') %>
+            </p>
+          <% end %>
+          <% if @lead.stage_lost? %>
+            <hr class="my-2">
+            <p class="mb-0 text-danger" style="font-size: 12px;">
+              Lost: <%= @lead.lost_reason&.humanize %><br>
+              <% if @lead.lost_reason_notes.present? %>
+                <span class="text-muted"><%= @lead.lost_reason_notes %></span>
+              <% end %>
+            </p>
+          <% end %>
+        </div>
+      </div>
+
+      <%# Stage transition panel %>
+      <div class="card border-0 shadow-sm mt-3">
+        <div class="card-body">
+          <h6 class="card-title text-muted text-uppercase fw-semibold" style="font-size: 11px; letter-spacing: 0.08em;">Move Stage</h6>
+          <% allowed = Crm::LeadTransitionService::FORWARD_TRANSITIONS[@lead.stage] || [] %>
+          <% if allowed.any? %>
+            <div class="d-flex flex-column gap-1">
+              <% allowed.each do |target_stage| %>
+                <%= button_to target_stage.humanize,
+                      transition_admin_crm_lead_path(@lead),
+                      params: { stage: target_stage },
+                      method: :patch,
+                      class: "btn btn-outline-secondary btn-sm text-start" %>
+              <% end %>
+            </div>
+          <% else %>
+            <p class="text-muted mb-0" style="font-size: 12px;">No further transitions available.</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <%# Right column — tabs %>
+    <div class="col-md-8" data-controller="crm-lead-detail">
+      <ul class="nav nav-tabs mb-3">
+        <li class="nav-item">
+          <a class="nav-link active" href="#notes" data-bs-toggle="tab">
+            Notes
+            <span class="badge bg-secondary ms-1"><%= @lead.crm_lead_notes.size %></span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#activity" data-bs-toggle="tab">Activity</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#emails" data-bs-toggle="tab">Emails</a>
+        </li>
+      </ul>
+
+      <div class="tab-content">
+        <%# Notes tab %>
+        <div class="tab-pane fade show active" id="notes">
+          <%= turbo_frame_tag 'crm_notes' do %>
+            <%= form_with model: CrmLeadNote.new,
+                  url: admin_crm_lead_notes_path(@lead),
+                  data: { turbo_frame: 'crm_notes' },
+                  class: 'mb-3' do |f| %>
+              <div class="mb-2">
+                <%= f.text_area :body,
+                      class: 'form-control',
+                      placeholder: 'Add a note...',
+                      rows: 3 %>
+              </div>
+              <%= f.submit 'Add Note', class: 'btn btn-primary btn-sm' %>
+            <% end %>
+
+            <div id="crm-notes-list">
+              <% @notes.each do |note| %>
+                <%= render 'admin/crm/notes/note', note: note, lead: @lead %>
+              <% end %>
+              <% if @notes.empty? %>
+                <p class="text-muted">No notes yet.</p>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+
+        <%# Activity tab %>
+        <div class="tab-pane fade" id="activity">
+          <%= turbo_frame_tag 'crm_activity' do %>
+            <% if @audits.any? %>
+              <div class="list-group list-group-flush">
+                <% @audits.each do |audit| %>
+                  <div class="list-group-item px-0 py-2 border-0 border-bottom">
+                    <div class="d-flex justify-content-between">
+                      <span style="font-size: 13px;">
+                        <strong><%= audit.actor&.email || 'System' %></strong>
+                        <%= audit.event.humanize.downcase %>
+                        <% if audit.field_name.present? %>
+                          <em><%= audit.field_name %></em>
+                          from <code><%= audit.from_value || '—' %></code>
+                          to <code><%= audit.to_value || '—' %></code>
+                        <% end %>
+                      </span>
+                      <span class="text-muted" style="font-size: 11px; white-space: nowrap;">
+                        <%= time_ago_in_words(audit.created_at) %> ago
+                      </span>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+              <%= link_to 'View full activity log', admin_crm_lead_audits_path(@lead), class: 'btn btn-link btn-sm mt-2' %>
+            <% else %>
+              <p class="text-muted">No activity recorded yet.</p>
+            <% end %>
+          <% end %>
+        </div>
+
+        <%# Emails tab %>
+        <div class="tab-pane fade" id="emails">
+          <%= link_to 'Compose Email',
+                new_admin_crm_lead_email_send_path(@lead),
+                class: 'btn btn-outline-primary btn-sm mb-3' %>
+          <% if @email_sends.any? %>
+            <div class="list-group list-group-flush">
+              <% @email_sends.each do |send| %>
+                <div class="list-group-item px-0 py-2 border-0 border-bottom">
+                  <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                      <strong style="font-size: 13px;"><%= send.subject %></strong>
+                      <p class="text-muted mb-0" style="font-size: 12px;">
+                        To: <%= send.to_email %> &bull; From: <%= send.sender.email %>
+                      </p>
+                    </div>
+                    <span class="text-muted" style="font-size: 11px; white-space: nowrap;">
+                      <%= send.sent_at ? send.sent_at.strftime('%d %b %Y') : 'Pending' %>
+                    </span>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <p class="text-muted">No emails sent yet.</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%# Convert modal %>
+<div class="modal fade" id="convertModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Mark as Converted</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <%= form_with url: convert_admin_crm_lead_path(@lead), method: :patch do |f| %>
+        <div class="modal-body">
+          <p>Link this lead to a Restaurant record to complete the conversion.</p>
+          <div class="mb-3">
+            <label class="form-label">Restaurant</label>
+            <%= f.select :restaurant_id,
+                  Restaurant.order(:name).map { |r| [r.name, r.id] },
+                  { prompt: 'Select restaurant...' },
+                  class: 'form-select' %>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <%= f.submit 'Convert Lead', class: 'btn btn-success' %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,4 @@
+<%= @crm_email_send.body_text.presence || ActionView::Base.full_sanitizer.sanitize(@crm_email_send.body_html.to_s) %>
+
+---
+Sent by <%= @sender.email %> via mellow.menu

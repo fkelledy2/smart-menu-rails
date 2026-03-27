@@ -1,6 +1,6 @@
 # mellow.menu Feature Backlog — Priority Index
 
-**Last updated**: 2026-03-27 (JWT Token Management #8 COMPLETED 2026-03-27)
+**Last updated**: 2026-03-27 (CRM Sales Funnel #9 COMPLETED 2026-03-27)
 **QR Code Security (#1)**: COMPLETED 2026-03-24 — Phase 1 shipped; spec at `docs/features/completed/qr-security.md`
 **Branded Email Styling (#1)**: COMPLETED 2026-03-24 — spec at `docs/features/completed/branded-email-styling-feature-request.md`
 **Branded Receipt Email (#2)**: COMPLETED 2026-03-25 — spec at `docs/features/completed/branded-receipt-email-feature-request.md`
@@ -20,7 +20,7 @@
 | ~~#6~~ | ~~Pre-Configured Marketing QRs~~ | ~~Launch Enhancer~~ | M | #1 (token infra) | COMPLETED 2026-03-25 — spec at `docs/features/completed/pre-config-qrs.md` |
 | ~~#7~~ | ~~Homepage Demo Booking & Video~~ | ~~Launch Enhancer~~ | S | None | COMPLETED 2026-03-26 — spec at `docs/features/completed/homepage-demo-booking-feature-request.md` |
 | ~~#8~~ | ~~JWT Token Management (API)~~ | ~~Post-Launch~~ | L | Existing admin auth | COMPLETED 2026-03-27 — spec at `docs/features/completed/mellow-admin-jwt-token-management-feature-request.md` |
-| #9 | CRM Sales Funnel | Growth | L | Admin auth, ActionMailer, Calendly webhook | Internal sales pipeline tool; directly accelerates restaurant acquisition and conversion tracking |
+| ~~#9~~ | ~~CRM Sales Funnel~~ | ~~Growth~~ | L | Admin auth, ActionMailer, Calendly webhook | **COMPLETED 2026-03-27** — spec at `docs/features/completed/crm-sales-funnel.md` |
 | #10 | Partner Integrations (Event-Driven) | Post-Launch | M | #8, Stripe webhooks | Ecosystem play; required by workforce/CRM partners |
 | #11 | Menu Experiments (A/B Testing) | Post-Launch | M | #1 (DiningSession built); MenuVersion BUILT | Elevated: MenuVersion dependency resolved — all blockers done |
 | #12 | Table Wait Time Estimation | Post-Launch | L | #5 (completed), Tablesetting | Operations win; differentiates for high-footfall walk-in restaurants |

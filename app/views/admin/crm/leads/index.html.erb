@@ -1,0 +1,73 @@
+<%# Admin CRM: Kanban board %>
+<% content_for :title, 'CRM Sales Pipeline — Admin' %>
+
+<div class="container-fluid py-4" data-controller="crm-kanban">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="h3 mb-1">Sales Pipeline</h1>
+      <p class="text-muted mb-0">
+        Drag cards between columns to update stage.
+        <% if @needs_assignment_count > 0 %>
+          <span class="badge bg-warning text-dark ms-2">
+            <%= @needs_assignment_count %> unassigned Calendly <%= 'lead'.pluralize(@needs_assignment_count) %>
+          </span>
+        <% end %>
+      </p>
+    </div>
+    <%= link_to 'New Lead', new_admin_crm_lead_path, class: 'btn btn-primary' %>
+  </div>
+
+  <div class="crm-kanban-board d-flex gap-3 overflow-auto pb-3" style="min-height: 70vh;">
+    <% CrmLead::STAGES.each do |stage| %>
+      <div class="crm-kanban-column flex-shrink-0"
+           style="width: 260px;"
+           data-stage="<%= stage %>"
+           data-crm-kanban-target="column"
+           data-transition-url="<%= admin_crm_leads_path %>">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h6 class="mb-0 text-uppercase fw-semibold" style="font-size: 11px; letter-spacing: 0.08em;">
+            <%= stage.humanize %>
+          </h6>
+          <span class="badge bg-secondary rounded-pill">
+            <%= (@leads_by_stage[stage] || []).size %>
+          </span>
+        </div>
+
+        <div class="crm-kanban-cards d-flex flex-column gap-2"
+             data-stage="<%= stage %>"
+             data-crm-kanban-target="cardList"
+             id="crm-stage-<%= stage %>">
+          <% (@leads_by_stage[stage] || []).each do |lead| %>
+            <%= render 'card', lead: lead %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<style>
+.crm-kanban-column {
+  background: #F9FAFB;
+  border-radius: 8px;
+  padding: 12px;
+  border: 1px solid #E5E7EB;
+}
+.crm-lead-card {
+  background: white;
+  border-radius: 6px;
+  padding: 12px;
+  border: 1px solid #E5E7EB;
+  cursor: grab;
+  transition: box-shadow 0.15s;
+}
+.crm-lead-card:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.crm-lead-card.sortable-ghost {
+  opacity: 0.4;
+}
+.crm-lead-card.sortable-drag {
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+}
+</style>

@@ -434,6 +434,159 @@ ALTER SEQUENCE public.crawl_source_rules_id_seq OWNED BY public.crawl_source_rul
 
 
 --
+-- Name: crm_email_sends; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.crm_email_sends (
+    id bigint NOT NULL,
+    crm_lead_id bigint NOT NULL,
+    sender_id bigint NOT NULL,
+    to_email character varying NOT NULL,
+    subject character varying NOT NULL,
+    body_html text,
+    body_text text,
+    mailer_message_id character varying,
+    sent_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: crm_email_sends_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.crm_email_sends_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: crm_email_sends_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.crm_email_sends_id_seq OWNED BY public.crm_email_sends.id;
+
+
+--
+-- Name: crm_lead_audits; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.crm_lead_audits (
+    id bigint NOT NULL,
+    crm_lead_id bigint NOT NULL,
+    actor_id bigint,
+    actor_type character varying DEFAULT 'user'::character varying NOT NULL,
+    event character varying NOT NULL,
+    field_name character varying,
+    from_value text,
+    to_value text,
+    metadata jsonb DEFAULT '{}'::jsonb NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: crm_lead_audits_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.crm_lead_audits_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: crm_lead_audits_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.crm_lead_audits_id_seq OWNED BY public.crm_lead_audits.id;
+
+
+--
+-- Name: crm_lead_notes; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.crm_lead_notes (
+    id bigint NOT NULL,
+    crm_lead_id bigint NOT NULL,
+    author_id bigint NOT NULL,
+    body text NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: crm_lead_notes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.crm_lead_notes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: crm_lead_notes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.crm_lead_notes_id_seq OWNED BY public.crm_lead_notes.id;
+
+
+--
+-- Name: crm_leads; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.crm_leads (
+    id bigint NOT NULL,
+    restaurant_name character varying NOT NULL,
+    contact_name character varying,
+    contact_email character varying,
+    contact_phone character varying,
+    stage character varying DEFAULT 'new'::character varying NOT NULL,
+    assigned_to_id bigint,
+    restaurant_id bigint,
+    source character varying,
+    notes_count integer DEFAULT 0 NOT NULL,
+    last_activity_at timestamp(6) without time zone,
+    converted_at timestamp(6) without time zone,
+    lost_at timestamp(6) without time zone,
+    lost_reason character varying,
+    lost_reason_notes text,
+    calendly_event_uuid character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: crm_leads_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.crm_leads_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: crm_leads_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.crm_leads_id_seq OWNED BY public.crm_leads.id;
+
+
+--
 -- Name: demo_bookings; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -4962,6 +5115,34 @@ ALTER TABLE ONLY public.crawl_source_rules ALTER COLUMN id SET DEFAULT nextval('
 
 
 --
+-- Name: crm_email_sends id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.crm_email_sends ALTER COLUMN id SET DEFAULT nextval('public.crm_email_sends_id_seq'::regclass);
+
+
+--
+-- Name: crm_lead_audits id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.crm_lead_audits ALTER COLUMN id SET DEFAULT nextval('public.crm_lead_audits_id_seq'::regclass);
+
+
+--
+-- Name: crm_lead_notes id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.crm_lead_notes ALTER COLUMN id SET DEFAULT nextval('public.crm_lead_notes_id_seq'::regclass);
+
+
+--
+-- Name: crm_leads id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.crm_leads ALTER COLUMN id SET DEFAULT nextval('public.crm_leads_id_seq'::regclass);
+
+
+--
 -- Name: demo_bookings id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -5811,6 +5992,38 @@ ALTER TABLE ONLY public.contacts
 
 ALTER TABLE ONLY public.crawl_source_rules
     ADD CONSTRAINT crawl_source_rules_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: crm_email_sends crm_email_sends_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.crm_email_sends
+    ADD CONSTRAINT crm_email_sends_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: crm_lead_audits crm_lead_audits_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.crm_lead_audits
+    ADD CONSTRAINT crm_lead_audits_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: crm_lead_notes crm_lead_notes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.crm_lead_notes
+    ADD CONSTRAINT crm_lead_notes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: crm_leads crm_leads_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.crm_leads
+    ADD CONSTRAINT crm_leads_pkey PRIMARY KEY (id);
 
 
 --
@@ -7069,6 +7282,83 @@ CREATE UNIQUE INDEX index_crawl_source_rules_on_domain ON public.crawl_source_ru
 --
 
 CREATE INDEX index_crawl_source_rules_on_rule_type ON public.crawl_source_rules USING btree (rule_type);
+
+
+--
+-- Name: index_crm_email_sends_on_crm_lead_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_crm_email_sends_on_crm_lead_id ON public.crm_email_sends USING btree (crm_lead_id);
+
+
+--
+-- Name: index_crm_email_sends_on_sender_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_crm_email_sends_on_sender_id ON public.crm_email_sends USING btree (sender_id);
+
+
+--
+-- Name: index_crm_lead_audits_on_actor_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_crm_lead_audits_on_actor_id ON public.crm_lead_audits USING btree (actor_id);
+
+
+--
+-- Name: index_crm_lead_audits_on_crm_lead_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_crm_lead_audits_on_crm_lead_id ON public.crm_lead_audits USING btree (crm_lead_id);
+
+
+--
+-- Name: index_crm_lead_notes_on_author_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_crm_lead_notes_on_author_id ON public.crm_lead_notes USING btree (author_id);
+
+
+--
+-- Name: index_crm_lead_notes_on_crm_lead_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_crm_lead_notes_on_crm_lead_id ON public.crm_lead_notes USING btree (crm_lead_id);
+
+
+--
+-- Name: index_crm_leads_on_assigned_to_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_crm_leads_on_assigned_to_id ON public.crm_leads USING btree (assigned_to_id);
+
+
+--
+-- Name: index_crm_leads_on_calendly_event_uuid_partial; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_crm_leads_on_calendly_event_uuid_partial ON public.crm_leads USING btree (calendly_event_uuid) WHERE (calendly_event_uuid IS NOT NULL);
+
+
+--
+-- Name: index_crm_leads_on_last_activity_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_crm_leads_on_last_activity_at ON public.crm_leads USING btree (last_activity_at);
+
+
+--
+-- Name: index_crm_leads_on_restaurant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_crm_leads_on_restaurant_id ON public.crm_leads USING btree (restaurant_id);
+
+
+--
+-- Name: index_crm_leads_on_stage; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_crm_leads_on_stage ON public.crm_leads USING btree (stage);
 
 
 --
@@ -9981,6 +10271,14 @@ ALTER TABLE ONLY public.menu_item_product_links
 
 
 --
+-- Name: crm_lead_notes fk_rails_2920b340a5; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.crm_lead_notes
+    ADD CONSTRAINT fk_rails_2920b340a5 FOREIGN KEY (crm_lead_id) REFERENCES public.crm_leads(id);
+
+
+--
 -- Name: pairing_recommendations fk_rails_296e3923e5; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -10485,6 +10783,14 @@ ALTER TABLE ONLY public.alcohol_order_events
 
 
 --
+-- Name: crm_leads fk_rails_86438a87b4; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.crm_leads
+    ADD CONSTRAINT fk_rails_86438a87b4 FOREIGN KEY (restaurant_id) REFERENCES public.restaurants(id);
+
+
+--
 -- Name: menulocales fk_rails_8648fef0b6; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -10514,6 +10820,14 @@ ALTER TABLE ONLY public.menuitem_allergyn_mappings
 
 ALTER TABLE ONLY public.payment_attempts
     ADD CONSTRAINT fk_rails_8cfe1b838d FOREIGN KEY (ordr_id) REFERENCES public.ordrs(id);
+
+
+--
+-- Name: crm_email_sends fk_rails_8e2b9d9c0b; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.crm_email_sends
+    ADD CONSTRAINT fk_rails_8e2b9d9c0b FOREIGN KEY (sender_id) REFERENCES public.users(id);
 
 
 --
@@ -10562,6 +10876,14 @@ ALTER TABLE ONLY public.alcohol_order_events
 
 ALTER TABLE ONLY public.active_storage_variant_records
     ADD CONSTRAINT fk_rails_993965df05 FOREIGN KEY (blob_id) REFERENCES public.active_storage_blobs(id);
+
+
+--
+-- Name: crm_lead_notes fk_rails_9e8c428264; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.crm_lead_notes
+    ADD CONSTRAINT fk_rails_9e8c428264 FOREIGN KEY (author_id) REFERENCES public.users(id);
 
 
 --
@@ -10765,6 +11087,14 @@ ALTER TABLE ONLY public.menusections
 
 
 --
+-- Name: crm_leads fk_rails_b327454a7d; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.crm_leads
+    ADD CONSTRAINT fk_rails_b327454a7d FOREIGN KEY (assigned_to_id) REFERENCES public.users(id);
+
+
+--
 -- Name: genimages fk_rails_b5396a358a; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -10882,6 +11212,14 @@ ALTER TABLE ONLY public.active_storage_attachments
 
 ALTER TABLE ONLY public.ordrparticipant_allergyn_filters
     ADD CONSTRAINT fk_rails_c560167c17 FOREIGN KEY (allergyn_id) REFERENCES public.allergyns(id);
+
+
+--
+-- Name: crm_lead_audits fk_rails_c5f1c0dde0; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.crm_lead_audits
+    ADD CONSTRAINT fk_rails_c5f1c0dde0 FOREIGN KEY (actor_id) REFERENCES public.users(id);
 
 
 --
@@ -11010,6 +11348,14 @@ ALTER TABLE ONLY public.admin_jwt_tokens
 
 ALTER TABLE ONLY public.menuitem_ingredient_quantities
     ADD CONSTRAINT fk_rails_da6c3805c1 FOREIGN KEY (menuitem_id) REFERENCES public.menuitems(id) ON DELETE CASCADE;
+
+
+--
+-- Name: crm_email_sends fk_rails_dcb963d670; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.crm_email_sends
+    ADD CONSTRAINT fk_rails_dcb963d670 FOREIGN KEY (crm_lead_id) REFERENCES public.crm_leads(id);
 
 
 --
@@ -11149,6 +11495,14 @@ ALTER TABLE ONLY public.menu_versions
 
 
 --
+-- Name: crm_lead_audits fk_rails_fb30938bf5; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.crm_lead_audits
+    ADD CONSTRAINT fk_rails_fb30938bf5 FOREIGN KEY (crm_lead_id) REFERENCES public.crm_leads(id);
+
+
+--
 -- Name: menuitem_size_mappings fk_rails_fc0cb35a04; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -11179,6 +11533,10 @@ ALTER TABLE ONLY public.voice_commands
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260327200004'),
+('20260327200003'),
+('20260327200002'),
+('20260327200001'),
 ('20260327100002'),
 ('20260327100001'),
 ('20260326194824'),

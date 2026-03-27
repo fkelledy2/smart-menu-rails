@@ -1,0 +1,4 @@
+<%= turbo_stream.prepend 'crm-notes-list', partial: 'admin/crm/notes/note', locals: { note: @note, lead: @lead } %>
+<%= turbo_stream.replace 'crm_notes',
+      partial: 'admin/crm/leads/notes_tab',
+      locals: { lead: @lead, notes: [@note] + @lead.crm_lead_notes.includes(:author).where.not(id: @note.id).order(created_at: :desc).to_a } %>

@@ -173,6 +173,15 @@ Rack::Attack.throttle('video_analytics/ip', limit: 60, period: 60.seconds) do |r
 end
 
 # ----------------------------------------------------------------------------
+# CRM webhook throttles
+# ----------------------------------------------------------------------------
+
+# Calendly webhook: 60 per minute per IP — defence-in-depth alongside HMAC verification
+Rack::Attack.throttle('crm/calendly_webhook/ip', limit: 60, period: 60.seconds) do |req|
+  req.ip if req.path == '/admin/webhooks/calendly' && req.post?
+end
+
+# ----------------------------------------------------------------------------
 # Marketing QR code throttles
 # ----------------------------------------------------------------------------
 
