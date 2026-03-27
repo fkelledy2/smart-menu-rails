@@ -1,7 +1,7 @@
 # Nearby Menus Map
 
 ## Status
-- Priority Rank: #30
+- Priority Rank: #31
 - Category: Post-Launch
 - Effort: L
 - Dependencies: Restaurant geocoding data (new), map provider API key (Google Maps or Mapbox), SmartMenu public menu URLs already exist

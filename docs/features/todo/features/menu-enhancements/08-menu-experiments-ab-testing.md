@@ -1,7 +1,7 @@
 # Menu Experiments (A/B + Time-Boxed) (v1)
 
 ## Status
-- Priority Rank: #10 (elevated from #14 — MenuVersion dependency is resolved)
+- Priority Rank: #11 (elevated from #14 — MenuVersion dependency resolved; CRM Sales Funnel inserted at #9 shifts all downstream ranks)
 - Category: Post-Launch
 - Effort: M
 - Dependencies: `MenuVersion` system (BUILT — see `menu-versioning-system.md`); existing `Menu`, `MenuItem`, `Smartmenu` models; `DiningSession` from QR Security (#1)

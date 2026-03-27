@@ -1,7 +1,7 @@
 # Heroku Cost Inventory (Spaces + Pipelines)
 
 ## Status
-- Priority Rank: #13
+- Priority Rank: #15
 - Category: Post-Launch
 - Effort: S
 - Dependencies: Existing admin auth (`admin? && super_admin?`); `Admin::` namespace pattern; `HEROKU_PLATFORM_API_TOKEN` environment variable

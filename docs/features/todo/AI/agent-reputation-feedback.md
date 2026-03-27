@@ -1,10 +1,10 @@
 # Reputation & Feedback Agent
 
 ## Status
-- Priority Rank: #21 (Phase 2 agent — requires in-app rating/feedback system to be active; meaningful only after restaurants have been live long enough to receive reviews)
+- Priority Rank: #22 (Phase 2 agent — requires in-app rating/feedback system to be active; meaningful only after restaurants have been live long enough to receive reviews)
 - Category: Post-Launch — agent tier, Phase 2
 - Effort: M
-- Dependencies: Agent Framework (#15), in-app rating at checkout (confirm existing), `Ordr` / `Ordritem` models (existing), email mailers (existing), OpenAI API
+- Dependencies: Agent Framework (#16), in-app rating at checkout (confirm existing), `Ordr` / `Ordritem` models (existing), email mailers (existing), OpenAI API
 
 ## Problem Statement
 Negative guest experiences compound quickly if left unaddressed: a 2-star rating with no response, a complaint ignored for 48 hours, or an abandoned payment tab that a manager never noticed. Restaurant owners currently receive these signals through disparate channels — a Google Review notification, an in-app rating at checkout, a support message — with no structured triage or response workflow. By the time a manager notices and drafts a response, the reputational window has closed. The Reputation & Feedback Agent monitors post-dining signals in real time, classifies their severity, drafts targeted recovery responses, and surfaces them to the manager with all the context needed to act — within minutes, not days. Critically, this agent never sends any communication autonomously. Every outbound message requires explicit manager sign-off.

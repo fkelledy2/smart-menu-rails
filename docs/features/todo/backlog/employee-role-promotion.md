@@ -1,7 +1,7 @@
 # Employee Role Promotion
 
 ## Status
-- Priority Rank: #27
+- Priority Rank: #28
 - Category: Post-Launch
 - Effort: S
 - Dependencies: Existing `Employee` model (role enum already present), `StaffInvitation` model (already exists), Pundit `EmployeePolicy`

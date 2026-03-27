@@ -4,7 +4,7 @@ description: Open questions identified during spec refinement that require produ
 type: project
 ---
 
-Open questions identified during the March 2026 full backlog refinement pass (initial pass 2026-03-22; AI agent tier added 2026-03-24).
+Open questions identified during the March 2026 full backlog refinement pass (initial pass 2026-03-22; AI agent tier added 2026-03-24; rank corrections applied 2026-03-27 after CRM inserted at #9).
 
 **Why:** These questions were identified during spec writing and cannot be assumed away by engineering. They need product/business decisions.
 

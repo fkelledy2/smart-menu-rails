@@ -4,7 +4,7 @@ description: Architectural decisions and patterns that recur across multiple fea
 type: project
 ---
 
-Patterns observed across the full feature backlog (31 ranked features, 50+ files, March 2026 analysis — updated 2026-03-24 second pass).
+Patterns observed across the full feature backlog (32 ranked features + 2 in-progress items, 50+ files, March 2026 analysis — updated 2026-03-27 fourth pass).
 
 **Why:** These patterns must be respected when writing or reviewing any future spec for mellow.menu. Violations create technical debt and inconsistency.
 

@@ -1,7 +1,7 @@
 # Bulk Employee Invitation
 
 ## Status
-- Priority Rank: #28
+- Priority Rank: #29
 - Category: Post-Launch
 - Effort: M
 - Dependencies: `StaffInvitation` model (already exists), `StaffInvitationMailer` (already exists), Sidekiq (already active), Active Storage (already configured)

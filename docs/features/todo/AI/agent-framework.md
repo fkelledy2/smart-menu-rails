@@ -1,7 +1,7 @@
 # Agent Framework — Shared Infrastructure
 
 ## Status
-- Priority Rank: #15 (first among all AI agent work; post-launch)
+- Priority Rank: #16 (first among all AI agent work; post-launch)
 - Category: Post-Launch — prerequisite for all individual agents
 - Effort: L
 - Dependencies: Rails 7.2 app foundation, Sidekiq/Redis, PostgreSQL, OpenAI API key
