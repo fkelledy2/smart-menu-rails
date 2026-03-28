@@ -12,7 +12,7 @@ class OrdritemnotePolicy < ApplicationPolicy
   end
 
   def create?
-    user.present?
+    user.present? && owns_order_item_note?
   end
 
   def update?

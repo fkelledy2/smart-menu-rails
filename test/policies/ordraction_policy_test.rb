@@ -1,7 +1,7 @@
 require 'test_helper'
 
-# OrdractionPolicy: index/create check user.present? (always true via User.new).
-# show/update/destroy check user.present? AND owns_order_action? (restaurant ownership).
+# OrdractionPolicy: index checks user.present?.
+# create/show/update/destroy check user.present? AND owns_order_action? (restaurant ownership).
 class OrdractionPolicyTest < ActiveSupport::TestCase
   def setup
     @owner = users(:one)
@@ -27,14 +27,19 @@ class OrdractionPolicyTest < ActiveSupport::TestCase
     assert policy.index?
   end
 
-  test 'create is allowed for authenticated user' do
+  test 'create is allowed for owner of the order restaurant' do
     policy = OrdractionPolicy.new(@owner, @ordraction)
     assert policy.create?
   end
 
-  test 'create is allowed for guest (user.present? always true)' do
+  test 'create is denied for non-owner' do
+    policy = OrdractionPolicy.new(@other_user, @ordraction)
+    assert_not policy.create?
+  end
+
+  test 'create is denied for guest' do
     policy = OrdractionPolicy.new(nil, @ordraction)
-    assert policy.create?
+    assert_not policy.create?
   end
 
   test 'show is allowed for owner of the order restaurant' do

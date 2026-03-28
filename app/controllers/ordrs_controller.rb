@@ -463,11 +463,12 @@ class OrdrsController < ApplicationController
           @tablesetting = @ordr.tablesetting
           @ordrparticipant = find_or_create_ordr_participant(@ordr)
           @ordr.status
+          broadcast_state(@ordr, @tablesetting, @ordrparticipant)
           respond_to do |format|
             format.json do
               render :show, status: :ok, location: restaurant_ordr_url(@restaurant || @ordr.restaurant, @ordr)
             end
-            broadcast_state(@ordr, @tablesetting, @ordrparticipant)
+            format.html { redirect_to restaurant_ordr_url(@restaurant || @ordr.restaurant, @ordr) }
           end
         else
           respond_to do |format|

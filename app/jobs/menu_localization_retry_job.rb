@@ -62,10 +62,15 @@ class MenuLocalizationRetryJob
     Rails.logger.warn('[MenuLocalizationRetryJob] DeepL disabled (DEEPL_API_KEY missing). Skipping translation retries and using original text.')
   end
 
-  # Retry translating a single item
+  # Retry translating a single item.
+  # NOTE: Sidekiq serialises job arguments as JSON, converting all symbol keys to strings.
+  # Access item fields with string keys to handle both the in-process and after-roundtrip cases.
   def retry_item_translation(item, stats)
-    locale_code = item[:locale]
-    text = item[:text]
+    locale_code = item['locale'] || item[:locale]
+    text = item['text'] || item[:text]
+    item_type = item['type'] || item[:type]
+    item_id = item['id'] || item[:id]
+    item_field = item['field'] || item[:field]
 
     return if text.blank?
 
@@ -75,16 +80,16 @@ class MenuLocalizationRetryJob
     if result[:rate_limited]
       # Still rate-limited, queue for later
       stats[:still_rate_limited] << item
-      Rails.logger.warn("[MenuLocalizationRetryJob] #{item[:type]} ##{item[:id]} #{item[:field]} still rate-limited")
+      Rails.logger.warn("[MenuLocalizationRetryJob] #{item_type} ##{item_id} #{item_field} still rate-limited")
     elsif result[:text] != text
       # Successfully translated, save to database
-      save_translation(item[:type], item[:id], item[:field], locale_code, result[:text])
+      save_translation(item_type, item_id, item_field, locale_code, result[:text])
       stats[:successful] += 1
-      Rails.logger.info("[MenuLocalizationRetryJob] Successfully translated #{item[:type]} ##{item[:id]} #{item[:field]} to #{locale_code}")
+      Rails.logger.info("[MenuLocalizationRetryJob] Successfully translated #{item_type} ##{item_id} #{item_field} to #{locale_code}")
     else
       # Translation returned original text (non-rate-limit error)
       stats[:successful] += 1 # Count as processed even if unchanged
-      Rails.logger.warn("[MenuLocalizationRetryJob] Translation unchanged for #{item[:type]} ##{item[:id]} #{item[:field]}")
+      Rails.logger.warn("[MenuLocalizationRetryJob] Translation unchanged for #{item_type} ##{item_id} #{item_field}")
     end
   end
 

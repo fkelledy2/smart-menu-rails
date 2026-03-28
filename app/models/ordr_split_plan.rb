@@ -41,11 +41,12 @@ class OrdrSplitPlan < ApplicationRecord
   end
 
   def any_share_in_flight?
-    ordr_split_payments.any? { |share| share.pending? || share.succeeded? }
+    ordr_split_payments.where(status: [:pending, :succeeded]).exists?
   end
 
   def all_shares_settled?
-    ordr_split_payments.exists? && ordr_split_payments.all?(&:succeeded?)
+    ordr_split_payments.exists? &&
+      !ordr_split_payments.where.not(status: :succeeded).exists?
   end
 
   def total_allocated_cents
@@ -65,7 +66,7 @@ class OrdrSplitPlan < ApplicationRecord
   end
 
   def any_share_failed?
-    ordr_split_payments.any?(&:failed?)
+    ordr_split_payments.exists?(status: :failed)
   end
 
   private

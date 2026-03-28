@@ -419,13 +419,12 @@ class Menuitem < ApplicationRecord
   rescue StandardError
     nil
   end
-end
+  # Size-based cost analysis
+  def size_cost_analysis
+    SizeMappingCostService.new(self).size_profitability_analysis
+  end
 
-# Size-based cost analysis
-def size_cost_analysis
-  SizeMappingCostService.new(self).size_profitability_analysis
-end
-
-def has_size_mappings?
-  menuitemsizemappings.any?
+  def has_size_mappings?
+    menuitemsizemappings.any?
+  end
 end

@@ -13,7 +13,7 @@ class OrdractionPolicy < ApplicationPolicy
   end
 
   def create?
-    user.present?
+    user.present? && owns_order_action?
   end
 
   def update?

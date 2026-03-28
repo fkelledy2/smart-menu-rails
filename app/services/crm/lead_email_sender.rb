@@ -36,6 +36,12 @@ module Crm
         return Result.new(success?: true, email_send: existing, error: nil) if existing
       end
 
+      # Build the message_id deterministically before persisting so we can store
+      # it without relying on deliver_later's return value. deliver_later returns
+      # an ActionMailer::MessageDelivery proxy (a job handle), not a Mail::Message,
+      # so message.message_id is not available after the enqueue call.
+      deterministic_message_id = "<crm-send-#{SecureRandom.hex(12)}@mellow.menu>"
+
       email_send = CrmEmailSend.create!(
         crm_lead: @crm_lead,
         sender: @sender,
@@ -45,10 +51,10 @@ module Crm
         body_text: @body_text,
         sent_at: Time.current,
         job_idempotency_key: @job_idempotency_key,
+        mailer_message_id: deterministic_message_id,
       )
 
-      message = CrmMailer.lead_follow_up(email_send).deliver_later
-      email_send.update_column(:mailer_message_id, message.message_id) if message.respond_to?(:message_id)
+      CrmMailer.lead_follow_up(email_send).deliver_later
 
       @crm_lead.touch(:last_activity_at)
 

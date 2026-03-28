@@ -29,7 +29,7 @@ class StaffInvitationsController < ApplicationController
 
     # Check if email already belongs to an active employee
     existing_user = User.find_by(email: @invitation.email)
-    if existing_user && @restaurant.employees.exists?(user: existing_user, archived: false)
+    if existing_user && @restaurant.employees.exists?(user: existing_user, status: :active, archived: false)
       respond_to do |format|
         format.turbo_stream do
           render turbo_stream: turbo_stream.replace('staff_invite_form',

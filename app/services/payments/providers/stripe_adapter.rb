@@ -46,7 +46,7 @@ module Payments
       # This is used by Auto Pay — the customer has already saved a Stripe PaymentMethod ID.
       # Returns { payment_intent_id: String }
       def create_and_capture_intent!(payment_attempt:, ordr:, payment_method_id:,
-                                     amount_cents:, currency:)
+                                     amount_cents:, currency:, idempotency_key: nil)
         ensure_api_key!
 
         metadata = {
@@ -56,16 +56,22 @@ module Payments
           source: 'auto_pay',
         }
 
+        stripe_options = {}
+        stripe_options[:idempotency_key] = idempotency_key if idempotency_key.present?
+
         intent = Stripe::PaymentIntent.create(
-          amount: amount_cents,
-          currency: currency.to_s.downcase,
-          payment_method: payment_method_id,
-          confirm: true,
-          capture_method: 'automatic',
-          confirmation_method: 'automatic',
-          off_session: true,
-          metadata: metadata,
-          description: "#{ordr.restaurant.name} Order #{ordr.id} (Auto Pay)",
+          {
+            amount: amount_cents,
+            currency: currency.to_s.downcase,
+            payment_method: payment_method_id,
+            confirm: true,
+            capture_method: 'automatic',
+            confirmation_method: 'automatic',
+            off_session: true,
+            metadata: metadata,
+            description: "#{ordr.restaurant.name} Order #{ordr.id} (Auto Pay)",
+          },
+          stripe_options,
         )
 
         payment_attempt.update!(

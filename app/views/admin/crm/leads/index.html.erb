@@ -21,9 +21,7 @@
     <% CrmLead::STAGES.each do |stage| %>
       <div class="crm-kanban-column flex-shrink-0"
            style="width: 260px;"
-           data-stage="<%= stage %>"
-           data-crm-kanban-target="column"
-           data-transition-url="<%= admin_crm_leads_path %>">
+           data-stage="<%= stage %>">
         <div class="d-flex justify-content-between align-items-center mb-2">
           <h6 class="mb-0 text-uppercase fw-semibold" style="font-size: 11px; letter-spacing: 0.08em;">
             <%= stage.humanize %>

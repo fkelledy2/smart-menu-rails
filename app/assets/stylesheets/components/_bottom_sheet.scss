@@ -9,19 +9,19 @@
   right: 0;
   bottom: 0;
   z-index: var(--z-bottom-sheet, 1080);
-  background: #fffdf9; // Warm off-white for light mode
+  background: var(--surface-sheet, #fffdf9);
+  color: var(--text-primary);
   border-radius: var(--radius-xl, 1rem) var(--radius-xl, 1rem) 0 0;
   box-shadow: var(--shadow-xl);
   transform: translateY(100%);
   transition: transform var(--motion-duration-slow, 350ms) var(--motion-easing-decelerate, cubic-bezier(0, 0, 0.2, 1));
   will-change: transform;
   max-height: 100vh;
-  max-height: 100dvh; // Use dynamic viewport height for mobile browsers
+  max-height: 100dvh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  
-  // Ensure bottom sheet stays at bottom on mobile when toolbar hides
+
   @supports (height: 100dvh) {
     max-height: 100dvh;
   }
@@ -34,7 +34,7 @@
   &--half,
   &--full {
     pointer-events: auto;
-    background: #fffdf9; // Ensure consistent background in all states
+    background: var(--surface-sheet, #fffdf9);
   }
 
   &--full {
@@ -100,15 +100,14 @@ body:has(.cart-bottom-sheet) {
 }
 
 .cart-bottom-sheet {
-  z-index: 1090; // Above FAB
-  background: #faf8f4; // Warm off-white for light mode
+  z-index: 1090;
+  background: var(--surface-sheet, #faf8f4);
   border-top: 2px solid var(--border-default);
 
-  // Ensure background stays consistent in all states
   &.bottom-sheet--peek,
   &.bottom-sheet--half,
   &.bottom-sheet--full {
-    background: #faf8f4; // Same warm off-white in all states
+    background: var(--surface-sheet, #faf8f4);
   }
 }
 
@@ -144,7 +143,7 @@ body:has(.cart-bottom-sheet) {
   margin: 0;
   border: none;
   border-radius: 0 var(--radius-xl, 1rem) 0 0;
-  background: #dc2626;
+  background: var(--color-primary, #dc2626);
   color: #fff;
   font-size: 0.9375rem;
   font-weight: 600;
@@ -155,15 +154,14 @@ body:has(.cart-bottom-sheet) {
   cursor: pointer;
   white-space: nowrap;
   transition: background 0.15s ease;
-  box-shadow: -2px 0 8px rgb(220, 38, 38, 0.3);
   z-index: 10;
 
   i { font-size: 1.125rem; }
 
-  &:hover { background: #b91c1c; }
+  &:hover { background: var(--color-primary-hover, #b91c1c); }
 
   &:active {
-    background: #991b1b;
+    background: var(--color-primary-hover, #991b1b);
     transform: scale(0.98);
   }
 }
@@ -185,7 +183,7 @@ body:has(.cart-bottom-sheet) {
 }
 
 .cart-sheet__count {
-  background: #dc2626;
+  background: var(--color-primary, #dc2626);
   color: white;
   min-width: 24px;
   height: 24px;
@@ -363,52 +361,5 @@ body:has(.cart-bottom-sheet) {
 }
 
 // ============================================================================
-// DARK MODE
+// DARK MODE — handled by _dark_mode.scss mixin via [data-color-scheme="dark"]
 // ============================================================================
-:root[data-theme="dark"] {
-  .bottom-sheet {
-    background: #374151; // Dark elevated surface
-  }
-
-  .cart-bottom-sheet {
-    background: #1F2937; // Dark primary surface
-  }
-
-  .bottom-sheet-backdrop {
-    background: rgb(0, 0, 0, 0.6);
-  }
-
-  // Cart-specific dark mode refinements
-  .cart-sheet__start-order-btn {
-    box-shadow: 0 2px 8px rgb(220, 38, 38, 0.4);
-  }
-
-  .cart-sheet__count {
-    box-shadow: 0 1px 3px rgb(0, 0, 0, 0.3);
-  }
-}
-
-// Respect system preference as fallback
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    .bottom-sheet {
-      background: #374151; // Dark elevated surface
-    }
-
-    .cart-bottom-sheet {
-      background: #1F2937; // Dark primary surface
-    }
-
-    .bottom-sheet-backdrop {
-      background: rgb(0, 0, 0, 0.6);
-    }
-
-    .cart-sheet__start-order-btn {
-      box-shadow: 0 2px 8px rgb(220, 38, 38, 0.4);
-    }
-
-    .cart-sheet__count {
-      box-shadow: 0 1px 3px rgb(0, 0, 0, 0.3);
-    }
-  }
-}
