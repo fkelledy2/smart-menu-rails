@@ -53,13 +53,15 @@ class Api::V1::OrdersController < Api::V1::BaseController
             .joins(menusection: :menu)
             .where(menus: { restaurant_id: @restaurant.id })
             .find(item_params[:menu_item_id])
-          @order.ordritems.create!(
+          ordritem = @order.ordritems.create!(
             menuitem: menu_item,
-            quantity: item_params[:quantity],
-            unit_price: menu_item.price,
-            total_price: menu_item.price * item_params[:quantity].to_i,
-            special_instructions: item_params[:special_instructions],
+            quantity: item_params[:quantity].to_i.clamp(1, 99),
+            ordritemprice: menu_item.price,
+            line_key: SecureRandom.uuid,
           )
+          if item_params[:special_instructions].present?
+            ordritem.ordritemnotes.create!(note: item_params[:special_instructions].to_s.truncate(500))
+          end
         end
 
       end
@@ -129,16 +131,16 @@ class Api::V1::OrdersController < Api::V1::BaseController
 
   def order_with_items_json(order)
     order_data = order_json(order)
-    order_data[:items] = order.ordritems.includes(:menuitem).map do |item|
+    order_data[:items] = order.ordritems.includes(:menuitem, :ordritemnotes).map do |item|
       {
         id: item.id,
         order_id: item.ordr_id,
         menu_item_id: item.menuitem_id,
         menu_item_name: item.menuitem&.name,
         quantity: item.quantity,
-        unit_price: item.unit_price,
-        total_price: item.total_price,
-        special_instructions: item.special_instructions,
+        unit_price: item.ordritemprice,
+        total_price: item.ordritemprice.to_f * item.quantity.to_i,
+        special_instructions: item.ordritemnotes.map(&:note).join('; ').presence,
         created_at: item.created_at,
         updated_at: item.updated_at,
       }

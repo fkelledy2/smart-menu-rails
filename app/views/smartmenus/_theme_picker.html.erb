@@ -1,0 +1,49 @@
+<%# Theme picker — CSS-only swatches with font sample text.
+    Requires: form (form builder), smartmenu (Smartmenu instance),
+              public_url (String) — the public smartmenu token URL.
+    Uses theme_picker_controller to manage active state and preview link. -%>
+
+<div class="mb-4" data-controller="theme-picker">
+  <label class="form-label fw-semibold mb-2">
+    <%= t('smartmenus.theme_picker.label', default: 'Menu Theme') %>
+  </label>
+  <p class="text-muted small mb-3">
+    <%= t('smartmenus.theme_picker.hint', default: 'Choose a visual style for your customer-facing menu.') %>
+  </p>
+
+  <%# Hidden field that submits with the form -%>
+  <%= form.hidden_field :theme, data: { 'theme-picker-target' => 'input' } %>
+
+  <div class="theme-picker">
+    <% Smartmenu::THEMES.each do |theme_value| %>
+      <button type="button"
+              class="theme-swatch<%= " theme-swatch--active" if smartmenu.theme == theme_value %>"
+              data-theme-value="<%= theme_value %>"
+              data-action="click->theme-picker#selectTheme"
+              data-theme-picker-target="swatch"
+              title="<%= t("smartmenus.themes.#{theme_value}", default: theme_value.capitalize) %>">
+        <div class="theme-swatch__preview">
+          <%= t('smartmenus.theme_picker.sample_text', default: 'Aa') %>
+        </div>
+        <span class="theme-swatch__label">
+          <%= t("smartmenus.themes.#{theme_value}", default: theme_value.capitalize) %>
+        </span>
+      </button>
+    <% end %>
+  </div>
+
+  <%# Preview button — opens the live public smartmenu in a new tab -%>
+  <% if smartmenu.persisted? && public_url.present? %>
+    <a href="<%= public_url %>"
+       target="_blank"
+       rel="noopener noreferrer"
+       class="btn btn-outline-secondary btn-sm mt-2"
+       data-theme-picker-target="previewLink">
+      <i class="bi bi-box-arrow-up-right me-1" aria-hidden="true"></i>
+      <%= t('smartmenus.theme_picker.preview_button', default: 'Preview in new tab') %>
+    </a>
+    <small class="text-muted d-block mt-1">
+      <%= t('smartmenus.theme_picker.preview_hint', default: 'Save first to see theme changes applied.') %>
+    </small>
+  <% end %>
+</div>

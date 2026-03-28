@@ -4,7 +4,11 @@ class Payments::RefundsController < ApplicationController
   before_action :ensure_admin!
 
   def create
-    payment_attempt = PaymentAttempt.find(params[:payment_attempt_id])
+    # Scope to restaurants owned by the current admin to prevent cross-tenant refunds.
+    payment_attempt = PaymentAttempt
+      .joins(:restaurant)
+      .where(restaurants: { id: current_user.restaurants.select(:id) })
+      .find(params[:payment_attempt_id])
 
     if payment_attempt.status.to_s != 'succeeded'
       render json: { ok: false, error: 'Payment must be succeeded to refund' }, status: :unprocessable_content

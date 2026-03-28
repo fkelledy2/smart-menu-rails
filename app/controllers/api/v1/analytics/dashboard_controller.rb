@@ -45,7 +45,7 @@ module Api
         end
 
         def total_revenue
-          recent_ordrs.sum(:total).to_f.round(2)
+          recent_ordrs.sum(:gross).to_f.round(2)
         end
 
         def average_order_value

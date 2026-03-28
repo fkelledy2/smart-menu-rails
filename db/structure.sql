@@ -448,7 +448,8 @@ CREATE TABLE public.crm_email_sends (
     mailer_message_id character varying,
     sent_at timestamp(6) without time zone,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    job_idempotency_key character varying
 );
 
 
@@ -4448,7 +4449,9 @@ CREATE TABLE public.smartmenus (
     tablesetting_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    public_token character varying(64) NOT NULL
+    public_token character varying(64) NOT NULL,
+    theme character varying DEFAULT 'modern'::character varying NOT NULL,
+    CONSTRAINT smartmenus_theme_check CHECK (((theme)::text = ANY ((ARRAY['modern'::character varying, 'rustic'::character varying, 'elegant'::character varying])::text[])))
 );
 
 
@@ -7289,6 +7292,13 @@ CREATE INDEX index_crawl_source_rules_on_rule_type ON public.crawl_source_rules 
 --
 
 CREATE INDEX index_crm_email_sends_on_crm_lead_id ON public.crm_email_sends USING btree (crm_lead_id);
+
+
+--
+-- Name: index_crm_email_sends_on_job_idempotency_key; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_crm_email_sends_on_job_idempotency_key ON public.crm_email_sends USING btree (job_idempotency_key) WHERE (job_idempotency_key IS NOT NULL);
 
 
 --
@@ -11533,6 +11543,8 @@ ALTER TABLE ONLY public.voice_commands
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260328100001'),
+('20260328000001'),
 ('20260327200004'),
 ('20260327200003'),
 ('20260327200002'),

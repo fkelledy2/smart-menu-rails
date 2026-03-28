@@ -118,7 +118,7 @@ Rails.application.routes.draw do
       member do
         post :revoke
         post :send_email
-        get  :download_link
+        post :download_link
       end
     end
 
@@ -610,6 +610,7 @@ Rails.application.routes.draw do
   # SMART MENU SYSTEM
   # ============================================================================
   resources :smartmenus do
+    get :preview, on: :member
     resources :voice_commands, only: %i[create show], controller: 'smartmenus_voice_commands'
     post 'sommelier/recommend', to: 'sommelier#recommend', as: :sommelier_recommend
     post 'sommelier/recommend_wine', to: 'sommelier#recommend_wine', as: :sommelier_recommend_wine

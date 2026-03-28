@@ -21,9 +21,7 @@ class DwOrdersMvPolicy < ApplicationPolicy
           restaurant_ids = user.restaurants.pluck(:id)
           scope.where(restaurant_id: restaurant_ids)
         else
-          # If no restaurant scoping is possible, return all for now
-          # This should be reviewed and improved based on the actual model structure
-          scope.all
+          scope.none
         end
       else
         scope.none
@@ -38,9 +36,7 @@ class DwOrdersMvPolicy < ApplicationPolicy
     if record.respond_to?(:restaurant_id) && record.restaurant_id
       user.restaurants.exists?(id: record.restaurant_id)
     else
-      # For now, allow access if user is authenticated
-      # This should be improved based on actual data model
-      true
+      false
     end
   end
 end

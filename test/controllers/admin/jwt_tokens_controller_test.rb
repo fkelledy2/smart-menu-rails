@@ -195,7 +195,7 @@ class Admin::JwtTokensControllerTest < ActionDispatch::IntegrationTest
   test 'download_link returns a text file when raw_jwt present' do
     sign_in @mellow_admin
 
-    get download_link_admin_jwt_token_path(@active_token), params: {
+    post download_link_admin_jwt_token_path(@active_token), params: {
       raw_jwt: 'fake.raw.jwt',
     }
 
@@ -206,7 +206,7 @@ class Admin::JwtTokensControllerTest < ActionDispatch::IntegrationTest
   test 'download_link redirects with alert when raw_jwt absent' do
     sign_in @mellow_admin
 
-    get download_link_admin_jwt_token_path(@active_token)
+    post download_link_admin_jwt_token_path(@active_token)
 
     assert_redirected_to admin_jwt_token_path(@active_token)
     assert flash[:alert].present?

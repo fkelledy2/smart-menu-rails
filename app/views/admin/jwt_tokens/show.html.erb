@@ -29,7 +29,7 @@
           <%= f.text_field :recipient_email, placeholder: 'Recipient email', class: 'form-control form-control-sm d-inline-block', style: 'width: 220px' %>
           <%= f.submit 'Email token', class: 'btn btn-sm btn-outline-dark ms-1' %>
         <% end %>
-        <%= form_with url: download_link_admin_jwt_token_path(@token), method: :get, local: true, class: 'd-inline ms-2' do |f| %>
+        <%= form_with url: download_link_admin_jwt_token_path(@token), method: :post, local: true, class: 'd-inline ms-2' do |f| %>
           <%= f.hidden_field :raw_jwt, value: flash[:raw_jwt] %>
           <%= f.submit 'Download .txt', class: 'btn btn-sm btn-outline-secondary' %>
         <% end %>

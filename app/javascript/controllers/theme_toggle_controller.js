@@ -1,17 +1,18 @@
 import { Controller } from '@hotwired/stimulus';
 
 // Theme toggle controller — cycles through light / dark / auto (system).
-// Persists choice in localStorage under "theme" key.
-// Sets data-theme on <html> so CSS picks it up instantly.
+// Persists choice in localStorage under "colorScheme" key.
+// Sets data-color-scheme on <html> so CSS picks it up instantly.
+// NOTE: data-color-scheme (light/dark) is orthogonal to data-theme (modern/rustic/elegant).
 export default class extends Controller {
   static targets = ['icon'];
 
   connect() {
-    this._applyStoredTheme();
+    this._applyStoredScheme();
   }
 
   toggle() {
-    const current = this._currentTheme();
+    const current = this._currentScheme();
     let next;
     if (current === 'light') {
       next = 'dark';
@@ -20,52 +21,52 @@ export default class extends Controller {
     } else {
       next = 'light';
     }
-    this._setTheme(next);
+    this._setScheme(next);
   }
 
-  // Allow setting a specific theme from a dropdown
+  // Allow setting a specific colour scheme from a dropdown
   setLight() {
-    this._setTheme('light');
+    this._setScheme('light');
   }
   setDark() {
-    this._setTheme('dark');
+    this._setScheme('dark');
   }
   setAuto() {
-    this._setTheme('auto');
+    this._setScheme('auto');
   }
 
   // --- Private ---
 
-  _currentTheme() {
-    return localStorage.getItem('theme') || 'auto';
+  _currentScheme() {
+    return localStorage.getItem('colorScheme') || 'auto';
   }
 
-  _setTheme(theme) {
-    if (theme === 'auto') {
-      localStorage.removeItem('theme');
-      document.documentElement.removeAttribute('data-theme');
+  _setScheme(scheme) {
+    if (scheme === 'auto') {
+      localStorage.removeItem('colorScheme');
+      document.documentElement.removeAttribute('data-color-scheme');
     } else {
-      localStorage.setItem('theme', theme);
-      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('colorScheme', scheme);
+      document.documentElement.setAttribute('data-color-scheme', scheme);
     }
-    this._updateIcon(theme);
+    this._updateIcon(scheme);
   }
 
-  _applyStoredTheme() {
-    const stored = localStorage.getItem('theme');
+  _applyStoredScheme() {
+    const stored = localStorage.getItem('colorScheme');
     if (stored && (stored === 'light' || stored === 'dark')) {
-      document.documentElement.setAttribute('data-theme', stored);
+      document.documentElement.setAttribute('data-color-scheme', stored);
     } else {
-      document.documentElement.removeAttribute('data-theme');
+      document.documentElement.removeAttribute('data-color-scheme');
     }
     this._updateIcon(stored || 'auto');
   }
 
-  _updateIcon(theme) {
+  _updateIcon(scheme) {
     if (!this.hasIconTarget) return;
     const icons = { light: 'bi-sun-fill', dark: 'bi-moon-fill', auto: 'bi-circle-half' };
     const titles = { light: 'Light mode', dark: 'Dark mode', auto: 'System theme' };
-    this.iconTarget.className = `bi ${icons[theme] || icons.auto}`;
-    this.element.setAttribute('title', titles[theme] || titles.auto);
+    this.iconTarget.className = `bi ${icons[scheme] || icons.auto}`;
+    this.element.setAttribute('title', titles[scheme] || titles.auto);
   }
 }

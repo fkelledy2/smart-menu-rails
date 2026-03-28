@@ -1,6 +1,6 @@
 # mellow.menu Feature Backlog — Priority Index
 
-**Last updated**: 2026-03-28 (sixth pass — all spec files aligned to current rank numbers; Sprint 1 Recommendation updated to reflect CRM #9 and JWT #8 completion; agent tier cross-references corrected to #17–#24)
+**Last updated**: 2026-03-28 (seventh pass — Smartmenu Theming #10 marked COMPLETED 2026-03-28)
 **QR Code Security (#1)**: COMPLETED 2026-03-24 — Phase 1 shipped; spec at `docs/features/completed/qr-security.md`
 **Branded Email Styling (#1)**: COMPLETED 2026-03-24 — spec at `docs/features/completed/branded-email-styling-feature-request.md`
 **Branded Receipt Email (#2)**: COMPLETED 2026-03-25 — spec at `docs/features/completed/branded-receipt-email-feature-request.md`
@@ -21,7 +21,7 @@
 | ~~#7~~ | ~~Homepage Demo Booking & Video~~ | ~~Launch Enhancer~~ | S | None | COMPLETED 2026-03-26 — spec at `docs/features/completed/homepage-demo-booking-feature-request.md` |
 | ~~#8~~ | ~~JWT Token Management (API)~~ | ~~Post-Launch~~ | L | Existing admin auth | COMPLETED 2026-03-27 — spec at `docs/features/completed/mellow-admin-jwt-token-management-feature-request.md` |
 | ~~#9~~ | ~~CRM Sales Funnel~~ | ~~Growth~~ | L | Admin auth, ActionMailer, Calendly webhook | COMPLETED 2026-03-27 — spec at `docs/features/completed/crm-sales-funnel.md` |
-| #10 | Smartmenu Theming | Launch Enhancer | M | None | **Current top priority.** High-visibility customer-facing feature; directly drives restaurant satisfaction and retention; differentiates the product at the point customers interact most |
+| ~~#10~~ | ~~Smartmenu Theming~~ | ~~Launch Enhancer~~ | M | None | COMPLETED 2026-03-28 — spec at `docs/features/completed/smartmenu-theming.md` |
 | #11 | Partner Integrations (Event-Driven) | Post-Launch | M | #8, Stripe webhooks | Ecosystem play; required by workforce/CRM partners |
 | #12 | Menu Experiments (A/B Testing) | Post-Launch | M | #1 (DiningSession built); MenuVersion BUILT | Elevated: MenuVersion dependency resolved — all blockers done |
 | #13 | Table Wait Time Estimation | Post-Launch | L | #5 (completed), Tablesetting | Operations win; differentiates for high-footfall walk-in restaurants |
@@ -94,12 +94,10 @@ Note: The launch blockers are deliberately narrow. Features #4–#7 are strong l
 
 ## Current Sprint Recommendation — Next Best Actions
 
-All launch blockers (#1–#7), JWT Token Management (#8), and CRM Sales Funnel (#9) are completed. The platform is live-capable with a functioning sales pipeline and API layer. The following represent the highest-value next actions:
+All launch blockers (#1–#7), JWT Token Management (#8), CRM Sales Funnel (#9), and Smartmenu Theming (#10) are completed. The platform is live-capable with a functioning sales pipeline, API layer, and visual theming. The following represent the highest-value next actions:
 
-### Track A: Customer-Facing Differentiation (Highest immediate restaurant satisfaction impact)
-**Feature #10 — Smartmenu Theming**
-
-Every dining customer sees the Smartmenu. Giving restaurant owners control over its visual appearance is the highest-visibility improvement currently available. M effort, no dependencies, no blockers. All prerequisite infrastructure (fragment caching, Smartmenu layout, Sass pipeline) is in place.
+### Track A: API Ecosystem (Unblocks partner integrations and enterprise conversations)
+**Feature #11 — Partner Integrations (Event-Driven)** — current top priority
 
 Deliverables in priority order:
 1. Migration: `add_theme_to_smartmenus` — string column, default `'classic'`, check constraint

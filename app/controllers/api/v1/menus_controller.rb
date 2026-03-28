@@ -3,7 +3,7 @@
 class Api::V1::MenusController < Api::V1::BaseController
   before_action :set_restaurant, only: %i[index create]
   before_action :set_menu, only: %i[show update destroy]
-before_action :enforce_menu_scope!, only: %i[index show create update destroy]
+  before_action :enforce_menu_scope!, only: %i[index show create update destroy]
 
   private
 

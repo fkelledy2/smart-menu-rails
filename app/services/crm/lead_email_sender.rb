@@ -6,7 +6,7 @@ module Crm
   class LeadEmailSender
     Result = Struct.new(:success?, :email_send, :error, keyword_init: true)
 
-    def self.call(crm_lead:, sender:, to_email:, subject:, body_html:, body_text: nil)
+    def self.call(crm_lead:, sender:, to_email:, subject:, body_html:, body_text: nil, job_idempotency_key: nil)
       new(
         crm_lead: crm_lead,
         sender: sender,
@@ -14,19 +14,28 @@ module Crm
         subject: subject,
         body_html: body_html,
         body_text: body_text,
+        job_idempotency_key: job_idempotency_key,
       ).call
     end
 
-    def initialize(crm_lead:, sender:, to_email:, subject:, body_html:, body_text:)
-      @crm_lead  = crm_lead
-      @sender    = sender
-      @to_email  = to_email
-      @subject   = subject
-      @body_html = body_html
-      @body_text = body_text
+    def initialize(crm_lead:, sender:, to_email:, subject:, body_html:, body_text:, job_idempotency_key: nil)
+      @crm_lead             = crm_lead
+      @sender               = sender
+      @to_email             = to_email
+      @subject              = subject
+      @body_html            = body_html
+      @body_text            = body_text
+      @job_idempotency_key  = job_idempotency_key
     end
 
     def call
+      # Guard against duplicate sends on Sidekiq retry — if this key was already
+      # processed, return the existing record as a success rather than re-sending.
+      if @job_idempotency_key.present?
+        existing = CrmEmailSend.find_by(job_idempotency_key: @job_idempotency_key)
+        return Result.new(success?: true, email_send: existing, error: nil) if existing
+      end
+
       email_send = CrmEmailSend.create!(
         crm_lead: @crm_lead,
         sender: @sender,
@@ -35,6 +44,7 @@ module Crm
         body_html: @body_html,
         body_text: @body_text,
         sent_at: Time.current,
+        job_idempotency_key: @job_idempotency_key,
       )
 
       message = CrmMailer.lead_follow_up(email_send).deliver_later

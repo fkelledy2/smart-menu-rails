@@ -161,3 +161,27 @@
     </div>
   <% end %>
 <% end %>
+
+<%# Menu Theme — separate form (theme lives on Smartmenu, not Menu) -%>
+<% if menu.persisted? && menu.smartmenu.present? %>
+  <%= form_with url: smartmenu_path(menu.smartmenu.slug), method: :patch, data: { turbo: true } do |sm_form| %>
+    <h4 class="mt-4 mb-3"><%= t('menus.form.display', default: 'Display') %></h4>
+    <div class="form-group row mb-2">
+      <div class="col-3">
+        <span class="float-md-end">
+          <%= sm_form.label :theme, t('smartmenus.theme_picker.label', default: 'Menu Theme'), class: 'col-form-label' %>
+        </span>
+      </div>
+      <div class="col-9">
+        <%= sm_form.select 'smartmenu[theme]',
+            Smartmenu::THEMES.map { |v| [t("smartmenus.themes.#{v}", default: v.capitalize), v] },
+            { selected: menu.smartmenu.theme },
+            class: 'form-control',
+            onchange: 'this.form.requestSubmit()' %>
+        <small class="text-muted">
+          <%= t('smartmenus.theme_picker.hint', default: 'Choose a visual style for your customer-facing menu.') %>
+        </small>
+      </div>
+    </div>
+  <% end %>
+<% end %>

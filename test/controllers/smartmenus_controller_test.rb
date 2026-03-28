@@ -87,4 +87,55 @@ class SmartmenusControllerTest < ActionDispatch::IntegrationTest
     end
     assert_response :success
   end
+
+  # ---------------------------------------------------------------------------
+  # Theme — PATCH update with theme param
+  # ---------------------------------------------------------------------------
+
+  test 'PATCH update with valid theme saves the new theme' do
+    sign_in users(:one)
+    sm = smartmenus(:one)
+    patch smartmenu_path(sm.slug), params: { smartmenu: { theme: 'rustic' } }
+    assert_equal 'rustic', sm.reload.theme
+  end
+
+  test 'PATCH update with invalid theme returns unprocessable' do
+    sign_in users(:one)
+    sm = smartmenus(:one)
+    patch smartmenu_path(sm.slug), params: { smartmenu: { theme: 'neon' } }
+    assert_response :unprocessable_content
+  end
+
+  test 'PATCH update with valid theme calls ThemeCacheBuster' do
+    sign_in users(:one)
+    sm = smartmenus(:one)
+    buster_called = false
+
+    Smartmenus::ThemeCacheBuster.stub(:new, lambda { |_|
+      stub_b = Object.new
+      stub_b.define_singleton_method(:call) { buster_called = true }
+      stub_b
+    },) do
+      patch smartmenu_path(sm.slug), params: { smartmenu: { theme: 'elegant' } }
+    end
+
+    assert buster_called
+  end
+
+  # ---------------------------------------------------------------------------
+  # Theme — GET preview redirect
+  # ---------------------------------------------------------------------------
+
+  test 'GET preview redirects authenticated owner to token URL' do
+    sign_in users(:one)
+    sm = smartmenus(:one)
+    get preview_smartmenu_path(sm.slug)
+    assert_redirected_to table_link_url(public_token: sm.public_token)
+  end
+
+  test 'GET preview redirects unauthenticated user to sign in' do
+    sm = smartmenus(:one)
+    get preview_smartmenu_path(sm.slug)
+    assert_redirected_to new_user_session_path
+  end
 end

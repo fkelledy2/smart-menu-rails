@@ -1,0 +1,252 @@
+// =============================================================================
+// SMARTMENU NAMED THEMES
+// Applied via data-theme="<name>" on the <html> element.
+// Orthogonal to data-color-scheme="dark|light" (the light/dark toggle).
+// Each theme overrides the CSS custom properties used by _smartmenu_mobile.scss
+// and the broader smartmenu component set.
+// =============================================================================
+
+// =============================================================================
+// MODERN THEME (default)
+// Clean lines, Inter font, high-contrast palette, reduced border radius
+// =============================================================================
+[data-theme="modern"] {
+  --sm-font-family-base:    'Inter', system-ui, sans-serif;
+  --sm-font-family-heading: 'Inter', system-ui, sans-serif;
+  --sm-font-size-base:      1rem;
+  --sm-line-height-base:    1.5;
+  --sm-heading-weight:      700;
+  --sm-primary:             #dc2626;
+  --sm-primary-hover:       #b91c1c;
+  --sm-secondary:           #1f2937;
+  --sm-accent:              #2563eb;
+  --sm-bg:                  #f9fafb;
+  --sm-card-bg:             #fff;
+  --sm-section-bg:          #f3f4f6;
+  --sm-divider-color:       #e5e7eb;
+  --sm-text-primary:        #111827;
+  --sm-text-secondary:      #374151;
+  --sm-text-muted:          #6b7280;
+  --sm-card-radius:         8px;
+  --sm-button-radius:       6px;
+  --sm-badge-radius:        4px;
+  --sm-section-gap:         1.5rem;
+  --sm-card-gap:            0.75rem;
+  --sm-card-padding:        0.875rem;
+  --sm-card-shadow:         0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --sm-card-shadow-hover:   0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+  --sm-divider-style:       1px solid var(--sm-divider-color);
+  --sm-section-divider-height: 1px;
+  --sm-texture-url:         none;
+}
+
+// =============================================================================
+// RUSTIC THEME
+// Warm tones, Playfair Display font, organic card shapes, textured feel
+// =============================================================================
+[data-theme="rustic"] {
+  --sm-font-family-base:    'Playfair Display', georgia, serif;
+  --sm-font-family-heading: 'Playfair Display', georgia, serif;
+  --sm-font-size-base:      1.0625rem;
+  --sm-line-height-base:    1.6;
+  --sm-heading-weight:      700;
+  --sm-primary:             #92400e;
+  --sm-primary-hover:       #78350f;
+  --sm-secondary:           #44403c;
+  --sm-accent:              #d97706;
+  --sm-bg:                  #fdf8f0;
+  --sm-card-bg:             #fffdf7;
+  --sm-section-bg:          #fef3c7;
+  --sm-divider-color:       #d6c9a8;
+  --sm-text-primary:        #292524;
+  --sm-text-secondary:      #44403c;
+  --sm-text-muted:          #78716c;
+  --sm-card-radius:         14px;
+  --sm-button-radius:       10px;
+  --sm-badge-radius:        6px;
+  --sm-section-gap:         2rem;
+  --sm-card-gap:            1rem;
+  --sm-card-padding:        1rem;
+  --sm-card-shadow:         0 2px 8px rgba(146, 64, 14, 0.10), 0 1px 3px rgba(0, 0, 0, 0.06);
+  --sm-card-shadow-hover:   0 6px 16px rgba(146, 64, 14, 0.14), 0 2px 6px rgba(0, 0, 0, 0.08);
+  --sm-divider-style:       2px dashed var(--sm-divider-color);
+  --sm-section-divider-height: 2px;
+  --sm-texture-url:         none;
+
+  // Apply warm tones to smartmenu card elements
+  .menu-item-card-mobile .card {
+    border-radius: var(--sm-card-radius);
+    box-shadow: var(--sm-card-shadow);
+    border-color: var(--sm-divider-color);
+    background-color: var(--sm-card-bg);
+  }
+
+  .menu-section-title {
+    font-family: var(--sm-font-family-heading);
+    color: var(--sm-primary);
+  }
+
+  .btn-touch-primary,
+  .addItemToOrder {
+    background-color: var(--sm-primary) !important;
+    border-color: var(--sm-primary) !important;
+
+    &:hover, &:focus {
+      background-color: var(--sm-primary-hover) !important;
+      border-color: var(--sm-primary-hover) !important;
+    }
+  }
+
+  .section-tab-pill.active {
+    background-color: var(--sm-primary) !important;
+  }
+}
+
+// =============================================================================
+// ELEGANT THEME
+// Serif typography (Cormorant Garamond), restrained palette, generous whitespace
+// =============================================================================
+[data-theme="elegant"] {
+  --sm-font-family-base:    'Cormorant Garamond', 'Times New Roman', serif;
+  --sm-font-family-heading: 'Cormorant Garamond', 'Times New Roman', serif;
+  --sm-font-size-base:      1.125rem;
+  --sm-line-height-base:    1.7;
+  --sm-heading-weight:      600;
+  --sm-primary:             #1c1917;
+  --sm-primary-hover:       #0c0a09;
+  --sm-secondary:           #44403c;
+  --sm-accent:              #a16207;
+  --sm-bg:                  #fafaf9;
+  --sm-card-bg:             #fff;
+  --sm-section-bg:          #f5f5f4;
+  --sm-divider-color:       #d6d3d1;
+  --sm-text-primary:        #1c1917;
+  --sm-text-secondary:      #44403c;
+  --sm-text-muted:          #78716c;
+  --sm-card-radius:         4px;
+  --sm-button-radius:       2px;
+  --sm-badge-radius:        2px;
+  --sm-section-gap:         2.5rem;
+  --sm-card-gap:            1.25rem;
+  --sm-card-padding:        1.25rem;
+  --sm-card-shadow:         0 1px 4px rgba(0, 0, 0, 0.06);
+  --sm-card-shadow-hover:   0 3px 12px rgba(0, 0, 0, 0.08);
+  --sm-divider-style:       1px solid var(--sm-divider-color);
+  --sm-section-divider-height: 1px;
+  --sm-texture-url:         none;
+
+  // Fine-rule section dividers, generous spacing
+  .menu-item-card-mobile .card {
+    border-radius: var(--sm-card-radius);
+    box-shadow: var(--sm-card-shadow);
+    border: 1px solid var(--sm-divider-color);
+    background-color: var(--sm-card-bg);
+  }
+
+  .menu-section-title {
+    font-family: var(--sm-font-family-heading);
+    font-weight: var(--sm-heading-weight);
+    letter-spacing: 0.04em;
+    color: var(--sm-primary);
+  }
+
+  .btn-touch-primary,
+  .addItemToOrder {
+    background-color: var(--sm-primary) !important;
+    border-color: var(--sm-primary) !important;
+    border-radius: var(--sm-button-radius) !important;
+    letter-spacing: 0.06em;
+    font-variant-caps: small-caps;
+
+    &:hover, &:focus {
+      background-color: var(--sm-primary-hover) !important;
+      border-color: var(--sm-primary-hover) !important;
+    }
+  }
+
+  .section-tab-pill.active {
+    background-color: var(--sm-primary) !important;
+  }
+}
+
+// =============================================================================
+// THEME PICKER — Edit page swatch UI
+// CSS-only coloured block + font sample (no image assets required)
+// =============================================================================
+.theme-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.theme-swatch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.375rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  background: #fff;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  min-width: 90px;
+  text-align: center;
+
+  &:hover {
+    border-color: #6b7280;
+  }
+
+  &.theme-swatch--active {
+    border-color: #1d4ed8;
+    box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.18);
+  }
+}
+
+.theme-swatch__preview {
+  width: 64px;
+  height: 48px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  padding: 0.25rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Modern swatch
+.theme-swatch[data-theme-value="modern"] .theme-swatch__preview {
+  background: #f9fafb;
+  color: #111827;
+  font-family: Inter, system-ui, sans-serif;
+  border: 1px solid #e5e7eb;
+}
+
+// Rustic swatch
+.theme-swatch[data-theme-value="rustic"] .theme-swatch__preview {
+  background: #fdf8f0;
+  color: #292524;
+  font-family: 'Playfair Display', Georgia, serif;
+  border: 1px solid #d6c9a8;
+}
+
+// Elegant swatch
+.theme-swatch[data-theme-value="elegant"] .theme-swatch__preview {
+  background: #fafaf9;
+  color: #1c1917;
+  font-family: 'Cormorant Garamond', 'Times New Roman', serif;
+  border: 1px solid #d6d3d1;
+}
+
+.theme-swatch__label {
+  font-size: 0.75rem;
+  color: #374151;
+  font-weight: 500;
+}

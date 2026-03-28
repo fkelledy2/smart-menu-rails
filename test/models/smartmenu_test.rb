@@ -77,6 +77,77 @@ class SmartmenuTest < ActiveSupport::TestCase
   end
 
   # ---------------------------------------------------------------------------
+  # Theme
+  # ---------------------------------------------------------------------------
+
+  test 'THEMES constant contains the three permitted values' do
+    assert_equal %w[modern rustic elegant], Smartmenu::THEMES
+  end
+
+  test 'valid with each permitted theme value' do
+    Smartmenu::THEMES.each do |theme|
+      sm = Smartmenu.new(
+        slug: SecureRandom.uuid,
+        restaurant: @restaurant,
+        tablesetting: @tablesetting_two,
+        theme: theme,
+      )
+      sm.valid?
+      assert_empty sm.errors[:theme], "Expected #{theme} to be valid but got: #{sm.errors[:theme]}"
+    end
+  end
+
+  test 'invalid with an unrecognised theme value' do
+    sm = Smartmenu.new(
+      slug: SecureRandom.uuid,
+      restaurant: @restaurant,
+      tablesetting: @tablesetting_two,
+      theme: 'neon',
+    )
+    assert_not sm.valid?
+    assert_includes sm.errors[:theme], 'is not included in the list'
+  end
+
+  test 'defaults to modern theme when not specified' do
+    sm = Smartmenu.create!(
+      slug: SecureRandom.uuid,
+      restaurant: @restaurant,
+      tablesetting: @tablesetting_two,
+    )
+    assert_equal 'modern', sm.theme
+  end
+
+  test 'bust_theme_cache is called after saving a theme change' do
+    sm = smartmenus(:one)
+    buster_called = false
+
+    Smartmenus::ThemeCacheBuster.stub(:new, lambda { |_|
+      stub_buster = Object.new
+      stub_buster.define_singleton_method(:call) { buster_called = true }
+      stub_buster
+    },) do
+      sm.update!(theme: 'rustic')
+    end
+
+    assert buster_called, 'Expected ThemeCacheBuster#call to be invoked after theme change'
+  end
+
+  test 'bust_theme_cache is NOT called when theme is unchanged' do
+    sm = smartmenus(:one)
+    buster_called = false
+
+    Smartmenus::ThemeCacheBuster.stub(:new, lambda { |_|
+      stub_buster = Object.new
+      stub_buster.define_singleton_method(:call) { buster_called = true }
+      stub_buster
+    },) do
+      sm.update!(slug: "#{sm.slug}-unchanged")
+    end
+
+    assert_not buster_called, 'Expected ThemeCacheBuster#call NOT to be invoked when theme did not change'
+  end
+
+  # ---------------------------------------------------------------------------
   # Validations
   # ---------------------------------------------------------------------------
 

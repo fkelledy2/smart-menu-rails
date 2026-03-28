@@ -7,7 +7,7 @@ RSpec.describe 'Payments::Refunds' do
   let(:payment_attempt) do
     PaymentAttempt.create!(
       ordr: create(:ordr, status: :billrequested),
-      restaurant: create(:restaurant, currency: 'USD'),
+      restaurant: create(:restaurant, user: admin_user, currency: 'USD'),
       provider: :stripe,
       provider_payment_id: 'cs_test_123',
       amount_cents: 1000,

@@ -3,6 +3,7 @@ class OrdrparticipantsController < ApplicationController
   before_action :set_restaurant, except: [:update] # Allow direct updates without restaurant context
   before_action :set_ordrparticipant, only: %i[show edit update destroy]
   before_action :set_ordrparticipant_for_direct_update, only: [:update], if: -> { params[:restaurant_id].blank? }
+  before_action :validate_guest_participant_ownership, only: [:update], unless: :user_signed_in?
 
   # Pundit authorization
   after_action :verify_authorized, except: %i[index update] # Skip authorization for direct updates
@@ -130,6 +131,26 @@ class OrdrparticipantsController < ApplicationController
     end
   rescue ActiveRecord::RecordNotFound
     redirect_to root_url
+  end
+
+  # Prevent anonymous users from mutating participants that don't belong to their session.
+  # Mirrors validate_guest_ordritem_ownership in OrdritemsController.
+  def validate_guest_participant_ownership
+    return unless @ordrparticipant
+
+    sid_candidates = [
+      session.id.to_s.presence,
+      session[:sid].presence,
+    ].compact.uniq
+    return if sid_candidates.empty?
+
+    return if Ordrparticipant.exists?(id: @ordrparticipant.id, sessionid: sid_candidates)
+
+    Rails.logger.warn(
+      "[SECURITY] Guest sessions #{sid_candidates.inspect} attempted to mutate ordrparticipant " \
+      "#{@ordrparticipant.id} without session ownership",
+    )
+    render json: { error: 'forbidden' }, status: :forbidden
   end
 
   # Set ordrparticipant for direct updates (unauthenticated smart menu interface)

@@ -89,6 +89,7 @@
 //= link controllers/video_analytics_controller.js
 //= link controllers/crm_kanban_controller.js
 //= link controllers/crm_lead_detail_controller.js
+//= link controllers/theme_picker_controller.js
 
 // Application entry point
 //= link application.js

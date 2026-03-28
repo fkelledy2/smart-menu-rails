@@ -1118,14 +1118,15 @@
   }
 }
 
-// Apply via explicit attribute
-:root[data-theme="dark"] {
+// Apply via explicit attribute (data-color-scheme is the dark/light toggle;
+// data-theme is reserved for named restaurant themes: modern, rustic, elegant)
+:root[data-color-scheme="dark"] {
   @include dark-mode-overrides;
 }
 
 // Apply via system preference (unless user explicitly chose light)
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
+  :root:not([data-color-scheme="light"]) {
     @include dark-mode-overrides;
   }
 }
@@ -1157,7 +1158,7 @@
   }
 }
 
-// Show correct icon based on active theme
-:root[data-theme="dark"] .theme-icon-dark { display: inline; }
-:root[data-theme="light"] .theme-icon-light { display: inline; }
-:root:not([data-theme]) .theme-icon-auto { display: inline; }
+// Show correct icon based on active colour scheme
+:root[data-color-scheme="dark"] .theme-icon-dark { display: inline; }
+:root[data-color-scheme="light"] .theme-icon-light { display: inline; }
+:root:not([data-color-scheme]) .theme-icon-auto { display: inline; }

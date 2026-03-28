@@ -249,9 +249,9 @@ module Payments
 
         return unless provider_account
 
-        charges_enabled = !obj['charges_enabled'].nil?
-        payouts_enabled = !obj['payouts_enabled'].nil?
-        details_submitted = !obj['details_submitted'].nil?
+        charges_enabled  = obj['charges_enabled'] == true
+        payouts_enabled  = obj['payouts_enabled'] == true
+        details_submitted = obj['details_submitted'] == true
 
         status = if charges_enabled && payouts_enabled
                    :enabled
