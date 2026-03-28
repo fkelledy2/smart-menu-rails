@@ -74,11 +74,19 @@ class SmartmenusController < ApplicationController
 
     respond_to do |format|
       if @smartmenu.update(smartmenu_params)
+        format.turbo_stream do
+          flash.now[:notice] = t('common.flash.updated', resource: t('activerecord.models.smartmenu'))
+          render turbo_stream: turbo_stream.prepend('flash_toasts', partial: 'shared/notices')
+        end
         format.html do
           redirect_back_or_to @smartmenu, notice: t('common.flash.updated', resource: t('activerecord.models.smartmenu'))
         end
         format.json { render :show, status: :ok, location: @smartmenu }
       else
+        format.turbo_stream do
+          flash.now[:alert] = @smartmenu.errors.full_messages.to_sentence
+          render turbo_stream: turbo_stream.prepend('flash_toasts', partial: 'shared/notices')
+        end
         format.html { render :edit, status: :unprocessable_content }
         format.json { render json: @smartmenu.errors, status: :unprocessable_content }
       end
@@ -487,7 +495,7 @@ class SmartmenusController < ApplicationController
         response.headers['Vary'] = [response.headers['Vary'], 'Accept-Language'].compact.join(', ')
       end
 
-      fresh_when(etag: etag_parts, last_modified: last_modified_candidates.max, public: !has_order_context)
+      return unless stale?(etag: etag_parts, last_modified: last_modified_candidates.max, public: !has_order_context)
     end
 
     respond_to do |format|
