@@ -52,7 +52,7 @@ class Payments::StripeConnectController < ApplicationController
       if provider_account.present?
         acct = Stripe::Account.retrieve(provider_account.provider_account_id)
         if acct.charges_enabled && acct.payouts_enabled
-          provider_account.update!(status: :active, payouts_enabled: true)
+          provider_account.update!(status: :enabled, payouts_enabled: true)
           @restaurant.update!(payments_enabled: true, ordering_enabled: true)
 
           # Upgrade claim_status if restaurant was soft_claimed

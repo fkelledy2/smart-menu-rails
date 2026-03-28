@@ -31,6 +31,19 @@ class Payments::IntentsController < ApplicationController
     key = ENV.fetch('STRIPE_SECRET_KEY', nil) if key.blank?
     Stripe.api_key = key if key.present?
 
+    idempotency_key = "stripe_intent:#{@ordr.id}:#{amount}:#{currency}"
+    payment_attempt = PaymentAttempt.create!(
+      ordr: @ordr,
+      restaurant: @ordr.restaurant,
+      provider: :stripe,
+      amount_cents: amount,
+      currency: currency,
+      status: :processing,
+      charge_pattern: :direct,
+      merchant_model: :restaurant_mor,
+      idempotency_key: idempotency_key,
+    )
+
     intent = Stripe::PaymentIntent.create(
       amount: amount,
       currency: currency,
@@ -39,8 +52,11 @@ class Payments::IntentsController < ApplicationController
         order_id: @ordr.id,
         restaurant_id: @ordr.restaurant_id,
         smartmenu_id: @ordr.menu&.smartmenus&.first&.id,
+        payment_attempt_id: payment_attempt.id,
       },
     )
+
+    payment_attempt.update_column(:provider_payment_id, intent.id)
 
     render json: { client_secret: intent.client_secret }
   end

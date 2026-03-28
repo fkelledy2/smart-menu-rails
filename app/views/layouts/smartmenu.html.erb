@@ -1,9 +1,10 @@
 
 <!DOCTYPE html>
-<html class="h-100">
+<html class="h-100" data-theme="<%= @smartmenu&.theme || 'modern' %>">
   <head>
     <%= render 'shared/head' %>
     <%= render 'shared/schema_org_json_ld' if @schema_org_json_ld.present? %>
+    <%= render partial: 'smartmenus/theme_font_link', locals: { theme: @smartmenu&.theme || 'modern' } %>
     <%= Sentry.get_trace_propagation_meta.html_safe %>
     <%= smartmenu_javascript_tags %>
     <script>window.USE_JSON_STATE = true;</script>

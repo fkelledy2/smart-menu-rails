@@ -452,17 +452,18 @@ class OrdritemsController < ApplicationController
     taxes = Tax.where(restaurant_id: ordr.restaurant.id).order(sequence: :asc)
     totalTax = 0
     totalService = 0
+    taxable_amount = ordr.nett.to_f + ordr.covercharge.to_f
     taxes.each do |tax|
       if tax.taxtype == 'service'
-        totalService += ((tax.taxpercentage * ordr.nett.to_f) / 100)
+        totalService += ((tax.taxpercentage * taxable_amount) / 100)
       else
-        totalTax += ((tax.taxpercentage * ordr.nett.to_f) / 100)
+        totalTax += ((tax.taxpercentage * taxable_amount) / 100)
       end
     end
     ordr.tax = totalTax
     ordr.service = totalService
-    # Use to_f to safely handle nil values
-    ordr.gross = ordr.nett.to_f + ordr.tip.to_f + ordr.service.to_f + ordr.tax.to_f
+    # Use to_f to safely handle nil values; include covercharge to match OrdrsController#calculate_order_totals
+    ordr.gross = ordr.nett.to_f + ordr.covercharge.to_f + ordr.tip.to_f + ordr.service.to_f + ordr.tax.to_f
     ordr.save
   end
 

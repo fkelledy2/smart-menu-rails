@@ -6,6 +6,7 @@ one:
   restaurant: one
   menu: ordering_menu
   tablesetting: table_one
+  theme: modern
 
 two:
   slug: another-menu
@@ -13,6 +14,7 @@ two:
   restaurant: one
   menu: two
   tablesetting: one
+  theme: modern
 
 three:
   slug: staff-test-menu
@@ -20,6 +22,7 @@ three:
   restaurant: two
   menu: three
   tablesetting: one
+  theme: modern
 
 # Smartmenu for customer ordering tests (no table - general menu)
 customer_menu:
@@ -27,3 +30,4 @@ customer_menu:
   public_token: dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
   restaurant: one
   menu: ordering_menu
+  theme: modern

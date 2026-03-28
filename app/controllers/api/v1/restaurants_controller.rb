@@ -2,7 +2,7 @@
 
 class Api::V1::RestaurantsController < Api::V1::BaseController
   before_action :set_restaurant, only: %i[show update destroy]
-before_action :enforce_settings_read_scope!, only: %i[show index]
+  before_action :enforce_settings_read_scope!, only: %i[show index]
 
   private
 
@@ -15,7 +15,17 @@ before_action :enforce_settings_read_scope!, only: %i[show index]
   # GET /api/v1/restaurants
   def index
     authorize Restaurant, :index?
-    @pagy, @restaurants = pagy(current_user.restaurants)
+
+    # For JWT-authenticated requests, scope strictly to the token's restaurant.
+    # Falling back to current_user.restaurants would expose all restaurants
+    # belonging to the admin who minted the token — a cross-tenant data leak.
+    scope = if api_jwt_request? && @current_api_restaurant.present?
+              Restaurant.where(id: @current_api_restaurant.id)
+            else
+              current_user.restaurants
+            end
+
+    @pagy, @restaurants = pagy(scope)
 
     render json: {
       data: @restaurants.map { |restaurant| restaurant_json(restaurant) },

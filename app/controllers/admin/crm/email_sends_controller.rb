@@ -29,6 +29,7 @@ module Admin
           subject: email_send_params[:subject],
           body_html: email_send_params[:body_html],
           body_text: email_send_params[:body_text],
+          job_idempotency_key: SecureRandom.uuid,
         )
 
         redirect_to admin_crm_lead_path(@lead), notice: 'Email queued for delivery.'

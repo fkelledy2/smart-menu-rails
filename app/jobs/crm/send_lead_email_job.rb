@@ -9,7 +9,7 @@ module Crm
 
     sidekiq_options retry: 3
 
-    def perform(crm_lead_id:, sender_id:, to_email:, subject:, body_html:, body_text: nil)
+    def perform(crm_lead_id:, sender_id:, to_email:, subject:, body_html:, body_text: nil, job_idempotency_key: nil)
       lead   = CrmLead.find(crm_lead_id)
       sender = User.find(sender_id)
 
@@ -20,6 +20,7 @@ module Crm
         subject: subject,
         body_html: body_html,
         body_text: body_text,
+        job_idempotency_key: job_idempotency_key,
       )
     end
   end

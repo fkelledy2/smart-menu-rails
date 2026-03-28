@@ -1,0 +1,12 @@
+<%# Conditionally load the Google Font for the active smartmenu theme.
+    Fonts are loaded from CDN in v1. Self-hosting deferred.
+    Only one font link is rendered per page. -%>
+<% font_url = case theme
+   when 'rustic'   then 'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap'
+   when 'elegant'  then 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&display=swap'
+   else                 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap'
+   end
+%>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link rel="stylesheet" href="<%= font_url %>">

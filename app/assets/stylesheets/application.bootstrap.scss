@@ -57,6 +57,9 @@
 // Dark mode overrides (Priority 6)
 @import 'components/dark_mode';
 
+// Named smartmenu themes (modern / rustic / elegant)
+@import 'components/themes';
+
 // Phase 1: Foundation (UI/UX Upgrade 2026)
 @import 'components/bottom_sheet';
 @import 'components/camera_capture';

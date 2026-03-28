@@ -8,6 +8,16 @@ class SmartmenusController < ApplicationController
   after_action :verify_authorized, except: %i[index show show_by_token]
   after_action :verify_policy_scoped, only: [:index]
 
+  # GET /smartmenus/:id/preview?theme_preview=elegant
+  # Opens a preview of the smartmenu public URL — no server-side rendering needed.
+  # Redirects to the public token URL; theme is applied client-side via data-theme
+  # once the theme is saved. This action exists as a convenience redirect.
+  def preview
+    sm = Smartmenu.find_by!(slug: params[:id])
+    authorize sm, :show?
+    redirect_to table_link_url(public_token: sm.public_token), allow_other_host: false
+  end
+
   # GET /smartmenus or /smartmenus.json
   def index
     @smartmenus = policy_scope(Smartmenu)
@@ -65,7 +75,7 @@ class SmartmenusController < ApplicationController
     respond_to do |format|
       if @smartmenu.update(smartmenu_params)
         format.html do
-          redirect_to @smartmenu, notice: t('common.flash.updated', resource: t('activerecord.models.smartmenu'))
+          redirect_back_or_to @smartmenu, notice: t('common.flash.updated', resource: t('activerecord.models.smartmenu'))
         end
         format.json { render :show, status: :ok, location: @smartmenu }
       else
@@ -551,6 +561,6 @@ class SmartmenusController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def smartmenu_params
-    params.require(:smartmenu).permit(:slug, :restaurant_id, :menu_id, :tablesetting_id)
+    params.require(:smartmenu).permit(:slug, :restaurant_id, :menu_id, :tablesetting_id, :theme)
   end
 end

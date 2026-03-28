@@ -10,3 +10,4 @@
 - [project_marketing_qr_v1.md](project_marketing_qr_v1.md) — Pre-Configured Marketing QRs v1: resolve endpoint, link/unlink services, mellow.menu email gate, attr_readonly gotcha, fixture alignment notes (March 2026)
 - [project_homepage_demo_booking_v1.md](project_homepage_demo_booking_v1.md) — Demo Booking v1: public controller pattern, video analytics, admin CRM, asset manifest gotcha, Calendly pre-fill URL, video placeholder fallback (March 2026)
 - [project_crm_sales_funnel_v1.md](project_crm_sales_funnel_v1.md) — CRM Sales Funnel v1: stage enum prefix gotcha, ReadonlyRecord fix, namespace resolution, counter_cache name, form_with routing, asset manifest, webhook refactor (March 2026)
+- [project_smartmenu_theming_v1.md](project_smartmenu_theming_v1.md) — Smartmenu Theming v1: data-theme/data-color-scheme split, Smartmenus:: namespace gotcha, manifest.js requirement, CSS theme architecture (March 2026)

@@ -7,14 +7,16 @@
 Rails.application.configure do
   config.content_security_policy do |policy|
     policy.default_src :self
-    policy.font_src    :self, :https, :data
+    # Google Fonts CDN required for Smartmenu named themes (modern/rustic/elegant).
+    # fonts.googleapis.com serves the CSS @import; fonts.gstatic.com serves the font files.
+    policy.font_src    :self, :https, :data, 'https://fonts.gstatic.com'
     policy.img_src     :self, :https, :data, :blob
     policy.object_src  :none
     # unsafe_inline retained: ~30 inline <script> blocks across views require nonce
     # migration before this can be removed. Nonce infrastructure is enabled below.
     # See docs/pentest_remediation.md Finding 3 for the full migration plan.
     policy.script_src  :self, :unsafe_inline, :https
-    policy.style_src   :self, :unsafe_inline, :https
+    policy.style_src   :self, :unsafe_inline, :https, 'https://fonts.googleapis.com'
     policy.connect_src :self, :https, 'wss:', 'ws:'
     policy.frame_src       :self, 'https://js.stripe.com', 'https://hooks.stripe.com'
     policy.frame_ancestors :self

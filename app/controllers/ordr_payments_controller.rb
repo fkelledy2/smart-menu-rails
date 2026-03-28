@@ -287,6 +287,13 @@ class OrdrPaymentsController < ApplicationController
                      end
                      Stripe.api_key = stripe_key
 
+                     qr_payment_attempt = PaymentAttempt.create!(
+                       ordr: @ordr, restaurant: @ordr.restaurant,
+                       provider: :stripe, amount_cents: amount_cents,
+                       currency: currency, status: :requires_action,
+                       charge_pattern: :direct, merchant_model: :restaurant_mor,
+                       idempotency_key: "checkout_qr:#{@ordr.id}:#{SecureRandom.hex(8)}",
+                     )
                      session = Stripe::Checkout::Session.create(
                        mode: 'payment',
                        success_url: success_url,
@@ -300,8 +307,13 @@ class OrdrPaymentsController < ApplicationController
                            product_data: { name: "#{@ordr.restaurant.name} Order #{@ordr.id}" },
                          },
                        }],
-                       metadata: { order_id: @ordr.id, restaurant_id: @ordr.restaurant_id },
+                       metadata: {
+                         order_id: @ordr.id,
+                         restaurant_id: @ordr.restaurant_id,
+                         payment_attempt_id: qr_payment_attempt.id,
+                       },
                      )
+                     qr_payment_attempt.update_column(:provider_payment_id, session.id)
                      session.url
                    end
 
@@ -378,6 +390,28 @@ class OrdrPaymentsController < ApplicationController
       status: :succeeded,
       provider_payment_id: result[:payment_id],
     )
+
+    OrderEvent.emit!(
+      ordr: @ordr,
+      event_type: 'paid',
+      entity_type: 'order',
+      entity_id: @ordr.id,
+      source: 'staff',
+      idempotency_key: "square_inline_paid:#{@ordr.id}:#{result[:payment_id]}",
+      payload: { provider: 'square', payment_id: result[:payment_id] },
+    )
+    OrderEvent.emit!(
+      ordr: @ordr,
+      event_type: 'closed',
+      entity_type: 'order',
+      entity_id: @ordr.id,
+      source: 'staff',
+      idempotency_key: "square_inline_closed:#{@ordr.id}:#{result[:payment_id]}",
+      payload: { provider: 'square' },
+    )
+    OrderEventProjector.project!(@ordr.id)
+    @ordr.reload
+    broadcast_state(@ordr)
 
     Rails.logger.info(
       "[SquareInline] Payment succeeded (ordr_id=#{@ordr.id} pa_id=#{pa.id} payment_id=#{result[:payment_id]})",

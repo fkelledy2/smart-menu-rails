@@ -123,6 +123,14 @@ class OrderEventProjector
 
     ordr.update_columns(updates)
 
+    # Re-implement the AASM requestbill after-callback that update_columns bypasses.
+    # The AASM event is never called in production (OrderEventProjector uses update_columns),
+    # so the auto-pay capture job must be enqueued here instead.
+    if to_key.to_s == 'billrequested'
+      ordr_id = ordr.id
+      AutoPayCaptureJob.perform_later(ordr_id) if ordr.auto_pay_capturable?
+    end
+
     # Keep child ordritems in sync with parent status.
     removed_value = Ordritem.statuses['removed']
     Ordritem.where(ordr_id: ordr.id)

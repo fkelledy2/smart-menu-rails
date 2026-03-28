@@ -56,6 +56,7 @@ import DemoBookingController from './demo_booking_controller';
 import VideoAnalyticsController from './video_analytics_controller';
 import CrmKanbanController from './crm_kanban_controller';
 import CrmLeadDetailController from './crm_lead_detail_controller';
+import ThemePickerController from './theme_picker_controller';
 
 application.register('sortable', SortableController);
 application.register('auto-save', AutoSaveController);
@@ -111,6 +112,7 @@ application.register('demo-booking', DemoBookingController);
 application.register('video-analytics', VideoAnalyticsController);
 application.register('crm-kanban', CrmKanbanController);
 application.register('crm-lead-detail', CrmLeadDetailController);
+application.register('theme-picker', ThemePickerController);
 
 console.log('[Stimulus] Controllers registered:', [
   'sortable',
@@ -154,4 +156,5 @@ console.log('[Stimulus] Controllers registered:', [
   'receipt-request',
   'crm-kanban',
   'crm-lead-detail',
+  'theme-picker',
 ]);

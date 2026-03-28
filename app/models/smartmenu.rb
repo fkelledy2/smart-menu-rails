@@ -1,6 +1,8 @@
 class Smartmenu < ApplicationRecord
   include IdentityCache
 
+  THEMES = %w[modern rustic elegant].freeze
+
   # Standard ActiveRecord associations
   belongs_to :restaurant, touch: true
   belongs_to :menu, optional: true
@@ -19,6 +21,7 @@ class Smartmenu < ApplicationRecord
   cache_belongs_to :tablesetting
 
   before_validation :generate_public_token, on: :create
+  after_save :bust_theme_cache, if: :saved_change_to_theme?
 
   def menuName
     if menu
@@ -47,6 +50,7 @@ class Smartmenu < ApplicationRecord
   validates :slug, presence: true
   validates :restaurant, presence: false
   validates :public_token, presence: true, uniqueness: true, length: { is: 64 }, allow_blank: false
+  validates :theme, inclusion: { in: THEMES }
 
   # Rotate the public_token, invalidating the old QR code.
   # Deactivates all active DiningSessions for this smartmenu.
@@ -59,5 +63,9 @@ class Smartmenu < ApplicationRecord
 
   def generate_public_token
     self.public_token ||= SecureRandom.hex(32)
+  end
+
+  def bust_theme_cache
+    Smartmenus::ThemeCacheBuster.new(self).call
   end
 end
