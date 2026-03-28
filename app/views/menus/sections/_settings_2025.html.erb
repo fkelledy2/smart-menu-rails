@@ -177,19 +177,26 @@
         </div>
       </div>
     <% end %>
-    <%# Menu Theme — separate form since theme lives on Smartmenu, not Menu -%>
-    <% if menu.smartmenu.present? %>
-      <%= form_with url: smartmenu_path(menu.smartmenu.slug), method: :patch,
-          data: { turbo: true } do |sm_form| %>
+  </div>
+  <% end %>
+</div>
+
+<%# Menu Theme — own section/form outside menu_form_with to avoid nested <form> -%>
+<% if menu.smartmenu.present? %>
+  <div class="mb-3 p-3">
+    <h2 class="content-card-title">
+      <i class="bi bi-palette"></i>
+      <%= t('smartmenus.theme_picker.label', default: 'Menu Theme') %>
+    </h2>
+    <%= form_with url: smartmenu_path(menu.smartmenu.slug), method: :patch,
+        data: { turbo: true, controller: 'toast', toast_message_value: t('common.flash.updated', resource: t('activerecord.models.smartmenu', default: 'Menu')) } do |sm_form| %>
+      <div class="features-grid" style="max-width: 400px;">
         <div class="feature-card">
           <div class="feature-card-icon" style="background: var(--color-gray-700);">
             <i class="bi bi-palette"></i>
           </div>
           <div class="feature-card-content">
-            <h5 class="feature-card-title">
-              <%= t('smartmenus.theme_picker.label', default: 'Menu Theme') %>
-            </h5>
-            <p class="feature-card-description">
+            <p class="feature-card-description mb-0">
               <%= t('smartmenus.theme_picker.hint', default: 'Choose a visual style for your customer-facing menu.') %>
             </p>
           </div>
@@ -201,11 +208,10 @@
                 onchange: 'this.form.requestSubmit()' %>
           </div>
         </div>
-      <% end %>
+      </div>
     <% end %>
   </div>
-  <% end %>
-</div>
+<% end %>
 
 
 <style>
