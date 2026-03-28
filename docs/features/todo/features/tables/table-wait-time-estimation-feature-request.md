@@ -1,10 +1,10 @@
 # Table Wait Time Estimation
 
 ## Status
-- Priority Rank: #12
+- Priority Rank: #13
 - Category: Post-Launch
 - Effort: L
-- Dependencies: Floorplan Dashboard (#5 — completed) — shares table state concepts; `Tablesetting` model; `Ordr` model
+- Dependencies: Floorplan Dashboard (#5 — completed 2026-03-25) — shares table state concepts; `Tablesetting` model; `Ordr` model
 
 ## Problem Statement
 Restaurants with high footfall regularly have walk-in customers waiting for a table. Staff must estimate wait times manually, leading to inaccurate quotes, customer frustration, and unnecessary walk-aways. A data-driven wait time estimation system gives staff accurate, real-time estimates based on current occupancy, service stage, and historical dining patterns — improving the walk-in experience and reducing lost revenue.

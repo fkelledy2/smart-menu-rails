@@ -3,7 +3,6 @@
 class Api::V1::OrdersController < Api::V1::BaseController
   before_action :set_restaurant, only: %i[index create]
   before_action :set_order, only: %i[show update destroy]
-  before_action :authenticate_user!, except: %i[create show]
   before_action :enforce_orders_scope!, only: %i[index show create update destroy]
 
   private
@@ -63,8 +62,6 @@ class Api::V1::OrdersController < Api::V1::BaseController
           )
         end
 
-        # Update order totals
-        @order.calculate_totals!
       end
 
       render json: order_with_items_json(@order), status: :created
@@ -108,26 +105,23 @@ class Api::V1::OrdersController < Api::V1::BaseController
   end
 
   def order_params
-    params.permit(:table_number, :customer_name, :customer_phone, :notes)
+    params.permit(:tablesetting_id, :menu_id, :employee_id, :status)
   end
 
   def order_update_params
-    params.permit(:status, :notes)
+    params.permit(:status)
   end
 
   def order_json(order)
     {
       id: order.id,
       restaurant_id: order.restaurant_id,
-      table_number: order.table_number,
-      status: order.status || 'pending',
-      customer_name: order.customer_name,
-      customer_phone: order.customer_phone,
-      subtotal: order.subtotal || 0,
+      status: order.status,
+      nett: order.nett || 0,
       tax: order.tax || 0,
-      service_charge: order.service_charge || 0,
-      total: order.total || 0,
-      notes: order.notes,
+      service: order.service || 0,
+      tip: order.tip || 0,
+      gross: order.gross || 0,
       created_at: order.created_at,
       updated_at: order.updated_at,
     }

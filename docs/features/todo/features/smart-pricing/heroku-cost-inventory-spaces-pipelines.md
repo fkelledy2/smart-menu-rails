@@ -1,7 +1,7 @@
 # Heroku Cost Inventory (Spaces + Pipelines)
 
 ## Status
-- Priority Rank: #15
+- Priority Rank: #16
 - Category: Post-Launch
 - Effort: S
 - Dependencies: Existing admin auth (`admin? && super_admin?`); `Admin::` namespace pattern; `HEROKU_PLATFORM_API_TOKEN` environment variable
@@ -14,7 +14,7 @@ mellow.menu's infrastructure costs across the `smart-menu` Heroku space are not 
 - Daily inventory snapshots are captured and persisted.
 - Monthly infra cost snapshots are computed per environment using internal cost coefficients.
 - Admin+super_admin can view the inventory and cost breakdown.
-- The pricing model (#12) can consume monthly infra cost totals as inputs.
+- The pricing model (#15 Cost Insights → #14 Dynamic Pricing) can consume monthly infra cost totals as inputs.
 
 ## User Stories
 - As a super admin, I want to see exactly what Heroku resources we're running so I can understand our infra cost.

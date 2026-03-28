@@ -2,8 +2,7 @@
 
 class Api::V1::RestaurantsController < Api::V1::BaseController
   before_action :set_restaurant, only: %i[show update destroy]
-  before_action :authenticate_user!, except: %i[index show]
-  before_action :enforce_settings_read_scope!, only: %i[show index]
+before_action :enforce_settings_read_scope!, only: %i[show index]
 
   private
 

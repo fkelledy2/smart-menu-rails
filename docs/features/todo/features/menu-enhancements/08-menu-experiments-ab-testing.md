@@ -1,10 +1,10 @@
 # Menu Experiments (A/B + Time-Boxed) (v1)
 
 ## Status
-- Priority Rank: #11 (elevated from #14 — MenuVersion dependency resolved; CRM Sales Funnel inserted at #9 shifts all downstream ranks)
+- Priority Rank: #12 (elevated from #14 — MenuVersion dependency resolved; CRM #9 and Smartmenu Theming #10 inserted ahead shift all downstream ranks)
 - Category: Post-Launch
 - Effort: M
-- Dependencies: `MenuVersion` system (BUILT — see `menu-versioning-system.md`); existing `Menu`, `MenuItem`, `Smartmenu` models; `DiningSession` from QR Security (#1)
+- Dependencies: `MenuVersion` system (BUILT — see `menu-versioning-system.md`); existing `Menu`, `MenuItem`, `Smartmenu` models; `DiningSession` from QR Security (#1 — completed 2026-03-24)
 
 > **Dependency resolved**: The MenuVersion system previously flagged as "not yet built" is fully implemented in the codebase: `app/models/menu_version.rb`, four supporting services, a versions controller, DB schema, and tests all exist. Menu Experiments can proceed once QR Security (#1) is shipped (required for `DiningSession` on which experiment assignment is stored).
 

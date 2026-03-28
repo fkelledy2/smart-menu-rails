@@ -4,7 +4,7 @@ description: Open questions identified during spec refinement that require produ
 type: project
 ---
 
-Open questions identified during the March 2026 full backlog refinement pass (initial pass 2026-03-22; AI agent tier added 2026-03-24; rank corrections applied 2026-03-27 after CRM inserted at #9).
+Open questions identified during the March 2026 full backlog refinement pass (initial pass 2026-03-22; AI agent tier added 2026-03-24; rank corrections applied 2026-03-27 after CRM inserted at #9; sixth pass rank alignment 2026-03-28 after Smartmenu Theming inserted at #10).
 
 **Why:** These questions were identified during spec writing and cannot be assumed away by engineering. They need product/business decisions.
 
@@ -117,6 +117,13 @@ Open questions identified during the March 2026 full backlog refinement pass (in
 - **Supported markets**: Which countries is Strikepay operational in? Feature should only be offered to restaurants in those markets.
 - **Tip income reporting obligation**: Is mellow.menu responsible for any tax reporting on tips, or does Strikepay handle this entirely? Legal/compliance confirmation required.
 - **Webhook reliability**: Does Strikepay offer retry guarantees for webhook delivery?
+
+## Smartmenu Theming (#10) — Added 2026-03-28
+- **CSS custom property audit scope**: `_smartmenu_mobile.scss` is 1500+ lines. A dedicated design-engineering pairing session is strongly recommended before implementation begins. This is the highest-risk task in the build.
+- **Swatch thumbnail assets**: Who produces theme thumbnail images for the picker? CSS-only swatches (colour + font sample) are an acceptable v1 substitute if design resource is unavailable.
+- **Preview iframe vs inline preview**: iframe (higher fidelity, one round-trip per swatch click) vs CSS-only inline preview (faster to build). Decision needed before frontend sprint begins.
+- **Google Fonts CSP**: If a Content Security Policy header is set on the Smartmenu layout, a `style-src fonts.googleapis.com` and `font-src fonts.gstatic.com` exception is required. Confirm whether a CSP is active.
+- **Dark mode interaction**: When dark mode and a named theme are both active, only one `data-theme` value can sit on `<html>`. Confirm whether a separate `data-color-scheme` attribute should carry dark mode, or whether dark mode overrides theme colour properties and dark variants per theme are out of scope for v1.
 
 ## Resolved Questions
 

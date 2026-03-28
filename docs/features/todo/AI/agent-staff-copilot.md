@@ -1,10 +1,10 @@
 # Staff Copilot Agent
 
 ## Status
-- Priority Rank: #23 (Phase 2 agent — most complex UX integration; ship after back-office agent patterns are proven by Growth Digest and Optimization agents)
+- Priority Rank: #24 (Phase 2 agent — most complex UX integration; ship after back-office agent patterns are proven by Growth Digest and Optimization agents)
 - Category: Post-Launch — agent tier, Phase 2
 - Effort: L
-- Dependencies: Agent Framework (#16), back-office controllers and service objects (existing), `RestaurantInsightsService` (existing), `ProfitMarginAnalyticsService` (existing), OpenAI API with streaming
+- Dependencies: Agent Framework (#17), back-office controllers and service objects (existing), `RestaurantInsightsService` (existing), `ProfitMarginAnalyticsService` (existing), OpenAI API with streaming
 
 ## Problem Statement
 Restaurant managers spend a disproportionate amount of time on routine back-office tasks that require navigating multiple screens, running reports manually, and making the same configuration changes repeatedly. A manager who wants to 86 an item during service must navigate three screens. Pulling a weekly margin report requires knowledge of which analytics page to use and how to interpret it. Drafting a team briefing note before a shift requires starting from scratch in a text editor. These tasks are individually small but collectively consume significant management time — time that could be spent on the floor serving customers. The Staff Copilot adds a natural-language interface to the existing back office, allowing managers and waiting staff to complete routine tasks by describing what they want in plain language and confirming a single proposed action, rather than navigating multiple UI screens. It is a productivity layer on top of the existing product — not a replacement for it.

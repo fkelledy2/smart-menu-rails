@@ -135,14 +135,6 @@ module Admin
         )
 
         if result.success?
-          ::Crm::LeadAuditWriter.write(
-            crm_lead: @lead,
-            event: 'lead_reopened',
-            actor: current_user,
-          )
-        end
-
-        if result.success?
           redirect_to admin_crm_lead_path(@lead), notice: 'Lead reopened.'
         else
           redirect_to admin_crm_lead_path(@lead), alert: result.error
