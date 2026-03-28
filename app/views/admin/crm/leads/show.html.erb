@@ -1,7 +1,7 @@
 <%# Admin CRM: Lead detail %>
 <% content_for :title, "#{@lead.restaurant_name} — CRM" %>
 
-<div class="container-fluid py-4" style="max-width: 960px;">
+<div class="container-fluid py-4 mw-960">
   <div class="mb-3">
     <%= link_to 'Pipeline', admin_crm_leads_path, class: 'text-muted text-decoration-none' %>
     <span class="text-muted mx-1">/</span>
@@ -36,7 +36,7 @@
     <div class="col-md-4">
       <div class="card border-0 shadow-sm">
         <div class="card-body">
-          <h6 class="card-title text-muted text-uppercase fw-semibold" style="font-size: 11px; letter-spacing: 0.08em;">Contact</h6>
+          <h6 class="card-title text-muted text-uppercase fw-semibold text-kanban-header">Contact</h6>
           <% if @lead.contact_name.present? %>
             <p class="mb-1"><strong><%= @lead.contact_name %></strong></p>
           <% end %>
@@ -48,25 +48,25 @@
           <% end %>
           <% if @lead.assigned_to %>
             <hr class="my-2">
-            <p class="mb-0 text-muted" style="font-size: 13px;">
+            <p class="mb-0 text-muted fs-13">
               Assigned to: <strong><%= @lead.assigned_to.email %></strong>
             </p>
           <% end %>
           <% if @lead.restaurant %>
             <hr class="my-2">
-            <p class="mb-0" style="font-size: 13px;">
+            <p class="mb-0 fs-13">
               Restaurant: <%= link_to @lead.restaurant.name, [:admin, @lead.restaurant] rescue @lead.restaurant.name %>
             </p>
           <% end %>
           <% if @lead.converted_at %>
             <hr class="my-2">
-            <p class="mb-0 text-success" style="font-size: 12px;">
+            <p class="mb-0 text-success fs-12">
               Converted: <%= @lead.converted_at.strftime('%d %b %Y') %>
             </p>
           <% end %>
           <% if @lead.stage_lost? %>
             <hr class="my-2">
-            <p class="mb-0 text-danger" style="font-size: 12px;">
+            <p class="mb-0 text-danger fs-12">
               Lost: <%= @lead.lost_reason&.humanize %><br>
               <% if @lead.lost_reason_notes.present? %>
                 <span class="text-muted"><%= @lead.lost_reason_notes %></span>
@@ -79,7 +79,7 @@
       <%# Stage transition panel %>
       <div class="card border-0 shadow-sm mt-3">
         <div class="card-body">
-          <h6 class="card-title text-muted text-uppercase fw-semibold" style="font-size: 11px; letter-spacing: 0.08em;">Move Stage</h6>
+          <h6 class="card-title text-muted text-uppercase fw-semibold text-kanban-header">Move Stage</h6>
           <% allowed = Crm::LeadTransitionService::FORWARD_TRANSITIONS[@lead.stage] || [] %>
           <% if allowed.any? %>
             <div class="d-flex flex-column gap-1">
@@ -92,7 +92,7 @@
               <% end %>
             </div>
           <% else %>
-            <p class="text-muted mb-0" style="font-size: 12px;">No further transitions available.</p>
+            <p class="text-muted mb-0 fs-12">No further transitions available.</p>
           <% end %>
         </div>
       </div>
@@ -151,7 +151,7 @@
                 <% @audits.each do |audit| %>
                   <div class="list-group-item px-0 py-2 border-0 border-bottom">
                     <div class="d-flex justify-content-between">
-                      <span style="font-size: 13px;">
+                      <span class="fs-13">
                         <strong><%= audit.actor&.email || 'System' %></strong>
                         <%= audit.event.humanize.downcase %>
                         <% if audit.field_name.present? %>
@@ -160,7 +160,7 @@
                           to <code><%= audit.to_value || '—' %></code>
                         <% end %>
                       </span>
-                      <span class="text-muted" style="font-size: 11px; white-space: nowrap;">
+                      <span class="text-muted fs-11 text-nowrap">
                         <%= time_ago_in_words(audit.created_at) %> ago
                       </span>
                     </div>
@@ -185,8 +185,8 @@
                 <div class="list-group-item px-0 py-2 border-0 border-bottom">
                   <div class="d-flex justify-content-between align-items-start">
                     <div>
-                      <strong style="font-size: 13px;"><%= send.subject %></strong>
-                      <p class="text-muted mb-0" style="font-size: 12px;">
+                      <strong class="fs-13"><%= send.subject %></strong>
+                      <p class="text-muted mb-0 fs-12">
                         To: <%= send.to_email %> &bull; From: <%= send.sender.email %>
                       </p>
                     </div>

@@ -74,7 +74,7 @@
     <%= link_to edit_restaurant_path(restaurant, section: 'profitability_margins'),
         class: 'profitability-nav-item text-decoration-none',
         data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
-      <div class="profitability-nav-icon" style="background: #0d6efd;">
+      <div class="profitability-nav-icon profitability-nav-icon--primary">
         <i class="bi bi-bar-chart-line"></i>
       </div>
       <div class="profitability-nav-info">
@@ -87,7 +87,7 @@
     <%= link_to edit_restaurant_path(restaurant, section: 'profitability_ingredients'),
         class: 'profitability-nav-item text-decoration-none',
         data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
-      <div class="profitability-nav-icon" style="background: #198754;">
+      <div class="profitability-nav-icon profitability-nav-icon--success">
         <i class="bi bi-egg-fried"></i>
       </div>
       <div class="profitability-nav-info">
@@ -100,7 +100,7 @@
     <%= link_to edit_restaurant_path(restaurant, section: 'profitability_optimization'),
         class: 'profitability-nav-item text-decoration-none',
         data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
-      <div class="profitability-nav-icon" style="background: #6f42c1;">
+      <div class="profitability-nav-icon profitability-nav-icon--purple">
         <i class="bi bi-stars"></i>
       </div>
       <div class="profitability-nav-info">
@@ -113,7 +113,7 @@
     <%= link_to edit_restaurant_path(restaurant, section: 'profitability_targets'),
         class: 'profitability-nav-item text-decoration-none',
         data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
-      <div class="profitability-nav-icon" style="background: #ffc107; color: #000;">
+      <div class="profitability-nav-icon profitability-nav-icon--warning">
         <i class="bi bi-bullseye"></i>
       </div>
       <div class="profitability-nav-info">
@@ -126,7 +126,7 @@
     <%= link_to edit_restaurant_path(restaurant, section: 'profitability_analytics'),
         class: 'profitability-nav-item text-decoration-none',
         data: { turbo_frame: 'restaurant_content', turbo_action: 'advance' } do %>
-      <div class="profitability-nav-icon" style="background: #0dcaf0; color: #000;">
+      <div class="profitability-nav-icon profitability-nav-icon--info">
         <i class="bi bi-graph-up"></i>
       </div>
       <div class="profitability-nav-info">

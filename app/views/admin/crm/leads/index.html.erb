@@ -23,7 +23,7 @@
            style="width: 260px;"
            data-stage="<%= stage %>">
         <div class="d-flex justify-content-between align-items-center mb-2">
-          <h6 class="mb-0 text-uppercase fw-semibold" style="font-size: 11px; letter-spacing: 0.08em;">
+          <h6 class="mb-0 text-uppercase fw-semibold text-kanban-header">
             <%= stage.humanize %>
           </h6>
           <span class="badge bg-secondary rounded-pill">
@@ -43,29 +43,3 @@
     <% end %>
   </div>
 </div>
-
-<style>
-.crm-kanban-column {
-  background: #F9FAFB;
-  border-radius: 8px;
-  padding: 12px;
-  border: 1px solid #E5E7EB;
-}
-.crm-lead-card {
-  background: white;
-  border-radius: 6px;
-  padding: 12px;
-  border: 1px solid #E5E7EB;
-  cursor: grab;
-  transition: box-shadow 0.15s;
-}
-.crm-lead-card:hover {
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-}
-.crm-lead-card.sortable-ghost {
-  opacity: 0.4;
-}
-.crm-lead-card.sortable-drag {
-  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-}
-</style>

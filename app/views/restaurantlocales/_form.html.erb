@@ -1,5 +1,5 @@
 <%= form_with(model: [restaurantlocale.restaurant, restaurantlocale]) do |form| %>
-  <div style='display:none'>
+  <div class="d-none">
   <% if @restaurant %>
     <%= form.hidden_field :restaurant_id, value: @restaurant.id %>
   <% else %>
@@ -11,7 +11,7 @@
   <% end %>
 
   <!-- Language/Locale -->
-  <div class="mb-4 mb-4">
+  <div class="mb-4">
     <%= form.label :locale, class: 'form-label' do %>
       <%= t('.locale', default: 'Language') %>
       <% unless restaurantlocale.persisted? %>
@@ -22,7 +22,7 @@
     <% if restaurantlocale.persisted? %>
       <!-- Show as read-only display on edit -->
       <%= form.hidden_field :locale %>
-      <div class="form-control bg-light" style="cursor: not-allowed;">
+      <div class="form-control bg-light pe-none" aria-readonly="true">
         <%= restaurantlocale.language %>
       </div>
       <div class="form-text">
@@ -54,7 +54,7 @@
   </div>
 
   <!-- Default Language -->
-  <div class="mb-4 mb-4">
+  <div class="mb-4">
     <%= form.label :dfault, class: 'form-label' do %>
       <%= t('.default', default: 'Default Language') %>
     <% end %>

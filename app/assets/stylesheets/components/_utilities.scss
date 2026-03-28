@@ -125,3 +125,101 @@
 // One-off vertical nudge (single use — candidate for removal)
 // ------------------------------------
 .padding-top-7px { padding-top: 7px; }
+
+// ------------------------------------
+// Constrained-width page wrappers
+// Replace repeated style="max-width: Xpx" inline styles.
+// ------------------------------------
+.mw-560  { max-width: 560px; }
+.mw-600  { max-width: 600px; }
+.mw-640  { max-width: 640px; }
+.mw-680  { max-width: 680px; }
+.mw-760  { max-width: 760px; }
+.mw-800  { max-width: 800px; }
+.mw-900  { max-width: 900px; }
+.mw-960  { max-width: 960px; }
+
+// ------------------------------------
+// Typography size one-offs
+// Replace repeated style="font-size: Npx" / style="font-size: N.Nrem" inline styles.
+// Bootstrap text utilities (.fs-1..6, .small) do not cover every use-case below.
+// ------------------------------------
+.fs-10 { font-size: 0.625rem !important; }  // 10px — tiny badge labels
+.fs-11 { font-size: 0.6875rem !important; } // 11px — CRM column headers
+.fs-12 { font-size: 0.75rem !important; }   // 12px — timestamps, metadata
+.fs-13 { font-size: 0.8125rem !important; } // 13px — secondary body text
+
+// ------------------------------------
+// CRM Kanban column header
+// Replaces inline style="font-size: 11px; letter-spacing: 0.08em;" pattern.
+// ------------------------------------
+.text-kanban-header {
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+}
+
+// ------------------------------------
+// CRM Kanban board components
+// Extracted from admin/crm/leads/index.html.erb inline <style>.
+// ------------------------------------
+.crm-kanban-column {
+  background: var(--color-gray-50, #F9FAFB);
+  border-radius: $border-radius;
+  padding: 12px;
+  border: 1px solid var(--color-gray-200, #E5E7EB);
+}
+
+.crm-lead-card {
+  background: #fff;
+  border-radius: calc(#{$border-radius} - 2px);
+  padding: 12px;
+  border: 1px solid var(--color-gray-200, #E5E7EB);
+  cursor: grab;
+  transition: box-shadow 0.15s;
+
+  &:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  &.sortable-ghost {
+    opacity: 0.4;
+  }
+
+  &.sortable-drag {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  }
+}
+
+// ------------------------------------
+// Profitability nav icon colours
+// Replaces inline style="background: #hex" on .profitability-nav-icon.
+// Use Bootstrap contextual colour classes instead.
+// ------------------------------------
+.profitability-nav-icon--primary  { background: var(--bs-primary); }
+.profitability-nav-icon--success  { background: var(--bs-success); }
+.profitability-nav-icon--purple   { background: #6f42c1; }
+
+.profitability-nav-icon--warning {
+  background: var(--bs-warning);
+  color: #000;
+}
+
+
+.profitability-nav-icon--info {
+  background: var(--bs-info);
+  color: #000;
+}
+
+// ------------------------------------
+// Footer build number
+// Replaces style="font-size: 0.65rem" inline style.
+// ------------------------------------
+.fs-build { font-size: 0.65rem; }
+
+// ------------------------------------
+// Icon display size
+// Replaces style="font-size: 3rem" / style="font-size: 4rem" used on Bootstrap Icons.
+// Bootstrap's .fs-1 tops out around 2.5rem; these cover the larger icon sizes.
+// ------------------------------------
+.fs-icon-lg   { font-size: 3rem; }
+.fs-icon-xl   { font-size: 4rem; }

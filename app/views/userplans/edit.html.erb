@@ -21,7 +21,7 @@
       <% end %>
      <% end %>
 
-     <div style="width: 100%;" data-controller="userplan-plan-change" data-userplan-plan-change-current-plan-id-value="<%= @userplan.plan_id %>">
+     <div class="w-100" data-controller="userplan-plan-change" data-userplan-plan-change-current-plan-id-value="<%= @userplan.plan_id %>">
       <%= form_with(
         url: start_plan_change_userplan_path(@userplan),
         method: :post,
@@ -32,7 +32,7 @@
           <%= select_tag :plan_id, options_for_select(Plan.limit(100).collect { |p| [t(p.key), p.id] }, @userplan.plan_id), class: 'form-select', data: { userplan_plan_change_target: 'select', action: 'change->userplan-plan-change#sync' } %>
         </div>
         <div class="d-grid">
-          <%= f.submit t(".saveChanges"), class: 'btn btn-danger', disabled: true, data: { userplan_plan_change_target: 'submit' } %>
+          <%= f.submit t(".saveChanges"), class: 'btn btn-primary', disabled: true, data: { userplan_plan_change_target: 'submit' } %>
         </div>
       <% end %>
      </div>
@@ -45,7 +45,7 @@
       <div class="col">
         <% if plan == @userplan.plan %>
          <div class="card mb-4 rounded-3 shadow-lg">
-            <div class="card-header bg-danger text-white py-3">
+            <div class="card-header bg-primary text-white py-3">
         <% else %>
           <div class="card mb-4 rounded-3 shadow-sm">
             <div class="card-header py-3">
