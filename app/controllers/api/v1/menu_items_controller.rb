@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Api::V1::MenuItemsController < Api::V1::BaseController
+  skip_after_action :verify_authorized
   before_action :set_menu, only: [:index]
 
   # GET /api/v1/menus/:menu_id/items

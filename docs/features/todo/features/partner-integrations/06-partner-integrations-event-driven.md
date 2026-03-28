@@ -1,10 +1,10 @@
 # Partner Integrations (Event-Driven, Replaceable) (v1)
 
 ## Status
-- Priority Rank: #10
+- Priority Rank: #11
 - Category: Post-Launch
 - Effort: M
-- Dependencies: JWT Token Management (#8), existing ActionCable event infrastructure, Payments::Webhooks (Stripe/Square ingestors)
+- Dependencies: JWT Token Management (#8 — completed 2026-03-27), existing ActionCable event infrastructure, Payments::Webhooks (Stripe/Square ingestors)
 
 ## Problem Statement
 mellow.menu produces rich real-time dining signals — order mutations, payment events, table occupancy — but has no formal mechanism for partners to consume them. This limits the platform's ecosystem value and prevents integration with workforce tools (scheduling, labour planning), CRM systems (guest analytics, retention), and messaging providers (receipts, nudges). An event-driven integration layer turns mellow.menu from an isolated product into a platform that partners can build on.

@@ -72,10 +72,8 @@ class AdminJwtToken < ApplicationRecord
       ip_address: ip_address,
       response_status: response_status,
     )
-    update_columns(
-      last_used_at: Time.current,
-      usage_count: usage_count + 1,
-    )
+    # Atomic SQL increment to avoid lost updates under concurrent requests.
+    self.class.where(id: id).update_all('last_used_at = NOW(), usage_count = usage_count + 1')
   end
 
   private

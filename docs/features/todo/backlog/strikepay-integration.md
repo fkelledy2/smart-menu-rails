@@ -1,7 +1,7 @@
 # Strikepay Integration — Direct Staff Tips
 
 ## Status
-- Priority Rank: #32
+- Priority Rank: #33
 - Category: Post-Launch
 - Effort: L
 - Dependencies: `Payments::Orchestrator` (existing), Strikepay API access and developer agreement, `Employee` model (existing), `Ordr` model (existing)

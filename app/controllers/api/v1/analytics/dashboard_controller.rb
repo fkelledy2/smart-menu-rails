@@ -6,16 +6,12 @@ module Api
       # JWT-protected analytics dashboard endpoint.
       # Requires the 'analytics:read' scope on the bearer token.
       class DashboardController < Api::V1::BaseController
-        include JwtAuthenticated
-
-        skip_before_action :authenticate_api_user!
-        skip_after_action  :verify_authorized
+        skip_after_action :verify_authorized
 
         before_action :set_restaurant
+        before_action -> { enforce_scope!('analytics:read') }
 
         def dashboard
-          enforce_scope!('analytics:read')
-
           render json: {
             restaurant_id: @restaurant.id,
             period: {

@@ -51,37 +51,37 @@ Rack::Attack.throttle('api/ip', limit: 60, period: 60.seconds) do |req|
   req.ip if req.path.start_with?('/api/')
 end
 
-# JWT API tokens: per-token rate limit (per minute).
-# Uses the SHA-256 hash of the raw JWT as the throttle key to avoid
-# storing sensitive material in the cache. Limit is enforced
-# by reading the token record (no DB hit — cached by IdentityCache where available).
+# JWT API tokens: per-token rate limit, honouring the rate_limit_per_minute /
+# rate_limit_per_hour fields configured at token creation time.
+# Uses the SHA-256 hash of the raw JWT as the throttle key to avoid storing
+# sensitive material in the cache. Token lookup is cached by IdentityCache
+# where available so the double lookup (limit + key) does not hit the DB twice.
 # If the token is unknown the request will fail at auth anyway; this is defence-in-depth.
-Rack::Attack.throttle('jwt_api/token/minute', limit: 60, period: 60.seconds) do |req|
+
+jwt_token_for = lambda do |req|
   auth = req.get_header('HTTP_AUTHORIZATION').to_s
-  if req.path.start_with?('/api/') && auth.start_with?('Bearer ')
-    raw_jwt = auth.split(' ', 2).last.presence
-    if raw_jwt
-      token_hash = Digest::SHA256.hexdigest(raw_jwt)
-      token = AdminJwtToken.find_by(token_hash: token_hash)
-      token ? "jwt_token:#{token.id}:minute" : nil
-    end
-  end
+  return nil unless req.path.start_with?('/api/') && auth.start_with?('Bearer ')
+
+  raw_jwt = auth.split(' ', 2).last.presence
+  return nil unless raw_jwt
+
+  AdminJwtToken.find_by(token_hash: Digest::SHA256.hexdigest(raw_jwt))
 rescue StandardError
   nil
 end
 
-Rack::Attack.throttle('jwt_api/token/hour', limit: 1000, period: 1.hour) do |req|
-  auth = req.get_header('HTTP_AUTHORIZATION').to_s
-  if req.path.start_with?('/api/') && auth.start_with?('Bearer ')
-    raw_jwt = auth.split(' ', 2).last.presence
-    if raw_jwt
-      token_hash = Digest::SHA256.hexdigest(raw_jwt)
-      token = AdminJwtToken.find_by(token_hash: token_hash)
-      token ? "jwt_token:#{token.id}:hour" : nil
-    end
-  end
-rescue StandardError
-  nil
+Rack::Attack.throttle('jwt_api/token/minute',
+                      limit: ->(req) { jwt_token_for.call(req)&.rate_limit_per_minute || 60 },
+                      period: 60.seconds) do |req|
+  token = jwt_token_for.call(req)
+  token ? "jwt_token:#{token.id}:minute" : nil
+end
+
+Rack::Attack.throttle('jwt_api/token/hour',
+                      limit: ->(req) { jwt_token_for.call(req)&.rate_limit_per_hour || 1000 },
+                      period: 1.hour) do |req|
+  token = jwt_token_for.call(req)
+  token ? "jwt_token:#{token.id}:hour" : nil
 end
 
 # Anonymous analytics: 30 per minute per IP

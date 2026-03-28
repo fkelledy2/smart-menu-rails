@@ -4,7 +4,7 @@
 Research / Strategy — All items in this directory are R&D bets, not development-ready specs. None are launch blockers. They inform the product vision and should be promoted to the main features backlog when ready for scoping.
 
 ## Priority within R&D
-From the master `PRIORITY_INDEX.md` perspective, R&D items collectively rank #17+ and should not consume sprint capacity until launch-blocker and launch-enhancer features are shipped.
+From the master `PRIORITY_INDEX.md` perspective, R&D items collectively rank beyond #33 and should not consume sprint capacity until at minimum Smartmenu Theming (#10), Partner Integrations (#11), and Menu Experiments (#12) have shipped. See `PRIORITY_INDEX.md` for the current canonical rank table.
 
 ## Recommended Build Sequence (within R&D horizon)
 

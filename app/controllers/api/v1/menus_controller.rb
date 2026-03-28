@@ -3,8 +3,7 @@
 class Api::V1::MenusController < Api::V1::BaseController
   before_action :set_restaurant, only: %i[index create]
   before_action :set_menu, only: %i[show update destroy]
-  before_action :authenticate_user!, except: %i[show index]
-  before_action :enforce_menu_scope!, only: %i[index show create update destroy]
+before_action :enforce_menu_scope!, only: %i[index show create update destroy]
 
   private
 
@@ -22,6 +21,7 @@ class Api::V1::MenusController < Api::V1::BaseController
 
   # GET /api/v1/restaurants/:restaurant_id/menus
   def index
+    authorize @restaurant, :show?
     @pagy, @menus = pagy(@restaurant.menus.includes(:menusections))
 
     render json: {

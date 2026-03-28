@@ -74,6 +74,10 @@ Explicitly list what is NOT included in this iteration.
 
 ## Open Questions
 Any unresolved decisions that need product/stakeholder input before build.
+
+## Mark as Refined
+When a requirement has been refined add a flag to the requirements .md file. requirements that have already been refined should not be refined again. Just re-prioritized in the priorit list.
+
 ```
 
 ### 4. Prioritise Using 'Next Best Action' Framework

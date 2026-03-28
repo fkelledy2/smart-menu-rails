@@ -2,7 +2,8 @@ module Api
   module V1
     class BaseController < ApplicationController
       include Pundit::Authorization
-      include Pagy::Backend if defined?(Pagy::Backend)
+      # Pagy v43+ uses Pagy::Method; fall back to Pagy::Backend for older installs
+      include(defined?(Pagy::Method) ? Pagy::Method : Pagy::Backend)
 
       protect_from_forgery with: :null_session
 
@@ -16,6 +17,7 @@ module Api
       before_action :force_json
       before_action :debug_api_request
       after_action :verify_authorized
+      after_action :log_jwt_token_usage
 
       rescue_from ActiveRecord::RecordNotFound do
         render json: { error: { code: 'not_found', message: 'Resource not found' } }, status: :not_found
@@ -65,12 +67,19 @@ module Api
         @current_api_token.present?
       end
 
+      # IMPORTANT: Must only be called from a before_action, never inline inside an
+      # action body. Rails halts the filter chain on render inside a before_action,
+      # but calling render in an action body causes AbstractController::DoubleRenderError.
       def enforce_scope!(required_scope)
         return unless api_jwt_request?
         return if Jwt::ScopeEnforcer.permitted?(token: @current_api_token, required_scope: required_scope)
 
         render json: error_response('forbidden', "Scope '#{required_scope}' is required for this endpoint"),
                status: :forbidden
+      end
+
+      def log_jwt_token_usage
+        log_api_usage_for_current_request(response.status)
       end
 
       def log_api_usage_for_current_request(response_status)
@@ -118,10 +127,10 @@ module Api
         {
           count: pagy.count,
           page: pagy.page,
-          items: pagy.items,
+          items: pagy.limit,
           pages: pagy.pages,
           next: pagy.next,
-          prev: pagy.prev,
+          prev: pagy.respond_to?(:previous) ? pagy.previous : pagy.prev,
         }
       end
 

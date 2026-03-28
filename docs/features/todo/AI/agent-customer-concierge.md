@@ -1,10 +1,10 @@
 # Customer Dietary & Ordering Concierge Agent
 
 ## Status
-- Priority Rank: #19 (Phase 1 agent — high differentiation value; ship after Framework + at least one back-office agent proves the toolbox)
+- Priority Rank: #20 (Phase 1 agent — high differentiation value; ship after Framework + at least one back-office agent proves the toolbox)
 - Category: Post-Launch — agent tier, Phase 1
 - Effort: M
-- Dependencies: Agent Framework (#16), SmartMenu customer view (existing), `Allergyn` model (existing), `Menuparticipant` model (existing), OpenAI API with streaming
+- Dependencies: Agent Framework (#17), SmartMenu customer view (existing), `Allergyn` model (existing), `Menuparticipant` model (existing), OpenAI API with streaming
 
 ## Problem Statement
 Guests arrive at the SmartMenu with varying dietary needs, group sizes, budgets, and taste preferences — but the current ordering experience is static browse-and-select. Customers with complex dietary requirements must manually scan every item for allergen information. Groups ordering together must coordinate verbally. Customers unfamiliar with a cuisine or wine list have no discovery aid beyond item descriptions. This friction reduces average order value, increases staff interruptions for dietary queries, and leaves high-margin items undiscovered. The Customer Concierge Agent addresses this by adding a natural-language discovery layer alongside the existing menu browse UI — allowing guests to describe what they want in plain language and receive an instant, personalised shortlist from the live menu. This is a customer-facing differentiator and a direct uplift to average order value.

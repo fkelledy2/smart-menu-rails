@@ -1,10 +1,10 @@
 # Real Dynamic Pricing Plans (Cost-Indexed, Price-Locked at Signup)
 
 ## Status
-- Priority Rank: #13
+- Priority Rank: #14
 - Category: Post-Launch
 - Effort: L
-- Dependencies: Cost Insights & Pricing Model Publisher (#14), Heroku Cost Inventory (#15); existing `Plan`, `Userplan`, `Payments::Orchestrator`, Stripe integration
+- Dependencies: Cost Insights & Pricing Model Publisher (#15), Heroku Cost Inventory (#16); existing `Plan`, `Userplan`, `Payments::Orchestrator`, Stripe integration
 
 ## Problem Statement
 mellow.menu's subscription pricing is currently static and manually managed. As the platform scales, usage-variable costs (AI/OCR, compute, OpenAI, DeepL) and infrastructure costs will change — making it increasingly difficult to maintain consistent gross margins. Static pricing also makes it hard to react to vendor price changes. This feature introduces versioned, cost-indexed pricing: new signups are billed at the price derived from current running costs plus target margin, while existing customers are never repriced automatically.

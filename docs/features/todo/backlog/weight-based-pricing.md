@@ -1,7 +1,7 @@
 # Weight-Based Menu Item Pricing
 
 ## Status
-- Priority Rank: #30
+- Priority Rank: #31
 - Category: Post-Launch
 - Effort: M
 - Dependencies: Existing `Menuitem` model, existing `Ordritem` model, existing SmartMenu customer ordering UI, Kitchen Display System (KDS)

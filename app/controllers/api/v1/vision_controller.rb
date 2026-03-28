@@ -69,8 +69,11 @@ module Api
       #   Body: { image: [binary image data] }
       def detect_menu_items
         unless params[:image].respond_to?(:tempfile)
+          skip_authorization
           return render json: error_response('bad_request', 'Image parameter is required'), status: :bad_request
         end
+
+        authorize :vision, :detect_menu_items?
 
         # First, extract text from the image
         text = analyze_image(

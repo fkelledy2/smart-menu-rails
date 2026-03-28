@@ -20,16 +20,30 @@ module Crm
       invitee_email = extract_invitee_email
       invitee_name = extract_invitee_name
 
+      if invitee_email.blank?
+        Rails.logger.warn('[Crm::CalendlyEventHandler] Webhook payload missing invitee email — skipping')
+        return Result.new(success?: false, lead: nil, created: false, error: 'missing_invitee_email')
+      end
+
       # Idempotency check — already processed this event
-      if event_uuid.present? && CrmLead.exists?(calendly_event_uuid: event_uuid)
+      if event_uuid.present?
         existing = CrmLead.find_by(calendly_event_uuid: event_uuid)
-        return Result.new(success?: true, lead: existing, created: false, error: nil)
+        return Result.new(success?: true, lead: existing, created: false, error: nil) if existing
       end
 
       lead, was_created = find_or_create_lead(invitee_email, invitee_name)
 
-      # Record the Calendly event UUID so we can detect replays
-      lead.update!(calendly_event_uuid: event_uuid) if event_uuid.present?
+      # Record the Calendly event UUID so we can detect replays.
+      # Rescue RecordNotUnique in case a concurrent Sidekiq retry already claimed
+      # this UUID between the idempotency check above and this write.
+      if event_uuid.present?
+        begin
+          lead.update!(calendly_event_uuid: event_uuid)
+        rescue ActiveRecord::RecordNotUnique
+          existing = CrmLead.find_by(calendly_event_uuid: event_uuid)
+          return Result.new(success?: true, lead: existing, created: false, error: nil)
+        end
+      end
 
       # Advance stage only if not already at or past demo_booked
       past_stages = %w[demo_booked demo_completed proposal_sent trial_active converted]

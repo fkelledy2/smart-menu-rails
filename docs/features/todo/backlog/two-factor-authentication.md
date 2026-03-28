@@ -1,7 +1,7 @@
 # Two-Factor Authentication (2FA)
 
 ## Status
-- Priority Rank: #27
+- Priority Rank: #28
 - Category: Post-Launch
 - Effort: M
 - Dependencies: Devise 5 (already integrated), Redis (already active via Sidekiq)

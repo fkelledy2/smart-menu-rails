@@ -1,10 +1,10 @@
 # Menu Import Agent
 
 ## Status
-- Priority Rank: #17 (first individual agent to ship after framework)
+- Priority Rank: #18 (first individual agent to ship after framework)
 - Category: Post-Launch — agent tier, Phase 1
 - Effort: M
-- Dependencies: Agent Framework (#16), existing `OcrMenuImport` / OCR infrastructure, DeepL integration, OpenAI API
+- Dependencies: Agent Framework (#17), existing `OcrMenuImport` / OCR infrastructure, DeepL integration, OpenAI API
 
 ## Problem Statement
 Restaurant onboarding is the most friction-heavy part of the mellow.menu experience. Owners must manually recreate their existing menu — transcribing items, prices, allergens, and descriptions from PDFs, photos, and printed menus. This is time-consuming, error-prone, and is a leading cause of onboarding abandonment. An existing OCR import pipeline (`OcrMenuImport`, `PdfMenuExtractionJob`, `AiMenuPolisherJob`) partially addresses this, but it produces raw extracted text that still requires significant human cleanup. The Menu Import Agent closes this gap by applying multi-step LLM reasoning to produce a clean, structured, publishable draft menu from unstructured source material — reducing the time from first upload to publishable menu from hours to minutes.
