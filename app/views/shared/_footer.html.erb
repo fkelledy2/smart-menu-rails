@@ -21,7 +21,7 @@
         <% unless current_user %>
           <div class="d-flex align-items-center justify-content-end gap-2">
             <% if build_number.present? %>
-              <span class="text-muted" style="font-size: 0.65rem;"><%= build_number %></span>
+              <span class="text-muted fs-build"><%= build_number %></span>
             <% end %>
             <ul class="nav mb-0">
               <li class="nav-item"><a href="#" class="px-1 text-muted" aria-label="<%= t('shared.footer.facebook') %>"><i class="bi bi-facebook"></i></a></li>
@@ -33,7 +33,7 @@
         <% else %>
           <% if build_number.present? %>
             <div class="text-end">
-              <span class="text-muted" style="font-size: 0.65rem;"><%= build_number %></span>
+              <span class="text-muted fs-build"><%= build_number %></span>
             </div>
           <% end %>
         <% end %>

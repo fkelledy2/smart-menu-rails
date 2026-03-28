@@ -18,11 +18,9 @@ export const OrderingModule = {
       this.currencyCode = dsCode || metaCode || 'USD';
       this.charts = this.charts || {};
       if (this.initialized) {
-        console.log('[OrderingModule] already initialized; refreshing');
         this.refresh();
         return this;
       }
-      console.log('[OrderingModule] init for restaurant', this.restaurantId);
       this.bindUI();
       this.refresh();
       this.initialized = true;
@@ -89,10 +87,6 @@ export const OrderingModule = {
         },
       },
     });
-    console.log('[OrderingModule] chart rendered', canvasId, {
-      bars: labels.length,
-      orientation: 'horizontal',
-    });
   },
 
   bindUI() {
@@ -146,9 +140,7 @@ export const OrderingModule = {
     if (emp && emp !== 'all') p.set('employee_id', emp);
     if (table && table !== 'all') p.set('table_id', table);
     if (status && status !== 'all') p.set('status', status);
-    const s = p.toString();
-    console.log('[OrderingModule] params', s);
-    return s;
+    return p.toString();
   },
 
   async refresh() {
@@ -156,7 +148,6 @@ export const OrderingModule = {
     if (this._refreshTimer) clearTimeout(this._refreshTimer);
     this._refreshTimer = setTimeout(async () => {
       try {
-        console.log('[OrderingModule] refresh start');
         this.renderLoading();
         await Promise.all([
           this.loadKpis(),
@@ -167,7 +158,6 @@ export const OrderingModule = {
           this.loadTablePerformance(),
         ]);
         await this.loadTables();
-        console.log('[OrderingModule] refresh done');
       } catch (e) {
         console.error('[OrderingModule] refresh failed', e);
       }
@@ -176,9 +166,7 @@ export const OrderingModule = {
 
   async loadKpis() {
     const url = `/restaurants/${this.restaurantId}/analytics/kpis?${this.params()}`;
-    console.log('[OrderingModule] GET', url);
     const json = await this.fetchJSON(url);
-    console.log('[OrderingModule] KPIs payload', json);
     const k = json?.kpis || {};
     const d = json?.deltas || {};
     this.updateKpiCard('gross', k.gross, d.gross);
@@ -193,9 +181,7 @@ export const OrderingModule = {
 
   async loadTimeseries() {
     const url = `/restaurants/${this.restaurantId}/analytics/timeseries?${this.params()}`;
-    console.log('[OrderingModule] GET', url);
     const json = await this.fetchJSON(url);
-    console.log('[OrderingModule] Timeseries payload', json);
     const series = Array.isArray(json?.series) ? json.series : [];
     const labels = series.map((p) => p.t);
     const gross = series.map((p) => p.gross || 0);
@@ -329,7 +315,6 @@ export const OrderingModule = {
         plugins: { legend: { display: true }, tooltip: { mode: 'index', intersect: false } },
       },
     });
-    console.log('[OrderingModule] chart rendered', canvasId, { points: labels.length });
   },
 
   renderBarChart(canvasId, labels, data, seriesLabel) {
@@ -366,7 +351,6 @@ export const OrderingModule = {
         },
       },
     });
-    console.log('[OrderingModule] chart rendered', canvasId, { bars: labels.length });
   },
 
   renderDoughnutChart(canvasId, labels, data) {
@@ -415,7 +399,6 @@ export const OrderingModule = {
         plugins: { legend: { display: true } },
       },
     });
-    console.log('[OrderingModule] chart rendered', canvasId, { slices: labels.length });
   },
 
   getCurrencyFormatter() {
@@ -431,7 +414,6 @@ export const OrderingModule = {
 
   async loadMenuMix() {
     const url = `/restaurants/${this.restaurantId}/analytics/menu_mix?${this.params()}`;
-    console.log('[OrderingModule] GET', url);
     const json = await this.fetchJSON(url);
     const rows = Array.isArray(json?.data) ? json.data : [];
     await this.ensureChartJs();
@@ -442,7 +424,6 @@ export const OrderingModule = {
 
   async loadTopItems() {
     const url = `/restaurants/${this.restaurantId}/analytics/top_items?${this.params()}`;
-    console.log('[OrderingModule] GET', url);
     const json = await this.fetchJSON(url);
     const rows = Array.isArray(json?.data) ? json.data : [];
     await this.ensureChartJs();
@@ -454,7 +435,6 @@ export const OrderingModule = {
 
   async loadStaffPerformance() {
     const url = `/restaurants/${this.restaurantId}/analytics/staff_performance?${this.params()}`;
-    console.log('[OrderingModule] GET', url);
     const json = await this.fetchJSON(url);
     const rows = Array.isArray(json?.data) ? json.data : [];
     await this.ensureChartJs();
@@ -465,7 +445,6 @@ export const OrderingModule = {
 
   async loadTablePerformance() {
     const url = `/restaurants/${this.restaurantId}/analytics/table_performance?${this.params()}`;
-    console.log('[OrderingModule] GET', url);
     const json = await this.fetchJSON(url);
     const rows = Array.isArray(json?.data) ? json.data : [];
     await this.ensureChartJs();
@@ -494,7 +473,6 @@ export const OrderingModule = {
     this.tables = {};
     this.initialized = false;
     this._odBound = false;
-    console.log('[OrderingModule] destroyed');
   },
 
   async fetchJSON(url) {
@@ -523,7 +501,6 @@ export const OrderingModule = {
 
   async loadOrdersTable() {
     const url = `/restaurants/${this.restaurantId}/analytics/orders?${this.params()}&page=1&per=50`;
-    console.log('[OrderingModule] GET', url);
     const json = await this.fetchJSON(url);
     const rows = Array.isArray(json?.rows) ? json.rows : [];
     const container = this.q('#od-table-orders');
@@ -628,7 +605,6 @@ export const OrderingModule = {
 
   async loadItemsTable() {
     const url = `/restaurants/${this.restaurantId}/analytics/items?${this.params()}&page=1&per=50`;
-    console.log('[OrderingModule] GET', url);
     const json = await this.fetchJSON(url);
     const rows = Array.isArray(json?.rows) ? json.rows : [];
     const container = this.q('#od-table-items');

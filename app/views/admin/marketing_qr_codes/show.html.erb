@@ -1,7 +1,7 @@
 <%# Admin: Marketing QR Code detail %>
 <% content_for :title, "QR: #{@qr_code.name.presence || @qr_code.token}" %>
 
-<div class="container-fluid py-4" style="max-width: 900px;">
+<div class="container-fluid py-4 mw-900">
   <div class="d-flex align-items-center gap-2 mb-4">
     <%= link_to '← All QR Codes', admin_marketing_qr_codes_path, class: 'btn btn-sm btn-outline-secondary' %>
     <h1 class="h4 mb-0 ms-2"><%= @qr_code.name.presence || '(unnamed)' %></h1>

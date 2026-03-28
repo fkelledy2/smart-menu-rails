@@ -72,7 +72,7 @@ end %>
           <i class="bi bi-x-octagon me-1"></i>Kill Enrichment
         <% end %>
       <% end %>
-      <span class="text-muted" style="font-size: 0.875rem;"><i class="bi bi-calendar3 me-1"></i>Discovered: <%= (@discovered_restaurant.discovered_at || @discovered_restaurant.created_at).strftime('%Y-%m-%d') %></span>
+      <span class="text-muted small"><i class="bi bi-calendar3 me-1" aria-hidden="true"></i>Discovered: <%= (@discovered_restaurant.discovered_at || @discovered_restaurant.created_at).strftime('%Y-%m-%d') %></span>
     </div>
   </div>
 
@@ -175,7 +175,7 @@ end %>
         <div class="row g-3">
           <div class="col-md-6">
             <label class="form-label text-muted small mb-0">Name<%= source_badge.call(:name) %></label>
-            <div class="form-control" style="background-color: #e9ecef;"><%= @discovered_restaurant.name %></div>
+            <div class="form-control bg-light text-muted" aria-readonly="true"><%= @discovered_restaurant.name %></div>
           </div>
           <div class="col-md-6">
             <label class="form-label text-muted small mb-0">Type<%= source_badge.call(:establishment_types) %></label>

@@ -26,7 +26,7 @@
   <% end %>
 
   <%# Manual add form %>
-  <div class="mb-3 p-3 rounded-2" style="background: #f0f7ff; border: 1px solid #b6d4fe;">
+  <div class="mb-3 p-3 rounded-2 bg-primary bg-opacity-10 border border-primary border-opacity-25">
     <%= form_with url: admin_discovered_restaurants_path, method: :post, local: true, class: 'd-flex align-items-end gap-2 flex-wrap' do %>
       <div>
         <%= label_tag 'discovered_restaurant[website_url]', 'Website URL', class: 'form-label small mb-0' %>

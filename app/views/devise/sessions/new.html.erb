@@ -52,7 +52,7 @@
 
             <!-- Submit Button -->
             <div class="d-grid mb-3">
-              <%= f.submit t(".login"), class: "btn btn-danger btn-lg", data: { testid: 'login-submit-btn' } %>
+              <%= f.submit t(".login"), class: "btn btn-primary btn-lg", data: { testid: 'login-submit-btn' } %>
             </div>
 
             <%- if devise_mapping.recoverable? && controller_name != 'passwords' && controller_name != 'registrations' %>
