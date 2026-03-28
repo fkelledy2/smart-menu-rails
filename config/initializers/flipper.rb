@@ -57,6 +57,12 @@ Rails.application.config.after_initialize do
   unless Flipper.exist?(:crm_sales_funnel)
     Flipper.add(:crm_sales_funnel)
   end
+
+  # Smartmenu Theming — per-smartmenu visual theme (Modern / Rustic / Elegant).
+  # Enabled by default; disable via Flipper UI to hide the selector during rollback.
+  unless Flipper.exist?(:smartmenu_theming)
+    Flipper.enable(:smartmenu_theming)
+  end
 rescue ActiveRecord::ConnectionNotEstablished, ActiveRecord::StatementInvalid, ActiveRecord::NoDatabaseError => e
   # DB may be unreachable (CI asset precompile), or tables may not exist yet (db:create / db:migrate)
   Rails.logger.warn "[Flipper] Skipping feature flag seeding: #{e.message}"

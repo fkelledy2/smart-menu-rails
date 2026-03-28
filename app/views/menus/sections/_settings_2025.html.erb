@@ -177,6 +177,32 @@
         </div>
       </div>
     <% end %>
+    <%# Menu Theme — separate form since theme lives on Smartmenu, not Menu -%>
+    <% if menu.smartmenu.present? %>
+      <%= form_with url: smartmenu_path(menu.smartmenu.slug), method: :patch,
+          data: { turbo: true } do |sm_form| %>
+        <div class="feature-card">
+          <div class="feature-card-icon" style="background: var(--color-gray-700);">
+            <i class="bi bi-palette"></i>
+          </div>
+          <div class="feature-card-content">
+            <h5 class="feature-card-title">
+              <%= t('smartmenus.theme_picker.label', default: 'Menu Theme') %>
+            </h5>
+            <p class="feature-card-description">
+              <%= t('smartmenus.theme_picker.hint', default: 'Choose a visual style for your customer-facing menu.') %>
+            </p>
+          </div>
+          <div class="feature-card-toggle">
+            <%= sm_form.select 'smartmenu[theme]',
+                Smartmenu::THEMES.map { |v| [t("smartmenus.themes.#{v}", default: v.capitalize), v] },
+                { selected: menu.smartmenu.theme },
+                class: 'form-select form-select-sm',
+                onchange: 'this.form.requestSubmit()' %>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
   </div>
   <% end %>
 </div>
