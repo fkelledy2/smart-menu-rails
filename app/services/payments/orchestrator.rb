@@ -77,6 +77,9 @@ module Payments
         restaurant: ordr.restaurant,
       )
 
+      # Stable key (no random suffix) so Sidekiq retries deduplicate at the Stripe level.
+      stable_idempotency_key = "auto_pay:#{ordr.id}"
+
       payment_attempt = PaymentAttempt.create!(
         ordr: ordr,
         restaurant: ordr.restaurant,
@@ -86,7 +89,7 @@ module Payments
         status: :processing,
         charge_pattern: charge_pattern,
         merchant_model: profile.merchant_model,
-        idempotency_key: "auto_pay:#{ordr.id}:#{SecureRandom.hex(8)}",
+        idempotency_key: stable_idempotency_key,
       )
 
       adapter = provider_adapter(provider)
@@ -96,6 +99,7 @@ module Payments
         payment_method_id: payment_method_id,
         amount_cents: amount_cents,
         currency: currency,
+        idempotency_key: stable_idempotency_key,
       )
 
       Payments::Ledger.append!(

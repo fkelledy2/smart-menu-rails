@@ -42,4 +42,11 @@ every 1.day, at: '3:30 am' do
   runner 'ExplorePageGeneratorJob.perform_later'
 end
 
+# Menu version scheduling: apply starts_at / ends_at activations every 5 minutes.
+# MenuVersionActivationService stores the scheduled intent with is_active: false;
+# this job is the only thing that actually flips versions live/expired on schedule.
+every 5.minutes do
+  runner 'MenuVersionSchedulerJob.perform_later'
+end
+
 # Learn more: http://github.com/javan/whenever

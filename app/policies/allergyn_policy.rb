@@ -8,7 +8,7 @@ class AllergynPolicy < ApplicationPolicy
   end
 
   def create?
-    user.present?
+    owner?
   end
 
   def update?

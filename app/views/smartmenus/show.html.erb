@@ -14,18 +14,41 @@
 <% end %>
 
 <%
-  # Determine view type: allow explicit override via params[:view]
-  # - ?view=customer forces customer view
-  # - ?view=staff forces staff view
-  if params[:view] == 'customer'
-    show_customer_view = true
-  elsif params[:view] == 'staff'
-    show_customer_view = false
-  else
-    show_customer_view = @force_customer_view || !current_user
-  end
+  # /t/ is the customer QR code URL — everyone sees customer view by default.
+  # Logged-in staff can opt into staff controls with ?view=staff.
+  # @staff_view_mode is set in the controller (current_user present AND params[:view]=='staff').
+  show_customer_view = !@staff_view_mode
 %>
 
+
+<%# Staff mode indicator — outside fragment cache, only visible to logged-in users.
+    Tells staff which view they're in and gives a one-click switch.
+    Customer view is the default; staff view requires ?view=staff. %>
+<% if current_user %>
+  <div class="staff-mode-indicator py-1 px-3 d-flex align-items-center gap-2 small" data-testid="staff-mode-indicator">
+    <% if show_customer_view %>
+      <span class="text-muted">
+        <i class="bi bi-eye me-1"></i><%= t('smartmenus.staff_mode.viewing_as_customer', default: 'Viewing as customer') %>
+      </span>
+      <%= link_to table_link_path(@smartmenu.public_token, view: 'staff'),
+          class: 'btn btn-outline-secondary btn-sm py-0 px-2',
+          data: { turbo: false },
+          title: t('smartmenus.staff_mode.switch_to_staff', default: 'Switch to staff controls') do %>
+        <i class="bi bi-person-badge me-1"></i><%= t('smartmenus.staff_mode.staff_view', default: 'Staff view') %>
+      <% end %>
+    <% else %>
+      <span class="badge bg-secondary">
+        <i class="bi bi-person-badge me-1"></i><%= t('smartmenus.staff_mode.staff_mode_on', default: 'Staff mode') %>
+      </span>
+      <%= link_to table_link_path(@smartmenu.public_token),
+          class: 'btn btn-outline-secondary btn-sm py-0 px-2',
+          data: { turbo: false },
+          title: t('smartmenus.staff_mode.switch_to_customer', default: 'Switch to customer view') do %>
+        <i class="bi bi-eye me-1"></i><%= t('smartmenus.staff_mode.customer_view', default: 'Customer view') %>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>
 
 <%# Test-only: disable modal backdrops and transitions to make UI automation reliable %>
 <% if Rails.env.test? %>
@@ -46,7 +69,7 @@
   </div>
 <% else %>
   <% participant_locale = (@ordrparticipant&.preferredlocale || @menuparticipant&.preferredlocale).to_s.downcase.presence %>
-  <% cache [@smartmenu, @menu, @restaurant, @header_cache_buster, @active_menu_version&.id, I18n.locale, participant_locale, show_customer_view ? 'customer' : 'staff', @smartmenu.theme], expires_in: 6.hours do %>
+  <% cache [@smartmenu, @menu, @restaurant, @header_cache_buster, @active_menu_version&.id, I18n.locale, participant_locale, show_customer_view ? 'customer' : 'staff', @effective_theme], expires_in: 6.hours do %>
   <% if show_customer_view %>
   <div id="menuc" class="menu-sticky-header menu-sticky-header-mobile" data-testid="smartmenu-customer-view">
   <% else %>
@@ -78,7 +101,7 @@
     <% else %>
         <% participant_locale = (@ordrparticipant&.preferredlocale || @menuparticipant&.preferredlocale).to_s.downcase.presence %>
         <% allergyns_updated_at = @allergyns.map(&:updated_at).compact.max %>
-        <% cache_key = [@smartmenu, @menu, @active_menu_version&.id, allergyns_updated_at, I18n.locale, participant_locale, show_customer_view ? 'customer' : 'staff', @smartmenu.theme] %>
+        <% cache_key = [@smartmenu, @menu, @active_menu_version&.id, allergyns_updated_at, I18n.locale, participant_locale, show_customer_view ? 'customer' : 'staff', @effective_theme] %>
         <% cache cache_key, expires_in: 4.hours do %>
         <% if show_customer_view %>
             <%= render partial: "smartmenus/showMenuContentCustomer", locals: { order: @openOrder, menu: @menu, allergyns: @allergyns, restaurantCurrency: @restaurantCurrency, ordrparticipant: @ordrparticipant, menuparticipant: @menuparticipant, tablesetting: @tablesetting } %>

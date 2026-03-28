@@ -137,6 +137,69 @@
     border-top-color: var(--border-default);
   }
 
+  .modal-body {
+    color: var(--text-primary);
+  }
+
+  .modal-title {
+    color: var(--text-primary);
+  }
+
+  // Bootstrap btn-primary → theme color
+  .modal-content .btn-primary {
+    background-color: var(--color-primary) !important;
+    border-color: var(--color-primary) !important;
+
+    &:disabled,
+    &[disabled] {
+      background-color: var(--color-primary) !important;
+      border-color: var(--color-primary) !important;
+      opacity: 0.5;
+    }
+  }
+
+  // Capacity preset / allergen outline buttons
+  .modal-content .btn-outline-primary {
+    color: var(--color-primary) !important;
+    border-color: var(--color-primary) !important;
+
+    &:hover,
+    &.active,
+    &:active {
+      background-color: var(--color-primary) !important;
+      color: #fff !important;
+    }
+  }
+
+  // Nav pills (payment method tabs)
+  .modal-content .nav-pills .nav-link {
+    color: var(--text-secondary);
+
+    &.active {
+      background-color: var(--color-primary) !important;
+      color: #fff !important;
+    }
+
+    &:hover:not(.active) {
+      background-color: var(--surface-tertiary);
+      color: var(--text-primary);
+    }
+  }
+
+  // Bill receipt lines (pay modal)
+  .bill-line-header {
+    border-bottom-color: var(--border-default) !important;
+  }
+
+  // Allergen / list-group hover states
+  .modal-content .list-group-item-action {
+    &:hover,
+    &:focus {
+      background-color: var(--surface-tertiary) !important;
+      color: var(--text-primary) !important;
+    }
+  }
+
   .btn-close {
     filter: invert(1) grayscale(100%) brightness(200%);
   }
@@ -538,14 +601,10 @@
     border-color: var(--border-strong) !important;
     color: var(--text-secondary) !important;
 
-    &.active {
-      border-bottom-color: var(--color-primary);
-    }
-
     &.active,
     &:active {
-      background: #dc2626 !important;
-      border-color: #dc2626 !important;
+      background: var(--color-primary) !important;
+      border-color: var(--color-primary) !important;
       color: #fff !important;
     }
   }
@@ -661,19 +720,27 @@
   // Layout toggle (card/list view switcher)
   .layout-toggle-group {
     border-color: var(--border-strong) !important;
+    background: var(--surface-secondary) !important;
 
     .layout-toggle-btn {
       background: transparent !important;
       color: var(--text-secondary) !important;
-      border-color: var(--border-strong) !important;
+      border-left-color: var(--border-strong) !important;
 
       &.active {
-        background: #dc2626 !important;
+        background: var(--color-primary) !important;
         color: #fff !important;
+        border-left-color: var(--color-primary) !important;
       }
 
       &:not(.active):hover {
         background: var(--surface-tertiary) !important;
+        color: var(--text-primary) !important;
+      }
+
+      &.bg-warning {
+        background: rgba(245, 158, 11, 0.15) !important;
+        color: var(--color-warning, #f59e0b) !important;
       }
     }
   }
@@ -681,23 +748,22 @@
   // Primary CTA (Add to order / price button) — make it pop in dark mode
   .btn-touch-primary,
   .addItemToOrder {
-    background: #ef4444 !important;
+    background: var(--color-primary) !important;
     color: #fff !important;
-    box-shadow: 0 2px 12px rgb(239, 68, 68, 0.4) !important;
 
     &:disabled,
     &[disabled] {
-      background: #ef4444 !important;
+      background: var(--color-primary) !important;
       color: #fff !important;
       opacity: 0.85;
     }
   }
 
   .quick-add-stepper-vertical {
-    background: #ef4444 !important;
+    background: var(--color-primary) !important;
 
     .quick-add-qty {
-      background: rgb(0, 0, 0, 0.15) !important;
+      background: rgba(0, 0, 0, 0.15) !important;
     }
   }
 
@@ -812,12 +878,40 @@
   }
 
   // --- Bottom Sheet ---
+  // Bottom sheet surfaces
+  --surface-sheet: var(--surface-elevated);
+
+  .bottom-sheet,
+  .bottom-sheet.bottom-sheet--peek,
+  .bottom-sheet.bottom-sheet--half,
+  .bottom-sheet.bottom-sheet--full {
+    background: var(--surface-elevated) !important;
+    color: var(--text-primary);
+    border-top-color: var(--border-default);
+  }
+
+  .cart-bottom-sheet,
+  .cart-bottom-sheet.bottom-sheet--peek,
+  .cart-bottom-sheet.bottom-sheet--half,
+  .cart-bottom-sheet.bottom-sheet--full {
+    background: var(--surface-elevated) !important;
+    border-top-color: var(--border-default);
+  }
+
+  .bottom-sheet-backdrop {
+    background: rgba(0, 0, 0, 0.6) !important;
+  }
+
   .bottom-sheet-container {
     background-color: var(--surface-elevated);
   }
 
   .bottom-sheet-handle-bar {
     background-color: var(--border-strong);
+  }
+
+  .cart-sheet__peek-bar {
+    border-bottom-color: var(--border-default);
   }
 
   // Party size selector text

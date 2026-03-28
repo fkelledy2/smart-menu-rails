@@ -64,6 +64,7 @@ module Users
         # 5. User is logged out and they login to a new account which doesn't match their old one
         flash[:alert] = t('omniauth.email_exists', provider: auth.provider.titleize)
         redirect_to new_user_session_path
+        return
       else
         @user = create_user
       end

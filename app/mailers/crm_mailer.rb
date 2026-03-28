@@ -11,7 +11,7 @@ class CrmMailer < ApplicationMailer
     mail(
       to: crm_email_send.to_email,
       subject: crm_email_send.subject,
-      message_id: "<crm-#{crm_email_send.id}-#{SecureRandom.hex(8)}@mellow.menu>",
+      message_id: crm_email_send.mailer_message_id.presence || "<crm-#{crm_email_send.id}-#{SecureRandom.hex(8)}@mellow.menu>",
     )
   end
 end

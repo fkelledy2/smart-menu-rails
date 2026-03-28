@@ -34,9 +34,9 @@ class AllergynPolicyTest < ActiveSupport::TestCase
     assert policy.create?
   end
 
-  test 'create is allowed for guest (user.present? is always true via User.new)' do
+  test 'create is denied for guest (not an owner)' do
     policy = AllergynPolicy.new(nil, @allergyn)
-    assert policy.create?
+    assert_not policy.create?
   end
 
   test 'update is allowed for owner' do

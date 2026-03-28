@@ -101,7 +101,7 @@ class Api::V1::MenusController < Api::V1::BaseController
 
   def menu_with_items_json(menu)
     menu_data = menu_json(menu)
-    menu_data[:sections] = menu.menusections.includes(:menuitems).map do |section|
+    menu_data[:sections] = menu.menusections.includes(menuitems: :allergyns).map do |section|
       {
         id: section.id,
         name: section.name,
@@ -115,11 +115,11 @@ class Api::V1::MenusController < Api::V1::BaseController
             price: item.price,
             menu_section_id: item.menusection_id,
             active: item.active?,
-            allergens: item.allergens || [],
+            allergens: item.allergyns.map(&:name),
             dietary_info: {
-              vegetarian: item.vegetarian?,
-              vegan: item.vegan?,
-              gluten_free: item.gluten_free?,
+              vegetarian: false,
+              vegan: false,
+              gluten_free: false,
             },
             created_at: item.created_at,
             updated_at: item.updated_at,

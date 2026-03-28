@@ -26,3 +26,15 @@
 - [pattern_checkout_qr_missing_payment_attempt.md](pattern_checkout_qr_missing_payment_attempt.md) — checkout_qr Stripe path creates no PaymentAttempt — webhook reconciliation fails, Ledger entity_id is nil
 - [pattern_dw_orders_mv_scope_all_fallback.md](pattern_dw_orders_mv_scope_all_fallback.md) — DwOrdersMvPolicy falls back to scope.all when restaurant_id column absent — cross-tenant analytics data leak
 - [pattern_demo_bookings_weak_admin_guard.md](pattern_demo_bookings_weak_admin_guard.md) — Admin::DemoBookingsController require_mellow_admin! missing admin? check — any @mellow.menu user can access DemoBookings
+- [pattern_calendly_lost_lead_transition.md](pattern_calendly_lost_lead_transition.md) — CalendlyEventHandler past_stages missing 'lost' — webhook fails and retries forever for lost leads (FIXED)
+- [pattern_deliver_later_no_message_id.md](pattern_deliver_later_no_message_id.md) — deliver_later returns a job proxy not Mail::Message; mailer_message_id was never stored (FIXED)
+- [pattern_stimulus_undeclared_target.md](pattern_stimulus_undeclared_target.md) — data-crm-kanban-target="column" declared in view but not in controller static targets — Stimulus warnings (FIXED)
+- [pattern_menuitem_methods_outside_class.md](pattern_menuitem_methods_outside_class.md) — size_cost_analysis and has_size_mappings? defined after class closes in menuitem.rb — NoMethodError on any call
+- [pattern_api_v1_dietary_nomethoderr.md](pattern_api_v1_dietary_nomethoderr.md) — V1 menus/items controllers call allergens/vegetarian?/vegan?/gluten_free? on Menuitem — only on OcrMenuItem, 500 on every request
+- [pattern_staff_invitation_archived_column.md](pattern_staff_invitation_archived_column.md) — employees.exists?(archived: false) queries non-existent column; Employee uses status enum not boolean
+- [pattern_square_inline_forced_succeeded.md](pattern_square_inline_forced_succeeded.md) — create_inline_payment sets PaymentAttempt :succeeded unconditionally, ignores Square's actual returned status
+- [pattern_ordrs_broadcast_outside_format.md](pattern_ordrs_broadcast_outside_format.md) — broadcast_state inside respond_to but outside format block — fires for all formats, HTML gets 406
+- [pattern_localization_retry_symbol_keys.md](pattern_localization_retry_symbol_keys.md) — MenuLocalizationRetryJob used symbol key access; Sidekiq JSON round-trip converts to strings — all retries silently did nothing (FIXED)
+- [pattern_kitchen_channel_unauth_status_mutation.md](pattern_kitchen_channel_unauth_status_mutation.md) — KitchenChannel handle_status_update had no current_user check — any guest WebSocket client could mutate order status (FIXED)
+- [pattern_menu_version_scheduler_missing.md](pattern_menu_version_scheduler_missing.md) — MenuVersionActivationService scheduled activation (starts_at/ends_at) stored is_active:false with no job to apply it — feature was dead (FIXED)
+- [pattern_checkout_qr_nonidempotent_key.md](pattern_checkout_qr_nonidempotent_key.md) — checkout_qr Stripe path used random idempotency key suffix — double-clicks create duplicate PaymentAttempts (FIXED)

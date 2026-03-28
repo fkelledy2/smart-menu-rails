@@ -141,14 +141,14 @@ class TipsController < ApplicationController
     end
 
     to_update = tips.where(id: ids)
-    # Use update_all for bulk updates (skips callbacks for performance)
-    # Only update status, not timestamps
-    to_update.update_all(status: Tip.statuses[status], updated_at: Time.current)
 
-    # Run authorizations in batch
-    Tip.where(id: ids).find_each do |tip|
+    # Authorize each in-scope tip BEFORE mutating — post-hoc auth is useless
+    to_update.find_each do |tip|
       authorize tip, :update?
     end
+
+    # Use update_all for bulk updates (skips callbacks for performance)
+    to_update.update_all(status: Tip.statuses[status], updated_at: Time.current)
 
     respond_to do |format|
       format.turbo_stream do

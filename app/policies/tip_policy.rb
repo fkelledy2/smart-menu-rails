@@ -12,7 +12,7 @@ class TipPolicy < ApplicationPolicy
   end
 
   def create?
-    user.present?
+    user.present? && owns_tip?
   end
 
   def update?

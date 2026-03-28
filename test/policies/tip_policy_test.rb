@@ -53,15 +53,19 @@ class TipPolicyTest < ActiveSupport::TestCase
 
   # === CREATE TESTS ===
 
-  test 'should allow authenticated user to create tip' do
-    policy = TipPolicy.new(@user, Tip.new)
+  test 'should allow owner to create tip for their restaurant' do
+    policy = TipPolicy.new(@user, Tip.new(restaurant: @restaurant))
     assert policy.create?
   end
 
-  test 'should allow anonymous user to create tip' do
-    policy = TipPolicy.new(nil, Tip.new)
-    # ApplicationPolicy creates User.new for nil user, so user.present? is true
-    assert policy.create?, 'ApplicationPolicy creates User.new for anonymous users'
+  test 'should deny authenticated user from creating tip for another restaurant' do
+    policy = TipPolicy.new(@user, Tip.new(restaurant: @other_restaurant))
+    assert_not policy.create?
+  end
+
+  test 'should deny guest from creating tip (no restaurant ownership)' do
+    policy = TipPolicy.new(nil, Tip.new(restaurant: @restaurant))
+    assert_not policy.create?
   end
 
   # === UPDATE TESTS ===
@@ -137,11 +141,11 @@ class TipPolicyTest < ActiveSupport::TestCase
   test 'should handle nil tip record' do
     policy = TipPolicy.new(@user, nil)
 
-    # Public methods should still work
+    # index is always allowed for authenticated users
     assert policy.index?
-    assert policy.create?
 
-    # Owner-based methods should return false for nil record (policy handles nil gracefully)
+    # create/show/update/destroy require restaurant ownership — nil record has no restaurant
+    assert_not policy.create?
     assert_not policy.show?
     assert_not policy.update?
     assert_not policy.destroy?

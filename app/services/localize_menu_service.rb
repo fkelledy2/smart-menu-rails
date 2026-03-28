@@ -82,10 +82,13 @@ class LocalizeMenuService
 
       Rails.logger.info("[LocalizeMenuService] Localized #{stats[:menus_processed]} menus to locale #{restaurant_locale.locale}")
 
-      # Queue rate-limited items for retry
+      # Queue rate-limited items for retry.
+      # Stringify keys before passing to Sidekiq — JSON serialisation converts symbol keys
+      # to strings, so the job must receive string-keyed hashes consistently.
       if stats[:rate_limited_items].any?
         Rails.logger.info("[LocalizeMenuService] Queueing #{stats[:rate_limited_items].count} rate-limited items for retry")
-        MenuLocalizationRetryJob.perform_in(5.minutes, stats[:rate_limited_items])
+        safe_items = stats[:rate_limited_items].map(&:stringify_keys)
+        MenuLocalizationRetryJob.perform_in(5.minutes, safe_items)
       end
 
       stats

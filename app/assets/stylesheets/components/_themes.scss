@@ -250,3 +250,478 @@
   color: #374151;
   font-weight: 500;
 }
+
+// =============================================================================
+// DARK MODE — per-theme variable overrides
+// Combined [data-theme][data-color-scheme] has specificity [0,2,0] which
+// beats the single-attribute block [0,1,0] above, so these always win.
+// _themes.scss is loaded after _dark_mode.scss (see application.bootstrap.scss)
+// so cascade order is also in our favour.
+// =============================================================================
+
+[data-theme="modern"][data-color-scheme="dark"] {
+  --surface-sheet:     #1e293b;
+  --sm-bg:             #0f172a;
+  --sm-card-bg:        #1e293b;
+  --sm-section-bg:     #1e293b;
+  --sm-text-primary:   #f1f5f9;
+  --sm-text-secondary: #cbd5e1;
+  --sm-text-muted:     #94a3b8;
+  --sm-divider-color:  #334155;
+  --sm-primary:        #fb7185;
+  --sm-primary-hover:  #f43f5e;
+  --surface-primary:   #1e293b;
+  --surface-secondary: #0f172a;
+  --surface-tertiary:  #293548;
+  --surface-elevated:  #253044;
+  --text-primary:      #f1f5f9;
+  --text-secondary:    #cbd5e1;
+  --text-tertiary:     #94a3b8;
+  --text-link:         #93c5fd;
+  --border-default:    #334155;
+  --border-strong:     #475569;
+  --color-primary:     #fb7185;
+  --input-bg:          #1e293b;
+  --input-border:      #334155;
+  --input-text:        #f1f5f9;
+  --input-placeholder: #94a3b8;
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-theme="modern"]:not([data-color-scheme="light"]) {
+    --surface-sheet:     #1e293b;
+    --sm-bg:             #0f172a;
+    --sm-card-bg:        #1e293b;
+    --sm-section-bg:     #1e293b;
+    --sm-text-primary:   #f1f5f9;
+    --sm-text-secondary: #cbd5e1;
+    --sm-text-muted:     #94a3b8;
+    --sm-divider-color:  #334155;
+    --sm-primary:        #fb7185;
+    --sm-primary-hover:  #f43f5e;
+    --surface-primary:   #1e293b;
+    --surface-secondary: #0f172a;
+    --surface-tertiary:  #293548;
+    --surface-elevated:  #253044;
+    --text-primary:      #f1f5f9;
+    --text-secondary:    #cbd5e1;
+    --text-tertiary:     #94a3b8;
+    --text-link:         #93c5fd;
+    --border-default:    #334155;
+    --border-strong:     #475569;
+    --color-primary:     #fb7185;
+    --input-bg:          #1e293b;
+    --input-border:      #334155;
+    --input-text:        #f1f5f9;
+    --input-placeholder: #94a3b8;
+  }
+}
+
+[data-theme="rustic"][data-color-scheme="dark"] {
+  --surface-sheet:     #261608;
+  --sm-bg:             #140d04;
+  --sm-card-bg:        #1f1309;
+  --sm-section-bg:     #261608;
+  --sm-text-primary:   #fef3c7;
+  --sm-text-secondary: #fde68a;
+  --sm-text-muted:     #a16207;
+  --sm-divider-color:  #5c3a1e;
+  --sm-primary:        #f59e0b;
+  --sm-primary-hover:  #d97706;
+  --surface-primary:   #1f1309;
+  --surface-secondary: #140d04;
+  --surface-tertiary:  #261608;
+  --surface-elevated:  #2d1a0a;
+  --text-primary:      #fef3c7;
+  --text-secondary:    #fde68a;
+  --text-tertiary:     #a16207;
+  --text-link:         #fbbf24;
+  --border-default:    #5c3a1e;
+  --border-strong:     #7a4e2a;
+  --color-primary:     #f59e0b;
+  --input-bg:          #1f1309;
+  --input-border:      #5c3a1e;
+  --input-text:        #fef3c7;
+  --input-placeholder: #a16207;
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-theme="rustic"]:not([data-color-scheme="light"]) {
+    --surface-sheet:     #261608;
+    --sm-bg:             #140d04;
+    --sm-card-bg:        #1f1309;
+    --sm-section-bg:     #261608;
+    --sm-text-primary:   #fef3c7;
+    --sm-text-secondary: #fde68a;
+    --sm-text-muted:     #a16207;
+    --sm-divider-color:  #5c3a1e;
+    --sm-primary:        #f59e0b;
+    --sm-primary-hover:  #d97706;
+    --surface-primary:   #1f1309;
+    --surface-secondary: #140d04;
+    --surface-tertiary:  #261608;
+    --surface-elevated:  #2d1a0a;
+    --text-primary:      #fef3c7;
+    --text-secondary:    #fde68a;
+    --text-tertiary:     #a16207;
+    --text-link:         #fbbf24;
+    --border-default:    #5c3a1e;
+    --border-strong:     #7a4e2a;
+    --color-primary:     #f59e0b;
+    --input-bg:          #1f1309;
+    --input-border:      #5c3a1e;
+    --input-text:        #fef3c7;
+    --input-placeholder: #a16207;
+  }
+}
+
+[data-theme="elegant"][data-color-scheme="dark"] {
+  --surface-sheet:     #1a1810;
+  --sm-bg:             #080706;
+  --sm-card-bg:        #111009;
+  --sm-section-bg:     #111009;
+  --sm-text-primary:   #f5f5f4;
+  --sm-text-secondary: #d6d3d1;
+  --sm-text-muted:     #a8a29e;
+  --sm-divider-color:  #2c2820;
+  --sm-primary:        #c9a96e;
+  --sm-primary-hover:  #b8966a;
+  --sm-accent:         #c9a96e;
+  --surface-primary:   #111009;
+  --surface-secondary: #080706;
+  --surface-tertiary:  #1a1810;
+  --surface-elevated:  #1a1810;
+  --text-primary:      #f5f5f4;
+  --text-secondary:    #d6d3d1;
+  --text-tertiary:     #a8a29e;
+  --text-link:         #c9a96e;
+  --border-default:    #2c2820;
+  --border-strong:     #44403c;
+  --color-primary:     #c9a96e;
+  --input-bg:          #111009;
+  --input-border:      #2c2820;
+  --input-text:        #f5f5f4;
+  --input-placeholder: #a8a29e;
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-theme="elegant"]:not([data-color-scheme="light"]) {
+    --surface-sheet:     #1a1810;
+    --sm-bg:             #080706;
+    --sm-card-bg:        #111009;
+    --sm-section-bg:     #111009;
+    --sm-text-primary:   #f5f5f4;
+    --sm-text-secondary: #d6d3d1;
+    --sm-text-muted:     #a8a29e;
+    --sm-divider-color:  #2c2820;
+    --sm-primary:        #c9a96e;
+    --sm-primary-hover:  #b8966a;
+    --sm-accent:         #c9a96e;
+    --surface-primary:   #111009;
+    --surface-secondary: #080706;
+    --surface-tertiary:  #1a1810;
+    --surface-elevated:  #1a1810;
+    --text-primary:      #f5f5f4;
+    --text-secondary:    #d6d3d1;
+    --text-tertiary:     #a8a29e;
+    --text-link:         #c9a96e;
+    --border-default:    #2c2820;
+    --border-strong:     #44403c;
+    --color-primary:     #c9a96e;
+    --input-bg:          #111009;
+    --input-border:      #2c2820;
+    --input-text:        #f5f5f4;
+    --input-placeholder: #a8a29e;
+  }
+}
+
+// =============================================================================
+// BASE APPLICATION — stamp theme vars onto the DOM
+// Variables are defined on <html> above; this section applies them to the
+// elements that actually render. Without this, vars are set but never used.
+// SPECIFICITY NOTE: _dark_mode.scss uses `:root[data-color-scheme="dark"] body`
+// which has specificity [0,1,2]. We must match that so our themed body
+// background wins in dark mode (dark --sm-bg overrides light --sm-bg via the
+// [data-theme][data-color-scheme] blocks above). Using :root[data-theme] gives
+// specificity [0,1,2]; cascade order (themes loaded last) then decides.
+// =============================================================================
+
+:root[data-theme="modern"],
+:root[data-theme="rustic"],
+:root[data-theme="elegant"] {
+  // Body: typography baseline + background
+  body {
+    background-color: var(--sm-bg);
+    color: var(--sm-text-primary);
+    font-family: var(--sm-font-family-base);
+    font-size: var(--sm-font-size-base);
+    line-height: var(--sm-line-height-base);
+  }
+
+  // Main content container
+  .container-fluid {
+    background-color: var(--sm-bg);
+    color: var(--sm-text-primary);
+    font-family: var(--sm-font-family-base);
+  }
+
+  // Sticky navigation header
+  .menu-sticky-header,
+  .menu-sticky-header-mobile {
+    background-color: var(--sm-bg) !important;
+    color: var(--sm-text-primary);
+    font-family: var(--sm-font-family-base);
+    border-bottom-color: var(--sm-divider-color);
+
+    .restaurant-name,
+    .menu-name { color: var(--sm-text-primary); }
+
+    .menu-search-input {
+      background-color: var(--sm-card-bg);
+      color: var(--sm-text-primary);
+      border-color: var(--sm-divider-color);
+    }
+  }
+
+  // Section navigation tabs
+  .section-tab {
+    font-family: var(--sm-font-family-base);
+    background-color: var(--sm-card-bg);
+    color: var(--sm-text-secondary);
+    border-color: var(--sm-divider-color);
+
+    &.active {
+      background-color: var(--sm-primary);
+      border-color: var(--sm-primary);
+      color: #fff;
+    }
+
+    &:hover:not(.active) {
+      border-color: var(--sm-primary);
+      color: var(--sm-primary);
+    }
+  }
+
+  // Menu section titles
+  .menu-section-title {
+    font-family: var(--sm-font-family-heading);
+    color: var(--sm-primary);
+  }
+
+  // Menu item cards
+  .menu-item-card-mobile .card {
+    background-color: var(--sm-card-bg);
+    border-color: var(--sm-divider-color);
+    border-radius: var(--sm-card-radius);
+    box-shadow: var(--sm-card-shadow);
+    color: var(--sm-text-primary);
+
+    .card-header,
+    .card-footer { background-color: transparent; }
+  }
+
+  // CTA buttons
+  .btn-touch-primary,
+  .addItemToOrder {
+    background-color: var(--sm-primary) !important;
+    border-color: var(--sm-primary) !important;
+    border-radius: var(--sm-button-radius);
+
+    &:hover,
+    &:focus {
+      background-color: var(--sm-primary-hover) !important;
+      border-color: var(--sm-primary-hover) !important;
+    }
+  }
+
+  // Section nav bar (search row + tabs strip)
+  .menu-sections-nav-mobile {
+    background: var(--sm-bg);
+    border-bottom-color: var(--sm-divider-color);
+  }
+
+  .sections-search-row .menu-search-input {
+    background: var(--sm-card-bg);
+    border-color: var(--sm-divider-color);
+    color: var(--sm-text-primary);
+
+    &::placeholder { color: var(--sm-text-muted); }
+
+    &:focus {
+      border-color: var(--sm-primary);
+      background: var(--sm-bg);
+    }
+  }
+
+  .sections-tabs-container {
+    &::-webkit-scrollbar-track { background: var(--sm-bg); }
+    &::-webkit-scrollbar-thumb { background: var(--sm-divider-color); }
+  }
+
+  .sections-tabs {
+    background: var(--sm-bg);
+  }
+
+  // Modals — surface, borders, typography
+  .modal-content {
+    background-color: var(--sm-card-bg);
+    border-color: var(--sm-divider-color);
+    color: var(--sm-text-primary);
+  }
+
+  .modal-header {
+    border-bottom-color: var(--sm-divider-color);
+  }
+
+  .modal-footer {
+    border-top-color: var(--sm-divider-color);
+  }
+
+  .modal-title {
+    color: var(--sm-text-primary);
+  }
+
+  // Bootstrap btn-primary → theme primary inside modals
+  .modal-content .btn-primary {
+    background-color: var(--sm-primary) !important;
+    border-color: var(--sm-primary) !important;
+
+    &:hover,
+    &:focus {
+      background-color: var(--sm-primary-hover) !important;
+      border-color: var(--sm-primary-hover) !important;
+    }
+  }
+
+  // Capacity preset buttons (start order modal)
+  .modal-content .btn-outline-primary {
+    color: var(--sm-primary) !important;
+    border-color: var(--sm-primary) !important;
+
+    &:hover,
+    &.active,
+    &:active {
+      background-color: var(--sm-primary) !important;
+      color: #fff !important;
+    }
+  }
+
+  // Nav pills (payment method tabs in pay modal)
+  .modal-content .nav-pills .nav-link {
+    color: var(--sm-text-secondary);
+
+    &.active {
+      background-color: var(--sm-primary) !important;
+      color: #fff;
+    }
+
+    &:hover:not(.active) {
+      background-color: var(--sm-section-bg);
+      color: var(--sm-primary);
+    }
+  }
+
+  // Bill receipt lines (pay modal)
+  .bill-line-header {
+    border-bottom-color: var(--sm-divider-color);
+  }
+
+  // Allergen list rows
+  .modal-content .list-group-item {
+    background-color: var(--sm-card-bg);
+    border-color: var(--sm-divider-color);
+    color: var(--sm-text-primary);
+  }
+
+  .modal-content .list-group-item-action {
+    &:hover,
+    &:focus {
+      background-color: var(--sm-section-bg) !important;
+      color: var(--sm-text-primary) !important;
+    }
+  }
+
+  // Layout toggle (card / list / allergen)
+  .layout-toggle-group {
+    border-color: var(--sm-divider-color);
+    background: var(--sm-card-bg);
+
+    .layout-toggle-btn {
+      background: var(--sm-card-bg);
+      color: var(--sm-text-secondary);
+
+      &.active {
+        background: var(--sm-primary);
+        color: #fff;
+        border-left-color: var(--sm-primary);
+      }
+
+      &:not(.active):hover {
+        background: var(--sm-section-bg);
+        color: var(--sm-text-primary);
+      }
+
+      & + .layout-toggle-btn {
+        border-left-color: var(--sm-divider-color);
+      }
+
+      &.bg-warning {
+        background: var(--sm-section-bg) !important;
+        color: var(--sm-accent) !important;
+      }
+    }
+  }
+}
+
+// =============================================================================
+// PER-THEME TAB PERSONALITY
+// Overrides the shared section-tab block above with theme-specific shapes,
+// fonts, and border styles.
+// =============================================================================
+
+// Modern — geometric, uppercase, tight tracked
+:root[data-theme="modern"] .section-tab {
+  border-radius: var(--sm-badge-radius);
+  border-width: 2px;
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+// Rustic — italic Playfair, dashed border, warm amber active
+:root[data-theme="rustic"] .section-tab {
+  border-radius: var(--sm-badge-radius);
+  border-style: dashed;
+  border-width: 2px;
+  font-style: italic;
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.01em;
+  text-transform: none;
+
+  &.active {
+    background-color: var(--sm-accent) !important;
+    border-style: solid;
+    border-color: var(--sm-accent) !important;
+    color: var(--sm-text-primary) !important;
+  }
+
+  &:hover:not(.active) {
+    border-color: var(--sm-accent) !important;
+    color: var(--sm-accent) !important;
+  }
+}
+
+// Elegant — hairline border, wide tracking, all-caps Raleway
+:root[data-theme="elegant"] .section-tab {
+  background-color: transparent;
+  border-radius: var(--sm-button-radius);
+  border-width: 1px;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+
+  &.active { letter-spacing: 0.12em; }
+}

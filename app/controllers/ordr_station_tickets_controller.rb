@@ -49,7 +49,7 @@ class OrdrStationTicketsController < ApplicationController
     @restaurant = Restaurant.find(params[:restaurant_id])
     is_owner = @restaurant && (@restaurant.user == current_user)
     is_admin = current_user&.admin?
-    is_active_employee = Employee.exists?(user_id: current_user.id, restaurant_id: @restaurant.id, status: :active)
+    is_active_employee = Employee.exists?(user_id: current_user.id, restaurant_id: @restaurant.id, status: :active, archived: false)
 
     return if is_owner || is_admin || is_active_employee
 

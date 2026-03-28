@@ -190,10 +190,11 @@ module Restaurants
     end
 
     def collect_traffic_analytics_data(days)
+      # TODO: wire up real traffic analytics (e.g. Plausible/GA integration)
       {
-        page_views: rand(100..1000),
-        unique_visitors: rand(50..500),
-        bounce_rate: rand(20..80),
+        page_views: 0,
+        unique_visitors: 0,
+        bounce_rate: 0,
         daily_data: generate_daily_traffic_data(days),
       }
     rescue StandardError => e
@@ -275,13 +276,15 @@ module Restaurants
     end
 
     def generate_seasonal_patterns
+      # TODO: wire up real seasonal pattern analysis
       ['Monday Peak', 'Weekend Rush', 'Lunch Hour Boost'].map do |pattern|
-        { pattern: pattern, impact: rand(10..50) }
+        { pattern: pattern, impact: 0 }
       end
     end
 
     def generate_peak_hours_data
-      (0..23).map { |hour| { hour: hour, orders: rand(0..20) } }
+      # TODO: wire up real peak-hour order counts from DB
+      (0..23).map { |hour| { hour: hour, orders: 0 } }
     end
   end
 end

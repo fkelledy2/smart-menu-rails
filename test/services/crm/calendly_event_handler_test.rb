@@ -92,4 +92,33 @@ class Crm::CalendlyEventHandlerTest < ActiveSupport::TestCase
     assert result.success?
     assert_equal 'demo_booked', lead.reload.stage
   end
+
+  # ---------------------------------------------------------------------------
+  # Lost lead — must succeed without attempting an invalid transition
+  # ---------------------------------------------------------------------------
+
+  test 'succeeds for a lost lead without changing its stage' do
+    lead = crm_leads(:lost_lead)
+    payload = build_payload(email: lead.contact_email, uuid: 'lost-lead-calendly-uuid')
+    result = Crm::CalendlyEventHandler.call(payload: payload)
+    assert result.success?, "Expected success for lost lead, got: #{result.error}"
+    assert_equal 'lost', lead.reload.stage
+  end
+
+  # ---------------------------------------------------------------------------
+  # Audit count — no duplicate stage_changed records for new leads
+  # ---------------------------------------------------------------------------
+
+  test 'writes exactly one stage_changed audit for a newly auto-created lead' do
+    payload = build_payload(email: 'brand-new@prospect.com', uuid: 'audit-count-uuid')
+    lead = nil
+    assert_difference 'CrmLead.count', 1 do
+      result = Crm::CalendlyEventHandler.call(payload: payload)
+      assert result.success?
+      lead = result.lead
+    end
+    stage_changed_audits = lead.crm_lead_audits.where(event: 'stage_changed')
+    assert_equal 1, stage_changed_audits.count,
+      "Expected 1 stage_changed audit, got #{stage_changed_audits.count}"
+  end
 end

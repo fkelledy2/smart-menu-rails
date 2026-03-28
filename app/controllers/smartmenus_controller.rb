@@ -129,6 +129,18 @@ class SmartmenusController < ApplicationController
     @header_cache_buster = nil
   end
 
+  # For table smartmenus the theme is inherited from the primary (non-table)
+  # smartmenu for the same restaurant+menu, so that updating the theme on the
+  # main smartmenu propagates to all tables without needing per-table updates.
+  def set_effective_theme
+    if @smartmenu.tablesetting_id.present?
+      primary = @table_smartmenus.find { |sm| sm.tablesetting_id.nil? }
+      @effective_theme = primary&.theme || @smartmenu.theme
+    else
+      @effective_theme = @smartmenu.theme
+    end
+  end
+
   def load_table_smartmenus
     @table_smartmenus = if @restaurant&.id && @menu&.id
                           Smartmenu.includes(:tablesetting)
@@ -440,9 +452,12 @@ class SmartmenusController < ApplicationController
       redirect_to root_url and return
     end
 
-    @force_customer_view = params[:view] == 'customer'
+    # /t/ is the customer-facing QR code URL — default to customer view for everyone.
+    # Staff must opt-in explicitly with ?view=staff to see staff controls.
+    @staff_view_mode = current_user.present? && params[:view] == 'staff'
 
     load_table_smartmenus
+    set_effective_theme
     load_restaurant_locales
     load_allergyns
     load_open_order_and_participant
@@ -484,6 +499,7 @@ class SmartmenusController < ApplicationController
       etag_parts = [
         @smartmenu, @menu, @restaurant, @tablesetting, @openOrder, @ordrparticipant,
         participant_locale, "sid:#{session.id}", "build:#{BUILD_VERSION}",
+        @staff_view_mode ? 'staff' : 'customer',
       ]
 
       has_order_context = @openOrder.present? || @ordrparticipant.present?
@@ -491,7 +507,10 @@ class SmartmenusController < ApplicationController
         response.headers['Cache-Control'] = 'private, must-revalidate, max-age=0'
         response.headers['Vary'] = [response.headers['Vary'], 'Cookie', 'Accept-Language'].compact.join(', ')
       else
-        response.headers['Cache-Control'] = 'public, max-age=60, stale-while-revalidate=300'
+        # no-cache means the browser always validates with the ETag (conditional GET).
+        # This ensures theme/menu changes are immediately visible without stale content windows.
+        # Performance is preserved: ETag match returns 304 with no body transfer.
+        response.headers['Cache-Control'] = 'public, no-cache'
         response.headers['Vary'] = [response.headers['Vary'], 'Accept-Language'].compact.join(', ')
       end
 

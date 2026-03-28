@@ -29,9 +29,9 @@ class OrdritemnotesPolicyTest < ActiveSupport::TestCase
     assert policy.create?
   end
 
-  test 'create is allowed for guest (user.present? always true)' do
+  test 'create is denied for guest (not an owner)' do
     policy = OrdritemnotePolicy.new(nil, @ordritemnote)
-    assert policy.create?
+    assert_not policy.create?
   end
 
   test 'show is allowed for owner' do

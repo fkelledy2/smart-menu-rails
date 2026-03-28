@@ -18,7 +18,7 @@ class OrdrnotePolicy < ApplicationPolicy
     return false unless user_is_restaurant_employee?
 
     # Employee who created the note can edit within 15 minutes
-    if record.employee.user_id == user.id
+    if record.employee&.user_id == user.id
       return record.created_at > 15.minutes.ago
     end
 
@@ -30,7 +30,7 @@ class OrdrnotePolicy < ApplicationPolicy
     return false unless user_is_restaurant_employee?
 
     # Employee who created the note can delete within 15 minutes
-    if record.employee.user_id == user.id
+    if record.employee&.user_id == user.id
       return record.created_at > 15.minutes.ago
     end
 

@@ -45,8 +45,12 @@ module Crm
         end
       end
 
-      # Advance stage only if not already at or past demo_booked
-      past_stages = %w[demo_booked demo_completed proposal_sent trial_active converted]
+      # Advance stage only if not already at or past demo_booked, and not lost.
+      # A lost lead should not be auto-transitioned by a Calendly webhook — the
+      # transition would fail anyway (lost → demo_booked is not a valid path in
+      # FORWARD_TRANSITIONS) but we handle it gracefully here to prevent Calendly
+      # from retrying the webhook on a permanent validation failure.
+      past_stages = %w[demo_booked demo_completed proposal_sent trial_active converted lost]
       unless past_stages.include?(lead.stage)
         result = Crm::LeadTransitionService.call(
           lead: lead,
@@ -57,18 +61,6 @@ module Crm
         unless result.success?
           return Result.new(success?: false, lead: lead, created: was_created, error: result.error)
         end
-      end
-
-      if was_created
-        Crm::LeadAuditWriter.write(
-          crm_lead: lead,
-          event: 'stage_changed',
-          actor: nil,
-          actor_type: 'system',
-          field_name: 'calendly_event_uuid',
-          to_value: event_uuid,
-          metadata: { source: 'calendly_webhook', event_uuid: event_uuid },
-        )
       end
 
       Result.new(success?: true, lead: lead, created: was_created, error: nil)

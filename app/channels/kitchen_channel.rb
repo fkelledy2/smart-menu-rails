@@ -39,8 +39,16 @@ class KitchenChannel < ApplicationCable::Channel
   private
 
   def handle_status_update(data)
+    # Staff-only action — reject unauthenticated WebSocket clients.
+    return unless current_user
+
     order = Ordr.find_by(id: data['order_id'])
     return unless order
+
+    # Ensure the authenticated user belongs to this order's restaurant.
+    return unless current_user.admin? ||
+                  order.restaurant&.user_id == current_user.id ||
+                  current_user.active_employee_for_restaurant?(order.restaurant_id)
 
     old_status = order.status.to_s
     raw_to = data['new_status']
@@ -75,6 +83,8 @@ class KitchenChannel < ApplicationCable::Channel
   end
 
   def handle_staff_assignment(data)
+    return unless current_user
+
     order = Ordr.find_by(id: data['order_id'])
     staff = User.find_by(id: data['staff_id'])
     return unless order && staff

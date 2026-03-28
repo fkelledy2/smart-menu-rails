@@ -15,7 +15,11 @@
         <% Array(table_smartmenus).each do |smartmenu| %>
             <% if smartmenu.tablesetting && smartmenu.tablesetting.status == 'free' %>
                 <li>
-                    <%= link_to smartmenu_path(smartmenu.slug), data: { turbo: false }, class: "dropdown-item min-h-44 d-flex align-items-center py-2 px-3", 'data-filter-text': smartmenu.tablesetting.name do %>
+                    <%# Use the token URL with ?view=staff so staff mode persists across table navigation %>
+                    <%= link_to table_link_path(smartmenu.public_token, view: 'staff'),
+                        data: { turbo: false },
+                        class: 'dropdown-item min-h-44 d-flex align-items-center py-2 px-3',
+                        'data-filter-text': smartmenu.tablesetting.name do %>
                         <%= smartmenu.tablesetting.name %>
                     <% end %>
                 </li>
