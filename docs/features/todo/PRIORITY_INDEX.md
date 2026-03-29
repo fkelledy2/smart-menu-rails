@@ -1,9 +1,10 @@
 # mellow.menu Feature Backlog — Priority Index
 
-**Last updated**: 2026-03-29 (eighth pass — Partner Integrations #11 marked COMPLETED 2026-03-29)
+**Last updated**: 2026-03-29 (ninth pass — Menu Experiments #12 marked COMPLETED 2026-03-29)
 **QR Code Security (#1)**: COMPLETED 2026-03-24 — Phase 1 shipped; spec at `docs/features/completed/qr-security.md`
 **Branded Email Styling (#1)**: COMPLETED 2026-03-24 — spec at `docs/features/completed/branded-email-styling-feature-request.md`
 **Branded Receipt Email (#2)**: COMPLETED 2026-03-25 — spec at `docs/features/completed/branded-receipt-email-feature-request.md`
+**Menu Experiments (#12)**: COMPLETED 2026-03-29 — spec at `docs/features/completed/08-menu-experiments-ab-testing.md`
 **Guiding principle**: Every decision is filtered through one question — does this get mellow.menu in front of paying customers faster?
 
 ---
@@ -23,7 +24,7 @@
 | ~~#9~~ | ~~CRM Sales Funnel~~ | ~~Growth~~ | L | Admin auth, ActionMailer, Calendly webhook | COMPLETED 2026-03-27 — spec at `docs/features/completed/crm-sales-funnel.md` |
 | ~~#10~~ | ~~Smartmenu Theming~~ | ~~Launch Enhancer~~ | M | None | COMPLETED 2026-03-28 — spec at `docs/features/completed/smartmenu-theming.md` |
 | ~~#11~~ | ~~Partner Integrations (Event-Driven)~~ | ~~Post-Launch~~ | M | #8, Stripe webhooks | COMPLETED 2026-03-29 — spec at `docs/features/completed/06-partner-integrations-event-driven.md` |
-| #12 | Menu Experiments (A/B Testing) | Post-Launch | M | #1 (DiningSession built); MenuVersion BUILT | Elevated: MenuVersion dependency resolved — all blockers done |
+| ~~#12~~ | ~~Menu Experiments (A/B Testing)~~ | ~~Post-Launch~~ | M | #1 (DiningSession built); MenuVersion BUILT | COMPLETED 2026-03-29 — spec at `docs/features/completed/08-menu-experiments-ab-testing.md` |
 | #13 | Table Wait Time Estimation | Post-Launch | L | #5 (completed), Tablesetting | Operations win; differentiates for high-footfall walk-in restaurants |
 | #14 | Dynamic Pricing Plans (Cost-Indexed) | Post-Launch | L | #15, #16 | Sustainable margin management at scale |
 | #15 | Cost Insights + Pricing Model Publisher | Post-Launch | L | #16 | Admin system enabling #14; required before pricing models can be published |
@@ -96,8 +97,8 @@ Note: The launch blockers are deliberately narrow. Features #4–#7 are strong l
 
 All launch blockers (#1–#7), JWT Token Management (#8), CRM Sales Funnel (#9), Smartmenu Theming (#10), and Partner Integrations (#11) are completed. The platform is live-capable with a functioning sales pipeline, API layer, visual theming, and event-driven partner integration layer. The following represent the highest-value next actions:
 
-### Track A: Menu Experiments (Quick win — all dependencies satisfied)
-**Feature #12 — Menu Experiments (A/B Testing)** — current top priority
+### Track A: Menu Experiments (COMPLETED 2026-03-29)
+~~**Feature #12 — Menu Experiments (A/B Testing)** — current top priority~~
 
 Deliverables in priority order:
 1. Migration: `add_theme_to_smartmenus` — string column, default `'classic'`, check constraint

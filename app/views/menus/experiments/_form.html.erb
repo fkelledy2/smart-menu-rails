@@ -1,0 +1,78 @@
+<% experiment = local_assigns[:experiment] %>
+<% versions = local_assigns[:versions] %>
+<% form_url = local_assigns[:form_url] %>
+
+<%= form_with model: experiment, url: form_url, data: { turbo: true } do |f| %>
+  <% if experiment.errors.any? %>
+    <div class="alert alert-danger">
+      <ul class="mb-0">
+        <% experiment.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <label class="form-label fw-semibold">Control version <span class="text-muted">(the current "safe" version)</span></label>
+    <%= f.select :control_version_id,
+        versions.map { |v| ["v#{v.version_number} — created #{v.created_at.strftime('%d %b %Y')}", v.id] },
+        { prompt: 'Select control version' },
+        class: 'form-select',
+        required: true %>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label fw-semibold">Variant version <span class="text-muted">(the new version to test)</span></label>
+    <%= f.select :variant_version_id,
+        versions.map { |v| ["v#{v.version_number} — created #{v.created_at.strftime('%d %b %Y')}", v.id] },
+        { prompt: 'Select variant version' },
+        class: 'form-select',
+        required: true %>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label fw-semibold">
+      Variant traffic allocation
+      <% if experiment.status_active? %>
+        <span class="badge text-bg-secondary ms-1">Locked (active)</span>
+      <% end %>
+    </label>
+    <div class="input-group" style="max-width: 200px;">
+      <%= f.number_field :allocation_pct,
+          class: 'form-control',
+          min: 1, max: 99, step: 1,
+          disabled: experiment.status_active?,
+          required: true %>
+      <span class="input-group-text">%</span>
+    </div>
+    <div class="form-text">
+      Percentage of dining sessions that will see the variant.
+      1–99%. Cannot be changed once the experiment is active.
+    </div>
+  </div>
+
+  <div class="row g-3 mb-3">
+    <div class="col-12 col-md-6">
+      <label class="form-label fw-semibold">Start time</label>
+      <%= f.datetime_local_field :starts_at,
+          class: 'form-control',
+          value: experiment.starts_at&.strftime('%Y-%m-%dT%H:%M'),
+          required: true %>
+      <div class="form-text">Must be in the future.</div>
+    </div>
+    <div class="col-12 col-md-6">
+      <label class="form-label fw-semibold">End time</label>
+      <%= f.datetime_local_field :ends_at,
+          class: 'form-control',
+          value: experiment.ends_at&.strftime('%Y-%m-%dT%H:%M'),
+          required: true %>
+      <div class="form-text">The experiment will end automatically at this time.</div>
+    </div>
+  </div>
+
+  <div class="d-flex gap-2">
+    <%= f.submit 'Save experiment', class: 'btn btn-dark' %>
+    <%= link_to 'Cancel', restaurant_menu_experiments_path(@restaurant, @menu), class: 'btn btn-outline-secondary' %>
+  </div>
+<% end %>

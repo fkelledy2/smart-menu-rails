@@ -1,0 +1,13 @@
+<% experiment = local_assigns[:experiment] %>
+<%
+  badge_class = case experiment.status
+                when 'draft'  then 'text-bg-secondary'
+                when 'active' then 'text-bg-success'
+                when 'paused' then 'text-bg-warning'
+                when 'ended'  then 'text-bg-dark'
+                else 'text-bg-secondary'
+                end
+%>
+<span class="badge <%= badge_class %>">
+  <%= t("menu_experiments.statuses.#{experiment.status}", default: experiment.status.capitalize) %>
+</span>

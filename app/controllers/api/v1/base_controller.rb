@@ -43,15 +43,20 @@ module Api
 
         # Attempt admin-issued JWT authentication first (when flag is enabled)
         if Flipper.enabled?(:jwt_api_access) && raw_token.present?
-          result = Jwt::TokenValidator.call(raw_jwt: raw_token, restaurant_id: params[:restaurant_id])
+          result = Jwt::TokenValidator.call(raw_jwt: raw_token)
           if result.valid?
             @current_api_token      = result.token
             @current_api_restaurant = result.token.restaurant
-            # Enforce that the token is scoped to the requested restaurant
+            # Enforce cross-tenant: the token must be scoped to the requested restaurant.
+            # Only render 403 when the target restaurant exists — non-existent restaurants
+            # are handled downstream by set_restaurant (404), so we skip the check here
+            # to avoid a spurious 403 racing ahead of the not-found response.
             if params[:restaurant_id].present? && @current_api_restaurant&.id.to_s != params[:restaurant_id].to_s
-              render json: error_response('forbidden', 'Token is not authorized for this restaurant'),
-                     status: :forbidden
-              return
+              if Restaurant.exists?(params[:restaurant_id])
+                render json: error_response('forbidden', 'Token is not authorized for this restaurant'),
+                       status: :forbidden
+                return
+              end
             end
             # Set current_user to the admin who issued the token so Pundit works
             @current_user = result.token.admin_user

@@ -1,0 +1,42 @@
+<% content_for :title, "Edit Experiment — #{@menu.name}" %>
+
+<div class="container-fluid py-4" style="max-width: 720px;">
+  <nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <%= link_to @restaurant.name, edit_restaurant_path(@restaurant) %>
+      </li>
+      <li class="breadcrumb-item">
+        <%= link_to @menu.name, edit_restaurant_menu_path(@restaurant, @menu) %>
+      </li>
+      <li class="breadcrumb-item">
+        <%= link_to 'Experiments', restaurant_menu_experiments_path(@restaurant, @menu) %>
+      </li>
+      <li class="breadcrumb-item active">Edit</li>
+    </ol>
+  </nav>
+
+  <div class="d-flex align-items-center gap-3 mb-4">
+    <h1 class="h4 mb-0">
+      <i class="bi bi-flask"></i>
+      Edit Experiment
+    </h1>
+    <%= render 'menus/experiments/status_badge', experiment: @experiment %>
+  </div>
+
+  <% if @experiment.status_ended? %>
+    <div class="alert alert-secondary">
+      <i class="bi bi-lock"></i>
+      This experiment has ended and can no longer be edited.
+    </div>
+  <% else %>
+    <div class="card">
+      <div class="card-body">
+        <%= render 'menus/experiments/form',
+            experiment: @experiment,
+            versions: @versions,
+            form_url: restaurant_menu_experiment_path(@restaurant, @menu, @experiment) %>
+      </div>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,15 @@
+en:
+  menu_experiments:
+    flash:
+      created: "Experiment created successfully."
+      updated: "Experiment updated successfully."
+      deleted: "Experiment deleted."
+      paused: "Experiment paused."
+      ended: "Experiment ended."
+      not_pausable: "Only active experiments can be paused."
+      not_deletable: "Only draft experiments can be deleted. End the experiment first."
+    statuses:
+      draft: "Draft"
+      active: "Active"
+      paused: "Paused"
+      ended: "Ended"

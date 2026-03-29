@@ -12,3 +12,4 @@
 - [project_crm_sales_funnel_v1.md](project_crm_sales_funnel_v1.md) — CRM Sales Funnel v1: stage enum prefix gotcha, ReadonlyRecord fix, namespace resolution, counter_cache name, form_with routing, asset manifest, webhook refactor (March 2026)
 - [project_smartmenu_theming_v1.md](project_smartmenu_theming_v1.md) — Smartmenu Theming v1: data-theme/data-color-scheme split, Smartmenus:: namespace gotcha, manifest.js requirement, CSS theme architecture (March 2026)
 - [project_partner_integrations_v1.md](project_partner_integrations_v1.md) — Partner Integrations v1: CanonicalEvent, adapter pattern, VALID_SCOPES gotcha, YAML null fixture gotcha, route param :restaurant_id (March 2026)
+- [project_menu_experiments_v1.md](project_menu_experiments_v1.md) — Menu Experiments v1: MD5 hash assignment, render-path safety, plan gate, cron job, snapshot_json vs ApplyService, Postgres.app auth gotcha (March 2026)

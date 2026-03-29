@@ -642,7 +642,9 @@ CREATE TABLE public.dining_sessions (
     expires_at timestamp(6) without time zone NOT NULL,
     last_activity_at timestamp(6) without time zone,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    menu_experiment_id bigint,
+    assigned_version_id bigint
 );
 
 
@@ -1735,6 +1737,80 @@ CREATE SEQUENCE public.menu_edit_sessions_id_seq
 --
 
 ALTER SEQUENCE public.menu_edit_sessions_id_seq OWNED BY public.menu_edit_sessions.id;
+
+
+--
+-- Name: menu_experiment_exposures; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.menu_experiment_exposures (
+    id bigint NOT NULL,
+    menu_experiment_id bigint NOT NULL,
+    assigned_version_id bigint NOT NULL,
+    dining_session_id bigint NOT NULL,
+    exposed_at timestamp(6) without time zone NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: menu_experiment_exposures_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.menu_experiment_exposures_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: menu_experiment_exposures_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.menu_experiment_exposures_id_seq OWNED BY public.menu_experiment_exposures.id;
+
+
+--
+-- Name: menu_experiments; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.menu_experiments (
+    id bigint NOT NULL,
+    menu_id bigint NOT NULL,
+    control_version_id bigint NOT NULL,
+    variant_version_id bigint NOT NULL,
+    created_by_user_id bigint,
+    allocation_pct integer DEFAULT 50 NOT NULL,
+    starts_at timestamp(6) without time zone NOT NULL,
+    ends_at timestamp(6) without time zone NOT NULL,
+    status integer DEFAULT 0 NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    CONSTRAINT chk_menu_experiments_allocation_pct CHECK (((allocation_pct >= 1) AND (allocation_pct <= 99))),
+    CONSTRAINT chk_menu_experiments_ends_after_starts CHECK ((ends_at > starts_at))
+);
+
+
+--
+-- Name: menu_experiments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.menu_experiments_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: menu_experiments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.menu_experiments_id_seq OWNED BY public.menu_experiments.id;
 
 
 --
@@ -5337,6 +5413,20 @@ ALTER TABLE ONLY public.menu_edit_sessions ALTER COLUMN id SET DEFAULT nextval('
 
 
 --
+-- Name: menu_experiment_exposures id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.menu_experiment_exposures ALTER COLUMN id SET DEFAULT nextval('public.menu_experiment_exposures_id_seq'::regclass);
+
+
+--
+-- Name: menu_experiments id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.menu_experiments ALTER COLUMN id SET DEFAULT nextval('public.menu_experiments_id_seq'::regclass);
+
+
+--
 -- Name: menu_imports id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -6250,6 +6340,22 @@ ALTER TABLE ONLY public.menu_edit_sessions
 
 
 --
+-- Name: menu_experiment_exposures menu_experiment_exposures_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.menu_experiment_exposures
+    ADD CONSTRAINT menu_experiment_exposures_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: menu_experiments menu_experiments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.menu_experiments
+    ADD CONSTRAINT menu_experiments_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: menu_imports menu_imports_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6976,6 +7082,13 @@ CREATE UNIQUE INDEX idx_explore_pages_unique_path ON public.explore_pages USING 
 
 
 --
+-- Name: idx_exposures_session_experiment; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_exposures_session_experiment ON public.menu_experiment_exposures USING btree (dining_session_id, menu_experiment_id);
+
+
+--
 -- Name: idx_flavor_profiles_profilable; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -7050,6 +7163,13 @@ CREATE INDEX idx_on_city_name_status_discovered_at_524af6544b ON public.discover
 --
 
 CREATE INDEX idx_on_impersonated_user_id_started_at_39d81181ba ON public.impersonation_audits USING btree (impersonated_user_id, started_at);
+
+
+--
+-- Name: idx_on_menu_experiment_id_assigned_version_id_f60bae83ea; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_on_menu_experiment_id_assigned_version_id_f60bae83ea ON public.menu_experiment_exposures USING btree (menu_experiment_id, assigned_version_id);
 
 
 --
@@ -7445,10 +7565,24 @@ CREATE INDEX index_demo_bookings_on_email ON public.demo_bookings USING btree (e
 
 
 --
+-- Name: index_dining_sessions_on_assigned_version_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_dining_sessions_on_assigned_version_id ON public.dining_sessions USING btree (assigned_version_id);
+
+
+--
 -- Name: index_dining_sessions_on_expires_at; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_dining_sessions_on_expires_at ON public.dining_sessions USING btree (expires_at);
+
+
+--
+-- Name: index_dining_sessions_on_menu_experiment_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_dining_sessions_on_menu_experiment_id ON public.dining_sessions USING btree (menu_experiment_id);
 
 
 --
@@ -7925,6 +8059,69 @@ CREATE INDEX index_menu_edit_sessions_on_session_id ON public.menu_edit_sessions
 --
 
 CREATE INDEX index_menu_edit_sessions_on_user_id ON public.menu_edit_sessions USING btree (user_id);
+
+
+--
+-- Name: index_menu_experiment_exposures_on_assigned_version_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_menu_experiment_exposures_on_assigned_version_id ON public.menu_experiment_exposures USING btree (assigned_version_id);
+
+
+--
+-- Name: index_menu_experiment_exposures_on_dining_session_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_menu_experiment_exposures_on_dining_session_id ON public.menu_experiment_exposures USING btree (dining_session_id);
+
+
+--
+-- Name: index_menu_experiment_exposures_on_menu_experiment_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_menu_experiment_exposures_on_menu_experiment_id ON public.menu_experiment_exposures USING btree (menu_experiment_id);
+
+
+--
+-- Name: index_menu_experiments_on_control_version_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_menu_experiments_on_control_version_id ON public.menu_experiments USING btree (control_version_id);
+
+
+--
+-- Name: index_menu_experiments_on_created_by_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_menu_experiments_on_created_by_user_id ON public.menu_experiments USING btree (created_by_user_id);
+
+
+--
+-- Name: index_menu_experiments_on_menu_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_menu_experiments_on_menu_id ON public.menu_experiments USING btree (menu_id);
+
+
+--
+-- Name: index_menu_experiments_on_menu_id_and_starts_at_and_ends_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_menu_experiments_on_menu_id_and_starts_at_and_ends_at ON public.menu_experiments USING btree (menu_id, starts_at, ends_at);
+
+
+--
+-- Name: index_menu_experiments_on_menu_id_and_status; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_menu_experiments_on_menu_id_and_status ON public.menu_experiments USING btree (menu_id, status);
+
+
+--
+-- Name: index_menu_experiments_on_variant_version_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_menu_experiments_on_variant_version_id ON public.menu_experiments USING btree (variant_version_id);
 
 
 --
@@ -10264,6 +10461,14 @@ ALTER TABLE ONLY public.ocr_menu_sections
 
 
 --
+-- Name: dining_sessions fk_rails_0655a41e22; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dining_sessions
+    ADD CONSTRAINT fk_rails_0655a41e22 FOREIGN KEY (menu_experiment_id) REFERENCES public.menu_experiments(id);
+
+
+--
 -- Name: ordractions fk_rails_116964a63c; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -10389,6 +10594,14 @@ ALTER TABLE ONLY public.pairing_recommendations
 
 ALTER TABLE ONLY public.tracks
     ADD CONSTRAINT fk_rails_2a7a85d479 FOREIGN KEY (restaurant_id) REFERENCES public.restaurants(id);
+
+
+--
+-- Name: menu_experiments fk_rails_2b078dd54d; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.menu_experiments
+    ADD CONSTRAINT fk_rails_2b078dd54d FOREIGN KEY (menu_id) REFERENCES public.menus(id);
 
 
 --
@@ -10656,6 +10869,22 @@ ALTER TABLE ONLY public.admin_jwt_tokens
 
 
 --
+-- Name: menu_experiments fk_rails_5cdf8c461e; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.menu_experiments
+    ADD CONSTRAINT fk_rails_5cdf8c461e FOREIGN KEY (created_by_user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: menu_experiment_exposures fk_rails_628cbd05c9; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.menu_experiment_exposures
+    ADD CONSTRAINT fk_rails_628cbd05c9 FOREIGN KEY (assigned_version_id) REFERENCES public.menu_versions(id);
+
+
+--
 -- Name: userplans fk_rails_666174eb65; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -10800,6 +11029,14 @@ ALTER TABLE ONLY public.ordractions
 
 
 --
+-- Name: menu_experiments fk_rails_75a33ffc41; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.menu_experiments
+    ADD CONSTRAINT fk_rails_75a33ffc41 FOREIGN KEY (control_version_id) REFERENCES public.menu_versions(id);
+
+
+--
 -- Name: beverage_pipeline_runs fk_rails_77e813c0f3; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -10877,6 +11114,14 @@ ALTER TABLE ONLY public.menuitem_costs
 
 ALTER TABLE ONLY public.alcohol_order_events
     ADD CONSTRAINT fk_rails_83023d3e45 FOREIGN KEY (ordr_id) REFERENCES public.ordrs(id);
+
+
+--
+-- Name: menu_experiments fk_rails_85cc278301; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.menu_experiments
+    ADD CONSTRAINT fk_rails_85cc278301 FOREIGN KEY (variant_version_id) REFERENCES public.menu_versions(id);
 
 
 --
@@ -11368,6 +11613,22 @@ ALTER TABLE ONLY public.menuavailabilities
 
 
 --
+-- Name: dining_sessions fk_rails_cc65ddb4b6; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dining_sessions
+    ADD CONSTRAINT fk_rails_cc65ddb4b6 FOREIGN KEY (assigned_version_id) REFERENCES public.menu_versions(id);
+
+
+--
+-- Name: menu_experiment_exposures fk_rails_cc799efe68; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.menu_experiment_exposures
+    ADD CONSTRAINT fk_rails_cc799efe68 FOREIGN KEY (dining_session_id) REFERENCES public.dining_sessions(id);
+
+
+--
 -- Name: staff_invitations fk_rails_cdac8f95ea; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -11445,6 +11706,14 @@ ALTER TABLE ONLY public.ordritemnotes
 
 ALTER TABLE ONLY public.admin_jwt_tokens
     ADD CONSTRAINT fk_rails_d9412e59ea FOREIGN KEY (admin_user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: menu_experiment_exposures fk_rails_da1b4b7c6d; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.menu_experiment_exposures
+    ADD CONSTRAINT fk_rails_da1b4b7c6d FOREIGN KEY (menu_experiment_id) REFERENCES public.menu_experiments(id);
 
 
 --
@@ -11638,6 +11907,9 @@ ALTER TABLE ONLY public.voice_commands
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260329200003'),
+('20260329200002'),
+('20260329200001'),
 ('20260329100002'),
 ('20260329100001'),
 ('20260328100001'),

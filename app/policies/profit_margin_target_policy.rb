@@ -11,11 +11,17 @@ class ProfitMarginTargetPolicy < ApplicationPolicy
   end
 
   def index?
-    true
+    user.present?
+  end
+
+  def new?
+    create?
   end
 
   def create?
-    user.present?
+    return true if user.super_admin?
+
+    record.is_a?(Class) || record.restaurant_id.in?(user.restaurants.pluck(:id))
   end
 
   def update?

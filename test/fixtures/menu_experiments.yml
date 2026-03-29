@@ -1,0 +1,5 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# NOTE: control_version_id and variant_version_id point to menu_versions
+# which are created inline in tests (no fixtures exist for menu_versions).
+# These fixtures use YAML-level overrides where needed.

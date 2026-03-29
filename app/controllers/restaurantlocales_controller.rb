@@ -13,6 +13,8 @@ class RestaurantlocalesController < ApplicationController
   def index
     if params[:restaurant_id]
       @restaurant = Restaurant.find_by(id: params[:restaurant_id])
+      return head :not_found unless @restaurant
+
       @restaurantlocales = policy_scope(Restaurantlocale).where(restaurant_id: @restaurant.id).order(:sequence)
     else
       @restaurantlocales = policy_scope(Restaurantlocale).where(archived: false).order(:sequence)

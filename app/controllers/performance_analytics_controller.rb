@@ -107,7 +107,7 @@ class PerformanceAnalyticsController < ApplicationController
   private
 
   def ensure_admin!
-    return if current_user&.admin?
+    return if current_user&.super_admin?
 
     respond_to do |format|
       format.html do

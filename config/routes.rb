@@ -534,6 +534,14 @@ Rails.application.routes.draw do
       resources :menuparticipants
       resources :menuavailabilities
 
+      # A/B Experiments
+      resources :experiments, controller: 'menus/experiments' do
+        member do
+          patch :pause
+          patch :end_experiment, path: 'end'
+        end
+      end
+
       # Menu structure and content
       resources :menusections do
         collection do

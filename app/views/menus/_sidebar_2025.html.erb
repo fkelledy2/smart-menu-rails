@@ -125,6 +125,16 @@
       <span>Profitability</span>
       <%= sa_badge %>
     <% end %>
+
+    <% if Flipper.enabled?(:menu_experiments, restaurant) %>
+      <%= link_to restaurant_menu_experiments_path(restaurant, menu),
+          class: 'sidebar-link',
+          data: { turbo_frame: '_top' } do %>
+        <i class="bi bi-flask"></i>
+        <span>A/B Experiments</span>
+        <%= sa_badge %>
+      <% end %>
+    <% end %>
   </div>
 </aside>
 

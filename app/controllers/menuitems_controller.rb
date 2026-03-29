@@ -12,6 +12,8 @@ class MenuitemsController < ApplicationController
   def index
     if params[:menusection_id]
       menusection = Menusection.find_by(id: params[:menusection_id])
+      return head :not_found unless menusection
+
       authorize menusection.menu, :show? # Authorize access to the menu
 
       # Optimize query based on request format

@@ -28,6 +28,15 @@ export default class extends Controller {
     this._updateBadge();
   }
 
+  escapeHtml(str) {
+    return String(str ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
   // ── Panel ────────────────────────────────────────────────────
 
   open() {
@@ -229,7 +238,7 @@ export default class extends Controller {
       .map(
         (pick) => `
       <div class="wa-pick-card">
-        <span class="wa-pick-name">${pick.name}</span>
+        <span class="wa-pick-name">${this.escapeHtml(pick.name)}</span>
         ${pick.price ? `<span class="wa-pick-price">${this.formatPrice(pick.price)}</span>` : ''}
       </div>
     `
@@ -293,8 +302,8 @@ export default class extends Controller {
       .join('');
 
     const meta = [];
-    if (rec.distillery) meta.push(rec.distillery);
-    if (rec.region) meta.push(rec.region.replace(/_/g, ' '));
+    if (rec.distillery) meta.push(this.escapeHtml(rec.distillery));
+    if (rec.region) meta.push(this.escapeHtml(rec.region.replace(/_/g, ' ')));
     if (rec.age_years) meta.push(`${rec.age_years}yo`);
     if (rec.abv) meta.push(`${rec.abv}%`);
     const metaHtml = meta.length > 0 ? `<div class="wa-meta">${meta.join(' · ')}</div>` : '';
@@ -312,21 +321,21 @@ export default class extends Controller {
         <div class="wa-card-header">
           <span class="wa-medal">${medal}</span>
           <div class="wa-card-title-wrap">
-            <h4 class="wa-card-title">${rec.name}</h4>
+            <h4 class="wa-card-title">${this.escapeHtml(rec.name)}</h4>
             ${metaHtml}
           </div>
           <span class="wa-card-price">${rec.price ? this.formatPrice(rec.price) : ''}</span>
         </div>
         ${badgesHtml}
         <div class="wa-tags">${tags}</div>
-        ${rec.staff_tasting_note ? `<p class="wa-tasting-note">"${rec.staff_tasting_note}"</p>` : ''}
-        ${rec.why_text ? `<p class="wa-why-text">${rec.why_text}</p>` : ''}
+        ${rec.staff_tasting_note ? `<p class="wa-tasting-note">"${this.escapeHtml(rec.staff_tasting_note)}"</p>` : ''}
+        ${rec.why_text ? `<p class="wa-why-text">${this.escapeHtml(rec.why_text)}</p>` : ''}
         <div class="wa-card-footer">
           <span class="wa-match-score">${Math.round(rec.score * 100)}% match</span>
           <button class="wa-btn wa-btn-sm"
                   data-action="click->whiskey-ambassador#addToPicks"
                   data-menuitem-id="${rec.menuitem_id}"
-                  data-name="${rec.name}"
+                  data-name="${this.escapeHtml(rec.name)}"
                   data-price="${rec.price || ''}"
                   ${inPicks ? 'disabled' : ''}>
             ${inPicks ? 'Added ✓' : 'Add to My Picks'}
@@ -357,12 +366,12 @@ export default class extends Controller {
         (item) => `
       <div class="wa-explore-item">
         <div class="wa-explore-item-header">
-          <h5>${item.name}</h5>
+          <h5>${this.escapeHtml(item.name)}</h5>
           <span class="wa-card-price">${item.price ? this.formatPrice(item.price) : ''}</span>
         </div>
         <div class="wa-explore-meta">
-          ${item.distillery ? `<span>${item.distillery}</span>` : ''}
-          ${item.region ? `<span>${item.region.replace(/_/g, ' ')}</span>` : ''}
+          ${item.distillery ? `<span>${this.escapeHtml(item.distillery)}</span>` : ''}
+          ${item.region ? `<span>${this.escapeHtml(item.region.replace(/_/g, ' '))}</span>` : ''}
           ${item.age_years ? `<span>${item.age_years}yo</span>` : ''}
         </div>
         <div class="wa-tags">${(item.tags || []).map((t) => `<span class="wa-tag">${t.replace(/_/g, ' ')}</span>`).join('')}</div>
@@ -401,8 +410,8 @@ export default class extends Controller {
       .map(
         (flight) => `
       <div class="wa-flight-card">
-        <h4 class="wa-flight-title">${flight.title}</h4>
-        <p class="wa-flight-narrative">${flight.narrative || ''}</p>
+        <h4 class="wa-flight-title">${this.escapeHtml(flight.title)}</h4>
+        <p class="wa-flight-narrative">${this.escapeHtml(flight.narrative || '')}</p>
         <div class="wa-flight-meta">
           <span class="wa-flight-price">${flight.display_price ? this.formatPrice(flight.display_price) : ''}</span>
           ${flight.savings ? `<span class="wa-flight-savings">Save ${this.formatPrice(flight.savings)}</span>` : ''}
@@ -414,7 +423,7 @@ export default class extends Controller {
               (item, i) => `
             <div class="wa-flight-item">
               <span class="wa-flight-item-pos">${i + 1}.</span>
-              <span class="wa-flight-item-note">${item.note || ''}</span>
+              <span class="wa-flight-item-note">${this.escapeHtml(item.note || '')}</span>
             </div>
           `
             )

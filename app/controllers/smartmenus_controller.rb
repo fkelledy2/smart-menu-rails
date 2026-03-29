@@ -111,13 +111,56 @@ class SmartmenusController < ApplicationController
   private
 
   def load_active_menu_version
-    @active_menu_version = @menu&.active_menu_version
-    if @active_menu_version
-      MenuVersionApplyService.apply_snapshot!(menu: @menu, menu_version: @active_menu_version)
+    # Check for an active A/B experiment first (only if flag is enabled and we have a dining session)
+    if @menu && @dining_session && Flipper.enabled?(:menu_experiments, @restaurant)
+      resolve_experiment_version
+    end
+
+    # Fall through to standard active version if no experiment was assigned
+    unless @active_menu_version
+      @active_menu_version = @menu&.active_menu_version
+      if @active_menu_version
+        MenuVersionApplyService.apply_snapshot!(menu: @menu, menu_version: @active_menu_version)
+      end
     end
   rescue StandardError => e
     Rails.logger.warn("[SmartmenusController#show] menu version apply failed: #{e.class}: #{e.message}")
     @active_menu_version = nil
+  end
+
+  # Resolve experiment assignment for this dining session.
+  # Assigns the session to control or variant, persists the assignment, and
+  # enqueues exposure logging. Uses snapshot_json directly — does NOT call
+  # MenuVersionApplyService (which is for rollback preview flows only).
+  def resolve_experiment_version
+    active_experiment = MenuExperiment.active_for_menu(@menu)
+    return unless active_experiment
+
+    version = if @dining_session.menu_experiment_id == active_experiment.id && @dining_session.assigned_version
+                # Re-use the existing assignment — session consistency guarantee
+                @dining_session.assigned_version
+              else
+                # First visit under this experiment — compute and persist assignment
+                assigned = MenuExperiments::VersionAssignmentService.assign(
+                  dining_session: @dining_session,
+                  menu_experiment: active_experiment,
+                )
+                @dining_session.update_columns(
+                  menu_experiment_id: active_experiment.id,
+                  assigned_version_id: assigned.id,
+                )
+                assigned
+              end
+
+    MenuExperiments::ExposureLogger.log(@dining_session, active_experiment, version)
+
+    # Read snapshot directly — do NOT call apply_snapshot! in the render path
+    @active_menu_version = version
+    @menu_experiment = active_experiment
+  rescue StandardError => e
+    Rails.logger.warn("[SmartmenusController#resolve_experiment_version] #{e.class}: #{e.message}")
+    @active_menu_version = nil
+    @menu_experiment = nil
   end
 
   def load_header_cache_buster

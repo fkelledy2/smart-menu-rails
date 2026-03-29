@@ -485,7 +485,11 @@ export default class extends Controller {
           percentages[participantId] = percentage;
         });
 
-        params.percentages = percentages;
+        const basisPoints = {};
+        Object.keys(percentages).forEach((participantId) => {
+          basisPoints[participantId] = Math.round(percentages[participantId] * 100);
+        });
+        params.percentage_basis_points = basisPoints;
       } else if (this.currentMethod === 'item_based') {
         const itemAssignments = {};
         const selects = this.itemAssignmentsListTarget.querySelectorAll('select');

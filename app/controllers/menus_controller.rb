@@ -41,6 +41,10 @@ class MenusController < Menus::BaseController
       end
     elsif params[:restaurant_id]
       @restaurant = Restaurant.find_by(id: params[:restaurant_id])
+      unless @restaurant
+        redirect_to root_url, alert: 'Restaurant not found'
+        return
+      end
       @menus = Menu.joins(:restaurant_menus)
         .where(restaurant_menus: { restaurant_id: @restaurant.id, status: RestaurantMenu.statuses[:active] })
         .for_customer_display

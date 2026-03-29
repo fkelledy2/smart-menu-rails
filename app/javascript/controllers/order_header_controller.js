@@ -4,9 +4,16 @@ export default class extends Controller {
   static values = { customer: { type: Boolean, default: false } };
 
   connect() {
+    this._onStateOrder = () => this.render();
+    this._onStateChanged = () => this.render();
+    document.addEventListener('state:order', this._onStateOrder);
+    document.addEventListener('state:changed', this._onStateChanged);
     this.render();
-    document.addEventListener('state:order', () => this.render());
-    document.addEventListener('state:changed', () => this.render());
+  }
+
+  disconnect() {
+    document.removeEventListener('state:order', this._onStateOrder);
+    document.removeEventListener('state:changed', this._onStateChanged);
   }
 
   render() {

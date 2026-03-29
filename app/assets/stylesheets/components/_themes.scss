@@ -100,6 +100,32 @@
   .section-tab-pill.active {
     background-color: var(--sm-primary) !important;
   }
+
+  // Staff POS item rows: the amber primary (#92400e) fills every item button
+  // creating a wall of saturated warm colour. Use the secondary (warm dark stone
+  // #44403c) instead — still rustic in character, far less visually intense,
+  // and maintains >8:1 contrast against white text.
+  .staff-item-row {
+    background: var(--sm-secondary);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .staff-item-row .addItemToOrder,
+  .staff-item-row .btn-dark {
+    background-color: var(--sm-secondary) !important;
+    border-color: transparent !important;
+
+    &:hover,
+    &:focus {
+      background-color: var(--sm-text-primary) !important;
+      border-color: transparent !important;
+    }
+  }
+
+  .quick-add-stepper-vertical {
+    background: var(--sm-secondary);
+    border-left-color: rgba(255, 255, 255, 0.15);
+  }
 }
 
 // =============================================================================

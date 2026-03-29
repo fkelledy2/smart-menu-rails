@@ -1,0 +1,151 @@
+<% content_for :title, "Experiment Results — #{@menu.name}" %>
+
+<div class="container-fluid py-4">
+  <nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <%= link_to @restaurant.name, edit_restaurant_path(@restaurant) %>
+      </li>
+      <li class="breadcrumb-item">
+        <%= link_to @menu.name, edit_restaurant_menu_path(@restaurant, @menu) %>
+      </li>
+      <li class="breadcrumb-item">
+        <%= link_to 'Experiments', restaurant_menu_experiments_path(@restaurant, @menu) %>
+      </li>
+      <li class="breadcrumb-item active">Results</li>
+    </ol>
+  </nav>
+
+  <div class="d-flex align-items-center gap-3 mb-4">
+    <h1 class="h4 mb-0">
+      <i class="bi bi-flask"></i>
+      Experiment Results
+    </h1>
+    <%= render 'menus/experiments/status_badge', experiment: @experiment %>
+  </div>
+
+  <!-- Metadata -->
+  <div class="row g-3 mb-4">
+    <div class="col-12 col-md-6">
+      <div class="card h-100">
+        <div class="card-body">
+          <h6 class="card-subtitle text-muted mb-2">CONTROL VERSION</h6>
+          <div class="fw-semibold">v<%= @experiment.control_version.version_number %></div>
+          <div class="text-muted small">ID <%= @experiment.control_version_id %></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-6">
+      <div class="card h-100">
+        <div class="card-body">
+          <h6 class="card-subtitle text-muted mb-2">VARIANT VERSION (<%= @experiment.allocation_pct %>% traffic)</h6>
+          <div class="fw-semibold">v<%= @experiment.variant_version.version_number %></div>
+          <div class="text-muted small">ID <%= @experiment.variant_version_id %></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-12 col-sm-6 col-md-3">
+          <div class="small text-muted">Start</div>
+          <div><%= @experiment.starts_at.strftime('%d %b %Y %H:%M') %></div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-3">
+          <div class="small text-muted">End</div>
+          <div><%= @experiment.ends_at.strftime('%d %b %Y %H:%M') %></div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-3">
+          <div class="small text-muted">Duration</div>
+          <div>
+            <% hours = ((@experiment.ends_at - @experiment.starts_at) / 3600).round %>
+            <% if hours >= 24 %>
+              <%= (hours / 24) %> day(s)
+            <% else %>
+              <%= hours %> hour(s)
+            <% end %>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-3">
+          <div class="small text-muted">Traffic split</div>
+          <div><%= 100 - @experiment.allocation_pct %>% / <%= @experiment.allocation_pct %>%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Exposure stats -->
+  <h5 class="mb-3">
+    <i class="bi bi-eye"></i>
+    Exposures
+  </h5>
+
+  <div class="row g-3 mb-4">
+    <div class="col-12 col-md-6">
+      <div class="card text-center">
+        <div class="card-body">
+          <div class="display-6 fw-bold">
+            <%= @exposure_counts[@experiment.control_version_id] || 0 %>
+          </div>
+          <div class="text-muted">Control exposures</div>
+          <div class="small text-muted">v<%= @experiment.control_version.version_number %></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-6">
+      <div class="card text-center">
+        <div class="card-body">
+          <div class="display-6 fw-bold">
+            <%= @exposure_counts[@experiment.variant_version_id] || 0 %>
+          </div>
+          <div class="text-muted">Variant exposures</div>
+          <div class="small text-muted">v<%= @experiment.variant_version.version_number %></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Order stats -->
+  <h5 class="mb-3">
+    <i class="bi bi-cart"></i>
+    Orders placed during experiment
+  </h5>
+
+  <div class="row g-3 mb-4">
+    <div class="col-12 col-md-6">
+      <div class="card text-center">
+        <div class="card-body">
+          <div class="display-6 fw-bold">
+            <%= @order_counts[@experiment.control_version_id] || 0 %>
+          </div>
+          <div class="text-muted">Control orders</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-6">
+      <div class="card text-center">
+        <div class="card-body">
+          <div class="display-6 fw-bold">
+            <%= @order_counts[@experiment.variant_version_id] || 0 %>
+          </div>
+          <div class="text-muted">Variant orders</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert alert-info small">
+    <i class="bi bi-info-circle"></i>
+    Statistical significance calculation is not available in v1.
+    Review exposure counts and order counts to determine if the variant shows improvement.
+  </div>
+
+  <div class="d-flex gap-2">
+    <%= link_to restaurant_menu_experiments_path(@restaurant, @menu), class: 'btn btn-outline-secondary' do %>
+      <i class="bi bi-arrow-left"></i>
+      Back to experiments
+    <% end %>
+  </div>
+</div>

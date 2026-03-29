@@ -3,18 +3,25 @@ class ProfitMarginTargetsController < ApplicationController
   before_action :set_restaurant
   before_action :set_target, only: %i[edit update destroy]
 
+  after_action :verify_authorized
+
   def index
+    authorize ProfitMarginTarget
     redirect_to edit_restaurant_path(@restaurant, section: 'profitability_targets')
   end
 
   def new
     @target = ProfitMarginTarget.new
+    authorize @target
   end
 
-  def edit; end
+  def edit
+    authorize @target
+  end
 
   def create
     @target = ProfitMarginTarget.new(target_params)
+    authorize @target
     if @target.save
       redirect_to edit_restaurant_path(@restaurant, section: 'profitability_targets'), notice: 'Target created.'
     else
@@ -23,6 +30,7 @@ class ProfitMarginTargetsController < ApplicationController
   end
 
   def update
+    authorize @target
     if @target.update(target_params)
       redirect_to edit_restaurant_path(@restaurant, section: 'profitability_targets'), notice: 'Target updated.'
     else
@@ -31,6 +39,7 @@ class ProfitMarginTargetsController < ApplicationController
   end
 
   def destroy
+    authorize @target
     @target.destroy
     redirect_to edit_restaurant_path(@restaurant, section: 'profitability_targets'), notice: 'Target deleted.'
   end
@@ -38,7 +47,7 @@ class ProfitMarginTargetsController < ApplicationController
   private
 
   def set_restaurant
-    @restaurant = Restaurant.find(params[:restaurant_id])
+    @restaurant = current_user.restaurants.find(params[:restaurant_id])
   end
 
   def set_target

@@ -5,6 +5,10 @@ class DiningSession < ApplicationRecord
   belongs_to :smartmenu
   belongs_to :tablesetting
   belongs_to :restaurant
+  belongs_to :menu_experiment, optional: true
+  belongs_to :assigned_version, class_name: 'MenuVersion', optional: true
+
+  has_many :menu_experiment_exposures, dependent: :nullify
 
   validates :session_token, presence: true, uniqueness: true, length: { is: 64 }
   validates :expires_at, presence: true

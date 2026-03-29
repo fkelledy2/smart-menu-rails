@@ -62,24 +62,30 @@ class ProvisionUnclaimedRestaurantJobTest < ActiveSupport::TestCase
     assert_equal :unclaimed.to_s, restaurant.claim_status
   end
 
-  test 'raises ActiveRecord::RecordNotFound when discovered restaurant does not exist' do
-    assert_raises(ActiveRecord::RecordNotFound) do
-      ProvisionUnclaimedRestaurantJob.new.perform(
+  test 'returns nil without error when discovered restaurant does not exist' do
+    result = nil
+    assert_nothing_raised do
+      result = ProvisionUnclaimedRestaurantJob.new.perform(
         discovered_restaurant_id: -999_999,
         provisioning_user_id: @user.id,
       )
     end
+    assert_nil result
   end
 
-  test 'raises ActiveRecord::RecordNotFound when user does not exist' do
+  test 'returns nil without error when user does not exist' do
     dr = build_discovered_without_restaurant
 
-    assert_raises(ActiveRecord::RecordNotFound) do
-      ProvisionUnclaimedRestaurantJob.new.perform(
+    result = nil
+    assert_nothing_raised do
+      result = ProvisionUnclaimedRestaurantJob.new.perform(
         discovered_restaurant_id: dr.id,
         provisioning_user_id: -999_999,
       )
     end
+    assert_nil result
+  ensure
+    dr&.destroy!
   end
 
   test 'enqueues asynchronously without raising' do
