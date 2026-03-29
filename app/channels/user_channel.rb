@@ -1,7 +1,8 @@
 class UserChannel < ApplicationCable::Channel
   def subscribed
-    session_id = params[:session_id]
-    stream_from "user_#{session_id}_channel"
+    return reject unless current_user
+
+    stream_from "user_#{current_user.id}_channel"
   end
 
   def unsubscribed

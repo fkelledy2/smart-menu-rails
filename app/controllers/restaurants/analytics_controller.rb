@@ -93,11 +93,16 @@ module Restaurants
       period_start = days.days.ago
       orders = @restaurant.ordrs.where(created_at: period_start..Time.current)
 
+      # Ordr status enum: opened=0, ordered=20, preparing=22, ready=24,
+      # delivered=25, billrequested=30, paid=35, closed=40
+      # 'cancelled', 'open', 'pending' do not exist as enum values and would
+      # silently return 0 rows. Use the correct status key strings.
+      open_statuses = Ordr.statuses.slice('opened', 'ordered', 'preparing', 'ready', 'delivered', 'billrequested').values
       {
         total: orders.count,
-        completed: orders.where(status: 'closed').count,
-        cancelled: orders.where(status: 'cancelled').count,
-        pending: orders.where(status: %w[open pending]).count,
+        completed: orders.where(status: Ordr.statuses['closed']).count,
+        cancelled: 0, # No cancelled state exists in the Ordr enum
+        pending: orders.where(status: open_statuses).count,
         daily_data: generate_daily_order_data(orders, days),
       }
     rescue StandardError => e
@@ -136,14 +141,20 @@ module Restaurants
       total_customers = orders.distinct.count(:tablesetting_id) if total_customers.zero?
 
       if participants.any?
-        existing_customer_sessions = Ordrparticipant.joins(:ordr)
-          .where(ordrs: { restaurant_id: @restaurant.id })
-          .where(ordrs: { created_at: ...period_start })
-          .where.not(sessionid: [nil, ''])
-          .distinct.pluck(:sessionid)
-
         current_period_sessions = participants.distinct.pluck(:sessionid)
-        new_customers = (current_period_sessions - existing_customer_sessions).count
+
+        # Count how many current-period sessions also appeared in the prior period.
+        # Use a bounded lookback (6× the current window, max 365 days) to avoid
+        # an unbounded pluck of the entire historical participant table.
+        lookback_start = [period_start - (days * 6).days, 365.days.ago].max
+        returning_count = Ordrparticipant.joins(:ordr)
+          .where(ordrs: { restaurant_id: @restaurant.id })
+          .where(ordrs: { created_at: lookback_start...period_start })
+          .where(sessionid: current_period_sessions)
+          .where.not(sessionid: [nil, ''])
+          .distinct.count(:sessionid)
+
+        new_customers = current_period_sessions.size - returning_count
       else
         new_customers = (total_customers * 0.7).round
       end
@@ -169,14 +180,19 @@ module Restaurants
 
       item_counts = order_items.group(:menuitem_id).count
 
-      most_popular = item_counts.sort_by { |_, count| -count }.first(5).map do |menuitem_id, count|
-        menuitem = Menuitem.find_by(id: menuitem_id)
-        { name: menuitem&.name || 'Unknown', count: count }
+      # Bulk-load all relevant menuitems in a single query to avoid N+1
+      menuitem_ids = item_counts.keys.compact
+      menuitem_names = Menuitem.where(id: menuitem_ids).pluck(:id, :name).to_h
+
+      sorted_asc  = item_counts.sort_by { |_, count| count }
+      sorted_desc = sorted_asc.reverse
+
+      most_popular = sorted_desc.first(5).map do |menuitem_id, count|
+        { name: menuitem_names[menuitem_id] || 'Unknown', count: count }
       end
 
-      least_popular = item_counts.sort_by { |_, count| count }.first(5).map do |menuitem_id, count|
-        menuitem = Menuitem.find_by(id: menuitem_id)
-        { name: menuitem&.name || 'Unknown', count: count }
+      least_popular = sorted_asc.first(5).map do |menuitem_id, count|
+        { name: menuitem_names[menuitem_id] || 'Unknown', count: count }
       end
 
       {
@@ -253,9 +269,11 @@ module Restaurants
     end
 
     def generate_daily_traffic_data(days)
+      # Traffic analytics not yet wired to a real data source.
+      # Return zeros rather than rand() which produces misleading fake data on every request.
       (0...days).map do |i|
         date = i.days.ago.to_date
-        { date: date.strftime('%Y-%m-%d'), value: rand(10..100) }
+        { date: date.strftime('%Y-%m-%d'), value: 0 }
       end.reverse
     end
 

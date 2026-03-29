@@ -1,46 +1,3 @@
-def broadcast_state(ordr, tablesetting, ordrparticipant)
-  menu = ordr.menu
-  restaurant = menu.restaurant
-  menuparticipant = Menuparticipant.includes(:smartmenu).find_by(sessionid: session.id.to_s)
-
-  Rails.logger.info("[BroadcastState][Ordrs] Building payload for order=#{ordr.id} table=#{tablesetting&.id} session=#{session.id}")
-
-  payload = SmartmenuState.for_context(
-    menu: menu,
-    restaurant: restaurant,
-    tablesetting: tablesetting,
-    open_order: ordr,
-    ordrparticipant: ordrparticipant,
-    menuparticipant: menuparticipant,
-    session_id: session.id.to_s,
-  )
-
-  begin
-    keys = payload.is_a?(Hash) ? payload.keys : payload.class
-    Rails.logger.info("[BroadcastState][Ordrs] Payload summary keys=#{keys} orderId=#{payload.dig(:order, :id)} totals?=#{!payload[:totals].nil?}")
-  rescue StandardError => e
-    Rails.logger.info("[BroadcastState][Ordrs] Payload summary failed: #{e.class}: #{e.message}")
-  end
-
-  # Broadcast to both order_id channel and slug channel for compatibility
-  channel_order = "ordr_#{ordr.id}_channel"
-  Rails.logger.info("[BroadcastState][Ordrs] Broadcasting to #{channel_order}")
-  ActionCable.server.broadcast(channel_order, { state: payload })
-
-  if menuparticipant&.smartmenu&.slug
-    channel_slug = "ordr_#{menuparticipant.smartmenu.slug}_channel"
-    Rails.logger.info("[BroadcastState][Ordrs] Broadcasting to #{channel_slug}")
-    ActionCable.server.broadcast(channel_slug, { state: payload })
-  end
-rescue StandardError => e
-  Rails.logger.warn("[SmartmenuState] Broadcast failed: #{e.class}: #{e.message}")
-  begin
-    Rails.logger.warn("[SmartmenuState] Backtrace:\n#{e.backtrace.join("\n")}")
-  rescue StandardError
-    # ignore
-  end
-end
-
 class OrdrsController < ApplicationController
   include CachePerformanceMonitoring
   include OrderingGate
@@ -671,5 +628,48 @@ class OrdrsController < ApplicationController
   def ordr_params
     params.require(:ordr).permit(:orderedAt, :deliveredAt, :paidAt, :nett, :tip, :service, :tax, :gross, :status,
                                  :ordercapacity, :covercharge, :employee_id, :tablesetting_id, :menu_id, :restaurant_id,)
+  end
+
+  def broadcast_state(ordr, tablesetting, ordrparticipant)
+    menu = ordr.menu
+    restaurant = menu.restaurant
+    menuparticipant = Menuparticipant.includes(:smartmenu).find_by(sessionid: session.id.to_s)
+
+    Rails.logger.info("[BroadcastState][Ordrs] Building payload for order=#{ordr.id} table=#{tablesetting&.id} session=#{session.id}")
+
+    payload = SmartmenuState.for_context(
+      menu: menu,
+      restaurant: restaurant,
+      tablesetting: tablesetting,
+      open_order: ordr,
+      ordrparticipant: ordrparticipant,
+      menuparticipant: menuparticipant,
+      session_id: session.id.to_s,
+    )
+
+    begin
+      keys = payload.is_a?(Hash) ? payload.keys : payload.class
+      Rails.logger.info("[BroadcastState][Ordrs] Payload summary keys=#{keys} orderId=#{payload.dig(:order, :id)} totals?=#{!payload[:totals].nil?}")
+    rescue StandardError => e
+      Rails.logger.info("[BroadcastState][Ordrs] Payload summary failed: #{e.class}: #{e.message}")
+    end
+
+    # Broadcast to both order_id channel and slug channel for compatibility
+    channel_order = "ordr_#{ordr.id}_channel"
+    Rails.logger.info("[BroadcastState][Ordrs] Broadcasting to #{channel_order}")
+    ActionCable.server.broadcast(channel_order, { state: payload })
+
+    return unless menuparticipant&.smartmenu&.slug
+
+    channel_slug = "ordr_#{menuparticipant.smartmenu.slug}_channel"
+    Rails.logger.info("[BroadcastState][Ordrs] Broadcasting to #{channel_slug}")
+    ActionCable.server.broadcast(channel_slug, { state: payload })
+  rescue StandardError => e
+    Rails.logger.warn("[SmartmenuState] Broadcast failed: #{e.class}: #{e.message}")
+    begin
+      Rails.logger.warn("[SmartmenuState] Backtrace:\n#{e.backtrace.join("\n")}")
+    rescue StandardError
+      # ignore
+    end
   end
 end

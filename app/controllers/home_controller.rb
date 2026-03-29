@@ -17,8 +17,9 @@ class HomeController < ApplicationController
 
     @plans = Plan.display_order
     @features = Feature.all
+    @features_plans = FeaturesPlan.all.group_by { |fp| [fp.plan_id, fp.feature_id] }
     @contact = Contact.new
-    @testimonials = Testimonial.where(status: 'approved').order(:sequence).all
+    @testimonials = Testimonial.where(status: 'approved').order(:sequence).includes(:user, :restaurant)
     @hero_images = HeroImage.approved_for_carousel
 
     # Set page metadata

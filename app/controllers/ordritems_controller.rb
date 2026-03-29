@@ -1,47 +1,3 @@
-def broadcast_state(ordr, tablesetting, ordrparticipant)
-  # Eager load ordritemnotes to ensure notes are included in broadcast
-  ordr = Ordr.includes(ordritems: :ordritemnotes).find(ordr.id)
-  menu = ordr.menu
-  restaurant = menu.restaurant
-  menuparticipant = Menuparticipant.includes(:smartmenu).find_by(sessionid: session.id.to_s)
-
-  Rails.logger.info("[BroadcastState][Ordritems] Building payload for order=#{ordr.id} table=#{tablesetting&.id} session=#{session.id}")
-
-  payload = SmartmenuState.for_context(
-    menu: menu,
-    restaurant: restaurant,
-    tablesetting: tablesetting,
-    open_order: ordr,
-    ordrparticipant: ordrparticipant,
-    menuparticipant: menuparticipant,
-    session_id: session.id.to_s,
-  )
-
-  begin
-    keys = payload.is_a?(Hash) ? payload.keys : payload.class
-    Rails.logger.info("[BroadcastState][Ordritems] Payload summary keys=#{keys} orderId=#{payload.dig(:order, :id)} totals?=#{!payload[:totals].nil?}")
-  rescue StandardError => e
-    Rails.logger.info("[BroadcastState][Ordritems] Payload summary failed: #{e.class}: #{e.message}")
-  end
-
-  channel_order = "ordr_#{ordr.id}_channel"
-  Rails.logger.info("[BroadcastState][Ordritems] Broadcasting to #{channel_order}")
-  ActionCable.server.broadcast(channel_order, { state: payload })
-
-  if menuparticipant&.smartmenu&.slug
-    channel_slug = "ordr_#{menuparticipant.smartmenu.slug}_channel"
-    Rails.logger.info("[BroadcastState][Ordritems] Broadcasting to #{channel_slug}")
-    ActionCable.server.broadcast(channel_slug, { state: payload })
-  end
-rescue StandardError => e
-  Rails.logger.warn("[SmartmenuState] Broadcast failed: #{e.class}: #{e.message}")
-  begin
-    Rails.logger.warn("[SmartmenuState] Backtrace:\n#{e.backtrace.join("\n")}")
-  rescue StandardError
-    # ignore
-  end
-end
-
 class OrdritemsController < ApplicationController
   include CsrfSafeGuestActions
 
@@ -479,5 +435,49 @@ class OrdritemsController < ApplicationController
   # Only allow a list of trusted parameters through.
   def ordritem_params
     params.require(:ordritem).permit(:ordr_id, :menuitem_id, :ordritemprice, :status, :size_name, :quantity, :note)
+  end
+
+  def broadcast_state(ordr, tablesetting, ordrparticipant)
+    # Eager load ordritemnotes to ensure notes are included in broadcast
+    ordr = Ordr.includes(ordritems: :ordritemnotes).find(ordr.id)
+    menu = ordr.menu
+    restaurant = menu.restaurant
+    menuparticipant = Menuparticipant.includes(:smartmenu).find_by(sessionid: session.id.to_s)
+
+    Rails.logger.info("[BroadcastState][Ordritems] Building payload for order=#{ordr.id} table=#{tablesetting&.id} session=#{session.id}")
+
+    payload = SmartmenuState.for_context(
+      menu: menu,
+      restaurant: restaurant,
+      tablesetting: tablesetting,
+      open_order: ordr,
+      ordrparticipant: ordrparticipant,
+      menuparticipant: menuparticipant,
+      session_id: session.id.to_s,
+    )
+
+    begin
+      keys = payload.is_a?(Hash) ? payload.keys : payload.class
+      Rails.logger.info("[BroadcastState][Ordritems] Payload summary keys=#{keys} orderId=#{payload.dig(:order, :id)} totals?=#{!payload[:totals].nil?}")
+    rescue StandardError => e
+      Rails.logger.info("[BroadcastState][Ordritems] Payload summary failed: #{e.class}: #{e.message}")
+    end
+
+    channel_order = "ordr_#{ordr.id}_channel"
+    Rails.logger.info("[BroadcastState][Ordritems] Broadcasting to #{channel_order}")
+    ActionCable.server.broadcast(channel_order, { state: payload })
+
+    if menuparticipant&.smartmenu&.slug
+      channel_slug = "ordr_#{menuparticipant.smartmenu.slug}_channel"
+      Rails.logger.info("[BroadcastState][Ordritems] Broadcasting to #{channel_slug}")
+      ActionCable.server.broadcast(channel_slug, { state: payload })
+    end
+  rescue StandardError => e
+    Rails.logger.warn("[SmartmenuState] Broadcast failed: #{e.class}: #{e.message}")
+    begin
+      Rails.logger.warn("[SmartmenuState] Backtrace:\n#{e.backtrace.join("\n")}")
+    rescue StandardError
+      # ignore
+    end
   end
 end

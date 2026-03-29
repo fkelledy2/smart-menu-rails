@@ -3,7 +3,7 @@
 
 // Navigation enhancements
 .navbar {
-  box-shadow: 0 2px 4px rgb(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0,0,0, 0.1);
   
   .navbar-brand {
     font-weight: 600;
@@ -57,6 +57,8 @@
 }
 
 // Alert enhancements
+// Intentional: replaces Bootstrap's full border with a left-accent style.
+// Dark mode sets border-left-color per variant — do not restore border: 1px solid.
 .alert {
   border: none;
   border-left: 4px solid;
@@ -81,7 +83,7 @@
 // Modal enhancements
 .modal-content {
   border: none;
-  box-shadow: 0 10px 30px rgb(0,0,0,0.2);
+  box-shadow: 0 10px 30px rgba(0,0,0, 0.2);
   
   .modal-header {
     background: $light;

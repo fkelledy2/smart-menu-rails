@@ -463,7 +463,7 @@ class SmartmenusController < ApplicationController
     load_open_order_and_participant
 
     begin
-      @needs_age_check = !(@openOrder && AlcoholOrderEvent.exists?(ordr_id: @openOrder.id, age_check_acknowledged: false)).nil?
+      @needs_age_check = @openOrder.present? && AlcoholOrderEvent.exists?(ordr_id: @openOrder.id, age_check_acknowledged: false)
     rescue StandardError => e
       Rails.logger.warn("[SmartmenusController#show] age check lookup failed: #{e.message}")
       @needs_age_check = false

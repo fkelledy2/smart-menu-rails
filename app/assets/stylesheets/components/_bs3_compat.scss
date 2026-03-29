@@ -1,0 +1,92 @@
+// ============================================
+// BOOTSTRAP 3 → 5 COMPATIBILITY SHIMS
+// Covers legacy classes still present in views
+// that haven't been migrated to the 2025 design
+// system yet. These give visual consistency
+// without requiring changes to every view file.
+// Remove a shim once all views using it are
+// migrated to the 2025 design system.
+// ============================================
+
+// ------------------------------------
+// .page-header (Bootstrap 3)
+// Used on show/new/edit pages across the app.
+// Gives heading a bottom border + spacing.
+// ------------------------------------
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding-bottom: 0.75rem;
+  margin-top: 0.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--color-gray-200, #e5e7eb);
+
+  h1, h2, h3, h4 {
+    margin-bottom: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-gray-900, #111827);
+  }
+}
+
+// ------------------------------------
+// .dl-horizontal (Bootstrap 3)
+// Renders a <dl> as a two-column key/value
+// layout on medium+ screens.
+// ------------------------------------
+.dl-horizontal {
+  dt {
+    font-weight: 600;
+    color: var(--color-gray-500, #6b7280);
+    font-size: 0.875rem;
+  }
+
+  dd {
+    margin-bottom: 0.5rem;
+    color: var(--color-gray-900, #111827);
+  }
+
+  @media (min-width: 768px) {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 0.25rem 1rem;
+
+    dt {
+      text-align: right;
+      grid-column: 1;
+    }
+
+    dd {
+      grid-column: 2;
+      margin-left: 0;
+    }
+  }
+}
+
+// ------------------------------------
+// .btn-default (Bootstrap 3)
+// Equivalent to Bootstrap 5 btn-outline-secondary.
+// ------------------------------------
+.btn-default {
+  --bs-btn-color: #{$gray-600};
+  --bs-btn-border-color: #{$gray-400};
+  --bs-btn-hover-color: #{$gray-700};
+  --bs-btn-hover-bg: #{$gray-100};
+  --bs-btn-hover-border-color: #{$gray-500};
+  --bs-btn-active-color: #{$gray-800};
+  --bs-btn-active-bg: #{$gray-200};
+  --bs-btn-active-border-color: #{$gray-600};
+
+  background-color: transparent;
+}
+
+// ------------------------------------
+// .table-container-spacing (custom legacy)
+// Adds top padding to a Tabulator table wrapper.
+// ------------------------------------
+.table-container-spacing {
+  padding-top: 0.5rem;
+}

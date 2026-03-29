@@ -1,11 +1,15 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  testimonial: MyString
+  testimonial: Great experience with this menu platform
+  sequence: 1
+  status: 1
   user: one
   restaurant: one
 
 two:
-  testimonial: MyString
+  testimonial: Excellent product for our restaurant
+  sequence: 2
+  status: 0
   user: two
   restaurant: two

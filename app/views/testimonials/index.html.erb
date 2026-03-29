@@ -1,20 +1,59 @@
-<div class="row">
-  <div class="col-6">
-    <h4><%= t(".testimonials") %> </h4>
-  </div>
-  <div class="col-6 text-end">
-    <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-      <div class="btn-group" role="group">
-        <button id="testimonial-actions" type="button" class="btn btn-dark dropdown-toggle" disabled data-bs-toggle="dropdown" aria-expanded="false">
-          <%= t('common.actions') %>
-        </button>
-        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="allergyn-actions">
-          <li><a id="approve-testimonial" class="dropdown-item" href="#"><%= t(".approve") %></a></li>
-          <li><a id="unapprove-testimonial" class="dropdown-item" href="#"><%= t(".unapprove") %></a></li>
-        </ul>
-      </div>
+<%#
+  Testimonials Management - 2025 Design System
+%>
+
+<!-- Page Header -->
+<div class="container-fluid px-0 pb-4">
+  <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+    <div>
+      <h1 class="text-2xl font-semibold text-gray-900 mb-1">
+        <i class="bi bi-chat-quote"></i>
+        <%= t('.testimonials') %>
+      </h1>
+      <p class="text-sm text-gray-500">
+        <%= t('.description') %>
+      </p>
+    </div>
+
+    <div class="d-flex gap-2">
+      <%= link_to new_testimonial_path, class: 'btn btn-primary' do %>
+        <i class="bi bi-plus-circle"></i> <%= t('.new_testimonial') %>
+      <% end %>
     </div>
   </div>
 </div>
-<div class="table-container-spacing table-borderless" id="testimonial-table">
+
+<!-- Testimonials Table Card -->
+<div class="content-card">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="content-card-title mb-0">
+      <i class="bi bi-list-ul"></i>
+      <%= t('.all_testimonials') %>
+    </h2>
+
+    <div class="btn-group" role="group">
+      <button id="testimonial-actions" type="button"
+              class="btn btn-ghost btn-sm dropdown-toggle"
+              disabled
+              data-bs-toggle="dropdown"
+              aria-expanded="false">
+        <%= t('common.actions') %>
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="testimonial-actions">
+        <li>
+          <a id="approve-testimonial" class="dropdown-item" href="#">
+            <i class="bi bi-check-circle"></i> <%= t('.approve') %>
+          </a>
+        </li>
+        <li>
+          <a id="unapprove-testimonial" class="dropdown-item" href="#">
+            <i class="bi bi-x-circle"></i> <%= t('.unapprove') %>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div id="testimonial-table">
+  </div>
 </div>

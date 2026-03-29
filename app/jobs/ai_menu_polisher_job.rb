@@ -10,7 +10,7 @@ class AiMenuPolisherJob
     menu = Menu.includes(menusections: [:menuitems]).find_by(id: menu_id)
     return unless menu
 
-    menu.restaurant
+    restaurant = menu.restaurant
     target_locale = restaurant_default_locale(menu)
     target_language = locale_to_language(target_locale)
     total_items = menu.menuitems.count
@@ -136,7 +136,7 @@ class AiMenuPolisherJob
 
     # Invalidate caches
     AdvancedCacheService.invalidate_menu_caches(menu.id)
-    AdvancedCacheService.invalidate_restaurant_caches(menu.restaurant.id)
+    AdvancedCacheService.invalidate_restaurant_caches(restaurant.id) if restaurant
 
     # Estimate prep times for menu items
     set_progress('running', total_items, total_items, menu_id, message: 'Estimating prep times...')

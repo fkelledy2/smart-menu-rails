@@ -119,6 +119,6 @@ class Crm::CalendlyEventHandlerTest < ActiveSupport::TestCase
     end
     stage_changed_audits = lead.crm_lead_audits.where(event: 'stage_changed')
     assert_equal 1, stage_changed_audits.count,
-      "Expected 1 stage_changed audit, got #{stage_changed_audits.count}"
+                 "Expected 1 stage_changed audit, got #{stage_changed_audits.count}"
   end
 end

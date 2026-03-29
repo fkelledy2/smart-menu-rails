@@ -7,7 +7,9 @@ class LocalGuideGeneratorJob < ApplicationJob
 
   def perform(local_guide_id: nil, city: nil, category: nil)
     if local_guide_id
-      guide = LocalGuide.find(local_guide_id)
+      guide = LocalGuide.find_by(id: local_guide_id)
+      return unless guide
+
       regenerate_guide(guide)
     else
       generate_new_guide(city: city, category: category)

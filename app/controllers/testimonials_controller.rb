@@ -3,11 +3,12 @@ class TestimonialsController < ApplicationController
   before_action :set_testimonial, only: %i[show edit update destroy]
 
   # Pundit authorization
-  after_action :verify_authorized, except: [:index]
+  after_action :verify_authorized
   after_action :verify_policy_scoped, only: [:index]
 
   # GET /testimonials or /testimonials.json
   def index
+    authorize Testimonial
     @testimonials = policy_scope(Testimonial)
   end
 
@@ -20,11 +21,13 @@ class TestimonialsController < ApplicationController
   def new
     @testimonial = Testimonial.new
     authorize @testimonial
+    load_form_collections
   end
 
   # GET /testimonials/1/edit
   def edit
     authorize @testimonial
+    load_form_collections
   end
 
   # POST /testimonials or /testimonials.json
@@ -39,7 +42,7 @@ class TestimonialsController < ApplicationController
         end
         format.json { render :show, status: :created, location: @testimonial }
       else
-        format.html { render :new, status: :unprocessable_content }
+        format.html { load_form_collections; render :new, status: :unprocessable_content }
         format.json { render json: @testimonial.errors, status: :unprocessable_content }
       end
     end
@@ -47,6 +50,8 @@ class TestimonialsController < ApplicationController
 
   # PATCH/PUT /testimonials/1 or /testimonials/1.json
   def update
+    authorize @testimonial
+
     respond_to do |format|
       if @testimonial.update(testimonial_params)
         format.html do
@@ -54,7 +59,7 @@ class TestimonialsController < ApplicationController
         end
         format.json { render :show, status: :ok, location: @testimonial }
       else
-        format.html { render :edit, status: :unprocessable_content }
+        format.html { load_form_collections; render :edit, status: :unprocessable_content }
         format.json { render json: @testimonial.errors, status: :unprocessable_content }
       end
     end
@@ -62,6 +67,8 @@ class TestimonialsController < ApplicationController
 
   # DELETE /testimonials/1 or /testimonials/1.json
   def destroy
+    authorize @testimonial
+
     @testimonial.destroy!
 
     respond_to do |format|
@@ -78,6 +85,11 @@ class TestimonialsController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_testimonial
     @testimonial = Testimonial.find(params[:id])
+  end
+
+  def load_form_collections
+    @users = User.order(:email).pluck(:email, :id)
+    @restaurants = Restaurant.order(:name).pluck(:name, :id)
   end
 
   # Only allow a list of trusted parameters through.

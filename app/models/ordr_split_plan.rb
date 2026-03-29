@@ -41,7 +41,7 @@ class OrdrSplitPlan < ApplicationRecord
   end
 
   def any_share_in_flight?
-    ordr_split_payments.where(status: [:pending, :succeeded]).exists?
+    ordr_split_payments.exists?(status: %i[pending succeeded])
   end
 
   def all_shares_settled?

@@ -72,4 +72,17 @@ class OrdritemnotesPolicyTest < ActiveSupport::TestCase
     scope = OrdritemnotePolicy::Scope.new(nil, Ordritemnote.all)
     assert_equal 0, scope.resolve.count
   end
+
+  test 'scope executes valid SQL for authenticated user' do
+    # Regression: the WHERE clause must reference the joined ordrs table directly.
+    # A nested hash like .where(ordritems: { ordrs: { ... } }) generates invalid SQL
+    # ("ordritems"."restaurant_id" resolved wrongly). This asserts no exception is raised.
+    scope = OrdritemnotePolicy::Scope.new(@owner, Ordritemnote.all)
+    assert_nothing_raised { scope.resolve.to_a }
+  end
+
+  test 'scope returns none for non-owner user' do
+    scope = OrdritemnotePolicy::Scope.new(@other_user, Ordritemnote.all)
+    assert_nothing_raised { scope.resolve.to_a }
+  end
 end

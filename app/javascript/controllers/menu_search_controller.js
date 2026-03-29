@@ -48,7 +48,12 @@ export default class extends Controller {
       });
     }
 
-    const items = container.querySelectorAll('.menu-item-card-mobile');
+    // Match both customer (.menu-item-card-mobile) and staff (.menu-item-card) item wrappers
+    const ITEM_SELECTOR = '.menu-item-card-mobile, .menu-item-card';
+    const VISIBLE_ITEM_SELECTOR =
+      '.menu-item-card-mobile:not(.search-hidden), .menu-item-card:not(.search-hidden)';
+
+    const items = container.querySelectorAll(ITEM_SELECTOR);
     let totalVisible = 0;
 
     // Toggle item visibility via CSS class
@@ -71,7 +76,7 @@ export default class extends Controller {
       );
       if (!itemsRow) return;
 
-      const visibleItems = itemsRow.querySelectorAll('.menu-item-card-mobile:not(.search-hidden)');
+      const visibleItems = itemsRow.querySelectorAll(VISIBLE_ITEM_SELECTOR);
       const sectionHidden = query && visibleItems.length === 0;
 
       // Hide the section header + items row

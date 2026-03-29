@@ -15,7 +15,12 @@ class Menu::GenerateWhiskeyFlightsJob < ApplicationJob
   }.freeze
 
   def perform(menu_id)
-    menu = ::Menu.find(menu_id)
+    menu = ::Menu.find_by(id: menu_id)
+    unless menu
+      Rails.logger.warn("[GenerateWhiskeyFlightsJob] Menu ##{menu_id} not found — skipping")
+      return
+    end
+
     restaurant = menu.restaurant
     max_flights = restaurant.max_whiskey_flights || 5
 

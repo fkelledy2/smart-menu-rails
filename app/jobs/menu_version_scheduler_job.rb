@@ -12,7 +12,7 @@ class MenuVersionSchedulerJob < ApplicationJob
     # Activate versions whose starts_at has arrived and are not yet active.
     activatable = MenuVersion
       .where(is_active: false)
-      .where('starts_at <= ?', now)
+      .where(starts_at: ..now)
       .where('ends_at IS NULL OR ends_at > ?', now)
 
     activatable.find_each do |version|

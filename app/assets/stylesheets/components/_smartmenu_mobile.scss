@@ -1051,6 +1051,12 @@
   display: none !important;
 }
 
+// .menu-layout-list sets display:block !important on .menu-item-card-mobile (specificity [0,2,0]).
+// Override it here with a 3-class selector ([0,3,0]) so search-hidden always wins.
+.menu-layout-list .menu-item-card-mobile.search-hidden {
+  display: none !important;
+}
+
 .search-section-hidden {
   display: none !important;
 }

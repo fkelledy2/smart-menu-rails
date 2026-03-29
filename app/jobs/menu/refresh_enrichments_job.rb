@@ -9,15 +9,21 @@ class Menu::RefreshEnrichmentsJob
   # Finds enrichments past their expires_at and re-enriches.
   # Intended to run via Sidekiq-Cron or similar scheduler (e.g. weekly).
   def perform(batch_size = 50)
-    stale = ProductEnrichment
+    # Load the batch IDs up-front so we have a stable, size-capped set.
+    # find_each silently ignores .limit, so we pluck the IDs first and then
+    # iterate over that fixed array — this also captures the correct total for logging.
+    stale_ids = ProductEnrichment
       .where(expires_at: ...Time.current)
       .order(expires_at: :asc)
       .limit(batch_size)
-      .includes(:product)
+      .pluck(:id)
 
+    total = stale_ids.size
     refreshed = 0
-    stale.find_each do |enrichment|
-      product = enrichment.product
+
+    stale_ids.each do |enrichment_id|
+      enrichment = ProductEnrichment.includes(:product).find_by(id: enrichment_id)
+      product = enrichment&.product
       next unless product
 
       enrich_job = Menu::EnrichProductsJob.new
@@ -27,7 +33,7 @@ class Menu::RefreshEnrichmentsJob
       Rails.logger.warn("[RefreshEnrichmentsJob] Failed for product ##{product&.id}: #{e.class}: #{e.message}")
     end
 
-    Rails.logger.info("[RefreshEnrichmentsJob] Refreshed #{refreshed}/#{stale.count} enrichments")
+    Rails.logger.info("[RefreshEnrichmentsJob] Refreshed #{refreshed}/#{total} enrichments")
     refreshed
   end
 end
