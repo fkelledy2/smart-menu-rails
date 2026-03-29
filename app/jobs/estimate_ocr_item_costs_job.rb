@@ -2,7 +2,8 @@ class EstimateOcrItemCostsJob < ApplicationJob
   queue_as :default
 
   def perform(ocr_menu_item_id)
-    ocr_item = OcrMenuItem.find(ocr_menu_item_id)
+    ocr_item = OcrMenuItem.find_by(id: ocr_menu_item_id)
+    return unless ocr_item
     return if ocr_item.price.blank?
 
     estimator = AiCostEstimatorService.new

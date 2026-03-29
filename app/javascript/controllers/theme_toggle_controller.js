@@ -49,6 +49,7 @@ export default class extends Controller {
       localStorage.setItem('colorScheme', scheme);
       document.documentElement.setAttribute('data-color-scheme', scheme);
     }
+    this._syncThemeColorMeta(scheme);
     this._updateIcon(scheme);
   }
 
@@ -59,7 +60,36 @@ export default class extends Controller {
     } else {
       document.documentElement.removeAttribute('data-color-scheme');
     }
+    this._syncThemeColorMeta(stored || 'auto');
     this._updateIcon(stored || 'auto');
+  }
+
+  // Keeps <meta name="theme-color"> in sync with the explicit scheme so the
+  // browser chrome (address bar / status bar on mobile) matches the page bg.
+  // The two meta tags keep their media attributes; only their content changes:
+  //   auto  → light meta = light colour, dark meta = dark colour (system picks)
+  //   light → both metas = light colour (system dark preference shows light bg)
+  //   dark  → both metas = dark colour  (system light preference shows dark bg)
+  _syncThemeColorMeta(scheme) {
+    const lightMeta = document.getElementById('theme-color-light');
+    const darkMeta  = document.getElementById('theme-color-dark');
+    if (!lightMeta || !darkMeta) return;
+
+    const html = document.documentElement;
+    const lightColor = html.dataset.themeColorLight;
+    const darkColor  = html.dataset.themeColorDark;
+    if (!lightColor || !darkColor) return;
+
+    if (scheme === 'dark') {
+      lightMeta.setAttribute('content', darkColor);
+      darkMeta.setAttribute('content', darkColor);
+    } else if (scheme === 'light') {
+      lightMeta.setAttribute('content', lightColor);
+      darkMeta.setAttribute('content', lightColor);
+    } else {
+      lightMeta.setAttribute('content', lightColor);
+      darkMeta.setAttribute('content', darkColor);
+    }
   }
 
   _updateIcon(scheme) {

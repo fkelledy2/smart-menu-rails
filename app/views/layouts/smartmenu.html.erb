@@ -1,7 +1,21 @@
 
+<%
+  _sm_theme_colors = {
+    'modern'  => { light: '#f9fafb', dark: '#0f172a' },
+    'rustic'  => { light: '#fdf8f0', dark: '#140d04' },
+    'elegant' => { light: '#fafaf9', dark: '#080706' },
+  }
+  _sm_effective = @effective_theme || @smartmenu&.theme || 'modern'
+  _sm_tc = _sm_theme_colors[_sm_effective] || _sm_theme_colors['modern']
+%>
 <!DOCTYPE html>
-<html class="h-100" data-theme="<%= @effective_theme || @smartmenu&.theme || 'modern' %>">
+<html class="h-100"
+      data-theme="<%= _sm_effective %>"
+      data-theme-color-light="<%= _sm_tc[:light] %>"
+      data-theme-color-dark="<%= _sm_tc[:dark] %>">
   <head>
+    <meta name="theme-color" id="theme-color-light" media="(prefers-color-scheme: light)" content="<%= _sm_tc[:light] %>">
+    <meta name="theme-color" id="theme-color-dark"  media="(prefers-color-scheme: dark)"  content="<%= _sm_tc[:dark] %>">
     <%= render 'shared/head' %>
     <%= render 'shared/schema_org_json_ld' if @schema_org_json_ld.present? %>
     <%= render partial: 'smartmenus/theme_font_link', locals: { theme: @effective_theme || @smartmenu&.theme || 'modern' } %>

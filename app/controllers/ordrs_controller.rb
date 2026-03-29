@@ -115,7 +115,7 @@ class OrdrsController < ApplicationController
       restaurant_id: @ordr.restaurant_id,
       order_status: @ordr.status,
       order_total: @ordr.gross,
-      viewing_context: current_user.admin? ? 'staff_view' : 'customer_view',
+      viewing_context: current_user.super_admin? ? 'staff_view' : 'customer_view',
     })
   end
 

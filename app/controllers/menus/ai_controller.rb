@@ -124,17 +124,6 @@ module Menus
 
       restaurant = @restaurant || @menu.restaurant
 
-      unless current_user.super_admin? || current_user.manager_employee_for_restaurant?(restaurant.id)
-        respond_to do |format|
-          format.html do
-            flash[:alert] = t('menus.controller.generate_pairings_unauthorized', default: 'You do not have permission to generate pairings.')
-            redirect_to edit_restaurant_menu_path(restaurant, @menu, section: 'details')
-          end
-          format.json { render json: { error: 'Unauthorized' }, status: :forbidden }
-        end
-        return
-      end
-
       engine = BeverageIntelligence::PairingEngine.new
       pairings_count = engine.generate_for_menu(@menu)
 
