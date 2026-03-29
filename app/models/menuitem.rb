@@ -419,12 +419,30 @@ class Menuitem < ApplicationRecord
   rescue StandardError
     nil
   end
+
   # Size-based cost analysis
   def size_cost_analysis
     SizeMappingCostService.new(self).size_profitability_analysis
   end
 
   def has_size_mappings?
-    menuitemsizemappings.any?
+    menuitem_size_mappings.any?
+  end
+
+  def margin_status
+    target = profit_margin_target
+    return 'no_target' unless target
+
+    pct = profit_margin_percentage
+    minimum = target.minimum_margin_percentage
+    goal = target.target_margin_percentage
+
+    if minimum && pct < minimum
+      'critical'
+    elsif pct >= goal
+      'above_target'
+    else
+      'below_target'
+    end
   end
 end

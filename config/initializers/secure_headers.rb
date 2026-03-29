@@ -16,12 +16,12 @@ SecureHeaders::Configuration.default do |config|
   # Content Security Policy
   config.csp = {
     default_src: %w['self'],
-    script_src: %w['self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://www.googletagmanager.com https://maps.googleapis.com],
+    script_src: %w['self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://www.googletagmanager.com https://maps.googleapis.com https://web.squarecdn.com https://sandbox.web.squarecdn.com https://ga.jspm.io https://cdn.jsdelivr.net https://unpkg.com],
     style_src: %w['self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net],
-    font_src: %w['self' https://fonts.gstatic.com data:],
+    font_src: %w['self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:],
     img_src: %w['self' data: https: blob:],
-    connect_src: %w['self' https://api.stripe.com https://*.sentry.io https://maps.googleapis.com https://maps.gstatic.com],
-    frame_src: %w['self' https://js.stripe.com],
+    connect_src: %w['self' https://api.stripe.com https://*.sentry.io https://maps.googleapis.com https://maps.gstatic.com https://unpkg.com https://cdn.jsdelivr.net https://ga.jspm.io https://pci.squareup.com https://pci.squareupsandbox.com https://connect.squareup.com https://connect.squareupsandbox.com],
+    frame_src: %w['self' https://js.stripe.com https://web.squarecdn.com https://sandbox.web.squarecdn.com],
     object_src: %w['none'],
     base_uri: %w['self']
   }

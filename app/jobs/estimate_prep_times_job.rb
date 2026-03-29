@@ -6,7 +6,10 @@ class EstimatePrepTimesJob
   sidekiq_options queue: 'default', retry: 3
 
   def perform(menu_id = nil)
-    items = menu_id ? Menu.find(menu_id).menuitems : Menuitem.where.not(archived: true)
+    menu = menu_id ? Menu.find_by(id: menu_id) : nil
+    return if menu_id && menu.nil?
+
+    items = menu ? menu.menuitems : Menuitem.where.not(archived: true)
     processed = 0
 
     items.find_each do |item|

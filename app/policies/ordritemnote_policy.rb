@@ -26,10 +26,13 @@ class OrdritemnotePolicy < ApplicationPolicy
   class Scope < Scope
     def resolve
       if user.present?
-        # Scope to order item notes from restaurants owned by the user
+        # Scope to order item notes from restaurants owned by the user.
+        # Join chain: ordritemnotes -> ordritems -> ordrs -> restaurants
+        # WHERE must reference the joined 'ordrs' table directly, not as a nested hash
+        # under 'ordritems' (which would generate invalid SQL like "ordritems"."ordrs").
         restaurant_ids = user.restaurants.pluck(:id)
         scope.joins(ordritem: { ordr: :restaurant })
-          .where(ordritems: { ordrs: { restaurant_id: restaurant_ids } })
+          .where(ordrs: { restaurant_id: restaurant_ids })
       else
         scope.none
       end

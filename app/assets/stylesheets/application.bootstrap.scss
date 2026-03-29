@@ -43,6 +43,14 @@
 @import 'components/bootstrap_enhancements';
 
 // ============================================
+// BOOTSTRAP 3 → 5 COMPATIBILITY SHIMS
+// Covers .page-header, .dl-horizontal,
+// .btn-default, .table-container-spacing
+// used in views not yet migrated to 2025 system.
+// ============================================
+@import 'components/bs3_compat';
+
+// ============================================
 // 2025 DESIGN SYSTEM (deprecated — migrating to Bootstrap)
 // These files will be removed once all views
 // are converted to Bootstrap equivalents.
@@ -68,26 +76,3 @@
 @import 'components/sommelier';
 @import 'components/whiskey_ambassador';
 
-// Fix for dropdown button clickability issues
-.dropdown-toggle {
-  position: relative;
-  z-index: 10;
-  pointer-events: auto !important;
-  cursor: pointer !important;
-}
-
-.dropdown-menu {
-  z-index: 1070 !important;
-}
-
-// Ensure button groups don't interfere with clicks
-.btn-group {
-  position: relative;
-  z-index: 1;
-}
-
-// Fix for any overlay issues
-.btn-group .dropdown-toggle {
-  position: relative;
-  z-index: 2;
-}

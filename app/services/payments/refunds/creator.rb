@@ -14,7 +14,7 @@ module Payments
           status: :processing,
         )
 
-        adapter = provider_adapter(payment_attempt.provider)
+        adapter = provider_adapter(payment_attempt.provider, payment_attempt: payment_attempt)
         created = adapter.create_full_refund!(payment_attempt: payment_attempt)
 
         refund.update!(
@@ -31,10 +31,15 @@ module Payments
 
       private
 
-      def provider_adapter(provider)
+      def provider_adapter(provider, payment_attempt: nil)
         case provider.to_sym
         when :stripe
           Payments::Providers::StripeAdapter.new
+        when :square
+          restaurant = payment_attempt&.restaurant
+          raise ArgumentError, 'Square refund requires a restaurant on the payment attempt' unless restaurant
+
+          Payments::Providers::SquareAdapter.new(restaurant: restaurant)
         else
           raise ArgumentError, "Unsupported provider: #{provider}"
         end

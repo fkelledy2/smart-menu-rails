@@ -348,11 +348,7 @@ class RestaurantsController < Restaurants::BaseController
           initial_next_section: @restaurant.onboarding_next_section,
         })
         if @restaurant.genimage.nil?
-          @genimage = Genimage.new
-          @genimage.restaurant = @restaurant
-          @genimage.created_at = DateTime.current
-          @restaurant.genimage.updated_at = DateTime.current
-          @restaurant.genimage.save
+          Genimage.create(restaurant: @restaurant)
         end
         format.html do
           redirect_to restaurants_path, notice: t('common.flash.created', resource: t('activerecord.models.restaurant'))
@@ -418,11 +414,7 @@ class RestaurantsController < Restaurants::BaseController
           changes_made: @restaurant.previous_changes.keys,
         })
         if @restaurant.genimage.nil?
-          @genimage = Genimage.new
-          @genimage.restaurant = @restaurant
-          @genimage.created_at = DateTime.current
-          @restaurant.genimage.updated_at = DateTime.current
-          @restaurant.genimage.save
+          Genimage.create(restaurant: @restaurant)
         end
         format.html do
           if params[:return_to] == 'restaurant_edit'

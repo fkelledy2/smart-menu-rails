@@ -32,7 +32,7 @@ class EstimatePrepTimesJobTest < ActiveSupport::TestCase
   end
 
   test 'does not raise for missing menu_id' do
-    assert_raises(ActiveRecord::RecordNotFound) do
+    assert_nothing_raised do
       EstimatePrepTimesJob.new.perform(-999_999)
     end
   end

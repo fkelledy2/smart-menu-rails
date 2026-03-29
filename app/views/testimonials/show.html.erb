@@ -1,18 +1,48 @@
-<div class="page-header">
-  <%= link_to testimonials_path, class: 'btn btn-default' do %>
-    All Testimonials
-  <% end %>
-  <%= link_to edit_testimonial_path(@testimonial), class: 'btn btn-dark' do %>
-    Edit
-  <% end %>
-  <h1>Show testimonial</h1>
+<%#
+  Show Testimonial - 2025 Design System
+%>
+
+<!-- Page Header -->
+<div class="container-fluid px-0 pb-4">
+  <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+    <div>
+      <div class="text-sm text-gray-500 mb-2">
+        <%= link_to t('.back'), testimonials_path, class: 'text-primary' %>
+        <i class="bi bi-chevron-right"></i>
+        <%= t('.title') %>
+      </div>
+      <h1 class="text-2xl font-semibold text-gray-900 mb-1">
+        <i class="bi bi-chat-quote"></i>
+        <%= t('.title') %>
+      </h1>
+    </div>
+
+    <div class="d-flex gap-2">
+      <%= link_to testimonials_path, class: 'btn btn-ghost' do %>
+        <i class="bi bi-arrow-left"></i> <%= t('.back') %>
+      <% end %>
+      <%= link_to edit_testimonial_path(@testimonial), class: 'btn btn-primary' do %>
+        <i class="bi bi-pencil"></i> <%= t('.edit') %>
+      <% end %>
+    </div>
+  </div>
 </div>
 
-<dl class="dl-horizontal">
-  <dt>Testimonial:</dt>
-  <dd><%= @testimonial.testimonial %></dd>
-  <dt>User:</dt>
-  <dd><%= @testimonial.user %></dd>
-  <dt>Restaurant:</dt>
-  <dd><%= @testimonial.restaurant %></dd>
-</dl>
+<!-- Testimonial Details Card -->
+<div class="content-card">
+  <h2 class="content-card-title">
+    <i class="bi bi-chat-quote"></i>
+    <%= t('.testimonial_details') %>
+  </h2>
+
+  <dl class="row mt-3">
+    <dt class="col-sm-3 text-gray-500"><%= t('testimonials.testimonial.testimonial') %></dt>
+    <dd class="col-sm-9"><%= @testimonial.testimonial %></dd>
+
+    <dt class="col-sm-3 text-gray-500"><%= t('testimonials.testimonial.user') %></dt>
+    <dd class="col-sm-9"><%= @testimonial.user&.name %></dd>
+
+    <dt class="col-sm-3 text-gray-500"><%= t('testimonials.testimonial.restaurant') %></dt>
+    <dd class="col-sm-9"><%= @testimonial.restaurant&.name %></dd>
+  </dl>
+</div>

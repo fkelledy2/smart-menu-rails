@@ -46,7 +46,7 @@ class KitchenChannel < ApplicationCable::Channel
     return unless order
 
     # Ensure the authenticated user belongs to this order's restaurant.
-    return unless current_user.admin? ||
+    return unless current_user.super_admin? ||
                   order.restaurant&.user_id == current_user.id ||
                   current_user.active_employee_for_restaurant?(order.restaurant_id)
 

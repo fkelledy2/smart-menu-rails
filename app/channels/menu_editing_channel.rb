@@ -2,11 +2,11 @@ class MenuEditingChannel < ApplicationCable::Channel
   def subscribed
     menu_id = params[:menu_id]
     return reject unless menu_id
+    return reject unless current_user
 
     stream_from "menu_#{menu_id}_editing"
 
     # Create or update edit session
-    return unless current_user
 
     MenuEditSession.find_or_create_by(
       menu_id: menu_id,

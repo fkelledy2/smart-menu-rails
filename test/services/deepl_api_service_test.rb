@@ -200,7 +200,8 @@ class DeeplApiServiceTest < ActiveSupport::TestCase
       DeeplApiService.stub(:post, mock_post) do
         DeeplApiService.translate('Hello', to: 'FR', from: 'EN')
 
-        assert_equal '/translate', captured_params[:endpoint]
+        expected_uri = DeeplApiService.base_uri_for_key(test_api_key)
+        assert_equal "#{expected_uri}/translate", captured_params[:endpoint]
 
         body = captured_params[:options][:body]
         assert_equal test_api_key, body[:auth_key]

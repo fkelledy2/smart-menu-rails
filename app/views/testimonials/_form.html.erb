@@ -1,12 +1,11 @@
 <%= form_with(model: testimonial) do |form| %>
   <% if testimonial.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(testimonial.errors.count, "error") %> prohibited this testimonial from being saved:</h2>
-
-      <ul>
-      <% testimonial.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
+    <div class="alert alert-danger" role="alert">
+      <strong><%= pluralize(testimonial.errors.count, 'error') %> prohibited this testimonial from being saved:</strong>
+      <ul class="mb-0 mt-1">
+        <% testimonial.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
       </ul>
     </div>
   <% end %>
@@ -18,27 +17,15 @@
 
   <div class="mb-3">
     <%= form.label :user_id, class: 'form-label' %>
-      <%= form.text_field :user_id, class: 'form-control' %>
-    </div>
+    <%= form.select :user_id, @users, { include_blank: true }, class: 'form-select' %>
+  </div>
 
   <div class="mb-3">
     <%= form.label :restaurant_id, class: 'form-label' %>
-      <%= form.text_field :restaurant_id, class: 'form-control' %>
-    </div>
+    <%= form.select :restaurant_id, @restaurants, { include_blank: true }, class: 'form-select' %>
+  </div>
 
-  <div class="mb-3">
-    <% if testimonial.persisted? %>
-      <div class="float-end">
-        <%= link_to t('common.delete'), testimonial, method: :delete, class: "text-danger", data: { confirm: t('common.confirm') } %>
-      </div>
-    <% end %>
-
-    <%= form.submit value: t('common.save'), class: 'btn btn-dark' %>
-
-    <% if testimonial.persisted? %>
-      <%= link_to t('common.cancel'), testimonial, class: "btn btn-link" %>
-    <% else %>
-      <%= link_to t('common.cancel'), testimonials_path, class: "btn btn-link" %>
-    <% end %>
+  <div class="d-flex gap-2 mt-4">
+    <%= form.submit t('testimonials.form.save'), class: 'btn btn-primary' %>
   </div>
 <% end %>

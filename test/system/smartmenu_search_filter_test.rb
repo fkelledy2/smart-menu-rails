@@ -47,7 +47,7 @@ class SmartmenuSearchFilterTest < ApplicationSystemTestCase
     input = find('[data-testid="menu-search-input"]', wait: 10)
     input.fill_in with: 'burger'
 
-    assert_selector    "[data-testid='menu-item-#{@burger.id}']",       visible: true,  wait: 2
+    assert_selector    "[data-testid='menu-item-#{@burger.id}']",       visible: true, wait: 2
     assert_no_selector "[data-testid='menu-item-#{@spring_rolls.id}']", visible: true
     assert_no_selector "[data-testid='menu-item-#{@caesar_salad.id}']", visible: true
     assert_no_selector "[data-testid='menu-item-#{@pasta.id}']",        visible: true
@@ -59,7 +59,7 @@ class SmartmenuSearchFilterTest < ApplicationSystemTestCase
     # @pasta description contains "bacon"
     input.fill_in with: 'bacon'
 
-    assert_selector    "[data-testid='menu-item-#{@pasta.id}']",        visible: true,  wait: 2
+    assert_selector    "[data-testid='menu-item-#{@pasta.id}']",        visible: true, wait: 2
     assert_no_selector "[data-testid='menu-item-#{@burger.id}']",       visible: true
   end
 

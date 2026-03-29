@@ -572,9 +572,30 @@ class OrdrPaymentsController < ApplicationController
       end
     end
 
+    # Create a PaymentAttempt before calling Stripe so the webhook can reconcile
+    # the checkout.session.completed event back to an internal record.
+    # Use a stable idempotency key so duplicate requests resolve to the same attempt.
+    idempotency_key = if split_payment
+                        "checkout_session:split:#{split_payment.id}"
+                      else
+                        "checkout_session:ordr:#{@ordr.id}"
+                      end
+
+    payment_attempt = PaymentAttempt.find_or_create_by!(idempotency_key: idempotency_key) do |pa|
+      pa.ordr          = @ordr
+      pa.restaurant    = @ordr.restaurant
+      pa.provider      = :stripe
+      pa.amount_cents  = amount_cents
+      pa.currency      = currency
+      pa.status        = :requires_action
+      pa.charge_pattern = :direct
+      pa.merchant_model = :restaurant_mor
+    end
+
     metadata = {
       order_id: @ordr.id,
       restaurant_id: @ordr.restaurant_id,
+      payment_attempt_id: payment_attempt.id,
     }
     metadata[:ordr_split_payment_id] = split_payment.id if split_payment
 
@@ -601,9 +622,11 @@ class OrdrPaymentsController < ApplicationController
       },
     )
 
+    payment_attempt.update!(provider_payment_id: session.id.to_s)
+
     key_fingerprint = Digest::SHA256.hexdigest(Stripe.api_key.to_s)[0, 12]
     Rails.logger.warn(
-      "[StripeCheckout] Created session (ordr_id=#{@ordr.id} split_payment_id=#{split_payment&.id} session_id=#{session.id} payment_intent_id=#{session.payment_intent.presence} stripe_key_fp=#{key_fingerprint})",
+      "[StripeCheckout] Created session (ordr_id=#{@ordr.id} pa_id=#{payment_attempt.id} split_payment_id=#{split_payment&.id} session_id=#{session.id} payment_intent_id=#{session.payment_intent.presence} stripe_key_fp=#{key_fingerprint})",
     )
 
     split_payment&.update!(

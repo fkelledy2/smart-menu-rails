@@ -7,6 +7,8 @@ class SpotifyPlaylistSyncJob
   def perform(*args)
     Rails.logger.debug 'SpotifyPlaylistSyncJob'
     @restaurant = Restaurant.find_by(id: args[0])
+    return unless @restaurant
+
     Rails.logger.debug @restaurant.name
     Rails.logger.debug @restaurant.spotifyuserid
     return if @restaurant.spotifyuserid.nil?

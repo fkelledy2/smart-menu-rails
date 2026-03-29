@@ -340,7 +340,7 @@ class ApplicationController < ActionController::Base
 
   # Admin authorization helper
   def ensure_admin!
-    unless current_user&.admin?
+    unless current_user&.super_admin?
       flash[:alert] = 'Access denied. Admin privileges required.'
       redirect_to root_path
     end

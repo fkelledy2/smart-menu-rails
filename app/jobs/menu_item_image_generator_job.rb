@@ -53,9 +53,10 @@ class MenuItemImageGeneratorJob
     prompt_fingerprint = Digest::SHA256.hexdigest(prompt.to_s)
     Rails.logger.warn("[MenuItemImageGeneratorJob] Prompt for Menuitem #{@menuitem.id} (genimage #{@genimage.id}): #{prompt}")
     response = generate_image(prompt, 1, default_image_size)
-    if response.success?
-      seed = response['created']
-      image_url = response['data'][0]['url']
+    image_data = response.parsed_response['data'] if response.success?
+    if image_data&.any?
+      seed = response.parsed_response['created']
+      image_url = image_data[0]['url']
       begin
         downloaded_image = URI.parse(image_url).open
         # Update genimage with seed
@@ -87,7 +88,8 @@ class MenuItemImageGeneratorJob
         raise e
       end
     else
-      Rails.logger.error "Failed to generate image for Genimage #{genimage_id}"
+      status_code = response.respond_to?(:code) ? response.code : 'unknown'
+      Rails.logger.error "Failed to generate image for Genimage #{genimage_id} (HTTP #{status_code})"
     end
   end
 

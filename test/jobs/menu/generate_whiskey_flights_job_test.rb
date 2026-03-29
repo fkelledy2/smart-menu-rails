@@ -138,6 +138,13 @@ class Menu::GenerateWhiskeyFlightsJobTest < ActiveSupport::TestCase
     assert_equal first_count, second_count, 'Regeneration should update, not duplicate'
   end
 
+  test 'returns nil without error when menu does not exist' do
+    nonexistent_id = 0
+    result = nil
+    assert_nothing_raised { result = Menu::GenerateWhiskeyFlightsJob.perform_now(nonexistent_id) }
+    assert_nil result, 'Should return nil when menu is not found'
+  end
+
   private
 
   def create_whiskey(name, price, parsed_fields)
