@@ -88,6 +88,7 @@ class MenuparticipantsController < ApplicationController
 
   # DELETE /menuparticipants/1 or /menuparticipants/1.json
   def destroy
+    authorize @menuparticipant
     @menuparticipant.destroy!
 
     respond_to do |format|

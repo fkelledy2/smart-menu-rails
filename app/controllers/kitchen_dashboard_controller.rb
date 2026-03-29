@@ -45,20 +45,11 @@ class KitchenDashboardController < ApplicationController
   end
 
   def calculate_avg_prep_time
-    completed_today = @restaurant.ordrs
+    avg_seconds = @restaurant.ordrs
       .where(created_at: Time.current.beginning_of_day..)
       .where(status: %w[ready delivered paid])
+      .average(Arel.sql('EXTRACT(EPOCH FROM (updated_at - created_at))'))
 
-    return 0 if completed_today.empty?
-
-    total_time = completed_today.sum do |order|
-      if order.updated_at && order.created_at
-        (order.updated_at - order.created_at) / 60 # in minutes
-      else
-        0
-      end
-    end
-
-    (total_time / completed_today.count).round
+    ((avg_seconds || 0) / 60).round
   end
 end

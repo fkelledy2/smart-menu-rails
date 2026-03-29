@@ -5,16 +5,22 @@ class MenuitemCostsController < ApplicationController
   before_action :set_menuitem
   before_action :set_menuitem_cost, only: %i[edit update destroy]
 
+  after_action :verify_authorized
+
   def new
     @menuitem_cost = @menuitem.menuitem_costs.new(effective_date: Date.current)
+    authorize @menuitem_cost
   end
 
-  def edit; end
+  def edit
+    authorize @menuitem_cost
+  end
 
   def create
     @menuitem_cost = @menuitem.menuitem_costs.new(menuitem_cost_params)
     @menuitem_cost.created_by_user = current_user
     @menuitem_cost.is_active = true
+    authorize @menuitem_cost
 
     if @menuitem_cost.save
       redirect_to edit_restaurant_path(@restaurant, section: 'profitability_margins'),
@@ -25,6 +31,7 @@ class MenuitemCostsController < ApplicationController
   end
 
   def update
+    authorize @menuitem_cost
     if @menuitem_cost.update(menuitem_cost_params)
       redirect_to edit_restaurant_path(@restaurant, section: 'profitability_margins'),
                   notice: 'Cost data updated.'
@@ -34,6 +41,7 @@ class MenuitemCostsController < ApplicationController
   end
 
   def destroy
+    authorize @menuitem_cost
     @menuitem_cost.update(is_active: false)
     redirect_to edit_restaurant_path(@restaurant, section: 'profitability_margins'),
                 notice: 'Cost data deactivated.'
@@ -42,7 +50,7 @@ class MenuitemCostsController < ApplicationController
   private
 
   def set_restaurant
-    @restaurant = Restaurant.find(params[:restaurant_id])
+    @restaurant = current_user.restaurants.find(params[:restaurant_id])
   end
 
   def set_menu

@@ -67,6 +67,11 @@ module Users
         return
       else
         @user = create_user
+        unless @user.persisted?
+          flash[:alert] = t('omniauth.create_failed', default: 'Unable to create account. Please try again.')
+          redirect_to new_user_session_path
+          return
+        end
       end
       Analytics.identify(
         user_id: @user.id,

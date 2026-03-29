@@ -392,6 +392,7 @@ export default class extends Controller {
     if (this._onSplitBillClick) document.removeEventListener('click', this._onSplitBillClick);
     if (this._onRemoveItemClick)
       document.removeEventListener('click', this._onRemoveItemClick, true);
+    if (this._onCancelClick) document.removeEventListener('click', this._onCancelClick);
     delete window.__cartPayCancel;
   }
 

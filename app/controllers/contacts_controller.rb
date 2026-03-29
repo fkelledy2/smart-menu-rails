@@ -32,7 +32,7 @@ class ContactsController < ApplicationController
       # Track successful contact form submission
       anonymous_id = session[:session_id] ||= SecureRandom.uuid
       AnalyticsService.track_anonymous_event(anonymous_id, 'contact_form_submitted', {
-        email_domain: @contact.email.split('@').last,
+        email_domain: @contact.email.to_s.split('@').last,
         message_length: @contact.message.length,
         user_type: current_user ? 'authenticated' : 'anonymous',
       })

@@ -2,6 +2,10 @@ class MenuVersion < ApplicationRecord
   belongs_to :menu
   belongs_to :created_by_user, class_name: 'User', optional: true
 
+  has_many :control_experiments, class_name: 'MenuExperiment', foreign_key: :control_version_id, dependent: :restrict_with_error
+  has_many :variant_experiments, class_name: 'MenuExperiment', foreign_key: :variant_version_id, dependent: :restrict_with_error
+  has_many :menu_experiment_exposures, foreign_key: :assigned_version_id, dependent: :destroy
+
   validates :version_number, presence: true
   validates :snapshot_json, presence: true
   validates :is_active, inclusion: { in: [true, false] }

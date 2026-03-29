@@ -23,10 +23,15 @@ export default class extends Controller {
     this.timeout = null;
     this.saving = false;
 
+    this._boundHandleInput = this.handleInput.bind(this);
+    this._boundHandleChange = this.handleChange.bind(this);
+    this._boundListeners = [];
+
     // Listen to all form inputs
     this.element.querySelectorAll('input, textarea, select').forEach((el) => {
-      el.addEventListener('input', this.handleInput.bind(this));
-      el.addEventListener('change', this.handleChange.bind(this));
+      el.addEventListener('input', this._boundHandleInput);
+      el.addEventListener('change', this._boundHandleChange);
+      this._boundListeners.push(el);
     });
 
     // Cmd+S / Ctrl+S keyboard shortcut
@@ -40,6 +45,11 @@ export default class extends Controller {
     if (this.timeout) {
       clearTimeout(this.timeout);
     }
+    this._boundListeners?.forEach((el) => {
+      el.removeEventListener('input', this._boundHandleInput);
+      el.removeEventListener('change', this._boundHandleChange);
+    });
+    this._boundListeners = [];
     if (this._handleKeyDown) {
       document.removeEventListener('keydown', this._handleKeyDown);
     }

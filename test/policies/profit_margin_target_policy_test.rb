@@ -35,9 +35,9 @@ class ProfitMarginTargetPolicyTest < ActiveSupport::TestCase
     assert policy.create?
   end
 
-  test 'create is allowed for guest (user.present? always true)' do
+  test 'create is denied for guest (nil user)' do
     policy = ProfitMarginTargetPolicy.new(nil, @target)
-    assert policy.create?
+    assert_not policy.create?
   end
 
   test 'update is allowed for owner' do

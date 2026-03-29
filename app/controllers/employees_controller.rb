@@ -170,7 +170,7 @@ class EmployeesController < ApplicationController
 
     respond_to do |format|
       if @employee.save
-        @employee.email = @employee.user.email
+        @employee.email = @employee.user&.email
         format.html do
           redirect_to edit_restaurant_path(@employee.restaurant, section: 'staff'), notice: t('employees.controller.created')
         end
@@ -204,7 +204,7 @@ class EmployeesController < ApplicationController
         AdvancedCacheService.invalidate_restaurant_caches(@employee.restaurant_id)
         AdvancedCacheService.invalidate_user_caches(@employee.restaurant.user_id) if @employee.restaurant.user_id
 
-        @employee.email = @employee.user.email
+        @employee.email = @employee.user&.email
         format.turbo_stream do
           render turbo_stream: [
             turbo_stream.replace('staff_edit_employee', ''),
@@ -338,8 +338,8 @@ class EmployeesController < ApplicationController
   def set_employee
     if current_user
       @employee = Employee.find(params[:id])
-      if @employee.nil? || (@employee.restaurant.user != current_user)
-        redirect_to root_url
+      if @employee.restaurant.user != current_user
+        redirect_to root_url and return
       end
     else
       redirect_to root_url

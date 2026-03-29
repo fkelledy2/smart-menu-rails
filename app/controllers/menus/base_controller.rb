@@ -99,7 +99,8 @@ module Menus
         restaurant_currency_code = @restaurant&.currency || @menu.restaurant.currency || 'USD'
         @restaurantCurrency = ISO4217::Currency.from_code(restaurant_currency_code)
         @menuItemCount ||= @menu.menuitems.count
-        @canAddMenuItem = @menuItemCount < current_user.plan.itemspermenu || current_user.plan.itemspermenu == -1
+        plan = current_user.plan
+        @canAddMenuItem = plan.nil? || plan.itemspermenu == -1 || @menuItemCount < plan.itemspermenu
       end
     rescue ActiveRecord::RecordNotFound => e
       Rails.logger.warn "[#{self.class.name}] Menu not found for id=#{menu_id}: #{e.message}"

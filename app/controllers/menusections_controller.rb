@@ -11,6 +11,7 @@ class MenusectionsController < ApplicationController
   def index
     if params[:menu_id]
       @menu = Menu.find_by(id: params[:menu_id])
+      return head :not_found unless @menu
 
       # Optimize query based on request format
       @menusections = if request.format.json?
@@ -149,6 +150,11 @@ class MenusectionsController < ApplicationController
     # Authorize that user owns this restaurant
     authorize @menu, :update?
 
+    unless params[:order].is_a?(Array)
+      render json: { status: 'error', message: 'order param must be an array' }, status: :bad_request
+      return
+    end
+
     # Update sequence for each section
     params[:order].each do |item|
       section = @menu.menusections.find(item[:id])
@@ -282,7 +288,8 @@ class MenusectionsController < ApplicationController
     @canAddMenuItem = false
     if @menusection.menu && current_user
       @menuItemCount = @menusection.menu.menuitems.count
-      if @menuItemCount < current_user.plan.itemspermenu || current_user.plan.itemspermenu == -1
+      plan = current_user.plan
+      if plan.nil? || plan.itemspermenu == -1 || @menuItemCount < plan.itemspermenu
         @canAddMenuItem = true
       end
     end

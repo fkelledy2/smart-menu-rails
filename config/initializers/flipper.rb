@@ -69,6 +69,13 @@ Rails.application.config.after_initialize do
   unless Flipper.exist?(:partner_integrations)
     Flipper.add(:partner_integrations)
   end
+
+  # Menu Experiments — A/B testing for menu versions (Pro+ plan only).
+  # Disabled by default; enable per-restaurant via Flipper UI once the restaurant
+  # has at least two menu versions and is on a Pro or Business plan.
+  unless Flipper.exist?(:menu_experiments)
+    Flipper.add(:menu_experiments)
+  end
 rescue ActiveRecord::ConnectionNotEstablished, ActiveRecord::StatementInvalid, ActiveRecord::NoDatabaseError => e
   # DB may be unreachable (CI asset precompile), or tables may not exist yet (db:create / db:migrate)
   Rails.logger.warn "[Flipper] Skipping feature flag seeding: #{e.message}"

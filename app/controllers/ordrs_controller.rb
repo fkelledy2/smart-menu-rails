@@ -500,7 +500,7 @@ class OrdrsController < ApplicationController
 
     respond_to do |format|
       format.html do
-        target = params[:return_to].presence || restaurant_ordr_path(@restaurant || @ordr.restaurant, @ordr)
+        target = url_from(params[:return_to]) || restaurant_ordr_path(@restaurant || @ordr.restaurant, @ordr)
         redirect_to target, notice: I18n.t('smartmenus.alcohol.acknowledged', default: 'Age check acknowledged')
       end
       format.json { render json: { ok: true, acknowledged: acknowledged_count } }

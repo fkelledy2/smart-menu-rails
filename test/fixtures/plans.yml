@@ -39,3 +39,23 @@ two:
   menusperlocation: 5
   itemspermenu: -1
   languages: 3
+
+pro:
+  key: plan.pro.key
+  descriptionKey: Pro Plan
+  attribute1: MyString
+  attribute2: MyString
+  attribute3: MyString
+  attribute4: MyString
+  attribute5: MyString
+  attribut6: MyString
+  status: 1
+  favourite: true
+  pricePerMonth: 49.99
+  pricePerYear: 499.99
+  action: 0
+  stripe_price_id_month: price_test_pro_key_month
+  locations: 10
+  menusperlocation: 10
+  itemspermenu: -1
+  languages: 5

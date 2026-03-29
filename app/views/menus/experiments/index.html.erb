@@ -1,0 +1,37 @@
+<% content_for :title, "Menu Experiments — #{@menu.name}" %>
+
+<div class="container-fluid py-4">
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+    <div>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-1">
+          <li class="breadcrumb-item">
+            <%= link_to @restaurant.name, edit_restaurant_path(@restaurant) %>
+          </li>
+          <li class="breadcrumb-item">
+            <%= link_to @menu.name, edit_restaurant_menu_path(@restaurant, @menu) %>
+          </li>
+          <li class="breadcrumb-item active">A/B Experiments</li>
+        </ol>
+      </nav>
+      <h1 class="h4 mb-0">
+        <i class="bi bi-flask"></i>
+        Menu A/B Experiments
+      </h1>
+      <p class="text-muted mb-0 small">
+        Test two menu versions simultaneously and measure the impact on ordering behaviour.
+      </p>
+    </div>
+
+    <%= link_to new_restaurant_menu_experiment_path(@restaurant, @menu), class: 'btn btn-dark' do %>
+      <i class="bi bi-plus-circle"></i>
+      New experiment
+    <% end %>
+  </div>
+
+  <div id="menu_experiments_list">
+    <%= render 'menus/experiments/list',
+        experiments: @experiments,
+        experiment_stats: @experiment_stats %>
+  </div>
+</div>

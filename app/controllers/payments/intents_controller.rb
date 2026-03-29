@@ -32,17 +32,16 @@ class Payments::IntentsController < ApplicationController
     Stripe.api_key = key if key.present?
 
     idempotency_key = "stripe_intent:#{@ordr.id}:#{amount}:#{currency}"
-    payment_attempt = PaymentAttempt.create!(
-      ordr: @ordr,
-      restaurant: @ordr.restaurant,
-      provider: :stripe,
-      amount_cents: amount,
-      currency: currency,
-      status: :processing,
-      charge_pattern: :direct,
-      merchant_model: :restaurant_mor,
-      idempotency_key: idempotency_key,
-    )
+    payment_attempt = PaymentAttempt.find_or_create_by!(idempotency_key: idempotency_key) do |pa|
+      pa.ordr            = @ordr
+      pa.restaurant      = @ordr.restaurant
+      pa.provider        = :stripe
+      pa.amount_cents    = amount
+      pa.currency        = currency
+      pa.status          = :processing
+      pa.charge_pattern  = :direct
+      pa.merchant_model  = :restaurant_mor
+    end
 
     intent = Stripe::PaymentIntent.create(
       amount: amount,

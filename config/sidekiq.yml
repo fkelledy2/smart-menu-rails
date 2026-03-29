@@ -23,3 +23,7 @@
     cron: "30 3 * * *"  # 3:30am UTC nightly, after sitemap
     class: "ExplorePageGeneratorJob"
     queue: "low_priority"
+  end_expired_menu_experiments:
+    cron: "*/15 * * * *"  # every 15 minutes
+    class: "EndExpiredMenuExperimentsJob"
+    queue: "default"

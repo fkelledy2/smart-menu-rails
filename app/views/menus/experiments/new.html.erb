@@ -1,0 +1,42 @@
+<% content_for :title, "New Experiment — #{@menu.name}" %>
+
+<div class="container-fluid py-4" style="max-width: 720px;">
+  <nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <%= link_to @restaurant.name, edit_restaurant_path(@restaurant) %>
+      </li>
+      <li class="breadcrumb-item">
+        <%= link_to @menu.name, edit_restaurant_menu_path(@restaurant, @menu) %>
+      </li>
+      <li class="breadcrumb-item">
+        <%= link_to 'Experiments', restaurant_menu_experiments_path(@restaurant, @menu) %>
+      </li>
+      <li class="breadcrumb-item active">New</li>
+    </ol>
+  </nav>
+
+  <h1 class="h4 mb-4">
+    <i class="bi bi-flask"></i>
+    New A/B Experiment
+  </h1>
+
+  <% if @versions.size < 2 %>
+    <div class="alert alert-warning">
+      <i class="bi bi-exclamation-triangle"></i>
+      <strong>Not enough versions.</strong>
+      You need at least two saved menu versions to create an experiment.
+      <%= link_to 'Create a version', edit_restaurant_menu_path(@restaurant, @menu, section: 'versions') %>
+      first.
+    </div>
+  <% else %>
+    <div class="card">
+      <div class="card-body">
+        <%= render 'menus/experiments/form',
+            experiment: @experiment,
+            versions: @versions,
+            form_url: restaurant_menu_experiments_path(@restaurant, @menu) %>
+      </div>
+    </div>
+  <% end %>
+</div>

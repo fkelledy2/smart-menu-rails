@@ -94,6 +94,10 @@ class OrdrnotesController < ApplicationController
 
   def set_restaurant
     @restaurant = Restaurant.find(params[:restaurant_id])
+    unless @restaurant.user_id == current_user.id ||
+           @restaurant.employees.exists?(user: current_user, status: :active)
+      raise Pundit::NotAuthorizedError
+    end
   end
 
   def set_order

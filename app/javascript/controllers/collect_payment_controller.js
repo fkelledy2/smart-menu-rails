@@ -53,12 +53,19 @@ export default class extends Controller {
     this.#wireTabActivation();
   }
 
+  disconnect() {
+    if (this._tabModal && this._onTabShown) {
+      this._tabModal.removeEventListener('shown.bs.tab', this._onTabShown);
+    }
+  }
+
   // ── Tab activation ──────────────────────────────────────────────────
 
   #wireTabActivation() {
     // Listen for Bootstrap tab shown events on the parent modal
     const modal = this.element.closest('.modal') || document;
-    modal.addEventListener('shown.bs.tab', (e) => {
+    this._tabModal = modal;
+    this._onTabShown = (e) => {
       const target = e.target?.dataset?.bsTarget || e.target?.getAttribute('href');
 
       // Lazy-load QR when that tab becomes active
@@ -71,7 +78,8 @@ export default class extends Controller {
       if (footer) {
         footer.classList.toggle('d-none', target !== '#collect-card-pane');
       }
-    });
+    };
+    modal.addEventListener('shown.bs.tab', this._onTabShown);
   }
 
   // ── QR Code ─────────────────────────────────────────────────────────
