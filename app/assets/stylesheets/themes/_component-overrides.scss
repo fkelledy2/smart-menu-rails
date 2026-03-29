@@ -3,6 +3,8 @@
 
 // Navigation enhancements
 .navbar {
+  position: relative;
+  z-index: 1035; // Above .sticky-header (1030) so dropdown menus are never clipped by page headers
   box-shadow: 0 2px 4px rgba(0,0,0, 0.1);
   
   .navbar-brand {

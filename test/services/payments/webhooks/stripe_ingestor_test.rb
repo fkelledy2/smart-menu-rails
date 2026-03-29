@@ -93,4 +93,80 @@ class Payments::Webhooks::StripeIngestorTest < ActiveSupport::TestCase
       )
     end
   end
+
+  test 'emits canonical partner event on payment_intent.succeeded when integrations enabled' do
+    ordr = ordrs(:one)
+    restaurant = ordr.restaurant
+    restaurant.update!(enabled_integrations: ['null'])
+    Flipper.enable(:partner_integrations, restaurant)
+
+    pi_id = 'pi_partner_test_456'
+    payload = {
+      'data' => {
+        'object' => {
+          'id' => pi_id,
+          'amount_received' => 2000,
+          'currency' => 'eur',
+          'metadata' => { 'order_id' => ordr.id.to_s },
+        },
+      },
+    }
+
+    emit_called = false
+    emit_args = nil
+    fake_emit = lambda do |restaurant:, event:|
+      emit_called = true
+      emit_args   = { restaurant: restaurant, event: event }
+    end
+
+    PartnerIntegrations::EventEmitter.stub(:emit, fake_emit) do
+      Payments::Webhooks::StripeIngestor.new.ingest!(
+        provider_event_id: 'evt_partner_pi',
+        provider_event_type: 'payment_intent.succeeded',
+        occurred_at: Time.current,
+        payload: payload,
+      )
+    end
+
+    assert emit_called, 'Expected EventEmitter.emit to be called'
+    assert_equal restaurant.id, emit_args[:restaurant].id
+    assert_equal 'order.payment.succeeded', emit_args[:event].event_type
+  ensure
+    Flipper.disable(:partner_integrations)
+    restaurant.update!(enabled_integrations: [])
+  end
+
+  test 'does not raise when partner event emission fails' do
+    ordr = ordrs(:one)
+    restaurant = ordr.restaurant
+    restaurant.update!(enabled_integrations: ['null'])
+    Flipper.enable(:partner_integrations, restaurant)
+
+    payload = {
+      'data' => {
+        'object' => {
+          'id' => 'pi_boom',
+          'amount_received' => 500,
+          'currency' => 'usd',
+          'metadata' => { 'order_id' => ordr.id.to_s },
+        },
+      },
+    }
+
+    bomb = ->(**_) { raise 'partner system down' }
+
+    assert_nothing_raised do
+      PartnerIntegrations::EventEmitter.stub(:emit, bomb) do
+        Payments::Webhooks::StripeIngestor.new.ingest!(
+          provider_event_id: 'evt_boom_pi',
+          provider_event_type: 'payment_intent.succeeded',
+          occurred_at: Time.current,
+          payload: payload,
+        )
+      end
+    end
+  ensure
+    Flipper.disable(:partner_integrations)
+    restaurant.update!(enabled_integrations: [])
+  end
 end

@@ -40,6 +40,8 @@ export default class extends Controller {
     this.currentMode = 'ai'; // "ai" | "localize" | "polish"
     this.lastLogStamp = null;
 
+    this._modalEl = this.hasModalTarget ? this.modalTarget : null;
+
     this._cleanupTomSelect();
     this._bindAutosave();
 
@@ -102,13 +104,8 @@ export default class extends Controller {
   // ── Private ──────────────────────────────────────────────────────────
 
   _showConfirmModal() {
-    const modalEl = this.modalTarget;
-
-    // Move modal to body once to avoid stacking context issues
-    if (!modalEl.dataset.movedToBody) {
-      document.body.appendChild(modalEl);
-      modalEl.dataset.movedToBody = 'true';
-    }
+    const modalEl = this._modalEl;
+    if (!modalEl) return;
 
     // Show confirm pane, hide progress pane
     this.confirmPaneTarget.classList.remove('d-none');
@@ -332,7 +329,7 @@ export default class extends Controller {
             this.progressTextTarget.textContent = 'Completed';
             this._updateBar(100);
             setTimeout(() => {
-              const modal = bootstrap.Modal.getOrCreateInstance(this.modalTarget);
+              const modal = bootstrap.Modal.getOrCreateInstance(this._modalEl);
               modal.hide();
             }, 900);
           }

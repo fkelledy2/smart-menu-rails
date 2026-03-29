@@ -452,9 +452,11 @@ class SmartmenusController < ApplicationController
       redirect_to root_url and return
     end
 
-    # /t/ is the customer-facing QR code URL — default to customer view for everyone.
-    # Staff must opt-in explicitly with ?view=staff to see staff controls.
-    @staff_view_mode = current_user.present? && params[:view] == 'staff'
+    # Mode is determined by a signed preview token generated on the menu edit page.
+    # Without a valid token the page is always customer view — no toggle, no params.
+    preview = SmartmenuPreviewToken.decode(params[:preview])
+    @staff_view_mode = preview.present? && preview[:mode] == 'staff'
+    @preview_edit_path = @staff_view_mode ? edit_restaurant_menu_path(@restaurant, @menu) : nil
 
     load_table_smartmenus
     set_effective_theme

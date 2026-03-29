@@ -9,7 +9,7 @@ class TestimonialsController < ApplicationController
   # GET /testimonials or /testimonials.json
   def index
     authorize Testimonial
-    @testimonials = policy_scope(Testimonial)
+    @testimonials = policy_scope(Testimonial).order(:sequence, created_at: :desc)
   end
 
   # GET /testimonials/1 or /testimonials/1.json

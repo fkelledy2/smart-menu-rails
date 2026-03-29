@@ -320,6 +320,7 @@
   
   .btn-danger {
     @extend %btn-home-cta;
+
     padding: 14px 32px;
     box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
 
@@ -363,7 +364,6 @@
   padding-right: 10px;
   color: #6B7280;
   line-height: 1.7;
-  text-align: justify;
 }
 
 .feature-icon {
@@ -385,7 +385,7 @@
   transform: translateY(-2px);
 }
 
- .metrics-value {
+.metrics-value {
   font-size: 2.5rem;
   font-weight: 700;
   color: #DC2626;
@@ -428,27 +428,28 @@
   }
 }
 
-.card-body {
+.pricing-card .card-body {
   .list-unstyled li {
     padding: 0.75rem 0;
     border-bottom: 1px solid #F3F4F6;
-    
+
     &:last-child {
       border-bottom: none;
     }
-    
+
     i.bi-check-lg {
       color: #10B981;
       font-weight: 700;
       margin-right: 0.5rem;
     }
   }
-  
-  .btn-danger {
-    @extend %btn-home-cta;
-    padding: 14px;
-    border-radius: 12px;
-  }
+}
+
+.pricing-card .card-body .btn-danger {
+  @extend %btn-home-cta;
+
+  padding: 14px;
+  border-radius: 12px;
 }
 
 // Demo section - Dark theme
@@ -566,6 +567,7 @@
   
   .btn-danger {
     @extend %btn-home-cta;
+
     padding: 12px 32px;
     border-radius: 12px;
   }
@@ -612,27 +614,6 @@
   color: #ffc107;
 }
 
-// Call-to-action sections
-.cta-section {
-  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-  color: white;
-  padding: 4rem 0;
-}
-
-.cta-section .btn {
-  background: white;
-  color: #007bff;
-  border: none;
-  padding: 12px 32px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-}
-
-.cta-section .btn:hover {
-  background: #f8f9fa;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0,0,0, 0.2);
-}
 
 // Footer enhancements
 .footer-custom {
@@ -651,8 +632,9 @@
   color: #fff;
 }
 
-// Section headers — scoped to home page sections only
-.bunq-section {
+// Section headers — scoped to home page sections and marketing containers
+.bunq-section,
+.home-marketing .container {
   h2.pb-2 {
     color: #111827;
     font-weight: 700;
@@ -664,9 +646,6 @@
   }
 }
 
-.bunq-section h2.pb-2.border-bottom {
-  border-bottom-color: rgba(17, 24, 39, 0.10) !important;
-}
 
 .bunq-section .text-muted {
   color: rgba(17, 24, 39, 0.70) !important;
@@ -771,10 +750,6 @@
 
 @media (max-width: 576px) {
   .demo-section {
-    padding: 2rem 0;
-  }
-  
-  .cta-section {
     padding: 2rem 0;
   }
   

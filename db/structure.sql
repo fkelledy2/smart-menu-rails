@@ -992,7 +992,8 @@ CREATE TABLE public.restaurants (
     platform_fee_type integer DEFAULT 0 NOT NULL,
     platform_fee_percent numeric(5,2),
     platform_fee_fixed_cents integer,
-    payment_gating_enabled boolean DEFAULT false NOT NULL
+    payment_gating_enabled boolean DEFAULT false NOT NULL,
+    enabled_integrations jsonb DEFAULT '[]'::jsonb NOT NULL
 );
 
 
@@ -3233,6 +3234,42 @@ CREATE SEQUENCE public.pairing_recommendations_id_seq
 --
 
 ALTER SEQUENCE public.pairing_recommendations_id_seq OWNED BY public.pairing_recommendations.id;
+
+
+--
+-- Name: partner_integration_error_logs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.partner_integration_error_logs (
+    id bigint NOT NULL,
+    restaurant_id bigint NOT NULL,
+    adapter_type character varying NOT NULL,
+    event_type character varying NOT NULL,
+    payload_json jsonb DEFAULT '{}'::jsonb NOT NULL,
+    error_message text NOT NULL,
+    attempt_number integer DEFAULT 1 NOT NULL,
+    created_at timestamp(6) without time zone DEFAULT now() NOT NULL,
+    updated_at timestamp(6) without time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: partner_integration_error_logs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.partner_integration_error_logs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: partner_integration_error_logs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.partner_integration_error_logs_id_seq OWNED BY public.partner_integration_error_logs.id;
 
 
 --
@@ -5594,6 +5631,13 @@ ALTER TABLE ONLY public.pairing_recommendations ALTER COLUMN id SET DEFAULT next
 
 
 --
+-- Name: partner_integration_error_logs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.partner_integration_error_logs ALTER COLUMN id SET DEFAULT nextval('public.partner_integration_error_logs_id_seq'::regclass);
+
+
+--
 -- Name: pay_charges id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -6547,6 +6591,14 @@ ALTER TABLE ONLY public.ordrs
 
 ALTER TABLE ONLY public.pairing_recommendations
     ADD CONSTRAINT pairing_recommendations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: partner_integration_error_logs partner_integration_error_logs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.partner_integration_error_logs
+    ADD CONSTRAINT partner_integration_error_logs_pkey PRIMARY KEY (id);
 
 
 --
@@ -9206,6 +9258,34 @@ CREATE INDEX index_pairing_recommendations_on_food_menuitem_id ON public.pairing
 
 
 --
+-- Name: index_partner_int_error_logs_on_restaurant_created; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_partner_int_error_logs_on_restaurant_created ON public.partner_integration_error_logs USING btree (restaurant_id, created_at);
+
+
+--
+-- Name: index_partner_integration_error_logs_on_adapter_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_partner_integration_error_logs_on_adapter_type ON public.partner_integration_error_logs USING btree (adapter_type);
+
+
+--
+-- Name: index_partner_integration_error_logs_on_event_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_partner_integration_error_logs_on_event_type ON public.partner_integration_error_logs USING btree (event_type);
+
+
+--
+-- Name: index_partner_integration_error_logs_on_restaurant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_partner_integration_error_logs_on_restaurant_id ON public.partner_integration_error_logs USING btree (restaurant_id);
+
+
+--
 -- Name: index_pay_charges_on_customer_id_and_processor_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -9721,6 +9801,13 @@ CREATE INDEX index_restaurants_on_claim_status ON public.restaurants USING btree
 --
 
 CREATE INDEX index_restaurants_on_employees_count ON public.restaurants USING btree (employees_count);
+
+
+--
+-- Name: index_restaurants_on_enabled_integrations; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_restaurants_on_enabled_integrations ON public.restaurants USING gin (enabled_integrations);
 
 
 --
@@ -11121,6 +11208,14 @@ ALTER TABLE ONLY public.menuitem_costs
 
 
 --
+-- Name: partner_integration_error_logs fk_rails_b5ff9d4045; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.partner_integration_error_logs
+    ADD CONSTRAINT fk_rails_b5ff9d4045 FOREIGN KEY (restaurant_id) REFERENCES public.restaurants(id);
+
+
+--
 -- Name: pay_subscriptions fk_rails_b7cd64d378; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -11543,6 +11638,8 @@ ALTER TABLE ONLY public.voice_commands
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260329100002'),
+('20260329100001'),
 ('20260328100001'),
 ('20260328000001'),
 ('20260327200004'),

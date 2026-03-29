@@ -63,6 +63,12 @@ Rails.application.config.after_initialize do
   unless Flipper.exist?(:smartmenu_theming)
     Flipper.enable(:smartmenu_theming)
   end
+
+  # Partner Integrations — event-driven API layer for workforce/CRM partners.
+  # Disabled by default; enable per-restaurant once a partner has been configured.
+  unless Flipper.exist?(:partner_integrations)
+    Flipper.add(:partner_integrations)
+  end
 rescue ActiveRecord::ConnectionNotEstablished, ActiveRecord::StatementInvalid, ActiveRecord::NoDatabaseError => e
   # DB may be unreachable (CI asset precompile), or tables may not exist yet (db:create / db:migrate)
   Rails.logger.warn "[Flipper] Skipping feature flag seeding: #{e.message}"

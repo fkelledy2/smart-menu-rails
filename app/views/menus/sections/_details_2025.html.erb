@@ -53,8 +53,8 @@
         { label: 'AI Polish', complete: ai_polish_complete, path: edit_restaurant_menu_path(restaurant, menu, section: 'details') },
         { label: 'Add a translation', complete: has_translation, path: (ai_polish_complete ? edit_restaurant_menu_path(restaurant, menu, section: 'details') : nil) },
         { label: 'Generate AI Images', complete: has_any_ai_image, path: (ai_polish_complete ? edit_restaurant_menu_path(restaurant, menu, section: 'details') : nil) },
-        { label: 'Preview as Staff', complete: menu_smartmenu_slug.present?, path: (ai_polish_complete && menu_smartmenu_slug.present? ? smartmenu_path(menu_smartmenu_slug) : nil) },
-        { label: 'Preview as Customer', complete: menu_smartmenu_slug.present?, path: (ai_polish_complete && menu_smartmenu_slug.present? ? smartmenu_path(menu_smartmenu_slug, view: 'customer') : nil) },
+        { label: 'Preview as Staff', complete: menu_smartmenu_slug.present?, path: (ai_polish_complete && menu_smartmenu_slug.present? ? smartmenu_path(menu_smartmenu_slug, preview: SmartmenuPreviewToken.generate(mode: :staff, menu_id: menu.id)) : nil) },
+        { label: 'Preview as Customer', complete: menu_smartmenu_slug.present?, path: (ai_polish_complete && menu_smartmenu_slug.present? ? smartmenu_path(menu_smartmenu_slug, preview: SmartmenuPreviewToken.generate(mode: :customer, menu_id: menu.id)) : nil) },
       ] %>
       <% completed_steps = menu_go_live_steps.count { |s| s[:complete] } %>
       <% total_steps = menu_go_live_steps.size %>
@@ -109,205 +109,205 @@
 
 <% if read_only %>
   <% if menu_smartmenu_slug.present? %>
-    <div class="mb-3 p-3">
-      <h2 class="quick-actions-title">
-        <i class="bi bi-lightning-charge"></i>
-        <%= t('.quick_actions') %>
-      </h2>
+    <div class="quick-actions-panel">
+      <div class="quick-actions-group">
+        <div class="quick-actions-group-label"><%= t('.preview', default: 'Preview') %></div>
+        <div class="quick-actions-group-btns">
+          <%= link_to smartmenu_path(menu_smartmenu_slug, preview: SmartmenuPreviewToken.generate(mode: :staff, menu_id: menu.id)),
+              class: 'quick-action-btn-sm',
+              target: '_blank',
+              title: t('.preview_staff_title') do %>
+            <i class="bi bi-eye"></i> <%= t('.preview_staff') %>
+          <% end %>
 
-      <div class="quick-actions-grid">
-        <%= link_to smartmenu_path(menu_smartmenu_slug),
-            class: 'quick-action-btn',
-            target: '_blank',
-            title: t('.preview_staff_title') do %>
-          <i class="bi bi-eye"></i>
-          <span><%= t('.preview_staff') %></span>
-        <% end %>
-
-        <%= link_to smartmenu_path(menu_smartmenu_slug, view: 'customer'),
-            class: 'quick-action-btn quick-action-btn-secondary',
-            target: '_blank',
-            rel: 'noopener noreferrer',
-            title: t('.preview_customer_title') do %>
-          <i class="bi bi-eye-slash"></i>
-          <span><%= t('.preview_customer') %></span>
-        <% end %>
+          <%= link_to smartmenu_path(menu_smartmenu_slug, preview: SmartmenuPreviewToken.generate(mode: :customer, menu_id: menu.id)),
+              class: 'quick-action-btn-sm',
+              target: '_blank',
+              rel: 'noopener noreferrer',
+              title: t('.preview_customer_title') do %>
+            <i class="bi bi-eye-slash"></i> <%= t('.preview_customer') %>
+          <% end %>
+        </div>
       </div>
 
       <% if restaurant_menu.present? %>
-        <div class="mt-3">
-          <h3 class="quick-actions-title fs-6 mb-2">
-            <i class="bi bi-calendar-check"></i>
-            <%= t('.availability') %>
-          </h3>
+        <div class="quick-actions-group-divider"></div>
 
-          <% availability_value = if restaurant_menu.availability_override_enabled?
-            restaurant_menu.availability_state.to_s
-          else
-            'default'
-          end %>
-
-          <%= form_with url: availability_restaurant_restaurant_menu_path(restaurant, restaurant_menu),
-                method: :patch,
-                data: { turbo_frame: '_top' },
-                class: 'd-inline' do |f| %>
-            <input type="hidden" name="availability_override_enabled" value="<%= availability_value == 'default' ? 'false' : 'true' %>" />
-            <input type="hidden" name="availability_state" value="<%= availability_value == 'default' ? 'available' : availability_value %>" />
-            <select class="form-select form-select-sm"
-                    name="availability_select"
-                    onchange="this.form.querySelector('input[name=availability_override_enabled]').value=(this.value==='default'?'false':'true'); this.form.querySelector('input[name=availability_state]').value=(this.value==='default'?'available':this.value); this.form.requestSubmit();">
-              <option value="default" <%= 'selected' if availability_value == 'default' %>><%= t('.default') %></option>
-              <option value="available" <%= 'selected' if availability_value == 'available' %>><%= t('.available') %></option>
-              <option value="unavailable" <%= 'selected' if availability_value == 'unavailable' %>><%= t('.unavailable') %></option>
-            </select>
-          <% end %>
+        <div class="quick-actions-group">
+          <div class="quick-actions-group-label"><%= t('.availability') %></div>
+          <div class="quick-actions-group-btns">
+            <% availability_value = if restaurant_menu.availability_override_enabled?
+              restaurant_menu.availability_state.to_s
+            else
+              'default'
+            end %>
+            <%= form_with url: availability_restaurant_restaurant_menu_path(restaurant, restaurant_menu),
+                  method: :patch,
+                  data: { turbo_frame: '_top' },
+                  class: 'd-inline' do |f| %>
+              <input type="hidden" name="availability_override_enabled" value="<%= availability_value == 'default' ? 'false' : 'true' %>" />
+              <input type="hidden" name="availability_state" value="<%= availability_value == 'default' ? 'available' : availability_value %>" />
+              <select class="form-select form-select-sm"
+                      style="width: auto;"
+                      name="availability_select"
+                      onchange="this.form.querySelector('input[name=availability_override_enabled]').value=(this.value==='default'?'false':'true'); this.form.querySelector('input[name=availability_state]').value=(this.value==='default'?'available':this.value); this.form.requestSubmit();">
+                <option value="default" <%= 'selected' if availability_value == 'default' %>><%= t('.default') %></option>
+                <option value="available" <%= 'selected' if availability_value == 'available' %>><%= t('.available') %></option>
+                <option value="unavailable" <%= 'selected' if availability_value == 'unavailable' %>><%= t('.unavailable') %></option>
+              </select>
+            <% end %>
+          </div>
         </div>
       <% end %>
     </div>
   <% end %>
 <% else %>
-  <div class="mb-3 p-3">
-    <h2 class="quick-actions-title">
-      <i class="bi bi-lightning-charge"></i>
-      <%= t('.quick_actions') %>
-    </h2>
+  <%# Pre-compute values needed across groups %>
+  <% missing_image_prompt_count = begin
+    menu.menuitems.where.not(itemtype: Menuitem.itemtypes[:wine]).where("COALESCE(image_prompt,'') = ''").count
+  rescue StandardError
+    0
+  end %>
+  <% active_locales = Restaurantlocale.where(restaurant_id: restaurant.id, status: 'active') %>
+  <% can_generate_pairings = current_user&.super_admin? || current_user&.manager_employee_for_restaurant?(restaurant.id) %>
+  <% if can_generate_pairings
+       food_count = menu.menuitems.joins(:menusection).where('menusections.archived IS NOT TRUE').where(itemtype: :food, status: 'active').count
+       drink_count = menu.menuitems.joins(:menusection).where('menusections.archived IS NOT TRUE').where(status: 'active').where(itemtype: [:wine, :spirit, :whiskey]).count
+       pairings_possible = food_count > 0 && drink_count > 0
+     end %>
 
-    <% missing_image_prompt_count = begin
-      menu.menuitems.where.not(itemtype: Menuitem.itemtypes[:wine]).where("COALESCE(image_prompt,'') = ''").count
-    rescue StandardError
-      0
-    end %>
-
-    <div class="quick-actions-grid">
-      <%= button_to regenerate_images_restaurant_menu_path(restaurant, menu, generate_ai: true),
-          method: :post,
-          class: 'quick-action-btn',
-          data: { turbo: false },
-          form: { data: { turbo: false, ai_generate: true, menu_id: menu.id } } do %>
-        <i class="bi bi-stars"></i>
-        <span><%= t('.generate_images') %></span>
-      <% end %>
-
-      <% active_locales = Restaurantlocale.where(restaurant_id: restaurant.id, status: 'active') %>
-      <% if active_locales.any? %>
-        <%= button_to localize_restaurant_menu_path(restaurant, menu, force: false),
+  <div class="quick-actions-panel">
+    <%# ── Group 1: AI Tools ──────────────────────────── %>
+    <div class="quick-actions-group">
+      <div class="quick-actions-group-label"><%= t('.ai_tools', default: 'AI') %></div>
+      <div class="quick-actions-group-btns">
+        <%= button_to regenerate_images_restaurant_menu_path(restaurant, menu, generate_ai: true),
             method: :post,
-            class: 'quick-action-btn',
-            data: { turbo: false, testid: 'localize-menu-btn' },
-            form: { data: { turbo: false, localize: true, menu_id: menu.id } } do %>
-          <i class="bi bi-translate"></i>
-          <span><%= t('.localize_menu') %></span>
-        <% end %>
-      <% end %>
-
-      <% if menu_smartmenu_slug.present? %>
-        <%= link_to smartmenu_path(menu_smartmenu_slug),
-            class: 'quick-action-btn',
-            target: '_blank',
-            title: t('.preview_staff_title') do %>
-          <i class="bi bi-eye"></i>
-          <span><%= t('.preview_staff') %></span>
+            class: 'quick-action-btn-sm',
+            data: { turbo: false },
+            form: { data: { turbo: false, ai_generate: true, menu_id: menu.id } } do %>
+          <i class="bi bi-stars"></i> <%= t('.generate_images') %>
         <% end %>
 
-        <%= link_to smartmenu_path(menu_smartmenu_slug, view: 'customer'),
-            class: 'quick-action-btn quick-action-btn-secondary',
-            target: '_blank',
-            rel: 'noopener noreferrer',
-            title: t('.preview_customer_title') do %>
-          <i class="bi bi-eye-slash"></i>
-          <span><%= t('.preview_customer') %></span>
+        <%= button_to polish_restaurant_menu_path(restaurant, menu),
+            method: :post,
+            class: 'quick-action-btn-sm',
+            data: { turbo: false, testid: 'polish-menu-btn' },
+            form: { data: { turbo: false, polish: true, menu_id: menu.id } } do %>
+          <i class="bi bi-magic"></i> <%= t('.ai_polish') %>
         <% end %>
-      <% end %>
 
-      <%= button_to polish_restaurant_menu_path(restaurant, menu),
-          method: :post,
-          class: 'quick-action-btn quick-action-btn-secondary',
-          data: { turbo: false, testid: 'polish-menu-btn' },
-          form: { data: { turbo: false, polish: true, menu_id: menu.id } } do %>
-        <i class="bi bi-magic"></i>
-        <span><%= t('.ai_polish') %></span>
-      <% end %>
+        <% if active_locales.any? %>
+          <%= button_to localize_restaurant_menu_path(restaurant, menu, force: false),
+              method: :post,
+              class: 'quick-action-btn-sm',
+              data: { turbo: false, testid: 'localize-menu-btn' },
+              form: { data: { turbo: false, localize: true, menu_id: menu.id } } do %>
+            <i class="bi bi-translate"></i> <%= t('.localize_menu') %>
+          <% end %>
+        <% end %>
 
-      <%# Generate Pairings — only for manager/admin/super_admin when food + drink items exist %>
-      <% can_generate_pairings = current_user&.super_admin? || current_user&.manager_employee_for_restaurant?(restaurant.id) %>
-      <% if can_generate_pairings
-           food_count = menu.menuitems.joins(:menusection).where('menusections.archived IS NOT TRUE').where(itemtype: :food, status: 'active').count
-           drink_count = menu.menuitems.joins(:menusection).where('menusections.archived IS NOT TRUE').where(status: 'active').where(itemtype: [:wine, :spirit, :whiskey]).count
-           pairings_possible = food_count > 0 && drink_count > 0
-         end %>
-      <% if can_generate_pairings %>
-        <% pairings_tooltip = pairings_possible ?
-             "Generate AI pairings — #{food_count} food item#{'s' unless food_count == 1}, #{drink_count} drink item#{'s' unless drink_count == 1} (wine/spirit/whiskey)" :
-             "Requires food items (#{food_count}) and wine/spirit/whiskey items (#{drink_count})" %>
-        <div data-controller="generate-pairings" data-generate-pairings-url-value="<%= generate_pairings_restaurant_menu_path(restaurant, menu) %>">
-          <button type="button"
-              class="quick-action-btn quick-action-btn-secondary<%= ' disabled' unless pairings_possible %>"
-              <%= 'disabled' unless pairings_possible %>
-              data-action="click->generate-pairings#generate"
-              data-testid="generate-pairings-btn"
-              title="<%= pairings_tooltip %>">
-            <i class="bi bi-cup-straw"></i>
-            <span><%= t('.generate_pairings', default: 'Generate Pairings') %></span>
-          </button>
+        <% if can_generate_pairings %>
+          <% pairings_tooltip = pairings_possible ?
+               "Generate AI pairings — #{food_count} food item#{'s' unless food_count == 1}, #{drink_count} drink item#{'s' unless drink_count == 1} (wine/spirit/whiskey)" :
+               "Requires food items (#{food_count}) and wine/spirit/whiskey items (#{drink_count})" %>
+          <div data-controller="generate-pairings" data-generate-pairings-url-value="<%= generate_pairings_restaurant_menu_path(restaurant, menu) %>">
+            <button type="button"
+                class="quick-action-btn-sm<%= ' disabled' unless pairings_possible %>"
+                <%= 'disabled' unless pairings_possible %>
+                data-action="click->generate-pairings#generate"
+                data-testid="generate-pairings-btn"
+                title="<%= pairings_tooltip %>">
+              <i class="bi bi-cup-straw"></i> <%= t('.generate_pairings', default: 'Pairings') %>
+            </button>
 
-          <%# Pairings result modal %>
-          <div class="modal fade" tabindex="-1" data-generate-pairings-target="modal" aria-labelledby="pairingsModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg modal-dialog-centered">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="pairingsModalLabel">
-                    <i class="bi bi-cup-straw me-2"></i>AI Food &amp; Drink Pairings
-                  </h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body overflow-auto" style="max-height: 60vh;">
-                  <%# Spinner while generating %>
-                  <div data-generate-pairings-target="spinner" class="text-center py-5">
-                    <div class="spinner-border text-primary mb-3" role="status">
-                      <span class="visually-hidden">Generating…</span>
+            <%# Pairings result modal — outside the panel so stacking context is clean %>
+            <div class="modal fade" tabindex="-1" data-generate-pairings-target="modal" aria-labelledby="pairingsModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="pairingsModalLabel">
+                      <i class="bi bi-cup-straw me-2"></i>AI Food &amp; Drink Pairings
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body overflow-auto" style="max-height: 60vh;">
+                    <div data-generate-pairings-target="spinner" class="text-center py-5">
+                      <div class="spinner-border text-primary mb-3" role="status">
+                        <span class="visually-hidden">Generating…</span>
+                      </div>
+                      <p class="text-muted">Generating pairings — this may take a moment…</p>
                     </div>
-                    <p class="text-muted">Generating pairings — this may take a moment…</p>
+                    <div data-generate-pairings-target="error" class="alert alert-danger d-none"></div>
+                    <div data-generate-pairings-target="results" class="d-none">
+                      <p class="text-muted mb-3" data-generate-pairings-target="count"></p>
+                      <div data-generate-pairings-target="pairingsBody"></div>
+                    </div>
                   </div>
-                  <%# Error state %>
-                  <div data-generate-pairings-target="error" class="alert alert-danger d-none"></div>
-                  <%# Results %>
-                  <div data-generate-pairings-target="results" class="d-none">
-                    <p class="text-muted mb-3" data-generate-pairings-target="count"></p>
-                    <div data-generate-pairings-target="pairingsBody"></div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                   </div>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      <% end %>
-
-      <%= form_with model: menu,
-            url: restaurant_menu_path(restaurant, menu),
-            method: :patch,
-            local: true,
-            data: { turbo: false },
-            html: { class: 'd-inline' } do |f| %>
-        <%= hidden_field_tag :return_to, 'menu_edit' %>
-        <% if menu.active? %>
-          <%= hidden_field_tag 'menu[status]', 'inactive', id: 'menu_status_toggle' %>
-          <%= hidden_field_tag :status, 'inactive' %>
-          <button type="submit" class="quick-action-btn quick-action-btn-secondary menu-status-pill menu-status-pill--active" data-testid="menu-status-toggle-btn">
-            <i class="bi bi-toggle2-on"></i>
-            <span><%= t('.active', default: 'Active') %></span>
-          </button>
-        <% else %>
-          <%= hidden_field_tag 'menu[status]', 'active', id: 'menu_status_toggle' %>
-          <%= hidden_field_tag :status, 'active' %>
-          <button type="submit" class="quick-action-btn menu-status-pill menu-status-pill--inactive" data-testid="menu-status-toggle-btn">
-            <i class="bi bi-toggle2-off"></i>
-            <span><%= t('.inactive', default: 'Inactive') %></span>
-          </button>
         <% end %>
-      <% end %>
+      </div>
+    </div>
+
+    <% if menu_smartmenu_slug.present? %>
+      <div class="quick-actions-group-divider"></div>
+
+      <%# ── Group 2: Preview ──────────────────────────── %>
+      <div class="quick-actions-group">
+        <div class="quick-actions-group-label"><%= t('.preview', default: 'Preview') %></div>
+        <div class="quick-actions-group-btns">
+          <%= link_to smartmenu_path(menu_smartmenu_slug, preview: SmartmenuPreviewToken.generate(mode: :staff, menu_id: menu.id)),
+              class: 'quick-action-btn-sm',
+              target: '_blank',
+              title: t('.preview_staff_title') do %>
+            <i class="bi bi-eye"></i> <%= t('.preview_staff') %>
+          <% end %>
+
+          <%= link_to smartmenu_path(menu_smartmenu_slug, preview: SmartmenuPreviewToken.generate(mode: :customer, menu_id: menu.id)),
+              class: 'quick-action-btn-sm',
+              target: '_blank',
+              rel: 'noopener noreferrer',
+              title: t('.preview_customer_title') do %>
+            <i class="bi bi-eye-slash"></i> <%= t('.preview_customer') %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <div class="quick-actions-group-divider"></div>
+
+    <%# ── Group 3: Manage ───────────────────────────── %>
+    <div class="quick-actions-group">
+      <div class="quick-actions-group-label"><%= t('.manage', default: 'Manage') %></div>
+      <div class="quick-actions-group-btns">
+        <%= form_with model: menu,
+              url: restaurant_menu_path(restaurant, menu),
+              method: :patch,
+              local: true,
+              data: { turbo: false },
+              html: { class: 'd-inline' } do |f| %>
+          <%= hidden_field_tag :return_to, 'menu_edit' %>
+          <% if menu.active? %>
+            <%= hidden_field_tag 'menu[status]', 'inactive', id: 'menu_status_toggle' %>
+            <%= hidden_field_tag :status, 'inactive' %>
+            <button type="submit" class="quick-action-btn-sm menu-status-pill menu-status-pill--active" data-testid="menu-status-toggle-btn">
+              <i class="bi bi-toggle2-on"></i> <%= t('.active', default: 'Active') %>
+            </button>
+          <% else %>
+            <%= hidden_field_tag 'menu[status]', 'active', id: 'menu_status_toggle' %>
+            <%= hidden_field_tag :status, 'active' %>
+            <button type="submit" class="quick-action-btn-sm menu-status-pill menu-status-pill--inactive" data-testid="menu-status-toggle-btn">
+              <i class="bi bi-toggle2-off"></i> <%= t('.inactive', default: 'Inactive') %>
+            </button>
+          <% end %>
+        <% end %>
+      </div>
     </div>
   </div>
 <% end %>
@@ -459,24 +459,15 @@
     margin-top: var(--space-1);
   }
 
-  /* Force Quick Actions into two columns on all viewports (including mobile portrait) */
-  .quick-actions-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--space-3);
-  }
-  .quick-actions-grid .quick-action-btn {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .menu-status-pill.menu-status-pill--active {
+  .quick-action-btn-sm.menu-status-pill--active {
     background: #d9f7e1;
-    border-color: rgba(25, 135, 84, 0.25);
+    border-color: rgba(25, 135, 84, 0.4);
+    color: #166534;
   }
 
-  .menu-status-pill.menu-status-pill--inactive {
+  .quick-action-btn-sm.menu-status-pill--inactive {
     background: #ffd9e1;
-    border-color: rgba(220, 53, 69, 0.25);
+    border-color: rgba(220, 53, 69, 0.4);
+    color: #991b1b;
   }
 </style>

@@ -13,39 +13,13 @@
   </div>
 <% end %>
 
-<%
-  # /t/ is the customer QR code URL — everyone sees customer view by default.
-  # Logged-in staff can opt into staff controls with ?view=staff.
-  # @staff_view_mode is set in the controller (current_user present AND params[:view]=='staff').
-  show_customer_view = !@staff_view_mode
-%>
-
-
-<%# Staff mode indicator — outside fragment cache, only visible to logged-in users.
-    Tells staff which view they're in and gives a one-click switch.
-    Customer view is the default; staff view requires ?view=staff. %>
-<% if current_user %>
-  <div class="staff-mode-indicator py-1 px-3 d-flex align-items-center gap-2 small" data-testid="staff-mode-indicator">
-    <% if show_customer_view %>
-      <span class="text-muted">
-        <i class="bi bi-eye me-1"></i><%= t('smartmenus.staff_mode.viewing_as_customer', default: 'Viewing as customer') %>
-      </span>
-      <%= link_to table_link_path(@smartmenu.public_token, view: 'staff'),
-          class: 'btn btn-outline-secondary btn-sm py-0 px-2',
-          data: { turbo: false },
-          title: t('smartmenus.staff_mode.switch_to_staff', default: 'Switch to staff controls') do %>
-        <i class="bi bi-person-badge me-1"></i><%= t('smartmenus.staff_mode.staff_view', default: 'Staff view') %>
-      <% end %>
-    <% else %>
-      <span class="badge bg-secondary">
-        <i class="bi bi-person-badge me-1"></i><%= t('smartmenus.staff_mode.staff_mode_on', default: 'Staff mode') %>
-      </span>
-      <%= link_to table_link_path(@smartmenu.public_token),
-          class: 'btn btn-outline-secondary btn-sm py-0 px-2',
-          data: { turbo: false },
-          title: t('smartmenus.staff_mode.switch_to_customer', default: 'Switch to customer view') do %>
-        <i class="bi bi-eye me-1"></i><%= t('smartmenus.staff_mode.customer_view', default: 'Customer view') %>
-      <% end %>
+<%# @staff_view_mode is set in the controller via a signed preview token.
+    No in-page toggle — mode is locked at launch from the menu edit page. %>
+<% show_customer_view = !@staff_view_mode %>
+<% if @staff_view_mode && @preview_edit_path %>
+  <div class="preview-back-pill" data-testid="preview-back-pill">
+    <%= link_to @preview_edit_path, class: 'preview-back-link', data: { turbo: false } do %>
+      <i class="bi bi-arrow-left me-1"></i><%= t('smartmenus.preview.back_to_edit', default: 'Back to edit') %>
     <% end %>
   </div>
 <% end %>

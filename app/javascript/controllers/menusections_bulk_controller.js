@@ -130,7 +130,7 @@ export default class extends Controller {
 
     if (this.bsModal) this.bsModal.hide();
 
-    const form = this.element.closest('form');
+    const form = this.element.querySelector('form');
     if (form) form.requestSubmit();
   }
 }

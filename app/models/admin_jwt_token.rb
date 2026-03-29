@@ -8,6 +8,8 @@ class AdminJwtToken < ApplicationRecord
     orders:write
     analytics:read
     settings:read
+    workforce:read
+    crm:read
   ].freeze
 
   EXPIRY_OPTIONS = {

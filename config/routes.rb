@@ -174,6 +174,12 @@ Rails.application.routes.draw do
         namespace :analytics do
           get :dashboard
         end
+
+        # Partner integration signals (JWT-protected, scoped)
+        namespace :partner do
+          get :workforce, to: 'workforce#workforce'
+          get :crm,       to: 'crm#crm'
+        end
       end
       
       # Menu Management API

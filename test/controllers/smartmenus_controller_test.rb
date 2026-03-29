@@ -123,6 +123,79 @@ class SmartmenusControllerTest < ActionDispatch::IntegrationTest
   end
 
   # ---------------------------------------------------------------------------
+  # Preview mode — signed token
+  # ---------------------------------------------------------------------------
+
+  test 'staff preview token sets @staff_view_mode true and renders back-pill' do
+    sign_in users(:one)
+    sm    = smartmenus(:one)
+    token = SmartmenuPreviewToken.generate(mode: :staff, menu_id: sm.menu_id)
+
+    get table_link_path(public_token: sm.public_token, preview: token)
+
+    assert_response :success
+    assert_select '[data-testid="preview-back-pill"]', count: 1
+    assert_select '[data-testid="staff-mode-indicator"]', count: 0
+  end
+
+  test 'customer preview token sets @staff_view_mode false and renders no back-pill' do
+    sign_in users(:one)
+    sm    = smartmenus(:one)
+    token = SmartmenuPreviewToken.generate(mode: :customer, menu_id: sm.menu_id)
+
+    get table_link_path(public_token: sm.public_token, preview: token)
+
+    assert_response :success
+    assert_select '[data-testid="preview-back-pill"]', count: 0
+    assert_select '[data-testid="staff-mode-indicator"]', count: 0
+  end
+
+  test 'no preview token renders customer view with no indicator or back-pill' do
+    sign_in users(:one)
+    sm = smartmenus(:one)
+
+    get table_link_path(public_token: sm.public_token)
+
+    assert_response :success
+    assert_select '[data-testid="staff-mode-indicator"]', count: 0
+    assert_select '[data-testid="preview-back-pill"]', count: 0
+  end
+
+  test 'expired preview token falls back silently to customer view' do
+    sign_in users(:one)
+    sm    = smartmenus(:one)
+    token = SmartmenuPreviewToken.generate(mode: :staff, menu_id: sm.menu_id)
+
+    travel_to(SmartmenuPreviewToken::TTL.from_now + 1.second) do
+      get table_link_path(public_token: sm.public_token, preview: token)
+    end
+
+    assert_response :success
+    assert_select '[data-testid="preview-back-pill"]', count: 0
+  end
+
+  test 'tampered preview token falls back silently to customer view' do
+    sign_in users(:one)
+    sm = smartmenus(:one)
+
+    get table_link_path(public_token: sm.public_token, preview: 'tampered-garbage')
+
+    assert_response :success
+    assert_select '[data-testid="preview-back-pill"]', count: 0
+  end
+
+  test 'legacy ?view=staff param no longer activates staff mode' do
+    sign_in users(:one)
+    sm = smartmenus(:one)
+
+    get table_link_path(public_token: sm.public_token, view: 'staff')
+
+    assert_response :success
+    assert_select '[data-testid="preview-back-pill"]', count: 0
+    assert_select '[data-testid="staff-mode-indicator"]', count: 0
+  end
+
+  # ---------------------------------------------------------------------------
   # Theme — GET preview redirect
   # ---------------------------------------------------------------------------
 

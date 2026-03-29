@@ -16,7 +16,8 @@ class MenuItemSearchIndexJob
     ml = SmartMenuMlClient.new
     return unless ml.enabled?
 
-    menu = Menu.find(menu_id)
+    menu = Menu.find_by(id: menu_id)
+    return unless menu
 
     restaurant_ids = RestaurantMenu.where(menu_id: menu.id).pluck(:restaurant_id)
     restaurant_ids = [menu.restaurant_id] if restaurant_ids.empty?

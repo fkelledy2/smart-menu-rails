@@ -121,6 +121,12 @@ class Restaurant < ApplicationRecord
     percent_plus_fixed: 30,
   }, prefix: :fee
 
+  # Partner integrations — list of enabled adapter types for event dispatch.
+  # Values must match keys in PartnerIntegrations::EventEmitter::ADAPTER_REGISTRY.
+  def integration_enabled?(adapter_type)
+    Array(enabled_integrations).map(&:to_s).include?(adapter_type.to_s)
+  end
+
   def square_provider?  = payment_provider == 'square'
   def stripe_provider?  = payment_provider == 'stripe'
   def square_connected? = square_provider? && provider_connected?
