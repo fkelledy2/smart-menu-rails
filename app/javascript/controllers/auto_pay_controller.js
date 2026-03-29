@@ -25,14 +25,17 @@ export default class extends Controller {
 
   connect() {
     this._updateBadges();
+    // Store bound references so the same function objects are passed to removeEventListener
+    this._boundOnSucceeded = this._onSucceeded.bind(this);
+    this._boundOnFailed = this._onFailed.bind(this);
     // Listen for real-time auto_pay events broadcast via ActionCable → state controller
-    this.element.addEventListener('auto_pay:succeeded', this._onSucceeded.bind(this));
-    this.element.addEventListener('auto_pay:failed', this._onFailed.bind(this));
+    this.element.addEventListener('auto_pay:succeeded', this._boundOnSucceeded);
+    this.element.addEventListener('auto_pay:failed', this._boundOnFailed);
   }
 
   disconnect() {
-    this.element.removeEventListener('auto_pay:succeeded', this._onSucceeded.bind(this));
-    this.element.removeEventListener('auto_pay:failed', this._onFailed.bind(this));
+    this.element.removeEventListener('auto_pay:succeeded', this._boundOnSucceeded);
+    this.element.removeEventListener('auto_pay:failed', this._boundOnFailed);
   }
 
   // Called when staff clicks "Disable Auto-Pay"

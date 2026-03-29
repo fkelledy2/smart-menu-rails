@@ -1,0 +1,9 @@
+one:
+  restaurant: one
+  adapter_type: 'null'
+  event_type: order.payment.succeeded
+  payload_json: '{"event_type":"order.payment.succeeded"}'
+  error_message: "StandardError: Something went wrong"
+  attempt_number: 3
+  created_at: <%= 1.hour.ago %>
+  updated_at: <%= 1.hour.ago %>

@@ -1,6 +1,6 @@
 # mellow.menu Feature Backlog — Priority Index
 
-**Last updated**: 2026-03-28 (seventh pass — Smartmenu Theming #10 marked COMPLETED 2026-03-28)
+**Last updated**: 2026-03-29 (eighth pass — Partner Integrations #11 marked COMPLETED 2026-03-29)
 **QR Code Security (#1)**: COMPLETED 2026-03-24 — Phase 1 shipped; spec at `docs/features/completed/qr-security.md`
 **Branded Email Styling (#1)**: COMPLETED 2026-03-24 — spec at `docs/features/completed/branded-email-styling-feature-request.md`
 **Branded Receipt Email (#2)**: COMPLETED 2026-03-25 — spec at `docs/features/completed/branded-receipt-email-feature-request.md`
@@ -22,7 +22,7 @@
 | ~~#8~~ | ~~JWT Token Management (API)~~ | ~~Post-Launch~~ | L | Existing admin auth | COMPLETED 2026-03-27 — spec at `docs/features/completed/mellow-admin-jwt-token-management-feature-request.md` |
 | ~~#9~~ | ~~CRM Sales Funnel~~ | ~~Growth~~ | L | Admin auth, ActionMailer, Calendly webhook | COMPLETED 2026-03-27 — spec at `docs/features/completed/crm-sales-funnel.md` |
 | ~~#10~~ | ~~Smartmenu Theming~~ | ~~Launch Enhancer~~ | M | None | COMPLETED 2026-03-28 — spec at `docs/features/completed/smartmenu-theming.md` |
-| #11 | Partner Integrations (Event-Driven) | Post-Launch | M | #8, Stripe webhooks | Ecosystem play; required by workforce/CRM partners |
+| ~~#11~~ | ~~Partner Integrations (Event-Driven)~~ | ~~Post-Launch~~ | M | #8, Stripe webhooks | COMPLETED 2026-03-29 — spec at `docs/features/completed/06-partner-integrations-event-driven.md` |
 | #12 | Menu Experiments (A/B Testing) | Post-Launch | M | #1 (DiningSession built); MenuVersion BUILT | Elevated: MenuVersion dependency resolved — all blockers done |
 | #13 | Table Wait Time Estimation | Post-Launch | L | #5 (completed), Tablesetting | Operations win; differentiates for high-footfall walk-in restaurants |
 | #14 | Dynamic Pricing Plans (Cost-Indexed) | Post-Launch | L | #15, #16 | Sustainable margin management at scale |
@@ -94,10 +94,10 @@ Note: The launch blockers are deliberately narrow. Features #4–#7 are strong l
 
 ## Current Sprint Recommendation — Next Best Actions
 
-All launch blockers (#1–#7), JWT Token Management (#8), CRM Sales Funnel (#9), and Smartmenu Theming (#10) are completed. The platform is live-capable with a functioning sales pipeline, API layer, and visual theming. The following represent the highest-value next actions:
+All launch blockers (#1–#7), JWT Token Management (#8), CRM Sales Funnel (#9), Smartmenu Theming (#10), and Partner Integrations (#11) are completed. The platform is live-capable with a functioning sales pipeline, API layer, visual theming, and event-driven partner integration layer. The following represent the highest-value next actions:
 
-### Track A: API Ecosystem (Unblocks partner integrations and enterprise conversations)
-**Feature #11 — Partner Integrations (Event-Driven)** — current top priority
+### Track A: Menu Experiments (Quick win — all dependencies satisfied)
+**Feature #12 — Menu Experiments (A/B Testing)** — current top priority
 
 Deliverables in priority order:
 1. Migration: `add_theme_to_smartmenus` — string column, default `'classic'`, check constraint

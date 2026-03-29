@@ -11,39 +11,41 @@
 <% menu_smartmenu_slug = Smartmenu.where(restaurant_id: restaurant.id, menu_id: menu.id, tablesetting_id: nil).first&.slug %>
 
 <% if menu.menusections.any? && !read_only %>
-  <div class="mb-3 p-3" data-testid="menu-items-quick-actions">
-    <h2 class="h5 mb-3">
-      <i class="bi bi-lightning-charge"></i>
-      <%= t('.quick_actions') %>
-    </h2>
-
-    <div class="quick-actions-grid">
-      <%= link_to '#', class: 'quick-action-btn', data: { testid: 'add-item-btn' } do %>
-        <i class="bi bi-plus-circle"></i>
-        <span><%= t('.add_item') %></span>
-      <% end %>
-
-      <% if menu_smartmenu_slug.present? %>
-        <%= link_to smartmenu_path(menu_smartmenu_slug),
-            class: 'quick-action-btn',
-            target: '_blank',
-            title: t('.preview_staff_title'),
-            data: { testid: 'preview-staff-btn' } do %>
-          <i class="bi bi-eye"></i>
-          <span><%= t('.preview_staff') %></span>
+  <div class="quick-actions-panel" data-testid="menu-items-quick-actions">
+    <div class="quick-actions-group">
+      <div class="quick-actions-group-label"><%= t('.quick_actions') %></div>
+      <div class="quick-actions-group-btns">
+        <%= link_to '#', class: 'quick-action-btn-sm', data: { testid: 'add-item-btn' } do %>
+          <i class="bi bi-plus-circle"></i> <%= t('.add_item') %>
         <% end %>
-
-        <%= link_to smartmenu_path(menu_smartmenu_slug, view: 'customer'),
-            class: 'quick-action-btn quick-action-btn-secondary',
-            target: '_blank',
-            rel: 'noopener noreferrer',
-            title: t('.preview_customer_title'),
-            data: { testid: 'preview-customer-btn' } do %>
-          <i class="bi bi-eye-slash"></i>
-          <span><%= t('.preview_customer') %></span>
-        <% end %>
-      <% end %>
+      </div>
     </div>
+
+    <% if menu_smartmenu_slug.present? %>
+      <div class="quick-actions-group-divider"></div>
+
+      <div class="quick-actions-group">
+        <div class="quick-actions-group-label"><%= t('.preview', default: 'Preview') %></div>
+        <div class="quick-actions-group-btns">
+          <%= link_to smartmenu_path(menu_smartmenu_slug),
+              class: 'quick-action-btn-sm',
+              target: '_blank',
+              title: t('.preview_staff_title'),
+              data: { testid: 'preview-staff-btn' } do %>
+            <i class="bi bi-eye"></i> <%= t('.preview_staff') %>
+          <% end %>
+
+          <%= link_to smartmenu_path(menu_smartmenu_slug, view: 'customer'),
+              class: 'quick-action-btn-sm',
+              target: '_blank',
+              rel: 'noopener noreferrer',
+              title: t('.preview_customer_title'),
+              data: { testid: 'preview-customer-btn' } do %>
+            <i class="bi bi-eye-slash"></i> <%= t('.preview_customer') %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
   </div>
 <% end %>
 

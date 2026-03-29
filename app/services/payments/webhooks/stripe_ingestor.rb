@@ -286,6 +286,8 @@ module Payments
         )
         return unless ordr
 
+        emit_partner_payment_event(obj: obj, ordr: ordr)
+
         split_payment_id = extract_split_payment_id(obj)
         pi_id = obj['id'].to_s
 
@@ -464,6 +466,24 @@ module Payments
         rescue StandardError
           nil
         end
+      end
+
+      # Emit a canonical partner event for a successful payment.
+      # Errors are swallowed so partner dispatch never disrupts core order flow.
+      def emit_partner_payment_event(obj:, ordr:)
+        restaurant = ordr.restaurant
+        return unless restaurant
+
+        event = PartnerIntegrations::StripeEventMapper.map(
+          provider_event_type: 'payment_intent.succeeded',
+          payload: { 'data' => { 'object' => obj } },
+          restaurant: restaurant,
+        )
+        return unless event
+
+        PartnerIntegrations::EventEmitter.emit(restaurant: restaurant, event: event)
+      rescue StandardError => e
+        Rails.logger.error("[StripeIngestor] partner event emit failed: #{e.message}")
       end
     end
   end

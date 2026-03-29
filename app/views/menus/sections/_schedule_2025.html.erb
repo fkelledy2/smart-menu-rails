@@ -6,18 +6,14 @@
 <% menu = local_assigns[:menu] || @menu %>
 <% restaurant = menu.restaurant %>
 
-<!-- Quick Actions Card -->
-<div class="mb-3 p-3">
-  <h2 class="quick-actions-title">
-    <i class="bi bi-lightning-charge"></i>
-    <%= t('.quick_actions') %>
-  </h2>
-
-  <div class="quick-actions-grid">
-    <button type="button" class="btn btn-outline-secondary quick-action-btn copy-monday-btn">
-      <i class="bi bi-files"></i>
-      <span><%= t('.copy_to_all') %></span>
-    </button>
+<div class="quick-actions-panel">
+  <div class="quick-actions-group">
+    <div class="quick-actions-group-label"><%= t('.quick_actions') %></div>
+    <div class="quick-actions-group-btns">
+      <button type="button" class="quick-action-btn-sm copy-monday-btn">
+        <i class="bi bi-files"></i> <%= t('.copy_to_all') %>
+      </button>
+    </div>
   </div>
 </div>
 
@@ -45,8 +41,9 @@
     </div>
 
   <div class="availability-editor transition-opacity-300">
+    <% availabilities_by_day = menu.menuavailabilities.order(:sequence).index_by(&:dayofweek) %>
     <% %w[monday tuesday wednesday thursday friday saturday sunday].each_with_index do |day, index| %>
-      <% day_availability = menu.menuavailabilities.where(dayofweek: day).order(:sequence).first %>
+      <% day_availability = availabilities_by_day[day] %>
       <% is_inactive = day_availability.nil? || day_availability.inactive? %>
       <% start_hour = day_availability&.starthour || 0 %>
       <% start_min = day_availability&.startmin || 0 %>
@@ -458,7 +455,7 @@
     });
 
     // Copy Monday to all days
-    const copyButton = root.querySelector('.copy-monday-btn');
+    const copyButton = document.querySelector('.copy-monday-btn');
     if (copyButton) {
       if (copyButton.dataset.menuAvailabilitiesBound === '1') {
         // already bound
@@ -542,9 +539,6 @@
   // Initialize on Turbo navigation (sidebar navigation)
   document.addEventListener('turbo:load', initializeMenuAvailabilities);
   document.addEventListener('turbo:frame-load', initializeMenuAvailabilities);
-  document.addEventListener('turbo:render', initializeMenuAvailabilities);
-
-  console.log('[MenuAvailabilities] Event listeners registered for DOMContentLoaded, turbo:load, turbo:frame-load, and turbo:render');
 
   // Delay-show the skeleton only if init takes noticeable time (>250ms)
   setTimeout(function() {

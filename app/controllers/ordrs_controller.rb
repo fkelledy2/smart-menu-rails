@@ -242,12 +242,14 @@ class OrdrsController < ApplicationController
     @summary_data = AdvancedCacheService.cached_restaurant_order_summary(@restaurant.id, days: days)
 
     # Track summary view
-    AnalyticsService.track_user_event(current_user, 'restaurant_order_summary_viewed', {
-      restaurant_id: @restaurant.id,
-      period_days: days,
-      total_orders: @summary_data[:summary][:total_orders],
-      total_revenue: @summary_data[:summary][:total_revenue],
-    })
+    if current_user
+      AnalyticsService.track_user_event(current_user, 'restaurant_order_summary_viewed', {
+        restaurant_id: @restaurant.id,
+        period_days: days,
+        total_orders: @summary_data[:summary][:total_orders],
+        total_revenue: @summary_data[:summary][:total_revenue],
+      })
+    end
 
     respond_to do |format|
       format.html

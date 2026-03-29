@@ -23,8 +23,8 @@ class RecalculateMenuitemCostsJobTest < ActiveSupport::TestCase
     end
   end
 
-  test 'raises ActiveRecord::RecordNotFound for missing ingredient' do
-    assert_raises(ActiveRecord::RecordNotFound) do
+  test 'returns early without raising for missing ingredient' do
+    assert_nothing_raised do
       RecalculateMenuitemCostsJob.new.perform(-999_999)
     end
   end

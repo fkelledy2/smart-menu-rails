@@ -51,6 +51,7 @@
         </div>
       <% end %>
 <% else %>
+<div class="home-marketing">
   <div class="hero-carousel"
        data-cta1-title="<%= t('.ctaTitle1') %>"
        data-cta1-body="<%= t('.ctaBody1') %>"
@@ -523,7 +524,6 @@
         </tbody>
       </table>
     </div>
-   </div>
 
   <% if Flipper.enabled?(:homepage_testimonials) && @testimonials.size > 0 %>
       <div class="bunq-section bunq-section--testimonials">
@@ -613,4 +613,5 @@
 
   <%= render 'home/demo_booking_modal' %>
   <%= render 'home/video_demo_modal' %>
+</div>
 <% end %>

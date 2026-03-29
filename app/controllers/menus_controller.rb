@@ -69,6 +69,10 @@ class MenusController < Menus::BaseController
     if params[:restaurant_id]
       @restaurant = Restaurant.find_by(id: params[:restaurant_id])
       @menu = Menu.find_by(id: params[:menu_id])
+      unless @menu
+        redirect_to root_url
+        return
+      end
       if @menu.restaurant != @restaurant
         redirect_to root_url
         return
@@ -99,12 +103,14 @@ class MenusController < Menus::BaseController
     end
     @participantsFirstTime = false
     @tablesetting = Tablesetting.find_by(id: params[:id])
-    @openOrder = Ordr.where(menu_id: params[:menu_id], tablesetting_id: params[:id],
-                            restaurant_id: @tablesetting.restaurant_id, status: 0,)
-      .or(Ordr.where(menu_id: params[:menu_id], tablesetting_id: params[:id],
-                     restaurant_id: @tablesetting.restaurant_id, status: 20,))
-      .or(Ordr.where(menu_id: params[:menu_id], tablesetting_id: params[:id],
-                     restaurant_id: @tablesetting.restaurant_id, status: 30,)).first
+    return unless @tablesetting
+
+    @openOrder = Ordr.where(
+      menu_id: params[:menu_id],
+      tablesetting_id: params[:id],
+      restaurant_id: @tablesetting.restaurant_id,
+      status: [0, 20, 30],
+    ).first
     return unless @openOrder
 
     @openOrder.nett = @openOrder.runningTotal
@@ -147,6 +153,10 @@ class MenusController < Menus::BaseController
       if params[:restaurant_id]
         @restaurant = Restaurant.find_by(id: params[:restaurant_id])
         @menu = Menu.find_by(id: params[:menu_id])
+        unless @menu
+          redirect_to root_url
+          return
+        end
         if @menu.restaurant != @restaurant
           redirect_to root_url
           return
@@ -296,7 +306,9 @@ class MenusController < Menus::BaseController
           if turbo_frame_request_id == 'menu_content'
             @current_section = 'settings'
             render partial: 'menus/section_frame_2025',
-                   locals: { menu: @menu, partial_name: menu_section_partial_name(@current_section) }
+                   locals: { menu: @menu, partial_name: menu_section_partial_name(@current_section),
+                             restaurant: @restaurant || @menu.restaurant, restaurant_menu: @restaurant_menu,
+                             read_only: @read_only_menu_context, }
           elsif params[:return_to] == 'menu_edit'
             redirect_to edit_restaurant_menu_path(@restaurant || @menu.restaurant, @menu), notice: t('common.flash.updated', resource: t('activerecord.models.menu'))
           else
@@ -309,7 +321,9 @@ class MenusController < Menus::BaseController
           if turbo_frame_request_id == 'menu_content'
             @current_section = 'settings'
             render partial: 'menus/section_frame_2025',
-                   locals: { menu: @menu, partial_name: menu_section_partial_name(@current_section) },
+                   locals: { menu: @menu, partial_name: menu_section_partial_name(@current_section),
+                             restaurant: @restaurant || @menu.restaurant, restaurant_menu: @restaurant_menu,
+                             read_only: @read_only_menu_context, },
                    status: :unprocessable_content
           elsif params[:return_to] == 'menu_edit'
             redirect_to edit_restaurant_menu_path(@restaurant || @menu.restaurant, @menu), alert: @menu.errors.full_messages.presence || 'Failed to update menu'

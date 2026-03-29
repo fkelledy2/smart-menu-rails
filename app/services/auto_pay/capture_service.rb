@@ -54,7 +54,7 @@ module AutoPay
     end
 
     def zero_total?
-      gross_cents <= 0
+      @ordr.gross.to_f <= 0
     end
 
     def gross_cents

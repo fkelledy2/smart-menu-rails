@@ -158,8 +158,8 @@ export default class extends Controller {
 
     if (this.bsModal) this.bsModal.hide();
 
-    // Submit the parent form
-    const form = this.element.closest('form');
+    // Submit the form contained within this controller element
+    const form = this.element.querySelector('form');
     if (form) form.requestSubmit();
   }
 }

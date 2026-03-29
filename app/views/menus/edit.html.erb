@@ -34,35 +34,21 @@
   </div>
 </div>
 
-<!-- Localization Quick Actions Panel -->
 <% active_locales = Restaurantlocale.where(restaurant_id: @menu.restaurant.id, status: 'active') %>
-<!-- DEBUG: Active locales count: <%= active_locales.count %> -->
 <% if active_locales.any? %>
-  <div class="container-fluid px-0 mb-3">
-    <div class="card border-0 shadow-sm">
-      <div class="card-body">
-        <div class="d-flex justify-content-between align-items-center">
-          <div>
-            <h6 class="mb-1">
-              <i class="bi bi-translate"></i> <%= t('.localization_title', default: 'Menu Localization') %>
-            </h6>
-            <p class="text-sm text-gray-500 mb-0">
-              <%= t('.localization_description',
-                default: "Translate this menu to all configured languages (#{active_locales.pluck(:locale).map(&:upcase).join(', ')})") %>
-            </p>
-          </div>
-          <div>
-            <%= button_to localize_restaurant_menu_path(@menu.restaurant, @menu),
-                method: :post,
-                class: 'btn btn-primary',
-                data: {
-                  turbo_confirm: t('.localization_confirm',
-                    default: "This will translate all menu sections and items to #{active_locales.count} language(s). Continue?")
-                } do %>
-              <i class="bi bi-globe"></i> <%= t('.localize_button', default: 'Localize Menu') %>
-            <% end %>
-          </div>
-        </div>
+  <div class="quick-actions-panel mb-3">
+    <div class="quick-actions-group">
+      <div class="quick-actions-group-label"><%= t('.localization_title', default: 'Localization') %></div>
+      <div class="quick-actions-group-btns">
+        <%= button_to localize_restaurant_menu_path(@menu.restaurant, @menu),
+            method: :post,
+            class: 'quick-action-btn-sm',
+            data: {
+              turbo_confirm: t('.localization_confirm',
+                default: "This will translate all menu sections and items to #{active_locales.count} language(s). Continue?")
+            } do %>
+          <i class="bi bi-globe"></i> <%= t('.localize_button', default: 'Localize Menu') %>
+        <% end %>
       </div>
     </div>
   </div>

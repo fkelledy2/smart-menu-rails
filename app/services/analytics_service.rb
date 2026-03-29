@@ -61,6 +61,7 @@ class AnalyticsService
   # Track events with user context
   def track_user_event(user, event, properties = {})
     return unless should_track?
+    return unless user
 
     base_properties = {
       timestamp: Time.current,

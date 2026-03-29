@@ -113,7 +113,7 @@ export default class extends Controller {
   }
 
   showModal() {
-    const modal = new bootstrap.Modal(this.modalTarget);
+    const modal = bootstrap.Modal.getOrCreateInstance(this.modalTarget);
     modal.show();
   }
 
