@@ -48,7 +48,11 @@ class AllergynsController < ApplicationController
   def new
     @allergyn = Allergyn.new
     if params[:restaurant_id]
-      @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
+      @futureParentRestaurant = Restaurant.find_by(id: params[:restaurant_id])
+      unless @futureParentRestaurant
+        skip_authorization
+        return head :not_found
+      end
       @allergyn.restaurant = @futureParentRestaurant
     end
     authorize @allergyn
@@ -132,7 +136,8 @@ class AllergynsController < ApplicationController
 
   # PATCH /restaurants/:restaurant_id/allergyns/bulk_update
   def bulk_update
-    @restaurant = Restaurant.find(params[:restaurant_id])
+    @restaurant = Restaurant.find_by(id: params[:restaurant_id])
+    return head :not_found unless @restaurant
     allergyns = policy_scope(Allergyn).where(restaurant_id: @restaurant.id, archived: false)
 
     ids = Array(params[:allergyn_ids]).map(&:to_s).compact_blank
@@ -176,7 +181,8 @@ class AllergynsController < ApplicationController
 
   # PATCH /restaurants/:restaurant_id/allergyns/reorder
   def reorder
-    @restaurant = Restaurant.find(params[:restaurant_id])
+    @restaurant = Restaurant.find_by(id: params[:restaurant_id])
+    return head :not_found unless @restaurant
     allergyns = policy_scope(Allergyn).where(restaurant_id: @restaurant.id, archived: false)
 
     order = params[:order]

@@ -63,12 +63,8 @@ module Admin
       params.require(:crawl_source_rule).permit(:domain, :rule_type, :reason)
     end
 
-    def ensure_admin!
-      redirect_to root_path, alert: 'Access denied.' unless current_user&.admin?
-    end
-
     def require_super_admin!
-      return if current_user&.admin? && current_user.super_admin?
+      return if current_user&.super_admin?
 
       redirect_to root_path, alert: 'Access denied. Super admin privileges required.'
     end

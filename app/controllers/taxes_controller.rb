@@ -12,7 +12,11 @@ class TaxesController < ApplicationController
   # GET /taxes or /taxes.json
   def index
     if params[:restaurant_id]
-      @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
+      @futureParentRestaurant = Restaurant.find_by(id: params[:restaurant_id])
+      unless @futureParentRestaurant
+        skip_policy_scope
+        return head :not_found
+      end
       @taxes = policy_scope(Tax).where(restaurant: @futureParentRestaurant, archived: false).where.not(status: :archived)
     else
       @taxes = policy_scope(Tax).where(archived: false).where.not(status: :archived)
@@ -29,7 +33,11 @@ class TaxesController < ApplicationController
     if current_user
       @tax = Tax.new
       if params[:restaurant_id]
-        @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
+        @futureParentRestaurant = Restaurant.find_by(id: params[:restaurant_id])
+        unless @futureParentRestaurant
+          skip_authorization
+          return head :not_found
+        end
         @tax.restaurant = @futureParentRestaurant
       end
       authorize @tax
@@ -125,7 +133,8 @@ class TaxesController < ApplicationController
 
   # PATCH /restaurants/:restaurant_id/taxes/bulk_update
   def bulk_update
-    restaurant = Restaurant.find(params[:restaurant_id])
+    restaurant = Restaurant.find_by(id: params[:restaurant_id])
+    return head :not_found unless restaurant
     taxes = policy_scope(Tax).where(restaurant_id: restaurant.id, archived: false)
 
     ids = Array(params[:tax_ids]).map(&:to_s).compact_blank
@@ -169,7 +178,8 @@ class TaxesController < ApplicationController
 
   # PATCH /restaurants/:restaurant_id/taxes/reorder
   def reorder
-    restaurant = Restaurant.find(params[:restaurant_id])
+    restaurant = Restaurant.find_by(id: params[:restaurant_id])
+    return head :not_found unless restaurant
     taxes = policy_scope(Tax).where(restaurant_id: restaurant.id, archived: false)
 
     order = params[:order]

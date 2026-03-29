@@ -31,7 +31,7 @@ export default class extends Controller {
       // If totals are missing or gross is not positive, force-refresh JSON state
       const gross = state?.totals?.gross;
       const totalsMissing = !state?.totals;
-      const grossNotPositive = !(typeof gross === 'number' ? gross : parseFloat(gross || 0)) > 0;
+      const grossNotPositive = !((typeof gross === 'number' ? gross : parseFloat(gross || 0)) > 0);
       if (totalsMissing || grossNotPositive) {
         try {
           const slug = document.body?.dataset?.smartmenuId;

@@ -64,7 +64,8 @@ export default class extends Controller {
     }
 
     // Add event listener for keyboard shortcuts
-    document.addEventListener('keydown', this.handleKeyDown.bind(this));
+    this._boundHandleKeyDown = this.handleKeyDown.bind(this);
+    document.addEventListener('keydown', this._boundHandleKeyDown);
 
     // Section-level pricing buttons
     this.element.addEventListener('click', this.handleSectionPriceClick.bind(this));
@@ -75,7 +76,8 @@ export default class extends Controller {
 
   disconnect() {
     // Clean up event listeners
-    document.removeEventListener('keydown', this.handleKeyDown.bind(this));
+    document.removeEventListener('keydown', this._boundHandleKeyDown);
+    if (this._polishInterval) clearInterval(this._polishInterval);
     this.unsubscribeFromProgressChannel();
   }
 
@@ -825,6 +827,6 @@ export default class extends Controller {
     };
 
     poll();
-    window.setInterval(poll, 1500);
+    this._polishInterval = window.setInterval(poll, 1500);
   }
 }

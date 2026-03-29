@@ -6,7 +6,6 @@ export default class extends Controller {
   static targets = ['sidebar', 'overlay'];
 
   connect() {
-    console.log('[Sidebar] Controller connected');
     this.isToggling = false; // Prevent rapid toggle spam
     this.lastToggleTime = 0; // Track last toggle timestamp
     this.setupResponsive();
@@ -20,8 +19,6 @@ export default class extends Controller {
 
   // Open sidebar (mobile)
   open() {
-    console.log('[Sidebar] Opening sidebar');
-
     // Fallback: try to find sidebar by class if target not found
     const sidebar = this.hasSidebarTarget
       ? this.sidebarTarget
@@ -31,16 +28,11 @@ export default class extends Controller {
       ? this.overlayTarget
       : document.querySelector('.sidebar-overlay');
 
-    console.log('[Sidebar] Open - Sidebar element:', sidebar);
-    console.log('[Sidebar] Open - Overlay element:', overlay);
-
     if (sidebar) {
       sidebar.classList.add('open');
-      console.log("[Sidebar] Added 'open' class to sidebar");
     }
     if (overlay) {
       overlay.classList.add('active');
-      console.log("[Sidebar] Added 'active' class to overlay");
     }
 
     // Prevent body scroll when sidebar is open
@@ -49,8 +41,6 @@ export default class extends Controller {
 
   // Close sidebar (mobile)
   close() {
-    console.log('[Sidebar] Closing sidebar');
-
     // Fallback: try to find sidebar by class if target not found
     const sidebar = this.hasSidebarTarget
       ? this.sidebarTarget
@@ -85,21 +75,15 @@ export default class extends Controller {
     const timeSinceLastToggle = now - this.lastToggleTime;
 
     if (timeSinceLastToggle < 400) {
-      console.log(`[Sidebar] Ignoring rapid toggle (${timeSinceLastToggle}ms since last toggle)`);
       return;
     }
 
     this.lastToggleTime = now;
 
-    console.log('[Sidebar] Toggle called');
-    console.log('[Sidebar] Has sidebar target?', this.hasSidebarTarget);
-
     // Fallback: try to find sidebar by class if target not found
     const sidebar = this.hasSidebarTarget
       ? this.sidebarTarget
       : document.querySelector('.sidebar-app');
-
-    console.log('[Sidebar] Sidebar element:', sidebar);
 
     if (sidebar && sidebar.classList.contains('open')) {
       this.close();
@@ -159,8 +143,6 @@ export default class extends Controller {
     const url = new URL(window.location.href);
     const section = url.searchParams.get('section') || 'details';
     const hash = window.location.hash;
-
-    console.log('[Sidebar] Updating active state for section:', section);
 
     // Find all sidebar links
     const sidebarLinks = this.element.querySelectorAll('.sidebar-link');

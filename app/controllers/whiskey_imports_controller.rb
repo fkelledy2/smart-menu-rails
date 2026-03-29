@@ -33,6 +33,7 @@ class WhiskeyImportsController < ApplicationController
 
   def set_restaurant
     rid = params[:id].presence || params[:restaurant_id]
-    @restaurant = Restaurant.find(rid)
+    @restaurant = Restaurant.find_by(id: rid)
+    head :not_found unless @restaurant
   end
 end

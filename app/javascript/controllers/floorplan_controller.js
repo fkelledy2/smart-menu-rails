@@ -24,6 +24,9 @@ export default class extends Controller {
     if (this._subscription) {
       this._subscription.unsubscribe();
     }
+    if (this._consumer) {
+      this._consumer.disconnect();
+    }
     if (this._elapsedTimer) {
       clearInterval(this._elapsedTimer);
     }
@@ -47,8 +50,8 @@ export default class extends Controller {
   // Private
 
   _subscribeToChannel() {
-    const consumer = createConsumer();
-    this._subscription = consumer.subscriptions.create(
+    this._consumer = createConsumer();
+    this._subscription = this._consumer.subscriptions.create(
       {
         channel: 'FloorplanChannel',
         restaurant_id: this.restaurantIdValue,

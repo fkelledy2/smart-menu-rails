@@ -180,8 +180,8 @@ class OrdrPaymentsController < ApplicationController
       return
     end
 
-    success_url = params[:success_url].presence || root_url
-    cancel_url = params[:cancel_url].presence || root_url
+    success_url = url_from(params[:success_url]) || root_url
+    cancel_url  = url_from(params[:cancel_url])  || root_url
 
     if @ordr.restaurant.square_provider?
       create_square_checkout(split_payment: split_payment, amount_cents: amount_cents, currency: currency,

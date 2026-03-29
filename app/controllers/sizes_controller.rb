@@ -140,14 +140,14 @@ class SizesController < ApplicationController
       return
     end
 
-    to_update = sizes.where(id: ids)
-    # Use update_all for bulk updates (skips callbacks for performance)
-    to_update.update_all(status: Size.statuses[status], updated_at: Time.current)
-
-    # Run authorizations in batch
+    # Authorize all sizes before mutating — prevents partial commits
     Size.where(id: ids).find_each do |size|
       authorize size, :update?
     end
+
+    to_update = sizes.where(id: ids)
+    # Use update_all for bulk updates (skips callbacks for performance)
+    to_update.update_all(status: Size.statuses[status], updated_at: Time.current)
 
     respond_to do |format|
       format.turbo_stream do
