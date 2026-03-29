@@ -169,7 +169,7 @@
     0
   end %>
   <% active_locales = Restaurantlocale.where(restaurant_id: restaurant.id, status: 'active') %>
-  <% can_generate_pairings = current_user&.super_admin? || current_user&.manager_employee_for_restaurant?(restaurant.id) %>
+  <% can_generate_pairings = policy(menu).update? %>
   <% if can_generate_pairings
        food_count = menu.menuitems.joins(:menusection).where('menusections.archived IS NOT TRUE').where(itemtype: :food, status: 'active').count
        drink_count = menu.menuitems.joins(:menusection).where('menusections.archived IS NOT TRUE').where(status: 'active').where(itemtype: [:wine, :spirit, :whiskey]).count

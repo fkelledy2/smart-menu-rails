@@ -9,11 +9,11 @@ class SmartmenuPreviewToken
   def self.decode(token)
     return nil if token.blank?
 
-    payload = Rails.application.message_verifier(:smartmenu_preview).verify(token)
-    return nil if Time.current.to_i > payload[:exp]
+    payload = Rails.application.message_verifier(:smartmenu_preview).verify(token).with_indifferent_access
+    return nil if payload[:exp].nil? || Time.current.to_i > payload[:exp]
 
     payload
-  rescue ActiveSupport::MessageVerifier::InvalidSignature, ActiveSupport::MessageVerifier::InvalidMessage
+  rescue ActiveSupport::MessageVerifier::InvalidSignature, ArgumentError
     nil
   end
 end

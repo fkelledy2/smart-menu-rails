@@ -10,6 +10,8 @@
 <% menu_smartmenu_slug = menu.smartmenu&.slug %>
 <%# Bypass IdentityCache (cache_has_many can return stale/empty collections) %>
 <% sections_for_menu = Menusection.where(menu_id: menu.id).order(:sequence) %>
+<%# Preload item counts per section in one query — avoids N+1 in the table below %>
+<% section_item_counts = Menuitem.where(menusection_id: sections_for_menu.select(:id)).group(:menusection_id).count %>
 
 <% unless read_only %>
   <div class="quick-actions-panel">
@@ -130,7 +132,7 @@
 										<strong><%= section.name %></strong>
 									</td>
 									<td class="text-end">
-										<%= section.menuitems.count %>
+										<%= section_item_counts[section.id] || 0 %>
 									</td>
 									<% unless read_only %>
 										<td class="text-end">

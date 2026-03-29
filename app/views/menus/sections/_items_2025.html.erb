@@ -60,7 +60,14 @@
     <%= t('.items_description') %>
   </p>
 
-  <% if menu.menuitems.where(archived: [false, nil]).where.not(status: :archived).any? %>
+  <%# Preload all visible items once and group by section — avoids N+1 per section %>
+  <% items_by_section = Menuitem
+       .where(menusection_id: Menusection.where(menu_id: menu.id).select(:id))
+       .where(archived: [false, nil])
+       .where.not(status: :archived)
+       .order(:sequence)
+       .group_by(&:menusection_id) %>
+  <% if items_by_section.any? %>
     <div data-controller="menuitems-bulk">
       <%= form_with url: bulk_update_restaurant_menu_menuitems_path(restaurant, menu), method: :patch, data: { turbo: true, action: 'submit->menuitems-bulk#beforeSubmit' } do |f| %>
         <%= hidden_field_tag :operation, '', data: { menuitems_bulk_target: 'operation' } %>
@@ -106,7 +113,7 @@
               </tr>
             </thead>
             <% menu.menusections.order(:sequence).each do |section| %>
-              <% section_items = section.menuitems.where(archived: [false, nil]).where.not(status: :archived).order(:sequence) %>
+              <% section_items = items_by_section[section.id] || [] %>
               <% if section_items.any? %>
                 <tbody>
                   <!-- Section Header Row -->
@@ -116,7 +123,7 @@
                         <i class="bi bi-layout-text-sidebar"></i>
                         <%= section.name %>
                       </strong>
-                      <span class="badge text-bg-secondary ms-2"><%= t('.items_count', count: section_items.count) %></span>
+                      <span class="badge text-bg-secondary ms-2"><%= t('.items_count', count: section_items.size) %></span>
                       <% if section.tasting_menu? %>
                         <%
                           currency_symbols = {

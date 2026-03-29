@@ -15,7 +15,7 @@ module PartnerIntegrations
     def initialize(restaurant:, window_minutes: DEFAULT_WINDOW_MINUTES)
       @restaurant     = restaurant
       @window_minutes = window_minutes.to_i.clamp(1, 1440)
-      @window_start   = window_minutes.minutes.ago
+      @window_start   = @window_minutes.minutes.ago
     end
 
     def call

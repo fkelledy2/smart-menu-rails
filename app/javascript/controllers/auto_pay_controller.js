@@ -36,6 +36,7 @@ export default class extends Controller {
   disconnect() {
     this.element.removeEventListener('auto_pay:succeeded', this._boundOnSucceeded);
     this.element.removeEventListener('auto_pay:failed', this._boundOnFailed);
+    if (this._statusTimeout) clearTimeout(this._statusTimeout);
   }
 
   // Called when staff clicks "Disable Auto-Pay"

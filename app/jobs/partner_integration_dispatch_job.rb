@@ -61,8 +61,10 @@ class PartnerIntegrationDispatchJob < ApplicationJob
   end
 
   def record_dead_letter(error)
+    return unless @restaurant_id
+
     PartnerIntegrationErrorLog.create!(
-      restaurant_id: @restaurant_id || 0,
+      restaurant_id: @restaurant_id,
       adapter_type: (@adapter_type || 'unknown').to_s.truncate(100),
       event_type: (@event_payload&.dig('event_type') || 'unknown').to_s.truncate(100),
       payload_json: @event_payload || {},
