@@ -78,7 +78,7 @@ class RestaurantInsightsController < ApplicationController
   private
 
   def set_restaurant
-    @restaurant = Restaurant.find(params[:id])
+    @restaurant = current_user.restaurants.find(params[:id])
   end
 
   def insights_service

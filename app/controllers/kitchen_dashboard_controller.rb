@@ -28,7 +28,7 @@ class KitchenDashboardController < ApplicationController
   def set_restaurant
     @restaurant = Restaurant.find(params[:id])
     is_owner = @restaurant && (@restaurant.user == current_user)
-    is_admin = current_user&.admin?
+    is_admin = current_user&.super_admin?
     is_active_employee = Employee.exists?(user_id: current_user.id, restaurant_id: @restaurant.id, status: :active)
 
     return if is_owner || is_admin || is_active_employee

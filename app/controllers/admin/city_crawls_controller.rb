@@ -34,14 +34,8 @@ module Admin
 
     private
 
-    def ensure_admin!
-      unless current_user&.admin?
-        redirect_to root_path, alert: 'Access denied. Admin privileges required.'
-      end
-    end
-
     def require_super_admin!
-      return if current_user&.admin? && current_user.super_admin?
+      return if current_user&.super_admin?
 
       redirect_to root_path, alert: 'Access denied. Super admin privileges required.'
     end

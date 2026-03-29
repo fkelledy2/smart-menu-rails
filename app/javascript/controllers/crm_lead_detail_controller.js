@@ -16,7 +16,7 @@ export default class extends Controller {
     event.preventDefault();
     const modal = document.getElementById('convertModal');
     if (modal && window.bootstrap?.Modal) {
-      const bsModal = new window.bootstrap.Modal(modal);
+      const bsModal = window.bootstrap.Modal.getOrCreateInstance(modal);
       bsModal.show();
     } else if (modal) {
       // Fallback: show via class manipulation if Bootstrap JS not loaded

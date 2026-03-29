@@ -192,9 +192,7 @@ class UserplansController < ApplicationController
 
     respond_to do |format|
       if @userplan.save
-        @user = User.where(id: @userplan.user.id).first
-        @user.plan = @userplan.plan
-        @user.save
+        @userplan.user&.update(plan: @userplan.plan)
         format.html do
           redirect_to root_path, notice: t('common.flash.created', resource: t('activerecord.models.userplan'))
         end
@@ -212,9 +210,7 @@ class UserplansController < ApplicationController
 
     respond_to do |format|
       if @userplan.update(userplan_params)
-        @user = User.where(id: @userplan.user.id).first
-        @user.plan = @userplan.plan
-        @user.save
+        @userplan.user&.update(plan: @userplan.plan)
         format.html do
           redirect_to edit_userplan_path(@userplan),
                       notice: t('common.flash.updated', resource: t('activerecord.models.userplan'))

@@ -19,7 +19,11 @@ class TablesettingsController < ApplicationController
 
     if current_user
       if params[:restaurant_id]
-        @restaurant = Restaurant.find(params[:restaurant_id])
+        @restaurant = Restaurant.find_by(id: params[:restaurant_id])
+        unless @restaurant
+          skip_policy_scope
+          return head :not_found
+        end
         @tablesettings = policy_scope(Tablesetting).where(restaurant: @restaurant, archived: false)
       else
         @tablesettings = policy_scope(Tablesetting).where(archived: false)
@@ -50,7 +54,11 @@ class TablesettingsController < ApplicationController
   def new
     @tablesetting = Tablesetting.new
     if params[:restaurant_id]
-      @restaurant = Restaurant.find(params[:restaurant_id])
+      @restaurant = Restaurant.find_by(id: params[:restaurant_id])
+      unless @restaurant
+        skip_authorization
+        return head :not_found
+      end
       @tablesetting.restaurant = @restaurant
     end
     authorize @tablesetting
@@ -136,7 +144,8 @@ class TablesettingsController < ApplicationController
 
   # GET /restaurants/:restaurant_id/tablesettings/new_bulk_create
   def new_bulk_create
-    @restaurant = Restaurant.find(params[:restaurant_id])
+    @restaurant = Restaurant.find_by(id: params[:restaurant_id])
+    return head :not_found unless @restaurant
     authorize @restaurant, :update?, policy_class: RestaurantPolicy
 
     render layout: false
@@ -144,7 +153,8 @@ class TablesettingsController < ApplicationController
 
   # POST /restaurants/:restaurant_id/tablesettings/bulk_create
   def bulk_create
-    restaurant = Restaurant.find(params[:restaurant_id])
+    restaurant = Restaurant.find_by(id: params[:restaurant_id])
+    return head :not_found unless restaurant
     authorize restaurant, :update?, policy_class: RestaurantPolicy
 
     prefix = (params[:prefix].presence || 'T')[0, 1]
@@ -208,7 +218,8 @@ class TablesettingsController < ApplicationController
 
   # PATCH /restaurants/:restaurant_id/tablesettings/bulk_update
   def bulk_update
-    restaurant = Restaurant.find(params[:restaurant_id])
+    restaurant = Restaurant.find_by(id: params[:restaurant_id])
+    return head :not_found unless restaurant
     tables = policy_scope(Tablesetting).where(restaurant_id: restaurant.id, archived: false)
 
     ids = Array(params[:tablesetting_ids]).map(&:to_s).compact_blank
@@ -292,7 +303,8 @@ class TablesettingsController < ApplicationController
 
   # PATCH /restaurants/:restaurant_id/tablesettings/reorder
   def reorder
-    restaurant = Restaurant.find(params[:restaurant_id])
+    restaurant = Restaurant.find_by(id: params[:restaurant_id])
+    return head :not_found unless restaurant
     tables = policy_scope(Tablesetting).where(restaurant_id: restaurant.id, archived: false)
 
     order = params[:order]

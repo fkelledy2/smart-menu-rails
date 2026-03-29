@@ -75,7 +75,7 @@ class IngredientsController < ApplicationController
   private
 
   def set_restaurant
-    @restaurant = Restaurant.find(params[:restaurant_id])
+    @restaurant = current_user.restaurants.find(params[:restaurant_id])
   end
 
   def set_ingredient

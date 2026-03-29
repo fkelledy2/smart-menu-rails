@@ -159,7 +159,7 @@ module Admin
       end
 
       def require_mellow_admin!
-        return if current_user&.admin? && current_user&.email.to_s.end_with?('@mellow.menu')
+        return if current_user&.super_admin? && current_user&.email.to_s.end_with?('@mellow.menu')
 
         redirect_to root_path, alert: 'Access denied. mellow.menu staff only.', status: :see_other
       end

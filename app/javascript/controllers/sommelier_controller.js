@@ -30,6 +30,15 @@ export default class extends Controller {
     this.flowSteps = [];
   }
 
+  escapeHtml(str) {
+    return String(str ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
   open() {
     this.mode = null;
     this.preferences = { smoky: null, taste: null, budget: null };
@@ -265,39 +274,39 @@ export default class extends Controller {
   buildCard(rec, index) {
     const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : '🥉';
     const tags = (rec.tags || [])
-      .map((t) => `<span class="sommelier-tag">${t.replace(/_/g, ' ')}</span>`)
+      .map((t) => `<span class="sommelier-tag">${this.escapeHtml(t.replace(/_/g, ' '))}</span>`)
       .join('');
 
     const tasting = rec.tasting_notes
       ? `<div class="sommelier-tasting">
-           ${rec.tasting_notes.nose ? `<div><strong>Nose:</strong> ${rec.tasting_notes.nose}</div>` : ''}
-           ${rec.tasting_notes.palate ? `<div><strong>Palate:</strong> ${rec.tasting_notes.palate}</div>` : ''}
-           ${rec.tasting_notes.finish ? `<div><strong>Finish:</strong> ${rec.tasting_notes.finish}</div>` : ''}
+           ${rec.tasting_notes.nose ? `<div><strong>Nose:</strong> ${this.escapeHtml(rec.tasting_notes.nose)}</div>` : ''}
+           ${rec.tasting_notes.palate ? `<div><strong>Palate:</strong> ${this.escapeHtml(rec.tasting_notes.palate)}</div>` : ''}
+           ${rec.tasting_notes.finish ? `<div><strong>Finish:</strong> ${this.escapeHtml(rec.tasting_notes.finish)}</div>` : ''}
          </div>`
       : '';
 
     const pairing = rec.best_pairing
       ? `<div class="sommelier-pairing">
            <span class="sommelier-pairing-label">Pairs with:</span>
-           <span class="sommelier-pairing-food">${rec.best_pairing.food_name}</span>
+           <span class="sommelier-pairing-food">${this.escapeHtml(rec.best_pairing.food_name)}</span>
          </div>`
       : '';
 
-    const story = rec.story ? `<p class="sommelier-story">${rec.story}</p>` : '';
+    const story = rec.story ? `<p class="sommelier-story">${this.escapeHtml(rec.story)}</p>` : '';
 
-    const region = rec.region ? `<span class="sommelier-region">${rec.region}</span>` : '';
+    const region = rec.region ? `<span class="sommelier-region">${this.escapeHtml(rec.region)}</span>` : '';
 
     return `
       <div class="sommelier-card" data-menuitem-id="${rec.id}">
         <div class="sommelier-card-header">
           <span class="sommelier-medal">${medal}</span>
           <div class="sommelier-card-title-wrap">
-            <h4 class="sommelier-card-title">${rec.name}</h4>
+            <h4 class="sommelier-card-title">${this.escapeHtml(rec.name)}</h4>
             ${region}
           </div>
           <span class="sommelier-card-price">${rec.price ? this.formatPrice(rec.price) : ''}</span>
         </div>
-        ${rec.description ? `<p class="sommelier-card-desc">${rec.description}</p>` : ''}
+        ${rec.description ? `<p class="sommelier-card-desc">${this.escapeHtml(rec.description)}</p>` : ''}
         <div class="sommelier-tags">${tags}</div>
         ${tasting}
         ${story}
@@ -321,7 +330,7 @@ export default class extends Controller {
   buildWineCard(rec, index) {
     const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : '🥉';
     const tags = (rec.tags || [])
-      .map((t) => `<span class="sommelier-tag">${t.replace(/_/g, ' ')}</span>`)
+      .map((t) => `<span class="sommelier-tag">${this.escapeHtml(t.replace(/_/g, ' '))}</span>`)
       .join('');
 
     // Wine-specific metadata line
@@ -338,23 +347,23 @@ export default class extends Controller {
     const pairing = rec.best_pairing
       ? `<div class="sommelier-pairing">
            <span class="sommelier-pairing-label">Pairs with:</span>
-           <span class="sommelier-pairing-food">${rec.best_pairing.food_name}</span>
+           <span class="sommelier-pairing-food">${this.escapeHtml(rec.best_pairing.food_name)}</span>
          </div>`
       : '';
 
-    const story = rec.story ? `<p class="sommelier-story">${rec.story}</p>` : '';
+    const story = rec.story ? `<p class="sommelier-story">${this.escapeHtml(rec.story)}</p>` : '';
 
     return `
       <div class="sommelier-card sommelier-card-wine" data-menuitem-id="${rec.id}">
         <div class="sommelier-card-header">
           <span class="sommelier-medal">${medal}</span>
           <div class="sommelier-card-title-wrap">
-            <h4 class="sommelier-card-title">${rec.name}</h4>
+            <h4 class="sommelier-card-title">${this.escapeHtml(rec.name)}</h4>
             ${wineMetaHtml}
           </div>
           <span class="sommelier-card-price">${rec.price ? this.formatPrice(rec.price) : ''}</span>
         </div>
-        ${rec.description ? `<p class="sommelier-card-desc">${rec.description}</p>` : ''}
+        ${rec.description ? `<p class="sommelier-card-desc">${this.escapeHtml(rec.description)}</p>` : ''}
         <div class="sommelier-tags">${tags}</div>
         ${story}
         ${pairing}
@@ -400,12 +409,12 @@ export default class extends Controller {
         (p) => `
       <div class="sommelier-pairing-card">
         <div class="sommelier-pairing-card-header">
-          <h5>${p.food_name}</h5>
+          <h5>${this.escapeHtml(p.food_name)}</h5>
           <span class="sommelier-match-score">${p.score}%</span>
         </div>
-        ${p.food_description ? `<p class="sommelier-pairing-desc">${p.food_description}</p>` : ''}
+        ${p.food_description ? `<p class="sommelier-pairing-desc">${this.escapeHtml(p.food_description)}</p>` : ''}
         ${p.food_price ? `<span class="sommelier-pairing-price">${this.formatPrice(p.food_price)}</span>` : ''}
-        <p class="sommelier-pairing-rationale">${p.rationale || ''}</p>
+        <p class="sommelier-pairing-rationale">${this.escapeHtml(p.rationale || '')}</p>
         ${p.pairing_type === 'surprise' ? '<span class="sommelier-badge-surprise">Surprise pick</span>' : ''}
       </div>
     `
@@ -417,10 +426,10 @@ export default class extends Controller {
       .map(
         (s) => `
       <div class="sommelier-similar-card">
-        <h5>${s.menuitem_name || s.product_name}</h5>
+        <h5>${this.escapeHtml(s.menuitem_name || s.product_name)}</h5>
         <span class="sommelier-match-score">${s.score}% similar</span>
         ${s.menuitem_price ? `<span class="sommelier-pairing-price">${this.formatPrice(s.menuitem_price)}</span>` : ''}
-        <p class="sommelier-similar-rationale">${s.rationale || ''}</p>
+        <p class="sommelier-similar-rationale">${this.escapeHtml(s.rationale || '')}</p>
       </div>
     `
       )
@@ -432,7 +441,7 @@ export default class extends Controller {
     modal.innerHTML = `
       <div class="sommelier-modal">
         <div class="sommelier-modal-header">
-          <h3>Pairings for ${data.drink.name}</h3>
+          <h3>Pairings for ${this.escapeHtml(data.drink.name)}</h3>
           <button class="sommelier-modal-close" id="sommelier-pairings-close-btn">✕</button>
         </div>
         <div class="sommelier-modal-body">
