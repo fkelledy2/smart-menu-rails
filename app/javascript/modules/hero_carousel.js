@@ -195,20 +195,31 @@ function initHeroCarousel() {
   const container = document.querySelector('.hero-carousel');
   if (!container) return;
 
-  new HeroCarousel('.hero-carousel', {
+  if (!container) {
+    return;
+  }
+
+  // Destroy any existing instance to prevent double-init (DOMContentLoaded + turbo:load)
+  if (container._heroCarousel) {
+    container._heroCarousel.destroy();
+    container._heroCarousel = null;
+  }
+
+  const heroCarousel = new HeroCarousel('.hero-carousel', {
     imageInterval: 10000, // 10 seconds for background images
     ctaInterval: 5000, // 5 seconds for CTA text
     transitionDuration: 2000, // 2 second dissolve
   });
+
+  container._heroCarousel = heroCarousel;
 }
 
-// Try multiple initialization methods for compatibility
+// Use turbo:load as the primary event — fires on initial load and Turbo navigation
+document.addEventListener('turbo:load', initHeroCarousel);
+
+// Fallback for non-Turbo contexts
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initHeroCarousel);
 } else {
-  // DOM already loaded
   initHeroCarousel();
 }
-
-// Also try with turbo:load for Turbo-powered apps
-document.addEventListener('turbo:load', initHeroCarousel);
