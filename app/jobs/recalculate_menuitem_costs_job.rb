@@ -5,18 +5,23 @@ class RecalculateMenuitemCostsJob < ApplicationJob
     ingredient = Ingredient.find_by(id: ingredient_id)
     return unless ingredient
 
-    # Find all menu items using this ingredient
+    # Find all menu items using this ingredient (single query, deduplicated)
     menuitem_ids = MenuitemIngredientQuantity.where(ingredient_id: ingredient_id).pluck(:menuitem_id).uniq
+    return if menuitem_ids.empty?
 
-    menuitem_ids.each do |menuitem_id|
-      menuitem = Menuitem.find_by(id: menuitem_id)
-      next unless menuitem
-      next unless menuitem.menuitem_costs.where(cost_source: 'recipe_calculated', is_active: true).any?
+    # Performance: load all affected menu items with their active recipe costs in two
+    # queries instead of N individual find_by + association queries per item.
+    menuitems = Menuitem.where(id: menuitem_ids).includes(:menuitem_costs).index_by(&:id)
 
-      # Recalculate recipe cost
+    # Filter to only items that have at least one active recipe-calculated cost
+    eligible_menuitems = menuitems.values.select do |mi|
+      mi.menuitem_costs.any? { |c| c.cost_source == 'recipe_calculated' && c.is_active }
+    end
+
+    eligible_menuitems.each do |menuitem|
       new_recipe_cost = menuitem.calculate_recipe_cost
 
-      # Create new cost record with updated ingredient costs
+      # current_cost is derived from already-loaded menuitem_costs — no extra query
       current_cost = menuitem.current_cost
       next unless current_cost&.cost_source == 'recipe_calculated'
 

@@ -6,8 +6,16 @@ export default class extends Controller {
   static values = { key: String };
 
   connect() {
+    this._hideTimer = null;
     if (sessionStorage.getItem(this.keyValue)) return;
     this._show();
+  }
+
+  disconnect() {
+    if (this._hideTimer) {
+      clearTimeout(this._hideTimer);
+      this._hideTimer = null;
+    }
   }
 
   _show() {
@@ -15,6 +23,6 @@ export default class extends Controller {
     sessionStorage.setItem(this.keyValue, '1');
     const modal = window.bootstrap.Modal.getOrCreateInstance(this.element, { backdrop: true, keyboard: true });
     modal.show();
-    setTimeout(() => modal.hide(), 3000);
+    this._hideTimer = setTimeout(() => modal.hide(), 3000);
   }
 }

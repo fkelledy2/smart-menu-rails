@@ -264,7 +264,9 @@ class TablesettingsController < ApplicationController
   # POST /restaurants/:restaurant_id/tablesettings/:id/regenerate_qr
   # Rotates public_token on all Smartmenus for this table, invalidating existing QR codes and sessions.
   def regenerate_qr
-    @tablesetting = Tablesetting.find(params[:id])
+    @tablesetting = Tablesetting.find_by(id: params[:id])
+    return head :not_found unless @tablesetting
+
     authorize @tablesetting, :update?
 
     @restaurant = @tablesetting.restaurant
@@ -370,7 +372,8 @@ class TablesettingsController < ApplicationController
     @currentHour = Time.now.strftime('%H').to_i
     @currentMin = Time.now.strftime('%M').to_i
     @currentDay = Time.now.wday.to_i
-    @tablesetting = Tablesetting.find(params[:id])
+    @tablesetting = Tablesetting.find_by(id: params[:id])
+    head :not_found unless @tablesetting
   end
 
   # Only allow a list of trusted parameters through.

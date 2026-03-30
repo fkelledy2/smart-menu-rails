@@ -53,7 +53,6 @@ export default class extends Controller {
     window.visualViewport?.addEventListener('resize', this._onViewportResize);
     window.addEventListener('resize', this._onViewportResize);
 
-    console.log('[BottomSheet] connected', { initial: this.state });
   }
 
   disconnect() {

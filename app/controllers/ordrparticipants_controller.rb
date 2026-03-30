@@ -120,7 +120,10 @@ class OrdrparticipantsController < ApplicationController
 
   # Set restaurant from nested route parameter
   def set_restaurant
-    @restaurant = Restaurant.find(params[:restaurant_id]) if params[:restaurant_id]
+    return unless params[:restaurant_id]
+
+    @restaurant = Restaurant.find_by(id: params[:restaurant_id])
+    head :not_found unless @restaurant
   end
 
   # Use callbacks to share common setup or constraints between actions.

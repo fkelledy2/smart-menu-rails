@@ -424,8 +424,10 @@ class OrdritemsController < ApplicationController
   end
 
   def set_currency
-    if params[:id]
-      @ordritem = Ordritem.find(params[:id])
+    # Performance: re-use @ordritem loaded by set_ordritem (same before_action chain).
+    # Only fall back to a fresh find when @ordritem is not yet assigned (e.g. non-resource actions).
+    if @ordritem || params[:id]
+      @ordritem ||= Ordritem.find(params[:id])
       @restaurantCurrency = ISO4217::Currency.from_code(@ordritem.ordr.restaurant.currency || 'USD')
     else
       @restaurantCurrency = ISO4217::Currency.from_code('USD')

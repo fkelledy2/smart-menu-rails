@@ -23,7 +23,8 @@ module Admin
       private
 
       def set_lead
-        @lead = CrmLead.find(params[:lead_id])
+        @lead = CrmLead.find_by(id: params[:lead_id])
+        head :not_found unless @lead
       end
 
       def require_mellow_admin!

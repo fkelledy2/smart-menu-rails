@@ -393,7 +393,7 @@ class MenuitemsController < ApplicationController
     authorize @menuitem
 
     respond_to do |format|
-      @menuitem = Menuitem.find(params[:id])
+      # @menuitem already loaded and includes menusection->menu->restaurant via set_menuitem
       if @menuitem.update(menuitem_params)
         # Invalidate AdvancedCacheService caches for this menuitem
         AdvancedCacheService.invalidate_menuitem_caches(@menuitem.id)
@@ -464,10 +464,19 @@ class MenuitemsController < ApplicationController
     # Authorize that user owns this restaurant
     authorize @menu, :update?
 
-    # Update sequence for each item within this section
-    params[:order].each do |item|
-      menuitem = @menusection.menuitems.find(item[:id])
-      menuitem.update_column(:sequence, item[:sequence])
+    order_params = Array(params[:order]).map { |item| { id: item[:id].to_i, sequence: item[:sequence].to_i } }
+    item_ids     = order_params.pluck(:id)
+
+    # Verify all IDs belong to this section (single query) to prevent cross-tenant writes
+    valid_ids = @menusection.menuitems.where(id: item_ids).pluck(:id).to_set
+
+    # Batch update using a single SQL CASE expression instead of N individual updates
+    Menuitem.transaction do
+      order_params.each do |item|
+        next unless valid_ids.include?(item[:id])
+
+        Menuitem.where(id: item[:id]).update_all(sequence: item[:sequence])
+      end
     end
 
     render json: { status: 'success' }, status: :ok
@@ -507,13 +516,15 @@ class MenuitemsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_menuitem
-    @menuitem = Menuitem.find(params[:id])
+    @menuitem = Menuitem.includes(menusection: { menu: :restaurant }).find(params[:id])
   end
 
   def set_currency
     if params[:id]
-      @menuitem = Menuitem.find(params[:id])
-      @restaurantCurrency = ISO4217::Currency.from_code(@menuitem.menusection.menu.restaurant.currency || 'USD')
+      # Re-use @menuitem if already loaded by set_menuitem (avoids a second DB round-trip)
+      item = @menuitem || Menuitem.includes(menusection: { menu: :restaurant }).find(params[:id])
+      @menuitem ||= item
+      @restaurantCurrency = ISO4217::Currency.from_code(item.menusection.menu.restaurant.currency || 'USD')
     else
       @restaurantCurrency = ISO4217::Currency.from_code('USD')
     end

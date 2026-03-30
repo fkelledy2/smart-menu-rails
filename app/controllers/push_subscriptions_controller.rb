@@ -3,6 +3,8 @@ class PushSubscriptionsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_subscription, only: [:destroy]
 
+  after_action :verify_authorized
+
   # POST /push_subscriptions
   def create
     @subscription = current_user.push_subscriptions.find_or_initialize_by(
@@ -11,6 +13,8 @@ class PushSubscriptionsController < ApplicationController
 
     @subscription.assign_attributes(subscription_params)
     @subscription.active = true
+
+    authorize @subscription
 
     if @subscription.save
       render json: {
@@ -28,6 +32,8 @@ class PushSubscriptionsController < ApplicationController
 
   # DELETE /push_subscriptions/:id
   def destroy
+    authorize @subscription
+
     if @subscription.destroy
       render json: {
         success: true,
@@ -43,6 +49,8 @@ class PushSubscriptionsController < ApplicationController
 
   # POST /push_subscriptions/test
   def test
+    authorize PushSubscription, :test?
+
     count = PushNotificationService.send_test_notification(current_user)
 
     if count.positive?

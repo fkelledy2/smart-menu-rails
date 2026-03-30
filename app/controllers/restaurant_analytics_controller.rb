@@ -230,7 +230,8 @@ class RestaurantAnalyticsController < ApplicationController
   private
 
   def set_restaurant
-    @restaurant = current_user.restaurants.find(params[:id])
+    @restaurant = current_user.restaurants.find_by(id: params[:id])
+    head :not_found unless @restaurant
   end
 
   # Extract/filter params for date range, menu/employee/table/status filters

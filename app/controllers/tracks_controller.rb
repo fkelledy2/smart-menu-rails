@@ -103,10 +103,15 @@ class TracksController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_track
     @track = Track.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    head :not_found
   end
 
   def set_restaurant
-    @restaurant = Restaurant.find(params[:restaurant_id]) if params[:restaurant_id]
+    return unless params[:restaurant_id]
+
+    @restaurant = Restaurant.find_by(id: params[:restaurant_id])
+    head :not_found unless @restaurant
   end
 
   def set_restaurant_from_track

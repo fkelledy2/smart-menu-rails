@@ -101,7 +101,12 @@ export default class extends Controller {
 
   #showErrors(messages) {
     if (!this.hasErrorBoxTarget) return;
-    this.errorBoxTarget.innerHTML = messages.map((m) => `<div>${m}</div>`).join('');
+    this.errorBoxTarget.textContent = '';
+    messages.forEach((m) => {
+      const div = document.createElement('div');
+      div.textContent = m;
+      this.errorBoxTarget.appendChild(div);
+    });
     this.errorBoxTarget.classList.remove('d-none');
   }
 

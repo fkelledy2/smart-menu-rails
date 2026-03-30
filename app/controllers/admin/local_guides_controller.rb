@@ -81,7 +81,8 @@ module Admin
     private
 
     def set_local_guide
-      @local_guide = LocalGuide.find(params[:id])
+      @local_guide = LocalGuide.find_by(id: params[:id])
+      head :not_found unless @local_guide
     end
 
     def local_guide_params

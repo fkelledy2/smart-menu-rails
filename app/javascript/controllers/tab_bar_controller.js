@@ -40,7 +40,6 @@ export default class extends Controller {
       this.moveIndicator(activeTab);
     }
 
-    console.log('[TabBar] connected', { tabs: this.tabTargets.length });
   }
 
   // --- Actions ---

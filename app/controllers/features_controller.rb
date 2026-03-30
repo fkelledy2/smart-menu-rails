@@ -14,7 +14,9 @@ class FeaturesController < ApplicationController
   end
 
   def show
-    @feature = Feature.find(params[:id])
+    @feature = Feature.find_by(id: params[:id])
+    return head :not_found unless @feature
+
     Rails.logger.debug { "FeaturesController#show: Found feature #{@feature.id}, format: #{request.format}" }
 
     respond_to do |format|

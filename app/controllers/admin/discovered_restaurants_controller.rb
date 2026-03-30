@@ -447,7 +447,8 @@ module Admin
     private
 
     def set_discovered_restaurant
-      @discovered_restaurant = DiscoveredRestaurant.find(params[:id])
+      @discovered_restaurant = DiscoveredRestaurant.find_by(id: params[:id])
+      head :not_found unless @discovered_restaurant
     end
 
     # Auto-trigger enrichment jobs on first view if they have never been run

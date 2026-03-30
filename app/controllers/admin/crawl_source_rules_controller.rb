@@ -56,7 +56,8 @@ module Admin
     private
 
     def set_rule
-      @rule = CrawlSourceRule.find(params[:id])
+      @rule = CrawlSourceRule.find_by(id: params[:id])
+      head :not_found unless @rule
     end
 
     def rule_params

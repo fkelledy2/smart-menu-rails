@@ -42,7 +42,9 @@ class MenusectionsController < ApplicationController
   def new
     @menusection = Menusection.new
     if params[:menu_id]
-      @futureParentMenu = Menu.find(params[:menu_id])
+      @futureParentMenu = Menu.find_by(id: params[:menu_id])
+      return head :not_found unless @futureParentMenu
+
       @menusection.menu = @futureParentMenu
       @menusection.sequence = 1
     end
@@ -144,7 +146,9 @@ class MenusectionsController < ApplicationController
 
   # PATCH /restaurants/:restaurant_id/menus/:menu_id/menusections/reorder
   def reorder
-    @menu = Menu.find(params[:menu_id])
+    @menu = Menu.find_by(id: params[:menu_id])
+    return head :not_found unless @menu
+
     @restaurant = @menu.restaurant
 
     # Authorize that user owns this restaurant
@@ -155,10 +159,19 @@ class MenusectionsController < ApplicationController
       return
     end
 
-    # Update sequence for each section
-    params[:order].each do |item|
-      section = @menu.menusections.find(item[:id])
-      section.update_column(:sequence, item[:sequence])
+    order_params = params[:order].map { |item| { id: item[:id].to_i, sequence: item[:sequence].to_i } }
+    section_ids  = order_params.pluck(:id)
+
+    # Verify all IDs belong to this menu (single query) before writing
+    valid_ids = @menu.menusections.where(id: section_ids).pluck(:id).to_set
+
+    # Batch update — one UPDATE per section but inside a single transaction, not N queries with N finds
+    Menusection.transaction do
+      order_params.each do |item|
+        next unless valid_ids.include?(item[:id])
+
+        Menusection.where(id: item[:id]).update_all(sequence: item[:sequence])
+      end
     end
 
     render json: { status: 'success' }, status: :ok
@@ -169,7 +182,9 @@ class MenusectionsController < ApplicationController
 
   # PATCH /restaurants/:restaurant_id/menus/:menu_id/menusections/bulk_update
   def bulk_update
-    @menu = Menu.find(params[:menu_id])
+    @menu = Menu.find_by(id: params[:menu_id])
+    return head :not_found unless @menu
+
     @restaurant = @menu.restaurant
     authorize @menu, :update?
 
@@ -232,7 +247,7 @@ class MenusectionsController < ApplicationController
            elsif defined?(@futureParentMenu) && @futureParentMenu
              @futureParentMenu
            elsif params[:menu_id]
-             Menu.find(params[:menu_id])
+             Menu.find_by(id: params[:menu_id])
            end
 
     return unless menu
@@ -278,7 +293,7 @@ class MenusectionsController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_menusection
     if current_user
-      @menusection = Menusection.find(params[:id])
+      @menusection = Menusection.find_by(id: params[:id])
       if @menusection.nil? || (@menusection.menu.restaurant.user != current_user)
         redirect_to root_url
       end
@@ -287,7 +302,8 @@ class MenusectionsController < ApplicationController
     end
     @canAddMenuItem = false
     if @menusection.menu && current_user
-      @menuItemCount = @menusection.menu.menuitems.count
+      # Use the counter_cache column on menus instead of issuing a COUNT(*) query
+      @menuItemCount = @menusection.menu.menuitems_count
       plan = current_user.plan
       if plan.nil? || plan.itemspermenu == -1 || @menuItemCount < plan.itemspermenu
         @canAddMenuItem = true

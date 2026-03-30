@@ -4,7 +4,14 @@ class StaffInvitationsController < ApplicationController
 
   # POST /restaurants/:restaurant_id/staff_invitations
   def create
-    @restaurant = Restaurant.find(params[:restaurant_id])
+    @restaurant = current_user.restaurants.find_by(id: params[:restaurant_id])
+    unless @restaurant
+      respond_to do |format|
+        format.turbo_stream { head :not_found }
+        format.html { redirect_to restaurants_path, alert: 'Restaurant not found.' }
+      end
+      return
+    end
     @invitation = @restaurant.staff_invitations.new(
       email: params[:staff_invitation][:email]&.strip&.downcase,
       role: params[:staff_invitation][:role],

@@ -17,6 +17,11 @@
       <%= link_to kitchen_dashboard_restaurant_path(@restaurant), class: 'btn btn-sm btn-outline-secondary' do %>
         <i class="bi bi-columns-gap me-1" aria-hidden="true"></i>Kitchen
       <% end %>
+      <% if Flipper.enabled?(:wait_time_estimation, @restaurant) %>
+        <%= link_to wait_times_restaurant_path(@restaurant), class: 'btn btn-sm btn-outline-secondary' do %>
+          <i class="bi bi-hourglass-split me-1" aria-hidden="true"></i>Wait Times
+        <% end %>
+      <% end %>
     </div>
   </div>
 

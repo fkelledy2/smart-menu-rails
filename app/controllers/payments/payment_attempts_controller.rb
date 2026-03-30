@@ -4,7 +4,12 @@ class Payments::PaymentAttemptsController < ApplicationController
 
   def create
     ordr_id = params[:ordr_id].presence || params[:order_id].presence
-    ordr = Ordr.find(ordr_id)
+    ordr = Ordr.find_by(id: ordr_id)
+
+    unless ordr
+      render json: { ok: false, error: 'Order not found' }, status: :not_found
+      return
+    end
 
     authorize ordr, :update?
 
@@ -13,8 +18,8 @@ class Payments::PaymentAttemptsController < ApplicationController
       return
     end
 
-    success_url = params[:success_url].presence || root_url
-    cancel_url = params[:cancel_url].presence || root_url
+    success_url = url_from(params[:success_url]) || root_url
+    cancel_url = url_from(params[:cancel_url]) || root_url
 
     provider = params[:provider].presence
     if provider.present? && !provider.to_s.in?(%w[stripe])

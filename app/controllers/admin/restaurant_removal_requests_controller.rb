@@ -41,7 +41,8 @@ module Admin
     private
 
     def set_request
-      @removal_request = RestaurantRemovalRequest.find(params[:id])
+      @removal_request = RestaurantRemovalRequest.find_by(id: params[:id])
+      head :not_found unless @removal_request
     end
 
     def require_super_admin!

@@ -13,7 +13,14 @@ class TipsController < ApplicationController
   # GET /tips or /tips.json
   def index
     if params[:restaurant_id]
-      @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
+      @futureParentRestaurant = Restaurant.find_by(id: params[:restaurant_id])
+      unless @futureParentRestaurant
+        respond_to do |format|
+          format.html { redirect_to root_path, alert: 'Restaurant not found.' }
+          format.json { head :not_found }
+        end
+        return
+      end
       @tips = policy_scope(Tip).where(restaurant: @futureParentRestaurant, archived: false).where.not(status: :archived)
     else
       @tips = policy_scope(Tip).where(archived: false).where.not(status: :archived)
@@ -29,7 +36,12 @@ class TipsController < ApplicationController
   def new
     @tip = Tip.new
     if params[:restaurant_id]
-      @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
+      @futureParentRestaurant = Restaurant.find_by(id: params[:restaurant_id])
+      unless @futureParentRestaurant
+        authorize @tip
+        redirect_to root_path, alert: 'Restaurant not found.'
+        return
+      end
       @tip.restaurant = @futureParentRestaurant
     end
     authorize @tip
@@ -220,7 +232,13 @@ class TipsController < ApplicationController
   end
 
   def set_tip
-    @tip = Tip.find(params[:id])
+    @tip = Tip.find_by(id: params[:id])
+    return if @tip
+
+    respond_to do |format|
+      format.html { redirect_to root_path, alert: 'Tip not found.' }
+      format.json { head :not_found }
+    end
   end
 
   # Only allow a list of trusted parameters through.

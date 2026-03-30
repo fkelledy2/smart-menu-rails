@@ -86,7 +86,13 @@ class GenimagesController < ApplicationController
   end
 
   def set_genimage
-    @genimage = Genimage.find(params[:id])
+    @genimage = Genimage.find_by(id: params[:id])
+    return if @genimage
+
+    respond_to do |format|
+      format.html { redirect_to restaurant_genimages_path(@restaurant), alert: 'Image not found.' }
+      format.json { head :not_found }
+    end
   end
 
   # Only allow a list of trusted parameters through.

@@ -27,3 +27,7 @@
     cron: "*/15 * * * *"  # every 15 minutes
     class: "EndExpiredMenuExperimentsJob"
     queue: "default"
+  update_dining_patterns:
+    cron: "0 2 * * *"  # 2am UTC nightly
+    class: "UpdateDiningPatternsJob"
+    queue: "low_priority"

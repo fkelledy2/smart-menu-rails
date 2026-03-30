@@ -98,6 +98,11 @@ class OrdrnotesController < ApplicationController
            @restaurant.employees.exists?(user: current_user, status: :active)
       raise Pundit::NotAuthorizedError
     end
+  rescue ActiveRecord::RecordNotFound
+    respond_to do |format|
+      format.html { redirect_to restaurants_path, alert: 'Restaurant not found.' }
+      format.json { render json: { error: 'Restaurant not found' }, status: :not_found }
+    end
   end
 
   def set_order

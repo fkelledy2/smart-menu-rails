@@ -47,6 +47,8 @@ class Restaurant < ApplicationRecord
   has_one :discovered_restaurant
   has_many :restaurant_removal_requests, dependent: :destroy
   has_many :restaurant_claim_requests, dependent: :destroy
+  has_many :customer_wait_queues, dependent: :destroy
+  has_many :dining_patterns, dependent: :destroy
 
   # IdentityCache configuration
   cache_index :id
@@ -161,12 +163,20 @@ class Restaurant < ApplicationRecord
   def whiskey_ambassador_ready?
     return false unless whiskey_ambassador_enabled?
 
-    menus.any? do |menu|
-      menu.menuitems
-        .where(itemtype: :whiskey, status: 'active')
-        .where("sommelier_parsed_fields->>'whiskey_region' IS NOT NULL OR sommelier_parsed_fields->>'staff_flavor_cluster' IS NOT NULL")
-        .count >= 10
-    end
+    # Use a single SQL EXISTS + subquery instead of iterating menus in Ruby
+    # (avoids 1 query per menu for the COUNT check)
+    Menuitem
+      .joins(:menusection)
+      .joins('INNER JOIN menus ON menus.id = menusections.menu_id')
+      .where(menus: { restaurant_id: id })
+      .where(itemtype: :whiskey, status: 'active')
+      .where(
+        "sommelier_parsed_fields->>'whiskey_region' IS NOT NULL OR " \
+        "sommelier_parsed_fields->>'staff_flavor_cluster' IS NOT NULL",
+      )
+      .group('menus.id')
+      .having('COUNT(*) >= 10')
+      .exists?
   end
 
   def gen_image_theme
@@ -174,7 +184,8 @@ class Restaurant < ApplicationRecord
   end
 
   def total_capacity
-    tablesettings.sum(&:capacity)
+    # Use SQL SUM instead of loading all tablesettings into Ruby
+    tablesettings.sum(:capacity)
   end
 
   def wifiQRString

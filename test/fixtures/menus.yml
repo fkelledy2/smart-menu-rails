@@ -55,6 +55,19 @@ five:
   inventoryTracking: false
   imagecontext: FifthContext
 
+# For shared menu cache invalidation tests
+shared_cache_menu:
+  name: Shared Cache Test Menu
+  description: Menu shared across two restaurants for cache invalidation tests
+  status: 1
+  sequence: 98
+  restaurant: one
+  owner_restaurant: one
+  displayImages: false
+  allowOrdering: false
+  inventoryTracking: false
+  imagecontext: SharedMenuContext
+
 # For smartmenu ordering tests
 ordering_menu:
   name: Test Ordering Menu

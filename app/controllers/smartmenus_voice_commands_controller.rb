@@ -4,8 +4,11 @@ class SmartmenusVoiceCommandsController < ApplicationController
   before_action :ensure_voice_enabled
 
   def show
-    smartmenu = Smartmenu.find_by(slug: params[:smartmenu_id]) || Smartmenu.find(params[:smartmenu_id])
-    vc = VoiceCommand.where(smartmenu: smartmenu, session_id: session.id.to_s).find(params[:id])
+    smartmenu = find_smartmenu
+    return head :not_found unless smartmenu
+
+    vc = VoiceCommand.where(smartmenu: smartmenu, session_id: session.id.to_s).find_by(id: params[:id])
+    return head :not_found unless vc
 
     render json: {
       id: vc.id,
@@ -18,7 +21,8 @@ class SmartmenusVoiceCommandsController < ApplicationController
   end
 
   def create
-    smartmenu = Smartmenu.find_by(slug: params[:smartmenu_id]) || Smartmenu.find(params[:smartmenu_id])
+    smartmenu = find_smartmenu
+    return head :not_found unless smartmenu
 
     vc = VoiceCommand.create!(
       smartmenu: smartmenu,
@@ -45,7 +49,13 @@ class SmartmenusVoiceCommandsController < ApplicationController
   private
 
   def ensure_voice_enabled
-    enabled = ENV['SMART_MENU_VOICE_ENABLED'].to_s.downcase == 'true'
-    head :not_found unless enabled
+    return if ENV['SMART_MENU_VOICE_ENABLED'].to_s.downcase == 'true'
+
+    head :not_found
+  end
+
+  def find_smartmenu
+    Smartmenu.find_by(slug: params[:smartmenu_id]) ||
+      (params[:smartmenu_id].to_s.match?(/\A\d+\z/) ? Smartmenu.find_by(id: params[:smartmenu_id]) : nil)
   end
 end

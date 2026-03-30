@@ -25,7 +25,7 @@ class AlcoholOrderEventsController < ApplicationController
 
   def set_restaurant
     @restaurant = Restaurant.find_by(id: params[:restaurant_id])
-    head :not_found unless @restaurant
+    return head :not_found unless @restaurant
   end
 
   def csv_enumerator(relation)

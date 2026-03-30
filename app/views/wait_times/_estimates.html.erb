@@ -1,0 +1,21 @@
+<div class="list-group list-group-flush">
+  <% estimates.each do |party_size, minutes| %>
+    <div class="list-group-item px-3 py-2 d-flex justify-content-between align-items-center">
+      <span class="fw-medium">
+        <i class="bi bi-people me-1 text-muted small" aria-hidden="true"></i>
+        Party of <%= party_size %>
+      </span>
+      <span class="badge <%= minutes.zero? ? 'bg-success' : 'bg-warning text-dark' %> rounded-pill fs-6">
+        <% if minutes.zero? %>
+          <i class="bi bi-check-circle me-1" aria-hidden="true"></i>Available now
+        <% else %>
+          ~<%= minutes %> min
+        <% end %>
+      </span>
+    </div>
+  <% end %>
+</div>
+<div class="px-3 py-2 text-muted small border-top">
+  <i class="bi bi-info-circle me-1" aria-hidden="true"></i>
+  Estimates refresh automatically every 5 minutes.
+</div>

@@ -8,7 +8,6 @@ export default class extends Controller {
       if (!root) return;
       if (root.dataset.odInitialized === 'true') return;
       root.dataset.odInitialized = 'true';
-      console.log('[OrderingDashboard][Stimulus] connect -> initializing module');
 
       // Defer one microtask to ensure DOM is settled
       Promise.resolve().then(() => {

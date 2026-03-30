@@ -26,11 +26,13 @@ module Admin
     end
 
     def show
-      @demo_booking = DemoBooking.find(params[:id])
+      @demo_booking = DemoBooking.find_by(id: params[:id])
+      return head :not_found unless @demo_booking
     end
 
     def update
-      @demo_booking = DemoBooking.find(params[:id])
+      @demo_booking = DemoBooking.find_by(id: params[:id])
+      return head :not_found unless @demo_booking
 
       if @demo_booking.update(update_params)
         redirect_to admin_demo_booking_path(@demo_booking), notice: 'Lead updated.'

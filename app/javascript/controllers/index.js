@@ -58,6 +58,7 @@ import CrmKanbanController from './crm_kanban_controller';
 import CrmLeadDetailController from './crm_lead_detail_controller';
 import ThemePickerController from './theme_picker_controller';
 import MenuSearchController from './menu_search_controller';
+import WaitTimeController from './wait_time_controller';
 
 application.register('sortable', SortableController);
 application.register('auto-save', AutoSaveController);
@@ -115,49 +116,5 @@ application.register('crm-kanban', CrmKanbanController);
 application.register('crm-lead-detail', CrmLeadDetailController);
 application.register('theme-picker', ThemePickerController);
 application.register('menu-search', MenuSearchController);
+application.register('wait-time', WaitTimeController);
 
-console.log('[Stimulus] Controllers registered:', [
-  'sortable',
-  'auto-save',
-  'menu-import',
-  'sidebar',
-  'stripe-wallet',
-  'state',
-  'order-header',
-  'order-totals',
-  'ordering',
-  'localization-bulk',
-  'menuitems-bulk',
-  'menusections-bulk',
-  'restaurants-bulk',
-  'discovered-restaurant-deep-dive',
-  'discovered-restaurant-web-scrape',
-  'restaurantmenus-bulk',
-  'discovered-restaurants-bulk',
-  'password-confirmation-toggle',
-  'disabled-action',
-  'userplan-plan-change',
-  'go-live-progress',
-  'settings-dependencies',
-  'bottom-sheet',
-  'tab-bar',
-  'menu-layout',
-  'inline-edit',
-  'mobile-tab-bar',
-  'ai-image-generator',
-  'scrollspy',
-  'generate-pairings',
-  'ai-progress',
-  'whiskey-ambassador',
-  'invite-staff',
-  'camera-capture',
-  'theme-toggle',
-  'quick-add',
-  'split-bill',
-  'order-notes',
-  'receipt-request',
-  'crm-kanban',
-  'crm-lead-detail',
-  'theme-picker',
-  'menu-search',
-]);

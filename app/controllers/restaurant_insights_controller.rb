@@ -78,7 +78,8 @@ class RestaurantInsightsController < ApplicationController
   private
 
   def set_restaurant
-    @restaurant = current_user.restaurants.find(params[:id])
+    @restaurant = current_user.restaurants.find_by(id: params[:id])
+    head :not_found unless @restaurant
   end
 
   def insights_service

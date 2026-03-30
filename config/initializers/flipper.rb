@@ -76,6 +76,18 @@ Rails.application.config.after_initialize do
   unless Flipper.exist?(:menu_experiments)
     Flipper.add(:menu_experiments)
   end
+
+  # Wait Time Estimation — per-restaurant opt-in for the walk-in queue dashboard.
+  # Disabled by default; enable per-restaurant via Flipper UI.
+  unless Flipper.exist?(:wait_time_estimation)
+    Flipper.add(:wait_time_estimation)
+  end
+
+  # Wait Time SMS — stretch goal; enables SMS notification when table is ready.
+  # Disabled by default. Requires Twilio credentials before enabling.
+  unless Flipper.exist?(:wait_time_sms)
+    Flipper.add(:wait_time_sms)
+  end
 rescue ActiveRecord::ConnectionNotEstablished, ActiveRecord::StatementInvalid, ActiveRecord::NoDatabaseError => e
   # DB may be unreachable (CI asset precompile), or tables may not exist yet (db:create / db:migrate)
   Rails.logger.warn "[Flipper] Skipping feature flag seeding: #{e.message}"

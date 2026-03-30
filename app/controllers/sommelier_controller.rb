@@ -144,8 +144,10 @@ class SommelierController < ApplicationController
   end
 
   def set_menu
-    @menu = @smartmenu.menu
-    render json: { error: 'No menu' }, status: :not_found unless @menu
+    @menu = @smartmenu&.menu
+    return if @menu
+
+    render json: { error: 'No menu' }, status: :not_found
   end
 
   def format_recommendation(rec)

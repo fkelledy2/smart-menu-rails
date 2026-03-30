@@ -1,10 +1,11 @@
 # mellow.menu Feature Backlog — Priority Index
 
-**Last updated**: 2026-03-29 (ninth pass — Menu Experiments #12 marked COMPLETED 2026-03-29)
+**Last updated**: 2026-03-29 (tenth pass — Table Wait Time Estimation #13 COMPLETED 2026-03-29)
 **QR Code Security (#1)**: COMPLETED 2026-03-24 — Phase 1 shipped; spec at `docs/features/completed/qr-security.md`
 **Branded Email Styling (#1)**: COMPLETED 2026-03-24 — spec at `docs/features/completed/branded-email-styling-feature-request.md`
 **Branded Receipt Email (#2)**: COMPLETED 2026-03-25 — spec at `docs/features/completed/branded-receipt-email-feature-request.md`
 **Menu Experiments (#12)**: COMPLETED 2026-03-29 — spec at `docs/features/completed/08-menu-experiments-ab-testing.md`
+**Table Wait Time Estimation (#13)**: COMPLETED 2026-03-29 — spec at `docs/features/completed/table-wait-time-estimation-feature-request.md`
 **Guiding principle**: Every decision is filtered through one question — does this get mellow.menu in front of paying customers faster?
 
 ---
@@ -25,7 +26,7 @@
 | ~~#10~~ | ~~Smartmenu Theming~~ | ~~Launch Enhancer~~ | M | None | COMPLETED 2026-03-28 — spec at `docs/features/completed/smartmenu-theming.md` |
 | ~~#11~~ | ~~Partner Integrations (Event-Driven)~~ | ~~Post-Launch~~ | M | #8, Stripe webhooks | COMPLETED 2026-03-29 — spec at `docs/features/completed/06-partner-integrations-event-driven.md` |
 | ~~#12~~ | ~~Menu Experiments (A/B Testing)~~ | ~~Post-Launch~~ | M | #1 (DiningSession built); MenuVersion BUILT | COMPLETED 2026-03-29 — spec at `docs/features/completed/08-menu-experiments-ab-testing.md` |
-| #13 | Table Wait Time Estimation | Post-Launch | L | #5 (completed), Tablesetting | Operations win; differentiates for high-footfall walk-in restaurants |
+| ~~#13~~ | ~~Table Wait Time Estimation~~ | ~~Post-Launch~~ | L | #5 (completed), Tablesetting | COMPLETED 2026-03-29 — spec at `docs/features/completed/table-wait-time-estimation-feature-request.md` |
 | #14 | Dynamic Pricing Plans (Cost-Indexed) | Post-Launch | L | #15, #16 | Sustainable margin management at scale |
 | #15 | Cost Insights + Pricing Model Publisher | Post-Launch | L | #16 | Admin system enabling #14; required before pricing models can be published |
 | #16 | Heroku Cost Inventory | Post-Launch | S | Admin auth, HEROKU_PLATFORM_API_TOKEN | Feeds #15 with accurate infra cost data |

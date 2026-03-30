@@ -20,12 +20,10 @@ export default class extends Controller {
   };
 
   connect() {
-    console.log('[OrderNotes] Controller connected for order:', this.orderIdValue);
     this.subscribeToOrderChannel();
   }
 
   disconnect() {
-    console.log('[OrderNotes] Controller disconnected');
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
@@ -43,17 +41,11 @@ export default class extends Controller {
         order_id: this.orderIdValue,
       },
       {
-        connected: () => {
-          console.log('[OrderNotes] Connected to OrderChannel');
-        },
+        connected: () => {},
 
-        disconnected: () => {
-          console.log('[OrderNotes] Disconnected from OrderChannel');
-        },
+        disconnected: () => {},
 
         received: (data) => {
-          console.log('[OrderNotes] Received data:', data);
-
           if (data.action === 'note_created') {
             this.handleNoteCreated(data);
           } else if (data.action === 'note_updated') {
@@ -67,7 +59,6 @@ export default class extends Controller {
   }
 
   handleNoteCreated(data) {
-    console.log('[OrderNotes] Note created:', data.note_id);
 
     // Hide empty state if it exists
     if (this.hasEmptyStateTarget) {
@@ -99,7 +90,6 @@ export default class extends Controller {
   }
 
   handleNoteUpdated(data) {
-    console.log('[OrderNotes] Note updated:', data.note_id);
 
     const existingNote = this.element.querySelector(`[data-note-id="${data.note_id}"]`);
     if (existingNote && data.note_html) {
@@ -117,7 +107,6 @@ export default class extends Controller {
   }
 
   handleNoteDeleted(data) {
-    console.log('[OrderNotes] Note deleted:', data.note_id);
 
     const noteToRemove = this.element.querySelector(`[data-note-id="${data.note_id}"]`);
     if (noteToRemove) {
