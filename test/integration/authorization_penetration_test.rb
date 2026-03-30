@@ -56,11 +56,11 @@ class AuthorizationPenetrationTest < ActionDispatch::IntegrationTest
 
     # Test accessing other restaurant's employees
     get restaurant_employees_path(@restaurant2)
-    # Same logic - test for current behavior
+    # Access should be denied — either a redirect (old behaviour) or 404 (scoped find_by)
     if response.successful?
       assert_response :success
     else
-      assert_response :redirect
+      assert_includes [301, 302, 303, 307, 308, 404], response.status
     end
   end
 

@@ -49,18 +49,13 @@ export default class extends Controller {
   };
 
   connect() {
-    console.debug('[menu-import] connect() — element:', this.element.className);
     // Initialize modals
     if (this.hasConfirmModalTarget) {
       this.confirmModal = Modal.getOrCreateInstance(this.confirmModalTarget);
-      console.debug('[menu-import] confirmModal initialized');
     }
 
     if (this.hasEditItemModalTarget) {
       this.editItemModal = Modal.getOrCreateInstance(this.editItemModalTarget);
-      console.debug('[menu-import] editItemModal initialized');
-    } else {
-      console.warn('[menu-import] editItemModalTarget NOT found at connect time');
     }
 
     // Add event listener for keyboard shortcuts
@@ -214,13 +209,11 @@ export default class extends Controller {
   // Edit Item Modal Methods
   showEditItemModal(event) {
     if (!this.hasEditItemModalTarget) {
-      console.warn('[menu-import#showEditItemModal] editItemModalTarget not found — aborting');
       return;
     }
 
     // Lazy-init the Modal instance if connect() missed it
     if (!this.editItemModal) {
-      console.debug('[menu-import#showEditItemModal] lazy-initializing Modal');
       this.editItemModal = Modal.getOrCreateInstance(this.editItemModalTarget);
     }
 
@@ -285,28 +278,15 @@ export default class extends Controller {
     let sizePrices = {};
     try {
       const raw = event.currentTarget.dataset.itemSizePrices || '{}';
-      console.debug('[menu-import#showEditItemModal] raw itemSizePrices attr:', raw);
       sizePrices = JSON.parse(raw);
     } catch (e) {
       console.error('[menu-import#showEditItemModal] Error parsing size prices:', e);
       sizePrices = {};
     }
-    console.debug('[menu-import#showEditItemModal] parsed sizePrices:', sizePrices);
-    console.debug(
-      '[menu-import#showEditItemModal] hasEditSizePriceTarget:',
-      this.hasEditSizePriceTarget
-    );
-    console.debug(
-      '[menu-import#showEditItemModal] editSizePriceTargets count:',
-      this.hasEditSizePriceTarget ? this.editSizePriceTargets.length : 0
-    );
     if (this.hasEditSizePriceTarget) {
       this.editSizePriceTargets.forEach((input) => {
         const key = input.dataset.sizeKey;
         const val = sizePrices[key];
-        console.debug(
-          `[menu-import#showEditItemModal] size input key=${key} raw=${val} setting=${val != null && parseFloat(val) > 0 ? val : ''}`
-        );
         input.value = val != null && parseFloat(val) > 0 ? val : '';
       });
     }
@@ -318,24 +298,6 @@ export default class extends Controller {
 
     // Auto-select pricing mode based on whether size prices exist
     const hasSizePrices = Object.values(sizePrices).some((v) => v != null && parseFloat(v) > 0);
-    console.debug(
-      '[menu-import#showEditItemModal] hasSizePrices:',
-      hasSizePrices,
-      '=> mode:',
-      hasSizePrices ? 'sizes' : 'single'
-    );
-    console.debug(
-      '[menu-import#showEditItemModal] hasPricingModeBtnTarget:',
-      this.hasPricingModeBtnTarget
-    );
-    console.debug(
-      '[menu-import#showEditItemModal] hasSinglePriceSectionTarget:',
-      this.hasSinglePriceSectionTarget
-    );
-    console.debug(
-      '[menu-import#showEditItemModal] hasSizePricesSectionTarget:',
-      this.hasSizePricesSectionTarget
-    );
     this._applyPricingMode(hasSizePrices ? 'sizes' : 'single');
 
     // Store id on modal dataset for save fallback
@@ -386,9 +348,7 @@ export default class extends Controller {
   }
 
   saveItem(event) {
-    console.debug('[menu-import#saveItem] click received');
     if (!this.hasEditItemFormTarget) {
-      console.warn('[menu-import#saveItem] No editItemFormTarget found');
       return;
     }
 
@@ -480,8 +440,6 @@ export default class extends Controller {
         size_prices: finalSizePrices,
       },
     };
-    console.debug('[menu-import#saveItem] PATCH /ocr_menu_items/' + itemId, payload);
-
     // Submit the form via fetch
     fetch(`/ocr_menu_items/${itemId}`, {
       method: 'PATCH',

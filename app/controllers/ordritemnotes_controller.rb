@@ -82,7 +82,8 @@ class OrdritemnotesController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_ordritemnote
-    @ordritemnote = Ordritemnote.find(params[:id])
+    @ordritemnote = Ordritemnote.find_by(id: params[:id])
+    head :not_found unless @ordritemnote
   end
 
   # Only allow a list of trusted parameters through.

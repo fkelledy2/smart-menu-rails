@@ -1,7 +1,7 @@
 <%# Admin: Demo Booking detail view %>
 <% content_for :title, "Demo Booking ##{@demo_booking.id} — Admin" %>
 
-<div class="container py-4 mw-760">
+<div class="container-fluid py-4">
   <div class="mb-3 d-flex gap-2">
     <%= link_to '&larr; All Demo Bookings'.html_safe, admin_demo_bookings_path,
                 class: 'btn btn-sm btn-outline-secondary' %>

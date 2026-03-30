@@ -15,7 +15,8 @@ class EmployeesController < ApplicationController
         policy_scope(Employee)
 
         if params[:restaurant_id]
-          @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
+          @futureParentRestaurant = current_user.restaurants.find_by(id: params[:restaurant_id])
+          return head :not_found unless @futureParentRestaurant
 
           # Use AdvancedCacheService for restaurant employees with comprehensive data
           @employees_data = AdvancedCacheService.cached_restaurant_employees(@futureParentRestaurant.id,
@@ -46,7 +47,9 @@ class EmployeesController < ApplicationController
       format.json do
         # For JSON requests, use optimized queries with minimal includes
         if params[:restaurant_id]
-          @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
+          @futureParentRestaurant = current_user.restaurants.find_by(id: params[:restaurant_id])
+          return head :not_found unless @futureParentRestaurant
+
           @employees = policy_scope(@futureParentRestaurant.employees.where(archived: false).order(:sequence))
         else
           # Get employees from all user's restaurants
@@ -112,7 +115,9 @@ class EmployeesController < ApplicationController
 
   # GET /restaurants/:restaurant_id/employees/summary
   def summary
-    @restaurant = Restaurant.find(params[:restaurant_id])
+    @restaurant = current_user.restaurants.find_by(id: params[:restaurant_id])
+    return head :not_found unless @restaurant
+
     authorize Employee.new(restaurant: @restaurant), :index?
 
     # Get summary period from params or default to 30 days
@@ -139,7 +144,9 @@ class EmployeesController < ApplicationController
   def new
     @employee = Employee.new
     if params[:restaurant_id]
-      @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
+      @futureParentRestaurant = current_user.restaurants.find_by(id: params[:restaurant_id])
+      return head :not_found unless @futureParentRestaurant
+
       @employee.restaurant = @futureParentRestaurant
     end
     authorize @employee
@@ -156,7 +163,9 @@ class EmployeesController < ApplicationController
 
     restaurant_id = params.dig(:employee, :restaurant_id).presence || params[:restaurant_id].presence
     if restaurant_id.present?
-      @futureParentRestaurant = Restaurant.find(restaurant_id)
+      @futureParentRestaurant = current_user.restaurants.find_by(id: restaurant_id)
+      return head :not_found unless @futureParentRestaurant
+
       @employee.restaurant = @futureParentRestaurant
     end
 
@@ -252,7 +261,9 @@ class EmployeesController < ApplicationController
 
   # PATCH /restaurants/:restaurant_id/employees/bulk_update
   def bulk_update
-    restaurant = Restaurant.find(params[:restaurant_id])
+    restaurant = current_user.restaurants.find_by(id: params[:restaurant_id])
+    return head :not_found unless restaurant
+
     employees = policy_scope(Employee).where(restaurant_id: restaurant.id, archived: false)
 
     ids = Array(params[:employee_ids]).map(&:to_s).compact_blank
@@ -296,7 +307,9 @@ class EmployeesController < ApplicationController
 
   # PATCH /restaurants/:restaurant_id/employees/reorder
   def reorder
-    restaurant = Restaurant.find(params[:restaurant_id])
+    restaurant = current_user.restaurants.find_by(id: params[:restaurant_id])
+    return render json: { status: 'error', message: 'Restaurant not found' }, status: :not_found unless restaurant
+
     employees = policy_scope(Employee).where(restaurant_id: restaurant.id, archived: false)
 
     order = params[:order]
