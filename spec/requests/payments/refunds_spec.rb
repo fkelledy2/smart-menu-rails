@@ -2,7 +2,7 @@ require 'rails_helper'
 require 'ostruct'
 
 RSpec.describe 'Payments::Refunds' do
-  let(:admin_user) { create(:user, admin: true) }
+  let(:admin_user) { create(:user, admin: true, super_admin: true) }
 
   let(:payment_attempt) do
     PaymentAttempt.create!(

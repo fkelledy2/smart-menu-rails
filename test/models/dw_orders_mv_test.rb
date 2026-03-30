@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class DwOrdersMvTest < ActiveSupport::TestCase
-  self.use_transactional_tests = false
+  self.use_transactional_tests = true
 
   def setup
     create_test_materialized_view unless table_exists?

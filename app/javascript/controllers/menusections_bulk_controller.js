@@ -19,9 +19,15 @@ export default class extends Controller {
 
   connect() {
     if (this.hasModalTarget) {
-      this.bsModal = new Modal(this.modalTarget);
+      this.bsModal = Modal.getOrCreateInstance(this.modalTarget);
     }
     this.sync();
+  }
+
+  disconnect() {
+    if (this.bsModal) {
+      this.bsModal.hide();
+    }
   }
 
   enabledCheckboxes() {

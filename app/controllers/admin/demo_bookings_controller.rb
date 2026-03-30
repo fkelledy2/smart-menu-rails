@@ -27,7 +27,7 @@ module Admin
 
     def show
       @demo_booking = DemoBooking.find_by(id: params[:id])
-      return head :not_found unless @demo_booking
+      head :not_found unless @demo_booking
     end
 
     def update

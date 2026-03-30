@@ -100,8 +100,13 @@ module Payments
         payment_id = payment_attempt.provider_payment_id.to_s
         raise ArgumentError, 'provider_payment_id is required to refund' if payment_id.blank?
 
+        # Deterministic idempotency key: keyed on the payment_attempt id so that
+        # Sidekiq retries (or admin double-clicks) send the same key to Square and
+        # Square deduplicates the call instead of issuing a second refund.
+        idempotency_key = "square_refund:pa_#{payment_attempt.id}"
+
         body = {
-          idempotency_key: SecureRandom.uuid,
+          idempotency_key: idempotency_key,
           payment_id: payment_id,
           reason: 'Full refund for order',
         }

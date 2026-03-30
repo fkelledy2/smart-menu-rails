@@ -42,7 +42,10 @@ class TestimonialsController < ApplicationController
         end
         format.json { render :show, status: :created, location: @testimonial }
       else
-        format.html { load_form_collections; render :new, status: :unprocessable_content }
+        format.html do
+          load_form_collections
+          render :new, status: :unprocessable_content
+        end
         format.json { render json: @testimonial.errors, status: :unprocessable_content }
       end
     end
@@ -59,7 +62,10 @@ class TestimonialsController < ApplicationController
         end
         format.json { render :show, status: :ok, location: @testimonial }
       else
-        format.html { load_form_collections; render :edit, status: :unprocessable_content }
+        format.html do
+          load_form_collections
+          render :edit, status: :unprocessable_content
+        end
         format.json { render json: @testimonial.errors, status: :unprocessable_content }
       end
     end

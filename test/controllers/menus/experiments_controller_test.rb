@@ -40,7 +40,7 @@ module Menus
     end
 
     def teardown
-      MenuExperiment.where(menu: @menu).where('control_version_id IN (?) OR variant_version_id IN (?)', [@v1.id, @v2.id], [@v1.id, @v2.id]).each do |e|
+      MenuExperiment.where(menu: @menu).where('control_version_id IN (?) OR variant_version_id IN (?)', [@v1.id, @v2.id], [@v1.id, @v2.id]).find_each do |e|
         e.menu_experiment_exposures.delete_all
         e.delete
       end

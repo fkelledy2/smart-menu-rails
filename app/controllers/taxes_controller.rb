@@ -135,6 +135,7 @@ class TaxesController < ApplicationController
   def bulk_update
     restaurant = Restaurant.find_by(id: params[:restaurant_id])
     return head :not_found unless restaurant
+
     taxes = policy_scope(Tax).where(restaurant_id: restaurant.id, archived: false)
 
     ids = Array(params[:tax_ids]).map(&:to_s).compact_blank
@@ -180,6 +181,7 @@ class TaxesController < ApplicationController
   def reorder
     restaurant = Restaurant.find_by(id: params[:restaurant_id])
     return head :not_found unless restaurant
+
     taxes = policy_scope(Tax).where(restaurant_id: restaurant.id, archived: false)
 
     order = params[:order]

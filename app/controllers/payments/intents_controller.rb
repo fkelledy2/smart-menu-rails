@@ -8,7 +8,11 @@ class Payments::IntentsController < ApplicationController
     amount = params[:amount].to_i
     currency = params[:currency].to_s.downcase.presence || 'usd'
 
-    @ordr = Ordr.find(open_order_id)
+    @ordr = Ordr.find_by(id: open_order_id)
+    unless @ordr
+      render json: { error: 'Order not found' }, status: :not_found
+      return
+    end
     authorize @ordr, :update?
 
     key = begin
@@ -43,19 +47,26 @@ class Payments::IntentsController < ApplicationController
       pa.merchant_model  = :restaurant_mor
     end
 
-    intent = Stripe::PaymentIntent.create(
-      amount: amount,
-      currency: currency,
-      automatic_payment_methods: { enabled: true },
-      metadata: {
-        order_id: @ordr.id,
-        restaurant_id: @ordr.restaurant_id,
-        smartmenu_id: @ordr.menu&.smartmenus&.first&.id,
-        payment_attempt_id: payment_attempt.id,
-      },
-    )
-
-    payment_attempt.update_column(:provider_payment_id, intent.id)
+    # Re-use the existing Stripe intent if one was already created for this
+    # PaymentAttempt. Without this guard every call (including retries from the
+    # wallet button tapping twice) would create a fresh intent, orphaning the
+    # previous one and overwriting provider_payment_id.
+    if payment_attempt.provider_payment_id.present?
+      intent = Stripe::PaymentIntent.retrieve(payment_attempt.provider_payment_id)
+    else
+      intent = Stripe::PaymentIntent.create(
+        amount: amount,
+        currency: currency,
+        automatic_payment_methods: { enabled: true },
+        metadata: {
+          order_id: @ordr.id,
+          restaurant_id: @ordr.restaurant_id,
+          smartmenu_id: @ordr.menu&.smartmenus&.first&.id,
+          payment_attempt_id: payment_attempt.id,
+        },
+      )
+      payment_attempt.update_column(:provider_payment_id, intent.id)
+    end
 
     render json: { client_secret: intent.client_secret }
   end

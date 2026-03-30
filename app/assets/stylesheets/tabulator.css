@@ -1,6 +1,7 @@
 /*
- *= require tabulator_bootstrap5
+ *= require tabulator_bootstrap5.min
  */
+
 /*
  * Tabulator Bootstrap 5 theme - vendored from tabulator-tables v5.6.1
  * Loaded separately from application.bootstrap.scss to avoid SassC min() function issues.

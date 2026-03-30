@@ -395,7 +395,7 @@ class RestaurantsController < Restaurants::BaseController
       end
       attrs[:status] = status_value if status_value.present?
 
-      Rails.logger.info("[RestaurantsController#update] raw_restaurant=#{raw_restaurant.inspect} built_attrs=#{attrs.inspect}")
+      Rails.logger.info("[RestaurantsController#update] restaurant_id=#{@restaurant.id} attr_keys=#{attrs.keys.inspect}")
 
       @restaurant.assign_attributes(attrs)
       updated = @restaurant.changed? ? @restaurant.save : true

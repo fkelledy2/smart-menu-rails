@@ -11,7 +11,11 @@ class Crm::ProcessCalendlyWebhookJobTest < ActiveSupport::TestCase
     handler_called = false
     received_payload = nil
 
-    Crm::CalendlyEventHandler.stub(:call, ->(payload:) { handler_called = true; received_payload = payload; nil }) do
+    Crm::CalendlyEventHandler.stub(:call, lambda { |payload:|
+      handler_called = true
+      received_payload = payload
+      nil
+    },) do
       Crm::ProcessCalendlyWebhookJob.new.perform(payload)
     end
 
@@ -25,7 +29,7 @@ class Crm::ProcessCalendlyWebhookJobTest < ActiveSupport::TestCase
       'payload' => { 'email' => 'cancel@test.com', 'name' => 'Test User' },
     }
 
-    Crm::CalendlyEventHandler.stub(:call, ->(payload:) { nil }) do
+    Crm::CalendlyEventHandler.stub(:call, ->(payload:) {}) do
       # No exception should be raised
       assert_nothing_raised { Crm::ProcessCalendlyWebhookJob.new.perform(payload) }
     end

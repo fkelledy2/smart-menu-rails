@@ -11,11 +11,11 @@ class MenuItemImageContextBatchJobTest < ActiveSupport::TestCase
     @menu       = menus(:one)
   end
 
-  def stub_sidekiq_redis(&block)
+  def stub_sidekiq_redis(&)
     fake_redis = Object.new
     fake_redis.define_singleton_method(:get) { |_k| nil }
     fake_redis.define_singleton_method(:setex) { |*_args| nil }
-    Sidekiq.stub(:redis, ->(*_args, &blk) { blk.call(fake_redis) }, &block)
+    Sidekiq.stub(:redis, ->(*_args, &blk) { blk.call(fake_redis) }, &)
   end
 
   test 'perform returns early for non-existent menu' do
@@ -37,15 +37,18 @@ class MenuItemImageContextBatchJobTest < ActiveSupport::TestCase
 
     prompt_fingerprint_calls = 0
     fake_prompt = ['A prompt text', 'some_fingerprint_hash']
-    MenuItemImageGeneratorJob.stub(:build_prompt_and_fingerprint, ->(_g) { prompt_fingerprint_calls += 1; fake_prompt }) do
-      MenuItemImageGeneratorJob.stub(:perform_sync, ->(_id) { nil }) do
+    MenuItemImageGeneratorJob.stub(:build_prompt_and_fingerprint, lambda { |_g|
+      prompt_fingerprint_calls += 1
+      fake_prompt
+    },) do
+      MenuItemImageGeneratorJob.stub(:perform_sync, ->(_id) {}) do
         stub_sidekiq_redis do
           MenuItemImageContextBatchJob.new.perform(@menu.id)
         end
       end
     end
 
-    assert prompt_fingerprint_calls > 0, 'build_prompt_and_fingerprint should have been called'
+    assert prompt_fingerprint_calls.positive?, 'build_prompt_and_fingerprint should have been called'
 
     genimage.destroy!
   end

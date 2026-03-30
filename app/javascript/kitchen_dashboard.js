@@ -43,7 +43,6 @@ class KitchenDashboard {
   initializeKitchenChannel() {
     // Access the global App.cable consumer
     if (!window.App || !window.App.cable) {
-      console.error('Action Cable not available');
       return;
     }
 
@@ -51,17 +50,14 @@ class KitchenDashboard {
       { channel: 'KitchenChannel', restaurant_id: this.restaurantId },
       {
         connected: () => {
-          console.log('Kitchen dashboard connected');
           this.showConnectionStatus(true);
         },
 
         disconnected: () => {
-          console.log('Kitchen dashboard disconnected');
           this.showConnectionStatus(false);
         },
 
         received: (data) => {
-          console.log('Kitchen update received:', data);
           this.handleKitchenMessage(data);
         },
       }
@@ -178,19 +174,23 @@ class KitchenDashboard {
 
     countEl.textContent = String(users.length);
 
-    // Show a short list of emails with status badges
-    listEl.innerHTML = users
-      .slice(0, 5)
-      .map((u) => {
-        const label = (u.email || '').split('@')[0] || `User ${u.user_id}`;
-        const badgeClass = u.status === 'active' ? 'bg-success' : 'bg-warning text-dark';
-        const statusLabel = u.status === 'active' ? 'active' : 'idle';
-        return `<span class="badge ${badgeClass} me-1">${label} • ${statusLabel}</span>`;
-      })
-      .join('');
+    // Show a short list of emails with status badges — use textContent to prevent XSS
+    listEl.innerHTML = '';
+    users.slice(0, 5).forEach((u) => {
+      const label = (u.email || '').split('@')[0] || `User ${u.user_id}`;
+      const badgeClass = u.status === 'active' ? 'bg-success' : 'bg-warning text-dark';
+      const statusLabel = u.status === 'active' ? 'active' : 'idle';
+      const span = document.createElement('span');
+      span.className = `badge ${badgeClass} me-1`;
+      span.textContent = `${label} • ${statusLabel}`;
+      listEl.appendChild(span);
+    });
 
     if (users.length > 5) {
-      listEl.insertAdjacentHTML('beforeend', `<span class="ms-1">+${users.length - 5} more</span>`);
+      const extra = document.createElement('span');
+      extra.className = 'ms-1';
+      extra.textContent = `+${users.length - 5} more`;
+      listEl.appendChild(extra);
     }
   }
 
@@ -205,19 +205,16 @@ class KitchenDashboard {
   handleKitchenMessage(data) {
     switch (data.event) {
       case 'new_order':
-        console.log('New order received:', data.order);
         this.addOrderToColumn(data.order, 'pending');
         this.updateMetric('pending', 1);
         this.playNotificationSound();
         this.showNotification('New Order', `Order #${data.order.id} received`);
         break;
       case 'status_change':
-        console.log('Order status changed:', data);
         this.moveOrderBetweenColumns(data.order_id, data.old_status, data.new_status);
         this.updateMetricsFromStatusChange(data.old_status, data.new_status);
         break;
       case 'queue_update':
-        console.log('Queue updated:', data);
         this.updateMetric('pending', data.queue_length);
         break;
     }
@@ -260,11 +257,7 @@ class KitchenDashboard {
         }
         return response.json();
       })
-      .then((data) => {
-        console.log('Order updated:', data);
-      })
       .catch((error) => {
-        console.error('Error updating order:', error);
         alert('Failed to update order status');
       });
   }
@@ -341,7 +334,7 @@ class KitchenDashboard {
       oscillator.start(this.audioContext.currentTime);
       oscillator.stop(this.audioContext.currentTime + 0.5);
     } catch (error) {
-      console.error('Error playing notification sound:', error);
+      // Notification sound unavailable — no-op
     }
   }
 
@@ -360,11 +353,8 @@ class KitchenDashboard {
     const column = document.getElementById(columnId);
 
     if (!column) {
-      console.error(`Column not found: ${columnId}`);
       return;
     }
-
-    console.log(`Adding order ${order.id} to column ${columnId}`);
 
     // Create order card HTML
     const orderCard = this.createOrderCardElement(order);
@@ -407,7 +397,6 @@ class KitchenDashboard {
     // If card doesn't exist and new status is kitchen-relevant, fetch and create it
     if (!orderCard) {
       if (['ordered', 'preparing', 'ready'].includes(newStatus)) {
-        console.log('Card not found, fetching order data for:', orderId);
         this.fetchAndAddOrder(orderId, newStatus);
       }
       return;
@@ -440,7 +429,7 @@ class KitchenDashboard {
       }
     }
 
-    // Update button
+    // Update button — orderId comes from dataset so it is a server-controlled integer; safe to interpolate
     const cardFooter = orderCard.querySelector('.card-footer');
     if (cardFooter) {
       let buttonHtml = '';
@@ -537,9 +526,7 @@ class KitchenDashboard {
   }
 
   fetchAndAddOrder(orderId, status) {
-    console.log(`Fetching order ${orderId} with status ${status}`);
     const columnType = this.getColumnType(status);
-    console.log(`Column type for status ${status}: ${columnType}`);
 
     // Fetch order data from server
     fetch(`/restaurants/${this.restaurantId}/ordrs/${orderId}.json`)
@@ -550,54 +537,55 @@ class KitchenDashboard {
         return response.json();
       })
       .then((data) => {
-        console.log('Fetched order data:', data);
-        console.log(`Overriding fetched status '${data.status}' with broadcast status '${status}'`);
-
         // IMPORTANT: Use the status from the broadcast, not the fetched data
         // The broadcast status is more current than the JSON response
         data.status = status;
 
-        console.log(`Adding to column type: ${columnType}`);
         // Create order card with fetched data
         this.addOrderToColumn(data, columnType);
         this.playNotificationSound();
         this.showNotification('New Order', `Order #${data.id} received`);
       })
-      .catch((error) => {
-        console.error('Error fetching order:', error);
+      .catch(() => {
+        // Failed to fetch order — no-op, will appear on next page load
       });
   }
 
+  // Escape a string for safe text insertion into HTML
+  escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = String(str || '');
+    return div.innerHTML;
+  }
+
   createOrderCardElement(order) {
-    console.log('Creating order card element for order:', order.id);
     const card = document.createElement('div');
     card.className = 'card mb-2 order-card shadow-sm';
     card.dataset.orderId = order.id;
     card.dataset.status = order.status;
     card.dataset.createdAt = Math.floor(new Date(order.created_at).getTime() / 1000);
-    console.log('Card element created with dataset:', card.dataset);
 
     // Determine header color based on status
     let headerClass = 'bg-danger-subtle';
     if (order.status === 'preparing') headerClass = 'bg-warning-subtle';
     if (order.status === 'ready') headerClass = 'bg-success-subtle';
 
-    // Build items HTML as bullet list
-    let itemsHtml = '';
+    // Build items list using DOM methods to prevent XSS
+    const ul = document.createElement('ul');
+    ul.className = 'mb-0';
     if (order.ordritems && order.ordritems.length > 0) {
-      itemsHtml = order.ordritems
-        .map(
-          (item) => `
-        <li>${item.menuitem ? item.menuitem.name : 'Item'}</li>
-      `
-        )
-        .join('');
+      order.ordritems.forEach((item) => {
+        const li = document.createElement('li');
+        li.textContent = item.menuitem ? item.menuitem.name : 'Item';
+        ul.appendChild(li);
+      });
     } else {
-      itemsHtml = '<li>Loading items...</li>';
+      const li = document.createElement('li');
+      li.textContent = 'Loading items...';
+      ul.appendChild(li);
     }
 
-    // Determine button based on status
-    console.log(`Determining button for order ${order.id} with status: ${order.status}`);
+    // Determine button based on status — orderId is a server-controlled integer; safe to interpolate
     let buttonHtml = '';
     if (order.status === 'ordered') {
       buttonHtml = `<button class="btn btn-warning w-100 order-status-btn" data-order-id="${order.id}" data-new-status="preparing">
@@ -612,37 +600,42 @@ class KitchenDashboard {
         <i class="bi bi-check2-all"></i> Mark as Collected
       </button>`;
     }
-    console.log(`Button HTML generated: ${buttonHtml ? 'Yes' : 'No (empty)'}`);
 
-    card.innerHTML = `
-      <div class="card-header py-2 d-flex justify-content-between align-items-center ${headerClass}">
-        <div>
-          <strong class="fs-5">Order #${order.id}</strong>
-          ${
-            order.tablesetting
-              ? `
-            <span class="badge bg-secondary ms-2">
-              ${order.tablesetting.name}
-            </span>
-          `
-              : ''
-          }
-        </div>
-        <small class="text-muted">
-          <i class="bi bi-clock"></i> Just now
-        </small>
-      </div>
-      
-      <div class="card-body py-2">
-        <ul class="mb-0">
-          ${itemsHtml}
-        </ul>
-      </div>
-      
-      <div class="card-footer py-2 bg-white border-top">
-        ${buttonHtml}
-      </div>
-    `;
+    // Build header using DOM methods; tablesetting name is user-controlled so must be escaped
+    const header = document.createElement('div');
+    header.className = `card-header py-2 d-flex justify-content-between align-items-center ${headerClass}`;
+
+    const headerLeft = document.createElement('div');
+    const orderTitle = document.createElement('strong');
+    orderTitle.className = 'fs-5';
+    orderTitle.textContent = `Order #${order.id}`;
+    headerLeft.appendChild(orderTitle);
+
+    if (order.tablesetting) {
+      const badge = document.createElement('span');
+      badge.className = 'badge bg-secondary ms-2';
+      badge.textContent = order.tablesetting.name;
+      headerLeft.appendChild(badge);
+    }
+
+    const headerRight = document.createElement('small');
+    headerRight.className = 'text-muted';
+    headerRight.innerHTML = '<i class="bi bi-clock"></i> Just now';
+
+    header.appendChild(headerLeft);
+    header.appendChild(headerRight);
+
+    const body = document.createElement('div');
+    body.className = 'card-body py-2';
+    body.appendChild(ul);
+
+    const footer = document.createElement('div');
+    footer.className = 'card-footer py-2 bg-white border-top';
+    footer.innerHTML = buttonHtml;
+
+    card.appendChild(header);
+    card.appendChild(body);
+    card.appendChild(footer);
 
     return card;
   }

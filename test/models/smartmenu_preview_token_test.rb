@@ -13,7 +13,7 @@ class SmartmenuPreviewTokenTest < ActiveSupport::TestCase
   end
 
   test 'generate produces different tokens for different modes' do
-    staff_token   = SmartmenuPreviewToken.generate(mode: :staff,    menu_id: 1)
+    staff_token = SmartmenuPreviewToken.generate(mode: :staff, menu_id: 1)
     customer_token = SmartmenuPreviewToken.generate(mode: :customer, menu_id: 1)
     assert_not_equal staff_token, customer_token
   end

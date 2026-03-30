@@ -190,6 +190,7 @@ class RestaurantlocalesController < ApplicationController
   def bulk_update
     @restaurant = Restaurant.find_by(id: params[:restaurant_id])
     return head :not_found unless @restaurant
+
     restaurantlocales = policy_scope(Restaurantlocale).where(restaurant_id: @restaurant.id)
 
     ids = Array(params[:restaurantlocale_ids]).map(&:to_s).compact_blank
@@ -238,6 +239,7 @@ class RestaurantlocalesController < ApplicationController
   def reorder
     @restaurant = Restaurant.find_by(id: params[:restaurant_id])
     return head :not_found unless @restaurant
+
     restaurantlocales = policy_scope(Restaurantlocale).where(restaurant_id: @restaurant.id)
 
     order = params[:order]

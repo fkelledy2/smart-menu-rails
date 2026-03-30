@@ -41,19 +41,14 @@ class StationDashboard {
 
   initializeStationChannel() {
     if (!window.App || !window.App.cable) {
-      console.error('Action Cable not available');
       return;
     }
 
     this.stationChannel = window.App.cable.subscriptions.create(
       { channel: 'StationChannel', restaurant_id: this.restaurantId, station: this.station },
       {
-        connected: () => {
-          console.log('Station dashboard connected');
-        },
-        disconnected: () => {
-          console.log('Station dashboard disconnected');
-        },
+        connected: () => {},
+        disconnected: () => {},
         received: (data) => {
           this.handleStationMessage(data);
         },
@@ -113,15 +108,17 @@ class StationDashboard {
 
     if (!listEl) return;
 
-    listEl.innerHTML = users
-      .slice(0, 5)
-      .map((u) => {
-        const label = (u.email || '').split('@')[0] || `User ${u.user_id}`;
-        const badgeClass = u.status === 'active' ? 'bg-success' : 'bg-warning text-dark';
-        const statusLabel = u.status === 'active' ? 'active' : 'idle';
-        return `<span class="badge ${badgeClass} me-1">${label} • ${statusLabel}</span>`;
-      })
-      .join('');
+    // Use textContent per badge to prevent XSS via email values
+    listEl.innerHTML = '';
+    users.slice(0, 5).forEach((u) => {
+      const label = (u.email || '').split('@')[0] || `User ${u.user_id}`;
+      const badgeClass = u.status === 'active' ? 'bg-success' : 'bg-warning text-dark';
+      const statusLabel = u.status === 'active' ? 'active' : 'idle';
+      const span = document.createElement('span');
+      span.className = `badge ${badgeClass} me-1`;
+      span.textContent = `${label} • ${statusLabel}`;
+      listEl.appendChild(span);
+    });
   }
 
   handleStationMessage(data) {
@@ -421,8 +418,7 @@ class StationDashboard {
         Accept: 'application/json',
       },
       body: JSON.stringify({ ordr_station_ticket: { status: newStatus } }),
-    }).catch((error) => {
-      console.error('Error updating ticket status:', error);
+    }).catch(() => {
       alert('Failed to update ticket status');
     });
   }
@@ -510,6 +506,7 @@ class StationDashboard {
       if (newStatus === 'ready') header.classList.add('bg-success-subtle');
     }
 
+    // ticket.id is a server-controlled integer — safe to interpolate in data attributes
     const footer = card.querySelector('.card-footer');
     if (footer) {
       let html = '';
@@ -602,15 +599,22 @@ class StationDashboard {
     if (ticket.status === 'preparing') headerClass = 'bg-warning-subtle';
     if (ticket.status === 'ready') headerClass = 'bg-success-subtle';
 
-    const itemsHtml = (ticket.items || [])
-      .map((i) => {
-        const notes = (i.notes || []).length
-          ? `<div class="text-muted small">${i.notes.join(', ')}</div>`
-          : '';
-        return `<li>${i.name || 'Item'}${notes}</li>`;
-      })
-      .join('');
+    // Build items list using DOM methods to prevent XSS via item names and notes
+    const ul = document.createElement('ul');
+    ul.className = 'mb-0';
+    (ticket.items || []).forEach((i) => {
+      const li = document.createElement('li');
+      li.textContent = i.name || 'Item';
+      if ((i.notes || []).length) {
+        const notesDiv = document.createElement('div');
+        notesDiv.className = 'text-muted small';
+        notesDiv.textContent = i.notes.join(', ');
+        li.appendChild(notesDiv);
+      }
+      ul.appendChild(li);
+    });
 
+    // ticket.id is a server-controlled integer — safe in data attributes
     let buttonHtml = '';
     if (ticket.status === 'ordered') {
       buttonHtml = `<button class="btn btn-warning w-100 ticket-status-btn" data-ticket-id="${ticket.id}" data-new-status="preparing">Start Preparing</button>`;
@@ -620,19 +624,41 @@ class StationDashboard {
       buttonHtml = `<button class="btn btn-primary w-100 ticket-status-btn" data-ticket-id="${ticket.id}" data-new-status="collected">Mark as Collected</button>`;
     }
 
-    card.innerHTML = `
-      <div class="card-header py-2 d-flex justify-content-between align-items-center ${headerClass}">
-        <div>
-          <strong class="fs-5">Order #${ticket.order_id}</strong>
-          ${ticket.table ? `<span class="badge bg-secondary ms-2">${ticket.table}</span>` : ''}
-        </div>
-        <small class="text-muted"><i class="bi bi-clock"></i> Just now</small>
-      </div>
-      <div class="card-body py-2">
-        <ul class="mb-0">${itemsHtml}</ul>
-      </div>
-      <div class="card-footer py-2 bg-white border-top">${buttonHtml}</div>
-    `;
+    // Build header using DOM methods; ticket.table is user-controlled
+    const header = document.createElement('div');
+    header.className = `card-header py-2 d-flex justify-content-between align-items-center ${headerClass}`;
+
+    const headerLeft = document.createElement('div');
+    const orderTitle = document.createElement('strong');
+    orderTitle.className = 'fs-5';
+    orderTitle.textContent = `Order #${ticket.order_id}`;
+    headerLeft.appendChild(orderTitle);
+
+    if (ticket.table) {
+      const tableBadge = document.createElement('span');
+      tableBadge.className = 'badge bg-secondary ms-2';
+      tableBadge.textContent = ticket.table;
+      headerLeft.appendChild(tableBadge);
+    }
+
+    const headerRight = document.createElement('small');
+    headerRight.className = 'text-muted';
+    headerRight.innerHTML = '<i class="bi bi-clock"></i> Just now';
+
+    header.appendChild(headerLeft);
+    header.appendChild(headerRight);
+
+    const body = document.createElement('div');
+    body.className = 'card-body py-2';
+    body.appendChild(ul);
+
+    const footer = document.createElement('div');
+    footer.className = 'card-footer py-2 bg-white border-top';
+    footer.innerHTML = buttonHtml;
+
+    card.appendChild(header);
+    card.appendChild(body);
+    card.appendChild(footer);
 
     return card;
   }

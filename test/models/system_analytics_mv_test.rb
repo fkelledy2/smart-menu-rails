@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class SystemAnalyticsMvTest < ActiveSupport::TestCase
-  self.use_transactional_tests = false
+  self.use_transactional_tests = true
 
   setup do
     conn = ApplicationRecord.connection

@@ -633,7 +633,17 @@ export default class extends Controller {
             const container = body.querySelector('.modal-body') || body;
             container.insertBefore(alert, container.firstChild);
           }
-          alert.innerHTML = `<strong>Unable to save:</strong><ul>${messages.map((m) => `<li>${m}</li>`).join('')}</ul>`;
+          alert.textContent = '';
+          const heading = document.createElement('strong');
+          heading.textContent = 'Unable to save:';
+          alert.appendChild(heading);
+          const ul = document.createElement('ul');
+          messages.forEach((m) => {
+            const li = document.createElement('li');
+            li.textContent = m;
+            ul.appendChild(li);
+          });
+          alert.appendChild(ul);
         } else {
           alert(messages.join('\n'));
         }

@@ -4,7 +4,7 @@ require 'test_helper'
 
 class MenuitemCostPolicyTest < ActiveSupport::TestCase
   def setup
-    @owner       = users(:one)    # owns restaurants(:one) → menus(:one) → menuitems(:one)
+    @owner       = users(:one) # owns restaurants(:one) → menus(:one) → menuitems(:one)
     @other_user  = users(:two)
     @super_admin = users(:super_admin)
 
@@ -16,7 +16,7 @@ class MenuitemCostPolicyTest < ActiveSupport::TestCase
       labor_cost: 1.0,
       packaging_cost: 0.5,
       overhead_cost: 0.5,
-      effective_date: Date.today,
+      effective_date: Time.zone.today,
       cost_source: 'manual',
       is_active: true,
       created_by_user: @owner,

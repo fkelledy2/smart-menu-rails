@@ -4,6 +4,13 @@ module Payments
       def create_full_refund!(payment_attempt:)
         raise ArgumentError, 'payment_attempt is required' if payment_attempt.nil?
 
+        # Guard against duplicate refunds from admin double-clicks or job retries.
+        existing = PaymentRefund.find_by(payment_attempt: payment_attempt, status: %i[processing succeeded])
+        if existing
+          Rails.logger.warn("[Payments::Refunds::Creator] Refund already exists for payment_attempt #{payment_attempt.id}: refund ##{existing.id} status=#{existing.status}")
+          return existing
+        end
+
         refund = PaymentRefund.create!(
           payment_attempt: payment_attempt,
           ordr: payment_attempt.ordr,

@@ -1,8 +1,8 @@
 require 'test_helper'
 
 class MenuPerformanceMvTest < ActiveSupport::TestCase
-  # Disable transactional tests for materialized views
-  self.use_transactional_tests = false
+  # Transactional tests are fine here — tests use stubs and don't need committed MV data
+  self.use_transactional_tests = true
 
   def setup
     @restaurant = restaurants(:one)

@@ -46,9 +46,8 @@ class MenuitemCostPolicy < ApplicationPolicy
     return false unless record.is_a?(MenuitemCost) && record.menuitem_id.present?
 
     restaurant_ids = user.restaurants.pluck(:id)
-    Menuitem.joins(:menusection => :menu)
-            .where(id: record.menuitem_id)
-            .where(menus: { restaurant_id: restaurant_ids })
-            .exists?
+    Menuitem.joins(menusection: :menu)
+      .where(id: record.menuitem_id)
+      .exists?(menus: { restaurant_id: restaurant_ids })
   end
 end

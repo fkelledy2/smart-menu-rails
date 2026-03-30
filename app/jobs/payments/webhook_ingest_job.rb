@@ -1,5 +1,8 @@
 class Payments::WebhookIngestJob < ApplicationJob
   queue_as :default
+  # Payment webhooks are idempotency-keyed by provider_event_id — retries are safe.
+  # Cap at 5 to prevent runaway retries on hard API failures.
+  sidekiq_options retry: 5, backtrace: true
 
   def perform(provider:, provider_event_id:, provider_event_type:, occurred_at:, payload:)
     Rails.logger.info(

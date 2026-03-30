@@ -51,12 +51,10 @@ module Api
             # Only render 403 when the target restaurant exists — non-existent restaurants
             # are handled downstream by set_restaurant (404), so we skip the check here
             # to avoid a spurious 403 racing ahead of the not-found response.
-            if params[:restaurant_id].present? && @current_api_restaurant&.id.to_s != params[:restaurant_id].to_s
-              if Restaurant.exists?(params[:restaurant_id])
-                render json: error_response('forbidden', 'Token is not authorized for this restaurant'),
-                       status: :forbidden
-                return
-              end
+            if params[:restaurant_id].present? && @current_api_restaurant&.id.to_s != params[:restaurant_id].to_s && Restaurant.exists?(params[:restaurant_id])
+              render json: error_response('forbidden', 'Token is not authorized for this restaurant'),
+                     status: :forbidden
+              return
             end
             # Set current_user to the admin who issued the token so Pundit works
             @current_user = result.token.admin_user

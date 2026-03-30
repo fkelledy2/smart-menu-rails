@@ -1,8 +1,7 @@
 require 'test_helper'
 
 class RestaurantAnalyticsMvTest < ActiveSupport::TestCase
-  # Disable transactional tests for materialized views
-  self.use_transactional_tests = false
+  self.use_transactional_tests = true
 
   def setup
     @restaurant = restaurants(:one)

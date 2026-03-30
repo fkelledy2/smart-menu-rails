@@ -107,10 +107,20 @@ class OrdrnotesController < ApplicationController
 
   def set_order
     @order = @restaurant.ordrs.find(params[:ordr_id])
+  rescue ActiveRecord::RecordNotFound
+    respond_to do |format|
+      format.html { redirect_to restaurant_path(@restaurant), alert: 'Order not found.' }
+      format.json { render json: { error: 'Order not found' }, status: :not_found }
+    end
   end
 
   def set_ordrnote
     @ordrnote = @order.ordrnotes.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    respond_to do |format|
+      format.html { redirect_to restaurant_ordr_path(@restaurant, @order), alert: 'Note not found.' }
+      format.json { render json: { error: 'Note not found' }, status: :not_found }
+    end
   end
 
   def ordrnote_params

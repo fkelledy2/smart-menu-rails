@@ -146,6 +146,7 @@ class TablesettingsController < ApplicationController
   def new_bulk_create
     @restaurant = Restaurant.find_by(id: params[:restaurant_id])
     return head :not_found unless @restaurant
+
     authorize @restaurant, :update?, policy_class: RestaurantPolicy
 
     render layout: false
@@ -155,6 +156,7 @@ class TablesettingsController < ApplicationController
   def bulk_create
     restaurant = Restaurant.find_by(id: params[:restaurant_id])
     return head :not_found unless restaurant
+
     authorize restaurant, :update?, policy_class: RestaurantPolicy
 
     prefix = (params[:prefix].presence || 'T')[0, 1]
@@ -220,6 +222,7 @@ class TablesettingsController < ApplicationController
   def bulk_update
     restaurant = Restaurant.find_by(id: params[:restaurant_id])
     return head :not_found unless restaurant
+
     tables = policy_scope(Tablesetting).where(restaurant_id: restaurant.id, archived: false)
 
     ids = Array(params[:tablesetting_ids]).map(&:to_s).compact_blank
@@ -307,6 +310,7 @@ class TablesettingsController < ApplicationController
   def reorder
     restaurant = Restaurant.find_by(id: params[:restaurant_id])
     return head :not_found unless restaurant
+
     tables = policy_scope(Tablesetting).where(restaurant_id: restaurant.id, archived: false)
 
     order = params[:order]

@@ -8,7 +8,7 @@ class WaitTimePolicyTest < ActiveSupport::TestCase
 
   def setup
     @restaurant  = restaurants(:one)
-    @owner       = users(:one)    # user_id of restaurants(:one) is users(:one)
+    @owner       = users(:one) # user_id of restaurants(:one) is users(:one)
     @other_user  = users(:two)
     @super_admin = users(:super_admin)
 

@@ -55,10 +55,10 @@ class OrdrparticipantsControllerTest < ActionDispatch::IntegrationTest
 
   test 'create: returns errors JSON when sessionid is blank' do
     post restaurant_ordrparticipants_path(@restaurant),
-      params: {
-        ordrparticipant: { sessionid: '' },
-      },
-      as: :json
+         params: {
+           ordrparticipant: { sessionid: '' },
+         },
+         as: :json
 
     # sessionid validation fails → unprocessable_content (policy authorize fires first)
     assert_includes [422, 500], response.status
@@ -67,8 +67,8 @@ class OrdrparticipantsControllerTest < ActionDispatch::IntegrationTest
   test 'create: redirects unauthenticated user' do
     sign_out @user
     post restaurant_ordrparticipants_path(@restaurant),
-      params: { ordrparticipant: { sessionid: 'anon' } },
-      as: :json
+         params: { ordrparticipant: { sessionid: 'anon' } },
+         as: :json
 
     assert_response :unauthorized
   end
@@ -80,8 +80,8 @@ class OrdrparticipantsControllerTest < ActionDispatch::IntegrationTest
   test 'update: updates participant name and returns JSON' do
     ActionCable.server.stub(:broadcast, nil) do
       patch restaurant_ordrparticipant_path(@restaurant, @participant),
-        params: { ordrparticipant: { name: 'Updated Name' } },
-        as: :json
+            params: { ordrparticipant: { name: 'Updated Name' } },
+            as: :json
     end
 
     assert_response :ok
@@ -98,8 +98,8 @@ class OrdrparticipantsControllerTest < ActionDispatch::IntegrationTest
       # guest session validation fires only when not user_signed_in?.
       # Here we are signed in so it is bypassed.
       patch ordrparticipant_path(@participant),
-        params: { ordrparticipant: { name: 'Direct Update' } },
-        as: :json
+            params: { ordrparticipant: { name: 'Direct Update' } },
+            as: :json
     end
 
     assert_response :ok

@@ -23,13 +23,13 @@ class Payments::WebhooksControllerTest < ActionDispatch::IntegrationTest
 
   test 'stripe: returns bad_request when no webhook secret is configured and signature missing' do
     # When build_stripe_event returns nil (no secret + signature mismatch), controller returns 400
-    ENV_BACKUP = ENV['STRIPE_WEBHOOK_SECRET']
+    ENV_BACKUP = ENV.fetch('STRIPE_WEBHOOK_SECRET', nil)
     ENV.delete('STRIPE_WEBHOOK_SECRET')
 
-    Rails.application.credentials.stub(:dig, ->(*_args) { nil }) do
+    Rails.application.credentials.stub(:dig, ->(*_args) {}) do
       post payments_webhooks_stripe_path,
-        params: '{"id":"evt_none","type":"test"}',
-        headers: { 'Content-Type' => 'application/json' }
+           params: '{"id":"evt_none","type":"test"}',
+           headers: { 'Content-Type' => 'application/json' }
     end
 
     assert_response :bad_request
@@ -42,18 +42,18 @@ class Payments::WebhooksControllerTest < ActionDispatch::IntegrationTest
     secret = 'whsec_test_webhook_secret'
 
     # Set ENV secret so build_stripe_event has a non-blank secret to use
-    prev_secret = ENV['STRIPE_WEBHOOK_SECRET']
+    prev_secret = ENV.fetch('STRIPE_WEBHOOK_SECRET', nil)
     ENV['STRIPE_WEBHOOK_SECRET'] = secret
 
     # Stub Stripe::Webhook.construct_event to return our fake event
     Stripe::Webhook.stub(:construct_event, evt) do
       Payments::WebhookIngestJob.stub(:perform_later, ->(**_kwargs) { OpenStruct.new(job_id: 'jid_test') }) do
         post payments_webhooks_stripe_path,
-          params: '{"id":"evt_test_001","type":"checkout.session.completed","created":1234567890}',
-          headers: {
-            'Content-Type' => 'application/json',
-            'HTTP_STRIPE_SIGNATURE' => 't=1234567890,v1=fakesig',
-          }
+             params: '{"id":"evt_test_001","type":"checkout.session.completed","created":1234567890}',
+             headers: {
+               'Content-Type' => 'application/json',
+               'HTTP_STRIPE_SIGNATURE' => 't=1234567890,v1=fakesig',
+             }
       end
     end
 
@@ -66,7 +66,7 @@ class Payments::WebhooksControllerTest < ActionDispatch::IntegrationTest
     evt = fake_stripe_event
     secret = 'whsec_test_webhook_secret'
 
-    prev_secret = ENV['STRIPE_WEBHOOK_SECRET']
+    prev_secret = ENV.fetch('STRIPE_WEBHOOK_SECRET', nil)
     ENV['STRIPE_WEBHOOK_SECRET'] = secret
 
     fake_ingestor = Object.new
@@ -76,11 +76,11 @@ class Payments::WebhooksControllerTest < ActionDispatch::IntegrationTest
       Payments::WebhookIngestJob.stub(:perform_later, ->(**_kwargs) { raise 'Redis unavailable' }) do
         Payments::Webhooks::StripeIngestor.stub(:new, fake_ingestor) do
           post payments_webhooks_stripe_path,
-            params: '{"id":"evt_test_001","type":"checkout.session.completed","created":1234567890}',
-            headers: {
-              'Content-Type' => 'application/json',
-              'HTTP_STRIPE_SIGNATURE' => 't=1234567890,v1=fakesig',
-            }
+               params: '{"id":"evt_test_001","type":"checkout.session.completed","created":1234567890}',
+               headers: {
+                 'Content-Type' => 'application/json',
+                 'HTTP_STRIPE_SIGNATURE' => 't=1234567890,v1=fakesig',
+               }
         end
       end
     end
@@ -91,7 +91,7 @@ class Payments::WebhooksControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'stripe: returns bad_request when construct_event raises SignatureVerificationError' do
-    prev_secret = ENV['STRIPE_WEBHOOK_SECRET']
+    prev_secret = ENV.fetch('STRIPE_WEBHOOK_SECRET', nil)
     ENV['STRIPE_WEBHOOK_SECRET'] = 'whsec_test'
 
     Stripe::Webhook.stub(
@@ -99,11 +99,11 @@ class Payments::WebhooksControllerTest < ActionDispatch::IntegrationTest
       ->(*_args) { raise Stripe::SignatureVerificationError.new('Invalid signature', 'sig') },
     ) do
       post payments_webhooks_stripe_path,
-        params: '{"id":"evt_bad"}',
-        headers: {
-          'Content-Type' => 'application/json',
-          'HTTP_STRIPE_SIGNATURE' => 'invalid_sig',
-        }
+           params: '{"id":"evt_bad"}',
+           headers: {
+             'Content-Type' => 'application/json',
+             'HTTP_STRIPE_SIGNATURE' => 'invalid_sig',
+           }
     end
 
     assert_response :bad_request

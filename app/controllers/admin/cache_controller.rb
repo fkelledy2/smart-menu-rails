@@ -114,7 +114,4 @@ class Admin::CacheController < ApplicationController
       end
     end
   end
-
-  private
-
 end

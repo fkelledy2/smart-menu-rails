@@ -344,7 +344,7 @@ export default class extends Controller {
         <div class="card mb-2">
           <div class="card-body p-2">
             <div class="d-flex justify-content-between align-items-center mb-2">
-              <span class="fw-bold">${item.name}</span>
+              <span class="fw-bold">${this.escapeHtml(item.name || '')}</span>
               <span>${this.formatCurrency(item.price * 100)}</span>
             </div>
             <select class="form-select form-select-sm" 
@@ -628,29 +628,47 @@ export default class extends Controller {
     this.methodSelectorTarget.style.display = 'block';
   }
 
+  escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = String(text);
+    return div.innerHTML;
+  }
+
   showError(message, details = null) {
     this.hideLoading();
     this.errorTarget.style.display = 'block';
 
-    let errorHtml = `<strong>${message}</strong>`;
+    const container = this.errorMessageTarget;
+    container.textContent = '';
+
+    const strong = document.createElement('strong');
+    strong.textContent = message;
+    container.appendChild(strong);
 
     if (details) {
       if (typeof details === 'string') {
-        errorHtml += `<br><small>${details}</small>`;
+        const br = document.createElement('br');
+        const small = document.createElement('small');
+        small.textContent = details;
+        container.appendChild(br);
+        container.appendChild(small);
       } else if (Array.isArray(details)) {
-        errorHtml += '<ul class="mb-0 mt-2">';
+        const ul = document.createElement('ul');
+        ul.className = 'mb-0 mt-2';
         details.forEach((detail) => {
-          errorHtml += `<li><small>${detail}</small></li>`;
+          const li = document.createElement('li');
+          const small = document.createElement('small');
+          small.textContent = detail;
+          li.appendChild(small);
+          ul.appendChild(li);
         });
-        errorHtml += '</ul>';
+        container.appendChild(ul);
       }
     }
-
-    this.errorMessageTarget.innerHTML = errorHtml;
   }
 
   hideError() {
     this.errorTarget.style.display = 'none';
-    this.errorMessageTarget.innerHTML = '';
+    this.errorMessageTarget.textContent = '';
   }
 }

@@ -29,10 +29,10 @@ module WaitTime
       menu = menus(:one)
 
       # Pin all orders to the same day-of-week (every 7 days back) + hour bucket
-    # so they all land in the same [party_size=2, day_of_week=X, hour_of_day=19] bucket
-    anchor = Time.current.beginning_of_day + 19.hours  # 7pm today
-    5.times do |i|
-        created = anchor - (i * 7).days  # same day of week, successive weeks
+      # so they all land in the same [party_size=2, day_of_week=X, hour_of_day=19] bucket
+      anchor = Time.current.beginning_of_day + 19.hours # 7pm today
+      5.times do |i|
+        created = anchor - (i * 7).days # same day of week, successive weeks
         paid = created + 55.minutes
         Ordr.create!(
           restaurant: @restaurant,
@@ -84,7 +84,7 @@ module WaitTime
       menu = menus(:one)
 
       # Pin all orders to same day-of-week + hour bucket to exceed MIN_SAMPLE_SIZE
-      anchor = Time.current.beginning_of_day + 20.hours  # 8pm tonight
+      anchor = Time.current.beginning_of_day + 20.hours # 8pm tonight
       5.times do |i|
         created = anchor - (i * 7).days
         paid = created + rand(40..90).minutes
@@ -101,7 +101,7 @@ module WaitTime
 
       DiningPattern.where(restaurant: @restaurant).delete_all
 
-      count_before = @updater.update!
+      @updater.update!
       count_after  = @updater.update!
 
       # Second run should upsert same records, not create duplicates

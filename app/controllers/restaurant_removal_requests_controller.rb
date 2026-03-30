@@ -17,8 +17,8 @@ class RestaurantRemovalRequestsController < ApplicationController
     if @removal_request.save
       # Only unpublish the preview when the requestor is the verified owner.
       # Anonymous submissions are queued for admin review — no immediate unpublish.
-      if user_signed_in? && current_user.restaurants.exists?(id: @restaurant.id)
-        @restaurant.update!(preview_enabled: false) if @restaurant.preview_enabled?
+      if user_signed_in? && current_user.restaurants.exists?(id: @restaurant.id) && @restaurant.preview_enabled?
+        @restaurant.update!(preview_enabled: false)
       end
 
       redirect_to submitted_restaurant_removal_requests_path(@restaurant),

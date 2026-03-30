@@ -27,8 +27,8 @@ class Payments::SubscriptionsControllerTest < ActionDispatch::IntegrationTest
   test 'start: redirects unauthenticated user' do
     sign_out @user
     post payments_subscriptions_start_path,
-      params: { restaurant_id: @restaurant.id },
-      as: :json
+         params: { restaurant_id: @restaurant.id },
+         as: :json
 
     assert_response :unauthorized
   end
@@ -36,16 +36,16 @@ class Payments::SubscriptionsControllerTest < ActionDispatch::IntegrationTest
   test 'start: returns not_found for unknown restaurant (super_admin bypasses verify_authorized)' do
     sign_in users(:super_admin)
     post payments_subscriptions_start_path,
-      params: { restaurant_id: 0 },
-      as: :json
+         params: { restaurant_id: 0 },
+         as: :json
 
     assert_response :not_found
   end
 
   test 'start: returns error JSON when plan is not found' do
     post payments_subscriptions_start_path,
-      params: { restaurant_id: @restaurant.id, plan_id: 0 },
-      as: :json
+         params: { restaurant_id: @restaurant.id, plan_id: 0 },
+         as: :json
 
     # plan_id 0 not found → respond_with_start_error
     assert_response :unprocessable_content
@@ -60,8 +60,8 @@ class Payments::SubscriptionsControllerTest < ActionDispatch::IntegrationTest
     plan_no_year = plans(:one) # free plan — stripe_price_id_year is nil
 
     post payments_subscriptions_start_path,
-      params: { restaurant_id: @restaurant.id, plan_id: plan_no_year.id, interval: 'year' },
-      as: :json
+         params: { restaurant_id: @restaurant.id, plan_id: plan_no_year.id, interval: 'year' },
+         as: :json
 
     assert_response :unprocessable_content
     body = response.parsed_body
@@ -82,8 +82,8 @@ class Payments::SubscriptionsControllerTest < ActionDispatch::IntegrationTest
     Stripe::Customer.stub(:create, fake_customer) do
       Stripe::Checkout::Session.stub(:create, fake_session) do
         post payments_subscriptions_start_path,
-          params: { restaurant_id: @restaurant.id, plan_id: @plan.id, interval: 'month' },
-          as: :json
+             params: { restaurant_id: @restaurant.id, plan_id: @plan.id, interval: 'month' },
+             as: :json
       end
     end
 
@@ -95,7 +95,7 @@ class Payments::SubscriptionsControllerTest < ActionDispatch::IntegrationTest
 
   test 'start: skips customer creation when stripe_customer_id already exists' do
     sub = @restaurant.restaurant_subscription ||
-      @restaurant.build_restaurant_subscription
+          @restaurant.build_restaurant_subscription
     sub.stripe_customer_id = 'cus_existing_456'
     sub.status = :active
     sub.save!
@@ -107,8 +107,8 @@ class Payments::SubscriptionsControllerTest < ActionDispatch::IntegrationTest
     Stripe::Customer.stub(:create, ->(*_args) { raise 'should not be called' }) do
       Stripe::Checkout::Session.stub(:create, fake_session) do
         post payments_subscriptions_start_path,
-          params: { restaurant_id: @restaurant.id, plan_id: @plan.id, interval: 'month' },
-          as: :json
+             params: { restaurant_id: @restaurant.id, plan_id: @plan.id, interval: 'month' },
+             as: :json
       end
     end
 
@@ -123,8 +123,8 @@ class Payments::SubscriptionsControllerTest < ActionDispatch::IntegrationTest
 
     Stripe::Customer.stub(:create, ->(*_args) { raise Stripe::StripeError, 'API error' }) do
       post payments_subscriptions_start_path,
-        params: { restaurant_id: @restaurant.id, plan_id: @plan.id },
-        as: :json
+           params: { restaurant_id: @restaurant.id, plan_id: @plan.id },
+           as: :json
     end
 
     assert_response :unprocessable_content
@@ -139,8 +139,8 @@ class Payments::SubscriptionsControllerTest < ActionDispatch::IntegrationTest
   test 'portal: redirects unauthenticated user' do
     sign_out @user
     post payments_subscriptions_portal_path,
-      params: { restaurant_id: @restaurant.id },
-      as: :json
+         params: { restaurant_id: @restaurant.id },
+         as: :json
 
     assert_response :unauthorized
   end
@@ -148,8 +148,8 @@ class Payments::SubscriptionsControllerTest < ActionDispatch::IntegrationTest
   test 'portal: returns not_found for unknown restaurant (super_admin bypasses verify_authorized)' do
     sign_in users(:super_admin)
     post payments_subscriptions_portal_path,
-      params: { restaurant_id: 0 },
-      as: :json
+         params: { restaurant_id: 0 },
+         as: :json
 
     assert_response :not_found
   end
@@ -159,8 +159,8 @@ class Payments::SubscriptionsControllerTest < ActionDispatch::IntegrationTest
     @restaurant.restaurant_subscription&.destroy
 
     post payments_subscriptions_portal_path,
-      params: { restaurant_id: @restaurant.id },
-      as: :json
+         params: { restaurant_id: @restaurant.id },
+         as: :json
 
     assert_response :unprocessable_content
     body = response.parsed_body
@@ -170,7 +170,7 @@ class Payments::SubscriptionsControllerTest < ActionDispatch::IntegrationTest
 
   test 'portal: returns portal_url JSON when customer exists' do
     sub = @restaurant.restaurant_subscription ||
-      @restaurant.build_restaurant_subscription
+          @restaurant.build_restaurant_subscription
     sub.stripe_customer_id = 'cus_portal_test'
     sub.status = :active
     sub.save!
@@ -180,8 +180,8 @@ class Payments::SubscriptionsControllerTest < ActionDispatch::IntegrationTest
 
     Stripe::BillingPortal::Session.stub(:create, fake_portal) do
       post payments_subscriptions_portal_path,
-        params: { restaurant_id: @restaurant.id },
-        as: :json
+           params: { restaurant_id: @restaurant.id },
+           as: :json
     end
 
     assert_response :ok
@@ -192,15 +192,15 @@ class Payments::SubscriptionsControllerTest < ActionDispatch::IntegrationTest
 
   test 'portal: returns error JSON on Stripe API failure' do
     sub = @restaurant.restaurant_subscription ||
-      @restaurant.build_restaurant_subscription
+          @restaurant.build_restaurant_subscription
     sub.stripe_customer_id = 'cus_fail_test'
     sub.status = :active
     sub.save!
 
     Stripe::BillingPortal::Session.stub(:create, ->(*_args) { raise Stripe::StripeError, 'Portal error' }) do
       post payments_subscriptions_portal_path,
-        params: { restaurant_id: @restaurant.id },
-        as: :json
+           params: { restaurant_id: @restaurant.id },
+           as: :json
     end
 
     assert_response :unprocessable_content

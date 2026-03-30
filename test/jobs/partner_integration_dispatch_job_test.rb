@@ -6,11 +6,11 @@ class PartnerIntegrationDispatchJobTest < ActiveJob::TestCase
   def setup
     @restaurant = restaurants(:one)
     @event_payload = {
-      'event_type'      => 'order.payment.succeeded',
-      'restaurant_id'   => @restaurant.id,
-      'occurred_at'     => Time.zone.now.iso8601,
+      'event_type' => 'order.payment.succeeded',
+      'restaurant_id' => @restaurant.id,
+      'occurred_at' => Time.zone.now.iso8601,
       'idempotency_key' => 'stripe:payment_intent:pi_test_123',
-      'payload'         => { 'provider' => 'stripe' },
+      'payload' => { 'provider' => 'stripe' },
     }
   end
 

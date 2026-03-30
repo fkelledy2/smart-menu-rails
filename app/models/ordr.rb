@@ -38,12 +38,15 @@ class Ordr < ApplicationRecord
     end
   end
 
-  # Callbacks for real-time kitchen updates
-  after_create :broadcast_new_order
-  after_update :broadcast_status_change, if: :saved_change_to_status?
-  after_update :cascade_status_to_items, if: :saved_change_to_status?
-  after_update :clear_station_tickets_if_terminal, if: :saved_change_to_status?
-  after_update :broadcast_auto_pay_disarmed, if: :auto_pay_disarmed?
+  # Callbacks for real-time kitchen updates.
+  # Must use after_*_commit so broadcasts only fire after the transaction commits.
+  # Using after_create / after_update would fire inside the transaction and could
+  # broadcast kitchen tickets for orders that are subsequently rolled back.
+  after_create_commit :broadcast_new_order
+  after_update_commit :broadcast_status_change, if: :saved_change_to_status?
+  after_update_commit :cascade_status_to_items, if: :saved_change_to_status?
+  after_update_commit :clear_station_tickets_if_terminal, if: :saved_change_to_status?
+  after_update_commit :broadcast_auto_pay_disarmed, if: :auto_pay_disarmed?
 
   # Floorplan dashboard real-time tile updates
   after_commit :broadcast_floorplan_tile_update, on: %i[create update]

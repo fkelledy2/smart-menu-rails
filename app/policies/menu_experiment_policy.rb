@@ -84,14 +84,14 @@ class MenuExperimentPolicy < ApplicationPolicy
   end
 
   def can_manage?
-    return false unless user.present?
+    return false if user.blank?
 
     # Class-level authorization (e.g. authorize MenuExperiment in index/new/create)
     # cannot resolve a specific restaurant from the record. Allow any eligible user;
     # Pundit scopes restrict the actual data returned.
     return true if record.is_a?(Class)
 
-    return false unless restaurant.present?
+    return false if restaurant.blank?
 
     owner? || employee_admin? || employee_manager?
   end

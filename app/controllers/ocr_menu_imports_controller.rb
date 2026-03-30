@@ -55,6 +55,7 @@ class OcrMenuImportsController < ApplicationController
   def set_section_price
     section = @ocr_menu_import.ocr_menu_sections.find_by(id: params[:section_id])
     return render json: { ok: false, error: 'Section not found' }, status: :not_found unless section
+
     price = BigDecimal(params[:price].to_s)
 
     if price.negative?

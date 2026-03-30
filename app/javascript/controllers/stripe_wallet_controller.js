@@ -79,9 +79,14 @@ export default class extends Controller {
   }
 
   async _createIntent(amountCents) {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
     const res = await fetch('/payments/create_intent', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        'X-CSRF-Token': csrfToken,
+      },
       body: JSON.stringify({
         open_order_id: this.openOrderIdValue,
         amount: amountCents,

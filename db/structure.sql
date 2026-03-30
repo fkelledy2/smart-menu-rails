@@ -7277,6 +7277,13 @@ CREATE INDEX idx_menuitem_ingredient ON public.menuitem_ingredient_quantities US
 
 
 --
+-- Name: idx_menuitem_ingredient_mappings_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_menuitem_ingredient_mappings_unique ON public.menuitem_ingredient_mappings USING btree (menuitem_id, ingredient_id);
+
+
+--
 -- Name: idx_on_city_name_status_discovered_at_524af6544b; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -8576,6 +8583,13 @@ CREATE INDEX index_menuitem_size_on_size_menuitem ON public.menuitem_size_mappin
 --
 
 CREATE INDEX index_menuitem_tag_mappings_on_menuitem_id ON public.menuitem_tag_mappings USING btree (menuitem_id);
+
+
+--
+-- Name: index_menuitem_tag_mappings_on_menuitem_id_and_tag_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_menuitem_tag_mappings_on_menuitem_id_and_tag_id ON public.menuitem_tag_mappings USING btree (menuitem_id, tag_id);
 
 
 --
@@ -10698,7 +10712,7 @@ ALTER TABLE ONLY public.smartmenus
 --
 
 ALTER TABLE ONLY public.features_plans
-    ADD CONSTRAINT fk_rails_1527e9ed48 FOREIGN KEY (plan_id) REFERENCES public.plans(id);
+    ADD CONSTRAINT fk_rails_1527e9ed48 FOREIGN KEY (plan_id) REFERENCES public.plans(id) ON DELETE CASCADE;
 
 
 --
@@ -11122,7 +11136,7 @@ ALTER TABLE ONLY public.userplans
 --
 
 ALTER TABLE ONLY public.menuitem_tag_mappings
-    ADD CONSTRAINT fk_rails_6831d50fe2 FOREIGN KEY (menuitem_id) REFERENCES public.menuitems(id);
+    ADD CONSTRAINT fk_rails_6831d50fe2 FOREIGN KEY (menuitem_id) REFERENCES public.menuitems(id) ON DELETE CASCADE;
 
 
 --
@@ -11290,7 +11304,7 @@ ALTER TABLE ONLY public.ordr_split_plans
 --
 
 ALTER TABLE ONLY public.ordrparticipants
-    ADD CONSTRAINT fk_rails_7cc8425445 FOREIGN KEY (employee_id) REFERENCES public.employees(id);
+    ADD CONSTRAINT fk_rails_7cc8425445 FOREIGN KEY (employee_id) REFERENCES public.employees(id) ON DELETE SET NULL;
 
 
 --
@@ -11402,7 +11416,7 @@ ALTER TABLE ONLY public.restaurant_menus
 --
 
 ALTER TABLE ONLY public.features_plans
-    ADD CONSTRAINT fk_rails_90e2063c37 FOREIGN KEY (feature_id) REFERENCES public.features(id);
+    ADD CONSTRAINT fk_rails_90e2063c37 FOREIGN KEY (feature_id) REFERENCES public.features(id) ON DELETE CASCADE;
 
 
 --
@@ -11410,7 +11424,7 @@ ALTER TABLE ONLY public.features_plans
 --
 
 ALTER TABLE ONLY public.menuitem_tag_mappings
-    ADD CONSTRAINT fk_rails_9156e4156b FOREIGN KEY (tag_id) REFERENCES public.tags(id);
+    ADD CONSTRAINT fk_rails_9156e4156b FOREIGN KEY (tag_id) REFERENCES public.tags(id) ON DELETE CASCADE;
 
 
 --
@@ -11514,7 +11528,7 @@ ALTER TABLE ONLY public.menu_imports
 --
 
 ALTER TABLE ONLY public.menuitem_ingredient_mappings
-    ADD CONSTRAINT fk_rails_a595a8024b FOREIGN KEY (ingredient_id) REFERENCES public.ingredients(id);
+    ADD CONSTRAINT fk_rails_a595a8024b FOREIGN KEY (ingredient_id) REFERENCES public.ingredients(id) ON DELETE CASCADE;
 
 
 --
@@ -11754,7 +11768,7 @@ ALTER TABLE ONLY public.restaurant_removal_requests
 --
 
 ALTER TABLE ONLY public.menuitem_ingredient_mappings
-    ADD CONSTRAINT fk_rails_c19699c686 FOREIGN KEY (menuitem_id) REFERENCES public.menuitems(id);
+    ADD CONSTRAINT fk_rails_c19699c686 FOREIGN KEY (menuitem_id) REFERENCES public.menuitems(id) ON DELETE CASCADE;
 
 
 --
@@ -12132,6 +12146,10 @@ ALTER TABLE ONLY public.voice_commands
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260330180552'),
+('20260330180337'),
+('20260330180151'),
+('20260330180001'),
 ('20260330125235'),
 ('20260329222214'),
 ('20260329220244'),

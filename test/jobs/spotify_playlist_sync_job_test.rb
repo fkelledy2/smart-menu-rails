@@ -19,7 +19,10 @@ class SpotifyPlaylistSyncJobTest < ActiveSupport::TestCase
 
     # Should return early without touching RSpotify
     rspotify_called = false
-    RSpotify::User.stub(:find, ->(_id) { rspotify_called = true; nil }) do
+    RSpotify::User.stub(:find, lambda { |_id|
+      rspotify_called = true
+      nil
+    },) do
       SpotifyPlaylistSyncJob.new.perform(@restaurant.id)
     end
 
@@ -74,7 +77,7 @@ class SpotifyPlaylistSyncJobTest < ActiveSupport::TestCase
     fake_album   = Struct.new(:name, :images).new('New Album', [fake_image])
     fake_track   = Struct.new(:uri, :name, :album, :artists).new('spotify:track:new', 'New Track', fake_album, [fake_artist])
     fake_playlist = Struct.new(:name, :tracks).new('Playlist', [fake_track])
-    fake_user    = Struct.new(:id, :to_json).new('spotify_user_123', '{}')
+    fake_user = Struct.new(:id, :to_json).new('spotify_user_123', '{}')
 
     RSpotify::User.stub(:find, ->(_id) { fake_user }) do
       RSpotify::Playlist.stub(:find, ->(_uid, _pid) { fake_playlist }) do

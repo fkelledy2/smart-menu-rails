@@ -22,8 +22,8 @@ class ReceiptDeliveriesControllerTest < ActionDispatch::IntegrationTest
     # but set_ordr_for_staff reads params[:ordr_id] — always 404 for mismatched param.
     # Test only the auth guard, passing ordr_id explicitly.
     post send_receipt_restaurant_ordr_path(@restaurant, @ordr),
-      params: { recipient_email: 'guest@example.com', delivery_method: 'email' },
-      as: :json
+         params: { recipient_email: 'guest@example.com', delivery_method: 'email' },
+         as: :json
 
     assert_response :unauthorized
   end
@@ -34,8 +34,8 @@ class ReceiptDeliveriesControllerTest < ActionDispatch::IntegrationTest
     Flipper.disable(:receipt_email, users(:super_admin))
 
     post send_receipt_restaurant_ordr_path(@restaurant, @ordr),
-      params: { ordr_id: @ordr.id, recipient_email: 'guest@example.com', delivery_method: 'email' },
-      as: :json
+         params: { ordr_id: @ordr.id, recipient_email: 'guest@example.com', delivery_method: 'email' },
+         as: :json
 
     assert_response :service_unavailable
     body = response.parsed_body
@@ -54,8 +54,8 @@ class ReceiptDeliveriesControllerTest < ActionDispatch::IntegrationTest
 
     ReceiptDeliveryService.stub(:new, ->(**_kwargs) { fake_service }) do
       post send_receipt_restaurant_ordr_path(@restaurant, @ordr),
-        params: { ordr_id: @ordr.id, recipient_email: 'guest@example.com', delivery_method: 'email' },
-        as: :json
+           params: { ordr_id: @ordr.id, recipient_email: 'guest@example.com', delivery_method: 'email' },
+           as: :json
     end
 
     assert_response :created
@@ -75,8 +75,8 @@ class ReceiptDeliveriesControllerTest < ActionDispatch::IntegrationTest
 
     ReceiptDeliveryService.stub(:new, ->(**_kwargs) { fake_service }) do
       post send_receipt_restaurant_ordr_path(@restaurant, @ordr),
-        params: { ordr_id: @ordr.id, recipient_email: 'fail@example.com', delivery_method: 'email' },
-        as: :json
+           params: { ordr_id: @ordr.id, recipient_email: 'fail@example.com', delivery_method: 'email' },
+           as: :json
     end
 
     assert_response :unprocessable_content
@@ -92,8 +92,8 @@ class ReceiptDeliveriesControllerTest < ActionDispatch::IntegrationTest
 
   test 'self_service: returns not_found when ordr_id is blank or missing' do
     post self_service_receipt_path,
-      params: { ordr_id: 0, recipient_email: 'guest@example.com' },
-      as: :json
+         params: { ordr_id: 0, recipient_email: 'guest@example.com' },
+         as: :json
 
     assert_response :not_found
   end
@@ -102,8 +102,8 @@ class ReceiptDeliveriesControllerTest < ActionDispatch::IntegrationTest
     Flipper.disable(:receipt_email)
 
     post self_service_receipt_path,
-      params: { ordr_id: @ordr.id, recipient_email: 'guest@example.com' },
-      as: :json
+         params: { ordr_id: @ordr.id, recipient_email: 'guest@example.com' },
+         as: :json
 
     assert_response :service_unavailable
   ensure
@@ -118,8 +118,8 @@ class ReceiptDeliveriesControllerTest < ActionDispatch::IntegrationTest
 
     ReceiptDeliveryService.stub(:new, ->(**_kwargs) { fake_service }) do
       post self_service_receipt_path,
-        params: { ordr_id: @ordr.id, recipient_email: 'guest@example.com' },
-        as: :json
+           params: { ordr_id: @ordr.id, recipient_email: 'guest@example.com' },
+           as: :json
     end
 
     assert_response :created
@@ -140,8 +140,8 @@ class ReceiptDeliveriesControllerTest < ActionDispatch::IntegrationTest
     # absorb them.
     ReceiptDeliveryService.stub(:new, ->(**_kwargs) { fake_service }) do
       post self_service_receipt_path,
-        params: { ordr_id: @ordr.id, recipient_email: 'bad' },
-        as: :json
+           params: { ordr_id: @ordr.id, recipient_email: 'bad' },
+           as: :json
     end
 
     assert_response :unprocessable_content
