@@ -89,6 +89,9 @@
   })();
 </script>
 <%= stylesheet_link_tag "application", media: "all", "data-turbo-track": "reload" %>
+<% unless controller_name == 'smartmenus' && action_name == 'show' && !current_user %>
+  <%= stylesheet_link_tag "tabulator", media: "all" %>
+<% end %>
 
 <script>
   // Function to load Google Maps API

@@ -128,7 +128,6 @@ export default class extends Controller {
         } catch (_) {}
       }
       if (!restaurantId) {
-        console.warn('[State][RemoveItem] Missing restaurant id');
         return;
       }
 
@@ -242,7 +241,6 @@ export default class extends Controller {
       const btn = e.target.closest('#cartPayCancel');
       if (!btn) return;
       e.preventDefault();
-      console.debug('[State] Cancel clicked');
       const paySection = document.getElementById('cartPaySection');
       if (paySection) {
         paySection.style.display = 'none';
@@ -274,7 +272,6 @@ export default class extends Controller {
       const sheet = document.getElementById('cartBottomSheet');
       if (sheet) {
         const ctrl = this.application?.getControllerForElementAndIdentifier(sheet, 'bottom-sheet');
-        console.debug('[State] Cancel -> bottom-sheet ctrl:', !!ctrl);
         if (ctrl) {
           ctrl.setState('full');
         }
@@ -302,17 +299,6 @@ export default class extends Controller {
           .then((r) => (r && r.ok ? r.json() : null))
           .then((payload) => {
             if (payload) {
-              try {
-                const cnt = Array.isArray(payload?.order?.items) ? payload.order.items.length : 0;
-                console.debug(
-                  '[State][hydrate] items=',
-                  cnt,
-                  'orderId=',
-                  payload?.order?.id,
-                  'hasTotals=',
-                  !!payload?.totals
-                );
-              } catch (_) {}
               this.applyJsonState(payload);
               this.dispatchState();
             }
@@ -380,17 +366,6 @@ export default class extends Controller {
           return;
         }
 
-        try {
-          const cnt = Array.isArray(incoming?.order?.items) ? incoming.order.items.length : 0;
-          console.info(
-            '[State][update] items=',
-            cnt,
-            'orderId=',
-            incoming?.order?.id,
-            'hasTotals=',
-            !!incoming?.totals
-          );
-        } catch (_) {}
         this.applyJsonState(incoming);
         this.dispatchState();
       } catch (err) {
@@ -516,11 +491,6 @@ export default class extends Controller {
     // Don't render until items array has been hydrated from JSON (preserve server-rendered ERB)
     if (!Array.isArray(order.items)) return;
     const items = order.items.filter((i) => i.status !== 'removed');
-    console.debug('[State] _renderCartItems', {
-      itemCount: items.length,
-      orderId: order.id,
-      hasContainer: !!container,
-    });
 
     const opened = items.filter((i) => i.status === 'opened');
     const submitted = items.filter((i) =>
@@ -775,7 +745,6 @@ export default class extends Controller {
     const cancelBtn = parent.querySelector('#cartPayCancel');
     if (!cancelBtn) return;
     cancelBtn.addEventListener('click', () => {
-      console.debug('[State] Cancel clicked (bound handler)');
       const paySection = document.getElementById('cartPaySection');
       if (paySection) {
         paySection.style.display = 'none';

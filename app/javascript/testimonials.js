@@ -3,7 +3,7 @@ import { patch } from './utils/api';
 export function initTestimonials() {
   if ($('#testimonial-table').length) {
     function status(cell, formatterParams) {
-      const s = cell.getRow().getData('data').status;
+      const s = cell.getValue();
       return s ? s.toUpperCase() : '';
     }
     const testimonialTable = new Tabulator('#testimonial-table', {

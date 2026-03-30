@@ -23,7 +23,8 @@ class Payments::PaymentProfilesController < ApplicationController
   private
 
   def set_restaurant
-    @restaurant = current_user.restaurants.find(params[:restaurant_id])
+    @restaurant = current_user.restaurants.find_by(id: params[:restaurant_id])
+    head :not_found unless @restaurant
   end
 
   def payment_profile_params

@@ -1,5 +1,8 @@
 /*
- * Tabulator CSS - loaded separately to avoid SassC compression issues with min() function
- * This file is imported directly as CSS, not processed through SCSS
+ *= require tabulator_bootstrap5
  */
-@import 'tabulator-tables/dist/css/tabulator_bootstrap5.min.css';
+/*
+ * Tabulator Bootstrap 5 theme - vendored from tabulator-tables v5.6.1
+ * Loaded separately from application.bootstrap.scss to avoid SassC min() function issues.
+ * Source: node_modules/tabulator-tables/dist/css/tabulator_bootstrap5.min.css
+ */

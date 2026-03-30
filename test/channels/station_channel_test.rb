@@ -70,16 +70,16 @@ class StationChannelTest < ActionCable::Channel::TestCase
   end
 
   # ---------------------------------------------------------------------------
-  # Unauthenticated client — no current_user, but valid params still subscribe
+  # Unauthenticated client — must be rejected since kitchen/bar streams contain
+  # order data that should not be exposed to anonymous connections.
   # ---------------------------------------------------------------------------
 
-  test 'subscribes without current_user (unauthenticated client can still stream)' do
+  test 'rejects unauthenticated client (no current_user)' do
     stub_connection current_user: nil
 
     subscribe(restaurant_id: @restaurant.id, station: 'bar')
 
-    assert subscription.confirmed?
-    assert_has_stream "bar_#{@restaurant.id}"
+    assert subscription.rejected?
   end
 
   # ---------------------------------------------------------------------------
@@ -97,7 +97,7 @@ class StationChannelTest < ActionCable::Channel::TestCase
     assert presence_called, 'PresenceService.user_online should be called on subscribe'
   end
 
-  test 'does not call PresenceService.user_online when current_user is nil' do
+  test 'does not call PresenceService.user_online when current_user is nil (rejects subscription)' do
     stub_connection current_user: nil
 
     presence_called = false
@@ -105,6 +105,7 @@ class StationChannelTest < ActionCable::Channel::TestCase
       subscribe(restaurant_id: @restaurant.id, station: 'kitchen')
     end
 
+    assert subscription.rejected?
     assert_not presence_called
   end
 

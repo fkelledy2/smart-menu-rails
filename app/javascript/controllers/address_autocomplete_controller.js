@@ -64,7 +64,6 @@ export default class extends Controller {
     });
 
     this._autocomplete.addListener('place_changed', () => this._handlePlaceChanged());
-    console.warn('[AddressAutocomplete] bound to #restaurant_address1');
   }
 
   _handlePlaceChanged() {

@@ -1,5 +1,8 @@
 class PresenceChannel < ApplicationCable::Channel
   def subscribed
+    # Presence data contains user emails — only authenticated staff may subscribe.
+    return reject unless current_user
+
     stream_from 'presence_channel'
 
     resource_type = params[:resource_type].presence
@@ -8,9 +11,6 @@ class PresenceChannel < ApplicationCable::Channel
     if resource_type && resource_id
       stream_from "#{resource_type.to_s.downcase}_#{resource_id}_presence"
     end
-
-    # Mark user as online
-    return unless current_user
 
     session_id = connection.connection_identifier
     PresenceService.user_online(

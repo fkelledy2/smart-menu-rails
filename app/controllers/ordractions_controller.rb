@@ -83,12 +83,14 @@ class OrdractionsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_restaurant
-    @restaurant = current_user.restaurants.find(params[:restaurant_id])
-    authorize @restaurant, :show?
+    @restaurant = current_user.restaurants.find_by(id: params[:restaurant_id])
+    head :not_found unless @restaurant
+    @restaurant && authorize(@restaurant, :show?)
   end
 
   def set_ordraction
-    @ordraction = Ordraction.find(params[:id])
+    @ordraction = Ordraction.find_by(id: params[:id])
+    head :not_found unless @ordraction
   end
 
   # Only allow a list of trusted parameters through.
