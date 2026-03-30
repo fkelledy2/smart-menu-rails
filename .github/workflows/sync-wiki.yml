@@ -20,6 +20,7 @@ jobs:
 
       - name: Clone wiki repo
         run: |
+          rm -rf wiki
           git clone \
             "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.wiki.git" \
             wiki
