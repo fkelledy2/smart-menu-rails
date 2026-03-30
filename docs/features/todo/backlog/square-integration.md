@@ -1,8 +1,19 @@
 # Square Integration
 
-**Status:** In Progress (Epics 1–6 complete, Epic 7 mostly complete, Epic 8 UI done — pending alpha testing)  
-**Priority:** High  
-**Target:** 2026  
+## Status
+- Priority Rank: IN-PROGRESS (not ranked — under active development; alpha testing is the immediate next step)
+- Category: Launch Enhancer (unlocks Square-market restaurant acquisition on GA)
+- Effort: XL (substantially complete — see epic checklist below for remaining items)
+- Dependencies: Payments::Orchestrator (built), ProviderAccount model (extended), Flipper (`square_payments` flag registered)
+- Refined: true
+
+**Implementation state (2026-03-30):** Epics 1–8 backend/UI complete. Three items remain before alpha: (a) split-bill progress UI, (b) manager notification email on degraded/disconnected status, (c) "Reconnect Square" CTA in admin UI. Alpha testing (Square sandbox, deployed environment) is the current blocker for pilot cohort configuration and GA.
+
+**Original spec fields (preserved below for reference):**
+
+**Status:** In Progress (Epics 1–6 complete, Epic 7 mostly complete, Epic 8 UI done — pending alpha testing)
+**Priority:** High
+**Target:** 2026
 **Feature flag:** `square_payments` (Flipper, registered in `config/initializers/flipper.rb`)
 
 ---

@@ -39,7 +39,6 @@ export default class extends Controller {
       this.scrollIntoView(activeTab);
       this.moveIndicator(activeTab);
     }
-
   }
 
   // --- Actions ---

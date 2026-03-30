@@ -55,6 +55,11 @@ The layout is single-column and responsive, so it reads well on both desktop ema
 - Per-restaurant email branding (using your restaurant's own logo and colours in system emails) is not available in v1. All emails use the mellow.menu platform brand.
 - Email analytics (open rates, click tracking) are not available.
 - Marketing email sequences are not available via this system.
+- SMS delivery of system notifications is planned as a future stretch goal and is not available in v1.
+
+## See Also
+
+- [Branded Receipt Emails](/docs/user_guides/branded-receipt-emails.md) — sending digital receipts to customers after payment, including staff-initiated and customer self-service flows.
 
 ## Frequently Asked Questions
 

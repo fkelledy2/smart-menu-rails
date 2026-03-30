@@ -78,6 +78,10 @@ Receipt emails are sent in HTML format with a matching plain-text version for em
 - The receipt email shows up to the last 4 digits of the card. Full card numbers are never included.
 - GDPR note: email addresses collected via the customer self-service form are used solely for delivering the receipt. They are not used for marketing without a separate explicit opt-in.
 
+## See Also
+
+- [Branded System Emails](/docs/user_guides/branded-system-emails.md) — overview of the shared branded email layout applied to all mellow.menu outgoing emails.
+
 ## Frequently Asked Questions
 
 **Q: What if the customer says they did not receive the receipt?**

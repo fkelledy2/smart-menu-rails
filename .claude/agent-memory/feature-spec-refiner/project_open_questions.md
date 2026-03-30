@@ -125,6 +125,27 @@ Open questions identified during the March 2026 full backlog refinement pass (in
 - **Google Fonts CSP**: If a Content Security Policy header is set on the Smartmenu layout, a `style-src fonts.googleapis.com` and `font-src fonts.gstatic.com` exception is required. Confirm whether a CSP is active.
 - **Dark mode interaction**: When dark mode and a named theme are both active, only one `data-theme` value can sit on `<html>`. Confirm whether a separate `data-color-scheme` attribute should carry dark mode, or whether dark mode overrides theme colour properties and dark variants per theme are out of scope for v1.
 
+## New Open Questions — Thirteenth Pass (2026-03-30)
+
+### Square Integration (IN-PROGRESS)
+- **SCA enforcement per region**: Buyer verification (SCA) plumbing is implemented but enforcement is deferred. Confirm which restaurant countries/regions require mandatory SCA enforcement and add the gate condition to `SquareAdapter#create_payment!`.
+- **Split-bill progress UI design**: The customer-facing "€X of €Y paid" progress display for split bills has no confirmed UI treatment. Is this a Turbo Stream update on the payment form, or a separate order status partial?
+
+### Profit Margin Phase 4 (#35)
+- **Bundling opportunity threshold**: What is the minimum co-order count before a bundle suggestion is shown? Spec proposes 20 co-orders in 30 days — confirm with product.
+- **Bundle suggestion surface**: New dashboard tab or a card/panel in the existing Profit Margins dashboard?
+- **Flipper flag scope**: Does `profit_margin_phase4` gate all Phase 4 features additively on top of Phases 1–3, or does it replace a Phase 3 flag?
+
+### Smartmenu Preview Modes (#36)
+- **Legacy `?view=staff` deprecation window**: One release with deprecation log then hard remove, or immediate removal? Spec recommends one release — confirm.
+- **"Back to edit" link in staff preview**: Should the staff preview show a minimal navigation pill back to the edit page, or is new-tab + close-tab sufficient?
+- **ActionCable in customer preview**: When a logged-in user opens customer preview, the WebSocket re-authenticates via cookie. Should the preview token be passed to the cable connection to downgrade to guest-level channels? Phase 1 decision: no channel override (customer preview simply does not establish an authenticated channel). Confirm this is acceptable.
+
+### Marketing Landing Pages (#37, #38)
+- **`MarketingController` existence**: Does a `MarketingController` already exist, or should this be added to `HomeController`? Check before writing the route.
+- **Copy/design ownership**: Who is the named owner for approving marketing copy and design assets? Without a confirmed owner and date, these pages have an indefinite blocker.
+- **Single `/ai-features` index vs separate URLs**: Should #37 and #38 be separate URLs or share an index page? Recommendation: separate URLs for independent SEO keyword targeting.
+
 ## Resolved Questions
 
 ### MenuVersion System — RESOLVED 2026-03-22

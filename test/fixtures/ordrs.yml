@@ -10,3 +10,13 @@ one:
   ordercapacity: 4
   created_at: <%= 1.day.ago %>
   updated_at: <%= 1.day.ago %>
+
+# Matches dining_sessions(:valid_session) — restaurant: one, tablesetting: table_one
+table_one_ordr:
+  restaurant: one
+  menu: one
+  tablesetting: table_one
+  status: 0  # opened
+  ordercapacity: 2
+  created_at: <%= 1.hour.ago %>
+  updated_at: <%= 1.hour.ago %>

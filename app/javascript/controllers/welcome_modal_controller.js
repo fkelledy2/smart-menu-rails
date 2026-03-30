@@ -21,7 +21,10 @@ export default class extends Controller {
   _show() {
     if (!window.bootstrap) return;
     sessionStorage.setItem(this.keyValue, '1');
-    const modal = window.bootstrap.Modal.getOrCreateInstance(this.element, { backdrop: true, keyboard: true });
+    const modal = window.bootstrap.Modal.getOrCreateInstance(this.element, {
+      backdrop: true,
+      keyboard: true,
+    });
     modal.show();
     this._hideTimer = setTimeout(() => modal.hide(), 3000);
   }

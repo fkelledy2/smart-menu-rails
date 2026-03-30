@@ -1,12 +1,84 @@
 # AI Sommelier Marketing Landing Page
 
-## Disposition
-- Type: Marketing Strategy Brief (not a dev spec)
+## Status
+- Priority Rank: #37 (Marketing — Post-Launch)
 - Category: Post-Launch
-- Owner: Marketing
-- Engineering effort: S (the landing page itself — static or CMS-managed; the AI Sommelier feature it markets already exists in the product)
-- Status: Awaiting marketing copywriter and design sign-off. No sprint work until the AI Sommelier feature is publicly accessible and at least 2–3 reference restaurants are using it.
-- Note: This document describes the *marketing page* strategy, not the AI Sommelier product feature. The landing page should be built in the existing Rails app as a static marketing view, not a separate Next.js application. No new JS framework is warranted for a marketing page.
+- Effort: S (engineering only — Rails static view; design and copy are the long-lead items)
+- Dependencies: AI Sommelier feature publicly accessible; minimum 2–3 reference restaurants actively using it; marketing copy and design approved
+- Refined: true
+
+## Disposition
+
+This is a marketing page brief, not a product feature spec. Engineering effort is small (one Rails view, one route, Bootstrap 5 styling). The long-lead blockers are copy, design, and proof-of-revenue from reference customers — not engineering.
+
+**Implementation constraint:** Build this as a static Rails view inside the existing app, not a separate Next.js application. The "sophisticated aesthetic" referenced in the original brief is achievable with Bootstrap 5 custom theming and does not warrant a new frontend framework or separate deployment. The original brief's budget estimates ($8k–$12k frontend development) are not applicable to a Rails static view — this is 1–2 days of engineering work once copy and design are ready.
+
+**No sprint work until:** The AI Sommelier feature is live for real customers AND marketing has approved copy and design assets.
+
+## Problem Statement
+
+Once the AI Sommelier feature has real restaurant customers and demonstrable results, mellow.menu needs a public landing page to convert inbound interest (search, paid ads, word of mouth) into demo bookings and trial sign-ups. Without this page, the feature has no discoverable public surface for acquisition.
+
+## Success Criteria
+
+- A `/ai-sommelier` route renders a marketing page in the existing Rails app
+- Page includes: hero with CTA linking to the existing demo booking flow, feature overview, benefits, social proof (real quotes from reference restaurants), and an FAQ
+- Page is indexed by search engines (no `noindex`) with correct meta tags and schema markup
+- CTA links route to the existing demo/trial sign-up flow — no new form infrastructure required
+- Page renders correctly on mobile (Bootstrap 5 responsive grid)
+
+## User Stories
+
+- As a restaurant owner searching for wine recommendation software, I want to land on a compelling page that explains the AI Sommelier feature and makes it easy to request a demo.
+- As a marketing team member, I want to update the page copy without needing a developer (consider using a simple ERB content partial or a YAML locale file for copy).
+
+## Functional Requirements
+
+1. New route: `GET /ai-sommelier` → `MarketingController#ai_sommelier` (or extend existing `HomeController` if a marketing controller already exists)
+2. Static view — no database queries, no authentication required
+3. Hero section: headline, subheadline, and a "Request Demo" CTA button linking to the existing Calendly or demo-booking flow
+4. Features section: 3–4 bullet benefits (copy TBD by marketing)
+5. Social proof section: 2–3 testimonial quotes from reference restaurants (copy TBD; placeholder markup ready for real quotes)
+6. FAQ section: 4–6 questions (copy TBD by marketing)
+7. SEO: `<title>`, `<meta description>`, Open Graph tags, and `Restaurant` schema markup in the `<head>`
+8. No React, no Next.js, no additional JS framework — plain ERB with Bootstrap 5
+
+## Non-Functional Requirements
+
+- Page must load in under 2 seconds on a 3G connection (no heavy JS bundles, no video autoplay)
+- No new gems required
+- Copy must be stored in `config/locales/en/marketing.en.yml` so it can be updated without code changes
+
+## Technical Notes
+
+- Route: `get '/ai-sommelier', to: 'marketing#ai_sommelier'` (or `home#ai_sommelier`)
+- Controller: `MarketingController < ApplicationController` — `skip_before_action :authenticate_user!` if authentication is required globally
+- View: `app/views/marketing/ai_sommelier.html.erb` — uses `application` layout or a dedicated `marketing` layout
+- No Pundit policy needed (public page)
+- No Flipper flag needed (public page — launch when copy is ready)
+- No Sidekiq job needed
+
+## Acceptance Criteria
+
+1. `GET /ai-sommelier` returns HTTP 200 for both authenticated and unauthenticated users.
+2. Page title and meta description are present and contain "AI Sommelier".
+3. The "Request Demo" CTA links to the existing demo booking URL.
+4. Page renders without JavaScript errors on mobile and desktop.
+5. `robots.txt` allows crawling of `/ai-sommelier`.
+
+## Out of Scope
+
+- Interactive wine pairing demo tool (requires significant engineering — separate spec if needed)
+- ROI calculator (separate spec if needed)
+- Video testimonials (requires video production — marketing lead item)
+- Paid advertising campaign setup (marketing, not engineering)
+- A separate Next.js or premium frontend build (ruled out — Rails view is sufficient)
+
+## Open Questions
+
+1. Does a `MarketingController` already exist, or should this extend `HomeController`?
+2. Who owns the copy and design approval gate — and what is the target date for those assets?
+3. Should the page be localised at launch (e.g. Irish English vs. UK English), or English-only initially?
 
 ## Overview
 Create a compelling marketing landing page showcasing mellow.menu's AI Sommelier functionality to attract wine enthusiasts and premium restaurants.

@@ -28,9 +28,7 @@ Partner Integrations gives third-party software platforms — such as workforce 
 
 To enable specific adapter types for a restaurant (for example, connecting a workforce tool):
 
-<!-- TODO: clarify — the requirement describes a per-restaurant `enabled_integrations` configuration, but the UI path for managing this in the admin panel is not described in the spec. Confirm the admin UI location once implemented. -->
-
-Contact mellow.menu support to enable specific integration adapters for a restaurant.
+Contact mellow.menu support to enable specific integration adapters for a restaurant. Integration adapter configuration is managed by mellow.menu staff and is not available as a self-serve setting in v1.
 
 ### For Partner Technical Teams — Accessing the API
 
@@ -102,7 +100,7 @@ No individual customer personal data (names, emails, payment details) is shared 
 - Two-way sync (partners writing data back to mellow.menu) is not supported.
 - There is no self-serve partner management UI inside mellow.menu for restaurant owners. Integration configuration is handled by mellow.menu staff.
 - Twilio and messaging provider integrations are not included in v1.
-- Adapter metrics (success and failure counts per adapter) are visible in the admin area — restaurant owners do not have a view of this data.
+- Adapter metrics (success and failure counts per adapter) are managed by mellow.menu support staff. Restaurant owners do not have a self-serve view of this data in v1.
 
 ## Frequently Asked Questions
 

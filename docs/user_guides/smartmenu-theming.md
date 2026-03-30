@@ -22,9 +22,9 @@ Restaurant owners and managers with permission to edit the restaurant's menu set
 2. Go to **Menu** and select the menu you want to theme.
 3. Click **Edit** to open the menu edit page.
 4. Look for the **Theme** section in the settings panel (usually in the sidebar or settings tab).
-5. You will see four theme swatches. Each swatch shows a small preview image, the theme name, and a font sample.
-6. Click any swatch to preview it. A preview panel updates instantly to show how your menu will look with that theme applied — your customers do not see this change yet.
-7. Click through the themes to compare them. Take your time — nothing is saved until you click Save.
+5. You will see four theme swatches. Each swatch shows the theme name and a font sample.
+6. Click any swatch to select it. Click the **Preview in new tab** button to open your live Smartmenu in a new tab and see how it will look — your customers do not see the change yet (save first to apply it for real).
+7. Click through the swatches to compare. Take your time — nothing is saved until you click Save.
 
 ### Saving Your Theme
 
@@ -80,10 +80,10 @@ Generous whitespace, fine dividers, a restrained colour palette, and the Cormora
 A: The new theme takes effect for all customers as soon as you save. Customers already on the page will see the new theme when the page next renders (usually within moments, or on their next interaction).
 
 **Q: Can I preview a theme without my customers seeing the change?**
-A: Yes. The preview panel shows the theme on your screen only. Customers see the change only after you click Save.
+A: Yes. Select a swatch to highlight your choice, then click **Preview in new tab**. This opens the live Smartmenu in a new browser tab so you can see what the theme looks like. Customers only see the change after you save. Note: the preview shows the last saved theme — save first, then preview, for the most accurate view.
 
-**Q: Why does the preview look slightly different from the live menu?**
-A: The preview loads inside a small panel which can affect how some spacing and layout elements appear. The live menu is the most accurate representation of the theme.
+**Q: Why does the preview look slightly different from the editor?**
+A: The preview opens your live Smartmenu in a new tab — the most accurate view of how customers will see the theme. Small differences in the editor are due to the reduced panel size.
 
 **Q: My restaurant has two menus — a lunch menu and a dinner menu. Can they have different themes?**
 A: Yes. Themes are set per Smartmenu, so you can give each menu its own look.

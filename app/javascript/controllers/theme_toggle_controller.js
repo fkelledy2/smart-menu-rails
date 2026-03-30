@@ -72,12 +72,12 @@ export default class extends Controller {
   //   dark  → both metas = dark colour  (system light preference shows dark bg)
   _syncThemeColorMeta(scheme) {
     const lightMeta = document.getElementById('theme-color-light');
-    const darkMeta  = document.getElementById('theme-color-dark');
+    const darkMeta = document.getElementById('theme-color-dark');
     if (!lightMeta || !darkMeta) return;
 
     const html = document.documentElement;
     const lightColor = html.dataset.themeColorLight;
-    const darkColor  = html.dataset.themeColorDark;
+    const darkColor = html.dataset.themeColorDark;
     if (!lightColor || !darkColor) return;
 
     if (scheme === 'dark') {

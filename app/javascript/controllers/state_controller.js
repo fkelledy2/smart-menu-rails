@@ -351,6 +351,35 @@ export default class extends Controller {
     this._onStateUpdate = (e) => {
       try {
         const incoming = e.detail || {};
+
+        // Route typed auto_pay events to the relevant Stimulus controllers.
+        if (incoming.type === 'auto_pay_disarmed') {
+          const autoPayEl = document.querySelector('[data-controller~="customer-auto-pay"]');
+          if (autoPayEl) {
+            autoPayEl.dispatchEvent(new CustomEvent('auto_pay:disarmed', { bubbles: false }));
+          }
+          return;
+        }
+        if (incoming.type === 'auto_pay_succeeded') {
+          const autoPayEl = document.querySelector('[data-controller~="auto-pay"]');
+          if (autoPayEl) {
+            autoPayEl.dispatchEvent(new CustomEvent('auto_pay:succeeded', { bubbles: false }));
+          }
+          return;
+        }
+        if (incoming.type === 'auto_pay_failed') {
+          const autoPayEl = document.querySelector('[data-controller~="auto-pay"]');
+          if (autoPayEl) {
+            autoPayEl.dispatchEvent(
+              new CustomEvent('auto_pay:failed', {
+                detail: { failure_reason: incoming.failure_reason },
+                bubbles: false,
+              })
+            );
+          }
+          return;
+        }
+
         try {
           const cnt = Array.isArray(incoming?.order?.items) ? incoming.order.items.length : 0;
           console.info(

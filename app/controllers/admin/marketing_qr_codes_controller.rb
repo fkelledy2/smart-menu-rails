@@ -13,8 +13,11 @@ module Admin
     before_action :set_qr_code, only: %i[show edit update destroy link unlink print]
 
     def index
-      @qr_codes = policy_scope(MarketingQrCode).order(created_at: :desc)
       authorize MarketingQrCode
+      scope = policy_scope(MarketingQrCode).order(created_at: :desc)
+      scope = scope.where(campaign: params[:campaign]) if params[:campaign].present?
+      scope = scope.where(status: params[:status]) if params[:status].present?
+      @qr_codes = scope
     end
 
     def show

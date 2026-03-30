@@ -1,9 +1,15 @@
 <%# Turbo-frame modal for staff to send a receipt from the order management view.
     Usage: render partial: 'ordrs/send_receipt_modal', locals: { ordr: @ordr }
-    Only render when the order is in paid or closed state. %>
+    Shows a pending note when the order is not yet paid, and the full button once paid. %>
 
-<% return unless ordr.paid? || ordr.closed? %>
 <% return unless Flipper.enabled?(:receipt_email, current_user) %>
+
+<% unless ordr.paid? || ordr.closed? %>
+  <span class="text-muted small" data-testid="receipt-pending-note">
+    <i class="bi bi-envelope me-1" aria-hidden="true"></i>Receipt available after payment
+  </span>
+  <% return %>
+<% end %>
 
 <div id="send_receipt_modal_<%= ordr.id %>">
   <!-- Trigger button -->

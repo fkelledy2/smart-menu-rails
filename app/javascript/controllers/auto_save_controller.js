@@ -37,7 +37,6 @@ export default class extends Controller {
     // Cmd+S / Ctrl+S keyboard shortcut
     this._handleKeyDown = this._onKeyDown.bind(this);
     document.addEventListener('keydown', this._handleKeyDown);
-
   }
 
   disconnect() {

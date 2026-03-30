@@ -43,6 +43,7 @@ class Ordr < ApplicationRecord
   after_update :broadcast_status_change, if: :saved_change_to_status?
   after_update :cascade_status_to_items, if: :saved_change_to_status?
   after_update :clear_station_tickets_if_terminal, if: :saved_change_to_status?
+  after_update :broadcast_auto_pay_disarmed, if: :auto_pay_disarmed?
 
   # Floorplan dashboard real-time tile updates
   after_commit :broadcast_floorplan_tile_update, on: %i[create update]
@@ -237,6 +238,11 @@ class Ordr < ApplicationRecord
     self.auto_pay_consent_at = nil
   end
 
+  # Returns true when auto_pay_enabled transitions from true to false in this update.
+  def auto_pay_disarmed?
+    saved_change_to_auto_pay_enabled? && !auto_pay_enabled? && saved_changes['auto_pay_enabled'].first == true
+  end
+
   private
 
   def enqueue_auto_pay_capture_if_armed
@@ -246,6 +252,17 @@ class Ordr < ApplicationRecord
   rescue StandardError => e
     Rails.logger.warn(
       "[Ordr#enqueue_auto_pay_capture_if_armed] Failed to enqueue for ordr=#{id}: #{e.class}: #{e.message}",
+    )
+  end
+
+  def broadcast_auto_pay_disarmed
+    ActionCable.server.broadcast(
+      "ordr_#{id}_channel",
+      { type: 'auto_pay_disarmed', ordr_id: id },
+    )
+  rescue StandardError => e
+    Rails.logger.warn(
+      "[Ordr#broadcast_auto_pay_disarmed] Failed for ordr=#{id}: #{e.class}: #{e.message}",
     )
   end
 

@@ -1,3 +1,11 @@
+<% using_default_estimates = local_assigns.fetch(:using_default_estimates, false) %>
+<% if using_default_estimates %>
+  <div class="px-3 pt-2">
+    <span class="badge text-bg-secondary small" title="Not enough historical data to compute a live estimate">
+      <i class="bi bi-info-circle me-1" aria-hidden="true"></i>Default estimate (insufficient data)
+    </span>
+  </div>
+<% end %>
 <div class="list-group list-group-flush">
   <% estimates.each do |party_size, minutes| %>
     <div class="list-group-item px-3 py-2 d-flex justify-content-between align-items-center">

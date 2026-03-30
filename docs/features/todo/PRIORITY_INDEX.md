@@ -1,6 +1,6 @@
 # mellow.menu Feature Backlog — Priority Index
 
-**Last updated**: 2026-03-29 (tenth pass — Table Wait Time Estimation #13 COMPLETED 2026-03-29)
+**Last updated**: 2026-03-30 (thirteenth pass — Square Integration, Profit Margin Phase 4, Smartmenu Preview Modes, AI Sommelier Landing Page, AI Whiskey Ambassador Landing Page refined and added to backlog at #35–#38 + IN-PROGRESS)
 **QR Code Security (#1)**: COMPLETED 2026-03-24 — Phase 1 shipped; spec at `docs/features/completed/qr-security.md`
 **Branded Email Styling (#1)**: COMPLETED 2026-03-24 — spec at `docs/features/completed/branded-email-styling-feature-request.md`
 **Branded Receipt Email (#2)**: COMPLETED 2026-03-25 — spec at `docs/features/completed/branded-receipt-email-feature-request.md`
@@ -27,6 +27,7 @@
 | ~~#11~~ | ~~Partner Integrations (Event-Driven)~~ | ~~Post-Launch~~ | M | #8, Stripe webhooks | COMPLETED 2026-03-29 — spec at `docs/features/completed/06-partner-integrations-event-driven.md` |
 | ~~#12~~ | ~~Menu Experiments (A/B Testing)~~ | ~~Post-Launch~~ | M | #1 (DiningSession built); MenuVersion BUILT | COMPLETED 2026-03-29 — spec at `docs/features/completed/08-menu-experiments-ab-testing.md` |
 | ~~#13~~ | ~~Table Wait Time Estimation~~ | ~~Post-Launch~~ | L | #5 (completed), Tablesetting | COMPLETED 2026-03-29 — spec at `docs/features/completed/table-wait-time-estimation-feature-request.md` |
+| **IQ-1** | **Naked Domain Canonical Strategy** | **Infrastructure** | **S** | DNS provider access, Heroku CLI | `mellow.menu` apex must resolve before public launch; Rack middleware 301 redirect; zero-downtime; no new models |
 | #14 | Dynamic Pricing Plans (Cost-Indexed) | Post-Launch | L | #15, #16 | Sustainable margin management at scale |
 | #15 | Cost Insights + Pricing Model Publisher | Post-Launch | L | #16 | Admin system enabling #14; required before pricing models can be published |
 | #16 | Heroku Cost Inventory | Post-Launch | S | Admin auth, HEROKU_PLATFORM_API_TOKEN | Feeds #15 with accurate infra cost data |
@@ -47,6 +48,18 @@
 | #31 | Weight-Based Menu Item Pricing | Post-Launch | M | Menuitem model, Ordritem model, KDS | Unlocks premium dining and butcher/seafood segments that require per-weight pricing |
 | #32 | Nearby Menus Map | Post-Launch | L | Geocoding data, map provider API key | Consumer-facing discovery surface; organic acquisition channel for new restaurant sign-ups |
 | #33 | Strikepay Integration (Staff Tipping) | Post-Launch | L | Payments::Orchestrator, Strikepay API agreement | Staff satisfaction and retention differentiator; compliance-heavy — Strikepay platform API confirmation required before build |
+| #34 | Realtime Ordritem Tracking & Passive Customer Feedback | Post-Launch | L | Existing `OrdrChannel`, `KitchenChannel`, `StationChannel`, Sidekiq, `Ordritem` model | Reduces "where is my order?" friction with item-level fulfillment status and passive realtime customer UI; batch-first staff workflow preserved |
+| #35 | Profit Margin Tracking — Phase 4 (Optimization Tools) | Post-Launch | M | Phases 1–3 complete (production); feeds #21 Menu Optimization Agent | Closes the loop from margin insight to action: menu engineering matrix, AI pricing recommendations, bundling opportunities |
+| #36 | Smartmenu Preview Modes (Signed Token) | Launch Enhancer | S | SmartMenu routes (built); Rails `message_verifier` (built) | Removes intrusive staff-mode banner from customer-facing URL; clean preview UX from edit page; no database changes |
+| IN-PROGRESS | Square Integration | Launch Enhancer | XL (mostly done) | Payments::Orchestrator, ProviderAccount model, Flipper flag | Under active development — Epics 1–8 backend/UI complete; 3 remaining items before alpha: split-bill progress UI, degraded-status email, "Reconnect" CTA |
+| #37 | AI Sommelier Marketing Landing Page | Post-Launch (Marketing) | S | AI Sommelier feature live; 2–3 reference restaurants; copy + design approved | Public acquisition surface for the AI Sommelier feature; 1–2 days engineering once assets are ready |
+| #38 | AI Whiskey Ambassador Marketing Landing Page | Post-Launch (Marketing) | S | #37 ships first (establishes MarketingController pattern); Whiskey Ambassador live; copy + design approved | Same pattern as #37; reuses controller and layout; distinct URL for SEO segment targeting |
+
+> **Note on March 2026 additions (thirteenth pass — 2026-03-30)**: Five previously unrefined files have been reviewed and dispositioned. (1) **Square Integration** (`backlog/square-integration.md`) is marked IN-PROGRESS (not ranked) — Epics 1–8 backend/UI are complete; three remaining items before alpha testing: split-bill progress UI, degraded-status manager notification email, and "Reconnect Square" CTA in admin UI. Alpha testing is the immediate next step. (2) **Profit Margin Tracking Phase 4** (`backlog/menu-item-profit-margin-tracking.md`) — Phases 1–3 are in production; Phase 4 (menu engineering matrix, AI pricing recommendations, bundling opportunity detection) is ranked #35, M-effort, Post-Launch. Feeds the Menu Optimization Agent (#21) via a shared `MenuEngineering::BundlingOpportunityService` interface. (3) **Smartmenu Preview Modes** (`features/smartmenu-preview-modes.md`) — ranked #36, S-effort, Launch Enhancer. Removes the intrusive staff-mode-indicator banner from the customer-facing smartmenu URL; replaces with signed `Rails.application.message_verifier` preview tokens launched from the edit page. No database changes, no new gems, no ActionCable changes in Phase 1. (4) **AI Sommelier Landing Page** (`marketing/ai-sommelier-landing-page.md`) — ranked #37, S-effort, Post-Launch/Marketing. Clarified that this is a Rails static view (not Next.js); engineering is 1–2 days once copy and design are ready. Gated on the feature being publicly live and 2–3 reference restaurants confirmed. (5) **AI Whiskey Ambassador Landing Page** (`marketing/ai-whiskey-ambassador-landing-page.md`) — ranked #38, S-effort, Post-Launch/Marketing. Same controller/layout pattern as #37; ranked downstream of it. Both marketing pages' original budget estimates ($8k–$25k frontend) are inapplicable — this is a Rails view, not a separate application.
+
+> **Note on March 2026 additions (twelfth pass — 2026-03-30)**: **Realtime Ordritem Tracking & Passive Customer Feedback** added at #34 (Post-Launch, L effort). This feature tracks fulfillment state at the `Ordritem` level and surfaces it passively to the customer via `OrdrChannel` ActionCable broadcasts. Key architectural decision: a new `fulfillment_status` column (separate from the existing `status` enum) avoids colliding with the `Ordritem` lifecycle states (`opened → paid`). Two open questions must be resolved before Phase 1 begins: (1) `Menuitem#default_station` column strategy, and (2) whether the `OrdrChannel` subscription auth guard ships in Phase 1 or as a separate security ticket. Spec at `docs/features/todo/backlog/realtime-ordritem-tracking.md`.
+
+> **Note on March 2026 additions (eleventh pass — 2026-03-30)**: **Naked Domain Canonical Strategy** added as Infrastructure Quick Win **IQ-1**. This is an S-effort ops + minimal-code task (one initializer, three config lines, one robots.txt update) with zero product dependencies. It is a pre-launch professionalism requirement: `mellow.menu` must resolve before the platform is presented to paying customers or press. It does not affect the existing rank sequence (#14–#33). The `IQ-` prefix distinguishes infrastructure quick-wins from ranked product features so the sprint table remains stable. Spec at `docs/features/todo/backlog/naked-domain-canonical-strategy.md`.
 
 > **Note on March 2026 additions (sixth pass — 2026-03-28)**: **Full rank alignment pass** — all individual spec files updated to reflect the current rank numbers following the fifth-pass Smartmenu Theming insertion. Prior to this pass, 19 spec files still carried pre-insertion rank numbers (agent specs #17–#23, second-pass specs #27–#32, CDN #25, partner integrations #10, menu experiments #11, table wait time #12, dynamic pricing #13, cost insights #14, Heroku cost #15). All files now reflect the canonical PRIORITY_INDEX rank numbers. CRM (#9) and JWT (#8) marked complete in the ranking table. Sprint 1 Recommendation updated to reflect current next best actions: Smartmenu Theming (#10, Track A), Partner Integrations (#11, Track B), Menu Experiments (#12, Track C), Employee Role Promotion (#29, Track D quick win). Agent Framework cross-references corrected from #16 to #17 across all agent specs.
 
@@ -89,14 +102,21 @@ The following features must ship before mellow.menu can accept live orders from 
 | ~~#1~~ | ~~QR Code Security~~ | COMPLETED 2026-03-24 |
 | ~~#2~~ | ~~Branded Email Styling~~ | COMPLETED 2026-03-24 |
 | ~~#3~~ | ~~Branded Receipt Email~~ | COMPLETED 2026-03-25 |
+| **IQ-1** | **Naked Domain Canonical Strategy** | `mellow.menu` apex must resolve; presenting the platform to customers or press with a broken naked domain is a trust failure. S-effort — ship before any public launch activity. |
 
-Note: The launch blockers are deliberately narrow. Features #4–#7 are strong launch enhancers that meaningfully improve the product but are not strictly required to go live with ordering enabled.
+Note: The launch blockers are deliberately narrow. Features #4–#7 are strong launch enhancers that meaningfully improve the product but are not strictly required to go live with ordering enabled. IQ-1 is an infrastructure pre-condition rather than a software feature blocker — it is S-effort and can be executed in an afternoon.
 
 ---
 
 ## Current Sprint Recommendation — Next Best Actions
 
-All launch blockers (#1–#7), JWT Token Management (#8), CRM Sales Funnel (#9), Smartmenu Theming (#10), and Partner Integrations (#11) are completed. The platform is live-capable with a functioning sales pipeline, API layer, visual theming, and event-driven partner integration layer. The following represent the highest-value next actions:
+All launch blockers (#1–#7), JWT Token Management (#8), CRM Sales Funnel (#9), Smartmenu Theming (#10), Partner Integrations (#11), Menu Experiments (#12), and Table Wait Time Estimation (#13) are completed. The platform is live-capable with a functioning sales pipeline, API layer, visual theming, event-driven partner integration layer, and A/B testing capability.
+
+**Immediate pre-sprint ship: IQ-1 — Naked Domain Canonical Strategy.** This is an afternoon's work (DNS + Heroku config + one Rack initializer). Ship it before any other track begins — the naked domain resolving is a prerequisite for presenting the platform publicly with confidence.
+
+**Parallel track: Square Integration alpha.** The backend and UI work for Square is complete (Epics 1–8). The immediate next step is alpha testing in the Square sandbox environment on a deployed instance. Three remaining items before alpha: (1) split-bill progress UI ("€X of €Y paid"), (2) manager notification email on degraded/disconnected status, (3) "Reconnect Square" CTA in admin UI when status is degraded. Complete these, then begin the alpha cohort.
+
+The following represent the highest-value next actions after IQ-1 ships:
 
 ### Track A: Menu Experiments (COMPLETED 2026-03-29)
 ~~**Feature #12 — Menu Experiments (A/B Testing)** — current top priority~~
@@ -147,6 +167,23 @@ Estimated: 1–2 developer weeks
 
 ### Track D: Team Management Quick Win (S-effort, ship between tracks)
 **Feature #29 — Employee Role Promotion** (S effort — 3–5 developer days)
+
+---
+
+### Track E: UX Cleanup Quick Win — Smartmenu Preview Modes (#36)
+**Feature #36 — Smartmenu Preview Modes** (S effort — 2–3 developer days)
+
+The `staff-mode-indicator` floating banner on the customer-facing smartmenu URL is a cosmetic and architectural issue that should be resolved before any public launch activity. This is S-effort with no database changes, no new gems, and no ActionCable changes. It can be shipped in a short slot between larger tracks.
+
+Deliverables:
+1. `app/models/smartmenu_preview_token.rb` — plain Ruby class with `generate` + `decode` using `Rails.application.message_verifier(:smartmenu_preview)`, 4-hour TTL
+2. Remove `staff-mode-indicator` block from `app/views/smartmenus/show.html.erb` lines 27–51
+3. Update `SmartmenusController` mode detection to decode signed token (replace `params[:view]` check)
+4. Update preview launch buttons in `app/views/menus/sections/_details_2025.html.erb` to generate signed token URLs
+5. Add `smartmenu_preview_tokens` Flipper flag for controlled rollout during `?view=staff` deprecation window
+6. Unit tests: `SmartmenuPreviewToken` encode/decode/expiry/tamper; controller tests for all token states
+
+Estimated: 2–3 developer days
 
 Low complexity, high operational value. Can be shipped in days during a gap between larger tracks. All dependencies exist. Uses the branded mailer layout that is now complete.
 
@@ -262,6 +299,36 @@ Square Integration (IN PROGRESS — Epics 1–6 complete, alpha testing pending)
 #33 Strikepay Integration
   └─► Branded Receipt Email (built) — tipping prompt appears on post-payment screen
   └─► (Strikepay platform API agreement is a hard pre-development gate — do not start without this)
+
+#34 Realtime Ordritem Tracking
+  └─► OrdrChannel (built — extends existing stream `ordr_#{id}_channel`)
+  └─► KitchenChannel / StationChannel (built — adds `advance_station` handler)
+  └─► Ordritem model (built — adds `fulfillment_status` + `station` columns via migration)
+  └─► DiningSession token auth guard on OrdrChannel (open question — latent risk; resolve before Phase 3)
+  └─► Menuitem#default_station (new column — confirm strategy before Phase 1 migration)
+
+#35 Profit Margin Phase 4
+  └─► Phases 1–3 of ProfitMarginTracking (COMPLETE — all models, services, jobs exist)
+  └─► #21 Menu Optimization Agent (Phase 4 output feeds agent via shared service interface)
+
+#36 Smartmenu Preview Modes
+  └─► SmartmenusController (built — modifying mode detection logic only)
+  └─► Rails.application.message_verifier (built-in — no new dependency)
+
+Square Integration (IN-PROGRESS)
+  └─► Payments::Orchestrator (built)
+  └─► ProviderAccount model (extended — Epics 1–2 complete)
+  └─► Flipper `square_payments` flag (registered)
+  └─► (feeds no ranked backlog items as a dependency)
+
+#37 AI Sommelier Landing Page
+  └─► AI Sommelier feature publicly accessible (gating condition — not a code dependency)
+  └─► Marketing copy + design approved (gating condition — not a code dependency)
+
+#38 AI Whiskey Ambassador Landing Page
+  └─► #37 (establishes MarketingController and layout pattern)
+  └─► AI Whiskey Ambassador feature publicly accessible (gating condition)
+  └─► Marketing copy + design approved (gating condition)
 ```
 
 ---
@@ -359,6 +426,8 @@ The following requirements are implied by existing specs but do not yet have sta
 | `EmployeeRoleAudit` model | Employee Role Promotion (#29) | Hard dependency | New — specified in #29 spec |
 | PostGIS availability in production | Nearby Menus Map (#32) | Must confirm before building spatial query service | Open — confirm with infra |
 | Strikepay platform API model (marketplace vs standalone) | Strikepay Integration (#33) | Hard pre-development gate | Open — confirm with Strikepay BD before any dev |
+| `OrdrChannel` subscription auth guard (verify DiningSession token before streaming) | Realtime Ordritem Tracking (#34) | Hard dependency — latent security risk regardless of feature | Open — confirm whether to address in Phase 1 of #34 or as a standalone security ticket; recommend Phase 1 |
+| `Menuitem#default_station` column (kitchen vs bar) | Realtime Ordritem Tracking (#34) | Required before Phase 1 migration | Open — confirm assignment strategy (per-item at order time vs `Menuitem` default) |
 | `calculated_price` vs `unit_price` column on Ordritem | Weight-Based Pricing (#31) | Affects migration design | Open — confirm exact column name in schema |
 | Blog CMS implementation decision | mellow-menu-blog.md (marketing) | Engineering decision needed before build | Open — Rails ActionText vs headless CMS |
 | AI feature landing pages (Sommelier, Whiskey Ambassador) | Marketing briefs | S-effort Rails views when marketing is ready | Open — awaiting marketing sign-off |

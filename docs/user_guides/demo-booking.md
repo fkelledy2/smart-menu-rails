@@ -85,8 +85,6 @@ For sales reps:
 - A/B testing of different demo videos is not available.
 - The recorded demo video must be produced and hosted separately — the platform embeds an existing video.
 
-<!-- TODO: clarify — the spec notes the recorded video must be confirmed as produced before the video embed component goes live. Verify with the marketing team that a video URL is available before enabling the Watch Demo CTA. -->
-
 ## Frequently Asked Questions
 
 **Q: I submitted the form but did not receive a confirmation email. What should I do?**

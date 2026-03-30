@@ -294,7 +294,9 @@ export default class extends Controller {
 
     const story = rec.story ? `<p class="sommelier-story">${this.escapeHtml(rec.story)}</p>` : '';
 
-    const region = rec.region ? `<span class="sommelier-region">${this.escapeHtml(rec.region)}</span>` : '';
+    const region = rec.region
+      ? `<span class="sommelier-region">${this.escapeHtml(rec.region)}</span>`
+      : '';
 
     return `
       <div class="sommelier-card" data-menuitem-id="${rec.id}">
