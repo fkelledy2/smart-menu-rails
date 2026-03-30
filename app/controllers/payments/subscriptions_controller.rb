@@ -48,8 +48,8 @@ class Payments::SubscriptionsController < ApplicationController
       sub.save!
     end
 
-    success_url = params[:success_url].presence || edit_restaurant_url(restaurant, checkout_session_id: '{CHECKOUT_SESSION_ID}')
-    cancel_url = params[:cancel_url].presence || edit_restaurant_url(restaurant)
+    success_url = url_from(params[:success_url]) || edit_restaurant_url(restaurant, checkout_session_id: '{CHECKOUT_SESSION_ID}')
+    cancel_url = url_from(params[:cancel_url]) || edit_restaurant_url(restaurant)
 
     session = Stripe::Checkout::Session.create(
       mode: 'subscription',
@@ -98,7 +98,7 @@ class Payments::SubscriptionsController < ApplicationController
       return
     end
 
-    return_url = params[:return_url].presence || edit_restaurant_url(restaurant)
+    return_url = url_from(params[:return_url]) || edit_restaurant_url(restaurant)
 
     session = Stripe::BillingPortal::Session.create(
       customer: stripe_customer_id,

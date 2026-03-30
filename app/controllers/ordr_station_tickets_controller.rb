@@ -71,6 +71,7 @@ class OrdrStationTicketsController < ApplicationController
         format.html { redirect_to root_path, alert: 'Access denied' }
         format.json { head :forbidden }
       end
+      return
     end
   rescue ActiveRecord::RecordNotFound
     respond_to do |format|

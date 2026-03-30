@@ -108,7 +108,8 @@ module Admin
     private
 
     def set_token
-      @token = AdminJwtToken.find(params[:id])
+      @token = AdminJwtToken.find_by(id: params[:id])
+      head :not_found unless @token
     end
 
     def restaurant_for_create

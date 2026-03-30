@@ -618,8 +618,11 @@ class OrdrsController < ApplicationController
   end
 
   def set_currency
-    if params[:restaurant_id]
-      @restaurant = Restaurant.find(params[:restaurant_id])
+    # Performance: re-use @restaurant already loaded by set_restaurant (same request).
+    # set_restaurant runs first in the before_action chain, so @restaurant is
+    # already assigned when params[:restaurant_id] is present — no second DB hit needed.
+    if @restaurant || params[:restaurant_id]
+      @restaurant ||= Restaurant.find(params[:restaurant_id])
       @restaurantCurrency = ISO4217::Currency.from_code(@restaurant.currency || 'USD')
     else
       @restaurantCurrency = ISO4217::Currency.from_code('USD')

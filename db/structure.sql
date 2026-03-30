@@ -588,6 +588,50 @@ ALTER SEQUENCE public.crm_leads_id_seq OWNED BY public.crm_leads.id;
 
 
 --
+-- Name: customer_wait_queues; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.customer_wait_queues (
+    id bigint NOT NULL,
+    restaurant_id bigint NOT NULL,
+    customer_name character varying NOT NULL,
+    customer_phone character varying,
+    party_size integer NOT NULL,
+    joined_queue_at timestamp(6) without time zone NOT NULL,
+    estimated_wait_minutes integer,
+    estimated_seat_time timestamp(6) without time zone,
+    queue_position integer NOT NULL,
+    status character varying DEFAULT 'waiting'::character varying NOT NULL,
+    seated_at timestamp(6) without time zone,
+    tablesetting_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    CONSTRAINT customer_wait_queues_party_size_positive CHECK ((party_size > 0)),
+    CONSTRAINT customer_wait_queues_queue_position_positive CHECK ((queue_position > 0)),
+    CONSTRAINT customer_wait_queues_status_check CHECK (((status)::text = ANY ((ARRAY['waiting'::character varying, 'notified'::character varying, 'seated'::character varying, 'cancelled'::character varying, 'no_show'::character varying])::text[])))
+);
+
+
+--
+-- Name: customer_wait_queues_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.customer_wait_queues_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: customer_wait_queues_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.customer_wait_queues_id_seq OWNED BY public.customer_wait_queues.id;
+
+
+--
 -- Name: demo_bookings; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -624,6 +668,50 @@ CREATE SEQUENCE public.demo_bookings_id_seq
 --
 
 ALTER SEQUENCE public.demo_bookings_id_seq OWNED BY public.demo_bookings.id;
+
+
+--
+-- Name: dining_patterns; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.dining_patterns (
+    id bigint NOT NULL,
+    restaurant_id bigint NOT NULL,
+    party_size integer NOT NULL,
+    day_of_week integer NOT NULL,
+    hour_of_day integer NOT NULL,
+    average_duration_minutes double precision NOT NULL,
+    median_duration_minutes double precision NOT NULL,
+    min_duration_minutes double precision,
+    max_duration_minutes double precision,
+    sample_count integer DEFAULT 0 NOT NULL,
+    last_calculated_at timestamp(6) without time zone NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    CONSTRAINT dining_patterns_day_of_week_range CHECK (((day_of_week >= 0) AND (day_of_week <= 6))),
+    CONSTRAINT dining_patterns_hour_of_day_range CHECK (((hour_of_day >= 0) AND (hour_of_day <= 23))),
+    CONSTRAINT dining_patterns_party_size_positive CHECK ((party_size > 0)),
+    CONSTRAINT dining_patterns_sample_count_non_negative CHECK ((sample_count >= 0))
+);
+
+
+--
+-- Name: dining_patterns_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.dining_patterns_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: dining_patterns_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.dining_patterns_id_seq OWNED BY public.dining_patterns.id;
 
 
 --
@@ -5259,10 +5347,24 @@ ALTER TABLE ONLY public.crm_leads ALTER COLUMN id SET DEFAULT nextval('public.cr
 
 
 --
+-- Name: customer_wait_queues id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.customer_wait_queues ALTER COLUMN id SET DEFAULT nextval('public.customer_wait_queues_id_seq'::regclass);
+
+
+--
 -- Name: demo_bookings id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.demo_bookings ALTER COLUMN id SET DEFAULT nextval('public.demo_bookings_id_seq'::regclass);
+
+
+--
+-- Name: dining_patterns id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dining_patterns ALTER COLUMN id SET DEFAULT nextval('public.dining_patterns_id_seq'::regclass);
 
 
 --
@@ -6164,11 +6266,27 @@ ALTER TABLE ONLY public.crm_leads
 
 
 --
+-- Name: customer_wait_queues customer_wait_queues_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.customer_wait_queues
+    ADD CONSTRAINT customer_wait_queues_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: demo_bookings demo_bookings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.demo_bookings
     ADD CONSTRAINT demo_bookings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: dining_patterns dining_patterns_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dining_patterns
+    ADD CONSTRAINT dining_patterns_pkey PRIMARY KEY (id);
 
 
 --
@@ -7068,6 +7186,13 @@ ALTER TABLE ONLY public.whiskey_flights
 
 
 --
+-- Name: idx_dining_patterns_lookup; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_dining_patterns_lookup ON public.dining_patterns USING btree (restaurant_id, party_size, day_of_week, hour_of_day);
+
+
+--
 -- Name: idx_effective_dates; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -7177,6 +7302,13 @@ CREATE INDEX idx_on_menu_experiment_id_assigned_version_id_f60bae83ea ON public.
 --
 
 CREATE INDEX idx_on_recommended_product_id_d9294a2c90 ON public.similar_product_recommendations USING btree (recommended_product_id);
+
+
+--
+-- Name: idx_on_restaurant_id_joined_queue_at_1102a21570; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_on_restaurant_id_joined_queue_at_1102a21570 ON public.customer_wait_queues USING btree (restaurant_id, joined_queue_at);
 
 
 --
@@ -7544,6 +7676,27 @@ CREATE INDEX index_crm_leads_on_stage ON public.crm_leads USING btree (stage);
 
 
 --
+-- Name: index_customer_wait_queues_on_restaurant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_customer_wait_queues_on_restaurant_id ON public.customer_wait_queues USING btree (restaurant_id);
+
+
+--
+-- Name: index_customer_wait_queues_on_restaurant_id_and_status; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_customer_wait_queues_on_restaurant_id_and_status ON public.customer_wait_queues USING btree (restaurant_id, status);
+
+
+--
+-- Name: index_customer_wait_queues_on_tablesetting_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_customer_wait_queues_on_tablesetting_id ON public.customer_wait_queues USING btree (tablesetting_id);
+
+
+--
 -- Name: index_demo_bookings_on_conversion_status; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -7562,6 +7715,13 @@ CREATE INDEX index_demo_bookings_on_created_at ON public.demo_bookings USING btr
 --
 
 CREATE INDEX index_demo_bookings_on_email ON public.demo_bookings USING btree (email);
+
+
+--
+-- Name: index_dining_patterns_on_restaurant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_dining_patterns_on_restaurant_id ON public.dining_patterns USING btree (restaurant_id);
 
 
 --
@@ -8454,6 +8614,13 @@ CREATE INDEX index_menuitemlocales_on_menuitem_locale_status ON public.menuiteml
 
 
 --
+-- Name: index_menuitemlocales_on_menuitem_lower_locale; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_menuitemlocales_on_menuitem_lower_locale ON public.menuitemlocales USING btree (menuitem_id, lower((locale)::text));
+
+
+--
 -- Name: index_menuitems_on_alcohol_classification; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -8521,6 +8688,13 @@ CREATE INDEX index_menuitems_on_menusection_status ON public.menuitems USING btr
 --
 
 CREATE INDEX index_menuitems_on_section_and_carrier ON public.menuitems USING btree (menusection_id, tasting_carrier);
+
+
+--
+-- Name: index_menuitems_on_section_itemtype_status; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_menuitems_on_section_itemtype_status ON public.menuitems USING btree (menusection_id, itemtype, status) WHERE (archived = false);
 
 
 --
@@ -9112,6 +9286,13 @@ CREATE INDEX index_ordractions_on_ordr_id ON public.ordractions USING btree (ord
 
 
 --
+-- Name: index_ordractions_on_ordr_id_action; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ordractions_on_ordr_id_action ON public.ordractions USING btree (ordr_id, action);
+
+
+--
 -- Name: index_ordractions_on_ordritem_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -9186,6 +9367,13 @@ CREATE INDEX index_ordritems_on_ordr_id ON public.ordritems USING btree (ordr_id
 --
 
 CREATE UNIQUE INDEX index_ordritems_on_ordr_id_and_line_key ON public.ordritems USING btree (ordr_id, line_key);
+
+
+--
+-- Name: index_ordritems_on_ordr_id_menuitem_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ordritems_on_ordr_id_menuitem_id ON public.ordritems USING btree (ordr_id, menuitem_id);
 
 
 --
@@ -9354,6 +9542,13 @@ CREATE INDEX index_ordrs_on_menu_id ON public.ordrs USING btree (menu_id);
 --
 
 CREATE INDEX index_ordrs_on_menu_table_status ON public.ordrs USING btree (menu_id, tablesetting_id, status);
+
+
+--
+-- Name: index_ordrs_on_orderedAt; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "index_ordrs_on_orderedAt" ON public.ordrs USING btree ("orderedAt");
 
 
 --
@@ -9973,6 +10168,13 @@ CREATE INDEX index_restaurantlocales_on_restaurant_locale ON public.restaurantlo
 
 
 --
+-- Name: index_restaurantlocales_on_restaurant_lower_locale; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_restaurantlocales_on_restaurant_lower_locale ON public.restaurantlocales USING btree (restaurant_id, lower((locale)::text));
+
+
+--
 -- Name: index_restaurantlocales_on_restaurant_status_default; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -10026,6 +10228,13 @@ CREATE INDEX index_restaurants_on_menus_count ON public.restaurants USING btree 
 --
 
 CREATE INDEX index_restaurants_on_preview_published_at ON public.restaurants USING btree (preview_published_at);
+
+
+--
+-- Name: index_restaurants_on_status; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_restaurants_on_status ON public.restaurants USING btree (status);
 
 
 --
@@ -10669,6 +10878,14 @@ ALTER TABLE ONLY public.menusectionlocales
 
 
 --
+-- Name: dining_patterns fk_rails_3937b277bf; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dining_patterns
+    ADD CONSTRAINT fk_rails_3937b277bf FOREIGN KEY (restaurant_id) REFERENCES public.restaurants(id);
+
+
+--
 -- Name: payment_profiles fk_rails_3b1e3db4e4; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -10953,7 +11170,7 @@ ALTER TABLE ONLY public.ingredients
 --
 
 ALTER TABLE ONLY public.jwt_token_usage_logs
-    ADD CONSTRAINT fk_rails_6ec5557375 FOREIGN KEY (jwt_token_id) REFERENCES public.admin_jwt_tokens(id);
+    ADD CONSTRAINT fk_rails_6ec5557375 FOREIGN KEY (jwt_token_id) REFERENCES public.admin_jwt_tokens(id) ON DELETE CASCADE;
 
 
 --
@@ -11613,6 +11830,14 @@ ALTER TABLE ONLY public.menuavailabilities
 
 
 --
+-- Name: customer_wait_queues fk_rails_cacff325a9; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.customer_wait_queues
+    ADD CONSTRAINT fk_rails_cacff325a9 FOREIGN KEY (restaurant_id) REFERENCES public.restaurants(id);
+
+
+--
 -- Name: dining_sessions fk_rails_cc65ddb4b6; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -11907,6 +12132,10 @@ ALTER TABLE ONLY public.voice_commands
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260330125235'),
+('20260329222214'),
+('20260329220244'),
+('20260329220235'),
 ('20260329200003'),
 ('20260329200002'),
 ('20260329200001'),

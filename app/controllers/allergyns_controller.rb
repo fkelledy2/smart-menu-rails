@@ -222,7 +222,8 @@ class AllergynsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_allergyn
-    @allergyn = Allergyn.find(params[:id])
+    @allergyn = Allergyn.find_by(id: params[:id])
+    head :not_found unless @allergyn
   end
 
   # Only allow a list of trusted parameters through.

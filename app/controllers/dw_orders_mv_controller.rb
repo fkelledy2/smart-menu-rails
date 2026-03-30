@@ -45,5 +45,7 @@ class DwOrdersMvController < ApplicationController
 
   def set_dw_order_mv
     @dw_order_mv = DwOrdersMv.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    head :not_found
   end
 end

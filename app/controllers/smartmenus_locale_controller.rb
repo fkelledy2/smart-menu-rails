@@ -15,6 +15,11 @@ class SmartmenusLocaleController < ApplicationController
       ],
     ).first
 
+    unless @smartmenu&.menu
+      head :not_found
+      return
+    end
+
     locale = params[:locale]
     # Render all menuitems as partials and return a hash of dom_id => html
     menuitems = @smartmenu.menu.menuitems

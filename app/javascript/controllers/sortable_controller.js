@@ -99,8 +99,6 @@ export default class extends Controller {
     if (isTbody) options.draggable = 'tr';
 
     this.sortable = new window.Sortable(this.element, options);
-
-    console.log('[Sortable] Connected', this.handleValue, this.urlValue);
   }
 
   disconnect() {
@@ -117,14 +115,6 @@ export default class extends Controller {
       return;
     }
 
-    console.log('Sortable onEnd event', {
-      oldIndex: event?.oldIndex,
-      newIndex: event?.newIndex,
-      from: event?.from,
-      to: event?.to,
-      item: event?.item,
-    });
-
     // Get all items in new order
     const items = Array.from(this.element.children);
     const order = items.map((item, index) => ({
@@ -140,20 +130,12 @@ export default class extends Controller {
       return;
     }
 
-    console.log('New order:', order);
-
     // Auto-save the new order
     await this.saveOrder(order);
   }
 
   async saveOrder(order) {
     try {
-      console.log('Sortable PATCH (reorder) begin', {
-        url: this.urlValue,
-        csrfPresent: Boolean(this.csrfToken()),
-        order,
-      });
-
       const response = await fetch(this.urlValue, {
         method: 'PATCH',
         headers: {
@@ -177,14 +159,6 @@ export default class extends Controller {
           rawText,
         });
       }
-
-      console.log('Sortable PATCH (reorder) response', {
-        status: response.status,
-        ok: response.ok,
-        contentType,
-        data,
-        rawText,
-      });
 
       if (response.ok) {
         this.showSuccess();

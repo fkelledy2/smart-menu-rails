@@ -38,7 +38,6 @@ export default class extends Controller {
     this._handleKeyDown = this._onKeyDown.bind(this);
     document.addEventListener('keydown', this._handleKeyDown);
 
-    console.log('Auto-save connected', this.urlValue);
   }
 
   disconnect() {
@@ -106,7 +105,6 @@ export default class extends Controller {
   async save() {
     if (this.saving) return;
 
-    console.log('[AutoSave] Saving changes...');
     this.saving = true;
     this.showSaving();
 
@@ -125,7 +123,6 @@ export default class extends Controller {
 
       if (response.ok) {
         const data = await response.json();
-        console.log('[AutoSave] ✓ Saved successfully');
         this.showSaved();
         this.updateOnboardingGuidance(data);
         this.dispatch('saved', { detail: data });

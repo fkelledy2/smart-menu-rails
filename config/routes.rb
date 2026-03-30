@@ -293,6 +293,13 @@ Rails.application.routes.draw do
       get 'kitchen', to: 'kitchen_dashboard#index', as: :kitchen_dashboard
       get 'bar', to: 'bar_dashboard#index', as: :bar_dashboard
       get 'floorplan', to: 'floorplans#show', as: :floorplan
+
+      # Wait Time Estimation Dashboard
+      get  'wait_times',                              to: 'wait_times#show',             as: :wait_times
+      post 'wait_times/queue',                        to: 'wait_times#create_queue_entry', as: :wait_times_queue
+      patch 'wait_times/queue/:entry_id/seat',        to: 'wait_times#seat_queue_entry',  as: :seat_wait_times_queue_entry
+      patch 'wait_times/queue/:entry_id/no_show',     to: 'wait_times#no_show_queue_entry', as: :no_show_wait_times_queue_entry
+      patch 'wait_times/queue/:entry_id/cancel',      to: 'wait_times#cancel_queue_entry', as: :cancel_wait_times_queue_entry
       patch :archive, to: 'restaurants/lifecycle#archive'
       patch :restore, to: 'restaurants/lifecycle#restore'
       patch 'update_hours', to: 'restaurants/hours#update_hours'

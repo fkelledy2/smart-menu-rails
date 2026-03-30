@@ -285,7 +285,11 @@ class UserplansController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_userplan
-    @userplan = Userplan.find(params[:id])
+    @userplan = Userplan.find_by(id: params[:id])
+    unless @userplan
+      head :not_found
+      return
+    end
     @plans = Plan.display_order
   end
 

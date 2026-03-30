@@ -41,7 +41,8 @@ module Admin
     private
 
     def set_claim_request
-      @claim_request = RestaurantClaimRequest.find(params[:id])
+      @claim_request = RestaurantClaimRequest.find_by(id: params[:id])
+      head :not_found unless @claim_request
     end
 
     def require_super_admin!

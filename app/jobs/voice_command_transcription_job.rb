@@ -63,12 +63,13 @@ class VoiceCommandTranscriptionJob
       },
     )
   rescue StandardError => e
+    Rails.logger.error("[VoiceCommandTranscriptionJob] Failed vc_id=#{voice_command_id}: #{e.class}: #{e.message}")
     begin
       vc&.update!(status: :failed, error_message: "#{e.class}: #{e.message}")
     rescue StandardError
-      # ignore
+      # ignore — vc may have been deleted
     end
-    nil
+    raise # re-raise so Sidekiq retry logic applies
   end
 
   private

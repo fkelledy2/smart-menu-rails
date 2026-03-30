@@ -111,11 +111,13 @@ module Admin
 
     def set_restaurant
       rid = params[:id].presence || params[:restaurant_id]
-      @restaurant = Restaurant.find(rid)
+      @restaurant = Restaurant.find_by(id: rid)
+      head :not_found unless @restaurant
     end
 
     def set_flight
-      @flight = WhiskeyFlight.find(params[:flight_id])
+      @flight = WhiskeyFlight.find_by(id: params[:flight_id])
+      head :not_found unless @flight
     end
 
     def flight_params

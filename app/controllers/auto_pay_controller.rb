@@ -180,17 +180,24 @@ class AutoPayController < ApplicationController
   end
 
   def set_restaurant
-    @restaurant = Restaurant.find(params[:restaurant_id]) if params[:restaurant_id]
+    return unless params[:restaurant_id]
+
+    @restaurant = Restaurant.find_by(id: params[:restaurant_id])
+    head :not_found unless @restaurant
   end
 
   def set_ordr
-    @ordr = Ordr.find(params[:id])
+    @ordr = Ordr.find_by(id: params[:id])
+    unless @ordr
+      skip_authorization
+      render json: { ok: false, error: 'Order not found' }, status: :not_found
+      return
+    end
 
     return unless @restaurant && @ordr.restaurant_id != @restaurant.id
 
     skip_authorization
     render json: { ok: false, error: 'Order not found for restaurant' }, status: :not_found
-    nil
   end
 
   def auto_pay_enabled_for_restaurant?

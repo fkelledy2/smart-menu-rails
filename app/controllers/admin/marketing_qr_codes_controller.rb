@@ -107,7 +107,8 @@ module Admin
     private
 
     def set_qr_code
-      @qr_code = MarketingQrCode.find(params[:id])
+      @qr_code = MarketingQrCode.find_by(id: params[:id])
+      head :not_found unless @qr_code
     end
 
     def create_params

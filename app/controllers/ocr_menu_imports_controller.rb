@@ -53,7 +53,8 @@ class OcrMenuImportsController < ApplicationController
 
   # PATCH /restaurants/:restaurant_id/ocr_menu_imports/:id/set_section_price
   def set_section_price
-    section = @ocr_menu_import.ocr_menu_sections.find(params[:section_id])
+    section = @ocr_menu_import.ocr_menu_sections.find_by(id: params[:section_id])
+    return render json: { ok: false, error: 'Section not found' }, status: :not_found unless section
     price = BigDecimal(params[:price].to_s)
 
     if price.negative?
@@ -479,7 +480,14 @@ class OcrMenuImportsController < ApplicationController
   end
 
   def set_restaurant
-    @restaurant = Restaurant.find(params[:restaurant_id])
+    @restaurant = Restaurant.find_by(id: params[:restaurant_id])
+    unless @restaurant
+      respond_to do |format|
+        format.json { render json: { error: { code: 'not_found', message: 'Restaurant not found' } }, status: :not_found }
+        format.html { redirect_to root_path, alert: 'Restaurant not found' }
+      end
+      return
+    end
     authorize @restaurant, :show?
   rescue Pundit::NotAuthorizedError
     respond_to do |format|

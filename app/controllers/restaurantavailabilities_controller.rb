@@ -10,7 +10,14 @@ class RestaurantavailabilitiesController < ApplicationController
   # GET /restaurantavailabilities or /restaurantavailabilities.json
   def index
     if params[:restaurant_id]
-      @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
+      @futureParentRestaurant = Restaurant.find_by(id: params[:restaurant_id])
+      unless @futureParentRestaurant
+        respond_to do |format|
+          format.html { redirect_to root_path, alert: 'Restaurant not found.' }
+          format.json { head :not_found }
+        end
+        return
+      end
       @restaurantavailabilities = policy_scope(Restaurantavailability).where(restaurant: @futureParentRestaurant)
     else
       @restaurantavailabilities = policy_scope(Restaurantavailability)
@@ -26,7 +33,12 @@ class RestaurantavailabilitiesController < ApplicationController
   def new
     @restaurantavailability = Restaurantavailability.new
     if params[:restaurant_id]
-      @futureParentRestaurant = Restaurant.find(params[:restaurant_id])
+      @futureParentRestaurant = Restaurant.find_by(id: params[:restaurant_id])
+      unless @futureParentRestaurant
+        authorize @restaurantavailability
+        redirect_to root_path, alert: 'Restaurant not found.'
+        return
+      end
       @restaurantavailability.restaurant = @futureParentRestaurant
     end
     authorize @restaurantavailability
@@ -96,7 +108,13 @@ class RestaurantavailabilitiesController < ApplicationController
   end
 
   def set_restaurantavailability
-    @restaurantavailability = Restaurantavailability.find(params[:id])
+    @restaurantavailability = Restaurantavailability.find_by(id: params[:id])
+    return if @restaurantavailability
+
+    respond_to do |format|
+      format.html { redirect_to root_path, alert: 'Availability not found.' }
+      format.json { head :not_found }
+    end
   end
 
   # Only allow a list of trusted parameters through.

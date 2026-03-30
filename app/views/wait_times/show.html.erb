@@ -1,0 +1,140 @@
+<% content_for :title, "Wait Times — #{@restaurant.name}" %>
+
+<div class="container-fluid py-3"
+     data-controller="wait-time"
+     data-wait-time-restaurant-id-value="<%= @restaurant.id %>">
+
+  <%# Header %>
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+      <h4 class="mb-0 fw-bold">
+        <i class="bi bi-hourglass-split me-2 text-primary" aria-hidden="true"></i>
+        Wait Times
+      </h4>
+      <p class="text-muted small mb-0"><%= @restaurant.name %></p>
+    </div>
+    <div class="d-flex gap-2">
+      <%= link_to floorplan_restaurant_path(@restaurant), class: 'btn btn-sm btn-outline-secondary' do %>
+        <i class="bi bi-grid-fill me-1" aria-hidden="true"></i>Floorplan
+      <% end %>
+      <%= link_to kitchen_dashboard_restaurant_path(@restaurant), class: 'btn btn-sm btn-outline-secondary' do %>
+        <i class="bi bi-columns-gap me-1" aria-hidden="true"></i>Kitchen
+      <% end %>
+    </div>
+  </div>
+
+  <%# Flash messages %>
+  <div id="wait_queue_flash">
+    <% if notice %>
+      <div class="alert alert-success alert-dismissible fade show py-2" role="alert">
+        <%= notice %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    <% end %>
+    <% if alert %>
+      <div class="alert alert-danger alert-dismissible fade show py-2" role="alert">
+        <%= alert %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="row g-4">
+    <%# Left column: estimates + add to queue form %>
+    <div class="col-md-4">
+
+      <%# Wait Time Estimates Card %>
+      <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-transparent fw-semibold border-bottom">
+          <i class="bi bi-clock me-1 text-primary" aria-hidden="true"></i>
+          Current Wait Estimates
+          <span class="badge bg-secondary ms-2 small" data-wait-time-target="lastUpdated">
+            Updated just now
+          </span>
+        </div>
+        <div id="wait_time_estimates">
+          <%= render 'wait_times/estimates', estimates: @estimates %>
+        </div>
+      </div>
+
+      <%# Add to Queue Form %>
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-transparent fw-semibold border-bottom">
+          <i class="bi bi-person-plus me-1 text-success" aria-hidden="true"></i>
+          Add to Queue
+        </div>
+        <div class="card-body">
+          <%= form_with model: @new_entry,
+                        url: wait_times_queue_restaurant_path(@restaurant),
+                        local: true,
+                        class: 'needs-validation',
+                        novalidate: true do |f| %>
+
+            <% if @new_entry.errors.any? %>
+              <div class="alert alert-danger py-2">
+                <ul class="mb-0 ps-3">
+                  <% @new_entry.errors.full_messages.each do |msg| %>
+                    <li class="small"><%= msg %></li>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
+
+            <div class="mb-3">
+              <%= f.label :customer_name, 'Guest Name', class: 'form-label fw-medium' %>
+              <%= f.text_field :customer_name,
+                    class: "form-control #{'is-invalid' if @new_entry.errors[:customer_name].any?}",
+                    placeholder: 'e.g. Smith party',
+                    required: true,
+                    autocomplete: 'off' %>
+              <div class="invalid-feedback">Name is required.</div>
+            </div>
+
+            <div class="mb-3">
+              <%= f.label :party_size, 'Party Size', class: 'form-label fw-medium' %>
+              <%= f.number_field :party_size,
+                    class: "form-control #{'is-invalid' if @new_entry.errors[:party_size].any?}",
+                    min: 1, max: 50, placeholder: '2',
+                    required: true %>
+              <div class="invalid-feedback">Party size must be at least 1.</div>
+            </div>
+
+            <div class="mb-3">
+              <%= f.label :customer_phone, 'Phone (optional)', class: 'form-label fw-medium' %>
+              <%= f.telephone_field :customer_phone,
+                    class: 'form-control',
+                    placeholder: '+1 555 000 0000',
+                    autocomplete: 'tel' %>
+              <div class="form-text">Used for SMS notification when table is ready.</div>
+            </div>
+
+            <%= f.submit 'Add to Queue',
+                  class: 'btn btn-success w-100',
+                  data: { disable_with: 'Adding...' } %>
+          <% end %>
+        </div>
+      </div>
+
+    </div>
+
+    <%# Right column: queue list %>
+    <div class="col-md-8">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
+          <span class="fw-semibold">
+            <i class="bi bi-list-ol me-1 text-primary" aria-hidden="true"></i>
+            Current Queue
+          </span>
+          <span class="badge bg-primary rounded-pill" data-wait-time-target="queueCount">
+            <%= @queue.count %>
+          </span>
+        </div>
+
+        <div id="wait_queue_list">
+          <%= render 'wait_times/queue_list', queue: @queue, restaurant: @restaurant, tablesettings: @tablesettings %>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

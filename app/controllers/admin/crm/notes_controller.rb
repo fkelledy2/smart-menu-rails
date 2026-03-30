@@ -39,7 +39,9 @@ module Admin
       end
 
       def destroy
-        @note = @lead.crm_lead_notes.find(params[:id])
+        @note = @lead.crm_lead_notes.find_by(id: params[:id])
+        return head :not_found unless @note
+
         authorize @note
 
         @note.destroy!
@@ -61,7 +63,8 @@ module Admin
       private
 
       def set_lead
-        @lead = CrmLead.find(params[:lead_id])
+        @lead = CrmLead.find_by(id: params[:lead_id])
+        head :not_found unless @lead
       end
 
       def note_params

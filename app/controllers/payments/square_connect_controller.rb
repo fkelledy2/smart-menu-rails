@@ -98,7 +98,8 @@ class Payments::SquareConnectController < ApplicationController
   private
 
   def set_restaurant
-    @restaurant = Restaurant.find(params[:restaurant_id])
+    @restaurant = current_user.restaurants.find_by(id: params[:restaurant_id])
+    head :not_found unless @restaurant
   end
 
   def square_connect

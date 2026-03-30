@@ -41,6 +41,10 @@ export default class extends Controller {
     }
   }
 
+  disconnect() {
+    clearTimeout(this._statusTimeout);
+  }
+
   // Add card button clicked — show Stripe Elements
   async showAddCard(event) {
     event.preventDefault();

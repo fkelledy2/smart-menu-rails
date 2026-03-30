@@ -77,7 +77,13 @@ class TagsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_tag
-    @tag = Tag.find(params[:id])
+    @tag = Tag.find_by(id: params[:id])
+    return if @tag
+
+    respond_to do |format|
+      format.html { redirect_to tags_url, alert: 'Tag not found.' }
+      format.json { head :not_found }
+    end
   end
 
   # Only allow a list of trusted parameters through.

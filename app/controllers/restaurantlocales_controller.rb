@@ -32,7 +32,12 @@ class RestaurantlocalesController < ApplicationController
   def new
     @restaurantlocale = Restaurantlocale.new
     if params[:restaurant_id]
-      @restaurant = Restaurant.find(params[:restaurant_id])
+      @restaurant = Restaurant.find_by(id: params[:restaurant_id])
+      unless @restaurant
+        authorize @restaurantlocale
+        redirect_to root_path, alert: 'Restaurant not found.'
+        return
+      end
       @restaurantlocale.restaurant = @restaurant
     end
     authorize @restaurantlocale
@@ -117,7 +122,7 @@ class RestaurantlocalesController < ApplicationController
           ), status: :unprocessable_content
         end
         format.html { render :new, status: :unprocessable_content }
-        format.json { render json: @menu.errors, status: :unprocessable_content }
+        format.json { render json: @restaurantlocale.errors, status: :unprocessable_content }
       end
     end
   end
@@ -152,7 +157,7 @@ class RestaurantlocalesController < ApplicationController
       else
         format.turbo_stream { render :edit, status: :unprocessable_content }
         format.html { render :edit, status: :unprocessable_content }
-        format.json { render json: @menu.errors, status: :unprocessable_content }
+        format.json { render json: @restaurantlocale.errors, status: :unprocessable_content }
       end
     end
   end
@@ -183,7 +188,8 @@ class RestaurantlocalesController < ApplicationController
 
   # PATCH /restaurants/:restaurant_id/restaurantlocales/bulk_update
   def bulk_update
-    @restaurant = Restaurant.find(params[:restaurant_id])
+    @restaurant = Restaurant.find_by(id: params[:restaurant_id])
+    return head :not_found unless @restaurant
     restaurantlocales = policy_scope(Restaurantlocale).where(restaurant_id: @restaurant.id)
 
     ids = Array(params[:restaurantlocale_ids]).map(&:to_s).compact_blank
@@ -230,7 +236,8 @@ class RestaurantlocalesController < ApplicationController
 
   # PATCH /restaurants/:restaurant_id/restaurantlocales/reorder
   def reorder
-    @restaurant = Restaurant.find(params[:restaurant_id])
+    @restaurant = Restaurant.find_by(id: params[:restaurant_id])
+    return head :not_found unless @restaurant
     restaurantlocales = policy_scope(Restaurantlocale).where(restaurant_id: @restaurant.id)
 
     order = params[:order]
@@ -305,7 +312,13 @@ class RestaurantlocalesController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_restaurantlocale
-    @restaurantlocale = Restaurantlocale.find(params[:id])
+    @restaurantlocale = Restaurantlocale.find_by(id: params[:id])
+    return if @restaurantlocale
+
+    respond_to do |format|
+      format.html { redirect_to root_path, alert: 'Language not found.' }
+      format.json { head :not_found }
+    end
   end
 
   # Only allow a list of trusted parameters through.

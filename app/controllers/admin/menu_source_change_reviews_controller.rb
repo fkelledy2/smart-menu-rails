@@ -38,7 +38,8 @@ module Admin
     private
 
     def set_review
-      @review = MenuSourceChangeReview.find(params[:id])
+      @review = MenuSourceChangeReview.find_by(id: params[:id])
+      head :not_found unless @review
     end
 
     def require_super_admin!

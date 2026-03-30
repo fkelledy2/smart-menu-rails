@@ -1,0 +1,16 @@
+# RestaurantMenu records for shared menu cache invalidation tests.
+# shared_cache_menu is owned by restaurants(:one) and also attached to restaurants(:two).
+
+shared_cache_menu_owner:
+  restaurant: one
+  menu: shared_cache_menu
+  status: 1
+  availability_override_enabled: false
+  availability_state: 0
+
+shared_cache_menu_attached:
+  restaurant: two
+  menu: shared_cache_menu
+  status: 1
+  availability_override_enabled: false
+  availability_state: 0

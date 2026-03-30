@@ -379,7 +379,7 @@ class SmartmenusController < ApplicationController
 
     # Schema.org JSON-LD — cached per menu+restaurant update pair to avoid repeated
     # eager loads and serialization on every request.
-    schema_cache_key = "schema_org/v1/menu/#{@menu.id}/#{@menu.updated_at.to_i}-#{@restaurant.updated_at.to_i}"
+    schema_cache_key = "schema_org/v1/smartmenu/#{@smartmenu.id}/menu/#{@menu.id}/#{@menu.updated_at.to_i}-#{@restaurant.updated_at.to_i}"
     @schema_org_json_ld = Rails.cache.fetch(schema_cache_key, expires_in: 1.hour) do
       menusections = Menusection.where(menu_id: @menu.id, archived: false)
         .includes(menuitems: :allergyns)

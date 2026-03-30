@@ -15,11 +15,14 @@ class RestaurantRemovalRequestsController < ApplicationController
     @removal_request.source = :public_page
 
     if @removal_request.save
-      # Immediately unpublish the preview
-      @restaurant.update!(preview_enabled: false) if @restaurant.preview_enabled?
+      # Only unpublish the preview when the requestor is the verified owner.
+      # Anonymous submissions are queued for admin review — no immediate unpublish.
+      if user_signed_in? && current_user.restaurants.exists?(id: @restaurant.id)
+        @restaurant.update!(preview_enabled: false) if @restaurant.preview_enabled?
+      end
 
       redirect_to submitted_restaurant_removal_requests_path(@restaurant),
-                  notice: 'Your removal request has been received. The preview has been unpublished immediately.'
+                  notice: 'Your removal request has been received. Our team will review it shortly.'
     else
       render :new, status: :unprocessable_content
     end

@@ -85,7 +85,6 @@ export default class extends Controller {
     if (!splitPlan) {
       // Split plan was removed/cleared
       if (this.existingPlan) {
-        console.log('[SplitBill] Plan removed, refreshing UI');
         this.existingPlan = null;
         this.renderParticipants();
       }
@@ -100,7 +99,6 @@ export default class extends Controller {
       this.existingPlan.frozen !== splitPlan.frozen;
 
     if (planChanged) {
-      console.log('[SplitBill] Plan updated via WebSocket, refreshing UI');
       this.existingPlan = splitPlan;
 
       if (splitPlan.frozen) {
@@ -127,7 +125,6 @@ export default class extends Controller {
       }
 
       const responseText = await orderResponse.text();
-      console.log('[SplitBill] Order response:', responseText.substring(0, 200));
 
       let orderData;
       try {

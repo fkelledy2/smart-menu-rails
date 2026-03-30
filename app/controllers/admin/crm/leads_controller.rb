@@ -144,7 +144,8 @@ module Admin
       private
 
       def set_lead
-        @lead = CrmLead.find(params[:id])
+        @lead = CrmLead.find_by(id: params[:id])
+        head :not_found unless @lead
       end
 
       def lead_params

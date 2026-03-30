@@ -79,7 +79,13 @@ class IngredientsController < ApplicationController
   end
 
   def set_ingredient
-    @ingredient = Ingredient.find(params[:id])
+    @ingredient = Ingredient.find_by(id: params[:id])
+    return if @ingredient
+
+    respond_to do |format|
+      format.html { redirect_to restaurant_ingredients_path(@restaurant), alert: 'Ingredient not found.' }
+      format.json { head :not_found }
+    end
   end
 
   def ingredient_params

@@ -203,7 +203,9 @@ class RestaurantMenusController < ApplicationController
 
   # PATCH /restaurants/:restaurant_id/restaurant_menus/:id/availability
   def availability
-    rm = policy_scope(RestaurantMenu).where(restaurant_id: @restaurant.id).find(params[:id])
+    rm = policy_scope(RestaurantMenu).where(restaurant_id: @restaurant.id).find_by(id: params[:id])
+    return head :not_found unless rm
+
     authorize rm, :update?
 
     enabled = ActiveModel::Type::Boolean.new.cast(params[:availability_override_enabled])

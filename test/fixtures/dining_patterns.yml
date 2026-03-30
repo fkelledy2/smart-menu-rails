@@ -1,0 +1,37 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+party_of_2_monday_evening:
+  restaurant: one
+  party_size: 2
+  day_of_week: 1   # Monday
+  hour_of_day: 19  # 7pm
+  average_duration_minutes: 55.0
+  median_duration_minutes: 52.0
+  min_duration_minutes: 30.0
+  max_duration_minutes: 90.0
+  sample_count: 25
+  last_calculated_at: <%= 1.day.ago %>
+
+party_of_4_friday_evening:
+  restaurant: one
+  party_size: 4
+  day_of_week: 5   # Friday
+  hour_of_day: 20  # 8pm
+  average_duration_minutes: 75.0
+  median_duration_minutes: 70.0
+  min_duration_minutes: 45.0
+  max_duration_minutes: 120.0
+  sample_count: 40
+  last_calculated_at: <%= 1.day.ago %>
+
+party_of_2_monday_evening_low_sample:
+  restaurant: two
+  party_size: 2
+  day_of_week: 1
+  hour_of_day: 19
+  average_duration_minutes: 45.0
+  median_duration_minutes: 40.0
+  min_duration_minutes: 25.0
+  max_duration_minutes: 60.0
+  sample_count: 2
+  last_calculated_at: <%= 1.day.ago %>

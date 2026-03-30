@@ -34,10 +34,12 @@ export default class extends Controller {
   connect() {
     this.stream = null;
     this.capturedFile = null;
+    this._statusTimer = null;
   }
 
   disconnect() {
     this._stopStream();
+    clearTimeout(this._statusTimer);
   }
 
   // --- Public actions ---
@@ -206,8 +208,9 @@ export default class extends Controller {
     if (this.hasStatusTarget) {
       this.statusTarget.textContent = msg;
       this.statusTarget.classList.remove('d-none');
-      setTimeout(() => {
-        this.statusTarget.classList.add('d-none');
+      clearTimeout(this._statusTimer);
+      this._statusTimer = setTimeout(() => {
+        if (this.hasStatusTarget) this.statusTarget.classList.add('d-none');
       }, 5000);
     }
   }

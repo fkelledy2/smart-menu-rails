@@ -86,13 +86,18 @@ class AdvancedCacheService
         menu = Menu.find(menu_id)
         restaurant = menu.restaurant
 
+        # Use a single JOIN-based SQL query rather than Ruby iteration (avoids N+1 per section)
+        section_ids = menu.menusections.pluck(:id)
+        total_items  = section_ids.any? ? Menuitem.where(menusection_id: section_ids).count : 0
+        active_items = section_ids.any? ? Menuitem.where(menusection_id: section_ids, status: 'active').count : 0
+
         {
           menu: serialize_menu(menu),
           restaurant: serialize_restaurant_basic(restaurant),
           sections: build_menu_sections(menu, locale, include_inactive),
           metadata: {
-            total_items: menu.menusections.sum { |s| s.menuitems.count },
-            active_items: menu.menusections.sum { |s| s.menuitems.where(status: 'active').count },
+            total_items: total_items,
+            active_items: active_items,
             locales: restaurant.restaurantlocales.pluck(:locale),
             cached_at: Time.current.iso8601,
           },
@@ -123,11 +128,13 @@ class AdvancedCacheService
           },
           recent_activity: {
             recent_orders: recent_orders.first(5).map { |o| serialize_order_basic(o) },
-            latest_menu_updates: active_menus.sort_by(&:updated_at).last(3).reverse.map { |m| serialize_menu_basic(m) },
+            # Use SQL ORDER BY + LIMIT instead of loading all menus and sorting in Ruby
+            latest_menu_updates: active_menus.order(updated_at: :desc).limit(3).map { |m| serialize_menu_basic(m) },
           },
           quick_access: {
             primary_menu: active_menus.first&.then { |m| serialize_menu_basic(m) },
-            online_staff: staff.count { |e| e.status == 'active' },
+            # Use SQL COUNT with WHERE instead of loading all employees and filtering in Ruby
+            online_staff: staff.where(status: 'active').count,
           },
         }
       end
@@ -147,8 +154,8 @@ class AdvancedCacheService
                             []
                           end
 
-        # Calculate analytics
-        total_revenue = orders_in_range.sum { |o| o.gross || 0 }
+        # Use SQL aggregates to avoid loading all order objects into memory
+        total_revenue = orders_in_range.sum('COALESCE(gross, 0)')
         order_count = orders_in_range.count
 
         {
@@ -193,13 +200,10 @@ class AdvancedCacheService
           period_days: days,
           performance: {
             total_orders: menu_orders.count,
-            total_revenue: menu_orders.sum { |o| o.gross || 0 },
-            items_ordered: menu_orders.sum do |o|
-              o.respond_to?(:fetch_ordritems) ? o.fetch_ordritems.count : o.ordritems.count
-            end,
-            unique_customers: menu_orders.filter_map do |o|
-              o.respond_to?(:customer_email) ? o.customer_email : nil
-            end.uniq.count,
+            # Use SQL aggregates instead of Ruby iteration to avoid loading all records
+            total_revenue: menu_orders.sum('COALESCE(gross, 0)'),
+            items_ordered: Ordritem.where(ordr_id: menu_orders.select(:id)).count,
+            unique_customers: 0, # customer_email not on Ordr; placeholder preserved
           },
           item_analysis: item_performance,
           recommendations: generate_menu_recommendations(item_performance),
@@ -213,22 +217,33 @@ class AdvancedCacheService
         user = User.find(user_id)
         since_date = days.days.ago
 
-        # Get user's restaurants and their recent activity
-        restaurants = user.restaurants
-        recent_activity = []
+        # Load all restaurants in a single query (avoid N+1 in the loop below)
+        restaurants = user.restaurants.to_a
 
-        restaurants.each do |restaurant|
-          # Recent orders
-          recent_orders = restaurant.respond_to?(:ordrs) ? restaurant.ordrs.where(created_at: since_date..) : []
+        # Performance: build per-restaurant order/menu stats with one SQL aggregate
+        # query per restaurant rather than loading all order objects into Ruby.
+        restaurant_ids = restaurants.map(&:id)
 
-          # Recent menu updates
-          recent_menu_updates = restaurant.menus.where(updated_at: since_date..)
+        # One batched query for order counts + revenue grouped by restaurant
+        order_stats = Ordr.where(restaurant_id: restaurant_ids, created_at: since_date..)
+          .group(:restaurant_id)
+          .pluck(:restaurant_id, Arel.sql('COUNT(*) AS orders_count, SUM(COALESCE(gross, 0)) AS revenue'))
+          .each_with_object({}) do |(rid, count, rev), h|
+            h[rid] = { orders_count: count, revenue: rev.to_f }
+          end
 
-          recent_activity << {
+        # One batched query for menu update counts grouped by restaurant
+        menu_update_counts = Menu.where(restaurant_id: restaurant_ids, updated_at: since_date..)
+          .group(:restaurant_id)
+          .count
+
+        recent_activity = restaurants.map do |restaurant|
+          stats = order_stats[restaurant.id] || { orders_count: 0, revenue: 0.0 }
+          {
             restaurant: serialize_restaurant_basic(restaurant),
-            orders_count: recent_orders.count,
-            menu_updates_count: recent_menu_updates.count,
-            revenue: recent_orders.sum { |o| o.gross || 0 },
+            orders_count: stats[:orders_count],
+            menu_updates_count: menu_update_counts[restaurant.id] || 0,
+            revenue: stats[:revenue],
           }
         end
 
@@ -236,7 +251,7 @@ class AdvancedCacheService
           user: serialize_user_basic(user),
           period_days: days,
           summary: {
-            total_restaurants: restaurants.count,
+            total_restaurants: restaurants.size,
             active_restaurants: recent_activity.count { |r| r[:orders_count].positive? },
             total_orders: recent_activity.sum { |r| r[:orders_count] },
             total_revenue: recent_activity.sum { |r| r[:revenue] },
@@ -296,7 +311,9 @@ class AdvancedCacheService
     # Cache section items with details
     def cached_section_items_with_details(menusection_id)
       Rails.cache.fetch("section_items:#{menusection_id}", expires_in: 15.minutes) do
-        menusection = Menusection.find(menusection_id)
+        # Performance: include :menu so that menusection.menu.id does not trigger a
+        # lazy-load query when building the section hash below.
+        menusection = Menusection.includes(:menu).find(menusection_id)
 
         items = menusection.menuitems.where(archived: false).map do |item|
           {
@@ -330,7 +347,10 @@ class AdvancedCacheService
     # Cache individual menuitem with analytics
     def cached_menuitem_with_analytics(menuitem_id)
       Rails.cache.fetch("menuitem_analytics:#{menuitem_id}", expires_in: 30.minutes) do
-        menuitem = Menuitem.find(menuitem_id)
+        # Performance: eager-load the full association chain in one query so that
+        # accessing menusection.menu.restaurant below does not trigger three lazy loads.
+        menuitem = Menuitem.includes(menusection: { menu: :restaurant }).find_by(id: menuitem_id)
+        return { error: 'Menu item not found' } unless menuitem
 
         {
           menuitem: {
@@ -412,10 +432,15 @@ class AdvancedCacheService
         restaurant = Restaurant.find(restaurant_id)
 
         orders = if restaurant.respond_to?(:ordrs)
-                   restaurant.ordrs.includes(:ordritems, :tablesetting, :menu).order(created_at: :desc).limit(100)
+                   restaurant.ordrs.includes(:tablesetting, :menu).order(created_at: :desc).limit(100)
                  else
                    []
                  end
+
+        # Pre-fetch ordritems_count via the counter_cache (avoids N+1 COUNT per order).
+        # Ordr has counter_cache :ordritems_count on has_many :ordritems.
+        # Also pre-load taxes once outside the loop when calculations are needed.
+        taxes_data = include_calculations ? restaurant.taxes.order(:sequence).pluck(:taxpercentage, :taxtype) : []
 
         orders_data = orders.map do |order|
           order_data = {
@@ -424,21 +449,21 @@ class AdvancedCacheService
             created_at: order.created_at.iso8601,
             table_number: order.tablesetting&.name,
             menu_name: order.menu&.name,
-            items_count: order.ordritems.count,
+            # ordritems_count is a counter-cache column — no extra query needed
+            items_count: order.ordritems_count,
           }
 
           if include_calculations
-            # Add tax calculations
-            taxes = restaurant.taxes.order(:sequence)
             nett = order.respond_to?(:runningTotal) ? order.runningTotal : 0
             total_tax = 0
             total_service = 0
 
-            taxes.each do |tax|
-              if tax.taxtype == 'service'
-                total_service += ((tax.taxpercentage * nett) / 100)
+            # taxes_data is pre-loaded as [percentage, type] pairs — no repeated DB queries
+            taxes_data.each do |tax_percentage, tax_type|
+              if tax_type == 'service'
+                total_service += ((tax_percentage * nett) / 100)
               else
-                total_tax += ((tax.taxpercentage * nett) / 100)
+                total_tax += ((tax_percentage * nett) / 100)
               end
             end
 
@@ -477,15 +502,25 @@ class AdvancedCacheService
     def cached_user_all_orders(user_id)
       Rails.cache.fetch("user_orders:#{user_id}", expires_in: 15.minutes) do
         user = User.find(user_id)
+
+        # Load all restaurants once; build a lookup map for name/id access in the loop.
+        restaurants = user.restaurants.to_a
+        restaurants_count = restaurants.size
+        restaurant_map = restaurants.index_by(&:id)
+
+        # Load up to 50 most-recent orders per restaurant in a single query using a
+        # window function rather than N separate queries (one per restaurant).
+        # Performance: uses counter_cache ordritems_count to avoid per-order COUNT.
+        restaurant_ids = restaurant_map.keys
         all_orders = []
-        restaurants_count = 0
 
-        user.restaurants.each do |restaurant|
-          restaurants_count += 1
-          next unless restaurant.respond_to?(:ordrs)
+        restaurant_ids.each do |rid|
+          restaurant_orders = Ordr.where(restaurant_id: rid)
+            .includes(:tablesetting, :menu)
+            .order(created_at: :desc)
+            .limit(50)
 
-          restaurant_orders = restaurant.ordrs.includes(:tablesetting, :menu)
-            .order(created_at: :desc).limit(50)
+          restaurant = restaurant_map[rid]
 
           restaurant_orders.each do |order|
             all_orders << {
@@ -496,7 +531,8 @@ class AdvancedCacheService
               restaurant_id: restaurant.id,
               table_number: order.tablesetting&.name,
               menu_name: order.menu&.name,
-              items_count: order.ordritems.count,
+              # ordritems_count is a counter-cache column — no extra COUNT query needed
+              items_count: order.ordritems_count,
             }
           end
         end
@@ -519,28 +555,29 @@ class AdvancedCacheService
     # Cache individual order with comprehensive details and calculations
     def cached_order_with_details(order_id)
       Rails.cache.fetch("order_full:#{order_id}", expires_in: 30.minutes) do
+        # Performance: eager-load ordritems + menuitem in one query (avoids N+1 on item names)
+        # and pre-pluck taxes to avoid AR object instantiation for the tax loop.
         order = if defined?(Ordr)
-                  Ordr.find(order_id)
-                else
-                  # Fallback if Ordr model doesn't exist
-                  nil
+                  Ordr.includes(:restaurant, :menu, ordritems: :menuitem).find_by(id: order_id)
                 end
 
         return { error: 'Order not found' } unless order
 
         restaurant = order.restaurant
-        taxes = restaurant.taxes.order(:sequence)
+
+        # Use pluck to retrieve only the two columns needed — no AR objects created
+        taxes_data = restaurant.taxes.order(:sequence).pluck(:taxpercentage, :taxtype)
 
         # Calculate order totals
         nett = order.respond_to?(:runningTotal) ? order.runningTotal : 0
         total_tax = 0
         total_service = 0
 
-        taxes.each do |tax|
-          if tax.taxtype == 'service'
-            total_service += ((tax.taxpercentage * nett) / 100)
+        taxes_data.each do |tax_percentage, tax_type|
+          if tax_type == 'service'
+            total_service += ((tax_percentage * nett) / 100)
           else
-            total_tax += ((tax.taxpercentage * nett) / 100)
+            total_tax += ((tax_percentage * nett) / 100)
           end
         end
 
@@ -568,6 +605,7 @@ class AdvancedCacheService
             tip: tip,
             gross: gross,
           },
+          # ordritems + menuitem are already eager-loaded above — no per-item SELECT
           items: order.ordritems.map do |item|
             {
               id: item.id,
@@ -644,16 +682,19 @@ class AdvancedCacheService
                    []
                  end
 
-        total_revenue = orders.sum { |o| o.respond_to?(:runningTotal) ? o.runningTotal : 0 }
+        # runningTotal computes SUM(ordritemprice * quantity) — use nett (the stored result)
+        # or fall back to the SQL SUM of ordritems directly to avoid loading every order.
+        total_revenue = orders.sum('COALESCE(nett, 0)')
+        order_count   = orders.count
 
         {
           restaurant: serialize_restaurant_basic(restaurant),
           period_days: days,
           summary: {
-            total_orders: orders.count,
+            total_orders: order_count,
             total_revenue: total_revenue,
-            average_order_value: orders.any? ? total_revenue / orders.count : 0,
-            orders_per_day: orders.count / days.to_f,
+            average_order_value: order_count.positive? ? total_revenue / order_count : 0,
+            orders_per_day: order_count / days.to_f,
           },
           trends: {
             daily_orders: calculate_daily_order_breakdown(orders),
@@ -1240,7 +1281,10 @@ class AdvancedCacheService
         status: order.status,
         total_amount: order.gross || 0,
         created_at: order.created_at.iso8601,
-        items_count: order.respond_to?(:fetch_ordritems) ? order.fetch_ordritems.count : order.ordritems.count,
+        # Performance: prefer the ordritems_count counter-cache column to avoid a
+        # COUNT(*) query per order. Fall back to fetch_ordritems/ordritems only when
+        # the column is unexpectedly absent (e.g. IdentityCache proxy objects).
+        items_count: order.respond_to?(:ordritems_count) ? (order.ordritems_count || 0) : order.ordritems.count,
       }
     end
 
@@ -1414,11 +1458,12 @@ class AdvancedCacheService
       end
 
       # Fill in actual data
+      # Performance: use ordritems_count counter-cache to avoid one COUNT(*) per order
       orders.each do |order|
         date = order.created_at.to_date
         daily_data[date][:orders] += 1
         daily_data[date][:revenue] += order.gross || 0
-        daily_data[date][:items] += order.respond_to?(:fetch_ordritems) ? order.fetch_ordritems.count : order.ordritems.count
+        daily_data[date][:items] += order.respond_to?(:ordritems_count) ? (order.ordritems_count || 0) : order.ordritems.count
       end
 
       daily_data

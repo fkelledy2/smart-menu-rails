@@ -11,7 +11,8 @@ class PlansController < ApplicationController
   end
 
   def show
-    @plan = Plan.find(params[:id])
+    @plan = Plan.find_by(id: params[:id])
+    return head :not_found unless @plan
 
     respond_to do |format|
       format.html # Plan detail page

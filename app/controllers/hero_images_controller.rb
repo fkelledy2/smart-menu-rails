@@ -93,6 +93,8 @@ class HeroImagesController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_hero_image
     @hero_image = HeroImage.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    head :not_found
   end
 
   # Only allow a list of trusted parameters through.

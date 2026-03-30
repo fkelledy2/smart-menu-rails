@@ -213,11 +213,9 @@ export default class extends Controller {
     this._onSplitBillClick = (e) => {
       const btn = e.target.closest('#cartSplitBill');
       if (!btn) return;
-      console.log('[State] Split Bill clicked');
       e.preventDefault();
       const splitSection = document.getElementById('cartSplitBillSection');
       const paySection = document.getElementById('cartPaySection');
-      console.log('[State] Split section found:', !!splitSection);
       if (splitSection) {
         splitSection.style.display = 'block';
       }

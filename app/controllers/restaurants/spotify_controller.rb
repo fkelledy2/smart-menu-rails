@@ -72,14 +72,26 @@ module Restaurants
       }
 
       if session[:spotify_restaurant_id]
-        @restaurant = Restaurant.find(session[:spotify_restaurant_id])
+        @restaurant = Restaurant.find_by(id: session[:spotify_restaurant_id])
+        unless @restaurant
+          Rails.logger.warn "[SpotifyController] Restaurant not found for id=#{session[:spotify_restaurant_id]}"
+          redirect_to root_url, alert: 'Restaurant not found.'
+          return
+        end
+
         @restaurant.spotifyaccesstoken = auth_data['access_token']
         @restaurant.spotifyrefreshtoken = auth_data['refresh_token']
         @restaurant.spotifyuserid = user_data['id']
         @restaurant.save
 
         Rails.logger.info "Spotify connected for restaurant: #{@restaurant.name} (ID: #{@restaurant.id})"
-        return_path = session.delete(:spotify_return_to) || edit_restaurant_path(@restaurant, section: 'jukebox')
+        # Validate the stored return_to path to prevent open redirect via the session value.
+        stored_path = session.delete(:spotify_return_to)
+        return_path = if stored_path.present? && stored_path.start_with?('/')
+                        stored_path
+                      else
+                        edit_restaurant_path(@restaurant, section: 'jukebox')
+                      end
         redirect_to return_path
       else
         redirect_to root_url
