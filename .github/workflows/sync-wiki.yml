@@ -1,0 +1,54 @@
+name: Sync Docs to GitHub Wiki
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/**'
+  workflow_dispatch: # allow manual trigger
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Clone wiki repo
+        run: |
+          git clone \
+            "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.wiki.git" \
+            wiki
+
+      - name: Generate Home.md index
+        run: |
+          node .github/scripts/generate-wiki-home.js > wiki/Home.md
+
+      - name: Sync docs into wiki
+        run: |
+          rsync -av --delete \
+            --exclude='.DS_Store' \
+            --exclude='_archive/' \
+            --exclude='*.swp' \
+            docs/ wiki/
+
+          # Remove any .DS_Store files that snuck in
+          find wiki -name '.DS_Store' -delete
+
+      - name: Commit and push wiki
+        working-directory: wiki
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          # Only commit if there are actual changes
+          if git diff --staged --quiet; then
+            echo "No wiki changes to push."
+          else
+            git commit -m "docs: sync from main @ ${{ github.sha }}"
+            git push
+          fi
