@@ -43,7 +43,7 @@ To import ingredients in bulk, download the CSV template from the Ingredients pa
 
 ### Step 3 — View Your Profit Margin Dashboard
 
-Go to **Reports** > **Profit Margins** (or `/restaurants/[id]/profit_margins`).
+In the restaurant sidebar, click **Profitability** > **Overview** (or navigate directly to `/restaurants/[id]/profit_margins`).
 
 The dashboard shows:
 
@@ -78,7 +78,7 @@ Menu Engineering classifies every item into one of four strategic groups based o
 
 To run the analysis:
 
-1. Go to **Reports** > **Menu Optimisations** (or `/restaurants/[id]/menu_optimizations`).
+1. In the restaurant sidebar, click **Profitability** > **Menu Optimisations** (or navigate to `/restaurants/[id]/menu_optimizations`).
 2. Click **Run Analysis**.
 3. Review the matrix showing where each item falls.
 4. Use the recommendations panel to see suggested actions for each category.
@@ -131,8 +131,6 @@ You can apply approved recommendations in two ways:
 - Automatic mode price adjustments require a human review of the audit trail to catch any unexpected changes.
 - The bundling analysis is based on order history. New restaurants with limited order data may not see meaningful bundle suggestions until more orders have been placed.
 - Margin targets are set in percentage terms. There is no fixed-dollar-amount target option in v1.
-
-<!-- TODO: clarify — the requirement document had corruption in sections covering Phase 4 automatic mode configuration. Verify in the UI whether auto-apply has a configurable approval threshold, or whether it is a simple on/off toggle. -->
 
 ## Frequently Asked Questions
 

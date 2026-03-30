@@ -2,6 +2,8 @@
 
 ## Architecture Decisions
 - [arch_crm_admin_only.md](arch_crm_admin_only.md) — CRM is admin-namespace only; no tenant scoping
+- [arch_ordritem_fulfillment_status.md](arch_ordritem_fulfillment_status.md) — Ordritem has two separate enums: `status` (commercial lifecycle) and `fulfillment_status` (kitchen/bar tracking); never conflate them
+- [arch_ordr_channel_customer_broadcast.md](arch_ordr_channel_customer_broadcast.md) — Customer realtime broadcasts use existing `ordr_#{id}_channel` via OrdrChannel; OrdrChannel has no auth guard (latent risk, tracked in #34 open questions)
 
 ## Patterns
 - [pattern_webhook_verification.md](pattern_webhook_verification.md) — Webhook verification service pattern used across CRM and Strikepay

@@ -39,10 +39,17 @@ export default class extends Controller {
     if (this.hasBillSectionTarget) {
       this._recordBillView();
     }
+
+    // Listen for server-side auto_pay_disarmed broadcast (e.g. order total changed)
+    this._boundOnDisarmed = this._onDisarmed.bind(this);
+    this.element.addEventListener('auto_pay:disarmed', this._boundOnDisarmed);
   }
 
   disconnect() {
     clearTimeout(this._statusTimeout);
+    if (this._boundOnDisarmed) {
+      this.element.removeEventListener('auto_pay:disarmed', this._boundOnDisarmed);
+    }
   }
 
   // Add card button clicked — show Stripe Elements
@@ -155,6 +162,16 @@ export default class extends Controller {
     } finally {
       this._setLoading(false);
     }
+  }
+
+  // Called when the server broadcasts auto_pay_disarmed (e.g. order total changed)
+  _onDisarmed() {
+    this.autoPayEnabledValue = false;
+    this._updateUI();
+    this._showStatus(
+      'Auto-pay has been turned off because your order total changed. Please review your total and re-enable if you wish.',
+      'warning'
+    );
   }
 
   // Private

@@ -59,7 +59,6 @@ export default class extends Controller {
   }
 
   handleNoteCreated(data) {
-
     // Hide empty state if it exists
     if (this.hasEmptyStateTarget) {
       this.emptyStateTarget.style.display = 'none';
@@ -90,7 +89,6 @@ export default class extends Controller {
   }
 
   handleNoteUpdated(data) {
-
     const existingNote = this.element.querySelector(`[data-note-id="${data.note_id}"]`);
     if (existingNote && data.note_html) {
       existingNote.outerHTML = data.note_html;
@@ -107,7 +105,6 @@ export default class extends Controller {
   }
 
   handleNoteDeleted(data) {
-
     const noteToRemove = this.element.querySelector(`[data-note-id="${data.note_id}"]`);
     if (noteToRemove) {
       // Fade out animation

@@ -147,6 +147,14 @@
       <span>Overview</span>
       <%= sa_badge %>
     <% end %>
+
+    <%= link_to restaurant_menu_optimizations_path(restaurant),
+        class: "sidebar-link #{'active' if current_section == 'menu_optimisations'} #{disabled_class_for('profitability', onboarding_next)}",
+        data: { testid: 'sidebar-menu-optimisations-link', turbo_frame: 'restaurant_content', turbo_action: 'advance', action: 'click->sidebar#handleLinkClick', **disabled_data_attrs('profitability', onboarding_next) } do %>
+      <i class="bi bi-stars"></i>
+      <span>Menu Optimisations</span>
+      <%= sa_badge %>
+    <% end %>
   </div>
 
   <!-- OPERATIONS (Tables + Staff) — collapsible -->
@@ -207,6 +215,32 @@
       <span><%= t('.bar_dashboard') %></span>
       <%= sa_badge %>
       <i class="bi bi-box-arrow-up-right ms-auto"></i>
+    <% end %>
+
+    <% if Flipper.enabled?(:floorplan_dashboard, restaurant) %>
+      <%= link_to floorplan_restaurant_path(restaurant),
+          class: 'sidebar-link',
+          target: '_blank',
+          rel: 'noopener',
+          data: { testid: 'sidebar-floorplan-link', turbo: false } do %>
+        <i class="bi bi-grid-fill"></i>
+        <span><%= t('.floorplan', default: 'Floorplan') %></span>
+        <%= sa_badge %>
+        <i class="bi bi-box-arrow-up-right ms-auto"></i>
+      <% end %>
+    <% end %>
+
+    <% if Flipper.enabled?(:wait_time_estimation, restaurant) %>
+      <%= link_to wait_times_restaurant_path(restaurant),
+          class: 'sidebar-link',
+          target: '_blank',
+          rel: 'noopener',
+          data: { testid: 'sidebar-wait-times-link', turbo: false } do %>
+        <i class="bi bi-hourglass-split"></i>
+        <span><%= t('.wait_times', default: 'Wait Times') %></span>
+        <%= sa_badge %>
+        <i class="bi bi-box-arrow-up-right ms-auto"></i>
+      <% end %>
     <% end %>
 
     <%= link_to edit_restaurant_path(restaurant, section: 'taxes_and_tips'),

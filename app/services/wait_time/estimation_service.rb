@@ -32,6 +32,16 @@ module WaitTime
       end
     end
 
+    # Returns true when there is insufficient historical data and estimates
+    # are falling back to the DEFAULT_WAIT_MINUTES constant.
+    def using_default_estimates?
+      !DiningPattern
+        .where(restaurant_id: @restaurant.id)
+        .exists?(sample_count: MIN_SAMPLE_THRESHOLD..)
+    rescue StandardError
+      true
+    end
+
     # Returns the estimated wait in minutes for a specific party size.
     # Returns 0 if a suitable table is already free.
     def estimate_for_party(party_size)

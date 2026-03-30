@@ -18,7 +18,7 @@ Restaurant staff and managers. Customers do not have access to this view.
 **Opening the dashboard**
 
 1. Sign in to your restaurant's staff interface.
-2. In the main navigation, click **Floorplan** (or navigate to `/restaurants/[your-restaurant-id]/floorplan`).
+2. In the restaurant sidebar, open the **Operations** section and click **Floorplan** (or navigate to `/restaurants/[your-restaurant-id]/floorplan`). The dashboard opens in a new tab.
 3. The dashboard loads all your tables. Tables with active orders display live status information.
 
 **Reading the table tiles**
@@ -54,7 +54,7 @@ A table tile is highlighted with a warning appearance when:
 - The order has been in "Preparing" or "Ready" status for more than 15 minutes
 - The order has been in "Bill Requested" status for more than 5 minutes
 
-These thresholds help you spot tables that may need attention before the customer becomes frustrated.
+These thresholds are hardcoded in v1 and cannot be changed. They help you spot tables that may need attention before the customer becomes frustrated.
 
 **Filtering the view**
 
@@ -75,7 +75,7 @@ You do not need to refresh the page. When any order changes status — for examp
 
 **Tablesetting** — the record in mellow.menu that represents a physical table in your restaurant. Tables must be created in **Settings** > **Tables** before they appear on the floorplan.
 
-**Attention threshold** — the configurable time limit (default: 15 minutes for preparing/ready, 5 minutes for bill requested) after which a table is highlighted to prompt staff action.
+**Attention threshold** — the fixed time limit (15 minutes for preparing/ready, 5 minutes for bill requested) after which a table is highlighted to prompt staff action. These thresholds are hardcoded in v1 and cannot be configured per restaurant.
 
 **Participant count** — the number of guests linked to the order, based on who has joined the dining session at that table.
 

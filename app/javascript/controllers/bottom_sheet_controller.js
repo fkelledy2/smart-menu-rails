@@ -52,7 +52,6 @@ export default class extends Controller {
     };
     window.visualViewport?.addEventListener('resize', this._onViewportResize);
     window.addEventListener('resize', this._onViewportResize);
-
   }
 
   disconnect() {

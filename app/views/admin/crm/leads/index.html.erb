@@ -14,7 +14,12 @@
         <% end %>
       </p>
     </div>
-    <%= link_to 'New Lead', new_admin_crm_lead_path, class: 'btn btn-primary' %>
+    <div class="d-flex gap-2">
+      <%= link_to admin_crm_leads_path, class: 'btn btn-outline-secondary', title: 'Refresh board' do %>
+        <i class="bi bi-arrow-clockwise me-1"></i>Refresh
+      <% end %>
+      <%= link_to 'New Lead', new_admin_crm_lead_path, class: 'btn btn-primary' %>
+    </div>
   </div>
 
   <div class="crm-kanban-board d-flex gap-3 overflow-auto pb-3" style="min-height: 70vh;">

@@ -1,86 +1,118 @@
-<div class="container mt-4">
-  <div class="row">
-    <div class="col-lg-8 offset-lg-2">
-      <div class="card">
-        <div class="card-header">
-          <h4><i class="bi bi-pencil"></i> Edit Order Note</h4>
+<%# Ordrnote edit — rendered inside a Bootstrap modal to match the add-note modal pattern. %>
+<div class="modal fade" id="editNoteModal" tabindex="-1" aria-labelledby="editNoteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <%= form_with model: [@restaurant, @order, @ordrnote], local: true, class: 'modal-form' do |form| %>
+        <div class="modal-header">
+          <h5 class="modal-title" id="editNoteModalLabel">
+            <i class="bi bi-pencil"></i> Edit Order Note
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="card-body">
-          <%= form_with model: [@restaurant, @order, @ordrnote], local: true do |form| %>
-            <div class="mb-3">
-              <%= form.label :category, class: "form-label fw-bold" %>
-              <%= form.select :category,
-                  options_for_select([
-                    ['🚨 Dietary Restrictions', 'dietary'],
-                    ['👨‍🍳 Preparation Instructions', 'preparation'],
-                    ['⏰ Timing Instructions', 'timing'],
-                    ['💬 Customer Service', 'customer_service'],
-                    ['🔧 Operational Notes', 'operational']
-                  ], @ordrnote.category),
-                  {},
-                  { class: "form-select", required: true } %>
-            </div>
 
-            <div class="mb-3">
-              <%= form.label :priority, class: "form-label fw-bold" %>
-              <%= form.select :priority,
-                  options_for_select([
-                    ['Low Priority', 'low'],
-                    ['Medium Priority', 'medium'],
-                    ['High Priority', 'high'],
-                    ['🚨 Urgent', 'urgent']
-                  ], @ordrnote.priority),
-                  {},
-                  { class: "form-select", required: true } %>
-            </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <%= form.label :category, class: 'form-label fw-bold' %>
+            <%= form.select :category,
+                options_for_select([
+                  ['🚨 Dietary Restrictions', 'dietary'],
+                  ['👨‍🍳 Preparation Instructions', 'preparation'],
+                  ['⏰ Timing Instructions', 'timing'],
+                  ['💬 Customer Service', 'customer_service'],
+                  ['🔧 Operational Notes', 'operational']
+                ], @ordrnote.category),
+                {},
+                { class: 'form-select', required: true } %>
+          </div>
 
-            <div class="mb-3">
-              <%= form.label :content, "Note Content", class: "form-label fw-bold" %>
-              <%= form.text_area :content,
-                  class: "form-control",
-                  rows: 4,
-                  maxlength: 500,
-                  required: true %>
-            </div>
+          <div class="mb-3">
+            <%= form.label :priority, class: 'form-label fw-bold' %>
+            <%= form.select :priority,
+                options_for_select([
+                  ['Low Priority', 'low'],
+                  ['Medium Priority', 'medium'],
+                  ['High Priority', 'high'],
+                  ['🚨 Urgent', 'urgent']
+                ], @ordrnote.priority),
+                {},
+                { class: 'form-select', required: true } %>
+          </div>
 
-            <div class="mb-3">
-              <label class="form-label fw-bold">Visibility</label>
-              <div class="row">
-                <div class="col-md-4">
-                  <div class="form-check">
-                    <%= form.check_box :visible_to_kitchen, class: "form-check-input" %>
-                    <%= form.label :visible_to_kitchen, "Kitchen", class: "form-check-label" %>
-                  </div>
+          <div class="mb-3" data-controller="char-counter">
+            <%= form.label :content, 'Note Content', class: 'form-label fw-bold' %>
+            <%= form.text_area :content,
+                class: 'form-control',
+                rows: 4,
+                maxlength: 500,
+                required: true,
+                data: { char_counter_target: 'input', action: 'input->char-counter#update' } %>
+            <div class="form-text">
+              <span data-char-counter-target="count"><%= @ordrnote.content&.length || 0 %></span>/500 characters
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-bold">Visibility</label>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-check">
+                  <%= form.check_box :visible_to_kitchen, class: 'form-check-input' %>
+                  <%= form.label :visible_to_kitchen, class: 'form-check-label' do %>
+                    <i class="bi bi-eye"></i> Kitchen
+                  <% end %>
                 </div>
-                <div class="col-md-4">
-                  <div class="form-check">
-                    <%= form.check_box :visible_to_servers, class: "form-check-input" %>
-                    <%= form.label :visible_to_servers, "Servers", class: "form-check-label" %>
-                  </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-check">
+                  <%= form.check_box :visible_to_servers, class: 'form-check-input' %>
+                  <%= form.label :visible_to_servers, class: 'form-check-label' do %>
+                    <i class="bi bi-eye"></i> Servers
+                  <% end %>
                 </div>
-                <div class="col-md-4">
-                  <div class="form-check">
-                    <%= form.check_box :visible_to_customers, class: "form-check-input" %>
-                    <%= form.label :visible_to_customers, "Customers", class: "form-check-label" %>
-                  </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-check">
+                  <%= form.check_box :visible_to_customers, class: 'form-check-input' %>
+                  <%= form.label :visible_to_customers, class: 'form-check-label' do %>
+                    <i class="bi bi-eye"></i> Customers
+                  <% end %>
                 </div>
               </div>
             </div>
+            <div class="form-text">Control who can see this note</div>
+          </div>
 
-            <div class="mb-3">
-              <%= form.label :expires_at, "Auto-Expire (Optional)", class: "form-label fw-bold" %>
-              <%= form.datetime_local_field :expires_at, 
-                  class: "form-control",
-                  min: Time.current.strftime("%Y-%m-%dT%H:%M") %>
-            </div>
-
-            <div class="d-flex justify-content-between">
-              <%= link_to "Cancel", restaurant_ordr_path(@restaurant, @order), class: "btn btn-secondary" %>
-              <%= form.submit "Update Note", class: "btn btn-primary" %>
-            </div>
-          <% end %>
+          <div class="mb-3">
+            <%= form.label :expires_at, 'Auto-Expire (Optional)', class: 'form-label fw-bold' %>
+            <%= form.datetime_local_field :expires_at,
+                class: 'form-control',
+                min: Time.current.strftime('%Y-%m-%dT%H:%M') %>
+            <div class="form-text">Note will automatically hide after this time</div>
+          </div>
         </div>
-      </div>
+
+        <div class="modal-footer">
+          <%= link_to 'Cancel', restaurant_ordr_path(@restaurant, @order), class: 'btn btn-secondary' %>
+          <%= form.submit 'Update Note', class: 'btn btn-primary' %>
+        </div>
+      <% end %>
     </div>
   </div>
 </div>
+
+<script>
+  (function () {
+    // Auto-open the modal when this partial is rendered (e.g. after a validation failure redirect)
+    document.addEventListener('turbo:load', function () {
+      var el = document.getElementById('editNoteModal');
+      if (el && typeof bootstrap !== 'undefined') {
+        bootstrap.Modal.getOrCreateInstance(el).show();
+      }
+    }, { once: true });
+    // Also trigger immediately if the DOM is already loaded
+    var el = document.getElementById('editNoteModal');
+    if (el && typeof bootstrap !== 'undefined') {
+      bootstrap.Modal.getOrCreateInstance(el).show();
+    }
+  })();
+</script>

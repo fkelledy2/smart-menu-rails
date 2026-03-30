@@ -182,7 +182,7 @@
 </div>
 
 <%# Menu Theme — own section/form outside menu_form_with to avoid nested <form> -%>
-<% if menu.smartmenu.present? %>
+<% if menu.smartmenu.present? && Flipper.enabled?(:smartmenu_theming, restaurant) %>
   <div class="mb-3 p-3">
     <h2 class="content-card-title">
       <i class="bi bi-palette"></i>
@@ -190,24 +190,12 @@
     </h2>
     <%= form_with url: smartmenu_path(menu.smartmenu.slug), method: :patch,
         data: { turbo: true, controller: 'toast', toast_message_value: t('common.flash.updated', resource: t('activerecord.models.smartmenu', default: 'Menu')) } do |sm_form| %>
-      <div class="features-grid" style="max-width: 400px;">
-        <div class="feature-card">
-          <div class="feature-card-icon" style="background: var(--color-gray-700);">
-            <i class="bi bi-palette"></i>
-          </div>
-          <div class="feature-card-content">
-            <p class="feature-card-description mb-0">
-              <%= t('smartmenus.theme_picker.hint', default: 'Choose a visual style for your customer-facing menu.') %>
-            </p>
-          </div>
-          <div class="feature-card-toggle">
-            <%= sm_form.select 'smartmenu[theme]',
-                Smartmenu::THEMES.map { |v| [t("smartmenus.themes.#{v}", default: v.capitalize), v] },
-                { selected: menu.smartmenu.theme },
-                class: 'form-select form-select-sm',
-                onchange: 'this.form.requestSubmit()' %>
-          </div>
-        </div>
+      <%= render 'smartmenus/theme_picker',
+          form: sm_form,
+          smartmenu: menu.smartmenu,
+          public_url: smartmenu_url(menu.smartmenu.slug) %>
+      <div class="mt-3">
+        <%= sm_form.submit t('common.save', default: 'Save'), class: 'btn btn-primary btn-sm' %>
       </div>
     <% end %>
   </div>

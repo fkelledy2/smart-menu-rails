@@ -117,4 +117,3 @@ application.register('crm-lead-detail', CrmLeadDetailController);
 application.register('theme-picker', ThemePickerController);
 application.register('menu-search', MenuSearchController);
 application.register('wait-time', WaitTimeController);
-

@@ -78,4 +78,4 @@ A: Their sessions are invalidated. They will need to re-scan the new code. Any i
 A: Yes, but the dining session is bound to a specific QR scan. The rate limits on ordering per session and per IP make large-scale remote ordering impractical. Full proximity verification (a code printed on the table itself) is coming in a future release.
 
 **Q: How do I know if my restaurant has QR security enabled?**
-A: If the QR codes you generate show a URL starting with `/t/` rather than `/smartmenus/`, QR security is active. You can also ask mellow.menu support to confirm the `qr_security_v1` flag status for your account.
+A: Go to **Settings** > **Tables**. If QR Security is active for your restaurant, a green "QR Security: Active" badge appears at the top of the Tables overview card. You can also check whether the QR codes you generate show a URL starting with `/t/` rather than `/smartmenus/`. Contact mellow.menu support to confirm or enable the `qr_security_v1` flag for your account.

@@ -12,8 +12,10 @@ class WaitTimesController < ApplicationController
   def show
     authorize @restaurant, policy_class: WaitTimePolicy
 
-    @estimates   = WaitTime::EstimationService.new(@restaurant).estimates_for_standard_sizes
-    @queue       = @restaurant.customer_wait_queues.active.by_position.includes(:tablesetting)
+    service = WaitTime::EstimationService.new(@restaurant)
+    @estimates = service.estimates_for_standard_sizes
+    @using_default_estimates = service.using_default_estimates?
+    @queue = @restaurant.customer_wait_queues.active.by_position.includes(:tablesetting)
     @tablesettings = @restaurant.tablesettings.where(archived: false).order(:sequence, :id)
     @new_entry = CustomerWaitQueue.new
   end
@@ -32,8 +34,10 @@ class WaitTimesController < ApplicationController
       redirect_to wait_times_restaurant_path(@restaurant),
                   notice: "#{result.record.customer_name} added to queue (position ##{result.record.queue_position})"
     else
-      @estimates   = WaitTime::EstimationService.new(@restaurant).estimates_for_standard_sizes
-      @queue       = @restaurant.customer_wait_queues.active.by_position.includes(:tablesetting)
+      service = WaitTime::EstimationService.new(@restaurant)
+      @estimates = service.estimates_for_standard_sizes
+      @using_default_estimates = service.using_default_estimates?
+      @queue = @restaurant.customer_wait_queues.active.by_position.includes(:tablesetting)
       @tablesettings = @restaurant.tablesettings.where(archived: false).order(:sequence, :id)
       @new_entry = result.record
       flash.now[:alert] = result.error
@@ -143,14 +147,16 @@ class WaitTimesController < ApplicationController
 
   def render_queue_stream
     queue = @restaurant.customer_wait_queues.active.by_position.includes(:tablesetting)
-    estimates = WaitTime::EstimationService.new(@restaurant).estimates_for_standard_sizes
+    service = WaitTime::EstimationService.new(@restaurant)
+    estimates = service.estimates_for_standard_sizes
+    using_default_estimates = service.using_default_estimates?
     tablesettings = @restaurant.tablesettings.where(archived: false).order(:sequence, :id)
 
     render turbo_stream: [
       turbo_stream.replace('wait_queue_list', partial: 'wait_times/queue_list',
                                               locals: { queue: queue, restaurant: @restaurant, tablesettings: tablesettings },),
       turbo_stream.replace('wait_time_estimates', partial: 'wait_times/estimates',
-                                                  locals: { estimates: estimates },),
+                                                  locals: { estimates: estimates, using_default_estimates: using_default_estimates },),
     ]
   end
 end

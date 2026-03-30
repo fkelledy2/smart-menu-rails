@@ -10,6 +10,26 @@
     <%= link_to 'New QR Code', new_admin_marketing_qr_code_path, class: 'btn btn-primary' %>
   </div>
 
+  <%# Campaign / status filter bar %>
+  <%= form_with url: admin_marketing_qr_codes_path, method: :get, local: true, class: 'mb-4 d-flex gap-2 align-items-end flex-wrap' do |f| %>
+    <div>
+      <label class="form-label fw-semibold mb-1" for="q_campaign">Campaign</label>
+      <%= f.text_field :campaign, id: 'q_campaign', value: params[:campaign],
+          class: 'form-control form-control-sm', placeholder: 'e.g. Q1 2026 onboarding',
+          style: 'width: 220px;' %>
+    </div>
+    <div>
+      <label class="form-label fw-semibold mb-1" for="q_status">Status</label>
+      <%= f.select :status, [['All', ''], ['Unlinked', 'unlinked'], ['Linked', 'linked'], ['Archived', 'archived']],
+          { selected: params[:status] },
+          id: 'q_status', class: 'form-select form-select-sm', style: 'width: 130px;' %>
+    </div>
+    <%= f.submit 'Filter', class: 'btn btn-sm btn-outline-secondary align-self-end' %>
+    <% if params[:campaign].present? || params[:status].present? %>
+      <%= link_to 'Clear', admin_marketing_qr_codes_path, class: 'btn btn-sm btn-link align-self-end text-muted' %>
+    <% end %>
+  <% end %>
+
   <% if @qr_codes.any? %>
     <div class="table-responsive">
       <table class="table table-hover align-middle">

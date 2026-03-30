@@ -1,12 +1,79 @@
 # AI Whiskey Ambassador Marketing Landing Page
 
-## Disposition
-- Type: Marketing Strategy Brief (not a dev spec)
+## Status
+- Priority Rank: #38 (Marketing — Post-Launch; ship alongside or immediately after AI Sommelier landing page)
 - Category: Post-Launch
-- Owner: Marketing
-- Engineering effort: S (same pattern as AI Sommelier landing page — static marketing view in the existing Rails app)
-- Status: Awaiting marketing copywriter, design, and proof-of-revenue from initial whiskey ambassador restaurant customers.
-- Note: Build this as a Rails view/partial alongside the AI Sommelier landing page, not a separate premium Next.js site. The "premium/luxury" aesthetic is achievable with Bootstrap 5 custom theming and does not require a new frontend framework.
+- Effort: S (engineering only — follows identical pattern to AI Sommelier landing page; share the same `MarketingController` and layout)
+- Dependencies: AI Sommelier landing page (#37) ships first (establishes the MarketingController and layout pattern); AI Whiskey Ambassador feature publicly accessible; minimum 2–3 reference whiskey bar customers using it; marketing copy and design approved
+- Refined: true
+
+## Disposition
+
+Same classification as the AI Sommelier landing page: marketing page brief, not a product feature spec. Engineering effort is 1 day once the `MarketingController` pattern from #37 exists. The AI Sommelier page establishes the controller, layout, and copy-in-locale pattern — this page reuses all of it.
+
+**Implementation constraint:** Build as a Rails view in the existing app alongside the Sommelier page. The original brief's references to "premium Next.js", "3D visualizations", "live chat concierge", and "$15,000–$25,000 frontend development" are not appropriate for a marketing page in a Rails SaaS app. Bootstrap 5 custom theming with appropriate photography achieves the luxury positioning without a separate framework or cost.
+
+**No sprint work until:** The AI Whiskey Ambassador feature is live for real customers AND marketing has approved copy and design. This is downstream of #37.
+
+## Problem Statement
+
+Once the AI Whiskey Ambassador feature has real whiskey bar and premium restaurant customers, mellow.menu needs a public landing page to convert inbound interest from the whiskey/premium bar segment into demo bookings. This is a distinct market segment from the Sommelier page and warrants its own URL and messaging.
+
+## Success Criteria
+
+- A `/ai-whiskey-ambassador` route renders a marketing page in the existing Rails app
+- Page shares the `MarketingController` and marketing layout established by the Sommelier page
+- Page includes: hero with CTA, feature overview, benefits by establishment type, social proof, FAQ
+- Copy is stored in `config/locales/en/marketing.en.yml` alongside Sommelier copy
+- Page is mobile-responsive and SEO-indexed
+
+## User Stories
+
+- As a whiskey bar owner searching for staff support and recommendation tools, I want to land on a page that speaks to my specific context (extensive whiskey list, staff knowledge gaps) and makes it easy to book a demo.
+
+## Functional Requirements
+
+1. New route: `GET /ai-whiskey-ambassador` → `MarketingController#ai_whiskey_ambassador`
+2. Static view — no database queries, no authentication required
+3. Reuses `MarketingController` and marketing layout established by AI Sommelier page (#37)
+4. Hero section: headline, subheadline, "Schedule Demo" CTA
+5. Establishment type benefits: Whiskey Bars / Fine Dining / Hotel Bars (3 segments)
+6. Social proof: 2–3 testimonial quotes from reference whiskey establishments
+7. SEO meta tags, Open Graph, schema markup in `<head>`
+8. Copy stored in `config/locales/en/marketing.en.yml` under `marketing.whiskey_ambassador.*` namespace
+
+## Non-Functional Requirements
+
+- Same constraints as AI Sommelier page: no new JS framework, page loads under 2 seconds
+- No gems, no new infrastructure
+
+## Technical Notes
+
+- Route: `get '/ai-whiskey-ambassador', to: 'marketing#ai_whiskey_ambassador'`
+- View: `app/views/marketing/ai_whiskey_ambassador.html.erb`
+- Shares `MarketingController` and marketing layout from #37
+- No Pundit policy, no Flipper flag, no Sidekiq job
+
+## Acceptance Criteria
+
+1. `GET /ai-whiskey-ambassador` returns HTTP 200 for authenticated and unauthenticated users.
+2. Page title and meta description contain "Whiskey Ambassador".
+3. CTA links to the existing demo booking URL.
+4. Page shares the marketing layout with the Sommelier page (consistent brand).
+5. `robots.txt` allows crawling of `/ai-whiskey-ambassador`.
+
+## Out of Scope
+
+- Interactive whiskey recommendation demo (engineering-heavy — separate spec if needed)
+- 3D bottle visualizations (ruled out — not warranted for a marketing page)
+- Live chat integration (marketing/support decision, not in this spec)
+- Separate Next.js premium build (ruled out)
+- Whiskey brand partnership integrations (business development, not engineering)
+
+## Open Questions
+
+1. Should this share a single `/ai-features` marketing index page with Sommelier, or maintain separate URLs for SEO purposes? (Recommendation: separate URLs for keyword targeting.)
+2. Who is the target launch date for this page relative to the Sommelier page?
 
 ## Overview
 Create a sophisticated marketing landing page showcasing mellow.menu's AI Whiskey Ambassador functionality to attract premium bars, whiskey lounges, and high-end restaurants.

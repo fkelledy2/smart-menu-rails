@@ -112,6 +112,7 @@ If a note is marked visible to customers, it appears in the customer's order vie
 ## Limitations & Known Constraints
 
 - Notes are order-level, not item-level. For per-item customer requests (e.g., "no onions on the burger"), customers add those directly when placing the order in the menu.
+- Cross-order note search and reporting across multiple orders is not available in v1.
 - Note content cannot exceed 500 characters.
 - Photo attachments are not supported in v1.
 - Voice-to-text note input is not yet available.
@@ -132,4 +133,4 @@ A: The edit button only appears within 15 minutes of creation. If that window ha
 A: Yes. When a note is added, edited, or deleted, it updates immediately on all staff devices viewing that order — no page refresh required.
 
 **Q: Can I search or filter notes across multiple orders?**
-A: Filtering within a single order by category and priority is built in (notes are sorted by priority automatically). Cross-order note reporting is available to managers via the analytics tools.
+A: Filtering within a single order by category and priority is built in (notes are sorted by priority automatically). Cross-order note search and reporting is not available in v1.
