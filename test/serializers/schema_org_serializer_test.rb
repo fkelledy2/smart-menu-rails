@@ -170,7 +170,7 @@ class SchemaOrgSerializerTest < ActiveSupport::TestCase
 
   test 'includes correct smartmenu URL' do
     data = parsed_json
-    assert_equal "https://www.mellow.menu/t/#{@smartmenu.public_token}", data['url']
+    assert_equal "https://mellow.menu/t/#{@smartmenu.public_token}", data['url']
   end
 
   test 'falls back to EUR when restaurant currency is nil' do

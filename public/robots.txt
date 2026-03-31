@@ -4,7 +4,7 @@ User-agent: *
 Allow: /
 
 # Sitemap location
-Sitemap: https://www.mellow.menu/sitemap.xml.gz
+Sitemap: https://mellow.menu/sitemap.xml.gz
 
 # Crawl-delay: 10
 

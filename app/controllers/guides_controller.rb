@@ -10,7 +10,7 @@ class GuidesController < ApplicationController
     @guides = LocalGuide.published.order(published_at: :desc)
     @page_title = 'Local Restaurant Guides | mellow.menu'
     @page_description = 'AI-powered local guides to the best restaurants. Grounded in real menu data.'
-    @canonical_url = 'https://www.mellow.menu/guides'
+    @canonical_url = 'https://mellow.menu/guides'
     @og_title = @page_title
     @og_description = @page_description
     @og_url = @canonical_url
@@ -29,7 +29,7 @@ class GuidesController < ApplicationController
   def set_guide_meta_tags
     @page_title = "#{@guide.title} | mellow.menu"
     @page_description = @guide.content.to_s.truncate(160, separator: ' ')
-    @canonical_url = "https://www.mellow.menu/guides/#{@guide.slug}"
+    @canonical_url = "https://mellow.menu/guides/#{@guide.slug}"
     @og_title = @page_title
     @og_description = @page_description
     @og_url = @canonical_url

@@ -14,7 +14,7 @@ class ExploreController < ApplicationController
       .distinct.order(:country_name)
     @page_title = 'Explore Restaurant Menus | mellow.menu'
     @page_description = 'Discover restaurant menus by city. Prices, allergens, and descriptions.'
-    @canonical_url = 'https://www.mellow.menu/explore'
+    @canonical_url = 'https://mellow.menu/explore'
     @og_title = @page_title
     @og_description = @page_description
     @og_url = @canonical_url
@@ -31,7 +31,7 @@ class ExploreController < ApplicationController
     country_name = @cities.first.country_name
     @page_title = "Restaurants in #{country_name} | mellow.menu"
     @page_description = "Explore restaurant menus across #{country_name}."
-    @canonical_url = "https://www.mellow.menu/explore/#{@country}"
+    @canonical_url = "https://mellow.menu/explore/#{@country}"
     @og_title = @page_title
     @og_description = @page_description
     @og_url = @canonical_url
@@ -74,7 +74,7 @@ class ExploreController < ApplicationController
                   "#{@page.category_name || 'All'} Restaurants in #{@page.city_name}, #{@page.country_name} | mellow.menu"
     @page_description = @page.meta_description.presence ||
                         "Discover #{@page.category_name&.downcase || ''} restaurants in #{@page.city_name}. View menus, prices, and allergen info."
-    @canonical_url = "https://www.mellow.menu#{@page.path}"
+    @canonical_url = "https://mellow.menu#{@page.path}"
     @og_title = @page_title
     @og_description = @page_description
     @og_url = @canonical_url

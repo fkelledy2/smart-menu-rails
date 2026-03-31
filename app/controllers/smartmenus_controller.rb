@@ -399,8 +399,8 @@ class SmartmenusController < ApplicationController
                         '. Prices, allergens, and descriptions.'
     @og_title = @page_title
     @og_description = @page_description
-    @og_url = "https://www.mellow.menu/t/#{@smartmenu.public_token}"
-    @og_image = @restaurant.try(:image_url) || 'https://www.mellow.menu/images/featured-dish.jpg'
+    @og_url = "https://mellow.menu/t/#{@smartmenu.public_token}"
+    @og_image = @restaurant.try(:image_url) || 'https://mellow.menu/images/featured-dish.jpg'
     @canonical_url = @og_url
     @geo_lat = @restaurant.latitude
     @geo_lng = @restaurant.longitude

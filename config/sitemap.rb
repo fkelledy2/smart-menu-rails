@@ -1,5 +1,5 @@
 # Set the host name for URL creation
-SitemapGenerator::Sitemap.default_host = 'https://www.mellow.menu'
+SitemapGenerator::Sitemap.default_host = 'https://mellow.menu'
 SitemapGenerator::Sitemap.create do
   # Static pages
   add '/', priority: 1.0, changefreq: 'daily'

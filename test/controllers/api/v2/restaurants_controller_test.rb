@@ -65,7 +65,7 @@ class Api::V2::RestaurantsControllerTest < ActionDispatch::IntegrationTest
   test 'response includes X-Data-Attribution header' do
     get '/api/v2/restaurants', as: :json
     assert_response :success
-    assert_equal 'Data by mellow.menu — https://www.mellow.menu',
+    assert_equal 'Data by mellow.menu — https://mellow.menu',
                  response.headers['X-Data-Attribution']
   end
 

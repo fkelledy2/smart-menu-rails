@@ -54,7 +54,7 @@ class DemoBookingMailer < ApplicationMailer
     event.dtend       = Icalendar::Values::DateTime.new(dtend.strftime('%Y%m%dT%H%M%SZ'))
     event.summary     = "mellow.menu Demo \u2014 #{demo_booking.contact_name}"
     event.description = demo_description(demo_booking)
-    event.url         = demo_url(host: default_url_options[:host] || 'www.mellow.menu')
+    event.url         = demo_url(host: default_url_options[:host] || 'mellow.menu')
 
     event.organizer = Icalendar::Values::CalAddress.new(
       "mailto:#{DEMOS_EMAIL}",
@@ -74,7 +74,7 @@ class DemoBookingMailer < ApplicationMailer
   end
 
   def demo_description(demo_booking)
-    host = default_url_options[:host] || 'www.mellow.menu'
+    host = default_url_options[:host] || 'mellow.menu'
     <<~DESC.strip
       Hi #{demo_booking.contact_name},
 

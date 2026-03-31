@@ -27,7 +27,7 @@ class SeoApiV2Test < ActionDispatch::IntegrationTest
 
   test 'response includes attribution header' do
     get '/api/v2/restaurants'
-    assert_equal 'Data by mellow.menu — https://www.mellow.menu',
+    assert_equal 'Data by mellow.menu — https://mellow.menu',
                  response.headers['X-Data-Attribution']
   end
 

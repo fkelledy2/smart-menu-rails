@@ -40,7 +40,7 @@ module Api
       end
 
       def set_attribution_header
-        response.headers['X-Data-Attribution'] = 'Data by mellow.menu — https://www.mellow.menu'
+        response.headers['X-Data-Attribution'] = 'Data by mellow.menu — https://mellow.menu'
       end
 
       def paginate(scope)

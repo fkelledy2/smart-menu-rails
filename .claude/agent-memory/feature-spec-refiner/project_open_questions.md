@@ -136,10 +136,10 @@ Open questions identified during the March 2026 full backlog refinement pass (in
 - **Bundle suggestion surface**: New dashboard tab or a card/panel in the existing Profit Margins dashboard?
 - **Flipper flag scope**: Does `profit_margin_phase4` gate all Phase 4 features additively on top of Phases 1–3, or does it replace a Phase 3 flag?
 
-### Smartmenu Preview Modes (#36)
-- **Legacy `?view=staff` deprecation window**: One release with deprecation log then hard remove, or immediate removal? Spec recommends one release — confirm.
-- **"Back to edit" link in staff preview**: Should the staff preview show a minimal navigation pill back to the edit page, or is new-tab + close-tab sufficient?
-- **ActionCable in customer preview**: When a logged-in user opens customer preview, the WebSocket re-authenticates via cookie. Should the preview token be passed to the cable connection to downgrade to guest-level channels? Phase 1 decision: no channel override (customer preview simply does not establish an authenticated channel). Confirm this is acceptable.
+### Smartmenu Preview Modes (#36) — RESOLVED 2026-03-31 (FEATURE COMPLETED)
+- **Legacy `?view=staff` deprecation window**: RESOLVED — removed immediately, no grace period.
+- **"Back to edit" link**: RESOLVED — new-tab (target: _blank) is sufficient; no back-link added.
+- **ActionCable in customer preview**: RESOLVED — Phase 1 decision applied: no channel override in customer preview. Phase 2 concern is out of scope and can be revisited when needed.
 
 ### Marketing Landing Pages (#37, #38)
 - **`MarketingController` existence**: Does a `MarketingController` already exist, or should this be added to `HomeController`? Check before writing the route.
@@ -147,6 +147,16 @@ Open questions identified during the March 2026 full backlog refinement pass (in
 - **Single `/ai-features` index vs separate URLs**: Should #37 and #38 be separate URLs or share an index page? Recommendation: separate URLs for independent SEO keyword targeting.
 
 ## Resolved Questions
+
+### Smartmenu Preview Modes (#36) — RESOLVED 2026-03-31 (FEATURE SHIPPED)
+- All Q1–Q5 open questions resolved in the shipped implementation.
+- Q1 (legacy ?view=staff grace period): removed immediately, no deprecation window.
+- Q2 (Back to edit link): not added; new-tab is sufficient.
+- Q3 (ActionCable in customer preview): no channel override in Phase 1.
+- Q4 (token expiry UX): silent fallback to customer view (no visible error).
+- Q5 (token in URL vs session): URL-based token confirmed; sharing is acceptable given 4h TTL.
+- SmartmenuPreviewToken model live at app/models/smartmenu_preview_token.rb; full test coverage.
+- The Flipper flag smartmenu_preview_tokens was not registered (old mechanism was already gone before ship).
 
 ### MenuVersion System — RESOLVED 2026-03-22
 - Previous question: "When will the MenuVersion system be built? This is a hard dependency with no workaround."

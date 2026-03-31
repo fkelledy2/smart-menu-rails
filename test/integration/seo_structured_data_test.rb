@@ -34,7 +34,7 @@ class SeoStructuredDataTest < ActionDispatch::IntegrationTest
     sm = smartmenus(:customer_menu)
     get table_link_path(public_token: sm.public_token)
     json_ld = extract_json_ld(response.body)
-    assert_equal "https://www.mellow.menu/t/#{sm.public_token}", json_ld['url']
+    assert_equal "https://mellow.menu/t/#{sm.public_token}", json_ld['url']
   end
 
   # ── Phase 1: Dynamic meta tags ──────────────────────────────────────────
