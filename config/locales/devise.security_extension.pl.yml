@@ -29,23 +29,23 @@ pl:
       equal_to_email: replace_me
       password_complexity:
         digit:
-          one: replace_me
           few: replace_me
           many: replace_me
+          one: replace_me
           other: replace_me
         lower:
-          one: replace_me
           few: replace_me
           many: replace_me
+          one: replace_me
           other: replace_me
         symbol:
-          one: replace_me
           few: replace_me
           many: replace_me
+          one: replace_me
           other: replace_me
         upper:
-          one: replace_me
           few: replace_me
           many: replace_me
+          one: replace_me
           other: replace_me
       taken_in_past: replace_me
