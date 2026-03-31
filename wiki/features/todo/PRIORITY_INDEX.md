@@ -1,11 +1,13 @@
 # mellow.menu Feature Backlog — Priority Index
 
-**Last updated**: 2026-03-30 (thirteenth pass — Square Integration, Profit Margin Phase 4, Smartmenu Preview Modes, AI Sommelier Landing Page, AI Whiskey Ambassador Landing Page refined and added to backlog at #35–#38 + IN-PROGRESS)
+**Last updated**: 2026-03-31 (sixteenth pass — Naked Domain Canonical Strategy IQ-1 COMPLETED; DomainRedirect middleware shipped; all www.mellow.menu canonical URLs updated to mellow.menu; 9 tests added; ops DNS/Heroku steps remain for deployer)
+**Naked Domain Canonical Strategy (IQ-1)**: COMPLETED 2026-03-31 — DomainRedirect middleware live; spec at `docs/features/completed/naked-domain-canonical-strategy.md`
 **QR Code Security (#1)**: COMPLETED 2026-03-24 — Phase 1 shipped; spec at `docs/features/completed/qr-security.md`
 **Branded Email Styling (#1)**: COMPLETED 2026-03-24 — spec at `docs/features/completed/branded-email-styling-feature-request.md`
 **Branded Receipt Email (#2)**: COMPLETED 2026-03-25 — spec at `docs/features/completed/branded-receipt-email-feature-request.md`
 **Menu Experiments (#12)**: COMPLETED 2026-03-29 — spec at `docs/features/completed/08-menu-experiments-ab-testing.md`
 **Table Wait Time Estimation (#13)**: COMPLETED 2026-03-29 — spec at `docs/features/completed/table-wait-time-estimation-feature-request.md`
+**Smartmenu Preview Modes (#36)**: COMPLETED 2026-03-31 — SmartmenuPreviewToken live; staff-mode-indicator removed; spec at `docs/features/todo/features/smartmenu-preview-modes.md`
 **Guiding principle**: Every decision is filtered through one question — does this get mellow.menu in front of paying customers faster?
 
 ---
@@ -27,7 +29,7 @@
 | ~~#11~~ | ~~Partner Integrations (Event-Driven)~~ | ~~Post-Launch~~ | M | #8, Stripe webhooks | COMPLETED 2026-03-29 — spec at `docs/features/completed/06-partner-integrations-event-driven.md` |
 | ~~#12~~ | ~~Menu Experiments (A/B Testing)~~ | ~~Post-Launch~~ | M | #1 (DiningSession built); MenuVersion BUILT | COMPLETED 2026-03-29 — spec at `docs/features/completed/08-menu-experiments-ab-testing.md` |
 | ~~#13~~ | ~~Table Wait Time Estimation~~ | ~~Post-Launch~~ | L | #5 (completed), Tablesetting | COMPLETED 2026-03-29 — spec at `docs/features/completed/table-wait-time-estimation-feature-request.md` |
-| **IQ-1** | **Naked Domain Canonical Strategy** | **Infrastructure** | **S** | DNS provider access, Heroku CLI | `mellow.menu` apex must resolve before public launch; Rack middleware 301 redirect; zero-downtime; no new models |
+| ~~IQ-1~~ | ~~Naked Domain Canonical Strategy~~ | ~~Infrastructure~~ | S | DNS provider access, Heroku CLI | COMPLETED 2026-03-31 — code shipped; ops DNS/Heroku steps remain; spec at `docs/features/completed/naked-domain-canonical-strategy.md` |
 | #14 | Dynamic Pricing Plans (Cost-Indexed) | Post-Launch | L | #15, #16 | Sustainable margin management at scale |
 | #15 | Cost Insights + Pricing Model Publisher | Post-Launch | L | #16 | Admin system enabling #14; required before pricing models can be published |
 | #16 | Heroku Cost Inventory | Post-Launch | S | Admin auth, HEROKU_PLATFORM_API_TOKEN | Feeds #15 with accurate infra cost data |
@@ -50,10 +52,14 @@
 | #33 | Strikepay Integration (Staff Tipping) | Post-Launch | L | Payments::Orchestrator, Strikepay API agreement | Staff satisfaction and retention differentiator; compliance-heavy — Strikepay platform API confirmation required before build |
 | #34 | Realtime Ordritem Tracking & Passive Customer Feedback | Post-Launch | L | Existing `OrdrChannel`, `KitchenChannel`, `StationChannel`, Sidekiq, `Ordritem` model | Reduces "where is my order?" friction with item-level fulfillment status and passive realtime customer UI; batch-first staff workflow preserved |
 | #35 | Profit Margin Tracking — Phase 4 (Optimization Tools) | Post-Launch | M | Phases 1–3 complete (production); feeds #21 Menu Optimization Agent | Closes the loop from margin insight to action: menu engineering matrix, AI pricing recommendations, bundling opportunities |
-| #36 | Smartmenu Preview Modes (Signed Token) | Launch Enhancer | S | SmartMenu routes (built); Rails `message_verifier` (built) | Removes intrusive staff-mode banner from customer-facing URL; clean preview UX from edit page; no database changes |
+| ~~#36~~ | ~~Smartmenu Preview Modes (Signed Token)~~ | ~~Launch Enhancer~~ | S | — | COMPLETED 2026-03-31 — SmartmenuPreviewToken live; staff-mode-indicator removed; ?view=staff fully retired; spec at `docs/features/todo/features/smartmenu-preview-modes.md` |
 | IN-PROGRESS | Square Integration | Launch Enhancer | XL (mostly done) | Payments::Orchestrator, ProviderAccount model, Flipper flag | Under active development — Epics 1–8 backend/UI complete; 3 remaining items before alpha: split-bill progress UI, degraded-status email, "Reconnect" CTA |
 | #37 | AI Sommelier Marketing Landing Page | Post-Launch (Marketing) | S | AI Sommelier feature live; 2–3 reference restaurants; copy + design approved | Public acquisition surface for the AI Sommelier feature; 1–2 days engineering once assets are ready |
 | #38 | AI Whiskey Ambassador Marketing Landing Page | Post-Launch (Marketing) | S | #37 ships first (establishes MarketingController pattern); Whiskey Ambassador live; copy + design approved | Same pattern as #37; reuses controller and layout; distinct URL for SEO segment targeting |
+
+> **Note on March 2026 additions (fifteenth pass — 2026-03-31)**: **Smartmenu Preview Modes** (#36) confirmed COMPLETED. Codebase verification shows `app/models/smartmenu_preview_token.rb` is live and tested (`test/models/smartmenu_preview_token_test.rb`), `SmartmenusController` decodes `params[:preview]` via `SmartmenuPreviewToken.decode`, and the `staff-mode-indicator` block is fully absent from all views. The legacy `?view=staff` param was removed immediately rather than kept for a grace period (Open Question Q1 resolved in favour of clean removal). The `smartmenu_preview_tokens` Flipper flag was not needed as the old mechanism was gone before this shipped. Track E retired from sprint recommendation. No rank changes to remaining backlog items.
+
+> **Note on March 2026 additions (fourteenth pass — 2026-03-31)**: **Realtime Ordritem Tracking & Passive Customer Feedback** (#34) spec reviewed against the detailed product document and confirmed fully current. The existing spec at `docs/features/todo/backlog/realtime-ordritem-tracking.md` and the mirrored copy at `wiki/features/todo/backlog/realtime-ordritem-tracking.md` both contain the complete architectural design including: `fulfillment_status` / `station` enum strategy with `prefix:` collision avoidance, `OrdritemEvent` immutability guards, `Ordritems::TransitionStatus` idempotency contract, `Ordritems::TransitionGroup` batch-first workflow, `Ordritems::BroadcastStatusChangeJob` post-commit broadcast pattern, `ordritem_tracking_controller.js` Stimulus controller, and the resolved open questions (station assignment from `Menuitem#default_station`, `OrdrChannel` auth shipped as `qr_security_v1`). No rank change. No new gems. Ready for Phase 1 development.
 
 > **Note on March 2026 additions (thirteenth pass — 2026-03-30)**: Five previously unrefined files have been reviewed and dispositioned. (1) **Square Integration** (`backlog/square-integration.md`) is marked IN-PROGRESS (not ranked) — Epics 1–8 backend/UI are complete; three remaining items before alpha testing: split-bill progress UI, degraded-status manager notification email, and "Reconnect Square" CTA in admin UI. Alpha testing is the immediate next step. (2) **Profit Margin Tracking Phase 4** (`backlog/menu-item-profit-margin-tracking.md`) — Phases 1–3 are in production; Phase 4 (menu engineering matrix, AI pricing recommendations, bundling opportunity detection) is ranked #35, M-effort, Post-Launch. Feeds the Menu Optimization Agent (#21) via a shared `MenuEngineering::BundlingOpportunityService` interface. (3) **Smartmenu Preview Modes** (`features/smartmenu-preview-modes.md`) — ranked #36, S-effort, Launch Enhancer. Removes the intrusive staff-mode-indicator banner from the customer-facing smartmenu URL; replaces with signed `Rails.application.message_verifier` preview tokens launched from the edit page. No database changes, no new gems, no ActionCable changes in Phase 1. (4) **AI Sommelier Landing Page** (`marketing/ai-sommelier-landing-page.md`) — ranked #37, S-effort, Post-Launch/Marketing. Clarified that this is a Rails static view (not Next.js); engineering is 1–2 days once copy and design are ready. Gated on the feature being publicly live and 2–3 reference restaurants confirmed. (5) **AI Whiskey Ambassador Landing Page** (`marketing/ai-whiskey-ambassador-landing-page.md`) — ranked #38, S-effort, Post-Launch/Marketing. Same controller/layout pattern as #37; ranked downstream of it. Both marketing pages' original budget estimates ($8k–$25k frontend) are inapplicable — this is a Rails view, not a separate application.
 
@@ -110,7 +116,7 @@ Note: The launch blockers are deliberately narrow. Features #4–#7 are strong l
 
 ## Current Sprint Recommendation — Next Best Actions
 
-All launch blockers (#1–#7), JWT Token Management (#8), CRM Sales Funnel (#9), Smartmenu Theming (#10), Partner Integrations (#11), Menu Experiments (#12), and Table Wait Time Estimation (#13) are completed. The platform is live-capable with a functioning sales pipeline, API layer, visual theming, event-driven partner integration layer, and A/B testing capability.
+All launch blockers (#1–#7), JWT Token Management (#8), CRM Sales Funnel (#9), Smartmenu Theming (#10), Partner Integrations (#11), Menu Experiments (#12), Table Wait Time Estimation (#13), and Smartmenu Preview Modes (#36) are completed. The platform is live-capable with a functioning sales pipeline, API layer, visual theming, event-driven partner integration layer, A/B testing capability, and clean signed-token preview UX.
 
 **Immediate pre-sprint ship: IQ-1 — Naked Domain Canonical Strategy.** This is an afternoon's work (DNS + Heroku config + one Rack initializer). Ship it before any other track begins — the naked domain resolving is a prerequisite for presenting the platform publicly with confidence.
 
@@ -168,23 +174,6 @@ Estimated: 1–2 developer weeks
 ### Track D: Team Management Quick Win (S-effort, ship between tracks)
 **Feature #29 — Employee Role Promotion** (S effort — 3–5 developer days)
 
----
-
-### Track E: UX Cleanup Quick Win — Smartmenu Preview Modes (#36)
-**Feature #36 — Smartmenu Preview Modes** (S effort — 2–3 developer days)
-
-The `staff-mode-indicator` floating banner on the customer-facing smartmenu URL is a cosmetic and architectural issue that should be resolved before any public launch activity. This is S-effort with no database changes, no new gems, and no ActionCable changes. It can be shipped in a short slot between larger tracks.
-
-Deliverables:
-1. `app/models/smartmenu_preview_token.rb` — plain Ruby class with `generate` + `decode` using `Rails.application.message_verifier(:smartmenu_preview)`, 4-hour TTL
-2. Remove `staff-mode-indicator` block from `app/views/smartmenus/show.html.erb` lines 27–51
-3. Update `SmartmenusController` mode detection to decode signed token (replace `params[:view]` check)
-4. Update preview launch buttons in `app/views/menus/sections/_details_2025.html.erb` to generate signed token URLs
-5. Add `smartmenu_preview_tokens` Flipper flag for controlled rollout during `?view=staff` deprecation window
-6. Unit tests: `SmartmenuPreviewToken` encode/decode/expiry/tamper; controller tests for all token states
-
-Estimated: 2–3 developer days
-
 Low complexity, high operational value. Can be shipped in days during a gap between larger tracks. All dependencies exist. Uses the branded mailer layout that is now complete.
 
 Deliverables:
@@ -195,6 +184,13 @@ Deliverables:
 5. "Change Role" UI with Turbo Modal, Turbo Stream update
 
 Estimated: 3–5 developer days
+
+---
+
+### Track E: UX Cleanup Quick Win — Smartmenu Preview Modes (#36) — COMPLETED 2026-03-31
+~~**Feature #36 — Smartmenu Preview Modes** (S effort — shipped)~~
+
+All deliverables confirmed live. `SmartmenuPreviewToken` model is in production with full test coverage. The `staff-mode-indicator` is fully removed from `smartmenus/show.html.erb`. The controller decodes signed tokens via `params[:preview]`. The legacy `?view=staff` path is gone entirely (removed immediately rather than with a grace period). Track E is retired.
 
 ---
 
@@ -311,9 +307,10 @@ Square Integration (IN PROGRESS — Epics 1–6 complete, alpha testing pending)
   └─► Phases 1–3 of ProfitMarginTracking (COMPLETE — all models, services, jobs exist)
   └─► #21 Menu Optimization Agent (Phase 4 output feeds agent via shared service interface)
 
-#36 Smartmenu Preview Modes
-  └─► SmartmenusController (built — modifying mode detection logic only)
-  └─► Rails.application.message_verifier (built-in — no new dependency)
+#36 Smartmenu Preview Modes — COMPLETED 2026-03-31
+  └─► SmartmenuPreviewToken (now live — app/models/smartmenu_preview_token.rb)
+  └─► SmartmenusController (updated — params[:preview] decode replaces params[:view])
+  └─► No downstream dependents
 
 Square Integration (IN-PROGRESS)
   └─► Payments::Orchestrator (built)

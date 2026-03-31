@@ -2,20 +2,32 @@
 name: Smartmenu Preview Modes
 description: Replace the in-page staff/customer view toggle on /smartmenus with signed token-based preview launch from the menu edit page, with mode locked for the session.
 type: feature
-status: spec-ready
+status: completed
 priority: medium
 refined: true
 priority_rank: 36
+completed: 2026-03-31
 ---
 
 # Smartmenu Preview Modes
 
 ## Status
-- Priority Rank: #36
+- Priority Rank: ~~#36~~ — COMPLETED 2026-03-31
 - Category: Launch Enhancer
 - Effort: S
 - Dependencies: None (SmartMenu routes and views already exist; Rails `message_verifier` built in)
 - Refined: true
+
+## Completion Note
+
+**Shipped 2026-03-31.** All deliverables confirmed live in `main`:
+
+- `app/models/smartmenu_preview_token.rb` — plain Ruby class with `generate(mode:, menu_id:)` and `decode(token)` using `Rails.application.message_verifier(:smartmenu_preview)`, 4-hour TTL, `nil` on expired/tampered tokens. Tested at `test/models/smartmenu_preview_token_test.rb`.
+- `SmartmenusController` updated: `params[:preview]` decoded via `SmartmenuPreviewToken.decode`; `@staff_view_mode` set from token payload. The old `params[:view]` path is fully removed.
+- The `staff-mode-indicator` block removed from `app/views/smartmenus/show.html.erb` (confirmed absent).
+- Open Questions Q1–Q5 from the spec are all resolved by the shipped implementation: legacy `?view=staff` was removed immediately (not kept for a grace period); no separate Flipper flag was needed since the old mechanism was already removed before this shipped.
+
+The spec document is retained for historical reference. The canonical completed spec is at `docs/features/completed/` (to be added).
 
 ## Problem Statement
 
