@@ -400,8 +400,8 @@ All controllers: Pundit `authorize` on every action. Thin — delegate to servic
 
 ## References
 
-- Related spec: `docs/features/todo/backlog/employee-role-promotion.md` (pattern reference for admin-only Pundit policies)
-- Related spec: `docs/features/todo/backlog/strikepay-integration.md` (pattern reference for webhook verification service structure)
+- Related spec: `docs/features/todo/backlog/29-employee-role-promotion.md` (pattern reference for admin-only Pundit policies)
+- Related spec: `docs/features/todo/backlog/33-strikepay-integration.md` (pattern reference for webhook verification service structure)
 - Calendly webhook documentation: https://developer.calendly.com/api-docs/ZG9jOjM2MzE2MDM4-webhook-signatures
 - Existing admin namespace: `app/controllers/admin/`
 - Existing branded mailer layout: `app/views/layouts/mailer.html.erb`
