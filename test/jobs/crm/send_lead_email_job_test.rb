@@ -43,10 +43,7 @@ class Crm::SendLeadEmailJobTest < ActiveSupport::TestCase
 
   test 'perform calls LeadEmailSender when lead and sender both exist' do
     sender_called = false
-    Crm::LeadEmailSender.stub(:call, lambda { |**_kwargs|
-      sender_called = true
-      nil
-    },) do
+    Crm::LeadEmailSender.stub(:call, ->(**_kwargs) { sender_called = true; nil }) do
       Crm::SendLeadEmailJob.new.perform(
         crm_lead_id: @lead.id,
         sender_id: @sender.id,

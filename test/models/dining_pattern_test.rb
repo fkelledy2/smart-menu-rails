@@ -99,7 +99,7 @@ class DiningPatternTest < ActiveSupport::TestCase
   end
 
   test 'uniqueness constraint: restaurant + party_size + day_of_week + hour_of_day' do
-    dining_patterns(:party_of_2_monday_evening) # loads existing fixture
+    dining_patterns(:party_of_2_monday_evening)  # loads existing fixture
     duplicate = build_pattern(party_size: 2, day_of_week: 1, hour_of_day: 19)
     assert_not duplicate.valid?
     assert_includes duplicate.errors[:restaurant_id], 'already has a pattern for this party size, day, and hour'

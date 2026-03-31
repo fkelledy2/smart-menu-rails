@@ -91,36 +91,31 @@ class ReceiptTemplateRendererTest < ActiveSupport::TestCase
 
   test '#currency_symbol returns correct symbol for EUR' do
     @restaurant.update_column(:currency, 'EUR')
-    @ordr.association(:restaurant).reset
-    renderer = ReceiptTemplateRenderer.new(@ordr)
+    renderer = ReceiptTemplateRenderer.new(@ordr.reload)
     assert_equal '€', renderer.currency_symbol
   end
 
   test '#currency_symbol returns correct symbol for GBP' do
     @restaurant.update_column(:currency, 'GBP')
-    @ordr.association(:restaurant).reset
-    renderer = ReceiptTemplateRenderer.new(@ordr)
+    renderer = ReceiptTemplateRenderer.new(@ordr.reload)
     assert_equal '£', renderer.currency_symbol
   end
 
   test '#currency_symbol returns correct symbol for USD' do
     @restaurant.update_column(:currency, 'USD')
-    @ordr.association(:restaurant).reset
-    renderer = ReceiptTemplateRenderer.new(@ordr)
+    renderer = ReceiptTemplateRenderer.new(@ordr.reload)
     assert_equal '$', renderer.currency_symbol
   end
 
   test '#currency_symbol returns currency code for unknown currency' do
     @restaurant.update_column(:currency, 'XYZ')
-    @ordr.association(:restaurant).reset
-    renderer = ReceiptTemplateRenderer.new(@ordr)
+    renderer = ReceiptTemplateRenderer.new(@ordr.reload)
     assert_equal 'XYZ', renderer.currency_symbol
   end
 
   test '#format_currency includes the currency symbol and two decimal places' do
     @restaurant.update_column(:currency, 'EUR')
-    @ordr.association(:restaurant).reset
-    renderer = ReceiptTemplateRenderer.new(@ordr)
+    renderer = ReceiptTemplateRenderer.new(@ordr.reload)
     assert_equal '€12.50', renderer.format_currency(12.5)
   end
 

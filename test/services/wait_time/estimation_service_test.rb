@@ -62,7 +62,7 @@ module WaitTime
       # Use a restaurant with no dining_patterns
       restaurant = restaurants(:two)
       # Ensure restaurant two has at least one tablesetting
-      ts = restaurant.tablesettings.where(archived: false).where(capacity: 2..).first
+      ts = restaurant.tablesettings.where(archived: false).where('capacity >= ?', 2).first
       skip 'No tablesetting for party size 2 in restaurant two' unless ts
 
       Ordr.create!(
@@ -87,13 +87,13 @@ module WaitTime
       # Set ALL tables to occupied by closing any open orders and creating active orders
       # on every table that fits party_size=2
       Ordr.unscoped
-        .where(restaurant: @restaurant)
-        .where.not(status: [Ordr.statuses['paid'], Ordr.statuses['closed']])
-        .update_all(status: Ordr.statuses['closed'])
+          .where(restaurant: @restaurant)
+          .where.not(status: [Ordr.statuses['paid'], Ordr.statuses['closed']])
+          .update_all(status: Ordr.statuses['closed'])
 
       candidate_tables = @restaurant.tablesettings
         .where(archived: false)
-        .where(capacity: 2..)
+        .where('capacity >= ?', 2)
 
       skip 'No suitable tablesettings in restaurant one' if candidate_tables.empty?
 
@@ -112,11 +112,7 @@ module WaitTime
       result = @service.estimate_for_party(2)
       assert result >= 1, 'Should return a positive wait time when all tables occupied'
     ensure
-      created_ordrs&.each do |o|
-        o.destroy
-      rescue StandardError
-        nil
-      end
+      created_ordrs&.each { |o| o.destroy rescue nil }
     end
   end
 end

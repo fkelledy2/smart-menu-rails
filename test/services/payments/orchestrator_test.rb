@@ -222,7 +222,7 @@ class Payments::OrchestratorTest < ActiveSupport::TestCase
     obj
   end
 
-  def stub_stripe_checkout_session(result, &)
+  def stub_stripe_checkout_session(result, &block)
     # Bypass ensure_api_key! by setting a dummy key and stub Stripe::Checkout::Session.create
     original_key = Stripe.api_key
     Stripe.api_key = 'sk_test_stub'
@@ -233,12 +233,14 @@ class Payments::OrchestratorTest < ActiveSupport::TestCase
       payment_intent: result[:payment_intent_id],
     )
 
-    Stripe::Checkout::Session.stub(:create, fake_session, &)
+    Stripe::Checkout::Session.stub(:create, fake_session) do
+      block.call
+    end
   ensure
     Stripe.api_key = original_key
   end
 
-  def stub_stripe_capture_intent(result, &)
+  def stub_stripe_capture_intent(result, &block)
     original_key = Stripe.api_key
     Stripe.api_key = 'sk_test_stub'
 
@@ -248,7 +250,9 @@ class Payments::OrchestratorTest < ActiveSupport::TestCase
     end
 
     # Also stub PaymentAttempt#update! so we do not need the adapter to update status
-    Payments::Providers::StripeAdapter.stub(:new, fake_adapter, &)
+    Payments::Providers::StripeAdapter.stub(:new, fake_adapter) do
+      block.call
+    end
   ensure
     Stripe.api_key = original_key
   end

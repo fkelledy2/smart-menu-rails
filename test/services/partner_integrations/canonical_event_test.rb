@@ -22,19 +22,19 @@ class PartnerIntegrations::CanonicalEventTest < ActiveSupport::TestCase
 
   test 'raises on unknown event_type' do
     assert_raises(ArgumentError) do
-      PartnerIntegrations::CanonicalEvent.new(**valid_attrs, event_type: 'unknown.event')
+      PartnerIntegrations::CanonicalEvent.new(**valid_attrs.merge(event_type: 'unknown.event'))
     end
   end
 
   test 'raises on blank restaurant_id' do
     assert_raises(ArgumentError) do
-      PartnerIntegrations::CanonicalEvent.new(**valid_attrs, restaurant_id: nil)
+      PartnerIntegrations::CanonicalEvent.new(**valid_attrs.merge(restaurant_id: nil))
     end
   end
 
   test 'raises on nil occurred_at' do
     assert_raises(ArgumentError) do
-      PartnerIntegrations::CanonicalEvent.new(**valid_attrs, occurred_at: nil)
+      PartnerIntegrations::CanonicalEvent.new(**valid_attrs.merge(occurred_at: nil))
     end
   end
 
@@ -60,13 +60,13 @@ class PartnerIntegrations::CanonicalEventTest < ActiveSupport::TestCase
 
   test 'to_h occurred_at is ISO8601 string' do
     t = Time.zone.parse('2026-03-29T12:00:00Z')
-    event = PartnerIntegrations::CanonicalEvent.new(**valid_attrs, occurred_at: t)
+    event = PartnerIntegrations::CanonicalEvent.new(**valid_attrs.merge(occurred_at: t))
     assert_match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/, event.to_h[:occurred_at])
   end
 
   test 'supports all valid event types' do
     PartnerIntegrations::CanonicalEvent::VALID_EVENT_TYPES.each do |et|
-      event = PartnerIntegrations::CanonicalEvent.new(**valid_attrs, event_type: et)
+      event = PartnerIntegrations::CanonicalEvent.new(**valid_attrs.merge(event_type: et))
       assert_equal et, event.event_type
     end
   end

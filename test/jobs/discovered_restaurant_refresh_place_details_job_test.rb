@@ -32,10 +32,7 @@ class DiscoveredRestaurantRefreshPlaceDetailsJobTest < ActiveSupport::TestCase
     @dr.update_column(:google_place_id, '')
 
     google_called = false
-    GooglePlaces::PlaceDetails.stub(:new, lambda { |_args|
-      google_called = true
-      nil
-    },) do
+    GooglePlaces::PlaceDetails.stub(:new, ->(_args) { google_called = true; nil }) do
       DiscoveredRestaurantRefreshPlaceDetailsJob.new.perform(
         discovered_restaurant_id: @dr.id,
       )
@@ -48,10 +45,7 @@ class DiscoveredRestaurantRefreshPlaceDetailsJobTest < ActiveSupport::TestCase
     @dr.update!(google_place_id: 'manual_abc123')
 
     google_called = false
-    GooglePlaces::PlaceDetails.stub(:new, lambda { |_args|
-      google_called = true
-      nil
-    },) do
+    GooglePlaces::PlaceDetails.stub(:new, ->(_args) { google_called = true; nil }) do
       DiscoveredRestaurantRefreshPlaceDetailsJob.new.perform(
         discovered_restaurant_id: @dr.id,
       )

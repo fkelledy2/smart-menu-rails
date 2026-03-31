@@ -101,13 +101,13 @@ class Admin::DiscoveredRestaurantsControllerTest < ActionDispatch::IntegrationTe
   test 'create: creates a new discovered restaurant and redirects' do
     assert_difference 'DiscoveredRestaurant.count', 1 do
       post admin_discovered_restaurants_path,
-           params: {
-             discovered_restaurant: {
-               website_url: 'https://newplace.example.com',
-               name: 'New Place',
-               city_name: 'Cork',
-             },
-           }
+        params: {
+          discovered_restaurant: {
+            website_url: 'https://newplace.example.com',
+            name: 'New Place',
+            city_name: 'Cork',
+          },
+        }
     end
 
     assert_response :redirect
@@ -116,13 +116,13 @@ class Admin::DiscoveredRestaurantsControllerTest < ActionDispatch::IntegrationTe
 
   test 'create: redirects with alert when website_url is blank' do
     post admin_discovered_restaurants_path,
-         params: {
-           discovered_restaurant: {
-             website_url: '',
-             name: 'No URL',
-             city_name: 'Cork',
-           },
-         }
+      params: {
+        discovered_restaurant: {
+          website_url: '',
+          name: 'No URL',
+          city_name: 'Cork',
+        },
+      }
 
     assert_redirected_to admin_discovered_restaurants_path
     assert_match(/URL is required/i, flash[:alert].to_s)
@@ -130,13 +130,13 @@ class Admin::DiscoveredRestaurantsControllerTest < ActionDispatch::IntegrationTe
 
   test 'create: auto-fills name from domain when name is blank' do
     post admin_discovered_restaurants_path,
-         params: {
-           discovered_restaurant: {
-             website_url: 'https://galwayeat.example.com',
-             name: '',
-             city_name: 'Galway',
-           },
-         }
+      params: {
+        discovered_restaurant: {
+          website_url: 'https://galwayeat.example.com',
+          name: '',
+          city_name: 'Galway',
+        },
+      }
 
     assert_response :redirect
     dr = DiscoveredRestaurant.order(:id).last
@@ -150,11 +150,11 @@ class Admin::DiscoveredRestaurantsControllerTest < ActionDispatch::IntegrationTe
 
   test 'update: updates name and redirects' do
     patch admin_discovered_restaurant_path(@dr),
-          params: {
-            discovered_restaurant: {
-              name: 'Updated Bistro Name',
-            },
-          }
+      params: {
+        discovered_restaurant: {
+          name: 'Updated Bistro Name',
+        },
+      }
 
     assert_response :redirect
     assert_equal 'Updated Bistro Name', @dr.reload.name
@@ -263,11 +263,11 @@ class Admin::DiscoveredRestaurantsControllerTest < ActionDispatch::IntegrationTe
 
   test 'bulk_update: sets status for given ids' do
     patch bulk_update_admin_discovered_restaurants_path,
-          params: {
-            discovered_restaurant_ids: [@dr.id],
-            operation: 'set_status',
-            value: 'rejected',
-          }
+      params: {
+        discovered_restaurant_ids: [@dr.id],
+        operation: 'set_status',
+        value: 'rejected',
+      }
 
     assert_redirected_to admin_discovered_restaurants_path
     assert_equal 'rejected', @dr.reload.status
@@ -275,11 +275,11 @@ class Admin::DiscoveredRestaurantsControllerTest < ActionDispatch::IntegrationTe
 
   test 'bulk_update: redirects with alert for invalid operation' do
     patch bulk_update_admin_discovered_restaurants_path,
-          params: {
-            discovered_restaurant_ids: [@dr.id],
-            operation: 'unknown',
-            value: 'something',
-          }
+      params: {
+        discovered_restaurant_ids: [@dr.id],
+        operation: 'unknown',
+        value: 'something',
+      }
 
     assert_redirected_to admin_discovered_restaurants_path
     assert_match(/Invalid bulk operation/i, flash[:alert].to_s)
@@ -287,7 +287,7 @@ class Admin::DiscoveredRestaurantsControllerTest < ActionDispatch::IntegrationTe
 
   test 'bulk_update: redirects with alert when ids blank' do
     patch bulk_update_admin_discovered_restaurants_path,
-          params: { discovered_restaurant_ids: [], operation: '', value: '' }
+      params: { discovered_restaurant_ids: [], operation: '', value: '' }
 
     assert_redirected_to admin_discovered_restaurants_path
     assert_match(/Invalid bulk update/i, flash[:alert].to_s)
@@ -320,7 +320,7 @@ class Admin::DiscoveredRestaurantsControllerTest < ActionDispatch::IntegrationTe
   # ---------------------------------------------------------------------------
 
   test 'refresh_place_details: redirects with alert when google_maps key missing' do
-    prev_key = ENV.fetch('GOOGLE_MAPS_API_KEY', nil)
+    prev_key = ENV['GOOGLE_MAPS_API_KEY']
     ENV.delete('GOOGLE_MAPS_API_KEY')
     ENV.delete('GOOGLE_MAPS_BROWSER_API_KEY')
 

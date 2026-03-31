@@ -17,7 +17,7 @@ class NotifyWaitQueueCustomerJobTest < ActiveSupport::TestCase
   end
 
   test 'does nothing when customer has no phone number' do
-    entry = customer_wait_queues(:waiting_two) # no customer_phone
+    entry = customer_wait_queues(:waiting_two)  # no customer_phone
     Flipper.enable(:wait_time_sms, entry.restaurant)
 
     # Should return early without attempting Twilio

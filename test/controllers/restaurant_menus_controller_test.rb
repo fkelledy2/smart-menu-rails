@@ -27,8 +27,8 @@ class RestaurantMenusControllerTest < ActionDispatch::IntegrationTest
 
   test 'reorder: returns success with valid order array' do
     patch reorder_restaurant_restaurant_menus_path(@restaurant),
-          params: { order: [{ id: @rm.id, sequence: 5 }] },
-          as: :json
+      params: { order: [{ id: @rm.id, sequence: 5 }] },
+      as: :json
 
     assert_response :ok
     body = response.parsed_body
@@ -38,8 +38,8 @@ class RestaurantMenusControllerTest < ActionDispatch::IntegrationTest
 
   test 'reorder: returns error when order param is not an array' do
     patch reorder_restaurant_restaurant_menus_path(@restaurant),
-          params: { order: 'invalid' },
-          as: :json
+      params: { order: 'invalid' },
+      as: :json
 
     assert_response :unprocessable_content
     body = response.parsed_body
@@ -48,8 +48,8 @@ class RestaurantMenusControllerTest < ActionDispatch::IntegrationTest
 
   test 'reorder: returns 404 for unknown restaurant_menu id' do
     patch reorder_restaurant_restaurant_menus_path(@restaurant),
-          params: { order: [{ id: 0, sequence: 1 }] },
-          as: :json
+      params: { order: [{ id: 0, sequence: 1 }] },
+      as: :json
 
     assert_response :not_found
     body = response.parsed_body
@@ -59,8 +59,8 @@ class RestaurantMenusControllerTest < ActionDispatch::IntegrationTest
   test 'reorder: redirects unauthenticated user' do
     sign_out @user
     patch reorder_restaurant_restaurant_menus_path(@restaurant),
-          params: { order: [] },
-          as: :json
+      params: { order: [] },
+      as: :json
 
     assert_response :unauthorized
   end
@@ -72,11 +72,11 @@ class RestaurantMenusControllerTest < ActionDispatch::IntegrationTest
   test 'bulk_update set_status: updates status to inactive and redirects' do
     # inactive is always allowed (no subscription check)
     patch bulk_update_restaurant_restaurant_menus_path(@restaurant),
-          params: {
-            restaurant_menu_ids: [@rm.id.to_s],
-            operation: 'set_status',
-            value: 'inactive',
-          }
+      params: {
+        restaurant_menu_ids: [@rm.id.to_s],
+        operation: 'set_status',
+        value: 'inactive',
+      }
 
     assert_response :redirect
     assert_equal 'inactive', @rm.reload.status
@@ -84,10 +84,10 @@ class RestaurantMenusControllerTest < ActionDispatch::IntegrationTest
 
   test 'bulk_update archive: archives the restaurant_menu' do
     patch bulk_update_restaurant_restaurant_menus_path(@restaurant),
-          params: {
-            restaurant_menu_ids: [@rm.id.to_s],
-            operation: 'archive',
-          }
+      params: {
+        restaurant_menu_ids: [@rm.id.to_s],
+        operation: 'archive',
+      }
 
     assert_response :redirect
     assert_equal 'archived', @rm.reload.status
@@ -95,10 +95,10 @@ class RestaurantMenusControllerTest < ActionDispatch::IntegrationTest
 
   test 'bulk_update: redirects with alert for invalid operation' do
     patch bulk_update_restaurant_restaurant_menus_path(@restaurant),
-          params: {
-            restaurant_menu_ids: [@rm.id.to_s],
-            operation: 'unknown_op',
-          }
+      params: {
+        restaurant_menu_ids: [@rm.id.to_s],
+        operation: 'unknown_op',
+      }
 
     assert_response :redirect
     assert_match(/Invalid bulk operation/i, flash[:alert].to_s)
@@ -106,7 +106,7 @@ class RestaurantMenusControllerTest < ActionDispatch::IntegrationTest
 
   test 'bulk_update: redirects with no ids' do
     patch bulk_update_restaurant_restaurant_menus_path(@restaurant),
-          params: { restaurant_menu_ids: [], operation: 'archive' }
+      params: { restaurant_menu_ids: [], operation: 'archive' }
 
     assert_response :redirect
   end
@@ -114,7 +114,7 @@ class RestaurantMenusControllerTest < ActionDispatch::IntegrationTest
   test 'bulk_update: redirects unauthenticated user' do
     sign_out @user
     patch bulk_update_restaurant_restaurant_menus_path(@restaurant),
-          params: { restaurant_menu_ids: [@rm.id.to_s], operation: 'archive' }
+      params: { restaurant_menu_ids: [@rm.id.to_s], operation: 'archive' }
 
     assert_response :redirect
     assert_redirected_to new_user_session_path
@@ -126,11 +126,11 @@ class RestaurantMenusControllerTest < ActionDispatch::IntegrationTest
 
   test 'bulk_availability: updates availability override and state' do
     patch bulk_availability_restaurant_restaurant_menus_path(@restaurant),
-          params: {
-            restaurant_menu_ids: [@rm.id.to_s],
-            availability_override_enabled: true,
-            availability_state: 'unavailable',
-          }
+      params: {
+        restaurant_menu_ids: [@rm.id.to_s],
+        availability_override_enabled: true,
+        availability_state: 'unavailable',
+      }
 
     assert_response :redirect
     @rm.reload
@@ -140,7 +140,7 @@ class RestaurantMenusControllerTest < ActionDispatch::IntegrationTest
 
   test 'bulk_availability: redirects with empty ids' do
     patch bulk_availability_restaurant_restaurant_menus_path(@restaurant),
-          params: { restaurant_menu_ids: [], availability_state: 'available' }
+      params: { restaurant_menu_ids: [], availability_state: 'available' }
 
     assert_response :redirect
   end
@@ -148,7 +148,7 @@ class RestaurantMenusControllerTest < ActionDispatch::IntegrationTest
   test 'bulk_availability: redirects unauthenticated user' do
     sign_out @user
     patch bulk_availability_restaurant_restaurant_menus_path(@restaurant),
-          params: { restaurant_menu_ids: [@rm.id.to_s], availability_state: 'available' }
+      params: { restaurant_menu_ids: [@rm.id.to_s], availability_state: 'available' }
 
     assert_response :redirect
     assert_redirected_to new_user_session_path
@@ -160,11 +160,11 @@ class RestaurantMenusControllerTest < ActionDispatch::IntegrationTest
 
   test 'availability: updates single record and returns JSON success' do
     patch availability_restaurant_restaurant_menu_path(@restaurant, @rm),
-          params: {
-            availability_override_enabled: true,
-            availability_state: 'unavailable',
-          },
-          as: :json
+      params: {
+        availability_override_enabled: true,
+        availability_state: 'unavailable',
+      },
+      as: :json
 
     assert_response :ok
     body = response.parsed_body
@@ -177,8 +177,8 @@ class RestaurantMenusControllerTest < ActionDispatch::IntegrationTest
   test 'availability: redirects unauthenticated user' do
     sign_out @user
     patch availability_restaurant_restaurant_menu_path(@restaurant, @rm),
-          params: { availability_state: 'available' },
-          as: :json
+      params: { availability_state: 'available' },
+      as: :json
 
     assert_response :unauthorized
   end
@@ -192,8 +192,8 @@ class RestaurantMenusControllerTest < ActionDispatch::IntegrationTest
     end
 
     patch availability_restaurant_restaurant_menu_path(@restaurant, other_rm),
-          params: { availability_state: 'available' },
-          as: :json
+      params: { availability_state: 'available' },
+      as: :json
 
     # The scope filters to current user's restaurant; record not found
     assert_response :not_found

@@ -208,18 +208,22 @@ class OrdrsControllerTest < ActionDispatch::IntegrationTest
 
   private
 
-  def stub_cache_services(&)
+  def stub_cache_services(&block)
     empty_result = { orders: [], cached_calculations: {}, metadata: { restaurants_count: 0 } }
     AdvancedCacheServiceV2.stub(:cached_restaurant_orders_with_models, empty_result) do
       AdvancedCacheServiceV2.stub(:cached_user_all_orders_with_models, empty_result) do
         AdvancedCacheService.stub(:cached_order_with_details, {
           calculations: { nett: 0, tax: 0, service: 0, covercharge: 0, gross: 0 },
-        }, &)
+        }) do
+          block.call
+        end
       end
     end
   end
 
-  def stub_broadcasts(&)
-    ActionCable.server.stub(:broadcast, nil, &)
+  def stub_broadcasts(&block)
+    ActionCable.server.stub(:broadcast, nil) do
+      block.call
+    end
   end
 end

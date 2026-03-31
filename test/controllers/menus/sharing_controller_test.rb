@@ -53,14 +53,14 @@ class Menus::SharingControllerTest < ActionDispatch::IntegrationTest
   test 'share: redirects unauthenticated user' do
     sign_out @user
     post share_restaurant_menu_path(@restaurant, @menu),
-         params: { target_restaurant_ids: [] }
+      params: { target_restaurant_ids: [] }
 
     assert_redirected_to new_user_session_path
   end
 
   test 'share: redirects with alert when no target restaurants found' do
     post share_restaurant_menu_path(@restaurant, @menu),
-         params: { target_restaurant_ids: ['999999'] }
+      params: { target_restaurant_ids: ['999999'] }
 
     assert_redirected_to edit_restaurant_path(@restaurant, section: 'menus')
     assert_match(/not found/i, flash[:alert].to_s)
@@ -77,7 +77,7 @@ class Menus::SharingControllerTest < ActionDispatch::IntegrationTest
     @menu.update_column(:owner_restaurant_id, restaurants(:two).id)
 
     post share_restaurant_menu_path(@restaurant, @menu),
-         params: { target_restaurant_ids: ['all'] }
+      params: { target_restaurant_ids: ['all'] }
 
     assert_redirected_to edit_restaurant_path(@restaurant, section: 'menus')
     assert_match(/owner/i, flash[:alert].to_s)

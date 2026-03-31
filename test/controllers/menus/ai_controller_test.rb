@@ -30,8 +30,10 @@ class Menus::AiControllerTest < ActionDispatch::IntegrationTest
   end
 
   # Stub Sidekiq.redis to be a no-op (avoid Redis in tests)
-  def stub_sidekiq_redis(&)
-    Sidekiq.stub(:redis, ->(*, &_blk) {}, &)
+  def stub_sidekiq_redis(&block)
+    Sidekiq.stub(:redis, ->(*, &_blk) {}) do
+      block.call
+    end
   end
 
   # ---------------------------------------------------------------------------
@@ -64,10 +66,7 @@ class Menus::AiControllerTest < ActionDispatch::IntegrationTest
     sign_in @owner
 
     webp_called = false
-    RegenerateMenuWebpJob.stub(:perform_async, lambda { |_mid|
-      webp_called = true
-      @fake_jid
-    },) do
+    RegenerateMenuWebpJob.stub(:perform_async, ->(_mid) { webp_called = true; @fake_jid }) do
       post regenerate_images_restaurant_menu_path(@restaurant, @menu),
            params: { generate_ai: 'false' }
     end

@@ -1,6 +1,13 @@
 ---
 en:
   smartmenus:
+    staff_mode:
+      customer_view: Customer view
+      staff_mode_on: Staff mode
+      staff_view: Staff view
+      switch_to_customer: Switch to customer view
+      switch_to_staff: Switch to staff controls
+      viewing_as_customer: Viewing as customer
     alcohol:
       acknowledge_btn: Acknowledge age check
       acknowledged: Age check acknowledged
