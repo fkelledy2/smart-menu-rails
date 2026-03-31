@@ -74,12 +74,15 @@ class DiscoveredRestaurantRefreshPlaceDetailsJobTest < ActiveSupport::TestCase
     fake_fetcher = Object.new
     fake_fetcher.define_singleton_method(:fetch!) { |_place_id| fake_details }
 
+    ENV['GOOGLE_MAPS_API_KEY'] = 'test_key'
     GooglePlaces::PlaceDetails.stub(:new, ->(api_key:) { fake_fetcher }) do
       DiscoveredRestaurantRefreshPlaceDetailsJob.new.perform(
         discovered_restaurant_id: @dr.id,
         triggered_by_user_id: nil,
       )
     end
+  ensure
+    ENV.delete('GOOGLE_MAPS_API_KEY')
 
     @dr.reload
     place_details = @dr.metadata&.dig('place_details')
