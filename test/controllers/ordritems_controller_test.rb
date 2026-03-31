@@ -73,9 +73,7 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
   ensure
     ApplicationController.class_eval do
       def verify_authorized
-        return if current_user&.super_admin?
-
-        super
+        super unless current_user&.super_admin?
       end
     end
   end
@@ -102,9 +100,7 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
   ensure
     ApplicationController.class_eval do
       def verify_authorized
-        return if current_user&.super_admin?
-
-        super
+        super unless current_user&.super_admin?
       end
     end
   end

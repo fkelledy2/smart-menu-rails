@@ -5,3 +5,5 @@ vendor/
 coverage/
 tmp/
 *.min.css
+app/assets/stylesheets/tabulator_bootstrap5.css
+app/assets/stylesheets/tabulator.css

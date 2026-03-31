@@ -45,7 +45,7 @@ class StaffInvitationsControllerTest < ActionDispatch::IntegrationTest
 
   test 'create: sends invitation and redirects with notice (HTML)' do
     mailer_double = Object.new
-    mailer_double.define_singleton_method(:deliver_later) {}
+    mailer_double.define_singleton_method(:deliver_later) { nil }
 
     StaffInvitationMailer.stub(:invite, ->(_inv) { mailer_double }) do
       post restaurant_staff_invitations_path(@restaurant),

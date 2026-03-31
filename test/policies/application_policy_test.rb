@@ -5,9 +5,12 @@ require 'test_helper'
 class ApplicationPolicyTest < ActiveSupport::TestCase
   # ApplicationPolicy is abstract — test via a concrete subclass that doesn't
   # override any methods, so we exercise the base behaviour directly.
-  class TestRecord; end
+  class TestRecord # rubocop:disable Lint/EmptyClass
+  end
 
-  class ConcretePolicy < ApplicationPolicy; end
+  class ConcretePolicy < ApplicationPolicy
+    # Inherits all ApplicationPolicy behaviour — no overrides needed for base tests.
+  end
 
   def setup
     @regular_user  = users(:one)

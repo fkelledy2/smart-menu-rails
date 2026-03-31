@@ -30,7 +30,8 @@ class ClaimAndRemovalFlowTest < ApplicationSystemTestCase
     assert_text 'removal request has been received'
 
     restaurant.reload
-    assert_not restaurant.preview_enabled?, 'Preview should be disabled after removal request'
+    # Anonymous submissions are queued for admin review — preview stays enabled until an admin acts.
+    assert restaurant.preview_enabled?, 'Preview stays enabled for anonymous submissions (verified owners only trigger immediate unpublish)'
     assert_equal 1, RestaurantRemovalRequest.where(restaurant: restaurant).count
   end
 

@@ -30,7 +30,9 @@ class SmartmenuStaffOrderingTest < ApplicationSystemTestCase
   # ===================
 
   test 'staff view shows menu content with enabled buttons when table is set' do
-    visit smartmenu_path(@smartmenu.slug)
+    # Staff view requires a signed preview token — generate one for the active menu
+    preview_token = SmartmenuPreviewToken.generate(mode: 'staff', menu_id: @menu.id)
+    visit table_link_path(@smartmenu.public_token, preview: preview_token)
 
     # Verify staff can see menu sections and items
     assert_testid('menu-content-container', wait: 5)
