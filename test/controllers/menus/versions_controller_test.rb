@@ -13,7 +13,7 @@ class Menus::VersionsControllerTest < ActionDispatch::IntegrationTest
     @owner      = users(:one)
     @other_user = users(:two)
     @restaurant = restaurants(:one)
-    @menu       = menus(:one)  # belongs to restaurant :one (owner = users :one)
+    @menu       = menus(:one) # belongs to restaurant :one (owner = users :one)
 
     # Stub snapshot so MenuVersion.create_from_menu! doesn't require full menu data
     @snapshot_stub = { sections: [] }.to_json
@@ -113,7 +113,7 @@ class Menus::VersionsControllerTest < ActionDispatch::IntegrationTest
 
       get versions_diff_restaurant_menu_path(@restaurant, @menu,
                                              from_version_id: v1.id,
-                                             to_version_id: v2.id), as: :json
+                                             to_version_id: v2.id,), as: :json
       assert_response :success
 
       body = response.parsed_body

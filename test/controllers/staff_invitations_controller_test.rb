@@ -29,7 +29,7 @@ class StaffInvitationsControllerTest < ActionDispatch::IntegrationTest
   test 'create: redirects unauthenticated user' do
     sign_out @super
     post restaurant_staff_invitations_path(@restaurant),
-      params: { staff_invitation: { email: 'new@example.com', role: 'staff' } }
+         params: { staff_invitation: { email: 'new@example.com', role: 'staff' } }
 
     assert_redirected_to new_user_session_path
   end
@@ -37,7 +37,7 @@ class StaffInvitationsControllerTest < ActionDispatch::IntegrationTest
   test 'create: returns not_found when restaurant does not belong to current user' do
     other_restaurant = restaurants(:two) # owned by users(:two), not @super
     post restaurant_staff_invitations_path(other_restaurant),
-      params: { staff_invitation: { email: 'invite@example.com', role: 'staff' } }
+         params: { staff_invitation: { email: 'invite@example.com', role: 'staff' } }
 
     # Restaurant lookup fails → head :not_found or redirect
     assert_includes [404, 302], response.status
@@ -49,7 +49,7 @@ class StaffInvitationsControllerTest < ActionDispatch::IntegrationTest
 
     StaffInvitationMailer.stub(:invite, ->(_inv) { mailer_double }) do
       post restaurant_staff_invitations_path(@restaurant),
-        params: { staff_invitation: { email: 'newstaff@example.com', role: 'staff' } }
+           params: { staff_invitation: { email: 'newstaff@example.com', role: 'staff' } }
     end
 
     assert_redirected_to edit_restaurant_path(@restaurant, section: 'staff')
@@ -68,7 +68,7 @@ class StaffInvitationsControllerTest < ActionDispatch::IntegrationTest
     )
 
     post restaurant_staff_invitations_path(@restaurant),
-      params: { staff_invitation: { email: 'existing@example.com', role: 'staff' } }
+         params: { staff_invitation: { email: 'existing@example.com', role: 'staff' } }
 
     assert_response :redirect
     assert_match(/already/i, flash[:alert].to_s)
@@ -79,7 +79,7 @@ class StaffInvitationsControllerTest < ActionDispatch::IntegrationTest
     Employee.where(restaurant: @restaurant, user: @owner).update_all(status: 1, archived: false)
 
     post restaurant_staff_invitations_path(@restaurant),
-      params: { staff_invitation: { email: @owner.email, role: 'staff' } }
+         params: { staff_invitation: { email: @owner.email, role: 'staff' } }
 
     assert_response :redirect
     assert_match(/already/i, flash[:alert].to_s)

@@ -172,7 +172,7 @@ class Payments::Providers::StripeAdapterTest < ActiveSupport::TestCase
   test 'ensure_api_key! raises when Stripe.api_key is blank and no env/credentials key exists' do
     Stripe.api_key = nil
 
-    ENV_KEY_BACKUP = ENV['STRIPE_SECRET_KEY']
+    ENV_KEY_BACKUP = ENV.fetch('STRIPE_SECRET_KEY', nil)
     ENV.delete('STRIPE_SECRET_KEY')
 
     adapter = Payments::Providers::StripeAdapter.new

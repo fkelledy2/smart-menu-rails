@@ -4,6 +4,7 @@ require 'test_helper'
 
 class PartnerIntegrations::EventEmitterTest < ActiveSupport::TestCase
   include ActiveJob::TestHelper
+
   def setup
     @restaurant = restaurants(:one)
     @restaurant.update!(enabled_integrations: [])

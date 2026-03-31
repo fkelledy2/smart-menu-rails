@@ -5,6 +5,7 @@ require 'test_helper'
 module MenuExperiments
   class ExposureLoggerTest < ActiveSupport::TestCase
     include ActiveJob::TestHelper
+
     def setup
       @menu = menus(:one)
       @dining_session = dining_sessions(:valid_session)

@@ -49,7 +49,7 @@ module MenuExperiments
     test 'assignment is deterministic for the same token' do
       session = DiningSession.new(session_token: 'b' * 64)
 
-      results = 5.times.map do
+      results = Array.new(5) do
         VersionAssignmentService.assign(
           dining_session: session,
           menu_experiment: @experiment,
@@ -62,7 +62,7 @@ module MenuExperiments
     test 'different session tokens can produce different assignments' do
       # With many different tokens one side must appear at least once
       # Use tokens that are known to map to different buckets
-      results = 100.times.map do |i|
+      results = Array.new(100) do |i|
         session = DiningSession.new(session_token: i.to_s.ljust(64, '0'))
         VersionAssignmentService.assign(
           dining_session: session,

@@ -74,6 +74,7 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
     ApplicationController.class_eval do
       def verify_authorized
         return if current_user&.super_admin?
+
         super
       end
     end
@@ -102,6 +103,7 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
     ApplicationController.class_eval do
       def verify_authorized
         return if current_user&.super_admin?
+
         super
       end
     end
@@ -114,10 +116,10 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
     # We stub both and manually create the ordritem to simulate the projector.
     line_key = nil
 
-    OrderEvent.stub(:emit!, ->(ordr:, **kwargs) {
+    OrderEvent.stub(:emit!, lambda { |ordr:, **kwargs|
       line_key = kwargs.dig(:payload, :line_key)
-    }) do
-      OrderEventProjector.stub(:project!, -> (ordr_id) {
+    },) do
+      OrderEventProjector.stub(:project!, lambda { |ordr_id|
         # Simulate projector creating the ordritem with the generated line_key
         Ordritem.create!(
           ordr: @ordr,
@@ -126,7 +128,7 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
           status: :opened,
           line_key: line_key || SecureRandom.uuid,
         )
-      }) do
+      },) do
         ActionCable.server.stub(:broadcast, nil) do
           assert_difference 'Ordritem.count', 1 do
             post restaurant_ordritems_path(@restaurant), params: {
@@ -165,7 +167,7 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
   test 'PATCH update status to removed triggers event-first removal' do
     sign_in @owner
 
-    order = @ordritem.ordr
+    @ordritem.ordr
     event_emitted = false
 
     OrderEvent.stub(:emit!, ->(**_kwargs) { event_emitted = true }) do
@@ -260,5 +262,4 @@ class OrdritemsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :forbidden
   end
-
 end

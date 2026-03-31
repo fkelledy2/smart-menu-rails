@@ -11,11 +11,11 @@ class MenuItemImageBatchJobTest < ActiveSupport::TestCase
     @menu       = menus(:one)
   end
 
-  def stub_sidekiq_redis(&block)
+  def stub_sidekiq_redis(&)
     fake_redis = Object.new
     fake_redis.define_singleton_method(:get) { |_k| nil }
     fake_redis.define_singleton_method(:setex) { |*_args| nil }
-    Sidekiq.stub(:redis, ->(*_args, &blk) { blk.call(fake_redis) }, &block)
+    Sidekiq.stub(:redis, ->(*_args, &blk) { blk.call(fake_redis) }, &)
   end
 
   test 'perform is a no-op for a non-existent menu' do
@@ -37,7 +37,10 @@ class MenuItemImageBatchJobTest < ActiveSupport::TestCase
     )
 
     processed_ids = []
-    MenuItemImageGeneratorJob.stub(:perform_sync, ->(id) { processed_ids << id; nil }) do
+    MenuItemImageGeneratorJob.stub(:perform_sync, lambda { |id|
+      processed_ids << id
+      nil
+    },) do
       stub_sidekiq_redis do
         MenuItemImageBatchJob.new.perform(@menu.id)
       end
@@ -49,7 +52,7 @@ class MenuItemImageBatchJobTest < ActiveSupport::TestCase
   end
 
   test 'perform skips wine items during generation' do
-    section  = menusections(:one)
+    section = menusections(:one)
     wine_item = @menu.menuitems.find_by(itemtype: 'wine') ||
                 Menuitem.create!(
                   name: 'Chardonnay',
@@ -69,7 +72,10 @@ class MenuItemImageBatchJobTest < ActiveSupport::TestCase
     )
 
     processed_ids = []
-    MenuItemImageGeneratorJob.stub(:perform_sync, ->(id) { processed_ids << id; nil }) do
+    MenuItemImageGeneratorJob.stub(:perform_sync, lambda { |id|
+      processed_ids << id
+      nil
+    },) do
       stub_sidekiq_redis do
         MenuItemImageBatchJob.new.perform(@menu.id)
       end

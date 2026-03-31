@@ -79,7 +79,7 @@ module WaitTime
       entry = customer_wait_queues(:seated_one)
       result = @manager.seat(entry)
       assert_not result.success?
-      assert_match /not in an active state/i, result.error
+      assert_match(/not in an active state/i, result.error)
     end
 
     test 'seat reorders remaining queue positions' do
@@ -146,7 +146,7 @@ module WaitTime
     end
 
     test 'notify fails on non-waiting entry' do
-      entry = customer_wait_queues(:notified_one)  # already notified
+      entry = customer_wait_queues(:notified_one) # already notified
       result = @manager.notify(entry)
       assert_not result.success?
     end
