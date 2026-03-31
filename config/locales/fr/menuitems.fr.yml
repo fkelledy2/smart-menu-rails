@@ -6,6 +6,8 @@ fr:
       deleted: L'élément de menu a été supprimé avec succès.
       updated: L'élément de menu a été mis à jour avec succès.
     edit:
+      back_to_section: replace_me
+      description: replace_me
       tab_item: Objet
     edit_2025:
       active: Actif

@@ -5,3 +5,9 @@ es:
       created: El ingrediente se ha creado correctamente.
       deleted: Ingrediente eliminado con éxito.
       updated: El ingrediente se ha actualizado correctamente.
+    edit:
+      back_to_ingredients: replace_me
+      description: replace_me
+      edit_ingredient: replace_me
+      ingredient_details: replace_me
+      ingredients: replace_me

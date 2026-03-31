@@ -26,6 +26,7 @@ cs:
       current_pdf: 'Aktuální PDF:'
       delete: Smazat
       details: Podrobnosti
+      display: replace_me
       errors: Chyby
       'false': mimo
       imageSettings: Nastavení obrázku
@@ -55,14 +56,20 @@ cs:
     new:
       menu: Nové menu
     sections:
+      details_2025:
+        ai_tools: replace_me
+        manage: replace_me
+        preview: replace_me
       items_2025:
         actions: Akce
         archive: Archiv
         archive_single_confirm: Archiv
+        preview: replace_me
       sections_2025:
         actions: Akce
         archive: Archiv
         archive_single_confirm: Archiv
+        preview: replace_me
       versions_2025:
         no_versions_desc: Verze se vytvářejí automaticky při publikování změn.
     show:

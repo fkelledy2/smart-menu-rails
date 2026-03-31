@@ -5,3 +5,9 @@ cs:
       created: Přísada byla úspěšně vytvořena.
       deleted: Přísada byla úspěšně odstraněna.
       updated: Složka byla úspěšně aktualizována.
+    edit:
+      back_to_ingredients: replace_me
+      description: replace_me
+      edit_ingredient: replace_me
+      ingredient_details: replace_me
+      ingredients: replace_me

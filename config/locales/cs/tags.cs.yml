@@ -6,6 +6,9 @@ cs:
       deleted: Značka byla úspěšně odstraněna.
       updated: Tag byl úspěšně aktualizován.
     edit:
+      back_to_tags: replace_me
+      tag_details: replace_me
+      tags: replace_me
       title: Upravit štítek
     form:
       delete: Odstranit

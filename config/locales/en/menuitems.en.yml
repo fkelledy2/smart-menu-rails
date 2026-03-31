@@ -6,6 +6,8 @@ en:
       deleted: Menu item was successfully deleted.
       updated: Menu item was successfully updated.
     edit:
+      back_to_section: Back to Section
+      description: Edit menu item details, pricing, and options
       tab_item: Item
     edit_2025:
       active: Active

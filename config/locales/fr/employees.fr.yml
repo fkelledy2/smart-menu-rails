@@ -6,7 +6,12 @@ fr:
       deleted: L'employé a été supprimé avec succès.
       updated: L'employé a été mis à jour avec succès.
     edit:
+      back_to_staff: replace_me
+      description: replace_me
+      edit_employee: replace_me
       employee: Modifier l'employé
+      employee_details: replace_me
+      staff: replace_me
     employee:
       eid: 'ID de l''employé :'
       image: 'Image :'

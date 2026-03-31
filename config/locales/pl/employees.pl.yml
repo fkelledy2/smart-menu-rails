@@ -6,7 +6,12 @@ pl:
       deleted: Pracownik został pomyślnie usunięty.
       updated: Pracownik został pomyślnie zaktualizowany.
     edit:
+      back_to_staff: replace_me
+      description: replace_me
+      edit_employee: replace_me
       employee: Pracownik
+      employee_details: replace_me
+      staff: replace_me
     employee:
       eid: 'Identyfikator pracownika:'
       image: 'Obraz:'

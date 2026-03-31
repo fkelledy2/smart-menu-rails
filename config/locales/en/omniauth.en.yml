@@ -2,6 +2,7 @@
 en:
   omniauth:
     connected: Your %{kind} account was connected.
+    create_failed: Unable to create account. Please try again.
     email_exists: An account with this email already exists. Please sign in with that
       account before connecting your %{provider} account.
     failure: Something went wrong

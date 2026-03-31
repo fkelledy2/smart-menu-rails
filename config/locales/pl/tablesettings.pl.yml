@@ -20,6 +20,10 @@ pl:
       deleted: Ustawienie tabeli zostało pomyślnie usunięte.
       updated: Ustawienie tabeli zostało pomyślnie zaktualizowane.
     edit:
+      back_to_tables: replace_me
+      description: replace_me
+      edit_tablesetting: replace_me
+      tables: replace_me
       tablesetting: Ustawienie stołu
     index:
       archive: Archiwum

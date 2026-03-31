@@ -2,6 +2,8 @@
 fr:
   menusections:
     edit:
+      back_to_menu: replace_me
+      description: replace_me
       inventories: Stocks
       items: Articles
       section: Section

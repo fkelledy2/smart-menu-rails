@@ -2,6 +2,7 @@
 hu:
   omniauth:
     connected: Az Ön %{fajtájú} fiókját összekapcsolták.
+    create_failed: replace_me
     email_exists: Már létezik egy fiók ezzel az e-mail címmel. Kérjük, jelentkezzen
       be ezzel a fiókkal, mielőtt csatlakoztatná a %{provider} fiókját.
     failure: Valami rosszul sült el

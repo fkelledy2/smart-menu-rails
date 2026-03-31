@@ -22,10 +22,10 @@ class ReceiptTemplateRendererTest < ActiveSupport::TestCase
 
   test '#receipt_items returns non-removed ordritems' do
     items = @renderer.receipt_items
-    assert items.all? { |i| i[:name].is_a?(String) }
-    assert items.all? { |i| i[:quantity].is_a?(Integer) }
-    assert items.all? { |i| i[:unit_price].is_a?(Float) }
-    assert items.all? { |i| i[:line_total].is_a?(Float) }
+    assert(items.all? { |i| i[:name].is_a?(String) })
+    assert(items.all? { |i| i[:quantity].is_a?(Integer) })
+    assert(items.all? { |i| i[:unit_price].is_a?(Float) })
+    assert(items.all? { |i| i[:line_total].is_a?(Float) })
   end
 
   # ---------------------------------------------------------------------------
@@ -91,30 +91,35 @@ class ReceiptTemplateRendererTest < ActiveSupport::TestCase
 
   test '#currency_symbol returns correct symbol for EUR' do
     @restaurant.update_column(:currency, 'EUR')
+    @ordr.association(:restaurant).reset
     renderer = ReceiptTemplateRenderer.new(@ordr)
     assert_equal '€', renderer.currency_symbol
   end
 
   test '#currency_symbol returns correct symbol for GBP' do
     @restaurant.update_column(:currency, 'GBP')
+    @ordr.association(:restaurant).reset
     renderer = ReceiptTemplateRenderer.new(@ordr)
     assert_equal '£', renderer.currency_symbol
   end
 
   test '#currency_symbol returns correct symbol for USD' do
     @restaurant.update_column(:currency, 'USD')
+    @ordr.association(:restaurant).reset
     renderer = ReceiptTemplateRenderer.new(@ordr)
     assert_equal '$', renderer.currency_symbol
   end
 
   test '#currency_symbol returns currency code for unknown currency' do
     @restaurant.update_column(:currency, 'XYZ')
+    @ordr.association(:restaurant).reset
     renderer = ReceiptTemplateRenderer.new(@ordr)
     assert_equal 'XYZ', renderer.currency_symbol
   end
 
   test '#format_currency includes the currency symbol and two decimal places' do
     @restaurant.update_column(:currency, 'EUR')
+    @ordr.association(:restaurant).reset
     renderer = ReceiptTemplateRenderer.new(@ordr)
     assert_equal '€12.50', renderer.format_currency(12.5)
   end

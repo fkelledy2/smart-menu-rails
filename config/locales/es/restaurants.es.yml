@@ -262,6 +262,7 @@ es:
       close_menu: Cerrar menú
       details: Detalles
       financials: FINANZAS
+      floorplan: replace_me
       insights: Perspectivas
       jukebox: Jukebox
       kitchen_dashboard: Cocina
@@ -281,6 +282,7 @@ es:
       taxes_and_tips: Impuestos y propinas
       team: EQUIPO
       tips: Consejos
+      wait_times: replace_me
       wifi: Wi‑Fi
     welcome_modal:
       body: Complete la lista de comprobación para poner su restaurante en línea.

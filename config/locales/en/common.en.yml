@@ -17,6 +17,7 @@ en:
       archived: "%{resource} was successfully archived."
       created: "%{resource} was successfully created."
       deleted: "%{resource} was successfully deleted."
+      error: Could not start order. Please try again.
       processing_restarted: Processing has been (re)started.
       updated: "%{resource} was successfully updated."
     loading: Loading...

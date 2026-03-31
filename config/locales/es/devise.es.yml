@@ -34,6 +34,19 @@ es:
       failure: No se le ha podido autenticar desde %{kind} porque "%{reason}".
       success: Autenticado correctamente desde la cuenta %{kind}.
     passwords:
+      edit:
+        change_my_password: replace_me
+        change_your_password: replace_me
+        characters_minimum: replace_me
+        confirm_password_placeholder: replace_me
+        password_placeholder: replace_me
+      new:
+        back_to_sign_in: replace_me
+        email_placeholder: replace_me
+        reset_instructions_help: replace_me
+        reset_password: replace_me
+        reset_subtitle: replace_me
+        send_reset_instructions: replace_me
       no_token: No puedes acceder a esta página sin haber recibido un correo electrónico
         de restablecimiento de contraseña. Si procede de un correo electrónico de
         restablecimiento de contraseña, asegúrese de haber utilizado la URL completa
@@ -50,20 +63,36 @@ es:
         verle pronto.
       edit:
         account: Cuenta
+        account_information: replace_me
+        change_password: replace_me
         confirmPassword: Confirmar contraseña
+        confirm_new_password: replace_me
+        confirm_new_password_placeholder: replace_me
         currentPassword: Contraseña actual
         currentPasswordHelp: Necesitamos tu contraseña actual para confirmar
+        danger_zone: replace_me
         deactivateMyAccount: Desactivar mi cuenta
         deactivateMyAccountAreYouSure: "¿Estás seguro? Esta acción es irreversible."
+        deactivate_warning: replace_me
         emailAddress: Dirección de correo electrónico
         fullName: Nombre y apellidos
+        leave_blank: replace_me
+        new_password: replace_me
+        new_password_placeholder: replace_me
+        pending_confirmation: replace_me
         saveChanges: Guardar cambios
+        update_subtitle: replace_me
       new:
+        already_have_account: replace_me
         confirmPassword: Confirmar contraseña
+        create_account: replace_me
+        create_your_account: replace_me
         emailAddress: Correo electrónico
         fullName: Nombre completo
+        minimum_characters: replace_me
         password: Contraseña
         signUp: Registrarse
+        sign_in: replace_me
       signed_up: Le damos la bienvenida. Se ha registrado correctamente.
       signed_up_but_inactive: Se ha registrado correctamente. Sin embargo, no hemos
         podido iniciar sesión porque su cuenta aún no está activada.
@@ -81,10 +110,13 @@ es:
     sessions:
       already_signed_out: Firmado con éxito.
       new:
+        create_account: replace_me
+        dont_have_account: replace_me
         emailAddress: Correo electrónico
         login: Iniciar sesión
         password: Contraseña
         rememberMe: Recordarme
+        welcome_back: replace_me
       signed_in: Se ha registrado correctamente.
       signed_out: Firmado con éxito.
     shared:

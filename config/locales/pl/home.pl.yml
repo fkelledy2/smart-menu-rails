@@ -2,6 +2,7 @@
 pl:
   home:
     index:
+      bookDemo: replace_me
       browse: Przeglądaj
       closingBody: Stwórz swoje pierwsze menu już teraz lub zapoznaj się z wersją
         demonstracyjną i zobacz, jak działa na urządzeniach mobilnych.
@@ -132,6 +133,7 @@ pl:
       trustItem4Title: Wsparcie, gdy go potrzebujesz
       trustTitle: Stworzony do prawdziwej obsługi restauracji
       video_unsupported: Twoja przeglądarka nie obsługuje tagu wideo.
+      watchDemo: replace_me
       welcome: Witamy
     privacy:
       page_description: Dowiedz się, w jaki sposób Mellow Menu gromadzi, wykorzystuje

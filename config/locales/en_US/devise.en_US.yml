@@ -30,6 +30,19 @@ en_US:
       failure: ''
       success: ''
     passwords:
+      edit:
+        change_my_password: replace_me
+        change_your_password: replace_me
+        characters_minimum: replace_me
+        confirm_password_placeholder: replace_me
+        password_placeholder: replace_me
+      new:
+        back_to_sign_in: replace_me
+        email_placeholder: replace_me
+        reset_instructions_help: replace_me
+        reset_password: replace_me
+        reset_subtitle: replace_me
+        send_reset_instructions: replace_me
       no_token: ''
       send_instructions: ''
       send_paranoid_instructions: ''
@@ -39,20 +52,36 @@ en_US:
       destroyed: ''
       edit:
         account: ''
+        account_information: replace_me
+        change_password: replace_me
         confirmPassword: ''
+        confirm_new_password: replace_me
+        confirm_new_password_placeholder: replace_me
         currentPassword: ''
         currentPasswordHelp: ''
+        danger_zone: replace_me
         deactivateMyAccount: ''
         deactivateMyAccountAreYouSure: ''
+        deactivate_warning: replace_me
         emailAddress: ''
         fullName: ''
+        leave_blank: replace_me
+        new_password: replace_me
+        new_password_placeholder: replace_me
+        pending_confirmation: replace_me
         saveChanges: ''
+        update_subtitle: replace_me
       new:
+        already_have_account: replace_me
         confirmPassword: ''
+        create_account: replace_me
+        create_your_account: replace_me
         emailAddress: ''
         fullName: ''
+        minimum_characters: replace_me
         password: ''
         signUp: ''
+        sign_in: replace_me
       signed_up: ''
       signed_up_but_inactive: ''
       signed_up_but_locked: ''
@@ -63,10 +92,13 @@ en_US:
     sessions:
       already_signed_out: ''
       new:
+        create_account: replace_me
+        dont_have_account: replace_me
         emailAddress: ''
         login: ''
         password: ''
         rememberMe: ''
+        welcome_back: replace_me
       signed_in: ''
       signed_out: ''
     shared:

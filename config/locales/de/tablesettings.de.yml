@@ -20,6 +20,10 @@ de:
       deleted: Die Tabelleneinstellung wurde erfolgreich gelöscht.
       updated: Die Tabelleneinstellung wurde erfolgreich aktualisiert.
     edit:
+      back_to_tables: replace_me
+      description: replace_me
+      edit_tablesetting: replace_me
+      tables: replace_me
       tablesetting: Tisch bearbeiten
     index:
       archive: Archiv

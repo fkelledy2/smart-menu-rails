@@ -17,6 +17,7 @@ it:
       archived: "%{resource} archiviato con successo."
       created: "%{resource} creato con successo."
       deleted: "%{resource} eliminato con successo."
+      error: replace_me
       processing_restarted: L'elaborazione è stata (ri)avviata.
       updated: "%{resource} aggiornato con successo."
     loading: Caricamento...

@@ -1,0 +1,16 @@
+---
+cs:
+  menu_experiments:
+    flash:
+      created: replace_me
+      deleted: replace_me
+      ended: replace_me
+      not_deletable: replace_me
+      not_pausable: replace_me
+      paused: replace_me
+      updated: replace_me
+    statuses:
+      active: replace_me
+      draft: replace_me
+      ended: replace_me
+      paused: replace_me

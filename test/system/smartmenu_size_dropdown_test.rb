@@ -28,10 +28,23 @@ class SmartmenuSizeDropdownTest < ApplicationSystemTestCase
       sequence: 99,
       price: 3.00,
       itemtype: 'food',
+      preptime: 0,
+      calories: 0,
       menusection: menusections(:mains_section),
     )
     MenuitemSizeMapping.create!(menuitem: @item_with_sizes, size: @size_small, price: 3.00)
     MenuitemSizeMapping.create!(menuitem: @item_with_sizes, size: @size_large, price: 4.50)
+
+    # Pre-create an open order so the page loads with menuItemsEnabled=true in __SM_STATE.
+    # Without a pre-existing order, ordr_commons.js disables all .addItemToOrder buttons
+    # (pointer-events: none) because order_hash[:id] is blank.
+    @ordr = Ordr.create!(
+      restaurant_id: @restaurant.id,
+      tablesetting_id: @table.id,
+      menu_id: @menu.id,
+      status: 0,
+      ordercapacity: 1,
+    )
 
     Warden.test_mode!
     login_as(@employee.user, scope: :user)
@@ -85,25 +98,29 @@ class SmartmenuSizeDropdownTest < ApplicationSystemTestCase
     find_testid("add-item-btn-#{@item_with_sizes.id}", wait: 5).click
     assert_selector('.size-add-group .dropdown-menu.show', wait: 3)
 
-    find('.size-add-group .dropdown-menu.show .size-option', wait: 3).click
+    first('.size-add-group .dropdown-menu.show .size-option', wait: 3).click
 
     assert_selector('#addItemToOrderModal.show', wait: 5)
   end
 
   test 'size toggle is disabled when no table is set' do
-    smartmenu_no_table = Smartmenu.create!(
-      slug: 'no-table-size-test',
-      public_token: 'e' * 64,
-      restaurant: @restaurant,
-      menu: @menu,
-      tablesetting: nil,
-    )
+    # Use the existing customer_menu fixture (restaurant: one, menu: ordering_menu,
+    # tablesetting: nil) to avoid violating the uniq_smartmenus_restaurant_menu_global
+    # constraint that would fire when creating a second global smartmenu for the same pair.
+    smartmenu_no_table = smartmenus(:customer_menu)
 
     visit table_link_path(smartmenu_no_table.public_token)
     assert_testid('menu-content-container', wait: 5)
-    sleep 0.6
+    sleep 0.8
 
-    btn = find_testid("add-item-btn-#{@item_with_sizes.id}", wait: 5)
-    assert btn.disabled?, 'Size toggle should be disabled when no table is set'
+    # A test-only <script> in show.html.erb removes the HTML `disabled` attribute from all
+    # add-item buttons for automation stability — so btn.disabled? is not reliable here.
+    # Instead assert pointer-events: none, which ordr_commons.js sets (and does not clear)
+    # when menuItemsEnabled is false (no open order / no table context).
+    pointer_events = page.evaluate_script(
+      "document.querySelector('[data-testid=\"add-item-btn-#{@item_with_sizes.id}\"]')?.style?.pointerEvents",
+    )
+    assert_equal 'none', pointer_events,
+                 'Size toggle should have pointer-events:none when no table is set'
   end
 end

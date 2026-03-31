@@ -6,6 +6,9 @@ es:
       deleted: La etiqueta se ha eliminado correctamente.
       updated: La etiqueta se ha actualizado correctamente.
     edit:
+      back_to_tags: replace_me
+      tag_details: replace_me
+      tags: replace_me
       title: Editar etiqueta
     form:
       delete: Eliminar

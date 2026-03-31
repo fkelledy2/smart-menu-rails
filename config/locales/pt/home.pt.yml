@@ -2,6 +2,7 @@
 pt:
   home:
     index:
+      bookDemo: replace_me
       browse: Ver menus
       closingBody: Crie o seu primeiro menu agora, ou explore uma demonstração e veja
         como se sente no telemóvel.
@@ -147,6 +148,7 @@ pt:
       trustItem4Title: Apoio quando precisa dele
       trustTitle: Construído para um verdadeiro serviço de restauração
       video_unsupported: O seu browser não suporta a etiqueta de vídeo.
+      watchDemo: replace_me
       welcome: Bem-vindo!
     privacy:
       page_description: Saiba como a Mellow Menu recolhe, utiliza e protege as suas

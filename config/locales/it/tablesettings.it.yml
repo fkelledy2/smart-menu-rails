@@ -20,6 +20,10 @@ it:
       deleted: Impostazione tavolo eliminata con successo.
       updated: Impostazione tavolo aggiornata con successo.
     edit:
+      back_to_tables: replace_me
+      description: replace_me
+      edit_tablesetting: replace_me
+      tables: replace_me
       tablesetting: Impostazione tavolo
     index:
       archive: Archivia

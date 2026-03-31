@@ -20,6 +20,10 @@ pt:
       deleted: A definição de tabela foi eliminada com êxito.
       updated: A configuração da tabela foi actualizada com sucesso.
     edit:
+      back_to_tables: replace_me
+      description: replace_me
+      edit_tablesetting: replace_me
+      tables: replace_me
       tablesetting: Editar mesa
     index:
       archive: Arquivo

@@ -70,6 +70,8 @@ cs:
       order: Objednávka
       startOrder: Počáteční objednávka
       takePayment: Přijmout platbu
+    preview:
+      back_to_edit: replace_me
     search:
       no_results_hint: Zkuste použít jiný vyhledávací výraz
       no_results_title: Nebyly nalezeny žádné položky
@@ -82,11 +84,18 @@ cs:
     showCoverCharge:
       covercharge: Poplatek za obálku
       coverchargeUnit: na osobu
+    showImage:
+      no_image: replace_me
     showMenuBanner:
       allergyns: Alergeny
+      auto_generated_preview: replace_me
+      based_on_public_info: replace_me
       card_view: Zobrazení karty
+      claim_restaurant: replace_me
       layout: Rozložení
       list_view: Zobrazení seznamu
+      more: replace_me
+      request_removal: replace_me
     showMenuContentCustomer:
       search_placeholder: Vyhledávání položek nabídky...
     showMenuitem:
@@ -106,26 +115,42 @@ cs:
       addToOrder: Přidat do objednávky
       add_items_hint: Klepnutím na + na libovolné položce ji přidáte
       bill_prefix: 'Bill:'
+      bill_summary: replace_me
       cancel: Zrušit
+      cash_confirm_btn: replace_me
+      cash_instructions: replace_me
+      cash_recording: replace_me
+      cash_success: replace_me
       confirmPayment: Potvrdit platbu
       cover_charge: Poplatek za obálku
       customiseOrderWithName: Přidejte své jméno do objednávky
+      decrease: replace_me
+      decrease_qty: replace_me
       empty_cart: Váš košík je prázdný
       excluding_tip: bez spropitného
       filterAllergyns: Filtrovat alergeny
       filterBy: Filtr
       full_capacity: Úplný
       including_tip: včetně spropitného
+      increase: replace_me
+      increase_qty: replace_me
       item: Položka
       name_label: 'Jméno:'
       nett: Nett
       noneAll: Žádné / Všechny
       order_aria: Objednávka
+      pairing: replace_me
       partySize: Velikost strany
       pay: Platit
       payBill: Zaplatit účet
       payment_link: Odkaz na platbu
+      payment_method_card: replace_me
+      payment_method_cash: replace_me
+      payment_method_pos: replace_me
+      payment_method_qr: replace_me
       price: Cena
+      qr_generating: replace_me
+      qr_instructions: replace_me
       requestBill: Žádat o účet
       request_bill: Žádost o účet
       request_bill_confirm_body: Jakmile si vyžádáte účet, nebudete již moci přidávat
@@ -133,6 +158,12 @@ cs:
       request_bill_confirm_title: Jste si jistý?
       selected: Vybrané stránky
       service: Služba
+      special_requests: replace_me
+      special_requests_placeholder: replace_me
+      split_bill: replace_me
+      square_pos_btn: replace_me
+      square_pos_instructions: replace_me
+      square_pos_note: replace_me
       start: Zahájit objednávku
       startOrder: Zahájit novou objednávku
       submit: Odeslat objednávku
@@ -151,8 +182,112 @@ cs:
       restaurant: 'Restaurace:'
       slug: 'Slimák:'
       tablesetting: 'Sestavení tabulek:'
+    sommelier:
+      budget_high: replace_me
+      budget_low: replace_me
+      budget_mid: replace_me
+      close: replace_me
+      fab_aria: replace_me
+      fab_label: replace_me
+      loading: replace_me
+      mode_spirits: replace_me
+      mode_wine: replace_me
+      smoky_no: replace_me
+      smoky_yes: replace_me
+      step0_question: replace_me
+      step0_subtitle: replace_me
+      step1_question: replace_me
+      step1_subtitle: replace_me
+      step2_question: replace_me
+      step2_subtitle: replace_me
+      step3_question: replace_me
+      step3_subtitle: replace_me
+      step4_question: replace_me
+      step4_subtitle: replace_me
+      step5_question: replace_me
+      step5_subtitle: replace_me
+      step6_question: replace_me
+      step6_subtitle: replace_me
+      subtitle: replace_me
+      taste_dry: replace_me
+      taste_spicy: replace_me
+      taste_sweet: replace_me
+      title: replace_me
+      wine_bold: replace_me
+      wine_budget_high: replace_me
+      wine_budget_low: replace_me
+      wine_budget_mid: replace_me
+      wine_fruity: replace_me
+      wine_light: replace_me
+      wine_red: replace_me
+      wine_rose: replace_me
+      wine_sparkling: replace_me
+      wine_surprise: replace_me
+      wine_white: replace_me
+    split_bill:
+      amount_per_person: replace_me
+      by_item: replace_me
+      create_plan: replace_me
+      custom: replace_me
+      custom_hint: replace_me
+      equal: replace_me
+      item_hint: replace_me
+      method: replace_me
+      participants: replace_me
+      pay_my_share: replace_me
+      percentage: replace_me
+      percentage_hint: replace_me
+      split_plan: replace_me
+      title: replace_me
+      total: replace_me
+      total_percentage: replace_me
+      your_share: replace_me
     staff_banner:
       dashboard: Přístrojová deska
       no_table: Žádná tabulka
       switch_table: Přepínač
       title: Pohled zaměstnanců
+    staff_mode:
+      customer_view: replace_me
+      staff_mode_on: replace_me
+      staff_view: replace_me
+      switch_to_customer: replace_me
+      switch_to_staff: replace_me
+      viewing_as_customer: replace_me
+    theme_picker:
+      hint: replace_me
+      label: replace_me
+      preview_button: replace_me
+      preview_hint: replace_me
+      sample_text: replace_me
+    whiskey_ambassador:
+      budget_high: replace_me
+      budget_low: replace_me
+      budget_mid: replace_me
+      close: replace_me
+      exp_casual: replace_me
+      exp_enthusiast: replace_me
+      exp_newcomer: replace_me
+      explore: replace_me
+      fab_aria: replace_me
+      fab_label: replace_me
+      flavor_fruity: replace_me
+      flavor_light: replace_me
+      flavor_peated: replace_me
+      flavor_rich: replace_me
+      flavor_smoky: replace_me
+      flavor_spicy: replace_me
+      flights: replace_me
+      loading: replace_me
+      my_picks: replace_me
+      region_american: replace_me
+      region_irish: replace_me
+      region_japanese: replace_me
+      region_scotch: replace_me
+      region_surprise: replace_me
+      step0_question: replace_me
+      step1_question: replace_me
+      step2_question: replace_me
+      step3_question: replace_me
+      subtitle: replace_me
+      title: replace_me

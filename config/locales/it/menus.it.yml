@@ -26,6 +26,7 @@ it:
       current_pdf: 'PDF corrente:'
       delete: Elimina
       details: Dettagli
+      display: replace_me
       errors: Errori
       'false': Disattivo
       imageSettings: Impostazioni immagine
@@ -55,14 +56,20 @@ it:
     new:
       menu: Menù
     sections:
+      details_2025:
+        ai_tools: replace_me
+        manage: replace_me
+        preview: replace_me
       items_2025:
         actions: Azioni
         archive: Archivio
         archive_single_confirm: Archivio
+        preview: replace_me
       sections_2025:
         actions: Azioni
         archive: Archivio
         archive_single_confirm: Archivio
+        preview: replace_me
       versions_2025:
         no_versions_desc: Le versioni vengono create automaticamente quando si pubblicano
           le modifiche.

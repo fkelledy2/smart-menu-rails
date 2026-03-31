@@ -6,6 +6,8 @@ pt:
       deleted: O item de menu foi eliminado com êxito.
       updated: O item de menu foi atualizado com sucesso.
     edit:
+      back_to_section: replace_me
+      description: replace_me
       tab_item: Item
     edit_2025:
       active: Ativo

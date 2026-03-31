@@ -6,7 +6,12 @@ cs:
       deleted: Zaměstnanec byl úspěšně odstraněn.
       updated: Zaměstnanec byl úspěšně aktualizován.
     edit:
+      back_to_staff: replace_me
+      description: replace_me
+      edit_employee: replace_me
       employee: Zaměstnanci
+      employee_details: replace_me
+      staff: replace_me
     employee:
       eid: 'ID zaměstnance:'
       image: 'Obrázek:'

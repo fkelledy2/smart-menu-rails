@@ -2,6 +2,8 @@
 hu:
   menusections:
     edit:
+      back_to_menu: replace_me
+      description: replace_me
       inventories: Készletek
       items: Tételek
       section: Szekció

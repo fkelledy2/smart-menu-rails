@@ -3,6 +3,9 @@
 ## User
 - [user_fergus.md](user_fergus.md) — Fergus: lead engineer on Smart Menu, works on all layers of the stack
 
+## Test Gotchas
+- [pattern_enable_staff_buttons_test_script.md](pattern_enable_staff_buttons_test_script.md) — show.html.erb test-only script removes disabled from all add-item-btn-* — use pointer-events:none assertion instead
+
 ## Patterns & Gotchas
 - [pattern_double_audit_write.md](pattern_double_audit_write.md) — CRM reopen action writes duplicate audit records; LeadTransitionService already writes the stage_changed audit
 - [pattern_enforce_scope_no_halt.md](pattern_enforce_scope_no_halt.md) — JwtAuthenticated#enforce_scope! renders 403 but does not halt; action body continues executing
@@ -143,3 +146,6 @@
 - [pattern_intents_ordr_find_unrescued.md](pattern_intents_ordr_find_unrescued.md) — Payments::IntentsController used Ordr.find (unrescued) — 500 instead of 404 on bad open_order_id (FIXED)
 - [pattern_square_refund_random_idempotency.md](pattern_square_refund_random_idempotency.md) — SquareAdapter#create_full_refund! used SecureRandom.uuid as idempotency key — Sidekiq retries/double-clicks send duplicate refunds; now uses deterministic key "square_refund:pa_#{id}" (FIXED)
 - [pattern_refund_creator_no_duplicate_guard.md](pattern_refund_creator_no_duplicate_guard.md) — Payments::Refunds::Creator#create_full_refund! had no guard against creating a second PaymentRefund for the same PaymentAttempt — double-click on admin refund button sent two refunds (FIXED)
+- [pattern_menu_items_api_idor.md](pattern_menu_items_api_idor.md) — Api::V1::MenuItemsController#index used unscoped Menu.find with no Pundit authorize — IDOR: any JWT token could enumerate any restaurant's menu items (FIXED)
+- [pattern_ilike_without_sanitize_sql_like.md](pattern_ilike_without_sanitize_sql_like.md) — RestaurantsController and Admin::DiscoveredRestaurantsController used "%#{user_input}%" without sanitize_sql_like — LIKE wildcard injection (FIXED)
+- [pattern_module_console_logs.md](pattern_module_console_logs.md) — hero_carousel.js, OrderingModule.js, CustomerMenuModule.js, AnalyticsModule.js all had console.log calls missed in earlier sweep (FIXED)

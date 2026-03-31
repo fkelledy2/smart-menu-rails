@@ -2,6 +2,7 @@
 it:
   omniauth:
     connected: Il tuo account %{kind} è stato collegato.
+    create_failed: replace_me
     email_exists: Esiste già un account con questa email. Accedi a quell'account prima
       di collegare il tuo account %{provider}.
     failure: Qualcosa è andato storto

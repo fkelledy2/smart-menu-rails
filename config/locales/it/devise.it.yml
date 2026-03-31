@@ -32,6 +32,19 @@ it:
       failure: 'Impossibile autenticarti da %{kind} a causa di: "%{reason}".'
       success: Autenticazione riuscita con l'account %{kind}.
     passwords:
+      edit:
+        change_my_password: replace_me
+        change_your_password: replace_me
+        characters_minimum: replace_me
+        confirm_password_placeholder: replace_me
+        password_placeholder: replace_me
+      new:
+        back_to_sign_in: replace_me
+        email_placeholder: replace_me
+        reset_instructions_help: replace_me
+        reset_password: replace_me
+        reset_subtitle: replace_me
+        send_reset_instructions: replace_me
       no_token: Non puoi accedere a questa pagina senza essere arrivato da un'email
         di reset della password. Se arrivi da lì, assicurati di aver usato l'URL completo.
       send_instructions: Riceverai un'email con le istruzioni per reimpostare la password
@@ -45,21 +58,37 @@ it:
         rivederti presto.
       edit:
         account: Conto
+        account_information: replace_me
+        change_password: replace_me
         confirmPassword: Conferma password
+        confirm_new_password: replace_me
+        confirm_new_password_placeholder: replace_me
         currentPassword: Password attuale
         currentPasswordHelp: Abbiamo bisogno della password attuale per confermare
           le modifiche
+        danger_zone: replace_me
         deactivateMyAccount: Disattiva il mio account
         deactivateMyAccountAreYouSure: Sei sicuro di voler disattivare il tuo account?
+        deactivate_warning: replace_me
         emailAddress: Indirizzo email
         fullName: Nome completo
+        leave_blank: replace_me
+        new_password: replace_me
+        new_password_placeholder: replace_me
+        pending_confirmation: replace_me
         saveChanges: Salva modifiche
+        update_subtitle: replace_me
       new:
+        already_have_account: replace_me
         confirmPassword: Conferma password
+        create_account: replace_me
+        create_your_account: replace_me
         emailAddress: Indirizzo email
         fullName: Nome completo
+        minimum_characters: replace_me
         password: Password
         signUp: Registrati
+        sign_in: replace_me
       signed_up: Benvenuto! Registrazione effettuata con successo.
       signed_up_but_inactive: Registrazione effettuata con successo. Tuttavia, non
         possiamo farti accedere perché il tuo account non è ancora attivato.
@@ -75,10 +104,13 @@ it:
     sessions:
       already_signed_out: Disconnessione effettuata con successo.
       new:
+        create_account: replace_me
+        dont_have_account: replace_me
         emailAddress: Indirizzo email
         login: Accedi
         password: Password
         rememberMe: Ricordami
+        welcome_back: replace_me
       signed_in: Accesso effettuato con successo.
       signed_out: Disconnessione effettuata con successo.
     shared:

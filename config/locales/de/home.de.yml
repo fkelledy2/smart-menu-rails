@@ -2,6 +2,7 @@
 de:
   home:
     index:
+      bookDemo: replace_me
       browse: Menüs durchsuchen
       closingBody: Erstellen Sie jetzt Ihr erstes Menü, oder sehen Sie sich eine Demo
         an, um zu sehen, wie es sich auf dem Handy anfühlt.
@@ -151,6 +152,7 @@ de:
       trustItem4Title: Unterstützung, wenn Sie sie brauchen
       trustTitle: Gebaut für den echten Restaurantbetrieb
       video_unsupported: Ihr Browser unterstützt das Video-Tag nicht.
+      watchDemo: replace_me
       welcome: Willkommen!
     privacy:
       page_description: Erfahren Sie in unseren Datenschutzrichtlinien, wie Mellow

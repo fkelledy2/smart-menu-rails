@@ -17,6 +17,7 @@ hu:
       archived: "%{resource} sikeresen archiválva."
       created: "%{resource} sikeresen létrehozva."
       deleted: "%{resource} sikeresen törölve."
+      error: replace_me
       processing_restarted: A feldolgozás újraindult.
       updated: "%{resource} sikeresen frissítve."
     loading: Betöltés...

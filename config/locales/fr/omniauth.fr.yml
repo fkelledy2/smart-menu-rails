@@ -2,6 +2,7 @@
 fr:
   omniauth:
     connected: Votre compte %{kind} a été connecté.
+    create_failed: replace_me
     email_exists: Un compte avec cet email existe déjà. Veuillez vous connecter avec
       ce compte avant de connecter votre compte %{fournisseur}.
     failure: Quelque chose n'a pas fonctionné

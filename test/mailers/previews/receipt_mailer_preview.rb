@@ -25,7 +25,7 @@ class ReceiptMailerPreview < ActionMailer::Preview
       currency: 'EUR',
     )
 
-    ordr = Ordr.new(
+    Ordr.new(
       restaurant: restaurant,
       gross: 45.50,
       tax: 3.25,
@@ -34,7 +34,5 @@ class ReceiptMailerPreview < ActionMailer::Preview
       status: :paid,
       created_at: Time.current,
     )
-
-    ordr
   end
 end

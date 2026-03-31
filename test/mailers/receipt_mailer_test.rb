@@ -20,8 +20,8 @@ class ReceiptMailerTest < ActionMailer::TestCase
       status: 'pending',
     )
 
-    default_url_options[:host] = 'localhost'
-    default_url_options[:port] = 3000
+    ActionMailer::Base.default_url_options[:host] = 'localhost'
+    ActionMailer::Base.default_url_options[:port] = 3000
   end
 
   def mail

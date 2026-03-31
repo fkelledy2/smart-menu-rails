@@ -6,7 +6,12 @@ it:
       deleted: Dipendente eliminato con successo.
       updated: Dipendente aggiornato con successo.
     edit:
+      back_to_staff: replace_me
+      description: replace_me
+      edit_employee: replace_me
       employee: Dipendente
+      employee_details: replace_me
+      staff: replace_me
     employee:
       eid: 'ID dipendente:'
       image: 'Immagine:'

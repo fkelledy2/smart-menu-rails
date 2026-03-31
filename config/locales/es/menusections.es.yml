@@ -2,6 +2,8 @@
 es:
   menusections:
     edit:
+      back_to_menu: replace_me
+      description: replace_me
       inventories: Inventarios
       items: Artículos
       section: Sección

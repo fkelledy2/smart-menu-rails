@@ -32,6 +32,19 @@ cs:
       failure: Nelze vás ověřit z %{druhu}, protože "%{důvod}".
       success: Úspěšně ověřeno z účtu %{druh}.
     passwords:
+      edit:
+        change_my_password: replace_me
+        change_your_password: replace_me
+        characters_minimum: replace_me
+        confirm_password_placeholder: replace_me
+        password_placeholder: replace_me
+      new:
+        back_to_sign_in: replace_me
+        email_placeholder: replace_me
+        reset_instructions_help: replace_me
+        reset_password: replace_me
+        reset_subtitle: replace_me
+        send_reset_instructions: replace_me
       no_token: Na tuto stránku se nedostanete, aniž byste přišli z e-mailu s obnovením
         hesla. Pokud přicházíte z e-mailu pro reset hesla, ujistěte se, že jste použili
         celou uvedenou adresu URL.
@@ -46,20 +59,36 @@ cs:
       destroyed: Ahoj! Váš účet byl úspěšně zrušen. Doufáme, že se brzy opět setkáme.
       edit:
         account: Účet
+        account_information: replace_me
+        change_password: replace_me
         confirmPassword: Potvrdit heslo
+        confirm_new_password: replace_me
+        confirm_new_password_placeholder: replace_me
         currentPassword: Současné heslo
         currentPasswordHelp: K potvrzení změn potřebujeme vaše aktuální heslo.
+        danger_zone: replace_me
         deactivateMyAccount: Deaktivovat můj účet
         deactivateMyAccountAreYouSure: Opravdu chcete svůj účet deaktivovat?
+        deactivate_warning: replace_me
         emailAddress: E-mailová adresa
         fullName: Celé jméno
+        leave_blank: replace_me
+        new_password: replace_me
+        new_password_placeholder: replace_me
+        pending_confirmation: replace_me
         saveChanges: Uložit změny
+        update_subtitle: replace_me
       new:
+        already_have_account: replace_me
         confirmPassword: Potvrdit heslo
+        create_account: replace_me
+        create_your_account: replace_me
         emailAddress: E-mailová adresa
         fullName: Celé jméno
+        minimum_characters: replace_me
         password: Heslo
         signUp: Registrace
+        sign_in: replace_me
       signed_up: Vítejte! Úspěšně jste se zaregistrovali.
       signed_up_but_inactive: Úspěšně jste se zaregistrovali. Nemohli jsme vás však
         přihlásit, protože váš účet ještě není aktivován.
@@ -77,10 +106,13 @@ cs:
     sessions:
       already_signed_out: Úspěšně se odhlásil.
       new:
+        create_account: replace_me
+        dont_have_account: replace_me
         emailAddress: E-mailová adresa
         login: Přihlášení
         password: Heslo
         rememberMe: Zapamatovat si mě
+        welcome_back: replace_me
       signed_in: Úspěšně přihlášeno.
       signed_out: Úspěšně se odhlásil.
     shared:

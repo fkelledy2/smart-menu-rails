@@ -5,3 +5,9 @@ fr:
       created: L'ingrédient a été créé avec succès.
       deleted: L'ingrédient a été supprimé avec succès.
       updated: L'ingrédient a été mis à jour avec succès.
+    edit:
+      back_to_ingredients: replace_me
+      description: replace_me
+      edit_ingredient: replace_me
+      ingredient_details: replace_me
+      ingredients: replace_me

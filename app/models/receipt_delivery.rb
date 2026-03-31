@@ -14,15 +14,13 @@ class ReceiptDelivery < ApplicationRecord
   validates :recipient_phone, presence: true, if: -> { delivery_method == 'sms' }
   validates :secure_token, presence: true, uniqueness: true
   validates :retry_count, numericality: { greater_than_or_equal_to: 0, only_integer: true }
-  validates :ordr_id, presence: true
-  validates :restaurant_id, presence: true
 
   before_validation :set_secure_token, on: :create
 
   scope :pending, -> { where(status: 'pending') }
   scope :sent, -> { where(status: 'sent') }
   scope :failed, -> { where(status: 'failed') }
-  scope :retryable, -> { where(status: 'failed').where('retry_count < ?', MAX_RETRIES) }
+  scope :retryable, -> { where(status: 'failed').where(retry_count: ...MAX_RETRIES) }
   scope :for_ordr, ->(ordr_id) { where(ordr_id: ordr_id) }
   scope :recent, -> { order(created_at: :desc) }
 
@@ -35,7 +33,7 @@ class ReceiptDelivery < ApplicationRecord
   end
 
   def increment_retry!
-    increment!(:retry_count)
+    update_column(:retry_count, retry_count + 1)
   end
 
   def retryable?

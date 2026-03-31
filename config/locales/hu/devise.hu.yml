@@ -33,6 +33,19 @@ hu:
       failure: Nem tudtuk hitelesíteni Önt %{fajtától}, mert "%{okozat}".
       success: Sikeresen hitelesítettük a %{fajtájú} fiókot.
     passwords:
+      edit:
+        change_my_password: replace_me
+        change_your_password: replace_me
+        characters_minimum: replace_me
+        confirm_password_placeholder: replace_me
+        password_placeholder: replace_me
+      new:
+        back_to_sign_in: replace_me
+        email_placeholder: replace_me
+        reset_instructions_help: replace_me
+        reset_password: replace_me
+        reset_subtitle: replace_me
+        send_reset_instructions: replace_me
       no_token: Ezt az oldalt csak akkor érheti el, ha jelszó-visszaállítási e-mailből
         érkezik. Ha jelszó-visszaállítási e-mailből érkezik, kérjük, győződjön meg
         róla, hogy a megadott teljes URL-címet használta.
@@ -47,20 +60,36 @@ hu:
         újra találkozunk.
       edit:
         account: Fiók
+        account_information: replace_me
+        change_password: replace_me
         confirmPassword: Jelszó megerősítése
+        confirm_new_password: replace_me
+        confirm_new_password_placeholder: replace_me
         currentPassword: Jelenlegi jelszó
         currentPasswordHelp: Szükségünk van az aktuális jelszavára a módosítások megerősítéséhez
+        danger_zone: replace_me
         deactivateMyAccount: Fiókom deaktiválása
         deactivateMyAccountAreYouSure: Biztos, hogy deaktiválni szeretné a fiókját?
+        deactivate_warning: replace_me
         emailAddress: E-mail cím
         fullName: Teljes név
+        leave_blank: replace_me
+        new_password: replace_me
+        new_password_placeholder: replace_me
+        pending_confirmation: replace_me
         saveChanges: Módosítások mentése
+        update_subtitle: replace_me
       new:
+        already_have_account: replace_me
         confirmPassword: Jelszó megerősítése
+        create_account: replace_me
+        create_your_account: replace_me
         emailAddress: E-mail cím
         fullName: Teljes név
+        minimum_characters: replace_me
         password: Jelszó
         signUp: Regisztráció
+        sign_in: replace_me
       signed_up: Üdvözöljük! Ön sikeresen regisztrált.
       signed_up_but_inactive: Ön sikeresen regisztrált. Azonban nem tudtunk bejelentkezni,
         mert a fiókja még nem aktiválódott.
@@ -77,10 +106,13 @@ hu:
     sessions:
       already_signed_out: Sikeresen kijelentkezett.
       new:
+        create_account: replace_me
+        dont_have_account: replace_me
         emailAddress: E-mail cím
         login: Bejelentkezés
         password: Jelszó
         rememberMe: Emlékezz rám
+        welcome_back: replace_me
       signed_in: Sikeresen bejelentkezett.
       signed_out: Sikeresen kijelentkezett.
     shared:

@@ -35,7 +35,7 @@ class ReceiptDeliveriesController < ApplicationController
     respond_to do |format|
       format.html do
         flash[:notice] = 'Receipt sent successfully.'
-        redirect_back fallback_location: restaurant_ordrs_path(@ordr.restaurant)
+        redirect_back_or_to(restaurant_ordrs_path(@ordr.restaurant))
       end
       format.json { render json: { status: 'ok', id: @delivery.id }, status: :created }
       format.turbo_stream do
@@ -50,9 +50,9 @@ class ReceiptDeliveriesController < ApplicationController
     respond_to do |format|
       format.html do
         flash[:alert] = e.message
-        redirect_back fallback_location: restaurant_ordrs_path(@ordr.restaurant)
+        redirect_back_or_to(restaurant_ordrs_path(@ordr.restaurant))
       end
-      format.json { render json: { error: e.message }, status: :unprocessable_entity }
+      format.json { render json: { error: e.message }, status: :unprocessable_content }
       format.turbo_stream do
         render turbo_stream: turbo_stream.replace(
           "send_receipt_modal_#{@ordr.id}",
@@ -82,7 +82,7 @@ class ReceiptDeliveriesController < ApplicationController
     respond_to do |format|
       format.html do
         flash[:notice] = 'Your receipt is on its way. Please check your inbox.'
-        redirect_back fallback_location: root_path
+        redirect_back_or_to(root_path)
       end
       format.json { render json: { status: 'ok' }, status: :created }
     end
@@ -90,9 +90,9 @@ class ReceiptDeliveriesController < ApplicationController
     respond_to do |format|
       format.html do
         flash[:alert] = e.message
-        redirect_back fallback_location: root_path
+        redirect_back_or_to(root_path)
       end
-      format.json { render json: { error: e.message }, status: :unprocessable_entity }
+      format.json { render json: { error: e.message }, status: :unprocessable_content }
     end
   end
 
@@ -126,7 +126,7 @@ class ReceiptDeliveriesController < ApplicationController
     respond_to do |format|
       format.html do
         flash[:alert] = 'Receipt delivery is not available at this time.'
-        redirect_back fallback_location: root_path
+        redirect_back_or_to(root_path)
       end
       format.json { render json: { error: 'Feature not enabled' }, status: :service_unavailable }
       format.turbo_stream { head :service_unavailable }

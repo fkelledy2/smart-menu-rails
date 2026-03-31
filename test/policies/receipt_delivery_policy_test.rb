@@ -76,13 +76,13 @@ class ReceiptDeliveryPolicyTest < ActiveSupport::TestCase
     )
 
     scope = ReceiptDeliveryPolicy::Scope.new(@owner, ReceiptDelivery).resolve
-    assert scope.any? { |d| d.restaurant_id == @restaurant.id }
+    assert(scope.any? { |d| d.restaurant_id == @restaurant.id })
   end
 
   test 'scope excludes deliveries for restaurants not owned by user' do
     scope = ReceiptDeliveryPolicy::Scope.new(@other_user, ReceiptDelivery).resolve
     # restaurant :two belongs to user :two — user :one should not see restaurant :one deliveries
-    assert scope.none? { |d| d.restaurant_id == @restaurant.id }
+    assert(scope.none? { |d| d.restaurant_id == @restaurant.id })
   end
 
   test 'scope returns all deliveries for super_admin' do

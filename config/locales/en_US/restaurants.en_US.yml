@@ -255,6 +255,7 @@ en_US:
       close_menu: ''
       details: ''
       financials: ''
+      floorplan: replace_me
       insights: ''
       jukebox: ''
       kitchen_dashboard: ''
@@ -274,6 +275,7 @@ en_US:
       taxes_and_tips: ''
       team: ''
       tips: ''
+      wait_times: replace_me
       wifi: ''
     welcome_modal:
       body: replace_me

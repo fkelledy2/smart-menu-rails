@@ -1,6 +1,8 @@
 require 'test_helper'
 
 class ReceiptDeliveryJobTest < ActiveSupport::TestCase
+  include ActionMailer::TestHelper
+
   def setup
     @ordr = ordrs(:one)
     @restaurant = restaurants(:one)

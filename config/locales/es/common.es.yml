@@ -17,6 +17,7 @@ es:
       archived: "%{resource} ha sido archivado."
       created: "%{resource} ha sido creado."
       deleted: "%{resource} ha sido eliminado."
+      error: replace_me
       processing_restarted: El procesamiento ha sido reiniciado.
       updated: "%{resource} ha sido actualizado."
     loading: Cargando...

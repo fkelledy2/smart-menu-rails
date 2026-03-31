@@ -262,6 +262,7 @@ de:
       close_menu: Menü schließen
       details: Einzelheiten
       financials: FINANZEN
+      floorplan: replace_me
       insights: Einblicke
       jukebox: Jukebox
       kitchen_dashboard: Küche
@@ -281,6 +282,7 @@ de:
       taxes_and_tips: Steuern & Tipps
       team: TEAM
       tips: Tipps
+      wait_times: replace_me
       wifi: WLAN
     welcome_modal:
       body: Füllen Sie die Checkliste aus, um Ihr Restaurant online zu schalten.

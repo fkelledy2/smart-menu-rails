@@ -6,6 +6,9 @@ de:
       deleted: Tag wurde erfolgreich gelöscht.
       updated: Tag wurde erfolgreich aktualisiert.
     edit:
+      back_to_tags: replace_me
+      tag_details: replace_me
+      tags: replace_me
       title: Tag bearbeiten
     form:
       delete: Löschen

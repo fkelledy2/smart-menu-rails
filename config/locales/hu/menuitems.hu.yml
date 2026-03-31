@@ -6,6 +6,8 @@ hu:
       deleted: A menüpont sikeresen törlődött.
       updated: A menüpont sikeresen frissült.
     edit:
+      back_to_section: replace_me
+      description: replace_me
       tab_item: Tétel
     edit_2025:
       active: Aktív

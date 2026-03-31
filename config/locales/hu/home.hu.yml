@@ -2,6 +2,7 @@
 hu:
   home:
     index:
+      bookDemo: replace_me
       browse: Böngésszen a  oldalon.
       closingBody: Készítse el első menüjét most, vagy fedezze fel a demót, és nézze
         meg, milyen érzés mobilon.
@@ -142,6 +143,7 @@ hu:
       trustItem4Title: Támogatás, amikor szüksége van rá
       trustTitle: Igazi éttermi kiszolgáláshoz készült
       video_unsupported: Az Ön böngészője nem támogatja a videó tag-et.
+      watchDemo: replace_me
       welcome: Üdvözöljük
     privacy:
       page_description: Az Adatvédelmi irányelvekből megtudhatja, hogyan gyűjti, használja

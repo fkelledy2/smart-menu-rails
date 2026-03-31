@@ -17,6 +17,7 @@ fr:
       archived: "%{resource} a été archivé."
       created: "%{resource} a été créé."
       deleted: "%{resource} a été supprimé."
+      error: replace_me
       processing_restarted: Le traitement a été redémarré.
       updated: "%{resource} a été mis à jour."
     loading: Chargement...

@@ -2,6 +2,7 @@
 it:
   home:
     index:
+      bookDemo: replace_me
       browse: Esplora
       closingBody: Crea il tuo primo menu ora, oppure esplora una demo e prova l’esperienza
         su mobile.
@@ -131,6 +132,7 @@ it:
       trustItem4Title: Supporto quando serve
       trustTitle: Progettato per il servizio reale
       video_unsupported: Il tuo browser non supporta il tag video.
+      watchDemo: replace_me
       welcome: Benvenuto
     privacy:
       page_description: Scopri come Mellow Menu raccoglie, utilizza e protegge i tuoi

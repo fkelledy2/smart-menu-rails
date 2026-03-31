@@ -2,5 +2,6 @@
 en_GB:
   omniauth:
     connected: ''
+    create_failed: replace_me
     email_exists: ''
     failure: ''

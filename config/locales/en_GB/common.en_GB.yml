@@ -17,6 +17,7 @@ en_GB:
       archived: ''
       created: ''
       deleted: ''
+      error: replace_me
       processing_restarted: ''
       updated: ''
     loading: ''

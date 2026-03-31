@@ -2,6 +2,7 @@
 cs:
   home:
     index:
+      bookDemo: replace_me
       browse: Procházet
       closingBody: Vytvořte si své první menu nebo si prohlédněte ukázku a zjistěte,
         jak to vypadá na mobilním telefonu.
@@ -133,6 +134,7 @@ cs:
       trustItem4Title: Podpora, když ji potřebujete
       trustTitle: Vytvořeno pro skutečné restaurační služby
       video_unsupported: Váš prohlížeč nepodporuje značku videa.
+      watchDemo: replace_me
       welcome: Vítejte na
     privacy:
       page_description: V našich Zásadách ochrany osobních údajů se dozvíte, jak společnost

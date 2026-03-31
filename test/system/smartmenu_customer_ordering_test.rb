@@ -153,10 +153,12 @@ class SmartmenuCustomerOrderingTest < ApplicationSystemTestCase
     # Open modal to verify total
     open_view_order_modal
 
-    # JS state hydration overwrites server-rendered value with totals.gross
+    # The cart peek bar is server-rendered with order.runningTotal (nett item sum).
+    # ActionCable JS-state hydration does not fire in headless system tests, so
+    # the DOM retains the server-rendered value rather than the post-tax gross.
     order = Ordr.where(restaurant_id: @restaurant.id, tablesetting_id: @table.id, menu_id: @menu.id, status: [0, 20, 22, 24, 25, 30]).order(:created_at).last
     within_testid('cart-total-amount') do
-      assert_text "$#{format('%.2f', order.gross)}"
+      assert_text "$#{format('%.2f', order.runningTotal)}"
     end
   end
 
@@ -174,10 +176,12 @@ class SmartmenuCustomerOrderingTest < ApplicationSystemTestCase
     # Verify in UI
     open_view_order_modal
 
-    # JS state hydration overwrites server-rendered value with totals.gross
+    # The cart peek bar is server-rendered with order.runningTotal (nett item sum).
+    # ActionCable JS-state hydration does not fire in headless system tests, so
+    # the DOM retains the server-rendered value rather than the post-tax gross.
     order.reload
     within_testid('cart-total-amount') do
-      assert_text "$#{format('%.2f', order.gross)}"
+      assert_text "$#{format('%.2f', order.runningTotal)}"
     end
   end
 

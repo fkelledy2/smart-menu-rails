@@ -6,6 +6,9 @@ en:
       deleted: Tag was successfully deleted.
       updated: Tag was successfully updated.
     edit:
+      back_to_tags: Back to Tags
+      tag_details: Tag Details
+      tags: Tags
       title: Edit Tag
     form:
       delete: Delete

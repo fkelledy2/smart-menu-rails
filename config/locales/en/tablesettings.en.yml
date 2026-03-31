@@ -19,6 +19,10 @@ en:
       deleted: Table setting was successfully deleted.
       updated: Table setting was successfully updated.
     edit:
+      back_to_tables: Back to Tables
+      description: Update table configuration and seating details
+      edit_tablesetting: Edit Table
+      tables: Tables
       tablesetting: Table Setting
     index:
       archive: Archive

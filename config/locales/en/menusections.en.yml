@@ -2,6 +2,8 @@
 en:
   menusections:
     edit:
+      back_to_menu: Back to Menu
+      description: Edit section configuration and menu items
       inventories: Inventories
       items: Items
       section: Section

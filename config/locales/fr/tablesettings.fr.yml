@@ -20,6 +20,10 @@ fr:
       deleted: Le paramètre de table a été supprimé avec succès.
       updated: La mise à jour du tableau a été effectuée avec succès.
     edit:
+      back_to_tables: replace_me
+      description: replace_me
+      edit_tablesetting: replace_me
+      tables: replace_me
       tablesetting: Modifier la table
     index:
       archive: Archives

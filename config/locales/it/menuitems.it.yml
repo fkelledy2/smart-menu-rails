@@ -6,6 +6,8 @@ it:
       deleted: Voce di menu eliminata con successo.
       updated: Voce di menu aggiornata con successo.
     edit:
+      back_to_section: replace_me
+      description: replace_me
       tab_item: Articolo
     edit_2025:
       active: Attivo

@@ -6,12 +6,12 @@ en:
       deleted: Testimonial was successfully deleted.
       updated: Testimonial was successfully updated.
     edit:
-      title: Edit Testimonial
+      cancel: Cancel
+      confirm_delete: Are you sure you want to delete this testimonial?
+      delete: Delete
       description: Update the testimonial details below.
       testimonial_details: Testimonial Details
-      cancel: Cancel
-      delete: Delete
-      confirm_delete: Are you sure you want to delete this testimonial?
+      title: Edit Testimonial
     form:
       cancel: Cancel
       destroy: Destroy
@@ -19,22 +19,22 @@ en:
       sure: Are you sure?
     index:
       actions: Actions
+      all_testimonials: All Testimonials
       approve: Approve
-      unapprove: Unapprove
-      testimonials: Testimonials
       description: Manage and moderate customer testimonials.
       new_testimonial: New Testimonial
-      all_testimonials: All Testimonials
+      testimonials: Testimonials
+      unapprove: Unapprove
     new:
       cancel: Cancel
-      title: New Testimonial
       description: Add a new customer testimonial.
       testimonial_details: Testimonial Details
+      title: New Testimonial
     show:
-      title: Testimonial
       back: All Testimonials
       edit: Edit
       testimonial_details: Testimonial Details
+      title: Testimonial
     testimonial:
       restaurant: 'Restaurant:'
       testimonial: 'Testimonial:'

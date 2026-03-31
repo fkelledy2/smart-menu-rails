@@ -1,6 +1,8 @@
 require 'test_helper'
 
 class ReceiptDeliveryServiceTest < ActiveSupport::TestCase
+  include ActiveJob::TestHelper
+
   def setup
     @restaurant = restaurants(:one)
     @ordr = ordrs(:one)
@@ -110,11 +112,9 @@ class ReceiptDeliveryServiceTest < ActiveSupport::TestCase
   end
 
   def build_service(overrides = {})
-    ReceiptDeliveryService.new({
-      ordr: @ordr,
-      delivery_method: 'email',
-      recipient_email: 'customer@example.com',
-      created_by_user: @user,
-    }.merge(overrides))
+    ReceiptDeliveryService.new(ordr: @ordr,
+                               delivery_method: 'email',
+                               recipient_email: 'customer@example.com',
+                               created_by_user: @user, **overrides,)
   end
 end

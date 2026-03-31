@@ -262,6 +262,7 @@ pl:
       close_menu: Zamknij menu
       details: Szczegóły
       financials: FINANSE
+      floorplan: replace_me
       insights: Spostrzeżenia
       jukebox: Szafa grająca
       kitchen_dashboard: Kuchnia
@@ -281,6 +282,7 @@ pl:
       taxes_and_tips: Podatki i porady
       team: ZESPÓŁ
       tips: Wskazówki
+      wait_times: replace_me
       wifi: Wi‑Fi
     welcome_modal:
       body: Wypełnij listę kontrolną uruchomienia, aby uruchomić restaurację online.

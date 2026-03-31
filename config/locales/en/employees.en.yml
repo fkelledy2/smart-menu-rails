@@ -6,7 +6,12 @@ en:
       deleted: Employee was successfully deleted.
       updated: Employee was successfully updated.
     edit:
+      back_to_staff: Back to Staff
+      description: Update staff member details and role
+      edit_employee: Edit Staff
       employee: Employee
+      employee_details: Staff Details
+      staff: Staff
     employee:
       eid: 'Employee ID:'
       image: 'Image:'

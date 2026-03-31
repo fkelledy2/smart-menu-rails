@@ -261,6 +261,7 @@ en:
       close_menu: Close menu
       details: Details
       financials: FINANCIALS
+      floorplan: Floorplan
       insights: Insights
       jukebox: Jukebox
       kitchen_dashboard: Kitchen
@@ -280,6 +281,7 @@ en:
       taxes_and_tips: Taxes & Tips
       team: TEAM
       tips: Tips
+      wait_times: Wait Times
       wifi: WiFi
     welcome_modal:
       body: Complete the go-live checklist to get your restaurant online.

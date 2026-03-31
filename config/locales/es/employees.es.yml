@@ -6,7 +6,12 @@ es:
       deleted: El empleado se ha eliminado correctamente.
       updated: El empleado se ha actualizado correctamente.
     edit:
+      back_to_staff: replace_me
+      description: replace_me
+      edit_employee: replace_me
       employee: Editar empleado
+      employee_details: replace_me
+      staff: replace_me
     employee:
       eid: 'ID de empleado:'
       image: 'Imagen:'

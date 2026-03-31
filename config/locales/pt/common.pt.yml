@@ -17,6 +17,7 @@ pt:
       archived: "%{resource} foi arquivado."
       created: "%{resource} foi criado."
       deleted: "%{resource} foi eliminado."
+      error: replace_me
       processing_restarted: O processamento foi reiniciado.
       updated: "%{resource} foi atualizado."
     loading: A carregar...

@@ -74,6 +74,8 @@ fr:
       order: Commander
       startOrder: Commencer commande
       takePayment: Payer
+    preview:
+      back_to_edit: replace_me
     search:
       no_results_hint: Essayez un autre terme de recherche
       no_results_title: Aucun élément trouvé
@@ -86,11 +88,18 @@ fr:
     showCoverCharge:
       covercharge: Cover
       coverchargeUnit: par personne
+    showImage:
+      no_image: replace_me
     showMenuBanner:
       allergyns: Allergènes
+      auto_generated_preview: replace_me
+      based_on_public_info: replace_me
       card_view: Vue de la carte
+      claim_restaurant: replace_me
       layout: Mise en page
       list_view: Vue de la liste
+      more: replace_me
+      request_removal: replace_me
     showMenuContentCustomer:
       search_placeholder: Recherche dans le menu...
     showMenuitem:
@@ -110,26 +119,42 @@ fr:
       addToOrder: Ajouter à la commande
       add_items_hint: Tapez sur + sur un élément pour l'ajouter
       bill_prefix: 'Projet de loi :'
+      bill_summary: replace_me
       cancel: Annuler
+      cash_confirm_btn: replace_me
+      cash_instructions: replace_me
+      cash_recording: replace_me
+      cash_success: replace_me
       confirmPayment: Confirmer le paiement
       cover_charge: Frais de couverture
       customiseOrderWithName: Personnalisez votre commande
+      decrease: replace_me
+      decrease_qty: replace_me
       empty_cart: Votre panier est vide
       excluding_tip: sans pointe
       filterAllergyns: Filtrer les allergènes
       filterBy: Filtrer par
       full_capacity: Complet
       including_tip: y compris la pointe
+      increase: replace_me
+      increase_qty: replace_me
       item: Objet
       name_label: 'Nom :'
       nett: Nett
       noneAll: Aucun / tous
       order_aria: Commande
+      pairing: replace_me
       partySize: Taille du groupe
       pay: Rémunération
       payBill: Payer la facture
       payment_link: Lien de paiement
+      payment_method_card: replace_me
+      payment_method_cash: replace_me
+      payment_method_pos: replace_me
+      payment_method_qr: replace_me
       price: Prix
+      qr_generating: replace_me
+      qr_instructions: replace_me
       requestBill: Demander l'addition
       request_bill: Demande de facture
       request_bill_confirm_body: Une fois la facture demandée, vous ne pourrez plus
@@ -137,6 +162,12 @@ fr:
       request_bill_confirm_title: Êtes-vous sûr ?
       selected: Sélectionné
       service: Service
+      special_requests: replace_me
+      special_requests_placeholder: replace_me
+      split_bill: replace_me
+      square_pos_btn: replace_me
+      square_pos_instructions: replace_me
+      square_pos_note: replace_me
       start: Commencer
       startOrder: Commencer commande
       submit: Envoyer la commande
@@ -155,8 +186,112 @@ fr:
       restaurant: 'Restaurant :'
       slug: 'Limace :'
       tablesetting: 'Mise en place des tables :'
+    sommelier:
+      budget_high: replace_me
+      budget_low: replace_me
+      budget_mid: replace_me
+      close: replace_me
+      fab_aria: replace_me
+      fab_label: replace_me
+      loading: replace_me
+      mode_spirits: replace_me
+      mode_wine: replace_me
+      smoky_no: replace_me
+      smoky_yes: replace_me
+      step0_question: replace_me
+      step0_subtitle: replace_me
+      step1_question: replace_me
+      step1_subtitle: replace_me
+      step2_question: replace_me
+      step2_subtitle: replace_me
+      step3_question: replace_me
+      step3_subtitle: replace_me
+      step4_question: replace_me
+      step4_subtitle: replace_me
+      step5_question: replace_me
+      step5_subtitle: replace_me
+      step6_question: replace_me
+      step6_subtitle: replace_me
+      subtitle: replace_me
+      taste_dry: replace_me
+      taste_spicy: replace_me
+      taste_sweet: replace_me
+      title: replace_me
+      wine_bold: replace_me
+      wine_budget_high: replace_me
+      wine_budget_low: replace_me
+      wine_budget_mid: replace_me
+      wine_fruity: replace_me
+      wine_light: replace_me
+      wine_red: replace_me
+      wine_rose: replace_me
+      wine_sparkling: replace_me
+      wine_surprise: replace_me
+      wine_white: replace_me
+    split_bill:
+      amount_per_person: replace_me
+      by_item: replace_me
+      create_plan: replace_me
+      custom: replace_me
+      custom_hint: replace_me
+      equal: replace_me
+      item_hint: replace_me
+      method: replace_me
+      participants: replace_me
+      pay_my_share: replace_me
+      percentage: replace_me
+      percentage_hint: replace_me
+      split_plan: replace_me
+      title: replace_me
+      total: replace_me
+      total_percentage: replace_me
+      your_share: replace_me
     staff_banner:
       dashboard: Tableau de bord
       no_table: Pas de tableau
       switch_table: Interrupteur
       title: Point de vue du personnel
+    staff_mode:
+      customer_view: replace_me
+      staff_mode_on: replace_me
+      staff_view: replace_me
+      switch_to_customer: replace_me
+      switch_to_staff: replace_me
+      viewing_as_customer: replace_me
+    theme_picker:
+      hint: replace_me
+      label: replace_me
+      preview_button: replace_me
+      preview_hint: replace_me
+      sample_text: replace_me
+    whiskey_ambassador:
+      budget_high: replace_me
+      budget_low: replace_me
+      budget_mid: replace_me
+      close: replace_me
+      exp_casual: replace_me
+      exp_enthusiast: replace_me
+      exp_newcomer: replace_me
+      explore: replace_me
+      fab_aria: replace_me
+      fab_label: replace_me
+      flavor_fruity: replace_me
+      flavor_light: replace_me
+      flavor_peated: replace_me
+      flavor_rich: replace_me
+      flavor_smoky: replace_me
+      flavor_spicy: replace_me
+      flights: replace_me
+      loading: replace_me
+      my_picks: replace_me
+      region_american: replace_me
+      region_irish: replace_me
+      region_japanese: replace_me
+      region_scotch: replace_me
+      region_surprise: replace_me
+      step0_question: replace_me
+      step1_question: replace_me
+      step2_question: replace_me
+      step3_question: replace_me
+      subtitle: replace_me
+      title: replace_me

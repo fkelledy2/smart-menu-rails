@@ -2,6 +2,7 @@
 en_US:
   home:
     index:
+      bookDemo: replace_me
       browse: ''
       closingBody: ''
       closingPrimaryCta: ''
@@ -120,6 +121,7 @@ en_US:
       trustItem4Title: ''
       trustTitle: ''
       video_unsupported: ''
+      watchDemo: replace_me
       welcome: ''
     privacy:
       page_description: ''

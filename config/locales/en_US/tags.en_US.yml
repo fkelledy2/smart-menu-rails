@@ -6,6 +6,9 @@ en_US:
       deleted: ''
       updated: ''
     edit:
+      back_to_tags: replace_me
+      tag_details: replace_me
+      tags: replace_me
       title: ''
     form:
       delete: ''

@@ -2,6 +2,7 @@
 en:
   home:
     index:
+      bookDemo: Book live demo
       browse: Browse
       closingBody: Create your first menu now, or explore a demo and see how it feels
         on mobile.
@@ -83,8 +84,6 @@ en:
       featuresStoryTitle: Finally, a digital menu that feels premium
       heroPrimaryCta: Create my menu
       heroSecondaryCta: View demo menu
-      bookDemo: Book live demo
-      watchDemo: Watch demo
       heroTrust1: No app needed for guests
       heroTrust2: Multilingual menus
       heroTrust3: Instant updates (no reprints)
@@ -133,6 +132,7 @@ en:
       trustItem4Title: Support when you need it
       trustTitle: Built for real restaurant service
       video_unsupported: Your browser does not support the video tag.
+      watchDemo: Watch demo
       welcome: Welcome
     privacy:
       page_description: Learn how Mellow Menu collects, uses, and protects your personal

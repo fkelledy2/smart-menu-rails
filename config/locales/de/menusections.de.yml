@@ -2,6 +2,8 @@
 de:
   menusections:
     edit:
+      back_to_menu: replace_me
+      description: replace_me
       inventories: Bestände
       items: Artikel
       section: Sektion

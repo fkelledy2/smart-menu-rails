@@ -2,6 +2,7 @@
 de:
   omniauth:
     connected: Ihr %{kind}-Konto wurde verbunden.
+    create_failed: replace_me
     email_exists: Es existiert bereits ein Konto mit dieser E-Mail-Adresse. Bitte
       melden Sie sich mit diesem Konto an, bevor Sie Ihr %{Provider}-Konto verbinden.
     failure: Etwas ist schief gelaufen

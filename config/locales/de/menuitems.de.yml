@@ -6,6 +6,8 @@ de:
       deleted: Der Menüpunkt wurde erfolgreich gelöscht.
       updated: Der Menüpunkt wurde erfolgreich aktualisiert.
     edit:
+      back_to_section: replace_me
+      description: replace_me
       tab_item: Artikel
     edit_2025:
       active: Aktiv

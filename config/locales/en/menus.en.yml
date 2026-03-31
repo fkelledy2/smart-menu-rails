@@ -26,6 +26,7 @@ en:
       current_pdf: 'Current PDF:'
       delete: Delete
       details: Details
+      display: Display
       errors: Errors
       'false': 'off'
       imageSettings: Image Settings
@@ -55,14 +56,20 @@ en:
     new:
       menu: Menu
     sections:
+      details_2025:
+        ai_tools: AI
+        manage: Manage
+        preview: Preview
       items_2025:
         actions: Actions
         archive: Archive
         archive_single_confirm: Archive
+        preview: Preview
       sections_2025:
         actions: Actions
         archive: Archive
         archive_single_confirm: Archive
+        preview: Preview
       versions_2025:
         no_versions_desc: Versions are created automatically when you publish changes.
     show:

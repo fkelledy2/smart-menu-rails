@@ -262,6 +262,7 @@ hu:
       close_menu: Menü bezárása
       details: Részletek
       financials: PÉNZÜGYI ADATOK
+      floorplan: replace_me
       insights: Betekintés
       jukebox: Jukebox
       kitchen_dashboard: Konyha
@@ -281,6 +282,7 @@ hu:
       taxes_and_tips: Adók és tippek
       team: TEAM
       tips: Tippek
+      wait_times: replace_me
       wifi: Wi‑Fi
     welcome_modal:
       body: Töltse ki az indulási ellenőrzőlistát, hogy étterme online legyen.

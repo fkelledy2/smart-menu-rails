@@ -6,6 +6,11 @@ de:
       deleted: Das Zeugnis wurde erfolgreich gelöscht.
       updated: Das Zeugnis wurde erfolgreich aktualisiert.
     edit:
+      cancel: replace_me
+      confirm_delete: replace_me
+      delete: replace_me
+      description: replace_me
+      testimonial_details: replace_me
       title: Zeugnis bearbeiten
     form:
       cancel: Abbrechen
@@ -14,12 +19,22 @@ de:
       sure: Sind Sie sicher?
     index:
       actions: Aktionen
+      all_testimonials: replace_me
       approve: Genehmigen
+      description: replace_me
+      new_testimonial: replace_me
       testimonials: Referenzen
       unapprove: Ablehnen
     new:
       cancel: Abbrechen
+      description: replace_me
+      testimonial_details: replace_me
       title: Neues Zeugnis
+    show:
+      back: replace_me
+      edit: replace_me
+      testimonial_details: replace_me
+      title: replace_me
     testimonial:
       restaurant: 'Restaurant:'
       testimonial: 'Zeugnis:'

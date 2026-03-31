@@ -17,6 +17,7 @@ pl:
       archived: "%{zasób} został pomyślnie zarchiwizowany."
       created: "%{zasób} został pomyślnie utworzony."
       deleted: "%{zasób} został pomyślnie usunięty."
+      error: replace_me
       processing_restarted: Przetwarzanie zostało (ponownie) rozpoczęte.
       updated: "%{zasób} został pomyślnie zaktualizowany."
     loading: Ładowanie...

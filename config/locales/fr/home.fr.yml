@@ -2,6 +2,7 @@
 fr:
   home:
     index:
+      bookDemo: replace_me
       browse: Parcourir les menus
       closingBody: Créez votre premier menu maintenant, ou explorez une démo pour
         voir ce que cela donne sur mobile.
@@ -155,6 +156,7 @@ fr:
       trustItem4Title: Un soutien quand vous en avez besoin
       trustTitle: Conçu pour un véritable service de restauration
       video_unsupported: Votre navigateur ne prend pas en charge la balise vidéo.
+      watchDemo: replace_me
       welcome: Bienvenue !
     privacy:
       page_description: Découvrez comment Mellow Menu recueille, utilise et protège

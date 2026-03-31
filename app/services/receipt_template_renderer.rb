@@ -75,13 +75,13 @@ class ReceiptTemplateRenderer
   end
 
   def format_currency(amount)
-    "#{currency_symbol}#{'%.2f' % amount.to_f}"
+    "#{currency_symbol}#{format('%.2f', amount.to_f)}"
   end
 
   def as_plain_text
     lines = []
     lines << restaurant_name
-    lines << restaurant_address unless restaurant_address.blank?
+    lines << restaurant_address if restaurant_address.present?
     lines << ''
     lines << "Receipt — Order ##{order_number}"
     lines << order_date
@@ -93,8 +93,8 @@ class ReceiptTemplateRenderer
 
     lines << ('-' * 40)
     lines << "Subtotal:  #{format_currency(subtotal)}"
-    lines << "Tax:       #{format_currency(tax_amount)}" if tax_amount > 0
-    lines << "Tip:       #{format_currency(tip_amount)}" if tip_amount > 0
+    lines << "Tax:       #{format_currency(tax_amount)}" if tax_amount.positive?
+    lines << "Tip:       #{format_currency(tip_amount)}" if tip_amount.positive?
     lines << "Total:     #{format_currency(grand_total)}"
     lines << ''
     lines << 'Thank you for dining with us!'

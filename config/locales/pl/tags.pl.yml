@@ -6,6 +6,9 @@ pl:
       deleted: Znacznik został pomyślnie usunięty.
       updated: Znacznik został pomyślnie zaktualizowany.
     edit:
+      back_to_tags: replace_me
+      tag_details: replace_me
+      tags: replace_me
       title: Edytuj znacznik
     form:
       delete: Usuń

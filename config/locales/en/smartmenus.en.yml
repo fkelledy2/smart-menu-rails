@@ -1,13 +1,6 @@
 ---
 en:
   smartmenus:
-    staff_mode:
-      customer_view: Customer view
-      staff_mode_on: Staff mode
-      staff_view: Staff view
-      switch_to_customer: Switch to customer view
-      switch_to_staff: Switch to staff controls
-      viewing_as_customer: Viewing as customer
     alcohol:
       acknowledge_btn: Acknowledge age check
       acknowledged: Age check acknowledged
@@ -78,6 +71,8 @@ en:
       order: Order
       startOrder: Start Order
       takePayment: Take Payment
+    preview:
+      back_to_edit: Back to edit
     search:
       no_results_hint: Try a different search term
       no_results_title: No items found
@@ -121,11 +116,18 @@ en:
       addToOrder: Add to Order
       add_items_hint: Tap + on any item to add it
       bill_prefix: 'Bill:'
+      bill_summary: Bill Summary
       cancel: Cancel
+      cash_confirm_btn: Mark as Cash Paid
+      cash_instructions: Confirm that the customer has paid in cash. This will close
+        the order.
+      cash_recording: Recording…
+      cash_success: Cash payment recorded. Order closed.
       confirmPayment: Pay
       cover_charge: Cover Charge
       customiseOrderWithName: Add your name to the order
       decrease: Decrease
+      decrease_qty: Decrease quantity
       empty_cart: Your cart is empty
       excluding_tip: excl. tip
       filterAllergyns: Filter Allergens
@@ -133,6 +135,7 @@ en:
       full_capacity: Full
       including_tip: incl. tip
       increase: Increase
+      increase_qty: Increase quantity
       item: Item
       name_label: 'Name:'
       nett: Nett
@@ -143,7 +146,14 @@ en:
       pay: Pay
       payBill: Pay Bill
       payment_link: Payment Link
+      payment_method_card: Card
+      payment_method_cash: Cash
+      payment_method_pos: Square POS
+      payment_method_qr: Customer QR
       price: Price
+      qr_generating: Generating payment link…
+      qr_instructions: Show this QR code to the customer. They can scan it and pay
+        on their own device.
       requestBill: Request Bill
       request_bill: Request Bill
       request_bill_confirm_body: Once you request the bill, you will no longer be
@@ -151,6 +161,13 @@ en:
       request_bill_confirm_title: Are you sure?
       selected: Selected
       service: Service
+      special_requests: Special requests
+      special_requests_placeholder: e.g., no onions, extra sauce...
+      split_bill: Split Bill
+      square_pos_btn: Open Square POS
+      square_pos_instructions: Opens the Square Point of Sale app on this device for
+        Tap to Pay or card-present payment.
+      square_pos_note: Requires the Square Point of Sale app installed on this device.
       start: Start
       startOrder: Start Order
       submit: Submit Order
@@ -211,11 +228,43 @@ en:
       wine_sparkling: Sparkling
       wine_surprise: Surprise me
       wine_white: White
+    split_bill:
+      amount_per_person: Amount per person
+      by_item: By Item
+      create_plan: Create Split
+      custom: Custom
+      custom_hint: Enter custom amounts for each participant. Total must equal bill
+        amount.
+      equal: Equal
+      item_hint: Assign items to participants. All items must be assigned.
+      method: Split Method
+      participants: Participants
+      pay_my_share: Pay My Share
+      percentage: "%"
+      percentage_hint: Enter percentage for each participant. Total must equal 100%.
+      split_plan: Split Plan
+      title: Split Bill
+      total: Total
+      total_percentage: Total
+      your_share: Your Share
     staff_banner:
       dashboard: Dashboard
       no_table: No Table
       switch_table: Switch
       title: Staff View
+    staff_mode:
+      customer_view: Customer view
+      staff_mode_on: Staff mode
+      staff_view: Staff view
+      switch_to_customer: Switch to customer view
+      switch_to_staff: Switch to staff controls
+      viewing_as_customer: Viewing as customer
+    theme_picker:
+      hint: Choose a visual style for your customer-facing menu.
+      label: Menu Theme
+      preview_button: Preview in new tab
+      preview_hint: Save first to see theme changes applied.
+      sample_text: Aa
     whiskey_ambassador:
       budget_high: Premium
       budget_low: Value picks

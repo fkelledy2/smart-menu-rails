@@ -5,3 +5,9 @@ en:
       created: Ingredient was successfully created.
       deleted: Ingredient was successfully deleted.
       updated: Ingredient was successfully updated.
+    edit:
+      back_to_ingredients: Back to Ingredients
+      description: Update ingredient details and cost information
+      edit_ingredient: Edit Ingredient
+      ingredient_details: Ingredient Details
+      ingredients: Ingredients

@@ -19,6 +19,10 @@ en_GB:
       deleted: ''
       updated: ''
     edit:
+      back_to_tables: replace_me
+      description: replace_me
+      edit_tablesetting: replace_me
+      tables: replace_me
       tablesetting: ''
     index:
       archive: ''

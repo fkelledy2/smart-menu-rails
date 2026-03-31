@@ -6,6 +6,9 @@ pt:
       deleted: A etiqueta foi eliminada com êxito.
       updated: A etiqueta foi actualizada com sucesso.
     edit:
+      back_to_tags: replace_me
+      tag_details: replace_me
+      tags: replace_me
       title: Editar etiqueta
     form:
       delete: Eliminar

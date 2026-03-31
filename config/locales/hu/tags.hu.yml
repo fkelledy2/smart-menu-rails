@@ -6,6 +6,9 @@ hu:
       deleted: A címke sikeresen törlésre került.
       updated: A címke sikeresen frissült.
     edit:
+      back_to_tags: replace_me
+      tag_details: replace_me
+      tags: replace_me
       title: Címke szerkesztése
     form:
       delete: Törölje a  címet.

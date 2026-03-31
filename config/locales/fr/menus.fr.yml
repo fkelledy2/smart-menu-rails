@@ -27,6 +27,7 @@ fr:
       current_pdf: 'PDF actuel :'
       delete: Supprimer
       details: Détails
+      display: replace_me
       errors: Erreurs
       'false': éteint
       imageSettings: Paramètres d'image
@@ -56,14 +57,20 @@ fr:
     new:
       menu: Nouveau menu
     sections:
+      details_2025:
+        ai_tools: replace_me
+        manage: replace_me
+        preview: replace_me
       items_2025:
         actions: Actions
         archive: Archives
         archive_single_confirm: Archives
+        preview: replace_me
       sections_2025:
         actions: Actions
         archive: Archives
         archive_single_confirm: Archives
+        preview: replace_me
       versions_2025:
         no_versions_desc: Les versions sont créées automatiquement lorsque vous publiez
           des modifications.

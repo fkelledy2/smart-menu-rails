@@ -81,15 +81,14 @@ describe("SidebarController", () => {
     // Open first
     toggleButton.click()
     expect(sidebar.classList.contains('open')).toBe(true)
-    
-    // Wait for debounce
-    jest.advanceTimersByTime(500)
-    
-    // Close
-    toggleButton.click()
-    expect(sidebar.classList.contains('open')).toBe(false)
-    expect(overlay.classList.contains('active')).toBe(false)
-    expect(document.body.style.overflow).toBe('')
+
+    // Close (debounce uses timestamp, not setTimeout — just wait 500ms via fake time)
+    return new Promise((resolve) => setTimeout(resolve, 500)).then(() => {
+      toggleButton.click()
+      expect(sidebar.classList.contains('open')).toBe(false)
+      expect(overlay.classList.contains('active')).toBe(false)
+      expect(document.body.style.overflow).toBe('')
+    })
   })
 
   test("close button closes sidebar", () => {
@@ -133,7 +132,7 @@ describe("SidebarController", () => {
   })
 
   test("prevents event bubbling", () => {
-    const parentClickHandler = jest.fn()
+    const parentClickHandler = vi.fn()
     container.addEventListener('click', parentClickHandler)
     
     const event = new MouseEvent('click', { 
@@ -148,16 +147,18 @@ describe("SidebarController", () => {
   })
 
   test("handles missing sidebar target gracefully", () => {
-    // Remove data-sidebar-target
+    // Remove data-sidebar-target attribute so Stimulus loses the target reference
     sidebar.removeAttribute('data-sidebar-target')
-    
+    // Also add the fallback class the controller uses for querySelector
+    sidebar.classList.add('sidebar-app')
+
     // Should still work via fallback querySelector
     expect(() => {
       toggleButton.click()
     }).not.toThrow()
-    
+
     // Should still open via fallback
-    const fallbackSidebar = document.querySelector('.sidebar-2025')
+    const fallbackSidebar = document.querySelector('.sidebar-app')
     expect(fallbackSidebar.classList.contains('open')).toBe(true)
   })
 
@@ -180,9 +181,9 @@ describe("SidebarController", () => {
   test("timestamp-based debounce works correctly", () => {
     const realDateNow = Date.now
     let mockTime = 1000
-    
+
     // Mock Date.now
-    Date.now = jest.fn(() => mockTime)
+    Date.now = vi.fn(() => mockTime)
     
     // First click at t=1000
     toggleButton.click()
