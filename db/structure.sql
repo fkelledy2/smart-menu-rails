@@ -11008,7 +11008,7 @@ ALTER TABLE ONLY public.ordr_split_payments
 --
 
 ALTER TABLE ONLY public.ordritems
-    ADD CONSTRAINT fk_rails_4f184e074e FOREIGN KEY (menuitem_id) REFERENCES public.menuitems(id);
+    ADD CONSTRAINT fk_rails_4f184e074e FOREIGN KEY (menuitem_id) REFERENCES public.menuitems(id) ON DELETE SET NULL;
 
 
 --
@@ -12146,6 +12146,7 @@ ALTER TABLE ONLY public.voice_commands
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260331054025'),
 ('20260330180552'),
 ('20260330180337'),
 ('20260330180151'),
