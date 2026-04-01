@@ -15,3 +15,4 @@
 - [project_menu_experiments_v1.md](project_menu_experiments_v1.md) — Menu Experiments v1: MD5 hash assignment, render-path safety, plan gate, cron job, snapshot_json vs ApplyService, Postgres.app auth gotcha (March 2026)
 - [project_wait_time_estimation_v1.md](project_wait_time_estimation_v1.md) — Wait Time Estimation v1: queue model, estimation service, pattern updater, cron job, upsert gotcha, replica fallback, bucket test gotcha (March 2026)
 - [project_naked_domain_v1.md](project_naked_domain_v1.md) — Naked Domain Canonical Strategy IQ-1: DomainRedirect middleware, www→naked 301, canonical URL audit, ops steps remaining (March 2026)
+- [project_employee_role_promotion_v1.md](project_employee_role_promotion_v1.md) — Employee Role Promotion #29: EmployeeRoleAudit model, RoleChangeService, Flipper flag, Pundit policy pattern, asset manifest gotcha, t.references index duplication gotcha (April 2026)

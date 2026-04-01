@@ -6,23 +6,24 @@ class RestaurantAnalyticsMvTest < ActiveSupport::TestCase
   def setup
     @restaurant = restaurants(:one)
 
-    # Create the materialized view if it doesn't exist in test context
-    begin
-      # Test if we can access the materialized view
-      RestaurantAnalyticsMv.connection.execute('SELECT 1 FROM restaurant_analytics_mv LIMIT 1')
-    rescue ActiveRecord::StatementInvalid
-      # Create the materialized view for testing
-      create_test_materialized_view
-    end
+    # The materialized view exists in the test schema but may not be populated.
+    # Refresh it so SELECT queries succeed (result set will be empty but no error).
+    ensure_materialized_view_populated
   end
 
   private
 
+  def ensure_materialized_view_populated
+    RestaurantAnalyticsMv.connection.execute('REFRESH MATERIALIZED VIEW restaurant_analytics_mv')
+  rescue ActiveRecord::StatementInvalid
+    # View does not exist — create it with the real schema columns and refresh.
+    create_test_materialized_view
+  end
+
   def create_test_materialized_view
-    # Create a simplified version of the materialized view for testing
     sql = <<~SQL.squish
       CREATE MATERIALIZED VIEW IF NOT EXISTS restaurant_analytics_mv AS
-      SELECT#{' '}
+      SELECT
         r.id as restaurant_id,
         r.name as restaurant_name,
         r.currency as restaurant_currency,
@@ -39,12 +40,10 @@ class RestaurantAnalyticsMvTest < ActiveSupport::TestCase
         0 as unique_tables,
         0 as repeat_customers
       FROM restaurants r
-      LIMIT 1;
+      LIMIT 0;
     SQL
 
     RestaurantAnalyticsMv.connection.execute(sql)
-  rescue ActiveRecord::StatementInvalid => e
-    skip "Cannot create test materialized view: #{e.message}"
   end
 
   test 'should be readonly' do

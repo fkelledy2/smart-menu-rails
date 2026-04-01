@@ -7,6 +7,7 @@ class Ordritem < ApplicationRecord
   belongs_to :ordr_station_ticket, optional: true
   has_one :ordrparticipant
   has_many :ordritemnotes, dependent: :destroy
+  has_many :ordritem_events, dependent: :destroy
 
   # Enums
   enum :status, {
@@ -20,6 +21,20 @@ class Ordritem < ApplicationRecord
     paid: 35,
     closed: 40,
   }
+
+  # Fulfillment tracking — independent of the lifecycle status enum above.
+  # Use prefix: to avoid method name collisions (e.g. fulfillment_pending?, station_kitchen?).
+  enum :fulfillment_status, {
+    pending: 0,
+    preparing: 1,
+    ready: 2,
+    collected: 3,
+  }, prefix: :fulfillment
+
+  enum :station, {
+    kitchen: 0,
+    bar: 1,
+  }, prefix: :station
 
   before_validation :ensure_line_key, on: :create
 

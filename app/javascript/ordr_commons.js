@@ -1066,17 +1066,12 @@ export function initOrderBindings() {
       // Prefers the immediate Bootstrap modal-content ancestor, then the
       // bottom-sheet start-order section, then falls back to document.
       function getScopeFor(el) {
-        return (
-          el.closest('.modal-content') ||
-          el.closest('#cartStartOrderSection') ||
-          document
-        );
+        return el.closest('.modal-content') || el.closest('#cartStartOrderSection') || document;
       }
 
       function getBoundsIn(scope) {
         const input =
-          scope.querySelector('#orderCapacity') ||
-          scope.querySelector('[name="orderCapacity"]');
+          scope.querySelector('#orderCapacity') || scope.querySelector('[name="orderCapacity"]');
         const min = parseInt(input?.dataset?.min || '1', 10) || 1;
         const max = parseInt(input?.dataset?.max || '1', 10) || 1;
         return { input, min, max };

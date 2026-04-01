@@ -1,0 +1,75 @@
+<%#
+  Partial: _ordritem_tracking_status
+  Renders realtime fulfillment status badges for submitted ordritems.
+  Gated behind the ordritem_realtime_tracking Flipper flag.
+
+  locals:
+    order   — the Ordr instance
+    locale  — optional locale string for item names
+%>
+<% order   = local_assigns[:order] %>
+<% locale  = local_assigns[:locale] %>
+
+<% if Flipper.enabled?(:ordritem_realtime_tracking) && order %>
+  <%
+    submitted = order.ordritems.select { |i| %w[ordered preparing ready delivered].include?(i.status) }
+    all_statuses = submitted.map(&:fulfillment_status)
+
+    summary_label = if all_statuses.empty?
+      'Received'
+    elsif all_statuses.all? { |s| s == 'collected' }
+      'Complete'
+    elsif all_statuses.all? { |s| s == 'ready' }
+      'Ready'
+    elsif all_statuses.any? { |s| s == 'preparing' }
+      'Preparing'
+    elsif all_statuses.any? { |s| s == 'ready' } && all_statuses.any? { |s| s != 'collected' }
+      'Partially Ready'
+    else
+      'Received'
+    end
+  %>
+
+  <turbo-frame id="ordr-status-frame-<%= order.id %>">
+    <div class="ordritem-tracking"
+         data-controller="ordritem-tracking"
+         data-ordritem-tracking-order-id-value="<%= order.id %>">
+
+      <%# Order summary header %>
+      <div class="ordritem-tracking__summary mb-2">
+        <small class="text-muted">Order status:</small>
+        <span class="badge ms-1 ordritem-summary-badge ordritem-summary-badge--<%= summary_label.downcase.tr(' ', '_') %>"
+              data-ordritem-tracking-target="orderSummaryLabel"
+              data-ordritem-tracking-target="orderSummaryStatus"
+              data-summary-status="<%= summary_label.downcase.tr(' ', '_') %>">
+          <%= summary_label %>
+        </span>
+      </div>
+
+      <%# Per-item status badges %>
+      <% submitted.each do |item| %>
+        <div class="ordritem-tracking__item"
+             data-ordritem-id="<%= item.id %>">
+          <div class="d-flex align-items-center justify-content-between py-1">
+            <span class="small">
+              <% if item.quantity > 1 %>
+                <span class="badge bg-primary me-1"><%= item.quantity %>x</span>
+              <% end %>
+              <%= locale ? item.menuitem.localised_name(locale) : item.menuitem.name %>
+            </span>
+            <div class="d-flex align-items-center gap-2">
+              <span class="badge ordritem-status-badge ordritem-status-badge--<%= item.fulfillment_status %>"
+                    data-ordritem-status-badge
+                    data-status="<%= item.fulfillment_status %>">
+                <%= item.fulfillment_status.capitalize %>
+              </span>
+              <small class="text-muted"
+                     data-ordritem-updated-at
+                     style="display:none;">Updated just now</small>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </turbo-frame>
+<% end %>

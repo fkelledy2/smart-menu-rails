@@ -24,3 +24,11 @@ table_two:
   capacity: 2
   tabletype: 1
   restaurant: one
+
+restaurant_two_table:
+  name: Table 1
+  description: Main table for restaurant two
+  status: 1
+  capacity: 2
+  tabletype: 1
+  restaurant: two

@@ -1,6 +1,6 @@
 class EmployeesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_employee, only: %i[show edit update destroy analytics]
+  before_action :set_employee, only: %i[show edit update destroy analytics role_history new_role_change change_role]
 
   skip_around_action :switch_locale, only: %i[reorder bulk_update]
 
@@ -87,6 +87,91 @@ class EmployeesController < ApplicationController
       employee_role: @employee.role,
       viewing_context: 'employee_management',
     })
+  end
+
+  # GET /restaurants/:restaurant_id/employees/:id/new_role_change
+  def new_role_change
+    authorize @employee, :change_role?
+
+    @restaurant = @employee.restaurant
+
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.replace(
+          "change_role_form_frame_#{@employee.id}",
+          partial: 'employees/change_role_form',
+          locals: { employee: @employee, restaurant: @restaurant, error: nil },
+        )
+      end
+      format.html { redirect_to edit_restaurant_path(@restaurant, section: 'staff') }
+    end
+  end
+
+  # GET /restaurants/:restaurant_id/employees/:id/role_history
+  def role_history
+    authorize @employee, :view_role_history?
+
+    @audits = @employee.employee_role_audits.includes(:changed_by).order(created_at: :desc)
+
+    respond_to do |format|
+      format.turbo_stream
+      format.html { redirect_to edit_restaurant_path(@employee.restaurant, section: 'staff') }
+    end
+  end
+
+  # POST /restaurants/:restaurant_id/employees/:id/change_role
+  def change_role
+    authorize @employee, :change_role?
+
+    acting_employee = @employee.restaurant.employees.find_by(user: current_user)
+
+    unless acting_employee
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace(
+            "change_role_form_frame_#{@employee.id}",
+            partial: 'employees/change_role_form',
+            locals: { employee: @employee, restaurant: @employee.restaurant, error: 'You are not an employee of this restaurant.' },
+          )
+        end
+        format.html { redirect_to edit_restaurant_path(@employee.restaurant, section: 'staff'), alert: 'Not authorised.' }
+      end
+      return
+    end
+
+    result = Employees::RoleChangeService.call(
+      acting_employee: acting_employee,
+      target_employee: @employee,
+      to_role: role_change_params[:to_role],
+      reason: role_change_params[:reason],
+    )
+
+    if result.success?
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.replace("change_role_form_frame_#{@employee.id}", ''),
+            turbo_stream.replace(
+              "employee_row_#{@employee.id}",
+              partial: 'employees/employee_row',
+              locals: { employee: @employee.reload, restaurant: @employee.restaurant },
+            ),
+          ]
+        end
+        format.html { redirect_to edit_restaurant_path(@employee.restaurant, section: 'staff'), notice: 'Role updated successfully.' }
+      end
+    else
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace(
+            "change_role_form_frame_#{@employee.id}",
+            partial: 'employees/change_role_form',
+            locals: { employee: @employee, restaurant: @employee.restaurant, error: result.error },
+          )
+        end
+        format.html { redirect_to edit_restaurant_path(@employee.restaurant, section: 'staff'), alert: result.error }
+      end
+    end
   end
 
   # GET /employees/1/analytics
@@ -359,6 +444,10 @@ class EmployeesController < ApplicationController
     end
   rescue ActiveRecord::RecordNotFound
     redirect_to root_url
+  end
+
+  def role_change_params
+    params.require(:role_change).permit(:to_role, :reason)
   end
 
   # Only allow a list of trusted parameters through.

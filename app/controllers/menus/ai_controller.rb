@@ -154,6 +154,8 @@ module Menus
           render json: { pairings_count: pairings_count, pairings: pairings }
         end
       end
+    rescue Pundit::NotAuthorizedError
+      raise
     rescue StandardError => e
       Rails.logger.error("[Menus::AiController] generate_pairings failed: #{e.class}: #{e.message}")
       respond_to do |format|

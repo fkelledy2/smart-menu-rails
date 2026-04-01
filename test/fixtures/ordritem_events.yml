@@ -1,0 +1,5 @@
+# OrdritemEvent fixtures intentionally empty.
+# OrdritemEvent records are immutable (before_destroy throws :abort), so they
+# cannot be fixture-cleaned between tests. Tests create events programmatically
+# within individual test methods instead.
+

@@ -8,6 +8,8 @@ class Employee < ApplicationRecord
   belongs_to :restaurant
   has_many :ordrs, dependent: :destroy
   has_many :ordrnotes, dependent: :destroy
+  has_many :employee_role_audits, dependent: :destroy
+  has_many :role_changes_made, class_name: 'EmployeeRoleAudit', foreign_key: :changed_by_id, dependent: :nullify
 
   # PII encryption. email uses deterministic mode so the DB index remains usable.
   encrypts :name

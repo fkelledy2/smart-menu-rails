@@ -28,9 +28,9 @@ class OrderEventProjectorTest < ActiveSupport::TestCase
 
   test 'closed status triggers FloorplanBroadcastService broadcast_tile' do
     broadcast_calls = []
-    FloorplanBroadcastService.stub(:broadcast_tile, ->(tablesetting_id:, restaurant_id:) {
+    FloorplanBroadcastService.stub(:broadcast_tile, lambda { |tablesetting_id:, restaurant_id:|
       broadcast_calls << { tablesetting_id: tablesetting_id, restaurant_id: restaurant_id }
-    }) do
+    },) do
       OrderEvent.emit!(
         ordr: @ordr,
         event_type: 'closed',

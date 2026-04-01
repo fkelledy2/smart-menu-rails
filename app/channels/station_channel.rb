@@ -32,4 +32,40 @@ class StationChannel < ApplicationCable::Channel
       connection.connection_identifier,
     )
   end
+
+  def receive(data)
+    case data['action']
+    when 'advance_station'
+      handle_station_advance(data)
+    end
+  end
+
+  private
+
+  def handle_station_advance(data)
+    return unless current_user
+
+    ordr_id     = data['ordr_id'].to_i
+    station     = data['station'].to_s
+    from_status = data['from_status'].to_s
+    to_status   = data['to_status'].to_s
+
+    ordr = Ordr.find_by(id: ordr_id)
+    return unless ordr
+
+    # Verify the authenticated user belongs to this order's restaurant
+    owns     = current_user.restaurants.exists?(id: ordr.restaurant_id)
+    works_at = current_user.employees.exists?(restaurant_id: ordr.restaurant_id)
+    return unless owns || works_at || current_user.super_admin?
+
+    result = Ordritems::TransitionGroup.new(
+      ordr_id: ordr_id,
+      station: station,
+      from_status: from_status,
+      to_status: to_status,
+      actor: current_user,
+    ).call
+
+    transmit({ action: 'station_advance_result', result: result })
+  end
 end

@@ -45,6 +45,22 @@ class OrdritemPolicy < ApplicationPolicy
     owner?
   end
 
+  def transition_fulfillment_status?
+    return false unless user&.persisted?
+
+    # Restaurant owner always permitted
+    return true if record.ordr&.restaurant&.user_id == user.id
+
+    # Active employee with manager or admin role
+    return false unless record.ordr&.restaurant_id
+
+    employee = user.employees.find_by(
+      restaurant_id: record.ordr.restaurant_id,
+      status: :active,
+    )
+    employee&.manager? || employee&.admin?
+  end
+
   class Scope < Scope
     def resolve
       scope.joins(ordr: :restaurant).where(restaurants: { user_id: user.id })

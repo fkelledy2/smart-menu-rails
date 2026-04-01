@@ -6,6 +6,8 @@
 <% restaurant = local_assigns[:restaurant] || @restaurant %>
 <% employees = restaurant.employees.includes(:user).where(archived: false)
   .order(Arel.sql('CASE WHEN sequence IS NULL THEN 1 ELSE 0 END, sequence ASC')) %>
+<% role_promotion_enabled = Flipper.enabled?(:employee_role_promotion) %>
+<% current_user_employee = restaurant.employees.find_by(user: current_user) %>
 
 <!-- Quick Actions Card -->
 <div class="mb-3 p-3">
@@ -140,7 +142,8 @@
                    data-sortable-url-value="<%= reorder_restaurant_employees_path(restaurant) %>"
                    data-sortable-handle-value=".employee-handle">
               <% employees.each do |employee| %>
-                <tr data-sortable-id="<%= employee.id %>"
+                <tr id="employee_row_<%= employee.id %>"
+                    data-sortable-id="<%= employee.id %>"
                     class="clickable-row row-status-<%= employee.status.to_s %>"
                     data-href="<%= edit_restaurant_employee_path(restaurant, employee) %>"
                     title="<%= t(".status_#{employee.status}") %>">
@@ -167,15 +170,52 @@
                     </span>
                   </td>
                   <td class="text-end">
+                    <% can_change_role = role_promotion_enabled &&
+                                         current_user_employee.present? &&
+                                         current_user_employee.id != employee.id &&
+                                         (current_user_employee.admin? || (current_user_employee.manager? && employee.staff?)) %>
+                    <% can_view_history = role_promotion_enabled &&
+                                          current_user_employee.present? &&
+                                          (current_user_employee.manager? || current_user_employee.admin?) %>
+                    <% action_items = [
+                         { label: t('.edit', default: 'Edit'), href: edit_restaurant_employee_path(restaurant, employee), data: { turbo_frame: 'staff_edit_employee' } },
+                       ] %>
+                    <% if can_change_role %>
+                      <% action_items << {
+                           label: 'Change Role',
+                           href: new_role_change_restaurant_employee_path(restaurant, employee),
+                           data: { turbo_stream: true },
+                         } %>
+                    <% end %>
+                    <% if can_view_history %>
+                      <% action_items << {
+                           label: 'Role History',
+                           href: role_history_restaurant_employee_path(restaurant, employee),
+                           data: { turbo_stream: true },
+                         } %>
+                    <% end %>
+                    <% action_items << { label: t('.remove', default: 'Remove'), href: restaurant_employee_path(restaurant, employee), method: :delete, class: 'text-danger', data: { turbo_confirm: t('.remove_confirm', default: 'Remove this staff member?') } } %>
                     <%= render 'shared/actions_dropdown',
                         aria_label: t('.actions', default: 'Actions'),
                         button_class: 'btn btn-sm btn-outline-secondary',
-                        items: [
-                          { label: t('.edit', default: 'Edit'), href: edit_restaurant_employee_path(restaurant, employee), data: { turbo_frame: 'staff_edit_employee' } },
-                          { label: t('.remove', default: 'Remove'), href: restaurant_employee_path(restaurant, employee), method: :delete, class: 'text-danger', data: { turbo_confirm: t('.remove_confirm', default: 'Remove this staff member?') } }
-                        ] %>
+                        items: action_items %>
                   </td>
                 </tr>
+                <%# Turbo Stream target frames for role change form and history panel %>
+                <% if role_promotion_enabled %>
+                  <tr id="change_role_form_frame_row_<%= employee.id %>" class="border-0 p-0" style="display:none">
+                    <td colspan="5" class="p-0 border-0">
+                      <%= turbo_frame_tag "change_role_form_frame_#{employee.id}" do %>
+                      <% end %>
+                    </td>
+                  </tr>
+                  <tr id="role_history_row_<%= employee.id %>" class="border-0 p-0" style="display:none">
+                    <td colspan="5" class="p-0 border-0">
+                      <%= turbo_frame_tag "role_history_#{employee.id}" do %>
+                      <% end %>
+                    </td>
+                  </tr>
+                <% end %>
               <% end %>
             </tbody>
           </table>

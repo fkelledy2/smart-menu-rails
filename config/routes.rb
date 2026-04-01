@@ -451,7 +451,10 @@ Rails.application.routes.draw do
         patch :reorder
       end
       member do
-        get :analytics
+        get  :analytics
+        get  :role_history
+        get  :new_role_change
+        post :change_role
       end
     end
 
@@ -489,7 +492,11 @@ Rails.application.routes.draw do
     end
     resources :ordr_station_tickets, only: [:update]
     resources :alcohol_order_events, only: [:index]
-    resources :ordritems
+    resources :ordritems do
+      member do
+        patch :advance_fulfillment
+      end
+    end
     resources :ordritemnotes
     resources :ordrparticipants, only: %i[index show create update destroy]
     resources :ordractions

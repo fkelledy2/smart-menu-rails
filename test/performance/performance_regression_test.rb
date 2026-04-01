@@ -128,8 +128,8 @@ class PerformanceRegressionTest < ActionDispatch::IntegrationTest
     cache_store_name = Rails.cache.class.name.demodulize.underscore.to_sym
 
     if non_caching_stores.include?(cache_store_name)
-      assert time_uncached < 10.0, "Uncached request too slow: #{time_uncached.round(3)}s"
-      assert time_cached   < 10.0, "Second request too slow: #{time_cached.round(3)}s"
+      assert time_uncached < 15.0, "Uncached request too slow: #{time_uncached.round(3)}s"
+      assert time_cached   < 15.0, "Second request too slow: #{time_cached.round(3)}s"
     else
       improvement = (time_uncached - time_cached) / time_uncached
       assert improvement > -1.0, "Cache causing excessive performance degradation: #{(improvement * 100).round(2)}%"

@@ -111,6 +111,8 @@
       <% submitted_ordritems = order.ordritems.select { |i| %w[ordered preparing ready delivered].include?(i.status) } %>
       <% if submitted_ordritems.any? %>
         <div class="cart-sheet__section-label cart-sheet__section-label--muted"><%= t('smartmenus.showModals.submitted', default: 'Submitted') %></div>
+        <%= render partial: 'smartmenus/ordritem_tracking_status',
+                   locals: { order: order, locale: ordrparticipant&.preferredlocale || menuparticipant&.preferredlocale } %>
         <% submitted_ordritems.each do |item| %>
           <div class="cart-sheet__item cart-sheet__item--submitted">
             <div class="cart-sheet__status-icon">

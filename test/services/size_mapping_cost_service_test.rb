@@ -54,9 +54,16 @@ class SizeMappingCostServiceTest < ActiveSupport::TestCase
     end
   end
 
-  # size_profitability_analysis calls least_profitable_size which has a NameError bug
-  # (line 49: `s.empty?` should be `size_costs.empty?`). Skipped until fixed.
-  test 'size_profitability_analysis skipped due to known bug in least_profitable_size' do
-    skip 'size_mapping_cost_service.rb:49 has NameError: `s` instead of `size_costs`'
+  test 'size_profitability_analysis returns expected structure with no sizemappings' do
+    with_empty_mappings do
+      service = SizeMappingCostService.new(@menuitem)
+      result = service.size_profitability_analysis
+
+      assert_equal 0, result[:total_sizes]
+      assert_equal({}, result[:size_breakdown])
+      assert_nil result[:most_profitable]
+      assert_nil result[:least_profitable]
+      assert_equal 0, result[:average_margin]
+    end
   end
 end

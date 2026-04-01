@@ -38,8 +38,8 @@ class OrdrPolicyComprehensiveTest < ActiveSupport::TestCase
     @manager_employee = create_employee_user(:manager, @restaurant)
     @staff_employee = create_employee_user(:staff, @restaurant)
 
-    # Create customer user
-    @customer = users(:admin) # Using admin fixture as customer
+    # Create customer user (users(:two) is not an employee or owner of @restaurant)
+    @customer = users(:two)
   end
 
   # === BASIC AUTHORIZATION TESTS ===

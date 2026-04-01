@@ -1,0 +1,106 @@
+<%# Change Role modal form — rendered inside a Turbo Frame, submitted via Turbo Stream %>
+<% employee   = local_assigns[:employee] %>
+<% restaurant = local_assigns[:restaurant] %>
+<% error      = local_assigns[:error] %>
+
+<% current_user_employee = restaurant.employees.find_by(user: current_user) %>
+<% is_demotion = ->(role) { Employee.roles[role.to_s] < Employee.roles[employee.role.to_s] } %>
+
+<div id="change_role_modal_<%= employee.id %>"
+     class="card border-primary mt-3 mb-2"
+     data-controller="role-change"
+     data-role-change-employee-id-value="<%= employee.id %>">
+  <div class="card-header d-flex justify-content-between align-items-center bg-primary-subtle">
+    <span class="fw-semibold">
+      <i class="bi bi-person-gear me-1"></i>
+      Change Role — <%= employee.user&.email&.split('@')&.first || employee.name %>
+    </span>
+    <button type="button"
+            class="btn-close btn-close-sm"
+            aria-label="Close"
+            data-action="click->role-change#close"
+            data-role-change-employee-id-param="<%= employee.id %>">
+    </button>
+  </div>
+  <div class="card-body">
+    <% if error.present? %>
+      <div class="alert alert-danger alert-sm py-2 mb-3">
+        <i class="bi bi-exclamation-triangle me-1"></i>
+        <%= error %>
+      </div>
+    <% end %>
+
+    <p class="text-muted small mb-3">
+      Current role:
+      <% badge_class = case employee.role
+                       when 'manager' then 'text-bg-primary'
+                       when 'staff'   then 'text-bg-info'
+                       when 'admin'   then 'text-bg-danger'
+                       else 'text-bg-secondary'
+                       end %>
+      <span class="badge <%= badge_class %>"><%= employee.role&.titleize %></span>
+    </p>
+
+    <%= form_with url: change_role_restaurant_employee_path(restaurant, employee),
+        method: :post,
+        data: { turbo_stream: true, controller: 'role-change-form', 'role-change-form-is-demotion-value': 'false' } do |f| %>
+
+      <div class="mb-3">
+        <%= f.label :to_role, 'New Role', class: 'form-label fw-semibold' %>
+        <% available_roles = if current_user_employee&.admin?
+                               Employee.roles.keys.map { |r| [r.titleize, r] }.reject { |_, v| v == employee.role }
+                             else
+                               [['Manager', 'manager']]
+                             end %>
+        <%= f.select 'role_change[to_role]',
+            available_roles,
+            { include_blank: '— Select a role —' },
+            {
+              class: 'form-select',
+              required: true,
+              data: {
+                action: 'change->role-change-form#checkDemotion',
+                'role-change-form-target': 'roleSelect',
+                'current-role': employee.role,
+              },
+            } %>
+      </div>
+
+      <div class="mb-3">
+        <%= f.label :reason, 'Reason for change', class: 'form-label fw-semibold' %>
+        <%= f.text_area 'role_change[reason]',
+            class: 'form-control',
+            rows: 3,
+            placeholder: 'Briefly explain why this role change is being made (minimum 10 characters)…',
+            required: true,
+            minlength: 10 %>
+        <div class="form-text text-muted">Minimum 10 characters. This is recorded in the audit log.</div>
+      </div>
+
+      <%# Demotion confirmation — shown by Stimulus when the new role is lower %>
+      <div class="alert alert-warning py-2 mb-3 d-none" data-role-change-form-target="demotionWarning">
+        <i class="bi bi-exclamation-triangle-fill me-1"></i>
+        <strong>Demotion:</strong> You are about to reduce this employee's access level.
+        <div class="form-check mt-2">
+          <%= f.check_box 'role_change[confirm_demotion]',
+              { class: 'form-check-input', data: { 'role-change-form-target': 'demotionConfirm', action: 'change->role-change-form#syncSubmit' } },
+              '1', '0' %>
+          <label class="form-check-label">I confirm I want to demote this employee.</label>
+        </div>
+      </div>
+
+      <div class="d-flex gap-2 justify-content-end">
+        <button type="button"
+                class="btn btn-sm btn-outline-secondary"
+                data-action="click->role-change#close"
+                data-role-change-employee-id-param="<%= employee.id %>">
+          Cancel
+        </button>
+        <%= f.submit 'Update Role',
+            class: 'btn btn-sm btn-primary',
+            data: { 'role-change-form-target': 'submitBtn' } %>
+      </div>
+
+    <% end %>
+  </div>
+</div>

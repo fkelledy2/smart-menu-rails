@@ -59,6 +59,8 @@ import CrmLeadDetailController from './crm_lead_detail_controller';
 import ThemePickerController from './theme_picker_controller';
 import MenuSearchController from './menu_search_controller';
 import WaitTimeController from './wait_time_controller';
+import RoleChangeController from './role_change_controller';
+import RoleChangeFormController from './role_change_form_controller';
 
 application.register('sortable', SortableController);
 application.register('auto-save', AutoSaveController);
@@ -117,3 +119,5 @@ application.register('crm-lead-detail', CrmLeadDetailController);
 application.register('theme-picker', ThemePickerController);
 application.register('menu-search', MenuSearchController);
 application.register('wait-time', WaitTimeController);
+application.register('role-change', RoleChangeController);
+application.register('role-change-form', RoleChangeFormController);

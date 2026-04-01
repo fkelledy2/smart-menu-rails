@@ -1,0 +1,58 @@
+<%# Single employee table row — used by Turbo Stream to update a row in-place after a role change %>
+<% employee  = local_assigns[:employee] %>
+<% restaurant = local_assigns[:restaurant] %>
+<% flipper_enabled = Flipper.enabled?(:employee_role_promotion) %>
+
+<% badge_class = case employee.role
+                 when 'manager' then 'text-bg-primary'
+                 when 'staff'   then 'text-bg-info'
+                 when 'admin'   then 'text-bg-danger'
+                 else 'text-bg-secondary'
+                 end %>
+
+<tr id="employee_row_<%= employee.id %>"
+    data-sortable-id="<%= employee.id %>"
+    class="clickable-row row-status-<%= employee.status.to_s %>"
+    data-href="<%= edit_restaurant_employee_path(restaurant, employee) %>"
+    title="<%= employee.status.to_s.titleize %>">
+  <td class="w-40px">
+    <input type="checkbox" name="employee_ids[]" value="<%= employee.id %>"
+           data-localization-bulk-target="checkbox"
+           data-action="change->localization-bulk#sync" />
+  </td>
+  <td class="w-40px employee-handle drag-handle cursor-grab">
+    <i class="bi bi-grip-vertical text-muted"></i>
+  </td>
+  <td>
+    <div class="fw-semibold">
+      <%= employee.user&.email&.split('@')&.first || 'Unnamed' %>
+    </div>
+  </td>
+  <td class="text-end">
+    <span class="badge <%= badge_class %>">
+      <%= employee.role&.titleize || 'No role' %>
+    </span>
+  </td>
+  <td class="text-end">
+    <% actions = [
+         { label: 'Edit', href: edit_restaurant_employee_path(restaurant, employee), data: { turbo_frame: 'staff_edit_employee' } },
+       ] %>
+    <% if flipper_enabled %>
+      <% current_user_employee = restaurant.employees.find_by(user: current_user) %>
+      <% if current_user_employee && current_user_employee.id != employee.id && (current_user_employee.admin? || (current_user_employee.manager? && employee.staff?)) %>
+        <% actions << { label: 'Change Role', href: '#', data: { action: 'click->role-change#open', 'employee-id': employee.id } } %>
+        <% actions << { label: 'Role History', href: role_history_restaurant_employee_path(restaurant, employee), data: { turbo_frame: "role_history_#{employee.id}", turbo_stream: true } } %>
+      <% end %>
+    <% end %>
+    <% actions << { label: 'Remove', href: restaurant_employee_path(restaurant, employee), method: :delete, class: 'text-danger', data: { turbo_confirm: 'Remove this staff member?' } } %>
+
+    <%= render 'shared/actions_dropdown',
+        aria_label: 'Actions',
+        button_class: 'btn btn-sm btn-outline-secondary',
+        items: actions %>
+
+    <%# Inline role history turbo frame (hidden until opened) %>
+    <%= turbo_frame_tag "role_history_#{employee.id}" do %>
+    <% end %>
+  </td>
+</tr>

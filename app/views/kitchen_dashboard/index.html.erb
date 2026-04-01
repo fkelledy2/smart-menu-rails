@@ -1,6 +1,50 @@
 <%= stylesheet_link_tag 'kitchen_dashboard_bootstrap', media: 'all' %>
 
 <div class="kitchen-dashboard d-flex flex-column" style="height: 100vh;" data-restaurant-id="<%= @restaurant.id %>" data-station="kitchen">
+  <% if Flipper.enabled?(:ordritem_realtime_tracking) %>
+  <!-- Batch Station Action Bar -->
+  <div class="container-fluid py-2 flex-shrink-0 bg-light border-bottom" id="batch-station-actions">
+    <div class="d-flex gap-2 align-items-center">
+      <span class="text-muted small fw-bold me-2">Fulfillment:</span>
+      <button type="button"
+              class="btn btn-warning btn-sm batch-station-advance-btn"
+              data-ordr-id=""
+              data-station="kitchen"
+              data-from-status="pending"
+              data-to-status="preparing"
+              title="Start all pending kitchen items across all open orders">
+        <i class="bi bi-play-fill"></i> Start Kitchen
+      </button>
+      <button type="button"
+              class="btn btn-success btn-sm batch-station-advance-btn"
+              data-ordr-id=""
+              data-station="kitchen"
+              data-from-status="preparing"
+              data-to-status="ready"
+              title="Mark all preparing kitchen items as ready">
+        <i class="bi bi-check-lg"></i> Kitchen Ready
+      </button>
+      <button type="button"
+              class="btn btn-info btn-sm batch-station-advance-btn"
+              data-ordr-id=""
+              data-station="bar"
+              data-from-status="pending"
+              data-to-status="preparing"
+              title="Start all pending bar items">
+        <i class="bi bi-cup-straw"></i> Start Bar
+      </button>
+      <button type="button"
+              class="btn btn-primary btn-sm batch-station-advance-btn"
+              data-ordr-id=""
+              data-station="bar"
+              data-from-status="preparing"
+              data-to-status="ready"
+              title="Mark all preparing bar items as ready">
+        <i class="bi bi-check-all"></i> Bar Ready
+      </button>
+    </div>
+  </div>
+  <% end %>
   <!-- Metrics Cards -->
   <div class="container-fluid mb-4 flex-shrink-0">
     <div class="row g-3 flex-grow-1" style="min-height: 0;">

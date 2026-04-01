@@ -108,7 +108,7 @@
 </div>
 
 <%# Item Content with inline notes on top of progress bar %>
-<div class="item-content">
+<div class="item-content" data-ordritem-id="<%= item.id %>">
   <div class="item-main">
     <% if item.quantity > 1 %><span class="badge bg-primary me-1"><%= item.quantity %>×</span><% end %>
     <span class="item-name"><%= item.menuitem.name %></span>
@@ -118,6 +118,13 @@
     <%# Display item-level notes inline %>
     <% if item.ordritemnotes.any? %>
       <span class="item-note-inline">(<%= item.ordritemnotes.map(&:note).join(', ') %>)</span>
+    <% end %>
+    <% if Flipper.enabled?(:ordritem_realtime_tracking) %>
+      <span class="badge ms-2 ordritem-status-badge ordritem-status-badge--<%= item.fulfillment_status %>"
+            data-ordritem-status-badge
+            data-status="<%= item.fulfillment_status %>">
+        <%= item.fulfillment_status.capitalize %>
+      </span>
     <% end %>
   </div>
 </div>
@@ -154,6 +161,46 @@
       <button class="btn btn-primary w-100 ticket-status-btn" data-ticket-id="<%= ticket.id %>" data-new-status="collected">
         Mark as Collected
       </button>
+    <% end %>
+
+    <% if Flipper.enabled?(:ordritem_realtime_tracking) %>
+      <%# Per-item fulfillment override (secondary/expandable) %>
+      <details class="mt-2">
+        <summary class="small text-muted" style="cursor:pointer;">
+          <i class="bi bi-sliders2"></i> Item fulfillment overrides
+        </summary>
+        <div class="mt-2">
+          <% ticket.ordritems.each do |item| %>
+            <% next unless item.menuitem %>
+            <div class="d-flex align-items-center justify-content-between py-1 border-bottom"
+                 data-ordritem-id="<%= item.id %>">
+              <small class="text-truncate me-2">
+                <% if item.quantity > 1 %><span class="badge bg-secondary me-1"><%= item.quantity %>x</span><% end %>
+                <%= item.menuitem.name %>
+              </small>
+              <div class="d-flex align-items-center gap-1">
+                <span class="badge ordritem-status-badge ordritem-status-badge--<%= item.fulfillment_status %>"
+                      data-ordritem-status-badge
+                      data-status="<%= item.fulfillment_status %>">
+                  <%= item.fulfillment_status.capitalize %>
+                </span>
+                <% next_status = { 'pending' => 'preparing', 'preparing' => 'ready', 'ready' => 'collected' }[item.fulfillment_status] %>
+                <% if next_status %>
+                  <button type="button"
+                          class="btn btn-outline-secondary btn-sm item-fulfillment-advance-btn"
+                          data-ordr-id="<%= order.id %>"
+                          data-ordritem-id="<%= item.id %>"
+                          data-from-status="<%= item.fulfillment_status %>"
+                          data-to-status="<%= next_status %>"
+                          title="Advance to <%= next_status %>">
+                    <i class="bi bi-arrow-right-circle"></i>
+                  </button>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </details>
     <% end %>
   </div>
 </div>

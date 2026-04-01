@@ -27,7 +27,7 @@ class SizeMappingCostService
       }
 
       size_cost[:total_cost] = size_cost[:ingredient_cost] + size_cost[:labor_cost] +
-                               ze_cost[:overhead_cost]
+                               size_cost[:packaging_cost] + size_cost[:overhead_cost]
       size_cost[:profit_margin] = price - size_cost[:total_cost]
       size_cost[:margin_percentage] = price.positive? ? ((size_cost[:profit_margin] / price) * 100).round(2) : 0
 

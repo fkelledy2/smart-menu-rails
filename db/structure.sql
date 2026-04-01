@@ -608,7 +608,7 @@ CREATE TABLE public.customer_wait_queues (
     updated_at timestamp(6) without time zone NOT NULL,
     CONSTRAINT customer_wait_queues_party_size_positive CHECK ((party_size > 0)),
     CONSTRAINT customer_wait_queues_queue_position_positive CHECK ((queue_position > 0)),
-    CONSTRAINT customer_wait_queues_status_check CHECK (((status)::text = ANY (ARRAY[('waiting'::character varying)::text, ('notified'::character varying)::text, ('seated'::character varying)::text, ('cancelled'::character varying)::text, ('no_show'::character varying)::text])))
+    CONSTRAINT customer_wait_queues_status_check CHECK (((status)::text = ANY ((ARRAY['waiting'::character varying, 'notified'::character varying, 'seated'::character varying, 'cancelled'::character varying, 'no_show'::character varying])::text[])))
 );
 
 
@@ -864,7 +864,8 @@ CREATE TABLE public.menuitems (
     sommelier_parse_confidence numeric(5,4),
     sommelier_needs_review boolean DEFAULT false NOT NULL,
     image_prompt text,
-    ordritems_count integer DEFAULT 0
+    ordritems_count integer DEFAULT 0,
+    default_station integer
 );
 
 
@@ -932,7 +933,8 @@ CREATE TABLE public.menusections (
     allow_pairing boolean DEFAULT false NOT NULL,
     pairing_price_cents integer,
     pairing_currency character varying,
-    menuitems_count integer DEFAULT 0
+    menuitems_count integer DEFAULT 0,
+    default_station integer
 );
 
 
@@ -952,6 +954,12 @@ CREATE TABLE public.ordritems (
     line_key character varying NOT NULL,
     size_name character varying,
     quantity integer DEFAULT 1 NOT NULL,
+    fulfillment_status integer DEFAULT 0 NOT NULL,
+    station integer,
+    fulfillment_status_changed_at timestamp(6) without time zone,
+    preparing_at timestamp(6) without time zone,
+    ready_at timestamp(6) without time zone,
+    collected_at timestamp(6) without time zone,
     CONSTRAINT ordritems_quantity_max CHECK ((quantity <= 99)),
     CONSTRAINT ordritems_quantity_positive CHECK ((quantity > 0))
 );
@@ -1148,6 +1156,41 @@ CREATE MATERIALIZED VIEW public.dw_orders_mv AS
   GROUP BY o.id, o."orderedAt", o."deliveredAt", o."paidAt", o.nett, o.gross, o.tax, o.tip, o.covercharge, o.status, r.id, r.name, r.city, r.country, r.currency, m.id, m.name, e.id, e.role, t.id, t.name, t.capacity, t.tabletype
   ORDER BY o.id DESC
   WITH NO DATA;
+
+
+--
+-- Name: employee_role_audits; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.employee_role_audits (
+    id bigint NOT NULL,
+    employee_id bigint NOT NULL,
+    restaurant_id bigint NOT NULL,
+    changed_by_id bigint NOT NULL,
+    from_role integer NOT NULL,
+    to_role integer NOT NULL,
+    reason text NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: employee_role_audits_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.employee_role_audits_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: employee_role_audits_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.employee_role_audits_id_seq OWNED BY public.employee_role_audits.id;
 
 
 --
@@ -3425,6 +3468,46 @@ ALTER SEQUENCE public.ordractions_id_seq OWNED BY public.ordractions.id;
 
 
 --
+-- Name: ordritem_events; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ordritem_events (
+    id bigint NOT NULL,
+    ordritem_id bigint NOT NULL,
+    ordr_id bigint NOT NULL,
+    restaurant_id bigint NOT NULL,
+    event_type character varying NOT NULL,
+    from_status integer,
+    to_status integer,
+    occurred_at timestamp(6) without time zone NOT NULL,
+    actor_type character varying,
+    actor_id bigint,
+    metadata jsonb DEFAULT '{}'::jsonb,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: ordritem_events_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.ordritem_events_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ordritem_events_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.ordritem_events_id_seq OWNED BY public.ordritem_events.id;
+
+
+--
 -- Name: ordritemnotes; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -4984,7 +5067,7 @@ CREATE TABLE public.smartmenus (
     updated_at timestamp(6) without time zone NOT NULL,
     public_token character varying(64) NOT NULL,
     theme character varying DEFAULT 'modern'::character varying NOT NULL,
-    CONSTRAINT smartmenus_theme_check CHECK (((theme)::text = ANY (ARRAY[('modern'::character varying)::text, ('rustic'::character varying)::text, ('elegant'::character varying)::text])))
+    CONSTRAINT smartmenus_theme_check CHECK (((theme)::text = ANY ((ARRAY['modern'::character varying, 'rustic'::character varying, 'elegant'::character varying])::text[])))
 );
 
 
@@ -5760,6 +5843,13 @@ ALTER TABLE ONLY public.discovered_restaurants ALTER COLUMN id SET DEFAULT nextv
 
 
 --
+-- Name: employee_role_audits id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.employee_role_audits ALTER COLUMN id SET DEFAULT nextval('public.employee_role_audits_id_seq'::regclass);
+
+
+--
 -- Name: employees id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -6198,6 +6288,13 @@ ALTER TABLE ONLY public.ordr_station_tickets ALTER COLUMN id SET DEFAULT nextval
 --
 
 ALTER TABLE ONLY public.ordractions ALTER COLUMN id SET DEFAULT nextval('public.ordractions_id_seq'::regclass);
+
+
+--
+-- Name: ordritem_events id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ordritem_events ALTER COLUMN id SET DEFAULT nextval('public.ordritem_events_id_seq'::regclass);
 
 
 --
@@ -6754,6 +6851,14 @@ ALTER TABLE ONLY public.discovered_restaurants
 
 
 --
+-- Name: employee_role_audits employee_role_audits_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.employee_role_audits
+    ADD CONSTRAINT employee_role_audits_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: employees employees_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -7255,6 +7360,14 @@ ALTER TABLE ONLY public.ordr_station_tickets
 
 ALTER TABLE ONLY public.ordractions
     ADD CONSTRAINT ordractions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ordritem_events ordritem_events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ordritem_events
+    ADD CONSTRAINT ordritem_events_pkey PRIMARY KEY (id);
 
 
 --
@@ -8355,6 +8468,34 @@ CREATE UNIQUE INDEX index_discovered_restaurants_on_google_place_id ON public.di
 --
 
 CREATE INDEX index_discovered_restaurants_on_restaurant_id ON public.discovered_restaurants USING btree (restaurant_id);
+
+
+--
+-- Name: index_employee_role_audits_on_changed_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_employee_role_audits_on_changed_by_id ON public.employee_role_audits USING btree (changed_by_id);
+
+
+--
+-- Name: index_employee_role_audits_on_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_employee_role_audits_on_created_at ON public.employee_role_audits USING btree (created_at);
+
+
+--
+-- Name: index_employee_role_audits_on_employee_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_employee_role_audits_on_employee_id ON public.employee_role_audits USING btree (employee_id);
+
+
+--
+-- Name: index_employee_role_audits_on_restaurant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_employee_role_audits_on_restaurant_id ON public.employee_role_audits USING btree (restaurant_id);
 
 
 --
@@ -9961,6 +10102,41 @@ CREATE INDEX index_ordractions_on_participant_ordr_action ON public.ordractions 
 
 
 --
+-- Name: index_ordritem_events_on_occurred_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ordritem_events_on_occurred_at ON public.ordritem_events USING btree (occurred_at);
+
+
+--
+-- Name: index_ordritem_events_on_ordr_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ordritem_events_on_ordr_id ON public.ordritem_events USING btree (ordr_id);
+
+
+--
+-- Name: index_ordritem_events_on_ordr_id_and_occurred_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ordritem_events_on_ordr_id_and_occurred_at ON public.ordritem_events USING btree (ordr_id, occurred_at);
+
+
+--
+-- Name: index_ordritem_events_on_ordritem_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ordritem_events_on_ordritem_id ON public.ordritem_events USING btree (ordritem_id);
+
+
+--
+-- Name: index_ordritem_events_on_restaurant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ordritem_events_on_restaurant_id ON public.ordritem_events USING btree (restaurant_id);
+
+
+--
 -- Name: index_ordritemnotes_on_ordritem_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -10003,6 +10179,13 @@ CREATE INDEX index_ordritems_on_ordr_created_at ON public.ordritems USING btree 
 
 
 --
+-- Name: index_ordritems_on_ordr_fulfillment_status; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ordritems_on_ordr_fulfillment_status ON public.ordritems USING btree (ordr_id, fulfillment_status);
+
+
+--
 -- Name: index_ordritems_on_ordr_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -10021,6 +10204,13 @@ CREATE UNIQUE INDEX index_ordritems_on_ordr_id_and_line_key ON public.ordritems 
 --
 
 CREATE INDEX index_ordritems_on_ordr_id_menuitem_id ON public.ordritems USING btree (ordr_id, menuitem_id);
+
+
+--
+-- Name: index_ordritems_on_ordr_station_fulfillment; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ordritems_on_ordr_station_fulfillment ON public.ordritems USING btree (ordr_id, station, fulfillment_status);
 
 
 --
@@ -11374,7 +11564,7 @@ ALTER TABLE ONLY public.menu_imports
 --
 
 ALTER TABLE ONLY public.pricing_model_plan_prices
-    ADD CONSTRAINT fk_rails_024354a9f5 FOREIGN KEY (pricing_model_id) REFERENCES public.pricing_models(id) ON DELETE CASCADE;
+    ADD CONSTRAINT fk_rails_024354a9f5 FOREIGN KEY (pricing_model_id) REFERENCES public.pricing_models(id);
 
 
 --
@@ -11471,6 +11661,14 @@ ALTER TABLE ONLY public.ordrnotes
 
 ALTER TABLE ONLY public.ocr_menu_items
     ADD CONSTRAINT fk_rails_19883c5eee FOREIGN KEY (ocr_menu_section_id) REFERENCES public.ocr_menu_sections(id);
+
+
+--
+-- Name: employee_role_audits fk_rails_1a796a1626; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.employee_role_audits
+    ADD CONSTRAINT fk_rails_1a796a1626 FOREIGN KEY (employee_id) REFERENCES public.employees(id);
 
 
 --
@@ -11583,6 +11781,14 @@ ALTER TABLE ONLY public.restaurant_removal_requests
 
 ALTER TABLE ONLY public.receipt_deliveries
     ADD CONSTRAINT fk_rails_3009604927 FOREIGN KEY (restaurant_id) REFERENCES public.restaurants(id);
+
+
+--
+-- Name: employee_role_audits fk_rails_30eab40aef; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.employee_role_audits
+    ADD CONSTRAINT fk_rails_30eab40aef FOREIGN KEY (restaurant_id) REFERENCES public.restaurants(id);
 
 
 --
@@ -11823,6 +12029,14 @@ ALTER TABLE ONLY public.ocr_menu_imports
 
 ALTER TABLE ONLY public.admin_jwt_tokens
     ADD CONSTRAINT fk_rails_5c18e2067b FOREIGN KEY (restaurant_id) REFERENCES public.restaurants(id);
+
+
+--
+-- Name: employee_role_audits fk_rails_5cadcefa31; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.employee_role_audits
+    ADD CONSTRAINT fk_rails_5cadcefa31 FOREIGN KEY (changed_by_id) REFERENCES public.employees(id);
 
 
 --
@@ -12502,7 +12716,7 @@ ALTER TABLE ONLY public.menuitem_ingredient_mappings
 --
 
 ALTER TABLE ONLY public.pricing_model_plan_prices
-    ADD CONSTRAINT fk_rails_c254eb28f9 FOREIGN KEY (plan_id) REFERENCES public.plans(id) ON DELETE CASCADE;
+    ADD CONSTRAINT fk_rails_c254eb28f9 FOREIGN KEY (plan_id) REFERENCES public.plans(id);
 
 
 --
@@ -12551,6 +12765,14 @@ ALTER TABLE ONLY public.ocr_menu_sections
 
 ALTER TABLE ONLY public.dining_sessions
     ADD CONSTRAINT fk_rails_c6bdf83dde FOREIGN KEY (tablesetting_id) REFERENCES public.tablesettings(id);
+
+
+--
+-- Name: ordritem_events fk_rails_c756388f03; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ordritem_events
+    ADD CONSTRAINT fk_rails_c756388f03 FOREIGN KEY (ordritem_id) REFERENCES public.ordritems(id);
 
 
 --
@@ -12778,6 +13000,14 @@ ALTER TABLE ONLY public.alcohol_order_events
 
 
 --
+-- Name: ordritem_events fk_rails_e66f623009; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ordritem_events
+    ADD CONSTRAINT fk_rails_e66f623009 FOREIGN KEY (restaurant_id) REFERENCES public.restaurants(id);
+
+
+--
 -- Name: restaurant_claim_requests fk_rails_e80cd502e3; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -12880,6 +13110,10 @@ ALTER TABLE ONLY public.voice_commands
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260401200003'),
+('20260401200002'),
+('20260401200001'),
+('20260401172749'),
 ('20260331215530'),
 ('20260331215525'),
 ('20260331215521'),

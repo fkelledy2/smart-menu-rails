@@ -1,0 +1,58 @@
+<%# Role history panel — rendered in a Turbo Frame %>
+<% employee = local_assigns[:employee] %>
+<% audits   = local_assigns[:audits] || employee.employee_role_audits.includes(:changed_by).order(created_at: :desc) %>
+
+<div class="card mt-2 mb-2 border-secondary-subtle">
+  <div class="card-header d-flex justify-content-between align-items-center bg-secondary-subtle py-2">
+    <span class="fw-semibold small">
+      <i class="bi bi-clock-history me-1"></i>
+      Role History — <%= employee.user&.email&.split('@')&.first || employee.name %>
+    </span>
+  </div>
+  <div class="card-body p-0">
+    <% if audits.empty? %>
+      <p class="text-muted small p-3 mb-0">No role changes recorded for this employee.</p>
+    <% else %>
+      <table class="table table-sm table-hover mb-0">
+        <thead class="table-light">
+          <tr>
+            <th class="small">Date</th>
+            <th class="small">From</th>
+            <th class="small">To</th>
+            <th class="small">Changed by</th>
+            <th class="small">Reason</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% audits.each do |audit| %>
+            <tr>
+              <td class="small text-nowrap text-muted">
+                <%= audit.created_at.strftime('%b %-d, %Y') %>
+              </td>
+              <td>
+                <% from_badge = case audit.from_role
+                                when 'manager' then 'text-bg-primary'
+                                when 'staff'   then 'text-bg-info'
+                                when 'admin'   then 'text-bg-danger'
+                                else 'text-bg-secondary'
+                                end %>
+                <span class="badge <%= from_badge %> small"><%= audit.from_role.titleize %></span>
+              </td>
+              <td>
+                <% to_badge = case audit.to_role
+                              when 'manager' then 'text-bg-primary'
+                              when 'staff'   then 'text-bg-info'
+                              when 'admin'   then 'text-bg-danger'
+                              else 'text-bg-secondary'
+                              end %>
+                <span class="badge <%= to_badge %> small"><%= audit.to_role.titleize %></span>
+              </td>
+              <td class="small"><%= audit.changed_by&.name || '—' %></td>
+              <td class="small text-muted"><%= truncate(audit.reason, length: 60) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
+  </div>
+</div>

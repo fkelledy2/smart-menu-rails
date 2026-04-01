@@ -1,0 +1,2 @@
+- [project_mellow_gtm.md](project_mellow_gtm.md) — GTM strategy decisions: ICP, positioning, launch timeline, MRR targets, channel priorities, tech dependencies
+- [user_founder_profile.md](user_founder_profile.md) — Founder is technical Rails developer in go-to-market mode; DNS live 2026-03-31

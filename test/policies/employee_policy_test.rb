@@ -423,4 +423,81 @@ class EmployeePolicyTest < ActiveSupport::TestCase
     assert_includes scope, employee_a
     assert_not_includes scope, employee_b
   end
+
+  # === CHANGE_ROLE? POLICY TESTS ===
+
+  test 'change_role? allows admin employee to change a staff employee role' do
+    # Use fixture employees: admin_employee (admin, user: admin) targeting staff_member (staff, user: two)
+    admin_user   = users(:admin)
+    staff_target = employees(:staff_member)
+    policy = EmployeePolicy.new(admin_user, staff_target)
+    assert policy.change_role?
+  end
+
+  test 'change_role? allows manager employee to change a staff employee role' do
+    # manager_employee (manager, user: one) targeting staff_member (staff, user: two)
+    manager_user = users(:one)
+    staff_target = employees(:staff_member)
+    policy = EmployeePolicy.new(manager_user, staff_target)
+    assert policy.change_role?
+  end
+
+  test 'change_role? denies manager from changing another manager' do
+    # manager (user: one) trying to change admin_employee (admin, user: admin)
+    manager_user   = users(:one)
+    admin_target   = employees(:admin_employee)
+    policy = EmployeePolicy.new(manager_user, admin_target)
+    assert_not policy.change_role?
+  end
+
+  test 'change_role? denies self-role-change' do
+    # manager (user: one) trying to change their own employee record (one)
+    manager_user     = users(:one)
+    manager_employee = employees(:one)
+    policy = EmployeePolicy.new(manager_user, manager_employee)
+    assert_not policy.change_role?
+  end
+
+  test 'change_role? denies staff from changing any role' do
+    # staff (user: two) trying to change manager (user: one)
+    staff_user       = users(:two)
+    manager_target   = employees(:one)
+    policy = EmployeePolicy.new(staff_user, manager_target)
+    assert_not policy.change_role?
+  end
+
+  test 'change_role? denies unauthenticated user' do
+    staff_target = employees(:staff_member)
+    policy = EmployeePolicy.new(User.new, staff_target)
+    assert_not policy.change_role?
+  end
+
+  # === VIEW_ROLE_HISTORY? POLICY TESTS ===
+
+  test 'view_role_history? allows admin employee' do
+    admin_user   = users(:admin)
+    staff_target = employees(:staff_member)
+    policy = EmployeePolicy.new(admin_user, staff_target)
+    assert policy.view_role_history?
+  end
+
+  test 'view_role_history? allows manager employee' do
+    manager_user = users(:one)
+    staff_target = employees(:staff_member)
+    policy = EmployeePolicy.new(manager_user, staff_target)
+    assert policy.view_role_history?
+  end
+
+  test 'view_role_history? denies staff employee' do
+    staff_user     = users(:two)
+    manager_target = employees(:one)
+    policy = EmployeePolicy.new(staff_user, manager_target)
+    assert_not policy.view_role_history?
+  end
+
+  test 'view_role_history? denies unauthenticated user' do
+    staff_target = employees(:staff_member)
+    policy = EmployeePolicy.new(User.new, staff_target)
+    assert_not policy.view_role_history?
+  end
 end

@@ -97,7 +97,7 @@ module AuthorizationTestHelper
       restaurant = extract_restaurant(resource)
       create_employee_user(:staff, restaurant)
     when :customer
-      users(:admin) # Using admin fixture as customer
+      users(:two) # users(:two) is not an owner or employee of any restaurant
     when :anonymous
       nil
     else

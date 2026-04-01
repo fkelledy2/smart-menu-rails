@@ -76,6 +76,12 @@ class Menusection < ApplicationRecord
     active: 1,
     archived: 2,
   }
+
+  # Station routing — determines which station ordritems from items in this section default to.
+  enum :default_station, {
+    kitchen: 0,
+    bar: 1,
+  }, prefix: :station
   def gen_image_theme
     genimage&.id
   end

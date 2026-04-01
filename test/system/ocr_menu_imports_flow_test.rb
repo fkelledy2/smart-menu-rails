@@ -29,7 +29,11 @@ class OcrMenuImportsFlowTest < ApplicationSystemTestCase
   # Removed: 'edit item modal updates DOM without full reload' - JS controller issue
 
   test 'invalid save shows inline errors in modal' do
-    skip('Error alert rendering needs investigation - JavaScript error handling may need fixes')
+    # SKIP: 2026-04-01 — The JS error path in menu_import_controller.js builds the alert
+    # dynamically via fetch/promise. The test infrastructure needs to verify that
+    # this.hasEditItemFormTarget and the .modal-content lookup succeed in the test env.
+    # The JS code path looks correct; failure may be Warden test_mode auth or modal DOM timing.
+    skip 'SKIP: 2026-04-01 — needs investigation of Warden test_mode auth and modal DOM timing in Capybara'
 
     visit Rails.application.routes.url_helpers.restaurant_ocr_menu_import_path(@restaurant, @import)
 

@@ -141,6 +141,7 @@ class PlanTest < ActiveSupport::TestCase
     # Clean up associations first to avoid foreign key constraints
     ActiveRecord::Base.connection.execute('DELETE FROM features_plans')
     ActiveRecord::Base.connection.execute('DELETE FROM userplans')
+    ActiveRecord::Base.connection.execute('DELETE FROM pricing_model_plan_prices')
     Plan.delete_all
 
     enterprise = Plan.create!(key: 'plan.enterprise.key', status: :active, action: :call)

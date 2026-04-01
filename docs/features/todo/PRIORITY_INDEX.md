@@ -1,6 +1,6 @@
 # mellow.menu Feature Backlog — Priority Index
 
-**Last updated**: 2026-03-31 (seventeenth pass — daily prioritisation run; IQ-1 Naked Domain confirmed fully COMPLETED including ops steps; Sprint Recommendation updated to reflect current next best actions: Square alpha + Track D Employee Role Promotion + Track F Agent Framework; stale Track A/B/C completed-item deliverable lists retired; Refined flags added to spec files #28–#34)
+**Last updated**: 2026-04-01 (nineteenth pass — Realtime Ordritem Tracking #34 COMPLETED) (seventeenth pass — daily prioritisation run; IQ-1 Naked Domain confirmed fully COMPLETED including ops steps; Sprint Recommendation updated to reflect current next best actions: Square alpha + Track D Employee Role Promotion + Track F Agent Framework; stale Track A/B/C completed-item deliverable lists retired; Refined flags added to spec files #28–#34)
 **Naked Domain Canonical Strategy (IQ-1)**: COMPLETED 2026-03-31 — DomainRedirect middleware live; spec at `docs/features/completed/naked-domain-canonical-strategy.md`
 **QR Code Security (#1)**: COMPLETED 2026-03-24 — Phase 1 shipped; spec at `docs/features/completed/qr-security.md`
 **Branded Email Styling (#1)**: COMPLETED 2026-03-24 — spec at `docs/features/completed/branded-email-styling-feature-request.md`
@@ -45,12 +45,12 @@
 | #26 | CDN Evaluation / Implementation | Post-Launch | S | Measured TTFB > 500ms | Deferred — revisit at traffic scale triggers |
 | #27+ | R&D Initiatives (Floor OS) | R&D | Various | Core product stable | Strategic vision; not sprint work until launch blockers ship |
 | #28 | Two-Factor Authentication | Post-Launch | M | Devise (built), Redis (built) | Security hardening for accounts controlling payments; increasingly expected by enterprise customers |
-| #29 | Employee Role Promotion | Post-Launch | S | Employee model (built) | Enables restaurant teams to grow organically without manual admin intervention; audit trail included |
+| ~~#29~~ | ~~Employee Role Promotion~~ | ~~Post-Launch~~ | S | Employee model (built) | **COMPLETED** 2026-04-01 — spec at `docs/features/completed/29-employee-role-promotion.md`; user guide at `docs/features/completed/29-employee-role-promotion-user-guide.md` |
 | #30 | Bulk Employee Invitation | Post-Launch | M | StaffInvitation (built), Sidekiq (built) | Reduces onboarding friction for multi-staff restaurants; leverages existing invitation infrastructure |
 | #31 | Weight-Based Menu Item Pricing | Post-Launch | M | Menuitem model, Ordritem model, KDS | Unlocks premium dining and butcher/seafood segments that require per-weight pricing |
 | #32 | Nearby Menus Map | Post-Launch | L | Geocoding data, map provider API key | Consumer-facing discovery surface; organic acquisition channel for new restaurant sign-ups |
 | #33 | Strikepay Integration (Staff Tipping) | Post-Launch | L | Payments::Orchestrator, Strikepay API agreement | Staff satisfaction and retention differentiator; compliance-heavy — Strikepay platform API confirmation required before build |
-| #34 | Realtime Ordritem Tracking & Passive Customer Feedback | Post-Launch | L | Existing `OrdrChannel`, `KitchenChannel`, `StationChannel`, Sidekiq, `Ordritem` model | Reduces "where is my order?" friction with item-level fulfillment status and passive realtime customer UI; batch-first staff workflow preserved |
+| ~~#34~~ | ~~Realtime Ordritem Tracking & Passive Customer Feedback~~ | ~~Post-Launch~~ | L | Existing `OrdrChannel`, `KitchenChannel`, `StationChannel`, Sidekiq, `Ordritem` model | **COMPLETED** 2026-04-01 — spec at `docs/features/completed/34-realtime-ordritem-tracking.md`; user guide at `docs/features/completed/34-realtime-ordritem-tracking-user-guide.md` |
 | #35 | Profit Margin Tracking — Phase 4 (Optimization Tools) | Post-Launch | M | Phases 1–3 complete (production); feeds #21 Menu Optimization Agent | Closes the loop from margin insight to action: menu engineering matrix, AI pricing recommendations, bundling opportunities |
 | ~~#36~~ | ~~Smartmenu Preview Modes (Signed Token)~~ | ~~Launch Enhancer~~ | S | — | COMPLETED 2026-03-31 — SmartmenuPreviewToken live; staff-mode-indicator removed; ?view=staff fully retired; spec at `docs/features/todo/features/36-smartmenu-preview-modes.md` |
 | IN-PROGRESS | Square Integration | Launch Enhancer | XL (mostly done) | Payments::Orchestrator, ProviderAccount model, Flipper flag | Under active development — Epics 1–8 backend/UI complete; 3 remaining items before alpha: split-bill progress UI, degraded-status email, "Reconnect" CTA |
@@ -136,19 +136,12 @@ Note: All launch blockers and infrastructure pre-conditions are now COMPLETED. T
 
 ---
 
-### Track D: Team Management Quick Win — CURRENT LEAD TRACK
-**Feature #29 — Employee Role Promotion** (S effort — 3–5 developer days)
+### Track D: Team Management Quick Win — COMPLETED 2026-04-01
+~~**Feature #29 — Employee Role Promotion**~~ COMPLETED 2026-04-01
 
-This is the highest-value remaining item that can ship in days with no external gates. All dependencies exist. Uses the branded mailer layout (complete). Enables restaurant teams to grow organically without manual admin intervention, and establishes the `EmployeeRoleAudit` pattern for #30 Bulk Invite.
+All deliverables shipped: migration, `EmployeeRoleAudit` model, `Employees::RoleChangeService`, `EmployeeRoleChangedJob`, `EmployeeMailer#role_changed`, extended `EmployeePolicy`, `EmployeeRoleAuditPolicy`, controller actions (`new_role_change`, `change_role`, `role_history`), inline Turbo Stream UI, two Stimulus controllers, `employee_role_promotion` Flipper flag, and 127 passing tests.
 
-Deliverables:
-1. `create_employee_role_audits` migration
-2. Extend `EmployeePolicy#change_role?` and `#view_role_history?`
-3. `Employees::RoleChangeService`
-4. `EmployeeMailer#role_changed` (uses built branded layout)
-5. "Change Role" UI with Turbo Modal, Turbo Stream update
-
-Estimated: 3–5 developer days
+Next track: **#30 Bulk Employee Invitation** or **Square Integration alpha blockers** (parallel priority).
 
 ---
 

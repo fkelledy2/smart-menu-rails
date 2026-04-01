@@ -1,0 +1,5 @@
+<%= turbo_stream.replace "role_history_#{@employee.id}" do %>
+  <%= turbo_frame_tag "role_history_#{@employee.id}" do %>
+    <%= render partial: 'employees/role_history', locals: { employee: @employee, audits: @audits } %>
+  <% end %>
+<% end %>

@@ -72,6 +72,12 @@ class Menuitem < ApplicationRecord
     archived: 2,
   }
 
+  # Station routing — determines which station ordritems from this item default to.
+  enum :default_station, {
+    kitchen: 0,
+    bar: 1,
+  }, prefix: :station
+
   enum :itemtype, {
     food: 0,
     beverage: 1,

@@ -107,6 +107,20 @@ Rails.application.config.after_initialize do
   unless Flipper.exist?(:cost_indexed_pricing)
     Flipper.add(:cost_indexed_pricing)
   end
+
+  # Employee Role Promotion (#29) — enables the "Change Role" UI in the staff management section.
+  # Disabled by default; enable per-restaurant or globally via Flipper UI.
+  # When disabled, existing roles are unaffected — only the UI action is hidden.
+  unless Flipper.exist?(:employee_role_promotion)
+    Flipper.add(:employee_role_promotion)
+  end
+
+  # Realtime Ordritem Tracking (#34) — gates item-level fulfillment status UI for customers,
+  # batch action buttons on kitchen/bar dashboards, and OrdritemEvent creation.
+  # Migrations run unconditionally; this flag controls activation per restaurant during beta.
+  unless Flipper.exist?(:ordritem_realtime_tracking)
+    Flipper.add(:ordritem_realtime_tracking)
+  end
 rescue ActiveRecord::ConnectionNotEstablished, ActiveRecord::StatementInvalid, ActiveRecord::NoDatabaseError => e
   # DB may be unreachable (CI asset precompile), or tables may not exist yet (db:create / db:migrate)
   Rails.logger.warn "[Flipper] Skipping feature flag seeding: #{e.message}"

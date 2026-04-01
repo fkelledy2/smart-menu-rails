@@ -1,0 +1,10 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  employee: staff_member
+  restaurant: one
+  changed_by: one
+  from_role: 0
+  to_role: 1
+  reason: Promoted for excellent performance during the busy season
+  created_at: <%= 7.days.ago %>

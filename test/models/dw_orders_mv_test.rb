@@ -4,7 +4,12 @@ class DwOrdersMvTest < ActiveSupport::TestCase
   self.use_transactional_tests = true
 
   def setup
-    create_test_materialized_view unless table_exists?
+    if table_exists?
+      # Refresh so the view is populated and queryable; may still be empty if no paid ordrs exist.
+      ActiveRecord::Base.connection.execute('REFRESH MATERIALIZED VIEW dw_orders_mv')
+    else
+      create_test_materialized_view
+    end
   end
 
   test 'uses correct table name' do
@@ -28,9 +33,7 @@ class DwOrdersMvTest < ActiveSupport::TestCase
   end
 
   test 'cannot be destroyed' do
-    skip 'No records in materialized view' if DwOrdersMv.none?
-
-    mv = DwOrdersMv.first
+    mv = DwOrdersMv.new
     assert_raises(ActiveRecord::ReadOnlyRecord) do
       mv.destroy
     end

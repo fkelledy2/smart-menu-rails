@@ -197,7 +197,12 @@ class SmartmenuOrderStateTest < ApplicationSystemTestCase
   end
 
   test 'order total calculated correctly' do
-    skip 'Test isolation issue - cart shows empty after add_item_to_order'
+    # SKIP: 2026-04-01 — add_item_to_order creates DB records directly, bypassing the
+    # Stimulus/Turbo cart state controller. The modal total display reads from JS state
+    # hydrated at page load, not directly from the DB total. After a page reload, the JS
+    # recalculates from the server-rendered gross value. The helper does not trigger this
+    # full roundtrip reliably. Needs a full Capybara UI interaction to test properly.
+    skip 'SKIP: 2026-04-01 — cart total modal reads JS-hydrated state; add_item_to_order helper bypasses Stimulus controller'
     visit smartmenu_path(@smartmenu.slug)
     start_order_if_needed
 
@@ -243,7 +248,11 @@ class SmartmenuOrderStateTest < ApplicationSystemTestCase
   # ===================
 
   test 'order tracks participants correctly' do
-    skip 'Test isolation issue - ordrparticipant not created with correct session'
+    # SKIP: 2026-04-01 — add_item_to_order explicitly skips participant creation
+    # ("Don't create participant here - let the controller create it with the correct session ID").
+    # Ordrparticipant.sessionid is set by the server from the Rack session during a real browser
+    # request; it cannot be injected via the DB-direct helper. Needs full UI interaction.
+    skip 'SKIP: 2026-04-01 — Ordrparticipant.sessionid is set by server session; not injectable via DB-direct helper'
     visit smartmenu_path(@smartmenu.slug)
     start_order_if_needed
 

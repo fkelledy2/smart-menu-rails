@@ -33,6 +33,8 @@ class KitchenChannel < ApplicationCable::Channel
       handle_status_update(data)
     when 'assign_staff'
       handle_staff_assignment(data)
+    when 'advance_station'
+      handle_station_advance(data)
     end
   end
 
@@ -90,5 +92,32 @@ class KitchenChannel < ApplicationCable::Channel
     return unless order && staff
 
     KitchenBroadcastService.broadcast_staff_assignment(order, staff)
+  end
+
+  def handle_station_advance(data)
+    return unless current_user
+
+    ordr_id     = data['ordr_id'].to_i
+    station     = data['station'].to_s
+    from_status = data['from_status'].to_s
+    to_status   = data['to_status'].to_s
+
+    ordr = Ordr.find_by(id: ordr_id)
+    return unless ordr
+
+    # Verify the authenticated user belongs to this order's restaurant
+    return unless current_user.super_admin? ||
+                  ordr.restaurant&.user_id == current_user.id ||
+                  current_user.active_employee_for_restaurant?(ordr.restaurant_id)
+
+    result = Ordritems::TransitionGroup.new(
+      ordr_id: ordr_id,
+      station: station,
+      from_status: from_status,
+      to_status: to_status,
+      actor: current_user,
+    ).call
+
+    transmit({ action: 'station_advance_result', result: result })
   end
 end

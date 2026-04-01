@@ -1,0 +1,19 @@
+Your role has been updated at <%= @restaurant.name %>
+
+Hi <%= @employee.name %>,
+
+Your role at <%= @restaurant.name %> has been updated by <%= @changed_by.name %>.
+
+Previous role: <%= @from_role.titleize %>
+New role: <%= @to_role.titleize %>
+
+Reason provided:
+<%= @audit.reason %>
+
+This change took effect on <%= @audit.created_at.strftime('%B %-d, %Y at %I:%M %p') %>.
+Your updated permissions are active immediately.
+
+If you believe this change was made in error, please contact your restaurant owner directly.
+
+---
+Mellow Menu — https://mellow.menu

@@ -8,23 +8,24 @@ class MenuPerformanceMvTest < ActiveSupport::TestCase
     @restaurant = restaurants(:one)
     @menu = menus(:one)
 
-    # Create the materialized view if it doesn't exist in test context
-    begin
-      # Test if we can access the materialized view
-      MenuPerformanceMv.connection.execute('SELECT 1 FROM menu_performance_mv LIMIT 1')
-    rescue ActiveRecord::StatementInvalid
-      # Create the materialized view for testing
-      create_test_materialized_view
-    end
+    # The materialized view exists in the test schema but may not be populated.
+    # Refresh it so SELECT queries succeed (result set will be empty but no error).
+    ensure_materialized_view_populated
   end
 
   private
 
+  def ensure_materialized_view_populated
+    MenuPerformanceMv.connection.execute('REFRESH MATERIALIZED VIEW menu_performance_mv')
+  rescue ActiveRecord::StatementInvalid
+    # View does not exist — create it with the real schema columns and refresh.
+    create_test_materialized_view
+  end
+
   def create_test_materialized_view
-    # Create a simplified version of the materialized view for testing
     sql = <<~SQL.squish
       CREATE MATERIALIZED VIEW IF NOT EXISTS menu_performance_mv AS
-      SELECT#{' '}
+      SELECT
         r.id as restaurant_id,
         m.id as menu_id,
         m.name as menu_name,
@@ -45,12 +46,10 @@ class MenuPerformanceMvTest < ActiveSupport::TestCase
       JOIN menus m ON m.restaurant_id = r.id
       JOIN menusections ms ON ms.menu_id = m.id
       JOIN menuitems mi ON mi.menusection_id = ms.id
-      LIMIT 1;
+      LIMIT 0;
     SQL
 
     MenuPerformanceMv.connection.execute(sql)
-  rescue ActiveRecord::StatementInvalid => e
-    skip "Cannot create test materialized view: #{e.message}"
   end
 
   test 'should be readonly' do

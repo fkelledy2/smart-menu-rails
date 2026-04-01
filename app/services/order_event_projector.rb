@@ -147,26 +147,26 @@ class OrderEventProjector
     # update_columns skips after_update_commit, so we must manually:
     #   1. Reset the tablesetting to :free so the table becomes bookable again.
     #   2. Re-trigger the floorplan broadcast so staff dashboards update in real-time.
-    if to_key.to_s == 'closed'
-      begin
-        tablesetting = ordr.tablesetting
-        tablesetting&.update_columns(status: Tablesetting.statuses['free'])
-      rescue StandardError => e
-        Rails.logger.warn(
-          "[OrderEventProjector] Failed to free tablesetting for ordr=#{ordr.id}: #{e.class}: #{e.message}",
-        )
-      end
+    return unless to_key.to_s == 'closed'
 
-      begin
-        FloorplanBroadcastService.broadcast_tile(
-          tablesetting_id: ordr.tablesetting_id,
-          restaurant_id: ordr.restaurant_id,
-        )
-      rescue StandardError => e
-        Rails.logger.warn(
-          "[OrderEventProjector] Failed to broadcast floorplan tile for ordr=#{ordr.id}: #{e.class}: #{e.message}",
-        )
-      end
+    begin
+      tablesetting = ordr.tablesetting
+      tablesetting&.update_columns(status: Tablesetting.statuses['free'])
+    rescue StandardError => e
+      Rails.logger.warn(
+        "[OrderEventProjector] Failed to free tablesetting for ordr=#{ordr.id}: #{e.class}: #{e.message}",
+      )
+    end
+
+    begin
+      FloorplanBroadcastService.broadcast_tile(
+        tablesetting_id: ordr.tablesetting_id,
+        restaurant_id: ordr.restaurant_id,
+      )
+    rescue StandardError => e
+      Rails.logger.warn(
+        "[OrderEventProjector] Failed to broadcast floorplan tile for ordr=#{ordr.id}: #{e.class}: #{e.message}",
+      )
     end
   end
 

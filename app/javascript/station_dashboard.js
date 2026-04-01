@@ -15,6 +15,7 @@ class StationDashboard {
     this.initializeTicketStatusButtons();
     this.initializeSortButtons();
     this.initializeDragAndDrop();
+    this.initializeFulfillmentButtons();
   }
 
   initializeClock() {
@@ -421,6 +422,96 @@ class StationDashboard {
     }).catch(() => {
       alert('Failed to update ticket status');
     });
+  }
+
+  initializeFulfillmentButtons() {
+    // Batch station advance — "Start Kitchen", "Bar Ready", etc.
+    document.addEventListener('click', (event) => {
+      const btn = event.target.closest('.batch-station-advance-btn');
+      if (!btn) return;
+
+      // If no explicit ordr-id, this is a restaurant-wide batch (ordr_id = '' means all)
+      const ordrId = btn.dataset.ordrId;
+      const station = btn.dataset.station;
+      const fromStatus = btn.dataset.fromStatus;
+      const toStatus = btn.dataset.toStatus;
+
+      if (!station || !fromStatus || !toStatus) return;
+
+      this.sendAdvanceStation({ ordrId, station, fromStatus, toStatus });
+    });
+
+    // Per-item fulfillment override
+    document.addEventListener('click', (event) => {
+      const btn = event.target.closest('.item-fulfillment-advance-btn');
+      if (!btn) return;
+
+      const ordrId = btn.dataset.ordrId;
+      const ordritemId = btn.dataset.ordritemId;
+      const fromStatus = btn.dataset.fromStatus;
+      const toStatus = btn.dataset.toStatus;
+
+      if (!ordrId || !ordritemId || !fromStatus || !toStatus) return;
+
+      this.sendSingleItemAdvance({ ordrId, ordritemId, fromStatus, toStatus, btn });
+    });
+  }
+
+  sendAdvanceStation({ ordrId, station, fromStatus, toStatus }) {
+    if (!this.stationChannel) return;
+
+    this.stationChannel.send({
+      action: 'advance_station',
+      ordr_id: ordrId,
+      station: station,
+      from_status: fromStatus,
+      to_status: toStatus,
+    });
+  }
+
+  sendSingleItemAdvance({ ordrId, ordritemId, fromStatus, toStatus, btn }) {
+    // Use fetch to call a dedicated HTTP endpoint for single-item override
+    // (avoids having to know the restaurant_id at this point in JS)
+    const csrfToken = document.querySelector('[name="csrf-token"]');
+    if (!csrfToken) return;
+
+    btn.disabled = true;
+
+    fetch(`/ordritems/${ordritemId}/advance_fulfillment`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': csrfToken.content,
+        Accept: 'application/json',
+      },
+      body: JSON.stringify({ to_status: toStatus }),
+    })
+      .then((res) => {
+        if (!res.ok) {
+          btn.disabled = false;
+        }
+        return res.json();
+      })
+      .then((data) => {
+        if (data && data.success) {
+          // Update badge inline
+          const container = document.querySelector(`[data-ordritem-id="${ordritemId}"]`);
+          if (container) {
+            const badge = container.querySelector('[data-ordritem-status-badge]');
+            if (badge) {
+              badge.textContent = toStatus.charAt(0).toUpperCase() + toStatus.slice(1);
+              badge.className = `badge ordritem-status-badge ordritem-status-badge--${toStatus}`;
+              badge.dataset.status = toStatus;
+            }
+            btn.remove();
+          }
+        } else {
+          btn.disabled = false;
+        }
+      })
+      .catch(() => {
+        btn.disabled = false;
+      });
   }
 
   initializeSortButtons() {

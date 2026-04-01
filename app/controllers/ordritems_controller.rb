@@ -4,7 +4,7 @@ class OrdritemsController < ApplicationController
   before_action :authenticate_user!, except: %i[create update destroy] # Allow customers to manage order items
   skip_before_action :verify_authenticity_token, only: %i[create update destroy]
   before_action :set_restaurant
-  before_action :set_ordritem, only: %i[show edit update destroy]
+  before_action :set_ordritem, only: %i[show edit update destroy advance_fulfillment]
   before_action :validate_guest_ordritem_ownership, only: %i[update destroy], unless: :user_signed_in?
   before_action :set_currency
   before_action :require_valid_dining_session!, only: %i[create update destroy], unless: :user_signed_in?
@@ -259,6 +259,31 @@ class OrdritemsController < ApplicationController
           end
         end
       end
+    end
+  end
+
+  # PATCH /ordritems/1/advance_fulfillment
+  # Staff-only: advance the fulfillment_status of a single item.
+  def advance_fulfillment
+    authorize @ordritem, :transition_fulfillment_status?
+
+    to_status = params[:to_status].to_s
+
+    result = Ordritems::TransitionStatus.new(
+      ordritem: @ordritem,
+      to_status: to_status,
+      actor: current_user,
+    ).call
+
+    if result[:success]
+      render json: {
+        success: true,
+        ordritem_id: @ordritem.id,
+        fulfillment_status: @ordritem.reload.fulfillment_status,
+        noop: result[:noop],
+      }
+    else
+      render json: { success: false, error: result[:error] }, status: :unprocessable_content
     end
   end
 
