@@ -46,7 +46,7 @@ class SizeMappingCostService
 
   def least_profitable_size
     size_costs = calculate_size_costs
-    s.empty?
+    return nil if size_costs.empty?
 
     size_costs.min_by { |_, cost| cost[:margin_percentage] }
   end
