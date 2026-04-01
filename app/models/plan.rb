@@ -6,6 +6,7 @@ class Plan < ApplicationRecord
   has_many :userplans, dependent: :destroy
   has_many :features_plans, dependent: :destroy
   has_many :features, through: :features_plans
+  has_many :pricing_model_plan_prices, dependent: :destroy
 
   enum :status, {
     inactive: 0,

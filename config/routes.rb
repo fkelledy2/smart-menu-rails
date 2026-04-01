@@ -5,9 +5,9 @@ Rails.application.routes.draw do
   # ============================================================================
   # ROOT AND AUTHENTICATION
   # ============================================================================
-  root to: "home#index", defaults: { format: :html }
-  devise_for :users, controllers: { omniauth_callbacks: "users/omniauth_callbacks" }
-  
+  root to: 'home#index', defaults: { format: :html }
+  devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
+
   # ============================================================================
   # PUBLIC PAGES
   # ============================================================================
@@ -35,30 +35,30 @@ Rails.application.routes.draw do
 
   # Standalone demo landing page
   get '/demo', to: 'home#demo', as: :demo
-  
+
   # ============================================================================
   # HEALTH AND MONITORING
   # ============================================================================
-  get "up" => "rails/health#show", as: :rails_health_check
+  get 'up' => 'rails/health#show', as: :rails_health_check
   get '/.well-known/appspecific/com.chrome.devtools.json', to: proc { [204, {}, ['']] }
-  
+
   # Cache and system health checks
   get '/health', to: 'health#index'
   get '/health/redis', to: 'health#redis_check'
   get '/health/database', to: 'health#database_check'
   get '/health/full', to: 'health#full_check'
   get '/health/cache-stats', to: 'health#cache_stats'
-  
+
   # ============================================================================
   # API DOCUMENTATION (Development/Test only)
   # ============================================================================
-  if Rails.env.development? || Rails.env.test?
+  if Rails.env.local?
     mount Rswag::Ui::Engine => '/api-docs'
     mount Rswag::Api::Engine => '/api-docs'
   end
 
   namespace :admin do
-    resource :impersonation, only: [:new, :create, :destroy]
+    resource :impersonation, only: %i[new create destroy]
 
     # Marketing QR codes — mellow.menu admin only
     resources :marketing_qr_codes do
@@ -150,25 +150,62 @@ Rails.application.routes.draw do
     namespace :webhooks do
       post :calendly, to: 'calendly#create'
     end
+
+    # Heroku Cost Inventory (#16) — super_admin only
+    resources :heroku_inventories, only: %i[index] do
+      collection do
+        get :coefficients
+        patch :update_coefficients
+        post :trigger_snapshot
+        post :trigger_rollup
+      end
+    end
+
+    # Cost Insights Dashboard (#15) — super_admin only
+    resource :cost_insights, only: %i[show] do
+      collection do
+        get  :index
+        post :trigger_monthly_rollup
+      end
+    end
+
+    resources :vendor_costs, only: %i[index new create edit update destroy]
+
+    resources :staff_costs, only: %i[index new create edit update destroy]
+
+    resources :margin_policies, only: %i[index new create edit update destroy] do
+      member do
+        patch :activate
+        patch :deactivate
+      end
+    end
+
+    # Dynamic Pricing Models (#14) — super_admin only
+    resources :pricing_models do
+      member do
+        get  :preview
+        post :publish
+      end
+    end
   end
-  
+
   # ============================================================================
   # API ENDPOINTS
   # ============================================================================
   namespace :api, defaults: { format: :json } do
     namespace :v1 do
       # Test endpoints (development and test only)
-      if Rails.env.development? || Rails.env.test?
+      if Rails.env.local?
         get 'test/ping', to: 'test#ping'
       end
 
       # Restaurant Management API
-      resources :restaurants, only: [:index, :show, :create, :update, :destroy] do
+      resources :restaurants, only: %i[index show create update destroy] do
         # Restaurant-specific menus
-        resources :menus, only: [:index, :create]
+        resources :menus, only: %i[index create]
 
         # Restaurant-specific orders
-        resources :orders, only: [:index, :create]
+        resources :orders, only: %i[index create]
 
         # Analytics dashboard (JWT-protected)
         namespace :analytics do
@@ -181,54 +218,54 @@ Rails.application.routes.draw do
           get :crm,       to: 'crm#crm'
         end
       end
-      
+
       # Menu Management API
-      resources :menus, only: [:show, :update, :destroy] do
+      resources :menus, only: %i[show update destroy] do
         # Menu items
         resources :items, only: [:index], controller: 'menu_items'
       end
-      
+
       # Order Management API
-      resources :orders, only: [:show, :update, :destroy]
-      
+      resources :orders, only: %i[show update destroy]
+
       # Google Vision API endpoints
       post 'vision/analyze', to: 'vision#analyze'
       post 'vision/detect_menu_items', to: 'vision#detect_menu_items'
-      
+
       # OCR management
       resources :ocr_menu_items, only: [:update]
       resources :ocr_menu_sections, only: [:update]
-      
+
       # Analytics tracking endpoints
       post 'analytics/track', to: 'analytics#track'
       post 'analytics/track_anonymous', to: 'analytics#track_anonymous'
     end
 
     namespace :v2 do
-      resources :restaurants, only: [:index, :show] do
+      resources :restaurants, only: %i[index show] do
         member do
           get :menu
         end
       end
-      resources :explore, only: [:index, :show], param: :path
+      resources :explore, only: %i[index show], param: :path
     end
   end
-  
+
   # ============================================================================
   # ONBOARDING AND USER MANAGEMENT
   # ============================================================================
   get 'onboarding', to: 'onboarding#show'
   patch 'onboarding', to: 'onboarding#update'
   post 'onboarding', to: 'onboarding#update'
-  
-  resources :contacts, only: [:new, :create]
+
+  resources :contacts, only: %i[new create]
   resources :notifications, only: [:index]
   resources :announcements, only: [:index]
-  
+
   # Push notification subscriptions
-  resources :push_subscriptions, only: [:create, :destroy]
+  resources :push_subscriptions, only: %i[create destroy]
   post 'push_subscriptions/test', to: 'push_subscriptions#test', as: 'push_subscription_probe'
-  
+
   # ============================================================================
   # SUBSCRIPTION AND BILLING
   # ============================================================================
@@ -249,7 +286,7 @@ Rails.application.routes.draw do
       post :clear_cache
     end
   end
-  
+
   # Payment processing (secure namespace)
   namespace :payments do
     post :create_payment_link, controller: 'base'
@@ -262,12 +299,12 @@ Rails.application.routes.draw do
     post 'webhooks/stripe', to: 'webhooks#stripe'
     post 'webhooks/square', to: 'square_webhooks#receive'
   end
-  
+
   # ============================================================================
   # RESTAURANT MANAGEMENT
   # ============================================================================
   get 'restaurants/:id', to: 'smartmenus#show', as: :public_restaurant, constraints: {
-    id: /(?!new$)(?!bulk_update$)(?!reorder$)(?!\d+$)[^\/]+/,
+    id: %r{(?!new$)(?!bulk_update$)(?!reorder$)(?!\d+$)[^/]+},
   }
 
   resources :restaurants do
@@ -295,9 +332,9 @@ Rails.application.routes.draw do
       get 'floorplan', to: 'floorplans#show', as: :floorplan
 
       # Wait Time Estimation Dashboard
-      get  'wait_times',                              to: 'wait_times#show',             as: :wait_times
+      get  'wait_times',                              to: 'wait_times#show', as: :wait_times
       post 'wait_times/queue',                        to: 'wait_times#create_queue_entry', as: :wait_times_queue
-      patch 'wait_times/queue/:entry_id/seat',        to: 'wait_times#seat_queue_entry',  as: :seat_wait_times_queue_entry
+      patch 'wait_times/queue/:entry_id/seat',        to: 'wait_times#seat_queue_entry', as: :seat_wait_times_queue_entry
       patch 'wait_times/queue/:entry_id/no_show',     to: 'wait_times#no_show_queue_entry', as: :no_show_wait_times_queue_entry
       patch 'wait_times/queue/:entry_id/cancel',      to: 'wait_times#cancel_queue_entry', as: :cancel_wait_times_queue_entry
       patch :archive, to: 'restaurants/lifecycle#archive'
@@ -341,7 +378,7 @@ Rails.application.routes.draw do
       get 'insights/voice_triggers',      to: 'restaurant_insights#voice_triggers'
       get 'insights/abandonment_funnel',  to: 'restaurant_insights#abandonment_funnel'
     end
-    
+
     # Restaurant configuration
     resources :restaurantlocales do
       collection do
@@ -361,7 +398,7 @@ Rails.application.routes.draw do
       end
     end
     resources :restaurantavailabilities
-    
+
     # Restaurant catalog management
     resources :taxes do
       collection do
@@ -391,18 +428,18 @@ Rails.application.routes.draw do
     resources :genimages
 
     # Profit Margin Tracking
-    resources :ingredients, only: [:index, :new, :create, :edit, :update, :destroy]
+    resources :ingredients, only: %i[index new create edit update destroy]
     post 'ingredients/import_csv', to: 'ingredients#import_csv'
-    resources :profit_margin_targets, only: [:index, :new, :create, :edit, :update, :destroy]
+    resources :profit_margin_targets, only: %i[index new create edit update destroy]
     get 'profit_margins', to: 'profit_margins#index'
     get 'profit_margins/report', to: 'profit_margins#report'
     get 'profit_margins/order_analytics', to: 'profit_margins#order_analytics'
     get 'profit_margins/inventory_alerts', to: 'profit_margins#inventory_alerts'
-    
-    get "menu_optimizations", to: "menu_optimizations#index"
-    get "menu_optimizations/menu_engineering", to: "menu_optimizations#menu_engineering"
-    get "menu_optimizations/bundling", to: "menu_optimizations#bundling_opportunities"
-    post "menu_optimizations/apply", to: "menu_optimizations#apply_optimizations"
+
+    get 'menu_optimizations', to: 'menu_optimizations#index'
+    get 'menu_optimizations/menu_engineering', to: 'menu_optimizations#menu_engineering'
+    get 'menu_optimizations/bundling', to: 'menu_optimizations#bundling_opportunities'
+    post 'menu_optimizations/apply', to: 'menu_optimizations#apply_optimizations'
 
     # Staff invitations
     resources :staff_invitations, only: [:create]
@@ -417,10 +454,10 @@ Rails.application.routes.draw do
         get :analytics
       end
     end
-    
+
     # Inventory management
     resources :inventories
-    
+
     # Order management
     get 'order_events', to: 'ordrs#restaurant_events'
     resources :ordrs do
@@ -447,26 +484,26 @@ Rails.application.routes.draw do
         post   'capture',                    to: 'auto_pay#capture'
         post   'payments/setup_intent',      to: 'auto_pay#setup_intent'
       end
-      
+
       resources :ordrnotes
     end
     resources :ordr_station_tickets, only: [:update]
     resources :alcohol_order_events, only: [:index]
     resources :ordritems
     resources :ordritemnotes
-    resources :ordrparticipants, only: [:index, :show, :create, :update, :destroy]
+    resources :ordrparticipants, only: %i[index show create update destroy]
     resources :ordractions
-    
+
     # Music/Entertainment
     resources :tracks
-    
+
     # Restaurant analytics and performance endpoints
     member do
       get :analytics,     to: 'restaurants/analytics#analytics'
       get :performance,   to: 'restaurants/performance#performance'
       get :user_activity, to: 'restaurants/analytics#user_activity'
     end
-    
+
     # Restaurant summary endpoints
     collection do
       get 'employees/summary', to: 'employees#summary'
@@ -486,7 +523,7 @@ Rails.application.routes.draw do
 
       resource :payment_profile, only: [:update]
     end
-    
+
     # Menu management (full operations within restaurant context)
     resources :restaurant_menus, only: [] do
       collection do
@@ -518,7 +555,7 @@ Rails.application.routes.draw do
         get  :localization_progress,  to: 'menus/localization#localization_progress'
 
         # AI / image generation
-        post :regenerate_images,        to: 'menus/ai#regenerate_images'
+        post :regenerate_images, to: 'menus/ai#regenerate_images'
         get  :image_generation_progress, to: 'menus/ai#image_generation_progress'
         post :polish,                   to: 'menus/ai#polish'
         get  :polish_progress,          to: 'menus/ai#polish_progress'
@@ -568,7 +605,7 @@ Rails.application.routes.draw do
           end
         end
 
-        resources :menuitem_costs, only: [:new, :create, :edit, :update, :destroy]
+        resources :menuitem_costs, only: %i[new create edit update destroy]
       end
 
       # Menu-level menuitem operations
@@ -579,9 +616,9 @@ Rails.application.routes.draw do
       end
       resources :menuitem_size_mappings, controller: 'menuitemsizemappings', only: [:update]
     end
-    
+
     # OCR menu import functionality
-    resources :ocr_menu_imports, only: [:index, :new, :create, :show, :edit, :update, :destroy] do
+    resources :ocr_menu_imports, only: %i[index new create show edit update destroy] do
       collection do
         delete :bulk_destroy
         post :import_from_menu_source
@@ -602,16 +639,15 @@ Rails.application.routes.draw do
       end
     end
   end
-  
-  
+
   # ============================================================================
   # GLOBAL RESOURCES
   # ============================================================================
-  resources :ingredients  # Global ingredient catalog shared across all restaurants
-  
+  resources :ingredients # Global ingredient catalog shared across all restaurants
+
   # Direct ordrparticipant updates (for frontend compatibility)
   resources :ordrparticipants, only: [:update]
-  
+
   # ============================================================================
   # EXPLORE PAGES (SEO / Geo)
   # ============================================================================
@@ -625,7 +661,7 @@ Rails.application.routes.draw do
   # ============================================================================
   # LOCAL GUIDES (Public)
   # ============================================================================
-  resources :guides, only: [:index, :show], param: :slug, controller: 'guides'
+  resources :guides, only: %i[index show], param: :slug, controller: 'guides'
 
   # ============================================================================
   # SMART MENU SYSTEM
@@ -641,26 +677,26 @@ Rails.application.routes.draw do
     get  'sommelier/whiskey_flights', to: 'sommelier#whiskey_flights', as: :sommelier_whiskey_flights
   end
   patch 'smartmenus/:smartmenu_id/locale', to: 'smartmenus_locale#update', as: :smartmenu_locale
-  
+
   # ============================================================================
   # OCR ENDPOINTS (Legacy/Direct Access)
   # ============================================================================
   resources :ocr_menu_items, only: [:update]
   resources :ocr_menu_sections, only: [:update]
-  
+
   # ============================================================================
   # ANALYTICS AND REPORTING
   # ============================================================================
   resources :metrics
-  resources :dw_orders_mv, only: [:index, :show]
-  
+  resources :dw_orders_mv, only: %i[index show]
+
   # Global menuitem analytics (direct access)
   resources :menuitems, only: [] do
     member do
       get :analytics
     end
   end
-  
+
   # Performance Analytics (APM)
   resources :performance_analytics, only: [] do
     collection do
@@ -673,15 +709,15 @@ Rails.application.routes.draw do
       get :export_metrics
     end
   end
-  
+
   # Admin analytics dashboard
   namespace :admin do
-    resources :metrics, only: [:index, :show] do
+    resources :metrics, only: %i[index show] do
       collection do
         get :export
       end
     end
-    
+
     # Performance monitoring
     resources :performance, only: [:index] do
       collection do
@@ -694,29 +730,29 @@ Rails.application.routes.draw do
       end
     end
   end
-  
+
   # ============================================================================
   # AUTHENTICATION INTEGRATIONS
   # ============================================================================
   get 'auth/spotify', to: 'restaurants/spotify#spotify_auth'
   get 'auth/spotify/callback', to: 'restaurants/spotify#spotify_callback'
   delete 'logout', to: 'restaurants/spotify#logout'
-  
+
   # ============================================================================
   # ADMIN TOOLS (Protected)
   # ============================================================================
   # Sidekiq and Flipper are restricted to super_admin to prevent regular admins
   # from manipulating background jobs or toggling platform-wide feature flags.
-  authenticate :user, lambda { |u| u.super_admin? } do
+  authenticate :user, ->(u) { u.super_admin? } do
     mount Sidekiq::Web => '/sidekiq'
     mount Flipper::UI.app(Flipper) => '/flipper', as: :flipper_ui
   end
 
-  authenticate :user, lambda { |u| u.admin? } do
-    mount ActionCable.server => "/cable"
-    
+  authenticate :user, ->(u) { u.admin? } do
+    mount ActionCable.server => '/cable'
+
     draw :madmin
-    
+
     namespace :madmin do
       resources :impersonates do
         collection do
@@ -727,7 +763,7 @@ Rails.application.routes.draw do
         post :stop_impersonating, on: :collection
       end
     end
-    
+
     # Cache administration
     namespace :admin do
       resources :cache, only: [:index] do
@@ -749,4 +785,3 @@ Rails.application.routes.draw do
     end
   end
 end
-

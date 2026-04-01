@@ -1,0 +1,120 @@
+<div class="container-fluid px-0 py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="text-2xl fw-semibold mb-1">Heroku Cost Inventory</h1>
+      <p class="text-muted small mb-0">Space: <code>smart-menu</code></p>
+    </div>
+    <div class="d-flex gap-2">
+      <%= link_to 'Coefficients', coefficients_admin_heroku_inventories_path, class: 'btn btn-outline-secondary btn-sm' %>
+      <%= button_to 'Snapshot Now', trigger_snapshot_admin_heroku_inventories_path,
+            method: :post, class: 'btn btn-outline-primary btn-sm',
+            data: { confirm: 'Enqueue a new inventory snapshot job?' } %>
+    </div>
+  </div>
+
+  <% if @mock_mode %>
+    <div class="alert alert-warning alert-sm mb-4">
+      <strong>Mock Mode:</strong> HEROKU_PLATFORM_API_TOKEN is not set or the
+      <code>heroku_cost_inventory</code> Flipper flag is off. Showing stub data.
+    </div>
+  <% end %>
+
+  <!-- Monthly Cost Trigger -->
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5 class="card-title">Trigger Monthly Cost Rollup</h5>
+      <%= form_with url: trigger_rollup_admin_heroku_inventories_path, method: :post, local: true, class: 'd-flex gap-2 align-items-end' do %>
+        <div>
+          <%= label_tag :month, 'Month', class: 'form-label small mb-1' %>
+          <%= date_field_tag :month, Date.current.beginning_of_month.strftime('%Y-%m-%d'),
+                class: 'form-control form-control-sm' %>
+        </div>
+        <%= submit_tag 'Run Rollup', class: 'btn btn-secondary btn-sm' %>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- App Inventory -->
+  <div class="card mb-4">
+    <div class="card-header">
+      <h5 class="mb-0">Current Inventory (<%= @snapshots.size %> apps)</h5>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-sm table-hover mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>App Name</th>
+            <th>Environment</th>
+            <th>Pipeline Stage</th>
+            <th>Formation</th>
+            <th>Add-ons</th>
+            <th>Last Captured</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if @snapshots.empty? %>
+            <tr><td colspan="6" class="text-center text-muted py-3">No snapshots yet. Trigger a snapshot above.</td></tr>
+          <% else %>
+            <% @snapshots.each do |snap| %>
+              <tr>
+                <td><code class="small"><%= snap.app_name %></code></td>
+                <td>
+                  <span class="badge bg-<%= env_badge_class(snap.environment) %>">
+                    <%= snap.environment %>
+                  </span>
+                </td>
+                <td class="text-muted small"><%= snap.pipeline_stage || '—' %></td>
+                <td class="small">
+                  <% (snap.formation_json || []).each do |f| %>
+                    <span class="me-1"><%= f['quantity'] %>x <%= f['type'] %> (<%= f['size'] %>)</span>
+                  <% end %>
+                </td>
+                <td class="small">
+                  <% (snap.addons_json || []).each do |a| %>
+                    <span class="me-1"><%= a.dig('plan', 'name') %></span>
+                  <% end %>
+                </td>
+                <td class="text-muted small"><%= snap.captured_at&.strftime('%d %b %H:%M') %></td>
+              </tr>
+            <% end %>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Monthly Cost Snapshots -->
+  <div class="card">
+    <div class="card-header">
+      <h5 class="mb-0">Monthly Cost Snapshots</h5>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-sm table-hover mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>Month</th>
+            <th>Environment</th>
+            <th>Apps</th>
+            <th>Estimated Monthly Cost</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if @cost_snapshots.empty? %>
+            <tr><td colspan="4" class="text-center text-muted py-3">No cost snapshots yet.</td></tr>
+          <% else %>
+            <% @cost_snapshots.each do |cs| %>
+              <tr>
+                <td><%= cs.month&.strftime('%B %Y') %></td>
+                <td>
+                  <span class="badge bg-<%= env_badge_class(cs.environment) %>"><%= cs.environment %></span>
+                </td>
+                <td><%= cs.app_count %></td>
+                <td><strong>&euro;<%= number_with_precision(cs.cost_euros, precision: 2) %></strong></td>
+              </tr>
+            <% end %>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

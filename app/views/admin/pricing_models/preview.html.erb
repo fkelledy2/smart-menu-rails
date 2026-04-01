@@ -1,0 +1,103 @@
+<div class="container-fluid px-0 py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="text-2xl fw-semibold mb-0">Preview: <%= @model.version %></h1>
+    <%= link_to '&larr; Back'.html_safe, admin_pricing_model_path(@model), class: 'btn btn-outline-secondary btn-sm' %>
+  </div>
+
+  <% if @margin_engine_result %>
+    <div class="row g-3 mb-4">
+      <div class="col-md-3">
+        <div class="card border-0 bg-light h-100">
+          <div class="card-body">
+            <div class="text-muted small">Total Cost</div>
+            <div class="fw-semibold">&euro;<%= number_with_precision(@margin_engine_result.total_cost_cents / 100.0, precision: 2) %></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card border-0 bg-light h-100">
+          <div class="card-body">
+            <div class="text-muted small">Required Revenue</div>
+            <div class="fw-semibold">&euro;<%= number_with_precision(@margin_engine_result.required_revenue_cents / 100.0, precision: 2) %></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="card border-0 bg-light h-100">
+          <div class="card-body">
+            <div class="text-muted small">Target Margin</div>
+            <div class="fw-semibold"><%= @margin_engine_result.target_margin_pct %>%</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="card border-0 bg-light h-100">
+          <div class="card-body">
+            <div class="text-muted small">Per Weight Unit</div>
+            <div class="fw-semibold">&euro;<%= number_with_precision(@margin_engine_result.per_weight_unit_cents / 100.0, precision: 2) %></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mb-4">
+      <div class="card-header"><h5 class="mb-0">Computed Plan Prices</h5></div>
+      <div class="table-responsive">
+        <table class="table table-sm mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Plan</th>
+              <th>Weight Multiplier</th>
+              <th>Monthly Price</th>
+              <th>Annual Price (10x monthly)</th>
+              <th>Annual Savings</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @margin_engine_result.plan_prices.each do |pp| %>
+              <tr>
+                <td><strong><%= pp.plan_name %></strong></td>
+                <td><%= pp.weight_multiplier %>x</td>
+                <td>&euro;<%= number_with_precision(pp.monthly_price_cents / 100.0, precision: 2) %>/mo</td>
+                <td>&euro;<%= number_with_precision(pp.annual_price_cents / 100.0, precision: 2) %>/yr</td>
+                <td class="text-success small">
+                  &euro;<%= number_with_precision(((pp.monthly_price_cents * 12) - pp.annual_price_cents) / 100.0, precision: 2) %> saved
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  <% end %>
+
+  <% if @plan_prices.any? %>
+    <div class="card mb-4">
+      <div class="card-header"><h5 class="mb-0">Saved Plan Price Records</h5></div>
+      <div class="table-responsive">
+        <table class="table table-sm mb-0">
+          <thead class="table-light">
+            <tr><th>Plan</th><th>Interval</th><th>Currency</th><th>Price</th></tr>
+          </thead>
+          <tbody>
+            <% @plan_prices.each do |pp| %>
+              <tr>
+                <td><strong><%= pp.plan.name %></strong></td>
+                <td><%= pp.interval %></td>
+                <td><%= pp.currency %></td>
+                <td>&euro;<%= number_with_precision(pp.price_euros, precision: 2) %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  <% end %>
+
+  <% if @model.draft? %>
+    <div class="alert alert-info">
+      These are the computed prices. When you publish, Stripe Price objects will be created for each row.
+      <%= link_to 'Go to publish', admin_pricing_model_path(@model), class: 'alert-link' %>
+    </div>
+  <% end %>
+</div>

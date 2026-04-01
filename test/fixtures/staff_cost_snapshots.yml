@@ -1,0 +1,7 @@
+march_eur:
+  month: "<%= Date.current.beginning_of_month.iso8601 %>"
+  currency: EUR
+  support_cost_cents: 50000
+  staff_cost_cents: 150000
+  other_ops_cost_cents: 10000
+  notes: March 2026

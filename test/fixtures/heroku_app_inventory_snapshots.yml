@@ -1,0 +1,21 @@
+production_web:
+  captured_at: "<%= Time.current.iso8601 %>"
+  space_name: smart-menu
+  app_id: mock-app-id-001
+  app_name: smart-menu-web-production
+  pipeline_id: mock-pipeline-id
+  pipeline_stage: production
+  environment: production
+  formation_json: '[{"type":"web","size":"standard-2x","quantity":2}]'
+  addons_json: '[{"addon_service":{"name":"heroku-postgresql"},"plan":{"name":"heroku-postgresql:standard-0"}}]'
+
+staging_web:
+  captured_at: "<%= Time.current.iso8601 %>"
+  space_name: smart-menu
+  app_id: mock-app-id-002
+  app_name: smart-menu-web-staging
+  pipeline_id: mock-pipeline-id
+  pipeline_stage: staging
+  environment: staging
+  formation_json: '[{"type":"web","size":"eco","quantity":1}]'
+  addons_json: '[]'

@@ -1,0 +1,6 @@
+legacy_pro_month:
+  pricing_model: legacy_v0
+  plan: pro
+  interval: month
+  price_cents: 4999
+  currency: EUR

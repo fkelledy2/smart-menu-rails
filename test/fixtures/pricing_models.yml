@@ -1,0 +1,14 @@
+legacy_v0:
+  version: legacy_v0
+  status: 1
+  currency: EUR
+  effective_from: "1970-01-01 00:00:00"
+  inputs_json: '{"note":"Legacy sentinel"}'
+  outputs_json: '{}'
+
+draft_2026_q2:
+  version: 2026_Q2
+  status: 0
+  currency: EUR
+  inputs_json: '{"total_cost_cents":500000,"target_gross_margin_pct":60,"currency":"EUR"}'
+  outputs_json: '{}'

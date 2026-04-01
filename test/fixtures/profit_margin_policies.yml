@@ -1,0 +1,5 @@
+default:
+  key: default
+  target_gross_margin_pct: 60.0
+  floor_gross_margin_pct: 40.0
+  status: 1

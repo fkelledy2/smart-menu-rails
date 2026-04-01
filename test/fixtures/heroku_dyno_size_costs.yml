@@ -1,0 +1,9 @@
+standard_2x:
+  dyno_size: standard-2x
+  cost_cents_per_month: 5000
+  notes: Standard-2x dynos
+
+eco:
+  dyno_size: eco
+  cost_cents_per_month: 500
+  notes: Eco dynos

@@ -147,6 +147,9 @@ gem 'tabulator-rails'
 gem 'tom-select-rails', '~> 2.3'
 gem 'whenever', require: false
 
+# Heroku Platform API client for infrastructure cost inventory (#16)
+gem 'platform-api', '~> 3.5', require: false
+
 # Feature flags
 gem 'flipper', '~> 1.3'
 gem 'flipper-active_record', '~> 1.3'

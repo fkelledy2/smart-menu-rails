@@ -1,0 +1,17 @@
+deepl_today:
+  date: "<%= Date.current.iso8601 %>"
+  service: deepl
+  dimension: character_count
+  units: 50000
+  unit_type: characters
+  restaurant_id:
+  metadata: '{}'
+
+openai_images_today:
+  date: "<%= Date.current.iso8601 %>"
+  service: openai
+  dimension: dalle_images
+  units: 5
+  unit_type: images
+  restaurant_id:
+  metadata: '{}'

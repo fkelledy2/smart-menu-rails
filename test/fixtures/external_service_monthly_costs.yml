@@ -1,0 +1,17 @@
+openai_march:
+  month: "<%= Date.current.beginning_of_month.iso8601 %>"
+  service: openai
+  currency: EUR
+  amount_cents: 8000
+  source: manual
+  notes: March 2026 OpenAI
+  evidence: '{}'
+
+deepl_march:
+  month: "<%= Date.current.beginning_of_month.iso8601 %>"
+  service: deepl
+  currency: EUR
+  amount_cents: 3000
+  source: manual
+  notes: March 2026 DeepL
+  evidence: '{}'

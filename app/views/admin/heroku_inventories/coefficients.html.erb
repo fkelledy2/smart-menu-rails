@@ -1,0 +1,66 @@
+<div class="container-fluid px-0 py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="text-2xl fw-semibold mb-0">Cost Coefficients</h1>
+    <%= link_to '&larr; Back to Inventory'.html_safe, admin_heroku_inventories_path, class: 'btn btn-outline-secondary btn-sm' %>
+  </div>
+
+  <%= form_with url: update_coefficients_admin_heroku_inventories_path, method: :patch, local: true do %>
+    <!-- Dyno Size Costs -->
+    <div class="card mb-4">
+      <div class="card-header"><h5 class="mb-0">Dyno Size Monthly Costs</h5></div>
+      <div class="table-responsive">
+        <table class="table table-sm mb-0">
+          <thead class="table-light">
+            <tr><th>Dyno Size</th><th>Cost (cents/month)</th><th>EUR/month</th><th>Notes</th></tr>
+          </thead>
+          <tbody>
+            <% @dyno_costs.each do |dc| %>
+              <tr>
+                <td><code><%= dc.dyno_size %></code></td>
+                <td>
+                  <%= number_field_tag "dyno_costs[#{dc.id}][cost_cents_per_month]",
+                        dc.cost_cents_per_month, class: 'form-control form-control-sm', style: 'width:120px' %>
+                </td>
+                <td class="text-muted small">&euro;<%= number_with_precision(dc.cost_euros, precision: 2) %></td>
+                <td class="text-muted small"><%= dc.notes %></td>
+              </tr>
+            <% end %>
+            <% if @dyno_costs.empty? %>
+              <tr><td colspan="4" class="text-center text-muted py-3">No dyno size coefficients configured.</td></tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Add-on Plan Costs -->
+    <div class="card mb-4">
+      <div class="card-header"><h5 class="mb-0">Add-on Plan Monthly Costs</h5></div>
+      <div class="table-responsive">
+        <table class="table table-sm mb-0">
+          <thead class="table-light">
+            <tr><th>Service</th><th>Plan</th><th>Cost (cents/month)</th><th>EUR/month</th></tr>
+          </thead>
+          <tbody>
+            <% @addon_costs.each do |ac| %>
+              <tr>
+                <td class="small"><%= ac.addon_service %></td>
+                <td class="small"><code><%= ac.plan_name %></code></td>
+                <td>
+                  <%= number_field_tag "addon_costs[#{ac.id}][cost_cents_per_month]",
+                        ac.cost_cents_per_month, class: 'form-control form-control-sm', style: 'width:120px' %>
+                </td>
+                <td class="text-muted small">&euro;<%= number_with_precision(ac.cost_euros, precision: 2) %></td>
+              </tr>
+            <% end %>
+            <% if @addon_costs.empty? %>
+              <tr><td colspan="4" class="text-center text-muted py-3">No add-on coefficients configured.</td></tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <%= submit_tag 'Save Coefficients', class: 'btn btn-primary' %>
+  <% end %>
+</div>

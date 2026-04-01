@@ -1,0 +1,46 @@
+<div class="container-fluid px-0 py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="text-2xl fw-semibold mb-0">Vendor Costs</h1>
+    <%= link_to 'Add Entry', new_admin_vendor_cost_path, class: 'btn btn-primary btn-sm' %>
+  </div>
+
+  <%= form_with url: admin_vendor_costs_path, method: :get, local: true, class: 'd-flex gap-2 align-items-end mb-4' do %>
+    <%= date_field_tag :month, @month.strftime('%Y-%m-%d'), class: 'form-control form-control-sm' %>
+    <%= select_tag :currency, options_for_select([['EUR', 'EUR'], ['USD', 'USD']], @currency), class: 'form-select form-select-sm', style: 'width:90px' %>
+    <%= submit_tag 'Filter', class: 'btn btn-secondary btn-sm' %>
+  <% end %>
+
+  <div class="card">
+    <div class="table-responsive">
+      <table class="table table-sm table-hover mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>Service</th><th>Month</th><th>Amount</th><th>Currency</th><th>Source</th><th>Notes</th><th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if @costs.empty? %>
+            <tr><td colspan="7" class="text-center text-muted py-3">No entries for this month.</td></tr>
+          <% else %>
+            <% @costs.each do |cost| %>
+              <tr>
+                <td><span class="badge bg-info text-dark"><%= cost.service %></span></td>
+                <td><%= cost.month&.strftime('%B %Y') %></td>
+                <td>&euro;<%= number_with_precision(cost.amount_euros, precision: 2) %></td>
+                <td><%= cost.currency %></td>
+                <td><span class="badge bg-secondary"><%= cost.source %></span></td>
+                <td class="text-muted small"><%= truncate(cost.notes, length: 60) %></td>
+                <td>
+                  <%= link_to 'Edit', edit_admin_vendor_cost_path(cost), class: 'btn btn-outline-secondary btn-xs me-1' %>
+                  <%= button_to 'Delete', admin_vendor_cost_path(cost), method: :delete,
+                        class: 'btn btn-outline-danger btn-xs',
+                        data: { confirm: 'Delete this entry?' } %>
+                </td>
+              </tr>
+            <% end %>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

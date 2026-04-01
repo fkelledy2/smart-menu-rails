@@ -1,0 +1,9 @@
+production_march:
+  month: "<%= Date.current.beginning_of_month.iso8601 %>"
+  provider: heroku
+  space_name: smart-menu
+  environment: production
+  estimated_monthly_cost_cents: 15000
+  app_count: 2
+  formation_rollup_json: '{}'
+  addons_rollup_json: '{}'

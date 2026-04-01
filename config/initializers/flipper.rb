@@ -88,6 +88,25 @@ Rails.application.config.after_initialize do
   unless Flipper.exist?(:wait_time_sms)
     Flipper.add(:wait_time_sms)
   end
+
+  # Heroku Cost Inventory (#16) — enables live Heroku API calls in SpaceInventoryService.
+  # Disabled by default. Requires HEROKU_PLATFORM_API_TOKEN to be set before enabling.
+  # In mock mode (flag off), jobs persist stub data for development/testing.
+  unless Flipper.exist?(:heroku_cost_inventory)
+    Flipper.add(:heroku_cost_inventory)
+  end
+
+  # Cost Insights Admin (#15) — enables the admin cost dashboard and vendor cost screens.
+  # Disabled by default; enable for super_admin users once the first cost data is entered.
+  unless Flipper.exist?(:cost_insights_admin)
+    Flipper.add(:cost_insights_admin)
+  end
+
+  # Cost-Indexed Pricing (#14) — enables new signup flow to use current PricingModel.
+  # Disabled by default until the first pricing model is published.
+  unless Flipper.exist?(:cost_indexed_pricing)
+    Flipper.add(:cost_indexed_pricing)
+  end
 rescue ActiveRecord::ConnectionNotEstablished, ActiveRecord::StatementInvalid, ActiveRecord::NoDatabaseError => e
   # DB may be unreachable (CI asset precompile), or tables may not exist yet (db:create / db:migrate)
   Rails.logger.warn "[Flipper] Skipping feature flag seeding: #{e.message}"

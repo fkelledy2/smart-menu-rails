@@ -1,0 +1,4 @@
+heroku_postgres:
+  addon_service: heroku-postgresql
+  plan_name: heroku-postgresql:standard-0
+  cost_cents_per_month: 5000
