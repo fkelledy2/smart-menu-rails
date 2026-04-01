@@ -5,6 +5,7 @@
 - Category: Post-Launch
 - Effort: L
 - Dependencies: Existing `Ordritem` model, existing `OrdrChannel` (customer-facing), existing `KitchenChannel` / `StationChannel` (staff-facing), Sidekiq, ActionCable (Redis adapter)
+- Refined: true
 
 ## Problem Statement
 Customers currently have no visibility into the per-item progress of their order after placing it. The only feedback is the coarse-grained `Ordr` status. This creates "where is my order?" friction at the table — customers do not know whether their Guinness is being poured or their steak is still waiting to go on. Kitchen and bar staff, meanwhile, operate batch-first: they start all kitchen items at once and mark the bar ticket ready as a group. Any solution that forces staff into per-item workflows will be rejected on the floor.

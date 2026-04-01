@@ -142,6 +142,32 @@ class OrderEventProjector
       Ordritem.where(ordr_id: ordr.id).where.not(ordr_station_ticket_id: nil).update_all(ordr_station_ticket_id: nil)
       ordr.ordr_station_tickets.delete_all
     end
+
+    # Re-implement the callbacks that update_columns bypasses when order is closed.
+    # update_columns skips after_update_commit, so we must manually:
+    #   1. Reset the tablesetting to :free so the table becomes bookable again.
+    #   2. Re-trigger the floorplan broadcast so staff dashboards update in real-time.
+    if to_key.to_s == 'closed'
+      begin
+        tablesetting = ordr.tablesetting
+        tablesetting&.update_columns(status: Tablesetting.statuses['free'])
+      rescue StandardError => e
+        Rails.logger.warn(
+          "[OrderEventProjector] Failed to free tablesetting for ordr=#{ordr.id}: #{e.class}: #{e.message}",
+        )
+      end
+
+      begin
+        FloorplanBroadcastService.broadcast_tile(
+          tablesetting_id: ordr.tablesetting_id,
+          restaurant_id: ordr.restaurant_id,
+        )
+      rescue StandardError => e
+        Rails.logger.warn(
+          "[OrderEventProjector] Failed to broadcast floorplan tile for ordr=#{ordr.id}: #{e.class}: #{e.message}",
+        )
+      end
+    end
   end
 
   private_class_method :apply_event!

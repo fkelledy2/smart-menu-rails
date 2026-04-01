@@ -1048,7 +1048,12 @@ export function initOrderBindings() {
     console.warn('[ordr_commons] Tip/payment bindings failed (non-fatal):', e);
   }
 
-  // Start Order modal: party size selector (no typing)
+  // Start Order modal / bottom sheet: party size selector (no typing)
+  // Both #openOrderModal (staff) and #cartStartOrderSection (customer bottom sheet) share
+  // the same element IDs (orderCapacity, orderCapacityValue, etc.).  When both are in the
+  // DOM simultaneously, document.getElementById returns only the *first* match — always the
+  // modal's elements — so the bottom sheet +/- buttons silently update the wrong container.
+  // Fix: resolve all elements relative to the closest scoped ancestor of the clicked button.
   (function bindOrderCapacityUi() {
     try {
       function clamp(n, min, max) {
@@ -1057,22 +1062,35 @@ export function initOrderBindings() {
         return Math.max(min, Math.min(max, safe));
       }
 
-      function getBounds() {
-        const input = document.getElementById('orderCapacity');
+      // Return the scoped container for a given element.
+      // Prefers the immediate Bootstrap modal-content ancestor, then the
+      // bottom-sheet start-order section, then falls back to document.
+      function getScopeFor(el) {
+        return (
+          el.closest('.modal-content') ||
+          el.closest('#cartStartOrderSection') ||
+          document
+        );
+      }
+
+      function getBoundsIn(scope) {
+        const input =
+          scope.querySelector('#orderCapacity') ||
+          scope.querySelector('[name="orderCapacity"]');
         const min = parseInt(input?.dataset?.min || '1', 10) || 1;
         const max = parseInt(input?.dataset?.max || '1', 10) || 1;
         return { input, min, max };
       }
 
-      function setCapacity(nextValue) {
-        const { input, min, max } = getBounds();
+      function setCapacityIn(scope, nextValue) {
+        const { input, min, max } = getBoundsIn(scope);
         if (!input) return;
         const value = clamp(nextValue, min, max);
         input.value = String(value);
-        const label = document.getElementById('orderCapacityValue');
+        const label = scope.querySelector('#orderCapacityValue');
         if (label) label.textContent = String(value);
-        const dec = document.getElementById('orderCapacityDecrement');
-        const inc = document.getElementById('orderCapacityIncrement');
+        const dec = scope.querySelector('#orderCapacityDecrement');
+        const inc = scope.querySelector('#orderCapacityIncrement');
         if (dec) dec.toggleAttribute('disabled', value <= min);
         if (inc) inc.toggleAttribute('disabled', value >= max);
       }
@@ -1081,28 +1099,31 @@ export function initOrderBindings() {
         .off('click.orderCapacityPreset.core')
         .on('click.orderCapacityPreset.core', '.orderCapacityPreset', function (evt) {
           evt.preventDefault();
+          const scope = getScopeFor(this);
           const cap = parseInt(String($(this).data('capacity') || ''), 10);
-          setCapacity(cap);
+          setCapacityIn(scope, cap);
         });
 
       $(document)
         .off('click.orderCapacityInc.core')
         .on('click.orderCapacityInc.core', '#orderCapacityIncrement', function (evt) {
           evt.preventDefault();
-          const { input, min, max } = getBounds();
+          const scope = getScopeFor(this);
+          const { input, min, max } = getBoundsIn(scope);
           if (!input) return;
           const current = clamp(input.value, min, max);
-          setCapacity(current + 1);
+          setCapacityIn(scope, current + 1);
         });
 
       $(document)
         .off('click.orderCapacityDec.core')
         .on('click.orderCapacityDec.core', '#orderCapacityDecrement', function (evt) {
           evt.preventDefault();
-          const { input, min, max } = getBounds();
+          const scope = getScopeFor(this);
+          const { input, min, max } = getBoundsIn(scope);
           if (!input) return;
           const current = clamp(input.value, min, max);
-          setCapacity(current - 1);
+          setCapacityIn(scope, current - 1);
         });
 
       // Reset to min each time the modal opens (keeps intent explicit)
@@ -1110,8 +1131,9 @@ export function initOrderBindings() {
       if (modalEl && !modalEl.__orderCapacityBound) {
         modalEl.__orderCapacityBound = true;
         modalEl.addEventListener('shown.bs.modal', () => {
-          const { min } = getBounds();
-          setCapacity(min);
+          const scope = modalEl.querySelector('.modal-content') || modalEl;
+          const { min } = getBoundsIn(scope);
+          setCapacityIn(scope, min);
         });
       }
     } catch (e) {

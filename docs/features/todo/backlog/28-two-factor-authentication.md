@@ -5,6 +5,7 @@
 - Category: Post-Launch
 - Effort: M
 - Dependencies: Devise 5 (already integrated), Redis (already active via Sidekiq)
+- Refined: true
 
 ## Problem Statement
 Restaurant owner and staff accounts control payment configurations, menu pricing, and live orders. A compromised password alone is sufficient to cause financial harm to a restaurant. 2FA provides a second line of defence for accounts with elevated permissions, and is increasingly expected by enterprise or multi-location restaurant groups. It also supports PCI DSS posture for accounts that touch payment data.

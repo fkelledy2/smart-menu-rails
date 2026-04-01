@@ -6,6 +6,70 @@ class OrderEventProjectorTest < ActiveSupport::TestCase
     @menuitem = menuitems(:one)
   end
 
+  # === closed: tablesetting freed + floorplan broadcast ===
+
+  test 'closed status frees the tablesetting' do
+    tablesetting = @ordr.tablesetting
+    assert_not_nil tablesetting, 'Fixture ordr must have a tablesetting'
+    tablesetting.update_columns(status: Tablesetting.statuses['occupied'])
+
+    OrderEvent.emit!(
+      ordr: @ordr,
+      event_type: 'closed',
+      entity_type: 'Ordr',
+      source: 'test',
+      payload: { to: 'closed' },
+    )
+
+    OrderEventProjector.project!(@ordr.id)
+
+    assert_equal 'free', tablesetting.reload.status.to_s
+  end
+
+  test 'closed status triggers FloorplanBroadcastService broadcast_tile' do
+    broadcast_calls = []
+    FloorplanBroadcastService.stub(:broadcast_tile, ->(tablesetting_id:, restaurant_id:) {
+      broadcast_calls << { tablesetting_id: tablesetting_id, restaurant_id: restaurant_id }
+    }) do
+      OrderEvent.emit!(
+        ordr: @ordr,
+        event_type: 'closed',
+        entity_type: 'Ordr',
+        source: 'test',
+        payload: { to: 'closed' },
+      )
+
+      OrderEventProjector.project!(@ordr.id)
+    end
+
+    assert_equal 1, broadcast_calls.size
+    assert_equal @ordr.tablesetting_id, broadcast_calls.first[:tablesetting_id]
+    assert_equal @ordr.restaurant_id, broadcast_calls.first[:restaurant_id]
+  end
+
+  test 'closed status does not raise when tablesetting cannot be found' do
+    # Emit the event first (does not touch tablesetting_id).
+    OrderEvent.emit!(
+      ordr: @ordr,
+      event_type: 'closed',
+      entity_type: 'Ordr',
+      source: 'test',
+      payload: { to: 'closed' },
+    )
+
+    # Point tablesetting_id to a non-existent row so ordr.tablesetting returns nil.
+    # Both NOT NULL and FK constraints must be disabled; keep the disable_referential_integrity
+    # block around the entire projection so the FK is also not enforced when the projector
+    # calls ordr.update_columns internally.
+    nonexistent_id = 999_999_999
+    ActiveRecord::Base.connection.disable_referential_integrity do
+      @ordr.update_columns(tablesetting_id: nonexistent_id)
+      assert_nothing_raised { OrderEventProjector.project!(@ordr.id) }
+    end
+
+    assert_equal 'closed', @ordr.reload.status.to_s
+  end
+
   # === item_added with quantity ===
 
   test 'item_added creates ordritem with quantity from payload' do

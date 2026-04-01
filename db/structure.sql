@@ -608,7 +608,7 @@ CREATE TABLE public.customer_wait_queues (
     updated_at timestamp(6) without time zone NOT NULL,
     CONSTRAINT customer_wait_queues_party_size_positive CHECK ((party_size > 0)),
     CONSTRAINT customer_wait_queues_queue_position_positive CHECK ((queue_position > 0)),
-    CONSTRAINT customer_wait_queues_status_check CHECK (((status)::text = ANY ((ARRAY['waiting'::character varying, 'notified'::character varying, 'seated'::character varying, 'cancelled'::character varying, 'no_show'::character varying])::text[])))
+    CONSTRAINT customer_wait_queues_status_check CHECK (((status)::text = ANY (ARRAY[('waiting'::character varying)::text, ('notified'::character varying)::text, ('seated'::character varying)::text, ('cancelled'::character varying)::text, ('no_show'::character varying)::text])))
 );
 
 
@@ -1211,6 +1211,81 @@ ALTER SEQUENCE public.explore_pages_id_seq OWNED BY public.explore_pages.id;
 
 
 --
+-- Name: external_service_daily_usages; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.external_service_daily_usages (
+    id bigint NOT NULL,
+    date date NOT NULL,
+    service character varying NOT NULL,
+    dimension character varying NOT NULL,
+    units numeric(15,4) DEFAULT 0.0 NOT NULL,
+    unit_type character varying DEFAULT 'count'::character varying NOT NULL,
+    restaurant_id bigint,
+    metadata jsonb DEFAULT '{}'::jsonb NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: external_service_daily_usages_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.external_service_daily_usages_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: external_service_daily_usages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.external_service_daily_usages_id_seq OWNED BY public.external_service_daily_usages.id;
+
+
+--
+-- Name: external_service_monthly_costs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.external_service_monthly_costs (
+    id bigint NOT NULL,
+    month date NOT NULL,
+    service character varying NOT NULL,
+    currency character varying DEFAULT 'EUR'::character varying NOT NULL,
+    amount_cents integer DEFAULT 0 NOT NULL,
+    source character varying DEFAULT 'manual'::character varying NOT NULL,
+    notes text,
+    evidence jsonb DEFAULT '{}'::jsonb NOT NULL,
+    created_by_user_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: external_service_monthly_costs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.external_service_monthly_costs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: external_service_monthly_costs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.external_service_monthly_costs_id_seq OWNED BY public.external_service_monthly_costs.id;
+
+
+--
 -- Name: features; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1483,6 +1558,112 @@ ALTER SEQUENCE public.hero_images_id_seq OWNED BY public.hero_images.id;
 
 
 --
+-- Name: heroku_addon_plan_costs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.heroku_addon_plan_costs (
+    id bigint NOT NULL,
+    addon_service character varying NOT NULL,
+    plan_name character varying NOT NULL,
+    cost_cents_per_month integer DEFAULT 0 NOT NULL,
+    notes text,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: heroku_addon_plan_costs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.heroku_addon_plan_costs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: heroku_addon_plan_costs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.heroku_addon_plan_costs_id_seq OWNED BY public.heroku_addon_plan_costs.id;
+
+
+--
+-- Name: heroku_app_inventory_snapshots; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.heroku_app_inventory_snapshots (
+    id bigint NOT NULL,
+    captured_at timestamp(6) without time zone NOT NULL,
+    space_name character varying NOT NULL,
+    app_id character varying NOT NULL,
+    app_name character varying NOT NULL,
+    pipeline_id character varying,
+    pipeline_stage character varying,
+    environment character varying DEFAULT 'unknown'::character varying NOT NULL,
+    formation_json jsonb DEFAULT '{}'::jsonb NOT NULL,
+    addons_json jsonb DEFAULT '{}'::jsonb NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: heroku_app_inventory_snapshots_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.heroku_app_inventory_snapshots_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: heroku_app_inventory_snapshots_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.heroku_app_inventory_snapshots_id_seq OWNED BY public.heroku_app_inventory_snapshots.id;
+
+
+--
+-- Name: heroku_dyno_size_costs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.heroku_dyno_size_costs (
+    id bigint NOT NULL,
+    dyno_size character varying NOT NULL,
+    cost_cents_per_month integer DEFAULT 0 NOT NULL,
+    notes text,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: heroku_dyno_size_costs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.heroku_dyno_size_costs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: heroku_dyno_size_costs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.heroku_dyno_size_costs_id_seq OWNED BY public.heroku_dyno_size_costs.id;
+
+
+--
 -- Name: impersonation_audits; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1519,6 +1700,46 @@ CREATE SEQUENCE public.impersonation_audits_id_seq
 --
 
 ALTER SEQUENCE public.impersonation_audits_id_seq OWNED BY public.impersonation_audits.id;
+
+
+--
+-- Name: infra_cost_snapshots; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.infra_cost_snapshots (
+    id bigint NOT NULL,
+    month date NOT NULL,
+    provider character varying DEFAULT 'heroku'::character varying NOT NULL,
+    space_name character varying NOT NULL,
+    environment character varying NOT NULL,
+    estimated_monthly_cost_cents integer DEFAULT 0 NOT NULL,
+    app_count integer DEFAULT 0 NOT NULL,
+    formation_rollup_json jsonb DEFAULT '{}'::jsonb NOT NULL,
+    addons_rollup_json jsonb DEFAULT '{}'::jsonb NOT NULL,
+    created_by_user_id bigint,
+    updated_by_user_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: infra_cost_snapshots_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.infra_cost_snapshots_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: infra_cost_snapshots_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.infra_cost_snapshots_id_seq OWNED BY public.infra_cost_snapshots.id;
 
 
 --
@@ -3858,7 +4079,8 @@ CREATE TABLE public.plans (
     locations integer DEFAULT 0,
     menusperlocation integer DEFAULT 0,
     stripe_price_id_month character varying,
-    stripe_price_id_year character varying
+    stripe_price_id_year character varying,
+    weight_multiplier numeric(6,2) DEFAULT 1.0 NOT NULL
 );
 
 
@@ -3879,6 +4101,81 @@ CREATE SEQUENCE public.plans_id_seq
 --
 
 ALTER SEQUENCE public.plans_id_seq OWNED BY public.plans.id;
+
+
+--
+-- Name: pricing_model_plan_prices; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.pricing_model_plan_prices (
+    id bigint NOT NULL,
+    pricing_model_id bigint NOT NULL,
+    plan_id bigint NOT NULL,
+    "interval" character varying DEFAULT 'month'::character varying NOT NULL,
+    price_cents integer DEFAULT 0 NOT NULL,
+    currency character varying DEFAULT 'EUR'::character varying NOT NULL,
+    stripe_price_id character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: pricing_model_plan_prices_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.pricing_model_plan_prices_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: pricing_model_plan_prices_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.pricing_model_plan_prices_id_seq OWNED BY public.pricing_model_plan_prices.id;
+
+
+--
+-- Name: pricing_models; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.pricing_models (
+    id bigint NOT NULL,
+    version character varying NOT NULL,
+    status integer DEFAULT 0 NOT NULL,
+    effective_from timestamp(6) without time zone,
+    currency character varying DEFAULT 'EUR'::character varying NOT NULL,
+    inputs_json jsonb DEFAULT '{}'::jsonb NOT NULL,
+    outputs_json jsonb DEFAULT '{}'::jsonb NOT NULL,
+    published_by_user_id bigint,
+    published_at timestamp(6) without time zone,
+    publish_reason text,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: pricing_models_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.pricing_models_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: pricing_models_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.pricing_models_id_seq OWNED BY public.pricing_models.id;
 
 
 --
@@ -3948,6 +4245,41 @@ CREATE SEQUENCE public.products_id_seq
 --
 
 ALTER SEQUENCE public.products_id_seq OWNED BY public.products.id;
+
+
+--
+-- Name: profit_margin_policies; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.profit_margin_policies (
+    id bigint NOT NULL,
+    key character varying NOT NULL,
+    target_gross_margin_pct numeric(5,2) DEFAULT 60.0 NOT NULL,
+    floor_gross_margin_pct numeric(5,2) DEFAULT 40.0 NOT NULL,
+    status integer DEFAULT 0 NOT NULL,
+    created_by_user_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: profit_margin_policies_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.profit_margin_policies_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: profit_margin_policies_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.profit_margin_policies_id_seq OWNED BY public.profit_margin_policies.id;
 
 
 --
@@ -4652,7 +4984,7 @@ CREATE TABLE public.smartmenus (
     updated_at timestamp(6) without time zone NOT NULL,
     public_token character varying(64) NOT NULL,
     theme character varying DEFAULT 'modern'::character varying NOT NULL,
-    CONSTRAINT smartmenus_theme_check CHECK (((theme)::text = ANY ((ARRAY['modern'::character varying, 'rustic'::character varying, 'elegant'::character varying])::text[])))
+    CONSTRAINT smartmenus_theme_check CHECK (((theme)::text = ANY (ARRAY[('modern'::character varying)::text, ('rustic'::character varying)::text, ('elegant'::character varying)::text])))
 );
 
 
@@ -4673,6 +5005,43 @@ CREATE SEQUENCE public.smartmenus_id_seq
 --
 
 ALTER SEQUENCE public.smartmenus_id_seq OWNED BY public.smartmenus.id;
+
+
+--
+-- Name: staff_cost_snapshots; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.staff_cost_snapshots (
+    id bigint NOT NULL,
+    month date NOT NULL,
+    currency character varying DEFAULT 'EUR'::character varying NOT NULL,
+    support_cost_cents integer DEFAULT 0 NOT NULL,
+    staff_cost_cents integer DEFAULT 0 NOT NULL,
+    other_ops_cost_cents integer DEFAULT 0 NOT NULL,
+    notes text,
+    created_by_user_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: staff_cost_snapshots_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.staff_cost_snapshots_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: staff_cost_snapshots_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.staff_cost_snapshots_id_seq OWNED BY public.staff_cost_snapshots.id;
 
 
 --
@@ -5084,7 +5453,16 @@ CREATE TABLE public.userplans (
     user_id bigint NOT NULL,
     plan_id bigint NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    pricing_model_id bigint,
+    applied_price_cents integer,
+    applied_currency character varying,
+    applied_interval character varying,
+    applied_stripe_price_id character varying,
+    pricing_override_keep_original_cohort boolean DEFAULT false NOT NULL,
+    pricing_override_by_user_id bigint,
+    pricing_override_at timestamp(6) without time zone,
+    pricing_override_reason text
 );
 
 
@@ -5396,6 +5774,20 @@ ALTER TABLE ONLY public.explore_pages ALTER COLUMN id SET DEFAULT nextval('publi
 
 
 --
+-- Name: external_service_daily_usages id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.external_service_daily_usages ALTER COLUMN id SET DEFAULT nextval('public.external_service_daily_usages_id_seq'::regclass);
+
+
+--
+-- Name: external_service_monthly_costs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.external_service_monthly_costs ALTER COLUMN id SET DEFAULT nextval('public.external_service_monthly_costs_id_seq'::regclass);
+
+
+--
 -- Name: features id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -5452,10 +5844,38 @@ ALTER TABLE ONLY public.hero_images ALTER COLUMN id SET DEFAULT nextval('public.
 
 
 --
+-- Name: heroku_addon_plan_costs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.heroku_addon_plan_costs ALTER COLUMN id SET DEFAULT nextval('public.heroku_addon_plan_costs_id_seq'::regclass);
+
+
+--
+-- Name: heroku_app_inventory_snapshots id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.heroku_app_inventory_snapshots ALTER COLUMN id SET DEFAULT nextval('public.heroku_app_inventory_snapshots_id_seq'::regclass);
+
+
+--
+-- Name: heroku_dyno_size_costs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.heroku_dyno_size_costs ALTER COLUMN id SET DEFAULT nextval('public.heroku_dyno_size_costs_id_seq'::regclass);
+
+
+--
 -- Name: impersonation_audits id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.impersonation_audits ALTER COLUMN id SET DEFAULT nextval('public.impersonation_audits_id_seq'::regclass);
+
+
+--
+-- Name: infra_cost_snapshots id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.infra_cost_snapshots ALTER COLUMN id SET DEFAULT nextval('public.infra_cost_snapshots_id_seq'::regclass);
 
 
 --
@@ -5907,6 +6327,20 @@ ALTER TABLE ONLY public.plans ALTER COLUMN id SET DEFAULT nextval('public.plans_
 
 
 --
+-- Name: pricing_model_plan_prices id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pricing_model_plan_prices ALTER COLUMN id SET DEFAULT nextval('public.pricing_model_plan_prices_id_seq'::regclass);
+
+
+--
+-- Name: pricing_models id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pricing_models ALTER COLUMN id SET DEFAULT nextval('public.pricing_models_id_seq'::regclass);
+
+
+--
 -- Name: product_enrichments id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -5918,6 +6352,13 @@ ALTER TABLE ONLY public.product_enrichments ALTER COLUMN id SET DEFAULT nextval(
 --
 
 ALTER TABLE ONLY public.products ALTER COLUMN id SET DEFAULT nextval('public.products_id_seq'::regclass);
+
+
+--
+-- Name: profit_margin_policies id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.profit_margin_policies ALTER COLUMN id SET DEFAULT nextval('public.profit_margin_policies_id_seq'::regclass);
 
 
 --
@@ -6044,6 +6485,13 @@ ALTER TABLE ONLY public.slow_queries ALTER COLUMN id SET DEFAULT nextval('public
 --
 
 ALTER TABLE ONLY public.smartmenus ALTER COLUMN id SET DEFAULT nextval('public.smartmenus_id_seq'::regclass);
+
+
+--
+-- Name: staff_cost_snapshots id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.staff_cost_snapshots ALTER COLUMN id SET DEFAULT nextval('public.staff_cost_snapshots_id_seq'::regclass);
 
 
 --
@@ -6322,6 +6770,22 @@ ALTER TABLE ONLY public.explore_pages
 
 
 --
+-- Name: external_service_daily_usages external_service_daily_usages_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.external_service_daily_usages
+    ADD CONSTRAINT external_service_daily_usages_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: external_service_monthly_costs external_service_monthly_costs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.external_service_monthly_costs
+    ADD CONSTRAINT external_service_monthly_costs_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: features features_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6386,11 +6850,43 @@ ALTER TABLE ONLY public.hero_images
 
 
 --
+-- Name: heroku_addon_plan_costs heroku_addon_plan_costs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.heroku_addon_plan_costs
+    ADD CONSTRAINT heroku_addon_plan_costs_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: heroku_app_inventory_snapshots heroku_app_inventory_snapshots_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.heroku_app_inventory_snapshots
+    ADD CONSTRAINT heroku_app_inventory_snapshots_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: heroku_dyno_size_costs heroku_dyno_size_costs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.heroku_dyno_size_costs
+    ADD CONSTRAINT heroku_dyno_size_costs_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: impersonation_audits impersonation_audits_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.impersonation_audits
     ADD CONSTRAINT impersonation_audits_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: infra_cost_snapshots infra_cost_snapshots_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.infra_cost_snapshots
+    ADD CONSTRAINT infra_cost_snapshots_pkey PRIMARY KEY (id);
 
 
 --
@@ -6914,6 +7410,22 @@ ALTER TABLE ONLY public.plans
 
 
 --
+-- Name: pricing_model_plan_prices pricing_model_plan_prices_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pricing_model_plan_prices
+    ADD CONSTRAINT pricing_model_plan_prices_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: pricing_models pricing_models_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pricing_models
+    ADD CONSTRAINT pricing_models_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: product_enrichments product_enrichments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6927,6 +7439,14 @@ ALTER TABLE ONLY public.product_enrichments
 
 ALTER TABLE ONLY public.products
     ADD CONSTRAINT products_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: profit_margin_policies profit_margin_policies_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.profit_margin_policies
+    ADD CONSTRAINT profit_margin_policies_pkey PRIMARY KEY (id);
 
 
 --
@@ -7079,6 +7599,14 @@ ALTER TABLE ONLY public.slow_queries
 
 ALTER TABLE ONLY public.smartmenus
     ADD CONSTRAINT smartmenus_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: staff_cost_snapshots staff_cost_snapshots_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.staff_cost_snapshots
+    ADD CONSTRAINT staff_cost_snapshots_pkey PRIMARY KEY (id);
 
 
 --
@@ -7284,6 +7812,13 @@ CREATE UNIQUE INDEX idx_menuitem_ingredient_mappings_unique ON public.menuitem_i
 
 
 --
+-- Name: idx_on_app_name_captured_at_d4386924c3; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_on_app_name_captured_at_d4386924c3 ON public.heroku_app_inventory_snapshots USING btree (app_name, captured_at);
+
+
+--
 -- Name: idx_on_city_name_status_discovered_at_524af6544b; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -7323,6 +7858,13 @@ CREATE INDEX idx_on_restaurant_id_joined_queue_at_1102a21570 ON public.customer_
 --
 
 CREATE INDEX idx_on_smartmenu_id_session_id_created_at_dc50bab09c ON public.voice_commands USING btree (smartmenu_id, session_id, created_at);
+
+
+--
+-- Name: idx_on_space_name_captured_at_32f5e55629; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_on_space_name_captured_at_32f5e55629 ON public.heroku_app_inventory_snapshots USING btree (space_name, captured_at);
 
 
 --
@@ -7872,6 +8414,55 @@ CREATE INDEX index_explore_pages_on_restaurant_count ON public.explore_pages USI
 
 
 --
+-- Name: index_ext_svc_daily_usages_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_ext_svc_daily_usages_unique ON public.external_service_daily_usages USING btree (date, service, dimension, restaurant_id);
+
+
+--
+-- Name: index_ext_svc_monthly_costs_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_ext_svc_monthly_costs_unique ON public.external_service_monthly_costs USING btree (month, service, currency);
+
+
+--
+-- Name: index_external_service_daily_usages_on_date; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_external_service_daily_usages_on_date ON public.external_service_daily_usages USING btree (date);
+
+
+--
+-- Name: index_external_service_daily_usages_on_restaurant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_external_service_daily_usages_on_restaurant_id ON public.external_service_daily_usages USING btree (restaurant_id);
+
+
+--
+-- Name: index_external_service_daily_usages_on_service; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_external_service_daily_usages_on_service ON public.external_service_daily_usages USING btree (service);
+
+
+--
+-- Name: index_external_service_monthly_costs_on_month; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_external_service_monthly_costs_on_month ON public.external_service_monthly_costs USING btree (month);
+
+
+--
+-- Name: index_external_service_monthly_costs_on_service; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_external_service_monthly_costs_on_service ON public.external_service_monthly_costs USING btree (service);
+
+
+--
 -- Name: index_features_plans_on_feature_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -7998,6 +8589,27 @@ CREATE INDEX index_hero_images_on_status ON public.hero_images USING btree (stat
 
 
 --
+-- Name: index_heroku_addon_plan_costs_on_addon_service_and_plan_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_heroku_addon_plan_costs_on_addon_service_and_plan_name ON public.heroku_addon_plan_costs USING btree (addon_service, plan_name);
+
+
+--
+-- Name: index_heroku_app_inventory_snapshots_on_app_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_heroku_app_inventory_snapshots_on_app_id ON public.heroku_app_inventory_snapshots USING btree (app_id);
+
+
+--
+-- Name: index_heroku_dyno_size_costs_on_dyno_size; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_heroku_dyno_size_costs_on_dyno_size ON public.heroku_dyno_size_costs USING btree (dyno_size);
+
+
+--
 -- Name: index_impersonation_audits_on_admin_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -8023,6 +8635,27 @@ CREATE INDEX index_impersonation_audits_on_expires_at ON public.impersonation_au
 --
 
 CREATE INDEX index_impersonation_audits_on_impersonated_user_id ON public.impersonation_audits USING btree (impersonated_user_id);
+
+
+--
+-- Name: index_infra_cost_snapshots_on_environment; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_infra_cost_snapshots_on_environment ON public.infra_cost_snapshots USING btree (environment);
+
+
+--
+-- Name: index_infra_cost_snapshots_on_month; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_infra_cost_snapshots_on_month ON public.infra_cost_snapshots USING btree (month);
+
+
+--
+-- Name: index_infra_cost_snapshots_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_infra_cost_snapshots_unique ON public.infra_cost_snapshots USING btree (provider, space_name, environment, month);
 
 
 --
@@ -9895,6 +10528,48 @@ CREATE INDEX index_plans_on_stripe_price_id_year ON public.plans USING btree (st
 
 
 --
+-- Name: index_pmpp_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_pmpp_unique ON public.pricing_model_plan_prices USING btree (pricing_model_id, plan_id, "interval", currency);
+
+
+--
+-- Name: index_pricing_model_plan_prices_on_plan_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_pricing_model_plan_prices_on_plan_id ON public.pricing_model_plan_prices USING btree (plan_id);
+
+
+--
+-- Name: index_pricing_model_plan_prices_on_pricing_model_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_pricing_model_plan_prices_on_pricing_model_id ON public.pricing_model_plan_prices USING btree (pricing_model_id);
+
+
+--
+-- Name: index_pricing_models_on_effective_from; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_pricing_models_on_effective_from ON public.pricing_models USING btree (effective_from);
+
+
+--
+-- Name: index_pricing_models_on_status; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_pricing_models_on_status ON public.pricing_models USING btree (status);
+
+
+--
+-- Name: index_pricing_models_on_version; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_pricing_models_on_version ON public.pricing_models USING btree (version);
+
+
+--
 -- Name: index_product_enrichments_on_product_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -9920,6 +10595,20 @@ CREATE INDEX index_product_enrichments_on_source_and_external_id ON public.produ
 --
 
 CREATE UNIQUE INDEX index_products_on_product_type_and_canonical_name ON public.products USING btree (product_type, canonical_name);
+
+
+--
+-- Name: index_profit_margin_policies_on_key; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_profit_margin_policies_on_key ON public.profit_margin_policies USING btree (key);
+
+
+--
+-- Name: index_profit_margin_policies_on_status; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_profit_margin_policies_on_status ON public.profit_margin_policies USING btree (status);
 
 
 --
@@ -10357,6 +11046,20 @@ CREATE INDEX index_smartmenus_on_tablesetting_id ON public.smartmenus USING btre
 
 
 --
+-- Name: index_staff_cost_snapshots_on_month; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_staff_cost_snapshots_on_month ON public.staff_cost_snapshots USING btree (month);
+
+
+--
+-- Name: index_staff_cost_snapshots_on_month_and_currency; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_staff_cost_snapshots_on_month_and_currency ON public.staff_cost_snapshots USING btree (month, currency);
+
+
+--
 -- Name: index_staff_invitations_on_invited_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -10511,6 +11214,13 @@ CREATE INDEX index_userplans_on_plan_id ON public.userplans USING btree (plan_id
 
 
 --
+-- Name: index_userplans_on_pricing_model_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_userplans_on_pricing_model_id ON public.userplans USING btree (pricing_model_id);
+
+
+--
 -- Name: index_userplans_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -10657,6 +11367,14 @@ ALTER TABLE ONLY public.ordr_split_item_assignments
 
 ALTER TABLE ONLY public.menu_imports
     ADD CONSTRAINT fk_rails_01b0b8d6ad FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: pricing_model_plan_prices fk_rails_024354a9f5; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pricing_model_plan_prices
+    ADD CONSTRAINT fk_rails_024354a9f5 FOREIGN KEY (pricing_model_id) REFERENCES public.pricing_models(id) ON DELETE CASCADE;
 
 
 --
@@ -10905,6 +11623,14 @@ ALTER TABLE ONLY public.dining_patterns
 
 ALTER TABLE ONLY public.payment_profiles
     ADD CONSTRAINT fk_rails_3b1e3db4e4 FOREIGN KEY (restaurant_id) REFERENCES public.restaurants(id);
+
+
+--
+-- Name: userplans fk_rails_3c5a1a774f; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.userplans
+    ADD CONSTRAINT fk_rails_3c5a1a774f FOREIGN KEY (pricing_model_id) REFERENCES public.pricing_models(id);
 
 
 --
@@ -11772,6 +12498,14 @@ ALTER TABLE ONLY public.menuitem_ingredient_mappings
 
 
 --
+-- Name: pricing_model_plan_prices fk_rails_c254eb28f9; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pricing_model_plan_prices
+    ADD CONSTRAINT fk_rails_c254eb28f9 FOREIGN KEY (plan_id) REFERENCES public.plans(id) ON DELETE CASCADE;
+
+
+--
 -- Name: order_events fk_rails_c2e4e152a7; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -12146,6 +12880,18 @@ ALTER TABLE ONLY public.voice_commands
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260331215530'),
+('20260331215525'),
+('20260331215521'),
+('20260331215516'),
+('20260331215435'),
+('20260331215430'),
+('20260331215426'),
+('20260331215421'),
+('20260331215342'),
+('20260331215338'),
+('20260331215333'),
+('20260331215310'),
 ('20260331054025'),
 ('20260330180552'),
 ('20260330180337'),

@@ -5,6 +5,7 @@
 - Category: Post-Launch
 - Effort: L
 - Dependencies: `Payments::Orchestrator` (existing), Strikepay API access and developer agreement, `Employee` model (existing), `Ordr` model (existing)
+- Refined: true
 
 ## Problem Statement
 Restaurant staff in markets where direct digital tipping is customary (Ireland, UK, US) have no mechanism to receive tips via mellow.menu. Tips currently bypass the platform entirely. Integrating Strikepay — a direct-to-staff tipping platform — allows customers to tip individual staff members at checkout or via a staff QR code, with tips flowing directly to staff personal accounts rather than through restaurant revenue. This improves staff retention, differentiates mellow.menu for premium venues, and creates a new data signal (tip rates per staff member) that can feed future analytics features.

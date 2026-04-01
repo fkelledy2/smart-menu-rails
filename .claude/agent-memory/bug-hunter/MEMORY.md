@@ -7,6 +7,8 @@
 - [pattern_enable_staff_buttons_test_script.md](pattern_enable_staff_buttons_test_script.md) — show.html.erb test-only script removes disabled from all add-item-btn-* — use pointer-events:none assertion instead
 
 ## Patterns & Gotchas
+- [pattern_party_size_duplicate_ids.md](pattern_party_size_duplicate_ids.md) — bindOrderCapacityUi() uses document.getElementById — both modal and bottom sheet share IDs, bottom sheet +/- buttons silently update wrong container (FIXED)
+- [pattern_projector_closed_no_table_free.md](pattern_projector_closed_no_table_free.md) — OrderEventProjector uses update_columns (bypasses callbacks) — tablesetting never freed and floorplan never rebroadcast on Stripe close (FIXED)
 - [pattern_double_audit_write.md](pattern_double_audit_write.md) — CRM reopen action writes duplicate audit records; LeadTransitionService already writes the stage_changed audit
 - [pattern_enforce_scope_no_halt.md](pattern_enforce_scope_no_halt.md) — JwtAuthenticated#enforce_scope! renders 403 but does not halt; action body continues executing
 - [pattern_jwt_double_logging.md](pattern_jwt_double_logging.md) — DashboardController includes JwtAuthenticated AND inherits BaseController, causing double usage_log writes on scope-denied requests
