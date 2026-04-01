@@ -72,18 +72,23 @@ module Crm
     private
 
     def extract_event_uuid
-      @payload.dig('payload', 'event', 'uuid') ||
-        @payload.dig('event', 'uuid') ||
-        @payload['uuid']
+      # Calendly v2 payload: uri is "https://api.calendly.com/scheduled_events/{event_uuid}/invitees/{invitee_uuid}"
+      # Use the invitee URI as the idempotency key — it is unique per booking.
+      uri = @payload.dig('payload', 'uri').to_s
+      uri.split('/').last.presence || @payload['uuid']
     end
 
     def extract_invitee_email
-      @payload.dig('payload', 'invitee', 'email') ||
+      # Calendly v2: email is directly on payload, not nested under invitee
+      @payload.dig('payload', 'email') ||
+        @payload.dig('payload', 'invitee', 'email') ||
         @payload.dig('invitee', 'email')
     end
 
     def extract_invitee_name
-      @payload.dig('payload', 'invitee', 'name') ||
+      # Calendly v2: name is directly on payload, not nested under invitee
+      @payload.dig('payload', 'name') ||
+        @payload.dig('payload', 'invitee', 'name') ||
         @payload.dig('invitee', 'name')
     end
 
