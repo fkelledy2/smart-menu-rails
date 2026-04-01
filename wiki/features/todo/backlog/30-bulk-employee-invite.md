@@ -5,6 +5,7 @@
 - Category: Post-Launch
 - Effort: M
 - Dependencies: `StaffInvitation` model (already exists), `StaffInvitationMailer` (already exists), Sidekiq (already active), Active Storage (already configured)
+- Refined: true
 
 ## Problem Statement
 Restaurant managers onboarding a new team — particularly for seasonal hires, new location openings, or franchise rollouts — must currently invite each staff member individually. With a team of 20+ employees, this becomes a time-consuming, error-prone manual process. A bulk invitation flow (CSV upload or spreadsheet-like manual entry) that builds on the existing `StaffInvitation` model reduces onboarding friction and gets new restaurants live faster.

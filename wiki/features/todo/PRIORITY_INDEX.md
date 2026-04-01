@@ -1,6 +1,6 @@
 # mellow.menu Feature Backlog — Priority Index
 
-**Last updated**: 2026-03-31 (sixteenth pass — Naked Domain Canonical Strategy IQ-1 COMPLETED; DomainRedirect middleware shipped; all www.mellow.menu canonical URLs updated to mellow.menu; 9 tests added; ops DNS/Heroku steps remain for deployer)
+**Last updated**: 2026-03-31 (seventeenth pass — daily prioritisation run; IQ-1 Naked Domain confirmed fully COMPLETED including ops steps; Sprint Recommendation updated to reflect current next best actions: Square alpha + Track D Employee Role Promotion + Track F Agent Framework; stale Track A/B/C completed-item deliverable lists retired; Refined flags added to spec files #28–#34)
 **Naked Domain Canonical Strategy (IQ-1)**: COMPLETED 2026-03-31 — DomainRedirect middleware live; spec at `docs/features/completed/naked-domain-canonical-strategy.md`
 **QR Code Security (#1)**: COMPLETED 2026-03-24 — Phase 1 shipped; spec at `docs/features/completed/qr-security.md`
 **Branded Email Styling (#1)**: COMPLETED 2026-03-24 — spec at `docs/features/completed/branded-email-styling-feature-request.md`
@@ -57,6 +57,10 @@
 | #37 | AI Sommelier Marketing Landing Page | Post-Launch (Marketing) | S | AI Sommelier feature live; 2–3 reference restaurants; copy + design approved | Public acquisition surface for the AI Sommelier feature; 1–2 days engineering once assets are ready |
 | #38 | AI Whiskey Ambassador Marketing Landing Page | Post-Launch (Marketing) | S | #37 ships first (establishes MarketingController pattern); Whiskey Ambassador live; copy + design approved | Same pattern as #37; reuses controller and layout; distinct URL for SEO segment targeting |
 
+> **Note on March 2026 additions (seventeenth pass — 2026-03-31)**: Daily prioritisation run. No new features added or re-ranked. Changes: (1) Sprint Recommendation updated — stale Tracks A, B, C retired (all completed); IQ-1 "ship first" guidance retired (completed); Track D (Employee Role Promotion) is now the current lead track; Square alpha three-item blockers remain the highest-revenue-unlocking parallel priority; Track F (Agent Framework #17) named as next major programme; Track G (pricing chain #16→#15→#14) documented; Quick Win Pool formalised. (2) Dependencies Graph cleaned — removed stale forward-references to #10, #12, #13. (3) `Refined: true` flags added to spec files #28, #29, #30, #31, #32, #33, #34 (previously refined in substance but flag omitted). No rank changes.
+
+> **Note on March 2026 additions (sixteenth pass — 2026-03-31)**: **Naked Domain Canonical Strategy** (IQ-1) COMPLETED. DomainRedirect Rack middleware shipped; all `www.mellow.menu` references updated to `mellow.menu` canonical URLs; 9 tests added; ops DNS/Heroku steps documented in spec at `docs/features/completed/naked-domain-canonical-strategy.md`.
+
 > **Note on March 2026 additions (fifteenth pass — 2026-03-31)**: **Smartmenu Preview Modes** (#36) confirmed COMPLETED. Codebase verification shows `app/models/smartmenu_preview_token.rb` is live and tested (`test/models/smartmenu_preview_token_test.rb`), `SmartmenusController` decodes `params[:preview]` via `SmartmenuPreviewToken.decode`, and the `staff-mode-indicator` block is fully absent from all views. The legacy `?view=staff` param was removed immediately rather than kept for a grace period (Open Question Q1 resolved in favour of clean removal). The `smartmenu_preview_tokens` Flipper flag was not needed as the old mechanism was gone before this shipped. Track E retired from sprint recommendation. No rank changes to remaining backlog items.
 
 > **Note on March 2026 additions (fourteenth pass — 2026-03-31)**: **Realtime Ordritem Tracking & Passive Customer Feedback** (#34) spec reviewed against the detailed product document and confirmed fully current. The existing spec at `docs/features/todo/backlog/34-realtime-ordritem-tracking.md` and the mirrored copy at `wiki/features/todo/backlog/34-realtime-ordritem-tracking.md` both contain the complete architectural design including: `fulfillment_status` / `station` enum strategy with `prefix:` collision avoidance, `OrdritemEvent` immutability guards, `Ordritems::TransitionStatus` idempotency contract, `Ordritems::TransitionGroup` batch-first workflow, `Ordritems::BroadcastStatusChangeJob` post-commit broadcast pattern, `ordritem_tracking_controller.js` Stimulus controller, and the resolved open questions (station assignment from `Menuitem#default_station`, `OrdrChannel` auth shipped as `qr_security_v1`). No rank change. No new gems. Ready for Phase 1 development.
@@ -108,73 +112,34 @@ The following features must ship before mellow.menu can accept live orders from 
 | ~~#1~~ | ~~QR Code Security~~ | COMPLETED 2026-03-24 |
 | ~~#2~~ | ~~Branded Email Styling~~ | COMPLETED 2026-03-24 |
 | ~~#3~~ | ~~Branded Receipt Email~~ | COMPLETED 2026-03-25 |
-| **IQ-1** | **Naked Domain Canonical Strategy** | `mellow.menu` apex must resolve; presenting the platform to customers or press with a broken naked domain is a trust failure. S-effort — ship before any public launch activity. |
+| ~~**IQ-1**~~ | ~~**Naked Domain Canonical Strategy**~~ | COMPLETED 2026-03-31 — DomainRedirect middleware live; `mellow.menu` apex resolves correctly |
 
-Note: The launch blockers are deliberately narrow. Features #4–#7 are strong launch enhancers that meaningfully improve the product but are not strictly required to go live with ordering enabled. IQ-1 is an infrastructure pre-condition rather than a software feature blocker — it is S-effort and can be executed in an afternoon.
+Note: All launch blockers and infrastructure pre-conditions are now COMPLETED. The platform is ready to accept live orders from paying restaurant customers.
+
+**Launch status: READY.** Features #4–#13, IQ-1, and #36 are all shipped. The platform is publicly presentable. Naked domain resolves. Sales pipeline is live. The minimum viable launch set is 100% complete.
 
 ---
 
 ## Current Sprint Recommendation — Next Best Actions
 
-All launch blockers (#1–#7), JWT Token Management (#8), CRM Sales Funnel (#9), Smartmenu Theming (#10), Partner Integrations (#11), Menu Experiments (#12), Table Wait Time Estimation (#13), and Smartmenu Preview Modes (#36) are completed. The platform is live-capable with a functioning sales pipeline, API layer, visual theming, event-driven partner integration layer, A/B testing capability, and clean signed-token preview UX.
+**Platform state as of 2026-03-31:** All launch blockers (#1–#7), JWT (#8), CRM (#9), Smartmenu Theming (#10), Partner Integrations (#11), Menu Experiments (#12), Table Wait Time Estimation (#13), Naked Domain (IQ-1), and Smartmenu Preview Modes (#36) are COMPLETED. The platform is live-capable and publicly presentable. The sales pipeline is operational. The focus shifts to: closing the Square alpha, shipping quick-win team management tooling, and beginning the post-launch feature programme.
 
-**Immediate pre-sprint ship: IQ-1 — Naked Domain Canonical Strategy.** This is an afternoon's work (DNS + Heroku config + one Rack initializer). Ship it before any other track begins — the naked domain resolving is a prerequisite for presenting the platform publicly with confidence.
+---
 
-**Parallel track: Square Integration alpha.** The backend and UI work for Square is complete (Epics 1–8). The immediate next step is alpha testing in the Square sandbox environment on a deployed instance. Three remaining items before alpha: (1) split-bill progress UI ("€X of €Y paid"), (2) manager notification email on degraded/disconnected status, (3) "Reconnect Square" CTA in admin UI when status is degraded. Complete these, then begin the alpha cohort.
+### Completed Tracks (retired from sprint planning)
 
-The following represent the highest-value next actions after IQ-1 ships:
+~~**Track A — Smartmenu Theming (#10)**~~ COMPLETED 2026-03-28
+~~**Track B — Partner Integrations (#11)**~~ COMPLETED 2026-03-29
+~~**Track C — Menu Experiments (#12)**~~ COMPLETED 2026-03-29
+~~**Track E — Smartmenu Preview Modes (#36)**~~ COMPLETED 2026-03-31
+~~**IQ-1 — Naked Domain Canonical Strategy**~~ COMPLETED 2026-03-31
 
-### Track A: Menu Experiments (COMPLETED 2026-03-29)
-~~**Feature #12 — Menu Experiments (A/B Testing)** — current top priority~~
+---
 
-Deliverables in priority order:
-1. Migration: `add_theme_to_smartmenus` — string column, default `'classic'`, check constraint
-2. `Smartmenu::THEMES` constant and `validates :theme, inclusion:` on model
-3. Audit `_smartmenu_mobile.scss` — extract hard-coded values to CSS custom properties (highest-risk task; pair design+engineering)
-4. `_theme_classic.scss`, `_theme_modern.scss`, `_theme_rustic.scss`, `_theme_elegant.scss`
-5. `Smartmenu::ThemeCacheBuster` service — called on `saved_change_to_theme?`
-6. Preview route + `smartmenus#preview` action
-7. `theme_picker_controller.js` Stimulus controller + `_theme_picker.html.erb` partial
-8. Fragment cache keys updated to include `@smartmenu.theme`
-
-Estimated: 1–2 developer weeks
-
-### Track B: API Ecosystem (Unblocks partner integrations and enterprise conversations)
-**Feature #11 — Partner Integrations (Event-Driven)**
-
-JWT is now complete. Partner Integrations is the direct downstream item — it turns mellow.menu from an isolated product into a platform partners can build on. Workforce and CRM signals are the highest-demand first use cases.
-
-Deliverables:
-1. Canonical event schema definition (JSON)
-2. `PartnerIntegrations::EventEmitter` + `PartnerIntegrationAdapter` base class
-3. `PartnerIntegrations::StripeEventMapper` — `payment_intent.succeeded` → canonical event
-4. `PartnerIntegrations::WorkforceExportService` + `CrmExportService`
-5. `PartnerIntegrationDispatchJob` with dead-letter logging
-6. API routes: `GET /api/v1/restaurants/:id/partner/workforce` and `/crm`
-7. `partner_integrations` Flipper flag
-
-Estimated: 1–2 developer weeks
-
-### Track C: Quick Win — Menu Experiments
-**Feature #12 — Menu Experiments (A/B Testing)**
-
-All dependencies are satisfied: DiningSession (built by #1), MenuVersion (confirmed built). This is M effort with no unresolved open questions. Ship this to give restaurants a data-driven experimentation capability.
-
-Deliverables:
-1. `create_menu_experiments` + `create_menu_experiment_exposures` migrations
-2. `add_experiment_fields_to_dining_sessions` migration
-3. `MenuExperiments::VersionAssignmentService` (pure — no DB writes)
-4. `MenuExperiments::ExposureLogger` + `MenuExperimentExposureJob`
-5. `EndExpiredMenuExperimentsJob` — Sidekiq cron, every 15 minutes
-6. Experiment create/edit/pause/end UI + exposure count dashboard
-7. `menu_experiments` Flipper flag
-
-Estimated: 1–2 developer weeks
-
-### Track D: Team Management Quick Win (S-effort, ship between tracks)
+### Track D: Team Management Quick Win — CURRENT LEAD TRACK
 **Feature #29 — Employee Role Promotion** (S effort — 3–5 developer days)
 
-Low complexity, high operational value. Can be shipped in days during a gap between larger tracks. All dependencies exist. Uses the branded mailer layout that is now complete.
+This is the highest-value remaining item that can ship in days with no external gates. All dependencies exist. Uses the branded mailer layout (complete). Enables restaurant teams to grow organically without manual admin intervention, and establishes the `EmployeeRoleAudit` pattern for #30 Bulk Invite.
 
 Deliverables:
 1. `create_employee_role_audits` migration
@@ -187,10 +152,57 @@ Estimated: 3–5 developer days
 
 ---
 
-### Track E: UX Cleanup Quick Win — Smartmenu Preview Modes (#36) — COMPLETED 2026-03-31
-~~**Feature #36 — Smartmenu Preview Modes** (S effort — shipped)~~
+### Square Integration Alpha — Parallel Priority
+**Feature: Square Integration** (IN-PROGRESS — Epics 1–8 backend/UI complete)
 
-All deliverables confirmed live. `SmartmenuPreviewToken` model is in production with full test coverage. The `staff-mode-indicator` is fully removed from `smartmenus/show.html.erb`. The controller decodes signed tokens via `params[:preview]`. The legacy `?view=staff` path is gone entirely (removed immediately rather than with a grace period). Track E is retired.
+Three remaining items before the alpha cohort can begin. These are small but blocking:
+1. Split-bill progress UI — display "€X of €Y paid" in the payment flow
+2. Manager notification email on degraded/disconnected Square status
+3. "Reconnect Square" CTA in admin UI when status is degraded
+
+Complete these three items, then stand up the Square sandbox alpha with the first pilot restaurant cohort. This is the single highest-revenue-unlocking activity on the board — Square-market restaurants (Ireland, UK, US) cannot be acquired until alpha validates the payment flow.
+
+Estimated: 3–5 developer days to clear the three blockers; alpha setup thereafter
+
+---
+
+### Track F: Agent Framework (#17) — Next Major Programme
+**Feature #17 — Agent Framework — Shared Infrastructure** (L effort — 4–6 developer weeks)
+
+All immediate quick wins and launch enhancers are completed. The Agent Framework is the highest-value next substantial build: it is the prerequisite for 8 downstream AI features (#18–#25). Nothing in the agent tier can start without it. Begin scoping once Track D and the Square alpha blockers are cleared.
+
+Deliverables (summary — full spec at `docs/features/todo/AI/17-agent-framework.md`):
+1. `AgentWorkflow`, `AgentRun`, `AgentArtifact`, `AgentApproval` models + migrations
+2. `Agents::Runner` — orchestrates tool calls, handles retries, emits events
+3. `Agents::Toolbox` base + first tool implementations (read-only menu + order data)
+4. `Agents::PolicyEvaluator` — Pundit-integrated safety layer
+5. `Agents::ArtifactWriter` — persists structured output for approval workflows
+6. `Agents::ApprovalRouter` — routes high-risk actions to human review
+7. `AgentRunWorker` Sidekiq queue (dedicated `agents` queue, concurrency 5)
+8. AI Workbench UI — admin view of runs, artifacts, approvals
+9. `agent_framework` Flipper flag
+
+Estimated: 4–6 developer weeks
+
+---
+
+### Track G: Pricing Infrastructure (#16 → #15 → #14) — Post-Launch Sequence
+When bandwidth allows after Tracks D/F, the pricing infrastructure chain is the next highest-ROI internal programme. Start with the smallest item (#16 Heroku Cost Inventory, S effort) to unlock the chain.
+
+1. **#16 Heroku Cost Inventory** (S effort) — connects Heroku Platform API; feeds cost data to #15
+2. **#15 Cost Insights + Pricing Publisher** (L effort) — admin system for publishing pricing models; enables #14
+3. **#14 Dynamic Pricing Plans** (L effort) — cost-indexed, price-locked-at-signup plans; sustainable margin management
+
+---
+
+### Quick Win Pool — Pick Up Between Tracks
+Items below can be slotted into any gap between larger tracks. All have full specs, no external blockers, and clear acceptance criteria.
+
+| Feature | Effort | Why now |
+|---------|--------|---------|
+| #30 Bulk Employee Invitation | M | Natural follow-on to #29; reuses `StaffInvitation` + branded mailer |
+| #28 Two-Factor Authentication | M | Security hygiene for payment-controlling accounts; increasingly table-stakes |
+| #35 Profit Margin Phase 4 | M | Phases 1–3 in production; Phase 4 closes the insight-to-action loop; feeds #21 |
 
 ---
 
@@ -222,23 +234,13 @@ Ship Phase 1 agents once the framework is stable (at least one full run through 
 ## Dependencies Graph
 
 ```
-Launch blockers #1–#7, JWT #8, and CRM #9 are all COMPLETED. Dependencies below reflect the active backlog.
+Launch blockers #1–#7, JWT #8, CRM #9, Theming #10, Partner Integrations #11, Menu Experiments #12,
+Table Wait Time #13, Naked Domain IQ-1, and Smartmenu Preview Modes #36 are all COMPLETED.
+Dependencies below reflect only the active backlog.
 
 #8 JWT Token Management (COMPLETED 2026-03-27)
-  └─► #11 Partner Integrations (needs JWT auth for API endpoints) — UNBLOCKED
-  └─► #25 MCP AI Agent Wrapper (needs JWT for agent API access) — partial; also needs #17
-
-#9 CRM Sales Funnel (COMPLETED 2026-03-27)
-  └─► (no downstream dependents — internal sales tool)
-
-#10 Smartmenu Theming
-  └─► (no upstream dependencies; no downstream dependents in v1) — CURRENT PRIORITY
-
-#12 Menu Experiments
-  └─► (all dependencies satisfied: DiningSession built by #1, MenuVersion built)
-
-#13 Table Wait Time Estimation
-  └─► (Floorplan Dashboard completed; Tablesetting model exists)
+  └─► #11 Partner Integrations (COMPLETED 2026-03-29)
+  └─► #25 MCP AI Agent Wrapper (also needs #17 Agent Framework)
 
 #16 Heroku Cost Inventory
   └─► #15 Cost Insights + Pricing Publisher (feeds infra cost data)

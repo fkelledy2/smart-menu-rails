@@ -5,6 +5,7 @@
 - Category: Post-Launch
 - Effort: L
 - Dependencies: Restaurant geocoding data (new), map provider API key (Google Maps or Mapbox), SmartMenu public menu URLs already exist
+- Refined: true
 
 ## Problem Statement
 Potential customers who don't already know about mellow.menu-powered restaurants have no discovery surface. A map-based discovery page at `mellow.menu/discover` (or equivalent) lets diners find restaurants near them, preview their menus, and link directly into the SmartMenu experience. This creates an organic, consumer-facing acquisition channel and gives mellow.menu a public proof point of its restaurant network size.

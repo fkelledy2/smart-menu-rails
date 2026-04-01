@@ -5,6 +5,7 @@
 - Category: Post-Launch
 - Effort: S
 - Dependencies: Existing `Employee` model (role enum already present), `StaffInvitation` model (already exists), Pundit `EmployeePolicy`
+- Refined: true
 
 ## Problem Statement
 Restaurant managers currently cannot promote an existing staff member to a higher role without deleting and re-inviting them. The `Employee` model already holds a `role` enum (`staff: 0, manager: 1, admin: 2`), but there is no UI or audit trail for changing that role on an existing employee record. Restaurants with growing teams need a safe, audited mechanism to elevate trusted staff members without disrupting their account history or order records.
