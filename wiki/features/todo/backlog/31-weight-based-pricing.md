@@ -5,6 +5,7 @@
 - Category: Post-Launch
 - Effort: M
 - Dependencies: Existing `Menuitem` model, existing `Ordritem` model, existing SmartMenu customer ordering UI, Kitchen Display System (KDS)
+- Refined: true
 
 ## Problem Statement
 Premium restaurants — fine dining, butchers, seafood counters, and steakhouses — routinely price certain items by weight (e.g. a ribeye at €4.50 per 100g). The current `Menuitem` model supports only a fixed price per item. This forces these restaurants to either list a fixed price for a "standard" portion (losing flexibility) or to avoid mellow.menu altogether. Adding weight-based pricing extends the platform's addressable market to premium dining segments and enables upselling by portion size.
