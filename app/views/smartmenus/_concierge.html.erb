@@ -1,0 +1,101 @@
+<%#
+  Customer Concierge panel — natural-language menu discovery.
+  Rendered outside the page cache because the query endpoint URL is
+  restaurant-specific and the panel state is session-local.
+
+  Locals:
+    smartmenu  [Smartmenu]
+    restaurant [Restaurant]
+%>
+<% concierge_url = smartmenu_concierge_query_url(public_token: smartmenu.public_token) %>
+<% restaurant_currency = restaurant&.currency || 'EUR' %>
+
+<div data-controller="concierge"
+     data-concierge-url-value="<%= concierge_url %>"
+     data-concierge-currency-value="<%= restaurant_currency %>"
+     data-testid="concierge-widget">
+
+  <%# Inline prompt bar — activated on click %>
+  <div class="concierge-bar" data-concierge-target="bar">
+    <button class="concierge-bar-trigger"
+            data-action="click->concierge#open"
+            data-testid="concierge-open-btn"
+            aria-label="<%= t('smartmenus.concierge.bar_aria', default: 'Find something for me') %>">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="11" cy="11" r="8"/>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <span class="concierge-bar-label"><%= t('smartmenus.concierge.bar_label', default: 'Find something for me') %></span>
+    </button>
+  </div>
+
+  <%# Expanded panel %>
+  <div class="concierge-panel d-none" data-concierge-target="panel" role="dialog"
+       aria-label="<%= t('smartmenus.concierge.panel_aria', default: 'Menu concierge') %>"
+       data-testid="concierge-panel">
+
+    <div class="concierge-panel-inner">
+
+      <%# Header %>
+      <div class="concierge-header">
+        <div class="concierge-header-text">
+          <h2 class="concierge-title"><%= t('smartmenus.concierge.title', default: 'Find something for me') %></h2>
+          <p class="concierge-subtitle"><%= t('smartmenus.concierge.subtitle', default: 'Describe what you\'re in the mood for') %></p>
+        </div>
+        <button class="concierge-close"
+                data-action="click->concierge#close"
+                aria-label="<%= t('smartmenus.concierge.close', default: 'Close') %>"
+                data-testid="concierge-close-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+
+      <%# Input area %>
+      <div class="concierge-input-area">
+        <textarea class="concierge-input"
+                  data-concierge-target="input"
+                  placeholder="<%= t('smartmenus.concierge.input_placeholder', default: 'e.g. I\'m vegan and gluten-free, or build a tapas order for 4 under €60') %>"
+                  rows="2"
+                  maxlength="500"
+                  aria-label="<%= t('smartmenus.concierge.input_aria', default: 'Describe what you want') %>"
+                  data-testid="concierge-input"
+                  data-action="keydown->concierge#handleKeydown"></textarea>
+        <button class="concierge-submit"
+                data-action="click->concierge#submit"
+                data-concierge-target="submitBtn"
+                data-testid="concierge-submit-btn"
+                aria-label="<%= t('smartmenus.concierge.submit_aria', default: 'Send') %>">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="22" y1="2" x2="11" y2="13"/>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          </svg>
+        </button>
+      </div>
+
+      <%# Loading spinner %>
+      <div class="concierge-loading d-none" data-concierge-target="loading" aria-live="polite"
+           data-testid="concierge-loading">
+        <div class="concierge-spinner"></div>
+        <p class="concierge-loading-text"><%= t('smartmenus.concierge.loading', default: 'Finding recommendations...') %></p>
+      </div>
+
+      <%# Error message %>
+      <div class="concierge-error d-none" data-concierge-target="error" role="alert"
+           data-testid="concierge-error"></div>
+
+      <%# Results — item cards %>
+      <div class="concierge-results d-none" data-concierge-target="results"
+           data-testid="concierge-results"></div>
+
+      <%# Basket preview %>
+      <div class="concierge-basket d-none" data-concierge-target="basket"
+           data-testid="concierge-basket"></div>
+
+    </div>
+  </div>
+</div>

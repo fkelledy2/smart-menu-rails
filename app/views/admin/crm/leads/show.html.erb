@@ -1,6 +1,7 @@
 <%# Admin CRM: Lead detail %>
 <% content_for :title, "#{@lead.restaurant_name} — CRM" %>
 
+<%= turbo_frame_tag 'crm_lead_modal' do %>
 <div class="container-fluid py-4 mw-960">
   <div class="mb-3">
     <%= link_to 'Pipeline', admin_crm_leads_path, class: 'text-muted text-decoration-none' %>
@@ -213,7 +214,8 @@
       </div>
     </div>
   </div>
-</div>
+</div><%# /container-fluid %>
+<% end %><%# /turbo_frame crm_lead_modal %>
 
 <%# Convert modal %>
 <div class="modal fade" id="convertModal" tabindex="-1">

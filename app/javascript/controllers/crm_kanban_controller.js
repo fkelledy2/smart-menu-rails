@@ -53,16 +53,30 @@ function ensureSortableLoaded() {
 }
 
 export default class extends Controller {
-  static targets = ['cardList'];
+  static targets = ['cardList', 'modal'];
 
   connect() {
     this._sortables = [];
+    this._dragging = false;
     this._initAllColumns();
   }
 
   disconnect() {
     this._sortables.forEach((s) => s.destroy());
     this._sortables = [];
+  }
+
+  openLeadModal(event) {
+    // Suppress modal open if a drag just finished
+    if (this._dragging) {
+      event.preventDefault();
+      return;
+    }
+
+    const modal = document.getElementById('leadModal');
+    if (!modal) return;
+
+    bootstrap.Modal.getOrCreateInstance(modal).show();
   }
 
   async _initAllColumns() {
@@ -84,7 +98,12 @@ export default class extends Controller {
         forceFallback: true,
         fallbackClass: 'sortable-fallback',
         fallbackOnBody: true,
-        onEnd: (event) => this._onCardDropped(event),
+        onStart: () => { this._dragging = true; },
+        onEnd: (event) => {
+          // Keep flag set briefly so the click event after mouseup is suppressed
+          setTimeout(() => { this._dragging = false; }, 100);
+          this._onCardDropped(event);
+        },
       });
       this._sortables.push(sortable);
     });

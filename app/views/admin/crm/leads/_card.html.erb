@@ -6,7 +6,11 @@
   <div class="d-flex justify-content-between align-items-start mb-1">
     <%= link_to lead.restaurant_name,
           admin_crm_lead_path(lead),
-          class: 'fw-semibold text-decoration-none text-dark stretched-link fs-13' %>
+          class: 'fw-semibold text-decoration-none text-dark stretched-link fs-13',
+          data: {
+            turbo_frame: 'crm_lead_modal',
+            action: 'click->crm-kanban#openLeadModal',
+          } %>
   </div>
 
   <% if lead.contact_name.present? %>
@@ -29,7 +33,7 @@
         <span class="badge bg-light text-secondary border fs-10"><%= dr.establishment_type_label_text %></span>
       <% end %>
     </div>
-    <div class="d-flex align-items-center gap-2 mb-1">
+    <div class="d-flex align-items-center gap-2 mb-1" style="position: relative; z-index: 1;">
       <% if dr.website_url.present? %>
         <a href="<%= dr.website_url %>" target="_blank" rel="noopener"
            class="text-muted fs-10 text-decoration-none text-truncate" style="max-width: 140px;"

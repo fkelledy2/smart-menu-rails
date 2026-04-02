@@ -1,28 +1,30 @@
 <%# Admin CRM: Kanban board %>
 <% content_for :title, 'CRM Sales Pipeline — Admin' %>
 
-<div class="container-fluid py-4" data-controller="crm-kanban">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-      <h1 class="h3 mb-1">Sales Pipeline</h1>
-      <p class="text-muted mb-0">
-        Drag cards between columns to update stage.
-        <% if @needs_assignment_count > 0 %>
-          <span class="badge bg-warning text-dark ms-2">
-            <%= @needs_assignment_count %> unassigned Calendly <%= 'lead'.pluralize(@needs_assignment_count) %>
-          </span>
+<div data-controller="crm-kanban" data-crm-kanban-target="board">
+  <div class="container-fluid py-4 pb-2">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <h1 class="h3 mb-1">Sales Pipeline</h1>
+        <p class="text-muted mb-0">
+          Drag cards between columns to update stage.
+          <% if @needs_assignment_count > 0 %>
+            <span class="badge bg-warning text-dark ms-2">
+              <%= @needs_assignment_count %> unassigned Calendly <%= 'lead'.pluralize(@needs_assignment_count) %>
+            </span>
+          <% end %>
+        </p>
+      </div>
+      <div class="d-flex gap-2">
+        <%= link_to admin_crm_leads_path, class: 'btn btn-outline-secondary', title: 'Refresh board' do %>
+          <i class="bi bi-arrow-clockwise me-1"></i>Refresh
         <% end %>
-      </p>
-    </div>
-    <div class="d-flex gap-2">
-      <%= link_to admin_crm_leads_path, class: 'btn btn-outline-secondary', title: 'Refresh board' do %>
-        <i class="bi bi-arrow-clockwise me-1"></i>Refresh
-      <% end %>
-      <%= link_to 'New Lead', new_admin_crm_lead_path, class: 'btn btn-primary' %>
+        <%= link_to 'New Lead', new_admin_crm_lead_path, class: 'btn btn-primary' %>
+      </div>
     </div>
   </div>
 
-  <div class="crm-kanban-board d-flex gap-3 overflow-auto pb-3" style="min-height: 70vh;">
+  <div class="crm-kanban-board d-flex gap-3 pb-3 px-4" style="min-height: 70vh; overflow-x: auto; overflow-y: visible;">
     <% CrmLead::STAGES.each do |stage| %>
       <div class="crm-kanban-column flex-shrink-0"
            style="width: 260px;"
@@ -46,5 +48,26 @@
         </div>
       </div>
     <% end %>
+  </div>
+</div>
+
+<%# Lead detail modal — content loaded via Turbo Frame %>
+<div class="modal fade" id="leadModal" tabindex="-1" aria-hidden="true"
+     data-crm-kanban-target="modal">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header border-0 pb-0">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body pt-0">
+        <%= turbo_frame_tag 'crm_lead_modal' do %>
+          <div class="d-flex justify-content-center py-5">
+            <div class="spinner-border text-secondary" role="status">
+              <span class="visually-hidden">Loading…</span>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
   </div>
 </div>
