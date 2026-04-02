@@ -1,167 +1,121 @@
 require 'sidekiq'
 
-# Background job for retrying rate-limited menu localizations
-# This job is automatically queued when MenuLocalizationJob encounters rate limits
-# It attempts to translate items that were previously rate-limited
+# Background job for retrying rate-limited menu localizations.
+# Enqueued by LocalizeMenuService when DeepL returns 429.
 #
-# Usage (automatic from LocalizeMenuService):
-#   MenuLocalizationRetryJob.perform_in(5.minutes, rate_limited_items_array)
+# Backoff schedule (attempt number passed as second argument):
+#   attempt 1 → 60s,  attempt 2 → 5min,  attempt 3 → 30min,  attempt 4+ → 1hr
 #
-# rate_limited_items format:
-#   [
-#     { type: 'menu', id: 123, field: 'name', locale: 'it', text: 'Menu Title' },
-#     { type: 'section', id: 456, field: 'description', locale: 'es', text: 'Section desc' },
-#     { type: 'item', id: 789, field: 'name', locale: 'fr', text: 'Item name' }
-#   ]
+# When a 429 is hit mid-batch, remaining unprocessed items are re-queued at
+# the next backoff tier rather than retrying the entire job from scratch.
 class MenuLocalizationRetryJob
   include Sidekiq::Worker
 
-  sidekiq_options queue: 'low_priority', retry: 2
+  sidekiq_options queue: 'low_priority', retry: 0
 
-  # Process rate-limited translations
-  #
-  # @param rate_limited_items [Array<Hash>] Array of items to retry
-  def perform(rate_limited_items)
+  BACKOFF_DELAYS = [60, 300, 1800, 3600].freeze # seconds: 1min, 5min, 30min, 1hr
+
+  def perform(rate_limited_items, attempt = 1)
     return if rate_limited_items.blank?
 
-    Rails.logger.info("[MenuLocalizationRetryJob] Retrying #{rate_limited_items.count} rate-limited translations")
+    Rails.logger.info("[MenuLocalizationRetryJob] Attempt #{attempt}: retrying #{rate_limited_items.count} rate-limited translations")
 
-    stats = {
-      processed: 0,
-      successful: 0,
-      still_rate_limited: [],
-      errors: [],
-    }
+    stats = { processed: 0, successful: 0, still_rate_limited: [], errors: [] }
+    hit_rate_limit = false
 
     rate_limited_items.each do |item|
-      retry_item_translation(item, stats)
+      if hit_rate_limit
+        # Circuit breaker tripped — queue everything remaining without calling DeepL
+        stats[:still_rate_limited] << item
+        next
+      end
+
+      result = retry_item_translation(item, stats)
       stats[:processed] += 1
+
+      if result == :rate_limited
+        hit_rate_limit = true
+        stats[:still_rate_limited] << item
+      end
     rescue StandardError => e
-      error_msg = "Failed to retry #{item[:type]} ##{item[:id]} #{item[:field]}: #{e.message}"
-      Rails.logger.error("[MenuLocalizationRetryJob] #{error_msg}")
-      stats[:errors] << error_msg
+      stats[:errors] << "#{item['type']} ##{item['id']} #{item['field']}: #{e.message}"
+      Rails.logger.error("[MenuLocalizationRetryJob] #{stats[:errors].last}")
     end
 
-    Rails.logger.info("[MenuLocalizationRetryJob] Completed: #{stats[:successful]} successful, #{stats[:still_rate_limited].count} still rate-limited, #{stats[:errors].count} errors")
+    Rails.logger.info("[MenuLocalizationRetryJob] Attempt #{attempt} complete: #{stats[:successful]} translated, #{stats[:still_rate_limited].count} still rate-limited, #{stats[:errors].count} errors")
 
-    # If there are still rate-limited items, queue another retry after longer delay
-    if stats[:still_rate_limited].any?
-      Rails.logger.info("[MenuLocalizationRetryJob] Queueing #{stats[:still_rate_limited].count} items for another retry in 15 minutes")
-      MenuLocalizationRetryJob.perform_in(15.minutes, stats[:still_rate_limited])
-    end
-
-    stats
+    reschedule_if_needed(stats[:still_rate_limited], attempt)
   end
 
   private
 
-  def log_deepl_missing_api_key_once
-    return if @deepl_missing_api_key_logged
-
-    @deepl_missing_api_key_logged = true
-    Rails.logger.warn('[MenuLocalizationRetryJob] DeepL disabled (DEEPL_API_KEY missing). Skipping translation retries and using original text.')
-  end
-
-  # Retry translating a single item.
-  # NOTE: Sidekiq serialises job arguments as JSON, converting all symbol keys to strings.
-  # Access item fields with string keys to handle both the in-process and after-roundtrip cases.
   def retry_item_translation(item, stats)
     locale_code = item['locale'] || item[:locale]
-    text = item['text'] || item[:text]
-    item_type = item['type'] || item[:type]
-    item_id = item['id'] || item[:id]
-    item_field = item['field'] || item[:field]
+    text        = item['text']   || item[:text]
+    item_type   = item['type']   || item[:type]
+    item_id     = item['id']     || item[:id]
+    item_field  = item['field']  || item[:field]
 
     return if text.blank?
 
-    # Attempt translation with rate limit tracking
-    result = translate_with_tracking(text, locale_code)
-
-    if result[:rate_limited]
-      # Still rate-limited, queue for later
-      stats[:still_rate_limited] << item
-      Rails.logger.warn("[MenuLocalizationRetryJob] #{item_type} ##{item_id} #{item_field} still rate-limited")
-    elsif result[:text] != text
-      # Successfully translated, save to database
-      save_translation(item_type, item_id, item_field, locale_code, result[:text])
-      stats[:successful] += 1
-      Rails.logger.info("[MenuLocalizationRetryJob] Successfully translated #{item_type} ##{item_id} #{item_field} to #{locale_code}")
-    else
-      # Translation returned original text (non-rate-limit error)
-      stats[:successful] += 1 # Count as processed even if unchanged
-      Rails.logger.warn("[MenuLocalizationRetryJob] Translation unchanged for #{item_type} ##{item_id} #{item_field}")
-    end
-  end
-
-  # Translate text with rate limit tracking
-  def translate_with_tracking(text, target_locale, source_locale: 'en')
-    return { text: text, rate_limited: false } if text.blank?
-
     unless DeeplApiService.configured?
       log_deepl_missing_api_key_once
-      return { text: text, rate_limited: false }
+      return
     end
 
-    max_retries = 2
-    retry_count = 0
-    base_delay = 2.0 # Start with 2 seconds for retries
+    translated = DeeplApiService.translate(text, to: locale_code, from: 'en')
 
-    begin
-      result = DeeplApiService.translate(text, to: target_locale, from: source_locale)
+    # Small inter-call delay to stay within DeepL's burst limit
+    sleep(0.1) unless Rails.env.test?
 
-      # Add delay to prevent rate limiting
-      sleep(0.1) unless Rails.env.test?
+    save_translation(item_type, item_id, item_field, locale_code, translated)
+    stats[:successful] += 1
+    Rails.logger.info("[MenuLocalizationRetryJob] Translated #{item_type} ##{item_id} #{item_field} → #{locale_code}")
 
-      { text: result, rate_limited: false }
-    rescue StandardError => e
-      # Check if it's a rate limit error (429)
-      if e.message.include?('429') && retry_count < max_retries
-        retry_count += 1
-        delay = base_delay * (2**(retry_count - 1)) # Exponential backoff: 2s, 4s
-
-        Rails.logger.warn("[MenuLocalizationRetryJob] Rate limit hit for '#{text.truncate(50)}' to #{target_locale}. Retry #{retry_count}/#{max_retries} after #{delay}s")
-        sleep(delay)
-        retry
-      end
-
-      # If still rate limited, mark for later retry
-      if e.message.include?('429')
-        Rails.logger.warn("[MenuLocalizationRetryJob] Rate limit exceeded for '#{text.truncate(50)}' to #{target_locale}. Will retry later.")
-        { text: text, rate_limited: true }
-      else
-        # For other errors, log and use original text
-        Rails.logger.warn("[MenuLocalizationRetryJob] Translation failed for '#{text.truncate(50)}' to #{target_locale}: #{e.message}")
-        { text: text, rate_limited: false }
-      end
+    :success
+  rescue StandardError => e
+    if e.message.include?('429')
+      Rails.logger.warn("[MenuLocalizationRetryJob] Rate limit hit for #{item_type} ##{item_id} #{item_field}. Stopping batch.")
+      :rate_limited
+    else
+      Rails.logger.warn("[MenuLocalizationRetryJob] Translation failed for #{item_type} ##{item_id}: #{e.message}")
+      :error
     end
   end
 
-  # Save translated text to the appropriate locale record
+  def reschedule_if_needed(items, current_attempt)
+    return if items.blank?
+
+    next_attempt = current_attempt + 1
+    delay = BACKOFF_DELAYS[[current_attempt - 1, BACKOFF_DELAYS.length - 1].min]
+
+    Rails.logger.info("[MenuLocalizationRetryJob] Scheduling #{items.count} items for retry in #{delay}s (will be attempt #{next_attempt})")
+    MenuLocalizationRetryJob.perform_in(delay.seconds, items, next_attempt)
+  end
+
   def save_translation(type, id, field, locale_code, translated_text)
     case type
     when 'menu'
-      save_menu_translation(id, field, locale_code, translated_text)
+      Menulocale.find_or_initialize_by(menu_id: id, locale: locale_code).tap do |r|
+        r.update!(field => translated_text)
+      end
     when 'section'
-      save_section_translation(id, field, locale_code, translated_text)
+      Menusectionlocale.find_or_initialize_by(menusection_id: id, locale: locale_code).tap do |r|
+        r.update!(field => translated_text)
+      end
     when 'item'
-      save_item_translation(id, field, locale_code, translated_text)
+      Menuitemlocale.find_or_initialize_by(menuitem_id: id, locale: locale_code).tap do |r|
+        r.update!(field => translated_text)
+      end
     else
       raise ArgumentError, "Unknown type: #{type}"
     end
   end
 
-  def save_menu_translation(menu_id, field, locale_code, text)
-    menu_locale = Menulocale.find_or_initialize_by(menu_id: menu_id, locale: locale_code)
-    menu_locale.update!(field => text)
-  end
+  def log_deepl_missing_api_key_once
+    return if @deepl_missing_api_key_logged
 
-  def save_section_translation(section_id, field, locale_code, text)
-    section_locale = Menusectionlocale.find_or_initialize_by(menusection_id: section_id, locale: locale_code)
-    section_locale.update!(field => text)
-  end
-
-  def save_item_translation(item_id, field, locale_code, text)
-    item_locale = Menuitemlocale.find_or_initialize_by(menuitem_id: item_id, locale: locale_code)
-    item_locale.update!(field => text)
+    @deepl_missing_api_key_logged = true
+    Rails.logger.warn('[MenuLocalizationRetryJob] DeepL disabled (DEEPL_API_KEY missing). Skipping translation retries.')
   end
 end

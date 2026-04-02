@@ -11,6 +11,7 @@ class LocalizeMenuService
     # @param force [Boolean] If true, re-translate all strings. If false, only translate missing localizations.
     # @return [Hash] Statistics about localization operations
     def localize_menu_to_all_locales(menu, force: false, &on_item)
+      clear_rate_limit_flag!
       restaurant = menu.restaurant
       stats = { locales_processed: 0, menu_locales_created: 0, menu_locales_updated: 0,
                 section_locales_created: 0, section_locales_updated: 0,
@@ -38,12 +39,7 @@ class LocalizeMenuService
 
       Rails.logger.info("[LocalizeMenuService] Localized menu ##{menu.id} to #{stats[:locales_processed]} locales")
 
-      # Queue rate-limited items for retry
-      if stats[:rate_limited_items].any?
-        Rails.logger.info("[LocalizeMenuService] Queueing #{stats[:rate_limited_items].count} rate-limited items for retry")
-        safe_items = stats[:rate_limited_items].map(&:stringify_keys)
-        MenuLocalizationRetryJob.perform_in(5.minutes, safe_items)
-      end
+      schedule_rate_limited_retry(stats[:rate_limited_items])
 
       stats
     end
@@ -56,6 +52,7 @@ class LocalizeMenuService
     # @param force [Boolean] If true, re-translate all strings. If false, only translate missing localizations.
     # @return [Hash] Statistics about localization operations
     def localize_all_menus_to_locale(restaurant, restaurant_locale, force: false, &on_item)
+      clear_rate_limit_flag!
       stats = { menus_processed: 0, menu_locales_created: 0, menu_locales_updated: 0,
                 section_locales_created: 0, section_locales_updated: 0,
                 item_locales_created: 0, item_locales_updated: 0,
@@ -82,14 +79,7 @@ class LocalizeMenuService
 
       Rails.logger.info("[LocalizeMenuService] Localized #{stats[:menus_processed]} menus to locale #{restaurant_locale.locale}")
 
-      # Queue rate-limited items for retry.
-      # Stringify keys before passing to Sidekiq — JSON serialisation converts symbol keys
-      # to strings, so the job must receive string-keyed hashes consistently.
-      if stats[:rate_limited_items].any?
-        Rails.logger.info("[LocalizeMenuService] Queueing #{stats[:rate_limited_items].count} rate-limited items for retry")
-        safe_items = stats[:rate_limited_items].map(&:stringify_keys)
-        MenuLocalizationRetryJob.perform_in(5.minutes, safe_items)
-      end
+      schedule_rate_limited_retry(stats[:rate_limited_items])
 
       stats
     end
@@ -348,6 +338,33 @@ class LocalizeMenuService
       translate_with_rate_limit_tracking(text, locale_code)
     end
 
+    # Thread-local circuit breaker — set on first 429, cleared at the start of each
+    # top-level call so concurrent Sidekiq workers don't share state.
+    def rate_limited?
+      Thread.current[:localize_menu_rate_limited] == true
+    end
+
+    def set_rate_limit_flag!
+      Thread.current[:localize_menu_rate_limited] = true
+    end
+
+    def clear_rate_limit_flag!
+      Thread.current[:localize_menu_rate_limited] = false
+    end
+
+    # Stringify keys and enqueue with a 60-second initial backoff.
+    # DeepL's rate limit window is ~1 minute, so 60s is the minimum sensible delay.
+    def schedule_rate_limited_retry(items, attempt: 1)
+      return if items.blank?
+
+      delays = [60, 300, 1800, 3600] # 1min, 5min, 30min, 1hr
+      delay  = delays[[attempt - 1, delays.length - 1].min]
+
+      Rails.logger.info("[LocalizeMenuService] Queueing #{items.count} rate-limited items for retry in #{delay}s (attempt #{attempt})")
+      safe_items = items.map(&:stringify_keys)
+      MenuLocalizationRetryJob.perform_in(delay.seconds, safe_items, attempt)
+    end
+
     def log_deepl_missing_api_key_once
       return if @deepl_missing_api_key_logged
 
@@ -393,8 +410,10 @@ class LocalizeMenuService
       end
     end
 
-    # Translate text with rate limit tracking
-    # Returns a hash indicating if translation was rate-limited
+    # Translate text with rate limit tracking.
+    # Uses a thread-local circuit breaker: the moment a 429 is received, all
+    # subsequent calls in the same job run return immediately without hitting DeepL,
+    # so the entire remaining batch is collected for a proper delayed retry.
     #
     # @param text [String] The text to translate
     # @param target_locale [String] The target locale code
@@ -403,37 +422,25 @@ class LocalizeMenuService
     def translate_with_rate_limit_tracking(text, target_locale, source_locale: 'en')
       return { text: text, rate_limited: false } if text.blank?
 
-      max_retries = 2 # Reduced from 3 for faster failure
-      retry_count = 0
-      base_delay = 1.0
+      # Circuit breaker: already rate-limited in this run — skip without calling DeepL
+      if rate_limited?
+        return { text: text, rate_limited: true }
+      end
 
-      begin
-        result = DeeplApiService.translate(text, to: target_locale, from: source_locale)
+      result = DeeplApiService.translate(text, to: target_locale, from: source_locale)
 
-        # Add small delay to prevent rate limiting (50ms between calls)
-        sleep(0.05) unless Rails.env.test?
+      # Small inter-call delay (100ms) to stay within DeepL's burst limit
+      sleep(0.1) unless Rails.env.test?
 
-        { text: result, rate_limited: false }
-      rescue StandardError => e
-        # Check if it's a rate limit error (429)
-        if e.message.include?('429') && retry_count < max_retries
-          retry_count += 1
-          delay = base_delay * (2**(retry_count - 1))
-
-          Rails.logger.warn("[LocalizeMenuService] Rate limit hit (429) for '#{text.truncate(50)}' to #{target_locale}. Retry #{retry_count}/#{max_retries} after #{delay}s")
-          sleep(delay)
-          retry
-        end
-
-        # If still rate limited after retries, mark for later processing
-        if e.message.include?('429')
-          Rails.logger.warn("[LocalizeMenuService] Rate limit exceeded for '#{text.truncate(50)}' to #{target_locale}. Will retry later.")
-          { text: text, rate_limited: true } # Keep original text, mark as rate-limited
-        else
-          # For other errors, log and use original text
-          Rails.logger.warn("[LocalizeMenuService] Translation failed for '#{text.truncate(50)}' to #{target_locale}: #{e.message}")
-          { text: text, rate_limited: false }
-        end
+      { text: result, rate_limited: false }
+    rescue StandardError => e
+      if e.message.include?('429')
+        set_rate_limit_flag!
+        Rails.logger.warn("[LocalizeMenuService] Rate limit hit (429) for '#{text.truncate(50)}' to #{target_locale}. Stopping batch — will retry remaining items after backoff.")
+        { text: text, rate_limited: true }
+      else
+        Rails.logger.warn("[LocalizeMenuService] Translation failed for '#{text.truncate(50)}' to #{target_locale}: #{e.message}")
+        { text: text, rate_limited: false }
       end
     end
   end
