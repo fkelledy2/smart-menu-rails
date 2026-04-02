@@ -28,7 +28,7 @@ class DiscoveredRestaurant < ApplicationRecord
   before_validation :infer_currency_from_country
   before_validation :normalize_establishment_types
   after_commit :enqueue_restaurant_sync_if_needed, on: %i[create update]
-  after_commit :enqueue_crm_lead_import, on: :create
+  after_commit :enqueue_crm_lead_import_if_approved, on: :update
 
   validates :city_name, presence: true
   validates :google_place_id, presence: true
@@ -94,7 +94,10 @@ class DiscoveredRestaurant < ApplicationRecord
 
   private
 
-  def enqueue_crm_lead_import
+  def enqueue_crm_lead_import_if_approved
+    return unless approved?
+    return unless previous_changes.key?('status')
+
     Crm::ImportDiscoveredRestaurantLeadJob.perform_later(discovered_restaurant_id: id)
   end
 

@@ -1,0 +1,106 @@
+<% content_for :title, 'Feature Flags — Admin' %>
+
+<div class="container-fluid py-3">
+
+  <%# ── HEADER ── %>
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <div>
+      <h1 class="h4 mb-1">Feature Flags</h1>
+      <p class="text-muted mb-0 small"><%= pluralize(@features.count, 'flag') %></p>
+    </div>
+  </div>
+
+  <%# ── ADD FLAG ── %>
+  <div class="card mb-3">
+    <div class="card-body py-2">
+      <%= form_with url: admin_feature_flags_path, method: :post, local: true,
+            class: 'd-flex align-items-end gap-2 flex-wrap' do %>
+        <div>
+          <%= label_tag 'name', 'Add flag', class: 'form-label small mb-1' %>
+          <%= text_field_tag 'name', nil,
+                class: 'form-control form-control-sm',
+                placeholder: 'my_feature_name',
+                required: true,
+                style: 'min-width: 240px;' %>
+        </div>
+        <div>
+          <button type="submit" class="btn btn-sm btn-primary">
+            <i class="bi bi-plus-lg me-1"></i>Add
+          </button>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <%# ── TABLE ── %>
+  <% if @features.empty? %>
+    <div class="alert alert-info">No feature flags defined yet.</div>
+  <% else %>
+    <div class="table-responsive">
+      <table class="table table-sm table-hover align-middle">
+        <thead>
+          <tr>
+            <th>Flag</th>
+            <th>State</th>
+            <th class="d-none d-md-table-cell">Gates enabled</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @features.each do |feature| %>
+            <%
+              state = feature.state
+              badge_class = case state
+                when :on          then 'bg-success'
+                when :conditional then 'bg-warning text-dark'
+                else 'bg-secondary'
+              end
+              state_label = case state
+                when :on          then 'On'
+                when :conditional then 'Conditional'
+                else 'Off'
+              end
+              gates_summary = feature.enabled_gate_names.join(', ').presence || '—'
+            %>
+            <tr>
+              <td class="font-monospace small"><%= feature.name %></td>
+              <td>
+                <span class="badge <%= badge_class %>"><%= state_label %></span>
+              </td>
+              <td class="small text-muted d-none d-md-table-cell"><%= gates_summary %></td>
+              <td class="text-end text-nowrap">
+                <% if state == :on %>
+                  <%= button_to admin_feature_flag_path(feature.name),
+                        method: :patch,
+                        params: { state: 'disable' },
+                        class: 'btn btn-sm btn-outline-warning me-1',
+                        title: 'Disable',
+                        form: { data: { turbo_confirm: "Disable '#{feature.name}'?" } } do %>
+                    <i class="bi bi-toggle-on"></i>
+                  <% end %>
+                <% else %>
+                  <%= button_to admin_feature_flag_path(feature.name),
+                        method: :patch,
+                        params: { state: 'enable' },
+                        class: 'btn btn-sm btn-outline-success me-1',
+                        title: 'Enable for everyone',
+                        form: { data: { turbo_confirm: "Enable '#{feature.name}' for everyone?" } } do %>
+                    <i class="bi bi-toggle-off"></i>
+                  <% end %>
+                <% end %>
+                <%= button_to admin_feature_flag_path(feature.name),
+                      method: :delete,
+                      class: 'btn btn-sm btn-outline-danger',
+                      title: 'Remove flag',
+                      form: { data: { turbo_confirm: "Remove flag '#{feature.name}'? This cannot be undone." } } do %>
+                  <i class="bi bi-trash"></i>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+
+</div>

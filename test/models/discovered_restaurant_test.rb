@@ -3,6 +3,7 @@
 require 'test_helper'
 
 class DiscoveredRestaurantTest < ActiveSupport::TestCase
+  include ActiveJob::TestHelper
   def build_discovered(overrides = {})
     DiscoveredRestaurant.new({
       name: 'Test Bistro',
@@ -161,6 +162,54 @@ class DiscoveredRestaurantTest < ActiveSupport::TestCase
   test 'suggested_currency returns nil gracefully when no country info present' do
     dr = build_discovered(currency: nil, country_code: nil, metadata: {})
     assert_nil dr.suggested_currency
+  end
+
+  # =========================================================================
+  # CRM lead import callback
+  # =========================================================================
+
+  test 'enqueues ImportDiscoveredRestaurantLeadJob when status transitions to approved' do
+    dr = save_discovered(status: :pending)
+
+    assert_enqueued_with(job: Crm::ImportDiscoveredRestaurantLeadJob) do
+      dr.update!(status: :approved)
+    end
+  end
+
+  test 'does not enqueue ImportDiscoveredRestaurantLeadJob on create' do
+    assert_no_enqueued_jobs(only: Crm::ImportDiscoveredRestaurantLeadJob) do
+      DiscoveredRestaurant.create!(
+        name: 'New Place',
+        city_name: 'Cork',
+        google_place_id: "gp_#{SecureRandom.hex(6)}",
+        status: :pending,
+        metadata: {},
+      )
+    end
+  end
+
+  test 'does not enqueue ImportDiscoveredRestaurantLeadJob when updating non-status fields' do
+    dr = save_discovered(status: :pending)
+
+    assert_no_enqueued_jobs(only: Crm::ImportDiscoveredRestaurantLeadJob) do
+      dr.update!(description: 'Updated description')
+    end
+  end
+
+  test 'does not enqueue ImportDiscoveredRestaurantLeadJob when status changes to rejected' do
+    dr = save_discovered(status: :pending)
+
+    assert_no_enqueued_jobs(only: Crm::ImportDiscoveredRestaurantLeadJob) do
+      dr.update!(status: :rejected)
+    end
+  end
+
+  test 'does not enqueue ImportDiscoveredRestaurantLeadJob when already approved and re-saved' do
+    dr = save_discovered(status: :approved)
+
+    assert_no_enqueued_jobs(only: Crm::ImportDiscoveredRestaurantLeadJob) do
+      dr.update!(description: 'Still approved but no status change')
+    end
   end
 
   # =========================================================================

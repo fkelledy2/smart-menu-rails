@@ -1,63 +1,132 @@
-<div class="container">
-  <div class="d-flex justify-content-between align-items-center">
-    <h2>Menu source change</h2>
+<% content_for :title, 'Change Review — Admin' %>
+
+<div class="container-fluid py-3">
+
+  <%# ── HEADER ── %>
+  <div class="d-flex align-items-center justify-content-between mb-3">
     <div>
-      <%= link_to 'Back', admin_menu_source_change_reviews_path, class: 'btn btn-secondary' %>
-      <%= button_to 'Resolve', resolve_admin_menu_source_change_review_path(@review), method: :patch, class: 'btn btn-success' %>
-      <%= button_to 'Ignore', ignore_admin_menu_source_change_review_path(@review), method: :patch, class: 'btn btn-secondary' %>
+      <h1 class="h4 mb-1">Menu Source Change</h1>
+      <p class="text-muted mb-0 small">
+        Detected <%= @review.detected_at.strftime('%Y-%m-%d %H:%M') %>
+      </p>
     </div>
-  </div>
-
-  <div class="mt-3">
-    <div><strong>Status:</strong> <%= @review.status %></div>
-    <div><strong>Detected:</strong> <%= @review.detected_at %></div>
-    <div><strong>Source URL:</strong> <%= link_to @review.menu_source.source_url, @review.menu_source.source_url, target: '_blank', rel: 'noopener' %></div>
-
-    <% if @review.menu_source.restaurant %>
-      <div><strong>Restaurant:</strong> <%= @review.menu_source.restaurant.name %></div>
-    <% elsif @review.menu_source.discovered_restaurant %>
-      <div><strong>Discovered restaurant:</strong> <%= @review.menu_source.discovered_restaurant.name %></div>
-    <% end %>
-  </div>
-
-  <div class="mt-4">
-    <h4>Fingerprint</h4>
-    <div><strong>Previous:</strong> <%= @review.previous_fingerprint %></div>
-    <div><strong>New:</strong> <%= @review.new_fingerprint %></div>
-  </div>
-
-  <div class="mt-4">
-    <h4>Headers</h4>
-    <div><strong>Previous ETag:</strong> <%= @review.previous_etag %></div>
-    <div><strong>New ETag:</strong> <%= @review.new_etag %></div>
-    <div><strong>Previous Last-Modified:</strong> <%= @review.previous_last_modified %></div>
-    <div><strong>New Last-Modified:</strong> <%= @review.new_last_modified %></div>
-  </div>
-
-  <div class="mt-4">
-    <div class="d-flex align-items-center gap-2 mb-2">
-      <h4 class="mb-0">Menu Diff</h4>
-      <% case @review.diff_status.to_s
-         when 'diff_complete' %>
-        <span class="badge bg-success">Complete</span>
-      <% when 'diff_failed' %>
-        <span class="badge bg-danger">Failed</span>
-      <% else %>
-        <span class="badge bg-warning text-dark">Pending</span>
+    <div class="d-flex gap-2">
+      <%= link_to admin_menu_source_change_reviews_path,
+            class: 'btn btn-sm btn-outline-secondary' do %>
+        <i class="bi bi-arrow-left me-1"></i>Queue
+      <% end %>
+      <% if @review.pending? %>
+        <%= button_to resolve_admin_menu_source_change_review_path(@review),
+              method: :patch,
+              class: 'btn btn-sm btn-success',
+              form: { data: { turbo_confirm: 'Mark as resolved?' } } do %>
+          <i class="bi bi-check-lg me-1"></i>Resolve
+        <% end %>
+        <%= button_to ignore_admin_menu_source_change_review_path(@review),
+              method: :patch,
+              class: 'btn btn-sm btn-outline-secondary',
+              form: { data: { turbo_confirm: 'Ignore this change?' } } do %>
+          <i class="bi bi-x-lg me-1"></i>Ignore
+        <% end %>
       <% end %>
     </div>
+  </div>
 
-    <% if @review.diff_content.present? %>
-      <pre class="bg-dark text-light p-3 rounded" style="max-height: 600px; overflow-y: auto; font-size: 0.85rem; line-height: 1.4;"><% @review.diff_content.each_line do |line| %><% stripped = line.rstrip %><% if stripped.start_with?('+ ') %><span style="color: #98c379;"><%= stripped %>
+  <%# ── META CARD ── %>
+  <div class="card mb-3">
+    <div class="card-body">
+      <dl class="row mb-0">
+        <dt class="col-sm-3">Status</dt>
+        <dd class="col-sm-9">
+          <%
+            status_badge_class = case @review.status.to_s
+              when 'resolved' then 'bg-success'
+              when 'ignored'  then 'bg-secondary'
+              else 'bg-warning text-dark'
+            end
+          %>
+          <span class="badge <%= status_badge_class %>"><%= @review.status.humanize %></span>
+        </dd>
+
+        <dt class="col-sm-3">Source URL</dt>
+        <dd class="col-sm-9">
+          <%= link_to @review.menu_source.source_url, @review.menu_source.source_url,
+                target: '_blank', rel: 'noopener', class: 'text-break' %>
+        </dd>
+
+        <% if @review.menu_source.restaurant %>
+          <dt class="col-sm-3">Restaurant</dt>
+          <dd class="col-sm-9"><%= @review.menu_source.restaurant.name %></dd>
+        <% elsif @review.menu_source.discovered_restaurant %>
+          <dt class="col-sm-3">Discovered restaurant</dt>
+          <dd class="col-sm-9">
+            <%= link_to @review.menu_source.discovered_restaurant.name,
+                  admin_discovered_restaurant_path(@review.menu_source.discovered_restaurant),
+                  class: 'text-decoration-none' %>
+          </dd>
+        <% end %>
+      </dl>
+    </div>
+  </div>
+
+  <%# ── FINGERPRINT CARD ── %>
+  <div class="card mb-3">
+    <div class="card-body">
+      <h2 class="h6 fw-semibold mb-3">Fingerprint</h2>
+      <dl class="row mb-0">
+        <dt class="col-sm-3">Previous</dt>
+        <dd class="col-sm-9 font-monospace small text-muted"><%= @review.previous_fingerprint.presence || '—' %></dd>
+        <dt class="col-sm-3">New</dt>
+        <dd class="col-sm-9 font-monospace small text-muted"><%= @review.new_fingerprint.presence || '—' %></dd>
+      </dl>
+    </div>
+  </div>
+
+  <%# ── HEADERS CARD ── %>
+  <div class="card mb-3">
+    <div class="card-body">
+      <h2 class="h6 fw-semibold mb-3">HTTP Headers</h2>
+      <dl class="row mb-0">
+        <dt class="col-sm-3">Previous ETag</dt>
+        <dd class="col-sm-9 font-monospace small text-muted"><%= @review.previous_etag.presence || '—' %></dd>
+        <dt class="col-sm-3">New ETag</dt>
+        <dd class="col-sm-9 font-monospace small text-muted"><%= @review.new_etag.presence || '—' %></dd>
+        <dt class="col-sm-3">Previous Last-Modified</dt>
+        <dd class="col-sm-9 small text-muted"><%= @review.previous_last_modified.presence || '—' %></dd>
+        <dt class="col-sm-3">New Last-Modified</dt>
+        <dd class="col-sm-9 small text-muted"><%= @review.new_last_modified.presence || '—' %></dd>
+      </dl>
+    </div>
+  </div>
+
+  <%# ── DIFF CARD ── %>
+  <div class="card">
+    <div class="card-body">
+      <div class="d-flex align-items-center gap-2 mb-3">
+        <h2 class="h6 fw-semibold mb-0">Menu Diff</h2>
+        <% case @review.diff_status.to_s
+           when 'diff_complete' %>
+          <span class="badge bg-success">Complete</span>
+        <% when 'diff_failed' %>
+          <span class="badge bg-danger">Failed</span>
+        <% else %>
+          <span class="badge bg-warning text-dark">Pending</span>
+        <% end %>
+      </div>
+
+      <% if @review.diff_content.present? %>
+        <pre class="bg-dark text-light p-3 rounded mb-0" style="max-height: 600px; overflow-y: auto; font-size: 0.85rem; line-height: 1.4;"><% @review.diff_content.each_line do |line| %><% stripped = line.rstrip %><% if stripped.start_with?('+ ') %><span style="color: #98c379;"><%= stripped %>
 </span><% elsif stripped.start_with?('- ') %><span style="color: #e06c75;"><%= stripped %>
 </span><% elsif stripped.start_with?('ADDED') || stripped.start_with?('REMOVED') %><span style="color: #e5c07b; font-weight: bold;"><%= stripped %>
 </span><% elsif stripped.start_with?('---') || stripped.start_with?('+++') %><span style="color: #61afef;"><%= stripped %>
 </span><% else %><%= stripped %>
 <% end %><% end %></pre>
-    <% elsif @review.diff_pending? %>
-      <div class="alert alert-info">Diff is being generated…</div>
-    <% else %>
-      <div class="text-muted">No diff content available.</div>
-    <% end %>
+      <% elsif @review.diff_pending? %>
+        <div class="alert alert-info mb-0">Diff is being generated…</div>
+      <% else %>
+        <p class="text-muted mb-0">No diff content available.</p>
+      <% end %>
+    </div>
   </div>
+
 </div>

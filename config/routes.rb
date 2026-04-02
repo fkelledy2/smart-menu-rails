@@ -111,6 +111,8 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :feature_flags, only: %i[index create update destroy]
+
     resources :demo_bookings, only: %i[index show update]
 
     # JWT Token Management — mellow.menu admin only

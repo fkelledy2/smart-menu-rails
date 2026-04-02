@@ -1,51 +1,99 @@
-<div class="container">
-  <h2>Change Detection Queue</h2>
+<% content_for :title, 'Change Detection Queue — Admin' %>
 
-  <%= form_with url: admin_menu_source_change_reviews_path, method: :get, local: true do %>
-    <div class="row g-2 align-items-end">
-      <div class="col-md-3">
-        <%= label_tag :status, 'Status' %>
-        <%= select_tag :status,
-              options_for_select([['All', '']] + MenuSourceChangeReview.statuses.keys.map { |k| [k.humanize, k] }, @status),
-              class: 'form-select' %>
-      </div>
-      <div class="col-md-2">
-        <%= submit_tag 'Filter', class: 'btn btn-primary w-100' %>
-      </div>
+<div class="container-fluid py-3">
+
+  <%# ── HEADER ── %>
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <div>
+      <h1 class="h4 mb-1">Change Detection Queue</h1>
+      <p class="text-muted mb-0 small"><%= pluralize(@reviews.count, 'review') %> found</p>
+    </div>
+    <div class="d-flex gap-2">
+      <%= link_to 'All', admin_menu_source_change_reviews_path(request.query_parameters.except('status')),
+          class: "btn btn-sm #{@status.blank? ? 'btn-primary' : 'btn-outline-secondary'}" %>
+      <% MenuSourceChangeReview.statuses.keys.each do |s| %>
+        <%= link_to s.humanize,
+            admin_menu_source_change_reviews_path(request.query_parameters.merge(status: s)),
+            class: "btn btn-sm #{@status == s ? 'btn-primary' : 'btn-outline-secondary'}" %>
+      <% end %>
+    </div>
+  </div>
+
+  <%# ── TABLE ── %>
+  <% if @reviews.empty? %>
+    <div class="alert alert-info">No reviews found matching the current filters.</div>
+  <% else %>
+    <div class="table-responsive">
+      <table class="table table-sm table-hover align-middle">
+        <thead>
+          <tr>
+            <th>Detected</th>
+            <th>Status</th>
+            <th>Restaurant</th>
+            <th class="d-none d-md-table-cell">Source</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @reviews.each do |r| %>
+            <%
+              status_badge_class = case r.status.to_s
+                when 'resolved' then 'bg-success'
+                when 'ignored'  then 'bg-secondary'
+                else 'bg-warning text-dark'
+              end
+            %>
+            <tr>
+              <td class="text-nowrap small text-muted">
+                <%= r.detected_at.strftime('%Y-%m-%d %H:%M') %>
+              </td>
+              <td>
+                <span class="badge <%= status_badge_class %>"><%= r.status.humanize %></span>
+              </td>
+              <td>
+                <% if r.menu_source.restaurant %>
+                  <span class="fw-semibold"><%= r.menu_source.restaurant.name %></span>
+                <% elsif r.menu_source.discovered_restaurant %>
+                  <span class="fw-semibold"><%= r.menu_source.discovered_restaurant.name %></span>
+                  <span class="badge bg-light text-secondary border ms-1 small">Discovery</span>
+                <% else %>
+                  <span class="text-muted">—</span>
+                <% end %>
+              </td>
+              <td class="d-none d-md-table-cell small" style="max-width: 300px;">
+                <div class="text-truncate" title="<%= r.menu_source.source_url %>">
+                  <%= link_to r.menu_source.source_url.to_s.delete_prefix('https://').delete_prefix('http://').truncate(60),
+                      admin_menu_source_change_review_path(r),
+                      class: 'text-muted text-decoration-none' %>
+                </div>
+              </td>
+              <td class="text-end text-nowrap">
+                <% if r.pending? %>
+                  <%= button_to resolve_admin_menu_source_change_review_path(r),
+                        method: :patch,
+                        class: 'btn btn-sm btn-outline-success me-1',
+                        form: { data: { turbo_confirm: 'Mark as resolved?' } } do %>
+                    <i class="bi bi-check-lg"></i>
+                  <% end %>
+                  <%= button_to ignore_admin_menu_source_change_review_path(r),
+                        method: :patch,
+                        class: 'btn btn-sm btn-outline-secondary',
+                        form: { data: { turbo_confirm: 'Ignore this change?' } } do %>
+                    <i class="bi bi-x-lg"></i>
+                  <% end %>
+                <% else %>
+                  <%= link_to admin_menu_source_change_review_path(r),
+                        class: 'btn btn-sm btn-outline-secondary',
+                        aria: { label: 'View' } do %>
+                    <i class="bi bi-chevron-right"></i>
+                  <% end %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
     </div>
   <% end %>
 
-  <div class="mt-3">
-    <table class="table table-sm table-striped">
-      <thead>
-        <tr>
-          <th>Detected</th>
-          <th>Status</th>
-          <th>Source</th>
-          <th>Restaurant</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @reviews.each do |r| %>
-          <tr>
-            <td><%= r.detected_at.strftime('%Y-%m-%d %H:%M') %></td>
-            <td><%= r.status %></td>
-            <td><%= link_to r.menu_source.source_url, admin_menu_source_change_review_path(r) %></td>
-            <td>
-              <% if r.menu_source.restaurant %>
-                <%= r.menu_source.restaurant.name %>
-              <% elsif r.menu_source.discovered_restaurant %>
-                <%= r.menu_source.discovered_restaurant.name %>
-              <% end %>
-            </td>
-            <td class="text-end">
-              <%= button_to 'Resolve', resolve_admin_menu_source_change_review_path(r), method: :patch, class: 'btn btn-sm btn-success' %>
-              <%= button_to 'Ignore', ignore_admin_menu_source_change_review_path(r), method: :patch, class: 'btn btn-sm btn-secondary' %>
-            </td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-  </div>
 </div>

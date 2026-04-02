@@ -55,6 +55,8 @@ module Admin
           ['COUNT(CASE WHEN menu_sources.source_type = ? THEN 1 END)', pdf_type],
         )
 
+        # Use a subquery to keep LIMIT/OFFSET on discovered_restaurants rows only,
+        # then preload associations separately to avoid JOIN row inflation.
         scope = base_scope
           .left_joins(:menu_sources)
           .select(
@@ -63,15 +65,25 @@ module Admin
           )
           .group('discovered_restaurants.id')
           .order(Arel.sql("#{count_expr} #{direction}"), id: :desc)
-          .includes(menu_sources: { latest_file_attachment: :blob })
       else
         order_expr = allowed_sorts[@sort] || allowed_sorts['discovered_at']
+        # preload (not includes/eager_load) keeps the JOIN out of the main query so
+        # LIMIT/OFFSET is applied to discovered_restaurants rows, not join rows.
         scope = base_scope
-          .includes(menu_sources: { latest_file_attachment: :blob })
+          .preload(menu_sources: { latest_file_attachment: :blob })
           .order(Arel.sql("#{order_expr} #{direction}"), id: :desc)
       end
 
       @discovered_restaurants = scope.offset((page - 1) * per_page).limit(per_page)
+
+      # Preload menu_source attachments for the menus_count branch after pagination,
+      # so the extra JOIN used for counting never touches LIMIT/OFFSET.
+      if @sort == 'menus_count'
+        ActiveRecord::Associations::Preloader.new(
+          records: @discovered_restaurants,
+          associations: { menu_sources: { latest_file_attachment: :blob } },
+        ).call
+      end
     end
 
     def show
