@@ -1,0 +1,23 @@
+---
+en:
+  kitchen_dashboard:
+    index:
+      bar_ready: Bar Ready
+      fulfillment_label: 'Fulfillment:'
+      kitchen_ready: Kitchen Ready
+      orders_today: Today's Orders
+      pending: Pending
+      pending_tickets: Pending Tickets
+      preparing: Preparing
+      ready: Ready
+      sort_oldest_first: 'Sort: Oldest First'
+      start_bar: Start Bar
+      start_kitchen: Start Kitchen
+    station_ticket_card:
+      item_fulfillment_overrides: Item fulfillment overrides
+      mark_as_collected: Mark as Collected
+      mark_ready: Mark Ready
+      order_age: 'Order age:'
+      start_in_min: Start in %{minutes} min
+      start_preparing: Start Preparing
+      total_prep_time: 'Total prep time:'

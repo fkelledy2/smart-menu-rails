@@ -23,10 +23,12 @@ class DiscoveredRestaurant < ApplicationRecord
 
   has_many :menu_sources, dependent: :destroy
   belongs_to :restaurant, optional: true
+  has_one :crm_lead, dependent: :nullify
 
   before_validation :infer_currency_from_country
   before_validation :normalize_establishment_types
   after_commit :enqueue_restaurant_sync_if_needed, on: %i[create update]
+  after_commit :enqueue_crm_lead_import, on: :create
 
   validates :city_name, presence: true
   validates :google_place_id, presence: true
@@ -91,6 +93,10 @@ class DiscoveredRestaurant < ApplicationRecord
   end
 
   private
+
+  def enqueue_crm_lead_import
+    Crm::ImportDiscoveredRestaurantLeadJob.perform_later(discovered_restaurant_id: id)
+  end
 
   def enqueue_restaurant_sync_if_needed
     return if restaurant_id.blank?

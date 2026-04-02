@@ -564,7 +564,8 @@ CREATE TABLE public.crm_leads (
     lost_reason_notes text,
     calendly_event_uuid character varying,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    discovered_restaurant_id bigint
 );
 
 
@@ -8317,6 +8318,13 @@ CREATE UNIQUE INDEX index_crm_leads_on_calendly_event_uuid_partial ON public.crm
 
 
 --
+-- Name: index_crm_leads_on_discovered_restaurant_id_partial; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_crm_leads_on_discovered_restaurant_id_partial ON public.crm_leads USING btree (discovered_restaurant_id) WHERE (discovered_restaurant_id IS NOT NULL);
+
+
+--
 -- Name: index_crm_leads_on_last_activity_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -11704,6 +11712,14 @@ ALTER TABLE ONLY public.ordrparticipant_allergyn_filters
 
 
 --
+-- Name: crm_leads fk_rails_223d7bafad; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.crm_leads
+    ADD CONSTRAINT fk_rails_223d7bafad FOREIGN KEY (discovered_restaurant_id) REFERENCES public.discovered_restaurants(id);
+
+
+--
 -- Name: menu_item_product_links fk_rails_283c478da0; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -13110,6 +13126,7 @@ ALTER TABLE ONLY public.voice_commands
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260402000001'),
 ('20260401200003'),
 ('20260401200002'),
 ('20260401200001'),

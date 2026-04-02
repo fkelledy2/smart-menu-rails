@@ -6,6 +6,7 @@ class CrmLead < ApplicationRecord
   # -------------------------------------------------------------------------
   belongs_to :assigned_to, class_name: 'User', optional: true
   belongs_to :restaurant, optional: true
+  belongs_to :discovered_restaurant, optional: true
   has_many :crm_lead_notes, dependent: :destroy
   # delete_all bypasses the ImmutableRecordError before_destroy callback on CrmLeadAudit
   has_many :crm_lead_audits, dependent: :delete_all

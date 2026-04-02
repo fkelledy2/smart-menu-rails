@@ -16,7 +16,7 @@ module Admin
       def index
         authorize CrmLead
         @leads_by_stage = policy_scope(CrmLead)
-          .includes(:assigned_to, :restaurant)
+          .includes(:assigned_to, :restaurant, :discovered_restaurant)
           .order(last_activity_at: :desc)
           .group_by(&:stage)
         @users = User.where('email LIKE ?', '%@mellow.menu').order(:email)
