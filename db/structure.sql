@@ -170,6 +170,237 @@ ALTER SEQUENCE public.admin_jwt_tokens_id_seq OWNED BY public.admin_jwt_tokens.i
 
 
 --
+-- Name: agent_approvals; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.agent_approvals (
+    id bigint NOT NULL,
+    agent_workflow_run_id bigint NOT NULL,
+    agent_workflow_step_id bigint,
+    action_type character varying NOT NULL,
+    risk_level character varying DEFAULT 'medium'::character varying NOT NULL,
+    proposed_payload jsonb DEFAULT '{}'::jsonb NOT NULL,
+    status character varying DEFAULT 'pending'::character varying NOT NULL,
+    reviewer_id bigint,
+    reviewed_at timestamp(6) without time zone,
+    reviewer_notes text,
+    expires_at timestamp(6) without time zone NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    CONSTRAINT agent_approvals_risk_level_check CHECK (((risk_level)::text = ANY ((ARRAY['low'::character varying, 'medium'::character varying, 'high'::character varying])::text[]))),
+    CONSTRAINT agent_approvals_status_check CHECK (((status)::text = ANY ((ARRAY['pending'::character varying, 'approved'::character varying, 'rejected'::character varying, 'expired'::character varying])::text[])))
+);
+
+
+--
+-- Name: agent_approvals_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.agent_approvals_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: agent_approvals_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.agent_approvals_id_seq OWNED BY public.agent_approvals.id;
+
+
+--
+-- Name: agent_artifacts; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.agent_artifacts (
+    id bigint NOT NULL,
+    agent_workflow_run_id bigint NOT NULL,
+    artifact_type character varying NOT NULL,
+    content jsonb DEFAULT '{}'::jsonb NOT NULL,
+    status character varying DEFAULT 'draft'::character varying NOT NULL,
+    approved_by_id bigint,
+    approved_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    CONSTRAINT agent_artifacts_status_check CHECK (((status)::text = ANY ((ARRAY['draft'::character varying, 'approved'::character varying, 'rejected'::character varying, 'applied'::character varying])::text[])))
+);
+
+
+--
+-- Name: agent_artifacts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.agent_artifacts_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: agent_artifacts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.agent_artifacts_id_seq OWNED BY public.agent_artifacts.id;
+
+
+--
+-- Name: agent_domain_events; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.agent_domain_events (
+    id bigint NOT NULL,
+    event_type character varying NOT NULL,
+    source_type character varying,
+    source_id bigint,
+    payload jsonb DEFAULT '{}'::jsonb NOT NULL,
+    idempotency_key character varying NOT NULL,
+    processed_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: agent_domain_events_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.agent_domain_events_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: agent_domain_events_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.agent_domain_events_id_seq OWNED BY public.agent_domain_events.id;
+
+
+--
+-- Name: agent_policies; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.agent_policies (
+    id bigint NOT NULL,
+    restaurant_id bigint,
+    action_type character varying NOT NULL,
+    auto_approve boolean DEFAULT false NOT NULL,
+    escalation_email character varying,
+    active boolean DEFAULT true NOT NULL,
+    approval_expiry_hours integer DEFAULT 72 NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: agent_policies_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.agent_policies_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: agent_policies_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.agent_policies_id_seq OWNED BY public.agent_policies.id;
+
+
+--
+-- Name: agent_workflow_runs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.agent_workflow_runs (
+    id bigint NOT NULL,
+    restaurant_id bigint NOT NULL,
+    workflow_type character varying NOT NULL,
+    trigger_event character varying NOT NULL,
+    status character varying DEFAULT 'pending'::character varying NOT NULL,
+    context_snapshot jsonb DEFAULT '{}'::jsonb NOT NULL,
+    error_message text,
+    started_at timestamp(6) without time zone,
+    completed_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    CONSTRAINT agent_workflow_runs_status_check CHECK (((status)::text = ANY ((ARRAY['pending'::character varying, 'running'::character varying, 'awaiting_approval'::character varying, 'completed'::character varying, 'failed'::character varying, 'cancelled'::character varying])::text[])))
+);
+
+
+--
+-- Name: agent_workflow_runs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.agent_workflow_runs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: agent_workflow_runs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.agent_workflow_runs_id_seq OWNED BY public.agent_workflow_runs.id;
+
+
+--
+-- Name: agent_workflow_steps; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.agent_workflow_steps (
+    id bigint NOT NULL,
+    agent_workflow_run_id bigint NOT NULL,
+    step_name character varying NOT NULL,
+    step_index integer NOT NULL,
+    status character varying DEFAULT 'pending'::character varying NOT NULL,
+    input_snapshot jsonb DEFAULT '{}'::jsonb NOT NULL,
+    output_snapshot jsonb DEFAULT '{}'::jsonb NOT NULL,
+    last_error text,
+    retry_count integer DEFAULT 0 NOT NULL,
+    started_at timestamp(6) without time zone,
+    completed_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    CONSTRAINT agent_workflow_steps_status_check CHECK (((status)::text = ANY ((ARRAY['pending'::character varying, 'running'::character varying, 'completed'::character varying, 'failed'::character varying, 'skipped'::character varying])::text[])))
+);
+
+
+--
+-- Name: agent_workflow_steps_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.agent_workflow_steps_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: agent_workflow_steps_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.agent_workflow_steps_id_seq OWNED BY public.agent_workflow_steps.id;
+
+
+--
 -- Name: alcohol_order_events; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -5452,6 +5683,44 @@ ALTER SEQUENCE public.tips_id_seq OWNED BY public.tips.id;
 
 
 --
+-- Name: tool_invocation_logs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tool_invocation_logs (
+    id bigint NOT NULL,
+    agent_workflow_step_id bigint NOT NULL,
+    tool_name character varying NOT NULL,
+    input_params jsonb DEFAULT '{}'::jsonb NOT NULL,
+    output_payload jsonb DEFAULT '{}'::jsonb NOT NULL,
+    status character varying DEFAULT 'success'::character varying NOT NULL,
+    duration_ms integer,
+    invoked_at timestamp(6) without time zone NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    CONSTRAINT tool_invocation_logs_status_check CHECK (((status)::text = ANY ((ARRAY['success'::character varying, 'error'::character varying, 'timeout'::character varying])::text[])))
+);
+
+
+--
+-- Name: tool_invocation_logs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.tool_invocation_logs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tool_invocation_logs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.tool_invocation_logs_id_seq OWNED BY public.tool_invocation_logs.id;
+
+
+--
 -- Name: tracks; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -5729,6 +5998,48 @@ ALTER TABLE ONLY public.active_storage_variant_records ALTER COLUMN id SET DEFAU
 --
 
 ALTER TABLE ONLY public.admin_jwt_tokens ALTER COLUMN id SET DEFAULT nextval('public.admin_jwt_tokens_id_seq'::regclass);
+
+
+--
+-- Name: agent_approvals id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.agent_approvals ALTER COLUMN id SET DEFAULT nextval('public.agent_approvals_id_seq'::regclass);
+
+
+--
+-- Name: agent_artifacts id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.agent_artifacts ALTER COLUMN id SET DEFAULT nextval('public.agent_artifacts_id_seq'::regclass);
+
+
+--
+-- Name: agent_domain_events id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.agent_domain_events ALTER COLUMN id SET DEFAULT nextval('public.agent_domain_events_id_seq'::regclass);
+
+
+--
+-- Name: agent_policies id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.agent_policies ALTER COLUMN id SET DEFAULT nextval('public.agent_policies_id_seq'::regclass);
+
+
+--
+-- Name: agent_workflow_runs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.agent_workflow_runs ALTER COLUMN id SET DEFAULT nextval('public.agent_workflow_runs_id_seq'::regclass);
+
+
+--
+-- Name: agent_workflow_steps id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.agent_workflow_steps ALTER COLUMN id SET DEFAULT nextval('public.agent_workflow_steps_id_seq'::regclass);
 
 
 --
@@ -6635,6 +6946,13 @@ ALTER TABLE ONLY public.tips ALTER COLUMN id SET DEFAULT nextval('public.tips_id
 
 
 --
+-- Name: tool_invocation_logs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tool_invocation_logs ALTER COLUMN id SET DEFAULT nextval('public.tool_invocation_logs_id_seq'::regclass);
+
+
+--
 -- Name: tracks id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -6713,6 +7031,54 @@ ALTER TABLE ONLY public.active_storage_variant_records
 
 ALTER TABLE ONLY public.admin_jwt_tokens
     ADD CONSTRAINT admin_jwt_tokens_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: agent_approvals agent_approvals_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.agent_approvals
+    ADD CONSTRAINT agent_approvals_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: agent_artifacts agent_artifacts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.agent_artifacts
+    ADD CONSTRAINT agent_artifacts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: agent_domain_events agent_domain_events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.agent_domain_events
+    ADD CONSTRAINT agent_domain_events_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: agent_policies agent_policies_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.agent_policies
+    ADD CONSTRAINT agent_policies_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: agent_workflow_runs agent_workflow_runs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.agent_workflow_runs
+    ADD CONSTRAINT agent_workflow_runs_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: agent_workflow_steps agent_workflow_steps_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.agent_workflow_steps
+    ADD CONSTRAINT agent_workflow_steps_pkey PRIMARY KEY (id);
 
 
 --
@@ -7772,6 +8138,14 @@ ALTER TABLE ONLY public.tips
 
 
 --
+-- Name: tool_invocation_logs tool_invocation_logs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tool_invocation_logs
+    ADD CONSTRAINT tool_invocation_logs_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: tracks tracks_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -7828,6 +8202,41 @@ ALTER TABLE ONLY public.whiskey_flights
 
 
 --
+-- Name: idx_agent_approvals_status_expires_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_agent_approvals_status_expires_at ON public.agent_approvals USING btree (status, expires_at);
+
+
+--
+-- Name: idx_agent_domain_events_source; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_agent_domain_events_source ON public.agent_domain_events USING btree (source_type, source_id);
+
+
+--
+-- Name: idx_agent_domain_events_unprocessed; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_agent_domain_events_unprocessed ON public.agent_domain_events USING btree (created_at) WHERE (processed_at IS NULL);
+
+
+--
+-- Name: idx_agent_policies_restaurant_action; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_agent_policies_restaurant_action ON public.agent_policies USING btree (restaurant_id, action_type);
+
+
+--
+-- Name: idx_agent_steps_run_id_step_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_agent_steps_run_id_step_index ON public.agent_workflow_steps USING btree (agent_workflow_run_id, step_index);
+
+
+--
 -- Name: idx_dining_patterns_lookup; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -7860,6 +8269,13 @@ CREATE UNIQUE INDEX idx_exposures_session_experiment ON public.menu_experiment_e
 --
 
 CREATE UNIQUE INDEX idx_flavor_profiles_profilable ON public.flavor_profiles USING btree (profilable_type, profilable_id);
+
+
+--
+-- Name: idx_menu_item_search_docs_embedding_hnsw; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_menu_item_search_docs_embedding_hnsw ON public.menu_item_search_documents USING hnsw (embedding public.vector_cosine_ops) WITH (m='16', ef_construction='64');
 
 
 --
@@ -8126,6 +8542,167 @@ CREATE INDEX index_admin_jwt_tokens_on_restaurant_id ON public.admin_jwt_tokens 
 --
 
 CREATE UNIQUE INDEX index_admin_jwt_tokens_on_token_hash ON public.admin_jwt_tokens USING btree (token_hash);
+
+
+--
+-- Name: index_agent_approvals_on_agent_workflow_run_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_agent_approvals_on_agent_workflow_run_id ON public.agent_approvals USING btree (agent_workflow_run_id);
+
+
+--
+-- Name: index_agent_approvals_on_agent_workflow_step_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_agent_approvals_on_agent_workflow_step_id ON public.agent_approvals USING btree (agent_workflow_step_id);
+
+
+--
+-- Name: index_agent_approvals_on_expires_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_agent_approvals_on_expires_at ON public.agent_approvals USING btree (expires_at);
+
+
+--
+-- Name: index_agent_approvals_on_reviewer_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_agent_approvals_on_reviewer_id ON public.agent_approvals USING btree (reviewer_id);
+
+
+--
+-- Name: index_agent_approvals_on_status; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_agent_approvals_on_status ON public.agent_approvals USING btree (status);
+
+
+--
+-- Name: index_agent_artifacts_on_agent_workflow_run_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_agent_artifacts_on_agent_workflow_run_id ON public.agent_artifacts USING btree (agent_workflow_run_id);
+
+
+--
+-- Name: index_agent_artifacts_on_approved_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_agent_artifacts_on_approved_by_id ON public.agent_artifacts USING btree (approved_by_id);
+
+
+--
+-- Name: index_agent_artifacts_on_artifact_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_agent_artifacts_on_artifact_type ON public.agent_artifacts USING btree (artifact_type);
+
+
+--
+-- Name: index_agent_artifacts_on_content; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_agent_artifacts_on_content ON public.agent_artifacts USING gin (content);
+
+
+--
+-- Name: index_agent_artifacts_on_status; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_agent_artifacts_on_status ON public.agent_artifacts USING btree (status);
+
+
+--
+-- Name: index_agent_domain_events_on_event_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_agent_domain_events_on_event_type ON public.agent_domain_events USING btree (event_type);
+
+
+--
+-- Name: index_agent_domain_events_on_idempotency_key; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_agent_domain_events_on_idempotency_key ON public.agent_domain_events USING btree (idempotency_key);
+
+
+--
+-- Name: index_agent_domain_events_on_payload; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_agent_domain_events_on_payload ON public.agent_domain_events USING gin (payload);
+
+
+--
+-- Name: index_agent_domain_events_on_processed_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_agent_domain_events_on_processed_at ON public.agent_domain_events USING btree (processed_at);
+
+
+--
+-- Name: index_agent_policies_on_action_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_agent_policies_on_action_type ON public.agent_policies USING btree (action_type);
+
+
+--
+-- Name: index_agent_policies_on_restaurant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_agent_policies_on_restaurant_id ON public.agent_policies USING btree (restaurant_id);
+
+
+--
+-- Name: index_agent_workflow_runs_on_context_snapshot; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_agent_workflow_runs_on_context_snapshot ON public.agent_workflow_runs USING gin (context_snapshot);
+
+
+--
+-- Name: index_agent_workflow_runs_on_restaurant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_agent_workflow_runs_on_restaurant_id ON public.agent_workflow_runs USING btree (restaurant_id);
+
+
+--
+-- Name: index_agent_workflow_runs_on_restaurant_id_and_status; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_agent_workflow_runs_on_restaurant_id_and_status ON public.agent_workflow_runs USING btree (restaurant_id, status);
+
+
+--
+-- Name: index_agent_workflow_runs_on_status; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_agent_workflow_runs_on_status ON public.agent_workflow_runs USING btree (status);
+
+
+--
+-- Name: index_agent_workflow_runs_on_workflow_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_agent_workflow_runs_on_workflow_type ON public.agent_workflow_runs USING btree (workflow_type);
+
+
+--
+-- Name: index_agent_workflow_steps_on_agent_workflow_run_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_agent_workflow_steps_on_agent_workflow_run_id ON public.agent_workflow_steps USING btree (agent_workflow_run_id);
+
+
+--
+-- Name: index_agent_workflow_steps_on_status; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_agent_workflow_steps_on_status ON public.agent_workflow_steps USING btree (status);
 
 
 --
@@ -11363,6 +11940,34 @@ CREATE INDEX index_tips_on_restaurant_status_active ON public.tips USING btree (
 
 
 --
+-- Name: index_tool_invocation_logs_on_agent_workflow_step_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_tool_invocation_logs_on_agent_workflow_step_id ON public.tool_invocation_logs USING btree (agent_workflow_step_id);
+
+
+--
+-- Name: index_tool_invocation_logs_on_invoked_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_tool_invocation_logs_on_invoked_at ON public.tool_invocation_logs USING btree (invoked_at);
+
+
+--
+-- Name: index_tool_invocation_logs_on_status; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_tool_invocation_logs_on_status ON public.tool_invocation_logs USING btree (status);
+
+
+--
+-- Name: index_tool_invocation_logs_on_tool_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_tool_invocation_logs_on_tool_name ON public.tool_invocation_logs USING btree (tool_name);
+
+
+--
 -- Name: index_tracks_on_restaurant_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -11605,6 +12210,22 @@ ALTER TABLE ONLY public.ocr_menu_sections
 
 ALTER TABLE ONLY public.dining_sessions
     ADD CONSTRAINT fk_rails_0655a41e22 FOREIGN KEY (menu_experiment_id) REFERENCES public.menu_experiments(id);
+
+
+--
+-- Name: agent_artifacts fk_rails_0aa7abd4a3; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.agent_artifacts
+    ADD CONSTRAINT fk_rails_0aa7abd4a3 FOREIGN KEY (agent_workflow_run_id) REFERENCES public.agent_workflow_runs(id);
+
+
+--
+-- Name: agent_policies fk_rails_0c2f364a7a; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.agent_policies
+    ADD CONSTRAINT fk_rails_0c2f364a7a FOREIGN KEY (restaurant_id) REFERENCES public.restaurants(id);
 
 
 --
@@ -11960,6 +12581,22 @@ ALTER TABLE ONLY public.ordritems
 
 
 --
+-- Name: agent_approvals fk_rails_4f74f9b1b2; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.agent_approvals
+    ADD CONSTRAINT fk_rails_4f74f9b1b2 FOREIGN KEY (reviewer_id) REFERENCES public.users(id);
+
+
+--
+-- Name: agent_approvals fk_rails_4ffd1cfea1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.agent_approvals
+    ADD CONSTRAINT fk_rails_4ffd1cfea1 FOREIGN KEY (agent_workflow_step_id) REFERENCES public.agent_workflow_steps(id);
+
+
+--
 -- Name: services fk_rails_51a813203f; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -12069,6 +12706,14 @@ ALTER TABLE ONLY public.menu_experiments
 
 ALTER TABLE ONLY public.menu_experiment_exposures
     ADD CONSTRAINT fk_rails_628cbd05c9 FOREIGN KEY (assigned_version_id) REFERENCES public.menu_versions(id);
+
+
+--
+-- Name: agent_workflow_steps fk_rails_64ccb22157; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.agent_workflow_steps
+    ADD CONSTRAINT fk_rails_64ccb22157 FOREIGN KEY (agent_workflow_run_id) REFERENCES public.agent_workflow_runs(id);
 
 
 --
@@ -12256,6 +12901,14 @@ ALTER TABLE ONLY public.ordr_split_plans
 
 
 --
+-- Name: agent_workflow_runs fk_rails_7c785090cf; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.agent_workflow_runs
+    ADD CONSTRAINT fk_rails_7c785090cf FOREIGN KEY (restaurant_id) REFERENCES public.restaurants(id);
+
+
+--
 -- Name: ordrparticipants fk_rails_7cc8425445; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -12293,6 +12946,14 @@ ALTER TABLE ONLY public.marketing_qr_codes
 
 ALTER TABLE ONLY public.menuitem_costs
     ADD CONSTRAINT fk_rails_8001b406b2 FOREIGN KEY (menuitem_id) REFERENCES public.menuitems(id) ON DELETE CASCADE;
+
+
+--
+-- Name: tool_invocation_logs fk_rails_8215fa3ba8; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tool_invocation_logs
+    ADD CONSTRAINT fk_rails_8215fa3ba8 FOREIGN KEY (agent_workflow_step_id) REFERENCES public.agent_workflow_steps(id);
 
 
 --
@@ -12824,6 +13485,14 @@ ALTER TABLE ONLY public.customer_wait_queues
 
 
 --
+-- Name: agent_approvals fk_rails_caef48971b; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.agent_approvals
+    ADD CONSTRAINT fk_rails_caef48971b FOREIGN KEY (agent_workflow_run_id) REFERENCES public.agent_workflow_runs(id);
+
+
+--
 -- Name: dining_sessions fk_rails_cc65ddb4b6; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -13112,6 +13781,14 @@ ALTER TABLE ONLY public.restaurantavailabilities
 
 
 --
+-- Name: agent_artifacts fk_rails_ff51ee3deb; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.agent_artifacts
+    ADD CONSTRAINT fk_rails_ff51ee3deb FOREIGN KEY (approved_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: voice_commands fk_rails_ffd8a93481; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -13126,6 +13803,14 @@ ALTER TABLE ONLY public.voice_commands
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260402090001'),
+('20260402073627'),
+('20260402073622'),
+('20260402073617'),
+('20260402073612'),
+('20260402073605'),
+('20260402073600'),
+('20260402073535'),
 ('20260402000001'),
 ('20260401200003'),
 ('20260401200002'),

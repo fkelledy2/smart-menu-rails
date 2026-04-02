@@ -1,0 +1,13 @@
+AI action requires your approval — <%= @restaurant.name %>
+
+Hi <%= @reviewer.name rescue @reviewer.email %>,
+
+An AI agent at <%= @restaurant.name %> has proposed an action that requires your review before it can proceed.
+
+Action Type: <%= @approval.action_type.humanize %>
+Risk Level:  <%= @approval.risk_level.capitalize %>
+Expires:     <%= @approval.expires_at.strftime('%B %-d, %Y at %I:%M %p UTC') %>
+
+Review and approve here: <%= @workbench_url %>
+
+If you did not expect this notification, you can reject the action from the AI Workbench.

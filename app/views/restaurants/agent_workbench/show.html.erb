@@ -1,0 +1,202 @@
+<% content_for :title, "AI Workbench — Run ##{@run.id}" %>
+
+<div class="container-fluid py-3">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <%= link_to restaurant_agent_workbench_index_path(@restaurant),
+            class: 'text-muted small text-decoration-none mb-1 d-block' do %>
+        <i class="bi bi-arrow-left me-1" aria-hidden="true"></i>Back to Workbench
+      <% end %>
+      <h4 class="mb-0 fw-bold">
+        <i class="bi bi-robot me-2 text-primary" aria-hidden="true"></i>
+        <%= @run.workflow_type.humanize %>
+      </h4>
+      <p class="text-muted small mb-0">
+        Run #<%= @run.id %>
+        &middot; triggered by <em><%= @run.trigger_event %></em>
+        &middot; <%= time_ago_in_words(@run.created_at) %> ago
+      </p>
+    </div>
+    <%= render 'status_badge', status: @run.status %>
+  </div>
+
+  <% if notice %>
+    <div class="alert alert-success alert-dismissible fade show py-2" role="alert">
+      <%= notice %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <% end %>
+  <% if alert %>
+    <div class="alert alert-danger alert-dismissible fade show py-2" role="alert">
+      <%= alert %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <% end %>
+
+  <% if @run.error_message.present? %>
+    <div class="alert alert-danger py-2">
+      <strong>Error:</strong> <%= @run.error_message %>
+    </div>
+  <% end %>
+
+  <div class="row g-4">
+    <%# Left column: steps + tool logs %>
+    <div class="col-lg-7">
+
+      <%# Step timeline %>
+      <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-transparent fw-semibold border-bottom">
+          <i class="bi bi-list-check me-1 text-primary" aria-hidden="true"></i>
+          Step Timeline
+        </div>
+        <div class="card-body p-0">
+          <% if @steps.empty? %>
+            <p class="text-muted small p-3 mb-0">No steps recorded yet.</p>
+          <% else %>
+            <% @steps.each do |step| %>
+              <div class="border-bottom px-3 py-3">
+                <div class="d-flex justify-content-between align-items-start mb-1">
+                  <div class="fw-semibold text-dark small">
+                    <span class="text-muted me-1">#<%= step.step_index + 1 %></span>
+                    <%= step.step_name.humanize %>
+                  </div>
+                  <%= render 'status_badge', status: step.status %>
+                </div>
+                <% if step.last_error.present? %>
+                  <p class="text-danger small mb-1">
+                    <strong>Error:</strong> <%= step.last_error %>
+                    <% if step.retry_count > 0 %>
+                      (attempted <%= step.retry_count %> <%= 'time'.pluralize(step.retry_count) %>)
+                    <% end %>
+                  </p>
+                <% end %>
+                <% if step.tool_invocation_logs.any? %>
+                  <details class="mt-1">
+                    <summary class="text-muted small" style="cursor: pointer;">
+                      <%= step.tool_invocation_logs.count %> tool call(s)
+                    </summary>
+                    <% step.tool_invocation_logs.each do |log| %>
+                      <div class="mt-2 ms-2 p-2 bg-light rounded small font-monospace">
+                        <div class="d-flex justify-content-between">
+                          <strong><%= log.tool_name %></strong>
+                          <span class="<%= log.success? ? 'text-success' : 'text-danger' %>">
+                            <%= log.status %> (<%= log.duration_ms %>ms)
+                          </span>
+                        </div>
+                        <% if log.error? %>
+                          <div class="text-danger mt-1"><%= log.output_payload['error'] %></div>
+                        <% end %>
+                      </div>
+                    <% end %>
+                  </details>
+                <% end %>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+
+      <%# Artifacts %>
+      <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-transparent fw-semibold border-bottom">
+          <i class="bi bi-file-earmark-text me-1 text-primary" aria-hidden="true"></i>
+          Artifacts
+        </div>
+        <div class="card-body p-0">
+          <% if @artifacts.empty? %>
+            <p class="text-muted small p-3 mb-0">No artifacts produced yet.</p>
+          <% else %>
+            <% @artifacts.each do |artifact| %>
+              <div class="border-bottom px-3 py-3">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <span class="fw-semibold text-dark small"><%= artifact.artifact_type.humanize %></span>
+                  <%= render 'status_badge', status: artifact.status %>
+                </div>
+                <% if artifact.approved_by.present? %>
+                  <p class="text-muted small mb-1">
+                    <%= artifact.status.capitalize %> by <%= artifact.approved_by.email %>
+                    on <%= artifact.approved_at&.strftime('%b %-d %Y at %H:%M') %>
+                  </p>
+                <% end %>
+                <details>
+                  <summary class="text-muted small" style="cursor: pointer;">View content</summary>
+                  <pre class="bg-light rounded p-2 mt-1 small overflow-auto" style="max-height: 200px;"><%= JSON.pretty_generate(artifact.content) %></pre>
+                </details>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+
+    </div>
+
+    <%# Right column: pending approvals %>
+    <div class="col-lg-5">
+      <div class="card border-0 shadow-sm" id="approvals">
+        <div class="card-header bg-transparent fw-semibold border-bottom">
+          <i class="bi bi-shield-check me-1 text-warning" aria-hidden="true"></i>
+          Approvals
+        </div>
+        <div class="card-body p-0">
+          <% if @approvals.empty? %>
+            <p class="text-muted small p-3 mb-0">No approvals required.</p>
+          <% else %>
+            <% @approvals.each do |approval| %>
+              <div class="border-bottom px-3 py-3" id="approval-<%= approval.id %>">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                  <div>
+                    <div class="fw-semibold text-dark small"><%= approval.action_type.humanize %></div>
+                    <div class="text-muted small">
+                      Risk: <strong><%= approval.risk_level.capitalize %></strong>
+                      &middot; Expires <%= approval.expires_at.strftime('%b %-d at %H:%M UTC') %>
+                    </div>
+                  </div>
+                  <%= render 'status_badge', status: approval.status %>
+                </div>
+
+                <% if approval.reviewer.present? %>
+                  <p class="text-muted small mb-1">
+                    Reviewed by <%= approval.reviewer.email %>
+                    on <%= approval.reviewed_at&.strftime('%b %-d %Y at %H:%M') %>
+                  </p>
+                  <% if approval.reviewer_notes.present? %>
+                    <p class="small text-muted mb-1"><em><%= approval.reviewer_notes %></em></p>
+                  <% end %>
+                <% end %>
+
+                <% if approval.pending? && !approval.expired_at_time? %>
+                  <details class="mb-2">
+                    <summary class="text-muted small" style="cursor: pointer;">View proposed payload</summary>
+                    <pre class="bg-light rounded p-2 mt-1 small overflow-auto" style="max-height: 150px;"><%= JSON.pretty_generate(approval.proposed_payload) %></pre>
+                  </details>
+
+                  <div class="d-flex gap-2 mt-2">
+                    <%= form_with url: approve_restaurant_agent_workbench_approval_path(
+                                        @restaurant,
+                                        agent_workbench_id: @run.id,
+                                        id: approval.id),
+                                  method: :patch, local: true do |f| %>
+                      <%= f.submit 'Approve', class: 'btn btn-sm btn-success' %>
+                    <% end %>
+                    <%= form_with url: reject_restaurant_agent_workbench_approval_path(
+                                        @restaurant,
+                                        agent_workbench_id: @run.id,
+                                        id: approval.id),
+                                  method: :patch, local: true do |f| %>
+                      <%= f.text_field :reviewer_notes, placeholder: 'Reason (optional)', class: 'form-control form-control-sm d-inline-block w-auto' %>
+                      <%= f.submit 'Reject', class: 'btn btn-sm btn-outline-danger ms-1' %>
+                    <% end %>
+                  </div>
+                <% elsif approval.expired_at_time? && approval.pending? %>
+                  <p class="text-warning small mb-0">
+                    <i class="bi bi-clock me-1" aria-hidden="true"></i>Expired — no action possible.
+                  </p>
+                <% end %>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

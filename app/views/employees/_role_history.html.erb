@@ -6,21 +6,21 @@
   <div class="card-header d-flex justify-content-between align-items-center bg-secondary-subtle py-2">
     <span class="fw-semibold small">
       <i class="bi bi-clock-history me-1"></i>
-      Role History — <%= employee.user&.email&.split('@')&.first || employee.name %>
+      <%= t('employees.role_history.heading') %> — <%= employee.user&.email&.split('@')&.first || employee.name %>
     </span>
   </div>
   <div class="card-body p-0">
     <% if audits.empty? %>
-      <p class="text-muted small p-3 mb-0">No role changes recorded for this employee.</p>
+      <p class="text-muted small p-3 mb-0"><%= t('employees.role_history.no_changes') %></p>
     <% else %>
       <table class="table table-sm table-hover mb-0">
         <thead class="table-light">
           <tr>
-            <th class="small">Date</th>
-            <th class="small">From</th>
-            <th class="small">To</th>
-            <th class="small">Changed by</th>
-            <th class="small">Reason</th>
+            <th class="small"><%= t('employees.role_history.date_header') %></th>
+            <th class="small"><%= t('employees.role_history.from_header') %></th>
+            <th class="small"><%= t('employees.role_history.to_header') %></th>
+            <th class="small"><%= t('employees.role_history.changed_by_header') %></th>
+            <th class="small"><%= t('employees.role_history.reason_header') %></th>
           </tr>
         </thead>
         <tbody>

@@ -520,8 +520,11 @@ class ImportToMenu
     # Ensure Allergyns exist/are active for these names (leverages same normalization as restaurant sync)
     sync_allergyns!(restaurant, desired)
 
-    # Lookup allergyn records
-    allergyns = Allergyn.where(restaurant: restaurant).select { |a| desired.include?(a.name.to_s.strip.downcase) }
+    # Lookup allergyn records via SQL rather than loading all and filtering in
+    # Ruby — avoids materialising the full allergyns relation per menu item.
+    allergyns = Allergyn
+      .where(restaurant: restaurant)
+      .where('LOWER(TRIM(name)) IN (?)', desired)
 
     # Compute current mappings
     current_ids = MenuitemAllergynMapping.where(menuitem_id: menuitem.id).pluck(:allergyn_id).to_set

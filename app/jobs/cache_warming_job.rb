@@ -199,8 +199,10 @@ class CacheWarmingJob < ApplicationJob
     restaurant = Restaurant.find_by(id: restaurant_id)
     return unless restaurant
 
-    # Warm all active menus for this restaurant
-    restaurant.fetch_menus.select { |m| m.status == 'active' }.each do |menu|
+    # Warm all active menus for this restaurant.
+    # Use SQL WHERE instead of IdentityCache fetch + Ruby .select to avoid
+    # loading inactive menus into memory only to discard them.
+    restaurant.menus.where(status: 'active').find_each do |menu|
       # Warm menu in multiple locales if available
       %w[en es fr de].each do |locale|
         AdvancedCacheService.cached_menu_with_items(menu.id, locale: locale)
@@ -258,9 +260,10 @@ class CacheWarmingJob < ApplicationJob
     restaurant = Restaurant.fetch(restaurant_id)
     return unless restaurant
 
-    # Get active orders (opened, confirmed, preparing)
+    # Get active orders via SQL rather than loading all orders via IdentityCache
+    # then discarding non-active ones in Ruby.
     active_statuses = %w[opened confirmed preparing]
-    active_orders = restaurant.fetch_ordrs.select { |o| active_statuses.include?(o.status) }
+    active_orders = Ordr.where(restaurant_id: restaurant.id, status: active_statuses).to_a
 
     # Warm each active order's data
     active_orders.each do |order|

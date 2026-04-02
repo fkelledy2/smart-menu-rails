@@ -59,6 +59,15 @@ en:
         override_label: Alcohol
         overrides_hint: Overrides apply at publish.
         review_needed: Needs review
+    ordritem_tracking:
+      order_status_label: 'Order status:'
+      status_collected: Collected
+      status_complete: Complete
+      status_partially_ready: Partially Ready
+      status_pending: Received
+      status_preparing: Preparing
+      status_ready: Ready
+      updated_just_now: Updated just now
     orderCustomer:
       bill: Bill
       items_in_cart: items in cart

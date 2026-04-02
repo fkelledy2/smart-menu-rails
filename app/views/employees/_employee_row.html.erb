@@ -25,29 +25,29 @@
   </td>
   <td>
     <div class="fw-semibold">
-      <%= employee.user&.email&.split('@')&.first || 'Unnamed' %>
+      <%= employee.user&.email&.split('@')&.first || t('restaurants.sections.staff_2025.unnamed') %>
     </div>
   </td>
   <td class="text-end">
     <span class="badge <%= badge_class %>">
-      <%= employee.role&.titleize || 'No role' %>
+      <%= employee.role&.titleize || t('restaurants.sections.staff_2025.no_role') %>
     </span>
   </td>
   <td class="text-end">
     <% actions = [
-         { label: 'Edit', href: edit_restaurant_employee_path(restaurant, employee), data: { turbo_frame: 'staff_edit_employee' } },
+         { label: t('restaurants.sections.staff_2025.edit'), href: edit_restaurant_employee_path(restaurant, employee), data: { turbo_frame: 'staff_edit_employee' } },
        ] %>
     <% if flipper_enabled %>
       <% current_user_employee = restaurant.employees.find_by(user: current_user) %>
       <% if current_user_employee && current_user_employee.id != employee.id && (current_user_employee.admin? || (current_user_employee.manager? && employee.staff?)) %>
-        <% actions << { label: 'Change Role', href: '#', data: { action: 'click->role-change#open', 'employee-id': employee.id } } %>
-        <% actions << { label: 'Role History', href: role_history_restaurant_employee_path(restaurant, employee), data: { turbo_frame: "role_history_#{employee.id}", turbo_stream: true } } %>
+        <% actions << { label: t('restaurants.sections.staff_2025.change_role'), href: '#', data: { action: 'click->role-change#open', 'employee-id': employee.id } } %>
+        <% actions << { label: t('restaurants.sections.staff_2025.role_history'), href: role_history_restaurant_employee_path(restaurant, employee), data: { turbo_frame: "role_history_#{employee.id}", turbo_stream: true } } %>
       <% end %>
     <% end %>
-    <% actions << { label: 'Remove', href: restaurant_employee_path(restaurant, employee), method: :delete, class: 'text-danger', data: { turbo_confirm: 'Remove this staff member?' } } %>
+    <% actions << { label: t('restaurants.sections.staff_2025.remove'), href: restaurant_employee_path(restaurant, employee), method: :delete, class: 'text-danger', data: { turbo_confirm: t('restaurants.sections.staff_2025.remove_confirm') } } %>
 
     <%= render 'shared/actions_dropdown',
-        aria_label: 'Actions',
+        aria_label: t('restaurants.sections.staff_2025.actions'),
         button_class: 'btn btn-sm btn-outline-secondary',
         items: actions %>
 

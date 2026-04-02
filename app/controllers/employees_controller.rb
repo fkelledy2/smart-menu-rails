@@ -131,10 +131,10 @@ class EmployeesController < ApplicationController
           render turbo_stream: turbo_stream.replace(
             "change_role_form_frame_#{@employee.id}",
             partial: 'employees/change_role_form',
-            locals: { employee: @employee, restaurant: @employee.restaurant, error: 'You are not an employee of this restaurant.' },
+            locals: { employee: @employee, restaurant: @employee.restaurant, error: t('employees.controller.not_an_employee') },
           )
         end
-        format.html { redirect_to edit_restaurant_path(@employee.restaurant, section: 'staff'), alert: 'Not authorised.' }
+        format.html { redirect_to edit_restaurant_path(@employee.restaurant, section: 'staff'), alert: t('employees.controller.not_authorised') }
       end
       return
     end
@@ -158,7 +158,7 @@ class EmployeesController < ApplicationController
             ),
           ]
         end
-        format.html { redirect_to edit_restaurant_path(@employee.restaurant, section: 'staff'), notice: 'Role updated successfully.' }
+        format.html { redirect_to edit_restaurant_path(@employee.restaurant, section: 'staff'), notice: t('employees.controller.role_updated') }
       end
     else
       respond_to do |format|

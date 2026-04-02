@@ -5,6 +5,11 @@
   - [mailers, 1]
   - [crm, 1]
   - [low_priority, 1]
+  - [agent_critical, 10]
+  - [agent_realtime, 8]
+  - [agent_high, 5]
+  - [agent_default, 3]
+  - [agent_low, 1]
 
 :schedule:
   expire_dining_sessions:
@@ -31,3 +36,11 @@
     cron: "0 2 * * *"  # 2am UTC nightly
     class: "UpdateDiningPatternsJob"
     queue: "low_priority"
+  poll_agent_domain_events:
+    cron: "*/1 * * * *"  # every minute (polling window — no LISTEN/NOTIFY due to PgBouncer)
+    class: "Agents::PollDomainEventsJob"
+    queue: "agent_default"
+  expire_agent_approvals:
+    cron: "0 * * * *"  # hourly
+    class: "Agents::ExpireAgentApprovalsJob"
+    queue: "agent_low"

@@ -379,6 +379,21 @@ Rails.application.routes.draw do
       get 'insights/abandonment_funnel',  to: 'restaurant_insights#abandonment_funnel'
     end
 
+    # AI Workbench — agent workflow run viewer and approval interface
+    resources :agent_workbench,
+      only: %i[index show],
+      controller: 'restaurants/agent_workbench' do
+      resources :approvals,
+        only: [],
+        controller: 'restaurants/agent_workbench',
+        param: :id do
+        member do
+          patch :approve
+          patch :reject
+        end
+      end
+    end
+
     # Restaurant configuration
     resources :restaurantlocales do
       collection do

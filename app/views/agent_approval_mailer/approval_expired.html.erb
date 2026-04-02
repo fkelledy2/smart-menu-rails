@@ -1,0 +1,30 @@
+<h1 style="margin: 0 0 24px 0; font-size: 24px; font-weight: 700; color: #111827; line-height: 1.3;">
+  AI approval expired
+</h1>
+
+<p style="margin: 0 0 16px 0; font-size: 16px; color: #374151; line-height: 1.6;">
+  Hi <%= @owner.name rescue @owner.email %>,
+</p>
+
+<p style="margin: 0 0 24px 0; font-size: 16px; color: #374151; line-height: 1.6;">
+  An AI approval for <strong><%= @restaurant.name %></strong> was not reviewed
+  within the required window and has been automatically cancelled.
+</p>
+
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"
+       style="margin: 0 0 24px 0; background-color: #FEF3C7; border-radius: 8px; border: 1px solid #FCD34D;">
+  <tr>
+    <td style="padding: 20px 24px;">
+      <p style="margin: 0 0 8px 0; font-size: 12px; font-weight: 600; color: #92400E; text-transform: uppercase; letter-spacing: 0.05em;">Cancelled Action</p>
+      <p style="margin: 0 0 16px 0; font-size: 16px; font-weight: 600; color: #111827;"><%= @approval.action_type.humanize %></p>
+
+      <p style="margin: 0 0 8px 0; font-size: 12px; font-weight: 600; color: #92400E; text-transform: uppercase; letter-spacing: 0.05em;">Expired At</p>
+      <p style="margin: 0; font-size: 15px; color: #374151;"><%= @approval.expires_at.strftime('%B %-d, %Y at %I:%M %p UTC') %></p>
+    </td>
+  </tr>
+</table>
+
+<p style="margin: 0; font-size: 14px; color: #6B7280; line-height: 1.6;">
+  No changes were made to your restaurant data.
+  If you'd like this action to run again, please visit the AI Workbench to trigger a new workflow.
+</p>

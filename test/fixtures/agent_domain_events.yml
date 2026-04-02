@@ -1,0 +1,14 @@
+unprocessed_event:
+  event_type: menu.import_requested
+  source_type: Restaurant
+  source_id: 1
+  payload: '{"restaurant_id": 1, "source_url": "http://example.com/menu"}'
+  idempotency_key: test-event-key-001
+
+processed_event:
+  event_type: order.completed
+  source_type: Restaurant
+  source_id: 1
+  payload: '{"restaurant_id": 1, "order_id": 999}'
+  idempotency_key: test-event-key-002
+  processed_at: <%= 1.hour.ago.iso8601 %>

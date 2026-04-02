@@ -1,0 +1,25 @@
+pending_approval:
+  agent_workflow_run: awaiting_approval_run
+  action_type: propose_menu_patch
+  risk_level: medium
+  proposed_payload: '{"changes": [{"op": "update", "target": "item"}]}'
+  status: pending
+  expires_at: <%= 48.hours.from_now.iso8601 %>
+
+expired_approval:
+  agent_workflow_run: failed_run
+  action_type: propose_menu_patch
+  risk_level: medium
+  proposed_payload: '{"changes": []}'
+  status: expired
+  expires_at: <%= 1.hour.ago.iso8601 %>
+
+approved_approval:
+  agent_workflow_run: completed_run
+  action_type: search_menu_items
+  risk_level: low
+  proposed_payload: '{"query": "burger"}'
+  status: approved
+  reviewer: one
+  reviewed_at: <%= 45.minutes.ago.iso8601 %>
+  expires_at: <%= 47.hours.from_now.iso8601 %>

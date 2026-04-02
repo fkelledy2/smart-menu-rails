@@ -47,7 +47,11 @@ class TablesettingsController < ApplicationController
                    ActionController::Base.helpers.sanitize(@tablesetting.status.to_s)
                  end
     @qr = RQRCode::QRCode.new(qr_content)
-    @menus = Menu.joins(:restaurant).all
+    # Scope to this restaurant only — the previous Menu.joins(:restaurant).all
+    # loaded every menu across every tenant (unbounded cross-tenant query).
+    @menus = Menu.where(restaurant_id: @restaurant.id, archived: false)
+      .includes(:restaurant)
+      .order(:sequence)
   end
 
   # GET /tablesettings/new

@@ -1,0 +1,48 @@
+pending_run:
+  restaurant: one
+  workflow_type: menu_import
+  trigger_event: menu.import_requested
+  status: pending
+  context_snapshot: '{"restaurant_id": 1}'
+
+running_run:
+  restaurant: one
+  workflow_type: growth_digest
+  trigger_event: digest.weekly_trigger
+  status: running
+  started_at: <%= 1.hour.ago.iso8601 %>
+  context_snapshot: '{"restaurant_id": 1}'
+
+completed_run:
+  restaurant: one
+  workflow_type: menu_import
+  trigger_event: menu.import_requested
+  status: completed
+  started_at: <%= 2.hours.ago.iso8601 %>
+  completed_at: <%= 1.hour.ago.iso8601 %>
+  context_snapshot: '{"restaurant_id": 1}'
+
+awaiting_approval_run:
+  restaurant: one
+  workflow_type: menu_optimization
+  trigger_event: menu.optimization_requested
+  status: awaiting_approval
+  started_at: <%= 30.minutes.ago.iso8601 %>
+  context_snapshot: '{"restaurant_id": 1}'
+
+failed_run:
+  restaurant: one
+  workflow_type: menu_import
+  trigger_event: menu.import_requested
+  status: failed
+  started_at: <%= 3.hours.ago.iso8601 %>
+  completed_at: <%= 2.hours.ago.iso8601 %>
+  error_message: Connection timeout after 3 retries
+  context_snapshot: '{"restaurant_id": 1}'
+
+other_restaurant_run:
+  restaurant: two
+  workflow_type: menu_import
+  trigger_event: menu.import_requested
+  status: pending
+  context_snapshot: '{"restaurant_id": 2}'

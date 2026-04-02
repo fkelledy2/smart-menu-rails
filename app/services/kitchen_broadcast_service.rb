@@ -18,11 +18,22 @@ class KitchenBroadcastService
         payload,
       )
 
-      # Also send push notification if enabled
-      return if order.restaurant.user.blank?
+      # Also send push notification if enabled.
+      # Use fetch_restaurant (IdentityCache) to avoid a SQL SELECT, then pluck
+      # the user record only when needed — avoids a lazy-load chain on the hot
+      # broadcast path (order.restaurant triggers SQL; .user triggers another).
+      restaurant = order.fetch_restaurant
+      return if restaurant.blank?
+
+      # Fetch owner user — not in IdentityCache so we pluck the id first.
+      owner_user_id = restaurant.user_id
+      return if owner_user_id.blank?
+
+      owner_user = User.find_by(id: owner_user_id)
+      return if owner_user.blank?
 
       PushNotificationService.send_to_user(
-        order.restaurant.user,
+        owner_user,
         'New Order',
         "Order ##{order.id} received",
         { type: 'new_order', order_id: order.id },
@@ -153,15 +164,23 @@ class KitchenBroadcastService
 
     private
 
-    # Generate order payload for broadcasting
+    # Generate order payload for broadcasting.
+    # Fetches quantity and revenue in a single SQL pass rather than two
+    # separate SUM queries — halves the DB round-trips per broadcast.
     def order_payload(order)
+      qty, total = order.ordritems
+        .pick(
+          Arel.sql('COALESCE(SUM(quantity), 0)'),
+          Arel.sql('COALESCE(SUM(ordritemprice * quantity), 0)'),
+        )
+
       {
         id: order.id,
         status: order.status,
         ordered_at: order.orderedAt,
         table: order.tablesetting&.name,
-        items_count: order.ordritems.sum(:quantity),
-        total: order.ordritems.sum('ordritemprice * quantity'),
+        items_count: qty.to_i,
+        total: total.to_f,
         created_at: order.created_at,
       }
     end

@@ -1,0 +1,17 @@
+success_log:
+  agent_workflow_step: step_one_completed
+  tool_name: read_restaurant_context
+  input_params: '{"restaurant_id": 1}'
+  output_payload: '{"id": 1, "name": "MyString"}'
+  status: success
+  duration_ms: 42
+  invoked_at: <%= 2.hours.ago.iso8601 %>
+
+error_log:
+  agent_workflow_step: step_failed
+  tool_name: fetch_menu_source
+  input_params: '{"url": "http://example.com/menu"}'
+  output_payload: '{"error": "Connection timeout"}'
+  status: error
+  duration_ms: 5000
+  invoked_at: <%= 3.hours.ago.iso8601 %>

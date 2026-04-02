@@ -419,6 +419,7 @@ en:
         add_first_staff: Add Your First Staff Member
         add_staff: Add Staff Member
         apply: Apply
+        change_role: Change Role
         confirm_remove: Remove this staff member?
         drag_to_reorder: Drag to reorder
         edit: Edit
@@ -442,7 +443,10 @@ en:
         no_staff_access: No staff access
         no_staff_description: Add team members to collaborate on your restaurant
         quick_actions: Quick Actions
+        remove: Remove
+        remove_confirm: Remove this staff member?
         role: Role
+        role_history: Role History
         roles_description: Define what each role can access and manage
         roles_permissions: Roles & Permissions
         select_all: Select all

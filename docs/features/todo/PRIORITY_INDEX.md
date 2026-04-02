@@ -33,7 +33,7 @@
 | #14 | Dynamic Pricing Plans (Cost-Indexed) | Post-Launch | L | #15, #16 | Sustainable margin management at scale |
 | #15 | Cost Insights + Pricing Model Publisher | Post-Launch | L | #16 | Admin system enabling #14; required before pricing models can be published |
 | #16 | Heroku Cost Inventory | Post-Launch | S | Admin auth, HEROKU_PLATFORM_API_TOKEN | Feeds #15 with accurate infra cost data |
-| #17 | Agent Framework — Shared Infrastructure | Post-Launch | L | OpenAI API, Sidekiq, PostgreSQL | Foundation for all AI agent work; must ship before any individual agent |
+| ~~#17~~ | ~~Agent Framework — Shared Infrastructure~~ | ~~Post-Launch~~ | L | OpenAI API, Sidekiq, PostgreSQL | **COMPLETED 2026-04-02** — spec at `docs/features/completed/17-agent-framework.md`; user guide at `docs/features/completed/17-agent-framework-user-guide.md` |
 | #18 | Menu Import Agent | Post-Launch | M | #17 Agent Framework | Highest-value onboarding accelerator; reduces time-to-first-menu from hours to minutes |
 | #19 | Restaurant Growth Agent | Post-Launch | M | #17 Agent Framework, analytics services | Weekly digest turns raw data into actionable owner insights; low risk, clear ROI |
 | #20 | Customer Concierge Agent | Post-Launch | M | #17 Agent Framework, SmartMenu view | Customer-facing differentiation; drives order value uplift via natural-language discovery |

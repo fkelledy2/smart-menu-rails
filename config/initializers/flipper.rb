@@ -121,6 +121,13 @@ Rails.application.config.after_initialize do
   unless Flipper.exist?(:ordritem_realtime_tracking)
     Flipper.add(:ordritem_realtime_tracking)
   end
+
+  # Agent Framework (#17) — master switch for all AI agent workflows.
+  # Must be enabled per-restaurant before any agent workflow runs.
+  # Disabled by default; enable only after reviewing AgentPolicy defaults for the restaurant.
+  unless Flipper.exist?(:agent_framework)
+    Flipper.add(:agent_framework)
+  end
 rescue ActiveRecord::ConnectionNotEstablished, ActiveRecord::StatementInvalid, ActiveRecord::NoDatabaseError => e
   # DB may be unreachable (CI asset precompile), or tables may not exist yet (db:create / db:migrate)
   Rails.logger.warn "[Flipper] Skipping feature flag seeding: #{e.message}"

@@ -252,13 +252,23 @@ class UserplansController < ApplicationController
 
     if target_plan.respond_to?(:menusperlocation) && target_plan.menusperlocation.to_i != -1
       limit = target_plan.menusperlocation.to_i
-      max_active_menus = current_user.restaurants.where(archived: false).map do |r|
-        r.restaurant_menus
-          .joins(:menu)
-          .where(menus: { archived: false })
-          .where(status: RestaurantMenu.statuses[:active])
-          .count
-      end.max.to_i
+      restaurant_ids = current_user.restaurants.where(archived: false).pluck(:id)
+
+      # Single GROUP BY query instead of one COUNT per restaurant (N+1).
+      max_active_menus = if restaurant_ids.any?
+                           RestaurantMenu
+                             .joins(:menu)
+                             .where(restaurant_id: restaurant_ids)
+                             .where(menus: { archived: false })
+                             .where(status: RestaurantMenu.statuses[:active])
+                             .group(:restaurant_id)
+                             .count
+                             .values
+                             .max
+                             .to_i
+                         else
+                           0
+                         end
 
       if max_active_menus > limit
         blocked = true

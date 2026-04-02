@@ -33,10 +33,17 @@ class AdvancedCacheService
     end
 
     def increment_metric(metric)
-      current_value = Rails.cache.read("cache_metrics:#{metric}") || 0
-      Rails.cache.write("cache_metrics:#{metric}", current_value + 1, expires_in: 1.week)
-    rescue StandardError => e
-      Rails.logger.error("[AdvancedCacheService] Failed to increment metric #{metric}: #{e.message}")
+      # Performance: use atomic increment (INCR on Redis / increment on Memcached)
+      # instead of a read-then-write pair which loses updates under concurrent load.
+      key = "cache_metrics:#{metric}"
+      Rails.cache.increment(key, 1)
+    rescue StandardError
+      # increment may raise if the key does not exist yet — seed it on the first call.
+      begin
+        Rails.cache.write(key, 1, expires_in: 1.week)
+      rescue StandardError => e
+        Rails.logger.error("[AdvancedCacheService] Failed to increment metric #{metric}: #{e.message}")
+      end
     end
 
     def monitored_cache_fetch(cache_key, _options = {})
@@ -641,6 +648,11 @@ class AdvancedCacheService
                            []
                          end
 
+        # Performance: use SQL aggregates instead of materialising all similar orders.
+        # COUNT + AVG(nett) replace similar_orders.sum { |o| o.runningTotal } / count.
+        similar_count = similar_orders.count
+        avg_value     = similar_count.positive? ? similar_orders.average('COALESCE(nett, 0)').to_f.round(2) : 0
+
         {
           order: {
             id: order.id,
@@ -649,20 +661,14 @@ class AdvancedCacheService
           },
           period_days: days,
           analytics: {
-            similar_orders_count: similar_orders.count,
-            average_order_value: if similar_orders.any?
-                                   similar_orders.sum do |o|
-                                     o.respond_to?(:runningTotal) ? o.runningTotal : 0
-                                   end / similar_orders.count
-                                 else
-                                   0
-                                 end,
+            similar_orders_count: similar_count,
+            average_order_value: avg_value,
             popular_items: [], # Placeholder - would need order items analysis
             peak_hours: [], # Placeholder - would need time analysis
           },
           recommendations: [
             "Order placed during #{order.created_at.strftime('%A')} - typical for this restaurant",
-            "Similar orders in the last #{days} days: #{similar_orders.count}",
+            "Similar orders in the last #{days} days: #{similar_count}",
           ],
         }
       end
@@ -760,32 +766,32 @@ class AdvancedCacheService
     def cached_user_all_employees(user_id)
       Rails.cache.fetch("user_employees:#{user_id}", expires_in: 20.minutes) do
         user = User.find(user_id)
-        all_employees = []
-        restaurants_count = 0
 
-        user.restaurants.each do |restaurant|
-          restaurants_count += 1
-          next unless restaurant.respond_to?(:employees)
+        # Performance: load all restaurants in one query, then fetch all employees
+        # for those restaurants in a single batched query — avoids one SELECT per restaurant.
+        restaurants = user.restaurants.to_a
+        restaurants_count = restaurants.size
+        restaurant_map = restaurants.index_by(&:id)
+        restaurant_ids = restaurant_map.keys
 
-          restaurant_employees = restaurant.employees.where(archived: false).includes(:user)
+        employees = Employee.where(restaurant_id: restaurant_ids, archived: false)
+          .includes(:user)
+          .order(created_at: :desc)
 
-          restaurant_employees.each do |employee|
-            all_employees << {
-              id: employee.id,
-              name: employee.name,
-              eid: employee.eid,
-              role: employee.role,
-              status: employee.status,
-              email: employee.user&.email,
-              restaurant_name: restaurant.name,
-              restaurant_id: restaurant.id,
-              created_at: employee.created_at.iso8601,
-            }
-          end
+        all_employees = employees.map do |employee|
+          restaurant = restaurant_map[employee.restaurant_id]
+          {
+            id: employee.id,
+            name: employee.name,
+            eid: employee.eid,
+            role: employee.role,
+            status: employee.status,
+            email: employee.user&.email,
+            restaurant_name: restaurant&.name,
+            restaurant_id: employee.restaurant_id,
+            created_at: employee.created_at.iso8601,
+          }
         end
-
-        # Sort all employees by creation date
-        all_employees.sort_by! { |e| e[:created_at] }.reverse!
 
         {
           user: serialize_user_basic(user),
@@ -1101,14 +1107,24 @@ class AdvancedCacheService
       Rails.logger.info("Invalidated caches for menuitem #{menuitem_id}")
     end
 
-    def invalidate_order_caches(order_id)
+    def invalidate_order_caches(order_id, restaurant_id: nil)
       Rails.cache.delete_matched("order_full:#{order_id}:*")
       Rails.cache.delete_matched("order_analytics:#{order_id}:*")
-      Rails.cache.delete_matched('restaurant_orders:*')
+
+      # Scope restaurant_orders invalidation to the specific restaurant when available.
+      # The global wildcard 'restaurant_orders:*' would scan every cached key across all
+      # tenants — O(n) on all restaurants. Scoping to restaurant_id reduces this to the
+      # single tenant whose order changed.
+      if restaurant_id
+        Rails.cache.delete_matched("restaurant_orders:#{restaurant_id}:*")
+      else
+        Rails.cache.delete_matched('restaurant_orders:*')
+      end
+
       Rails.cache.delete_matched('user_orders:*')
       Rails.cache.delete_matched('order_summary:*')
 
-      Rails.logger.info("Invalidated caches for order #{order_id}")
+      Rails.logger.info("Invalidated caches for order #{order_id} (restaurant: #{restaurant_id || 'unknown'})")
     end
 
     def invalidate_employee_caches(employee_id)
@@ -1269,9 +1285,11 @@ class AdvancedCacheService
     end
 
     def serialize_menu(menu)
+      # Performance: read the menusections_count counter-cache column instead of
+      # issuing a COUNT(*) or materialising all sections via fetch_menusections.
       serialize_menu_basic(menu).merge(
         description: menu.description,
-        sections_count: menu.fetch_menusections.count,
+        sections_count: menu.menusections_count,
       )
     end
 
@@ -1326,24 +1344,36 @@ class AdvancedCacheService
     end
 
     def calculate_daily_order_breakdown(orders)
-      return {} if orders.empty?
+      # Performance: GROUP BY in SQL instead of loading all order rows into Ruby.
+      # unscope(:order) strips the restaurant.ordrs reorder(orderedAt:) scope which
+      # would otherwise conflict with the GROUP BY clause in PostgreSQL.
+      return {} if orders.respond_to?(:empty?) && orders.empty?
 
-      daily_orders = orders.group_by { |o| o.created_at.to_date }
-      daily_orders.transform_values(&:count)
+      orders
+        .unscope(:order)
+        .group(Arel.sql('DATE(created_at)'))
+        .count
+        .transform_keys(&:to_s)
     end
 
     def calculate_order_status_distribution(orders)
-      return {} if orders.empty?
+      # Performance: SQL GROUP BY instead of Ruby group_by.
+      return {} if orders.respond_to?(:empty?) && orders.empty?
 
-      orders.group_by(&:status).transform_values(&:count)
+      orders.unscope(:order).group(:status).count
     end
 
     def calculate_order_peak_hours(orders)
-      return [] if orders.empty?
+      # Performance: SQL EXTRACT(HOUR ...) GROUP BY instead of loading all orders.
+      return [] if orders.respond_to?(:empty?) && orders.empty?
 
-      hourly_orders = orders.group_by { |o| o.created_at.hour }
-      hourly_orders.map { |hour, orders| { hour: hour, count: orders.count } }
-        .sort_by { |h| h[:count] }.last(3).reverse
+      orders
+        .unscope(:order)
+        .group(Arel.sql('EXTRACT(HOUR FROM created_at)::int'))
+        .count
+        .map { |hour, count| { hour: hour, count: count } }
+        .sort_by { |h| -h[:count] }
+        .first(3)
     end
 
     def calculate_daily_employee_orders(orders)
@@ -1409,44 +1439,61 @@ class AdvancedCacheService
     end
 
     def calculate_order_trends(orders)
-      return {} if orders.empty?
+      # Performance: use SQL GROUP BY + aggregates — avoids loading every order row
+      # into Ruby memory for a potentially large date range.
+      return {} if orders.respond_to?(:empty?) && orders.empty?
 
-      # Group by day for trend analysis
-      daily_orders = orders.group_by { |o| o.created_at.to_date }
-      daily_revenue = daily_orders.transform_values { |day_orders| day_orders.sum { |o| o.gross || 0 } }
+      # unscope(:order) strips the reorder(orderedAt:) from restaurant.ordrs scope
+      # which would otherwise cause a PostgreSQL GROUP BY / ORDER BY conflict.
+      daily_rows = orders
+        .unscope(:order)
+        .group(Arel.sql('DATE(created_at)'))
+        .pluck(
+          Arel.sql('DATE(created_at)'),
+          Arel.sql('COUNT(*)'),
+          Arel.sql('SUM(COALESCE(gross, 0))'),
+        )
+
+      return {} if daily_rows.empty?
+
+      daily_orders  = daily_rows.to_h { |date, cnt, _rev| [date.to_s, cnt.to_i] }
+      daily_revenue = daily_rows.to_h { |date, _cnt, rev| [date.to_s, rev.to_f.round(2)] }
+      peak_day      = daily_rows.max_by { |_, cnt, _rev| cnt }&.first&.to_s
+      total_count   = daily_rows.sum { |_, cnt, _rev| cnt.to_i }
 
       {
-        daily_orders: daily_orders.transform_values(&:count),
+        daily_orders: daily_orders,
         daily_revenue: daily_revenue,
-        peak_day: daily_orders.max_by { |_, orders| orders.count }&.first,
-        average_daily_orders: daily_orders.values.sum(&:count) / daily_orders.keys.count.to_f,
+        peak_day: peak_day,
+        average_daily_orders: daily_rows.size.positive? ? (total_count.to_f / daily_rows.size).round(2) : 0,
       }
     end
 
     def calculate_popular_items(orders)
-      item_counts = Hash.new(0)
-      item_revenue = Hash.new(0)
+      # Performance: use a single SQL aggregate query against ordritems + menuitems
+      # rather than materialising every order row and all its ordritems into Ruby.
+      # This replaces an N+1 (one ordritems query per order) with two GROUP BY queries.
+      return { by_quantity: {}, by_revenue: {} } if orders.respond_to?(:empty?) && orders.empty?
 
-      orders.each do |order|
-        ordritems = order.respond_to?(:fetch_ordritems) ? order.fetch_ordritems : order.ordritems
-        ordritems.each do |item|
-          menuitem = item.respond_to?(:fetch_menuitem) ? item.fetch_menuitem : item.menuitem
-          next unless menuitem
+      order_ids = orders.respond_to?(:select) ? orders.select(:id) : orders.map(&:id)
 
-          # Handle case where menuitem might be an array (take first element)
-          menuitem = menuitem.first if menuitem.is_a?(Array)
-          next unless menuitem.respond_to?(:name)
+      rows = Ordritem
+        .joins(:menuitem)
+        .where(ordr_id: order_ids)
+        .where.not(status: Ordritem.statuses['removed'])
+        .group('menuitems.name')
+        .pluck(
+          'menuitems.name',
+          Arel.sql('SUM(ordritems.quantity)'),
+          Arel.sql('SUM(ordritems.ordritemprice * ordritems.quantity)'),
+        )
 
-          item_counts[menuitem.name] += 1 # Assume quantity 1
-          item_revenue[menuitem.name] += item.respond_to?(:ordritemprice) ? (item.ordritemprice || 0) : 0
-        end
-      end
+      by_quantity = rows.sort_by { |_, qty, _rev| -qty }.first(10)
+        .to_h { |name, qty, _rev| [name, qty.to_i] }
+      by_revenue  = rows.sort_by { |_, _qty, rev| -rev.to_f }.first(10)
+        .to_h { |name, _qty, rev| [name, rev.to_f.round(2)] }
 
-      # Return top 10 by quantity and revenue
-      {
-        by_quantity: item_counts.sort_by { |_, count| -count }.first(10).to_h,
-        by_revenue: item_revenue.sort_by { |_, revenue| -revenue }.first(10).to_h,
-      }
+      { by_quantity: by_quantity, by_revenue: by_revenue }
     end
 
     def calculate_daily_breakdown(orders, date_range)
@@ -1470,27 +1517,47 @@ class AdvancedCacheService
     end
 
     def analyze_menu_item_performance(menu, orders)
-      item_stats = {}
+      # Performance: replace O(sections * items * orders) Ruby iteration with two SQL
+      # queries — one to get menu item metadata, one GROUP BY aggregate for order stats.
+      sections = menu.fetch_menusections.to_a
+      section_map = sections.index_by(&:id)
 
-      menu.fetch_menusections.each do |section|
-        menuitems = section.respond_to?(:fetch_menuitems) ? section.fetch_menuitems : section.menuitems
-        menuitems.each do |item|
-          all_ordritems = orders.flat_map { |o| o.respond_to?(:fetch_ordritems) ? o.fetch_ordritems : o.ordritems }
-          item_orders = all_ordritems.select { |oi| oi.menuitem_id == item.id }
+      menuitems = Menuitem.where(menusection_id: sections.map(&:id))
+        .pluck(:id, :name, :menusection_id)
 
-          total_quantity = item_orders.sum { |oi| oi.respond_to?(:quantity) ? (oi.quantity || 1) : 1 }
-          total_revenue = item_orders.sum { |oi| (oi.respond_to?(:ordritemprice) ? (oi.ordritemprice || 0) : 0) * (oi.respond_to?(:quantity) ? (oi.quantity || 1) : 1) }
-
-          item_stats[item.id] = {
-            name: item.name,
-            section: section.name,
-            orders_count: item_orders.count,
-            total_quantity: total_quantity,
-            total_revenue: total_revenue,
-            average_price: item_orders.any? ? total_revenue / total_quantity : 0,
-          }
-        end
+      item_stats = menuitems.each_with_object({}) do |(item_id, item_name, section_id), h|
+        section_name = section_map[section_id]&.name || ''
+        h[item_id] = {
+          name: item_name,
+          section: section_name,
+          orders_count: 0,
+          total_quantity: 0,
+          total_revenue: 0.0,
+          average_price: 0,
+        }
       end
+
+      return item_stats if item_stats.empty? || !orders.respond_to?(:select)
+
+      order_ids = orders.select(:id)
+      Ordritem
+        .where(ordr_id: order_ids, menuitem_id: item_stats.keys)
+        .where.not(status: Ordritem.statuses['removed'])
+        .group(:menuitem_id)
+        .pluck(
+          :menuitem_id,
+          Arel.sql('COUNT(DISTINCT ordr_id)'),
+          Arel.sql('SUM(quantity)'),
+          Arel.sql('SUM(ordritemprice * quantity)'),
+        )
+        .each do |item_id, order_count, qty, revenue|
+          next unless item_stats.key?(item_id)
+
+          item_stats[item_id][:orders_count] = order_count.to_i
+          item_stats[item_id][:total_quantity] = qty.to_i
+          item_stats[item_id][:total_revenue]  = revenue.to_f.round(2)
+          item_stats[item_id][:average_price]  = qty.to_i.positive? ? (revenue.to_f / qty.to_i).round(2) : 0
+        end
 
       item_stats
     end

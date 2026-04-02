@@ -13,7 +13,7 @@
   <div class="card-header d-flex justify-content-between align-items-center bg-primary-subtle">
     <span class="fw-semibold">
       <i class="bi bi-person-gear me-1"></i>
-      Change Role — <%= employee.user&.email&.split('@')&.first || employee.name %>
+      <%= t('employees.change_role_form.change_role_heading') %> — <%= employee.user&.email&.split('@')&.first || employee.name %>
     </span>
     <button type="button"
             class="btn-close btn-close-sm"
@@ -31,7 +31,7 @@
     <% end %>
 
     <p class="text-muted small mb-3">
-      Current role:
+      <%= t('employees.change_role_form.current_role_label') %>
       <% badge_class = case employee.role
                        when 'manager' then 'text-bg-primary'
                        when 'staff'   then 'text-bg-info'
@@ -46,7 +46,7 @@
         data: { turbo_stream: true, controller: 'role-change-form', 'role-change-form-is-demotion-value': 'false' } do |f| %>
 
       <div class="mb-3">
-        <%= f.label :to_role, 'New Role', class: 'form-label fw-semibold' %>
+        <%= f.label :to_role, t('employees.change_role_form.new_role_label'), class: 'form-label fw-semibold' %>
         <% available_roles = if current_user_employee&.admin?
                                Employee.roles.keys.map { |r| [r.titleize, r] }.reject { |_, v| v == employee.role }
                              else
@@ -54,7 +54,7 @@
                              end %>
         <%= f.select 'role_change[to_role]',
             available_roles,
-            { include_blank: '— Select a role —' },
+            { include_blank: t('employees.change_role_form.select_role_blank') },
             {
               class: 'form-select',
               required: true,
@@ -67,25 +67,25 @@
       </div>
 
       <div class="mb-3">
-        <%= f.label :reason, 'Reason for change', class: 'form-label fw-semibold' %>
+        <%= f.label :reason, t('employees.change_role_form.reason_label'), class: 'form-label fw-semibold' %>
         <%= f.text_area 'role_change[reason]',
             class: 'form-control',
             rows: 3,
-            placeholder: 'Briefly explain why this role change is being made (minimum 10 characters)…',
+            placeholder: t('employees.change_role_form.reason_placeholder'),
             required: true,
             minlength: 10 %>
-        <div class="form-text text-muted">Minimum 10 characters. This is recorded in the audit log.</div>
+        <div class="form-text text-muted"><%= t('employees.change_role_form.reason_hint') %></div>
       </div>
 
       <%# Demotion confirmation — shown by Stimulus when the new role is lower %>
       <div class="alert alert-warning py-2 mb-3 d-none" data-role-change-form-target="demotionWarning">
         <i class="bi bi-exclamation-triangle-fill me-1"></i>
-        <strong>Demotion:</strong> You are about to reduce this employee's access level.
+        <%= t('employees.change_role_form.demotion_warning') %>
         <div class="form-check mt-2">
           <%= f.check_box 'role_change[confirm_demotion]',
               { class: 'form-check-input', data: { 'role-change-form-target': 'demotionConfirm', action: 'change->role-change-form#syncSubmit' } },
               '1', '0' %>
-          <label class="form-check-label">I confirm I want to demote this employee.</label>
+          <label class="form-check-label"><%= t('employees.change_role_form.confirm_demotion_label') %></label>
         </div>
       </div>
 
@@ -94,9 +94,9 @@
                 class="btn btn-sm btn-outline-secondary"
                 data-action="click->role-change#close"
                 data-role-change-employee-id-param="<%= employee.id %>">
-          Cancel
+          <%= t('employees.change_role_form.cancel') %>
         </button>
-        <%= f.submit 'Update Role',
+        <%= f.submit t('employees.change_role_form.submit'),
             class: 'btn btn-sm btn-primary',
             data: { 'role-change-form-target': 'submitBtn' } %>
       </div>

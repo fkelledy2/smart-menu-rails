@@ -95,6 +95,32 @@ class OpenaiClient < ExternalApiClient
     process_image_response(response)
   end
 
+  # Chat completion with optional tool/function calling support (Responses API).
+  # @param model    [String]  e.g. 'gpt-4o'
+  # @param messages [Array]   array of { role:, content: } hashes
+  # @param tools    [Array]   optional OpenAI tool definitions (function-calling format)
+  # @param temperature [Float] sampling temperature (default 0.2 for determinism)
+  # @return [Hash] parsed response body
+  def chat_with_tools(model:, messages:, tools: [], temperature: 0.2)
+    body = {
+      model: model,
+      messages: messages,
+      temperature: temperature,
+    }
+
+    body[:tools]      = tools       if tools.any?
+    body[:tool_choice] = 'auto'     if tools.any?
+
+    response = post('/chat/completions', {
+      body: body.to_json,
+      headers: { 'Content-Type' => 'application/json' },
+    })
+
+    response.parsed_response
+  rescue ApiError => e
+    handle_openai_error(e)
+  end
+
   # Get available models
   # @return [Array<Hash>] List of available models
   def models

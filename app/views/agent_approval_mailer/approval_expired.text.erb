@@ -1,0 +1,11 @@
+AI approval expired — <%= @restaurant.name %>
+
+Hi <%= @owner.name rescue @owner.email %>,
+
+An AI approval for <%= @restaurant.name %> was not reviewed within the required window and has been automatically cancelled.
+
+Cancelled Action: <%= @approval.action_type.humanize %>
+Expired At: <%= @approval.expires_at.strftime('%B %-d, %Y at %I:%M %p UTC') %>
+
+No changes were made to your restaurant data.
+If you'd like this action to run again, please visit the AI Workbench to trigger a new workflow.

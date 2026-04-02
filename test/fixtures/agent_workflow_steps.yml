@@ -1,0 +1,42 @@
+step_one_pending:
+  agent_workflow_run: pending_run
+  step_name: fetch_context
+  step_index: 0
+  status: pending
+  input_snapshot: '{}'
+  output_snapshot: '{}'
+  retry_count: 0
+
+step_one_completed:
+  agent_workflow_run: completed_run
+  step_name: fetch_context
+  step_index: 0
+  status: completed
+  input_snapshot: '{}'
+  output_snapshot: '{"restaurant_name": "Test Restaurant"}'
+  retry_count: 0
+  started_at: <%= 2.hours.ago.iso8601 %>
+  completed_at: <%= 100.minutes.ago.iso8601 %>
+
+step_two_completed:
+  agent_workflow_run: completed_run
+  step_name: generate_summary
+  step_index: 1
+  status: completed
+  input_snapshot: '{}'
+  output_snapshot: '{"summary": "All is well."}'
+  retry_count: 0
+  started_at: <%= 100.minutes.ago.iso8601 %>
+  completed_at: <%= 90.minutes.ago.iso8601 %>
+
+step_failed:
+  agent_workflow_run: failed_run
+  step_name: fetch_context
+  step_index: 0
+  status: failed
+  input_snapshot: '{}'
+  output_snapshot: '{}'
+  retry_count: 3
+  last_error: Connection timeout
+  started_at: <%= 3.hours.ago.iso8601 %>
+  completed_at: <%= 2.hours.ago.iso8601 %>

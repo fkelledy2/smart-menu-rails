@@ -258,7 +258,11 @@ class AiMenuPolisherJob
     desired = Array(allergen_names).map { |n| n.to_s.strip.downcase }.uniq
     return if desired.empty?
 
-    allergyns = Allergyn.where(restaurant: restaurant).select { |a| desired.include?(a.name.to_s.strip.downcase) }
+    # Use SQL LOWER() filter instead of loading all Allergyns into Ruby then
+    # calling .select — avoids materialising the full allergyns relation.
+    allergyns = Allergyn
+      .where(restaurant: restaurant)
+      .where('LOWER(TRIM(name)) IN (?)', desired)
 
     current_ids = MenuitemAllergynMapping.where(menuitem_id: menuitem.id).pluck(:allergyn_id).to_set
     desired_ids = allergyns.to_set(&:id)

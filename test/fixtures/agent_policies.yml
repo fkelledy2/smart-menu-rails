@@ -1,0 +1,20 @@
+auto_approve_read:
+  restaurant: one
+  action_type: read_restaurant_context
+  auto_approve: true
+  active: true
+  approval_expiry_hours: 72
+
+require_approval_patch:
+  restaurant: one
+  action_type: propose_menu_patch
+  auto_approve: false
+  active: true
+  approval_expiry_hours: 48
+
+inactive_policy:
+  restaurant: one
+  action_type: flag_item_unavailable
+  auto_approve: false
+  active: false
+  approval_expiry_hours: 72

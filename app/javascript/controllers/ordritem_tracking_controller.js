@@ -6,7 +6,7 @@ import consumer from '../channels/consumer';
 // updates item badges + order summary label without a page reload.
 export default class extends Controller {
   static targets = ['orderSummaryLabel', 'orderSummaryStatus'];
-  static values = { orderId: String };
+  static values = { orderId: String, statusLabels: Object };
 
   connect() {
     if (!this.orderIdValue) return;
@@ -48,10 +48,12 @@ export default class extends Controller {
       badge.dataset.status = toStatus;
     }
 
-    // Show "Updated just now" timestamp label
+    // Show "Updated just now" timestamp label.
+    // Text is sourced from the element's data-updated-label attribute (set server-side via i18n)
+    // so this controller stays locale-agnostic.
     const ts = el.querySelector('[data-ordritem-updated-at]');
     if (ts) {
-      ts.textContent = 'Updated just now';
+      ts.textContent = ts.dataset.updatedLabel || ts.textContent;
       ts.style.display = '';
     }
   }
@@ -76,13 +78,11 @@ export default class extends Controller {
     }
   }
 
+  // Returns a human-readable label for a fulfillment status.
+  // Prefers labels supplied via the data-ordritem-tracking-status-labels-value attribute
+  // (a JSON map populated server-side through i18n), falling back to the raw status string.
   _humanise(status) {
-    const map = {
-      pending: 'Received',
-      preparing: 'Preparing',
-      ready: 'Ready',
-      collected: 'Collected',
-    };
-    return map[status] || status;
+    const labels = this.hasStatusLabelsValue ? this.statusLabelsValue : {};
+    return labels[status] || status;
   }
 }

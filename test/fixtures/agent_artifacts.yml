@@ -1,0 +1,13 @@
+draft_artifact:
+  agent_workflow_run: completed_run
+  artifact_type: menu_patch
+  content: '{"changes": [{"op": "update", "target": "item", "id": 1, "data": {"price": 1299}}]}'
+  status: draft
+
+approved_artifact:
+  agent_workflow_run: completed_run
+  artifact_type: menu_patch
+  content: '{"changes": [{"op": "add", "target": "item", "data": {"name": "New Item", "price": 999}}]}'
+  status: approved
+  approved_by: one
+  approved_at: <%= 30.minutes.ago.iso8601 %>

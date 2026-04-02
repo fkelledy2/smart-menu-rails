@@ -14,7 +14,7 @@ class EmployeeMailer < ApplicationMailer
 
     mail(
       to: recipient_email,
-      subject: "Your role at #{@restaurant.name} has been updated",
+      subject: t('employee_mailer.role_changed.subject'),
     )
   end
 end

@@ -15,29 +15,39 @@
     submitted = order.ordritems.select { |i| %w[ordered preparing ready delivered].include?(i.status) }
     all_statuses = submitted.map(&:fulfillment_status)
 
-    summary_label = if all_statuses.empty?
-      'Received'
+    summary_status_key = if all_statuses.empty?
+      'pending'
     elsif all_statuses.all? { |s| s == 'collected' }
-      'Complete'
+      'complete'
     elsif all_statuses.all? { |s| s == 'ready' }
-      'Ready'
+      'ready'
     elsif all_statuses.any? { |s| s == 'preparing' }
-      'Preparing'
+      'preparing'
     elsif all_statuses.any? { |s| s == 'ready' } && all_statuses.any? { |s| s != 'collected' }
-      'Partially Ready'
+      'partially_ready'
     else
-      'Received'
+      'pending'
     end
+    summary_label = t("smartmenus.ordritem_tracking.status_#{summary_status_key}")
   %>
 
   <turbo-frame id="ordr-status-frame-<%= order.id %>">
+    <%
+      status_labels = {
+        pending:        t('smartmenus.ordritem_tracking.status_pending'),
+        preparing:      t('smartmenus.ordritem_tracking.status_preparing'),
+        ready:          t('smartmenus.ordritem_tracking.status_ready'),
+        collected:      t('smartmenus.ordritem_tracking.status_collected'),
+      }.to_json
+    %>
     <div class="ordritem-tracking"
          data-controller="ordritem-tracking"
-         data-ordritem-tracking-order-id-value="<%= order.id %>">
+         data-ordritem-tracking-order-id-value="<%= order.id %>"
+         data-ordritem-tracking-status-labels-value="<%= status_labels %>">
 
       <%# Order summary header %>
       <div class="ordritem-tracking__summary mb-2">
-        <small class="text-muted">Order status:</small>
+        <small class="text-muted"><%= t('smartmenus.ordritem_tracking.order_status_label') %></small>
         <span class="badge ms-1 ordritem-summary-badge ordritem-summary-badge--<%= summary_label.downcase.tr(' ', '_') %>"
               data-ordritem-tracking-target="orderSummaryLabel"
               data-ordritem-tracking-target="orderSummaryStatus"
@@ -61,11 +71,12 @@
               <span class="badge ordritem-status-badge ordritem-status-badge--<%= item.fulfillment_status %>"
                     data-ordritem-status-badge
                     data-status="<%= item.fulfillment_status %>">
-                <%= item.fulfillment_status.capitalize %>
+                <%= t("smartmenus.ordritem_tracking.status_#{item.fulfillment_status}", default: item.fulfillment_status.capitalize) %>
               </span>
               <small class="text-muted"
                      data-ordritem-updated-at
-                     style="display:none;">Updated just now</small>
+                     data-updated-label="<%= t('smartmenus.ordritem_tracking.updated_just_now') %>"
+                     style="display:none;"><%= t('smartmenus.ordritem_tracking.updated_just_now') %></small>
             </div>
           </div>
         </div>

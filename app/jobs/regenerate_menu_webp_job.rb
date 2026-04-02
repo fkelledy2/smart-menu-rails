@@ -12,8 +12,13 @@ class RegenerateMenuWebpJob
     Rails.logger.info "[RegenerateMenuWebpJob] 🖼️  Starting WebP regeneration for '#{menu.name}'"
     Rails.logger.info '=' * 80
 
-    # Get all menu items with images for this menu
-    menu_items = menu.menusections.flat_map(&:menuitems).select { |mi| mi.image.present? }
+    # Load menu items with images in a single query via joins rather than
+    # flat_map(&:menuitems) which fires one SELECT per section (N+1).
+    menu_items = Menuitem
+      .joins(:menusection)
+      .where(menusections: { menu_id: menu.id })
+      .where.not(image_data: [nil, ''])
+      .order('menusections.sequence ASC, menuitems.sequence ASC')
     total = menu_items.count
 
     Rails.logger.info "[RegenerateMenuWebpJob] Found #{total} menu items with images"

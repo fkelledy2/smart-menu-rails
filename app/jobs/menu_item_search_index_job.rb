@@ -95,9 +95,11 @@ class MenuItemSearchIndexJob
       return if vectors.blank?
     end
 
+    # Performance: batch upsert via INSERT ... ON CONFLICT DO UPDATE instead of one
+    # SELECT + INSERT/UPDATE per document.  Eliminates N round-trips per menu.
     now = Time.current
 
-    to_index.each_with_index do |row, idx|
+    upsert_rows = to_index.each_with_index.filter_map do |row, idx|
       attrs = {
         restaurant_id: row[:restaurant_id],
         menu_id: row[:menu_id],
@@ -106,6 +108,7 @@ class MenuItemSearchIndexJob
         document_text: row[:document_text],
         content_hash: row[:content_hash],
         indexed_at: now,
+        embedding: nil,
       }
 
       if vectors
@@ -113,17 +116,22 @@ class MenuItemSearchIndexJob
         next unless vec.is_a?(Array) && vec.any?
 
         attrs[:embedding] = "[#{vec.join(',')}]"
-      else
-        attrs[:embedding] = nil
       end
 
-      rec = MenuItemSearchDocument.where(menu_id: menu.id, restaurant_id: restaurant_id, menuitem_id: row[:menuitem_id], locale: locale).first
-      if rec
-        rec.update!(attrs)
-      else
-        MenuItemSearchDocument.create!(attrs)
-      end
+      attrs
     end
+
+    return if upsert_rows.empty?
+
+    # rubocop:disable Rails/SkipsModelValidations -- intentional: bulk search-index
+    # writes don't need ActiveRecord validations; upsert_all is the only way to
+    # replace N sequential INSERT/UPDATE pairs with a single round-trip.
+    MenuItemSearchDocument.upsert_all(
+      upsert_rows,
+      unique_by: %i[menu_id restaurant_id menuitem_id locale],
+      update_only: %i[document_text content_hash indexed_at embedding],
+    )
+    # rubocop:enable Rails/SkipsModelValidations
   end
 
   def batch_embed(ml, texts, locale)

@@ -1,15 +1,14 @@
 <!-- Role Change Notification Email -->
 <h1 style="margin: 0 0 24px 0; font-size: 24px; font-weight: 700; color: #111827; line-height: 1.3;">
-  Your role has been updated
+  <%= t('employee_mailer.role_changed.subject') %>
 </h1>
 
 <p style="margin: 0 0 16px 0; font-size: 16px; color: #374151; line-height: 1.6;">
-  Hi <%= @employee.name %>,
+  <%= t('employee_mailer.role_changed.greeting', name: @employee.name) %>
 </p>
 
 <p style="margin: 0 0 24px 0; font-size: 16px; color: #374151; line-height: 1.6;">
-  Your role at <strong><%= @restaurant.name %></strong> has been updated by
-  <strong><%= @changed_by.name %></strong>.
+  <%= t('employee_mailer.role_changed.intro', restaurant: content_tag(:strong, @restaurant.name), changed_by: content_tag(:strong, @changed_by.name)).html_safe %>
 </p>
 
 <!-- Role change summary -->
@@ -20,11 +19,11 @@
       <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
         <tr>
           <td width="50%" style="padding: 0 12px 0 0;">
-            <p style="margin: 0 0 4px 0; font-size: 12px; font-weight: 600; color: #6B7280; text-transform: uppercase; letter-spacing: 0.05em;">Previous Role</p>
+            <p style="margin: 0 0 4px 0; font-size: 12px; font-weight: 600; color: #6B7280; text-transform: uppercase; letter-spacing: 0.05em;"><%= t('employee_mailer.role_changed.previous_role') %></p>
             <p style="margin: 0; font-size: 18px; font-weight: 700; color: #374151;"><%= @from_role.titleize %></p>
           </td>
           <td width="50%" style="padding: 0 0 0 12px; border-left: 1px solid #E5E7EB;">
-            <p style="margin: 0 0 4px 0; font-size: 12px; font-weight: 600; color: #6B7280; text-transform: uppercase; letter-spacing: 0.05em;">New Role</p>
+            <p style="margin: 0 0 4px 0; font-size: 12px; font-weight: 600; color: #6B7280; text-transform: uppercase; letter-spacing: 0.05em;"><%= t('employee_mailer.role_changed.new_role') %></p>
             <p style="margin: 0; font-size: 18px; font-weight: 700; color: #2563EB;"><%= @to_role.titleize %></p>
           </td>
         </tr>
@@ -38,27 +37,26 @@
   <% case @to_role.to_s %>
   <% when 'manager' %>
     <p style="margin: 0 0 16px 0; font-size: 15px; color: #374151; line-height: 1.6;">
-      As a <strong>Manager</strong>, you can now edit menus, manage orders, and update restaurant settings during service.
+      <%= t('employee_mailer.role_changed.promotion_manager') %>
     </p>
   <% when 'admin' %>
     <p style="margin: 0 0 16px 0; font-size: 15px; color: #374151; line-height: 1.6;">
-      As an <strong>Admin</strong>, you have full access to restaurant settings, billing, and staff management.
+      <%= t('employee_mailer.role_changed.promotion_admin') %>
     </p>
   <% end %>
 <% end %>
 
 <p style="margin: 0 0 8px 0; font-size: 14px; color: #6B7280; line-height: 1.6;">
-  <strong>Reason provided:</strong>
+  <strong><%= t('employee_mailer.role_changed.reason_label') %></strong>
 </p>
 <p style="margin: 0 0 24px 0; font-size: 15px; color: #374151; line-height: 1.6; padding: 12px 16px; background-color: #F3F4F6; border-left: 3px solid #D1D5DB; border-radius: 0 4px 4px 0;">
   <%= @audit.reason %>
 </p>
 
 <p style="margin: 0 0 8px 0; font-size: 14px; color: #9CA3AF; line-height: 1.6;">
-  This change took effect on <%= @audit.created_at.strftime('%B %-d, %Y at %I:%M %p') %>.
-  Your updated permissions are active immediately.
+  <%= t('employee_mailer.role_changed.change_date', date: @audit.created_at.strftime('%B %-d, %Y at %I:%M %p')) %>
 </p>
 
 <p style="margin: 0; font-size: 14px; color: #9CA3AF; line-height: 1.6;">
-  If you believe this change was made in error, please contact your restaurant owner directly.
+  <%= t('employee_mailer.role_changed.error_contact') %>
 </p>

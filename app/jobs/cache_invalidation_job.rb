@@ -18,9 +18,10 @@ class CacheInvalidationJob < ApplicationJob
     start_time = Time.current
 
     begin
-      # Invalidate order-specific caches
+      # Invalidate order-specific caches — pass restaurant_id so the wildcard
+      # delete_matched is scoped to this tenant rather than scanning all restaurants.
       if order_id
-        AdvancedCacheService.invalidate_order_caches(order_id)
+        AdvancedCacheService.invalidate_order_caches(order_id, restaurant_id: restaurant_id)
         invalidate_identity_cache_for_order(order_id)
       end
 

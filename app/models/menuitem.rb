@@ -44,9 +44,9 @@ class Menuitem < ApplicationRecord
   cache_has_one :genimage, embed: :id
 
   before_validation :ensure_hidden_when_carrier
-  # Cache invalidation hooks
-  after_update :invalidate_menuitem_caches
-  after_destroy :invalidate_menuitem_caches
+  # Cache invalidation hooks — run after commit so the job sees committed data
+  # and so cache clears don't block the write transaction on the primary DB.
+  after_commit :invalidate_menuitem_caches, on: %i[update destroy]
 
   after_commit :enqueue_menu_item_search_reindex, on: %i[create update destroy]
 

@@ -182,14 +182,14 @@
                        ] %>
                     <% if can_change_role %>
                       <% action_items << {
-                           label: 'Change Role',
+                           label: t('.change_role'),
                            href: new_role_change_restaurant_employee_path(restaurant, employee),
                            data: { turbo_stream: true },
                          } %>
                     <% end %>
                     <% if can_view_history %>
                       <% action_items << {
-                           label: 'Role History',
+                           label: t('.role_history'),
                            href: role_history_restaurant_employee_path(restaurant, employee),
                            data: { turbo_stream: true },
                          } %>

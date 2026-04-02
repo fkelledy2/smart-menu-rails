@@ -1,19 +1,18 @@
-Your role has been updated at <%= @restaurant.name %>
+<%= t('employee_mailer.role_changed.subject') %> — <%= @restaurant.name %>
 
-Hi <%= @employee.name %>,
+<%= t('employee_mailer.role_changed.greeting', name: @employee.name) %>
 
-Your role at <%= @restaurant.name %> has been updated by <%= @changed_by.name %>.
+<%= t('employee_mailer.role_changed.intro', restaurant: @restaurant.name, changed_by: @changed_by.name) %>
 
-Previous role: <%= @from_role.titleize %>
-New role: <%= @to_role.titleize %>
+<%= t('employee_mailer.role_changed.previous_role') %>: <%= @from_role.titleize %>
+<%= t('employee_mailer.role_changed.new_role') %>: <%= @to_role.titleize %>
 
-Reason provided:
+<%= t('employee_mailer.role_changed.reason_label') %>
 <%= @audit.reason %>
 
-This change took effect on <%= @audit.created_at.strftime('%B %-d, %Y at %I:%M %p') %>.
-Your updated permissions are active immediately.
+<%= t('employee_mailer.role_changed.change_date', date: @audit.created_at.strftime('%B %-d, %Y at %I:%M %p')) %>
 
-If you believe this change was made in error, please contact your restaurant owner directly.
+<%= t('employee_mailer.role_changed.error_contact') %>
 
 ---
-Mellow Menu — https://mellow.menu
+<%= t('employee_mailer.role_changed.footer') %>

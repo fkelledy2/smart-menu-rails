@@ -8,6 +8,10 @@ class SmartMenuGeneratorJob
     restaurant = Restaurant.find_by(id: restaurantId)
     return unless restaurant # Skip if restaurant doesn't exist
 
+    # Pre-load tablesettings once rather than re-querying inside the menus loop
+    # (previously fired one SELECT per menu + one final SELECT — N+1 on tablesettings).
+    tablesettings = Tablesetting.where(restaurant_id: restaurant.id).order(:name).to_a
+
     #       Restaurant.all.each do |restaurant|
     Menu.where(restaurant_id: restaurant.id).find_each do |menu|
       begin
@@ -21,7 +25,7 @@ class SmartMenuGeneratorJob
         nil
       end
 
-      Tablesetting.where(restaurant_id: restaurant.id).order(:name).each do |tablesetting|
+      tablesettings.each do |tablesetting|
         Smartmenu.create!(
           restaurant: restaurant,
           menu: menu,
@@ -33,7 +37,7 @@ class SmartMenuGeneratorJob
       end
     end
 
-    Tablesetting.where(restaurant_id: restaurant.id).order(:name).each do |tablesetting|
+    tablesettings.each do |tablesetting|
       Smartmenu.create!(
         restaurant: restaurant,
         menu: nil,

@@ -44,9 +44,10 @@ class Menu < ApplicationRecord
   cache_belongs_to :restaurant
   cache_belongs_to :owner_restaurant
 
-  # Cache invalidation hooks
-  after_update :invalidate_menu_caches
-  after_destroy :invalidate_menu_caches
+  # Cache invalidation hooks — after_commit ensures the Memcached delete
+  # happens outside the write transaction so it does not slow down the primary DB
+  # and always reflects committed state.
+  after_commit :invalidate_menu_caches, on: %i[update destroy]
 
   # Localization hook - trigger localization after menu is created
   after_commit :enqueue_localization, on: :create
