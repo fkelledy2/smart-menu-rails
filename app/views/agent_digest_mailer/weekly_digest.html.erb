@@ -1,0 +1,129 @@
+<h1 style="margin: 0 0 8px 0; font-size: 22px; font-weight: 700; color: #111827; line-height: 1.3;">
+  Your weekly growth digest
+</h1>
+<p style="margin: 0 0 24px 0; font-size: 14px; color: #6B7280;">
+  <%= @restaurant.name %> &mdash; week of <%= Date.current.beginning_of_week.strftime('%B %-d, %Y') %>
+</p>
+
+<p style="margin: 0 0 16px 0; font-size: 16px; color: #374151; line-height: 1.6;">
+  Hi <%= @recipient.try(:name) || @recipient.email %>,
+</p>
+
+<% if @content[:narrative].present? %>
+  <p style="margin: 0 0 24px 0; font-size: 16px; color: #374151; line-height: 1.6;">
+    <%= @content[:narrative] %>
+  </p>
+<% end %>
+
+<% if @content[:weekend_recommendation].present? %>
+  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"
+         style="margin: 0 0 24px 0; background-color: #EFF6FF; border-radius: 8px; border-left: 4px solid #3B82F6;">
+    <tr>
+      <td style="padding: 16px 20px;">
+        <p style="margin: 0 0 4px 0; font-size: 12px; font-weight: 600; color: #1D4ED8; text-transform: uppercase; letter-spacing: 0.05em;">Weekend Recommendation</p>
+        <p style="margin: 0; font-size: 15px; color: #1E3A8A;"><%= @content[:weekend_recommendation] %></p>
+      </td>
+    </tr>
+  </table>
+<% end %>
+
+<% insights = Array(@content[:insights]) %>
+<% top = insights.select { |i| i['type'] == 'top_performer' || i[:type] == 'top_performer' } %>
+<% actions = insights.reject { |i| (i['type'] || i[:type]) == 'top_performer' } %>
+
+<% if top.any? %>
+  <h2 style="margin: 0 0 12px 0; font-size: 16px; font-weight: 700; color: #111827;">Top Performers This Week</h2>
+  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"
+         style="margin: 0 0 24px 0; background-color: #F9FAFB; border-radius: 8px; border: 1px solid #E5E7EB;">
+    <% top.first(5).each do |item| %>
+      <% name = item['name'] || item[:name] %>
+      <% reason = item['reason'] || item[:reason] %>
+      <tr>
+        <td style="padding: 12px 20px; border-bottom: 1px solid #E5E7EB;">
+          <span style="font-weight: 600; color: #111827;"><%= name %></span>
+          <% if reason.present? %>
+            <span style="color: #6B7280; font-size: 14px;"> &mdash; <%= reason %></span>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+<% end %>
+
+<% if actions.any? %>
+  <h2 style="margin: 0 0 12px 0; font-size: 16px; font-weight: 700; color: #111827;">Actions to Consider</h2>
+  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"
+         style="margin: 0 0 24px 0; background-color: #F9FAFB; border-radius: 8px; border: 1px solid #E5E7EB;">
+    <% actions.first(8).each do |item| %>
+      <% iname  = item['name']   || item[:name] %>
+      <% ireason = item['reason'] || item[:reason] %>
+      <% iaction = item['action'] || item[:action] %>
+      <tr>
+        <td style="padding: 12px 20px; border-bottom: 1px solid #E5E7EB;">
+          <span style="font-weight: 600; color: #111827;"><%= iname %></span>
+          <% if iaction.present? %>
+            <span style="display: inline-block; margin-left: 8px; padding: 2px 8px; font-size: 11px; font-weight: 600; background-color: #FEF3C7; color: #92400E; border-radius: 4px; text-transform: uppercase;">
+              <%= iaction %>
+            </span>
+          <% end %>
+          <% if ireason.present? %>
+            <br>
+            <span style="color: #6B7280; font-size: 13px;"><%= ireason %></span>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+<% end %>
+
+<% marketing = @content[:marketing_copy] || @content['marketing_copy'] || {} %>
+<% instagram = marketing['instagram_caption'] || marketing[:instagram_caption] %>
+<% email_body = marketing['email_body'] || marketing[:email_body] %>
+<% featured = marketing['featured_item'] || marketing[:featured_item] %>
+
+<% if instagram.present? || email_body.present? %>
+  <h2 style="margin: 0 0 12px 0; font-size: 16px; font-weight: 700; color: #111827;">
+    Ready-to-Use Marketing Copy
+    <% if featured.present? %>
+      <span style="font-weight: 400; color: #6B7280; font-size: 13px;">
+        — for <%= featured['name'] || featured[:name] %>
+      </span>
+    <% end %>
+  </h2>
+
+  <% if instagram.present? %>
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"
+           style="margin: 0 0 16px 0; background-color: #F5F3FF; border-radius: 8px; border: 1px solid #DDD6FE;">
+      <tr>
+        <td style="padding: 16px 20px;">
+          <p style="margin: 0 0 6px 0; font-size: 12px; font-weight: 600; color: #7C3AED; text-transform: uppercase; letter-spacing: 0.05em;">Instagram Caption</p>
+          <p style="margin: 0; font-size: 14px; color: #374151; line-height: 1.6;"><%= instagram %></p>
+        </td>
+      </tr>
+    </table>
+  <% end %>
+
+  <% if email_body.present? %>
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"
+           style="margin: 0 0 24px 0; background-color: #F0FDF4; border-radius: 8px; border: 1px solid #BBF7D0;">
+      <tr>
+        <td style="padding: 16px 20px;">
+          <p style="margin: 0 0 6px 0; font-size: 12px; font-weight: 600; color: #166534; text-transform: uppercase; letter-spacing: 0.05em;">Email / Newsletter Copy</p>
+          <p style="margin: 0; font-size: 14px; color: #374151; line-height: 1.6;"><%= email_body %></p>
+        </td>
+      </tr>
+    </table>
+  <% end %>
+<% end %>
+
+<p style="margin: 0 0 24px 0;">
+  <a href="<%= @workbench_url %>"
+     style="display: inline-block; padding: 12px 24px; background-color: #2563EB; color: #ffffff; font-size: 15px; font-weight: 600; text-decoration: none; border-radius: 6px;">
+    View Full Digest in Back Office
+  </a>
+</p>
+
+<p style="margin: 0; font-size: 13px; color: #9CA3AF; line-height: 1.6;">
+  You are receiving this because you are a manager or owner at <%= @restaurant.name %>.
+  All recommendations are advisory only — no changes have been made to your menu automatically.
+</p>

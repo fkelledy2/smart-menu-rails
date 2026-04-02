@@ -14,11 +14,19 @@ module Agents
         @registry ||= {}
       end
 
+      # Registry of workflow_type → job class for specialised workflow jobs.
+      # If a workflow_type is not registered here, DispatchDomainEventJob is used.
+      def job_registry
+        @job_registry ||= {}
+      end
+
       # Register an event_type → workflow_type mapping.
-      # @param event_type    [String] e.g. 'order.completed'
-      # @param workflow_type [String] e.g. 'menu_import'
-      def register(event_type, workflow_type:)
+      # @param event_type    [String]  e.g. 'order.completed'
+      # @param workflow_type [String]  e.g. 'menu_import'
+      # @param job_class     [Class]   optional specialised job class
+      def register(event_type, workflow_type:, job_class: nil)
         registry[event_type.to_s] = workflow_type.to_s
+        job_registry[workflow_type.to_s] = job_class if job_class
       end
 
       def call(domain_event)
@@ -51,9 +59,10 @@ module Agents
       end
 
       run = create_workflow_run!(restaurant, workflow_type)
-      Agents::DispatchDomainEventJob.perform_later(run.id)
+      dispatch_job = self.class.job_registry[workflow_type] || Agents::DispatchDomainEventJob
+      dispatch_job.perform_later(run.id)
 
-      Rails.logger.info("[Agents::Dispatcher] Enqueued workflow run #{run.id} for #{workflow_type}")
+      Rails.logger.info("[Agents::Dispatcher] Enqueued workflow run #{run.id} for #{workflow_type} via #{dispatch_job}")
       :enqueued
     end
 

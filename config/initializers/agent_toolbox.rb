@@ -8,4 +8,6 @@ Rails.application.config.after_initialize do
   Agents::Toolbox.register(Agents::Tools::ProposeMenuPatch)
   Agents::Toolbox.register(Agents::Tools::ComposeManagerSummary)
   Agents::Toolbox.register(Agents::Tools::CreateReviewQueueTask)
+  Agents::Toolbox.register(Agents::Tools::FetchMenuSource)
+  Agents::Toolbox.register(Agents::Tools::DraftMarketingCopy)
 end

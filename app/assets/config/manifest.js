@@ -94,6 +94,7 @@
 //= link controllers/role_change_controller.js
 //= link controllers/role_change_form_controller.js
 //= link controllers/ordritem_tracking_controller.js
+//= link controllers/clipboard_controller.js
 
 // Application entry point
 //= link application.js

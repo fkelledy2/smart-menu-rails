@@ -1,0 +1,26 @@
+Your weekly growth digest — <%= @restaurant.name %>
+Week of <%= Date.current.beginning_of_week.strftime('%B %-d, %Y') %>
+
+Hi <%= @recipient.try(:name) || @recipient.email %>,
+
+<% if @content[:narrative].present? %><%= @content[:narrative] %>
+
+<% end %><% if @content[:weekend_recommendation].present? %>WEEKEND RECOMMENDATION
+<%= @content[:weekend_recommendation] %>
+
+<% end %><% insights = Array(@content[:insights]) %><% top = insights.select { |i| (i['type'] || i[:type]) == 'top_performer' } %><% if top.any? %>TOP PERFORMERS THIS WEEK
+<% top.first(5).each do |item| %>- <%= item['name'] || item[:name] %><% reason = item['reason'] || item[:reason] %><% if reason.present? %> — <%= reason %><% end %>
+<% end %>
+
+<% end %><% actions = insights.reject { |i| (i['type'] || i[:type]) == 'top_performer' } %><% if actions.any? %>ACTIONS TO CONSIDER
+<% actions.first(8).each do |item| %><% iname = item['name'] || item[:name] %><% iaction = item['action'] || item[:action] %><% ireason = item['reason'] || item[:reason] %>- <%= iname %><% if iaction.present? %> [<%= iaction.upcase %>]<% end %><% if ireason.present? %>: <%= ireason %><% end %>
+<% end %>
+
+<% end %><% marketing = @content[:marketing_copy] || @content['marketing_copy'] || {} %><% instagram = marketing['instagram_caption'] || marketing[:instagram_caption] %><% email_body = marketing['email_body'] || marketing[:email_body] %><% if instagram.present? || email_body.present? %>MARKETING COPY
+<% if instagram.present? %>Instagram: <%= instagram %>
+
+<% end %><% if email_body.present? %>Email: <%= email_body %>
+
+<% end %><% end %>View your full digest: <%= @workbench_url %>
+
+All recommendations are advisory only — no changes have been made to your menu automatically.

@@ -1,0 +1,220 @@
+<% content_for :title, "Menu Import Review — Run ##{@run.id}" %>
+
+<div class="container-fluid py-3">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <%= link_to restaurant_agent_workbench_path(@restaurant, @run),
+            class: 'text-muted small text-decoration-none mb-1 d-block' do %>
+        <i class="bi bi-arrow-left me-1" aria-hidden="true"></i>Back to Run #<%= @run.id %>
+      <% end %>
+      <h4 class="mb-0 fw-bold">
+        <i class="bi bi-file-check me-2 text-success" aria-hidden="true"></i>
+        Menu Import Review
+      </h4>
+      <p class="text-muted small mb-0">
+        Review and approve AI-proposed menu items before publishing
+      </p>
+    </div>
+    <div class="text-end">
+      <%= render 'status_badge', status: @run.status %>
+    </div>
+  </div>
+
+  <% if notice %>
+    <div class="alert alert-success alert-dismissible fade show py-2" role="alert">
+      <%= notice %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <% end %>
+  <% if alert %>
+    <div class="alert alert-danger alert-dismissible fade show py-2" role="alert">
+      <%= alert %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <% end %>
+
+  <% if @ocr_import.nil? %>
+    <div class="alert alert-warning">
+      No menu import is linked to this workflow run yet. The import agent may still be processing.
+    </div>
+  <% else %>
+
+    <%# Summary bar %>
+    <div class="row g-3 mb-4">
+      <div class="col-auto">
+        <div class="card border-0 bg-light px-4 py-3 text-center">
+          <div class="fw-bold fs-4"><%= @ocr_import.ocr_menu_sections.count %></div>
+          <div class="text-muted small">Sections</div>
+        </div>
+      </div>
+      <div class="col-auto">
+        <div class="card border-0 bg-light px-4 py-3 text-center">
+          <div class="fw-bold fs-4"><%= @ocr_import.ocr_menu_items.count %></div>
+          <div class="text-muted small">Items</div>
+        </div>
+      </div>
+      <div class="col-auto">
+        <div class="card border-0 bg-success bg-opacity-10 border-success px-4 py-3 text-center">
+          <div class="fw-bold fs-4 text-success"><%= @ocr_import.ocr_menu_items.auto_approved.count %></div>
+          <div class="text-muted small">Auto-approved</div>
+        </div>
+      </div>
+      <div class="col-auto">
+        <div class="card border-0 bg-warning bg-opacity-10 border-warning px-4 py-3 text-center">
+          <div class="fw-bold fs-4 text-warning"><%= @ocr_import.ocr_menu_items.require_approval.count %></div>
+          <div class="text-muted small">Need Review</div>
+        </div>
+      </div>
+      <% if @pending_approvals.any? %>
+        <div class="col-auto">
+          <div class="card border-0 bg-danger bg-opacity-10 border-danger px-4 py-3 text-center">
+            <div class="fw-bold fs-4 text-danger"><%= @pending_approvals.count %></div>
+            <div class="text-muted small">Pending Approvals</div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <%# Pending approvals block %>
+    <% if @pending_approvals.any? %>
+      <div class="card border-warning shadow-sm mb-4">
+        <div class="card-header bg-warning bg-opacity-10 fw-semibold border-warning">
+          <i class="bi bi-shield-exclamation me-1 text-warning" aria-hidden="true"></i>
+          Pending Approvals — resolve all before publishing
+        </div>
+        <div class="card-body p-0">
+          <% @pending_approvals.each do |approval| %>
+            <div class="border-bottom px-3 py-3" id="approval-<%= approval.id %>">
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <div>
+                  <% payload = approval.proposed_payload || {} %>
+                  <div class="fw-semibold text-dark small">
+                    <%= payload['name'].presence || approval.action_type.humanize %>
+                  </div>
+                  <div class="text-muted small">
+                    <% if payload['price'].present? %>Price: <%= number_to_currency(payload['price'], unit: @restaurant.try(:currency).presence || '€') %>&middot; <% end %>
+                    Confidence: <%= ((payload['confidence_score'].to_f) * 100).round %>%
+                    &middot; Risk: <strong class="text-<%= approval.risk_level == 'high' ? 'danger' : 'warning' %>"><%= approval.risk_level.capitalize %></strong>
+                  </div>
+                  <% if payload['allergens'].present? %>
+                    <div class="text-danger small">
+                      <i class="bi bi-exclamation-triangle me-1" aria-hidden="true"></i>
+                      Allergens: <%= Array(payload['allergens']).join(', ') %>
+                    </div>
+                  <% end %>
+                  <div class="text-muted small">
+                    Reason: <em><%= payload['reason'].to_s.humanize %></em>
+                  </div>
+                </div>
+                <%= render 'status_badge', status: approval.status %>
+              </div>
+
+              <div class="d-flex gap-2 mt-2 flex-wrap">
+                <%= form_with url: approve_restaurant_agent_workbench_approval_path(
+                                    @restaurant,
+                                    agent_workbench_id: @run.id,
+                                    id: approval.id),
+                              method: :patch, local: true do |f| %>
+                  <%= f.submit 'Approve Item', class: 'btn btn-sm btn-success' %>
+                <% end %>
+                <%= form_with url: reject_restaurant_agent_workbench_approval_path(
+                                    @restaurant,
+                                    agent_workbench_id: @run.id,
+                                    id: approval.id),
+                              method: :patch, local: true do |f| %>
+                  <%= f.text_field :reviewer_notes, placeholder: 'Reason for rejection', class: 'form-control form-control-sm d-inline-block', style: 'width: 200px;' %>
+                  <%= f.submit 'Reject Item', class: 'btn btn-sm btn-outline-danger ms-1' %>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <%# Section / item diff table %>
+    <div class="card border-0 shadow-sm mb-4">
+      <div class="card-header bg-transparent fw-semibold border-bottom">
+        <i class="bi bi-list-ul me-1 text-primary" aria-hidden="true"></i>
+        Proposed Menu Items
+        <span class="text-muted fw-normal small ms-2">Left: existing live menu | Right: AI-proposed</span>
+      </div>
+      <div class="card-body p-0">
+        <% @ocr_import.ocr_menu_sections.order(sequence: :asc).includes(:ocr_menu_items).each do |section| %>
+          <div class="border-bottom px-3 py-2 bg-light">
+            <strong class="text-dark"><%= section.name %></strong>
+          </div>
+          <% section.ocr_menu_items.ordered.each do |item| %>
+            <div class="border-bottom px-3 py-2 d-flex justify-content-between align-items-start">
+              <div class="flex-grow-1">
+                <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
+                  <span class="fw-semibold text-dark small"><%= item.name %></span>
+                  <% if item.price.present? %>
+                    <span class="text-muted small"><%= number_to_currency(item.price, unit: @restaurant.try(:currency).presence || '€') %></span>
+                  <% end %>
+                  <% if item.allergens.any? %>
+                    <span class="badge bg-danger bg-opacity-10 text-danger small">
+                      <i class="bi bi-exclamation-triangle me-1" aria-hidden="true"></i>
+                      Allergens: <%= item.allergens.join(', ') %>
+                    </span>
+                  <% end %>
+                  <% Array(item.proposed_tags).each do |tag| %>
+                    <span class="badge bg-secondary bg-opacity-10 text-secondary"><%= tag %></span>
+                  <% end %>
+                </div>
+                <% if item.description.present? %>
+                  <p class="text-muted small mb-1"><%= item.description %></p>
+                <% end %>
+                <% if item.confidence_score.present? %>
+                  <div class="d-flex align-items-center gap-1">
+                    <div class="progress" style="width: 80px; height: 6px;" title="Confidence: <%= (item.confidence_score * 100).round %>%">
+                      <div class="progress-bar <%= item.confidence_score >= 0.8 ? 'bg-success' : item.confidence_score >= 0.5 ? 'bg-warning' : 'bg-danger' %>"
+                           style="width: <%= (item.confidence_score * 100).round %>%"></div>
+                    </div>
+                    <span class="text-muted" style="font-size: 0.7rem;"><%= (item.confidence_score * 100).round %>% confidence</span>
+                  </div>
+                <% end %>
+              </div>
+              <div class="ms-3 flex-shrink-0">
+                <% case item.agent_approval_status
+                   when 'auto_approved' %>
+                  <span class="badge bg-success">Auto-approved</span>
+                <% when 'approved' %>
+                  <span class="badge bg-success">Approved</span>
+                <% when 'rejected' %>
+                  <span class="badge bg-danger">Rejected</span>
+                <% when 'require_approval' %>
+                  <span class="badge bg-warning text-dark">Needs review</span>
+                <% else %>
+                  <span class="badge bg-secondary">Pending</span>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
+    <%# Publish CTA %>
+    <% all_resolved = @pending_approvals.empty? %>
+    <div class="d-flex justify-content-end gap-3">
+      <%= link_to restaurant_agent_workbench_path(@restaurant, @run),
+                  class: 'btn btn-outline-secondary' do %>
+        Back to Run Details
+      <% end %>
+      <% if all_resolved %>
+        <%= form_with url: publish_menu_import_restaurant_agent_workbench_path(@restaurant, @run),
+                      method: :post, local: true do |f| %>
+          <%= f.submit 'Publish to Live Menu',
+                       class: 'btn btn-success',
+                       data: { confirm: 'This will create live menu items. Are you sure?' } %>
+        <% end %>
+      <% else %>
+        <button class="btn btn-success" disabled title="Resolve all pending approvals first">
+          Publish to Live Menu
+        </button>
+      <% end %>
+    </div>
+
+  <% end %>
+</div>

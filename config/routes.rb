@@ -392,6 +392,14 @@ Rails.application.routes.draw do
           patch :reject
         end
       end
+      member do
+        get :menu_import_review
+        post :publish_menu_import
+      end
+      collection do
+        get :digests
+        post :generate_digest
+      end
     end
 
     # Restaurant configuration

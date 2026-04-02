@@ -1,0 +1,190 @@
+<% content_for :title, "Growth Digest History — #{@restaurant.name}" %>
+
+<div class="container-fluid py-3">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h4 class="mb-0 fw-bold">
+        <i class="bi bi-graph-up-arrow me-2 text-success" aria-hidden="true"></i>
+        Growth Digest
+      </h4>
+      <p class="text-muted small mb-0"><%= @restaurant.name %></p>
+    </div>
+    <div class="d-flex gap-2">
+      <%= link_to restaurant_agent_workbench_index_path(@restaurant),
+                  class: 'btn btn-sm btn-outline-secondary' do %>
+        <i class="bi bi-arrow-left me-1" aria-hidden="true"></i> AI Workbench
+      <% end %>
+      <% if Flipper.enabled?(:agent_growth_digest, @restaurant) %>
+        <%= button_to generate_digest_restaurant_agent_workbench_index_path(@restaurant),
+                      method: :post,
+                      class: 'btn btn-sm btn-primary',
+                      data: { confirm: 'Generate a new digest now? This will use AI credits.' } do %>
+          <i class="bi bi-lightning-fill me-1" aria-hidden="true"></i> Generate Now
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+
+  <% if notice %>
+    <div class="alert alert-success alert-dismissible fade show py-2" role="alert">
+      <%= notice %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <% end %>
+  <% if alert %>
+    <div class="alert alert-danger alert-dismissible fade show py-2" role="alert">
+      <%= alert %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <% end %>
+
+  <% unless Flipper.enabled?(:agent_growth_digest, @restaurant) %>
+    <div class="alert alert-info">
+      <i class="bi bi-info-circle me-1" aria-hidden="true"></i>
+      The Growth Digest feature is not yet enabled for this restaurant.
+      Enable the <strong>agent_growth_digest</strong> Flipper flag to start receiving weekly insights.
+    </div>
+  <% end %>
+
+  <% if @digests.empty? %>
+    <div class="card border-0 shadow-sm">
+      <div class="card-body text-center py-5">
+        <i class="bi bi-bar-chart-line display-4 text-muted mb-3" aria-hidden="true"></i>
+        <h5 class="text-muted">No digests yet</h5>
+        <p class="text-muted small mb-3">
+          Weekly digests are generated automatically every Monday at 08:00.
+          You need at least 5 orders in the past 7 days to receive a digest.
+        </p>
+        <% if Flipper.enabled?(:agent_growth_digest, @restaurant) %>
+          <%= button_to generate_digest_restaurant_agent_workbench_index_path(@restaurant),
+                        method: :post,
+                        class: 'btn btn-primary' do %>
+            <i class="bi bi-lightning-fill me-1" aria-hidden="true"></i> Generate First Digest
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  <% else %>
+    <div class="row g-3">
+      <% @digests.each_with_index do |artifact, idx| %>
+        <% content = artifact.content.with_indifferent_access %>
+        <div class="col-12">
+          <div class="card border-0 shadow-sm <%= idx.zero? ? 'border-start border-3 border-primary' : '' %>">
+            <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
+              <div>
+                <span class="fw-semibold">
+                  <% if idx.zero? %>
+                    <span class="badge bg-primary me-2">Latest</span>
+                  <% end %>
+                  Digest — <%= artifact.created_at.strftime('%B %-d, %Y') %>
+                </span>
+                <span class="text-muted small ms-2">
+                  <%= artifact.created_at.strftime('%H:%M UTC') %>
+                </span>
+              </div>
+              <span class="badge bg-success">approved</span>
+            </div>
+            <div class="card-body">
+              <% if content[:narrative].present? %>
+                <p class="text-dark mb-3"><%= content[:narrative] %></p>
+              <% end %>
+
+              <% if content[:weekend_recommendation].present? %>
+                <div class="alert alert-primary py-2 mb-3">
+                  <i class="bi bi-lightbulb me-1" aria-hidden="true"></i>
+                  <strong>Weekend Tip:</strong> <%= content[:weekend_recommendation] %>
+                </div>
+              <% end %>
+
+              <% insights = Array(content[:insights]) %>
+              <% if insights.any? %>
+                <h6 class="fw-semibold mb-2">Insights &amp; Actions</h6>
+                <div class="list-group list-group-flush mb-3">
+                  <% insights.first(6).each do |insight| %>
+                    <% itype   = insight['type']   || insight[:type] %>
+                    <% iname   = insight['name']   || insight[:name] %>
+                    <% iaction = insight['action'] || insight[:action] %>
+                    <% ireason = insight['reason'] || insight[:reason] %>
+                    <% imid    = insight['menuitem_id'] || insight[:menuitem_id] %>
+                    <div class="list-group-item list-group-item-action px-0 py-2 border-0 border-bottom">
+                      <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                          <% case itype %>
+                          <% when 'top_performer' %>
+                            <i class="bi bi-star-fill text-warning me-1" aria-hidden="true"></i>
+                          <% when 'repricing_candidate' %>
+                            <i class="bi bi-tag-fill text-info me-1" aria-hidden="true"></i>
+                          <% when 'friction' %>
+                            <i class="bi bi-exclamation-triangle-fill text-warning me-1" aria-hidden="true"></i>
+                          <% else %>
+                            <i class="bi bi-arrow-down-circle text-danger me-1" aria-hidden="true"></i>
+                          <% end %>
+                          <span class="fw-semibold"><%= iname %></span>
+                          <% if ireason.present? %>
+                            <span class="text-muted small ms-1">— <%= ireason %></span>
+                          <% end %>
+                        </div>
+                        <% if imid.present? && itype != 'top_performer' %>
+                          <div class="d-flex gap-1 flex-shrink-0 ms-2">
+                            <% if iaction == 'reimage' %>
+                              <span class="badge bg-light text-dark border">Generate image</span>
+                            <% elsif iaction.present? %>
+                              <span class="badge bg-light text-dark border"><%= iaction.capitalize %></span>
+                            <% end %>
+                          </div>
+                        <% end %>
+                      </div>
+                    </div>
+                  <% end %>
+                </div>
+              <% end %>
+
+              <% marketing = content[:marketing_copy] || content['marketing_copy'] || {} %>
+              <% instagram = marketing['instagram_caption'] || marketing[:instagram_caption] %>
+              <% email_copy = marketing['email_body'] || marketing[:email_body] %>
+              <% featured = marketing['featured_item'] || marketing[:featured_item] %>
+
+              <% if instagram.present? || email_copy.present? %>
+                <h6 class="fw-semibold mb-2">
+                  Marketing Copy
+                  <% if featured.present? %>
+                    <small class="text-muted fw-normal">— for <%= featured['name'] || featured[:name] %></small>
+                  <% end %>
+                </h6>
+                <% if instagram.present? %>
+                  <div class="p-3 bg-light rounded mb-2">
+                    <div class="d-flex justify-content-between align-items-start mb-1">
+                      <small class="fw-semibold text-muted text-uppercase" style="letter-spacing: .05em;">Instagram Caption</small>
+                      <button class="btn btn-sm btn-outline-secondary py-0"
+                              data-controller="clipboard"
+                              data-clipboard-text-value="<%= h instagram %>"
+                              data-action="clipboard#copy">
+                        <i class="bi bi-clipboard me-1" aria-hidden="true"></i>Copy
+                      </button>
+                    </div>
+                    <p class="mb-0 small"><%= instagram %></p>
+                  </div>
+                <% end %>
+                <% if email_copy.present? %>
+                  <div class="p-3 bg-light rounded mb-3">
+                    <div class="d-flex justify-content-between align-items-start mb-1">
+                      <small class="fw-semibold text-muted text-uppercase" style="letter-spacing: .05em;">Email / Newsletter</small>
+                      <button class="btn btn-sm btn-outline-secondary py-0"
+                              data-controller="clipboard"
+                              data-clipboard-text-value="<%= h email_copy %>"
+                              data-action="clipboard#copy">
+                        <i class="bi bi-clipboard me-1" aria-hidden="true"></i>Copy
+                      </button>
+                    </div>
+                    <p class="mb-0 small"><%= email_copy %></p>
+                  </div>
+                <% end %>
+              <% end %>
+
+            </div><!-- card-body -->
+          </div><!-- card -->
+        </div><!-- col -->
+      <% end %>
+    </div><!-- row -->
+  <% end %>
+</div>

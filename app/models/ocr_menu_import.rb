@@ -2,14 +2,21 @@ class OcrMenuImport < ApplicationRecord
   include AASM
   include IdentityCache
 
+  after_create :emit_agent_domain_event
   after_commit :broadcast_progress_update, on: %i[create update]
 
   # Associations
   belongs_to :restaurant
   belongs_to :menu, optional: true
+  belongs_to :agent_workflow_run, optional: true
   has_many :ocr_menu_sections, dependent: :destroy
   has_many :ocr_menu_items, through: :ocr_menu_sections
   has_one_attached :pdf_file
+
+  # Agent processing statuses (separate from AASM OCR pipeline status)
+  AGENT_STATUSES = %w[pending processing awaiting_approval published failed].freeze
+
+  validates :agent_status, inclusion: { in: AGENT_STATUSES }, allow_nil: true
 
   # Active Storage validations
   validates :pdf_file, content_type: ['application/pdf'],
@@ -252,5 +259,19 @@ class OcrMenuImport < ApplicationRecord
     OcrMenuImportBroadcastService.broadcast_progress(self)
   rescue StandardError => e
     Rails.logger.warn("[OcrMenuImport] progress broadcast failed for ##{id}: #{e.class}: #{e.message}")
+  end
+
+  def emit_agent_domain_event
+    AgentDomainEvent.publish!(
+      event_type: 'menu.import.requested',
+      payload: {
+        restaurant_id: restaurant_id,
+        ocr_menu_import_id: id,
+      },
+      source: self,
+      idempotency_key: "menu.import.requested:ocr_menu_import:#{id}",
+    )
+  rescue StandardError => e
+    Rails.logger.warn("[OcrMenuImport] Failed to emit agent domain event for ##{id}: #{e.class}: #{e.message}")
   end
 end

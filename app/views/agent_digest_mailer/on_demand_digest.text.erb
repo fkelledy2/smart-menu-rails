@@ -1,0 +1,13 @@
+Your growth digest is ready — <%= @restaurant.name %>
+Generated <%= Time.current.strftime('%B %-d, %Y at %I:%M %p UTC') %>
+
+Hi <%= @recipient.try(:name) || @recipient.email %>,
+
+<% if @content[:narrative].present? %><%= @content[:narrative] %>
+
+<% end %><% if @content[:weekend_recommendation].present? %>WEEKEND RECOMMENDATION
+<%= @content[:weekend_recommendation] %>
+
+<% end %>View your full digest: <%= @workbench_url %>
+
+All recommendations are advisory only — no changes have been made to your menu automatically.

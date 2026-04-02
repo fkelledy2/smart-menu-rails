@@ -1,6 +1,6 @@
 # mellow.menu Feature Backlog — Priority Index
 
-**Last updated**: 2026-04-01 (nineteenth pass — Realtime Ordritem Tracking #34 COMPLETED) (seventeenth pass — daily prioritisation run; IQ-1 Naked Domain confirmed fully COMPLETED including ops steps; Sprint Recommendation updated to reflect current next best actions: Square alpha + Track D Employee Role Promotion + Track F Agent Framework; stale Track A/B/C completed-item deliverable lists retired; Refined flags added to spec files #28–#34)
+**Last updated**: 2026-04-01 (twentieth pass — Restaurant Growth Agent #19 COMPLETED) (seventeenth pass — daily prioritisation run; IQ-1 Naked Domain confirmed fully COMPLETED including ops steps; Sprint Recommendation updated to reflect current next best actions: Square alpha + Track D Employee Role Promotion + Track F Agent Framework; stale Track A/B/C completed-item deliverable lists retired; Refined flags added to spec files #28–#34)
 **Naked Domain Canonical Strategy (IQ-1)**: COMPLETED 2026-03-31 — DomainRedirect middleware live; spec at `docs/features/completed/naked-domain-canonical-strategy.md`
 **QR Code Security (#1)**: COMPLETED 2026-03-24 — Phase 1 shipped; spec at `docs/features/completed/qr-security.md`
 **Branded Email Styling (#1)**: COMPLETED 2026-03-24 — spec at `docs/features/completed/branded-email-styling-feature-request.md`
@@ -34,8 +34,8 @@
 | #15 | Cost Insights + Pricing Model Publisher | Post-Launch | L | #16 | Admin system enabling #14; required before pricing models can be published |
 | #16 | Heroku Cost Inventory | Post-Launch | S | Admin auth, HEROKU_PLATFORM_API_TOKEN | Feeds #15 with accurate infra cost data |
 | ~~#17~~ | ~~Agent Framework — Shared Infrastructure~~ | ~~Post-Launch~~ | L | OpenAI API, Sidekiq, PostgreSQL | **COMPLETED 2026-04-02** — spec at `docs/features/completed/17-agent-framework.md`; user guide at `docs/features/completed/17-agent-framework-user-guide.md` |
-| #18 | Menu Import Agent | Post-Launch | M | #17 Agent Framework | Highest-value onboarding accelerator; reduces time-to-first-menu from hours to minutes |
-| #19 | Restaurant Growth Agent | Post-Launch | M | #17 Agent Framework, analytics services | Weekly digest turns raw data into actionable owner insights; low risk, clear ROI |
+| ~~#18~~ | ~~Menu Import Agent~~ | ~~Post-Launch~~ | M | #17 Agent Framework | **COMPLETED 2026-04-01** — spec at `docs/features/completed/18-agent-menu-import.md`; user guide at `docs/features/completed/18-agent-menu-import-user-guide.md` |
+| ~~#19~~ | ~~Restaurant Growth Agent~~ | ~~Post-Launch~~ | M | #17 Agent Framework, analytics services | **COMPLETED 2026-04-01** — spec at `docs/features/completed/19-agent-restaurant-growth.md`; user guide at `docs/features/completed/19-agent-restaurant-growth-user-guide.md` |
 | #20 | Customer Concierge Agent | Post-Launch | M | #17 Agent Framework, SmartMenu view | Customer-facing differentiation; drives order value uplift via natural-language discovery |
 | #21 | Menu Optimization Agent | Post-Launch | M | #17, #19 patterns, 14+ days order data | Structured change-set proposals; builds on Growth Digest patterns; drives conversion |
 | #22 | Service Operations Agent | Post-Launch | M | #17, Kitchen/Station dashboards, ActionCable | Real-time ops intelligence; reduces kitchen congestion and service recovery lag |

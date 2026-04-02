@@ -3289,7 +3289,10 @@ CREATE TABLE public.ocr_menu_imports (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     source_locale character varying,
-    ai_mode integer DEFAULT 0 NOT NULL
+    ai_mode integer DEFAULT 0 NOT NULL,
+    agent_workflow_run_id bigint,
+    confidence_score double precision,
+    agent_status character varying DEFAULT 'pending'::character varying
 );
 
 
@@ -3341,7 +3344,10 @@ CREATE TABLE public.ocr_menu_items (
     estimated_packaging_cost numeric(10,4),
     estimated_overhead_cost numeric(10,4),
     cost_estimation_confidence numeric(5,2),
-    ai_cost_notes text
+    ai_cost_notes text,
+    confidence_score double precision,
+    agent_approval_status character varying DEFAULT 'pending'::character varying,
+    proposed_tags jsonb DEFAULT '[]'::jsonb
 );
 
 
@@ -10316,6 +10322,20 @@ CREATE INDEX index_ocr_imports_on_restaurant_status_created ON public.ocr_menu_i
 
 
 --
+-- Name: index_ocr_menu_imports_on_agent_status; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ocr_menu_imports_on_agent_status ON public.ocr_menu_imports USING btree (agent_status);
+
+
+--
+-- Name: index_ocr_menu_imports_on_agent_workflow_run_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ocr_menu_imports_on_agent_workflow_run_id ON public.ocr_menu_imports USING btree (agent_workflow_run_id);
+
+
+--
 -- Name: index_ocr_menu_imports_on_menu_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -10348,6 +10368,13 @@ CREATE INDEX index_ocr_menu_imports_on_source_locale ON public.ocr_menu_imports 
 --
 
 CREATE INDEX index_ocr_menu_imports_on_status ON public.ocr_menu_imports USING btree (status);
+
+
+--
+-- Name: index_ocr_menu_items_on_agent_approval_status; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ocr_menu_items_on_agent_approval_status ON public.ocr_menu_items USING btree (agent_approval_status);
 
 
 --
@@ -13803,6 +13830,8 @@ ALTER TABLE ONLY public.voice_commands
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260402115205'),
+('20260402115157'),
 ('20260402090001'),
 ('20260402073627'),
 ('20260402073622'),

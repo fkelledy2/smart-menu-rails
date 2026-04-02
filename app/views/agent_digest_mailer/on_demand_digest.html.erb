@@ -1,0 +1,40 @@
+<h1 style="margin: 0 0 8px 0; font-size: 22px; font-weight: 700; color: #111827; line-height: 1.3;">
+  Your growth digest is ready
+</h1>
+<p style="margin: 0 0 24px 0; font-size: 14px; color: #6B7280;">
+  <%= @restaurant.name %> &mdash; generated <%= Time.current.strftime('%B %-d, %Y at %I:%M %p UTC') %>
+</p>
+
+<p style="margin: 0 0 16px 0; font-size: 16px; color: #374151; line-height: 1.6;">
+  Hi <%= @recipient.try(:name) || @recipient.email %>,
+</p>
+
+<% if @content[:narrative].present? %>
+  <p style="margin: 0 0 24px 0; font-size: 16px; color: #374151; line-height: 1.6;">
+    <%= @content[:narrative] %>
+  </p>
+<% end %>
+
+<% if @content[:weekend_recommendation].present? %>
+  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"
+         style="margin: 0 0 24px 0; background-color: #EFF6FF; border-radius: 8px; border-left: 4px solid #3B82F6;">
+    <tr>
+      <td style="padding: 16px 20px;">
+        <p style="margin: 0 0 4px 0; font-size: 12px; font-weight: 600; color: #1D4ED8; text-transform: uppercase; letter-spacing: 0.05em;">Weekend Recommendation</p>
+        <p style="margin: 0; font-size: 15px; color: #1E3A8A;"><%= @content[:weekend_recommendation] %></p>
+      </td>
+    </tr>
+  </table>
+<% end %>
+
+<p style="margin: 0 0 24px 0;">
+  <a href="<%= @workbench_url %>"
+     style="display: inline-block; padding: 12px 24px; background-color: #2563EB; color: #ffffff; font-size: 15px; font-weight: 600; text-decoration: none; border-radius: 6px;">
+    View Full Digest in Back Office
+  </a>
+</p>
+
+<p style="margin: 0; font-size: 13px; color: #9CA3AF; line-height: 1.6;">
+  You are receiving this because you are a manager or owner at <%= @restaurant.name %>.
+  All recommendations are advisory only — no changes have been made to your menu automatically.
+</p>

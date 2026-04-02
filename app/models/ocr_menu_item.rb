@@ -21,10 +21,27 @@ class OcrMenuItem < ApplicationRecord
   validates :sequence, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :price, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
 
+  AGENT_APPROVAL_STATUSES = %w[pending auto_approved require_approval approved rejected].freeze
+
+  validates :agent_approval_status, inclusion: { in: AGENT_APPROVAL_STATUSES }, allow_nil: true
+  validates :confidence_score, numericality: { in: 0.0..1.0 }, allow_nil: true
+
   # Scopes
   scope :ordered, -> { order(sequence: :asc) }
   scope :confirmed, -> { where(is_confirmed: true) }
   scope :pending_confirmation, -> { where(is_confirmed: false) }
+  scope :require_approval, -> { where(agent_approval_status: 'require_approval') }
+  scope :auto_approved, -> { where(agent_approval_status: 'auto_approved') }
+
+  # Is this item flagged as allergen-sensitive?
+  def allergen_flagged?
+    allergens.present? && allergens.any?(&:present?)
+  end
+
+  # Should this item require manual approval before it can be published?
+  def requires_agent_approval?
+    allergen_flagged? || confidence_score.nil? || confidence_score < 0.8
+  end
 
   # Callbacks
   before_validation :set_default_sequence, on: :create

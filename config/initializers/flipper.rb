@@ -128,6 +128,12 @@ Rails.application.config.after_initialize do
   unless Flipper.exist?(:agent_framework)
     Flipper.add(:agent_framework)
   end
+
+  # Menu Import Agent (#18) — per-restaurant flag for the AI-powered menu import workflow.
+  # Requires agent_framework to also be enabled. Disabled by default.
+  unless Flipper.exist?(:agent_menu_import)
+    Flipper.add(:agent_menu_import)
+  end
 rescue ActiveRecord::ConnectionNotEstablished, ActiveRecord::StatementInvalid, ActiveRecord::NoDatabaseError => e
   # DB may be unreachable (CI asset precompile), or tables may not exist yet (db:create / db:migrate)
   Rails.logger.warn "[Flipper] Skipping feature flag seeding: #{e.message}"
