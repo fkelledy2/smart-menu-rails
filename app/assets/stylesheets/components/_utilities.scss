@@ -167,6 +167,23 @@
   border-radius: $border-radius;
   padding: 12px;
   border: 1px solid var(--color-gray-200, #E5E7EB);
+  transition: border-color 0.15s, background 0.15s, opacity 0.15s;
+
+  &--valid {
+    border-color: #198754;
+    background: #f0faf4;
+  }
+
+  &--invalid {
+    opacity: 0.45;
+    pointer-events: none;
+  }
+
+  &--blocked {
+    opacity: 0.3;
+    pointer-events: none;
+    cursor: not-allowed;
+  }
 }
 
 .crm-lead-card {
