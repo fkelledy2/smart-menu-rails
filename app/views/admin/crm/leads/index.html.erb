@@ -2,8 +2,8 @@
 <% content_for :title, 'CRM Sales Pipeline — Admin' %>
 
 <div data-controller="crm-kanban"
-     data-crm-kanban-transitions-value="<%= Crm::LeadTransitionService::FORWARD_TRANSITIONS.to_json.html_safe %>"
-     data-crm-kanban-lost-reasons-value="<%= CrmLead::LOST_REASONS.to_json.html_safe %>">
+     data-crm-kanban-transitions-value="<%= Crm::LeadTransitionService::FORWARD_TRANSITIONS.to_json %>"
+     data-crm-kanban-lost-reasons-value="<%= CrmLead::LOST_REASONS.to_json %>">
   <div class="container-fluid py-4 pb-2">
     <div class="d-flex justify-content-between align-items-center">
       <div>
@@ -12,16 +12,23 @@
           Drag cards between columns to update stage.
           <% if @needs_assignment_count > 0 %>
             <span class="badge bg-warning text-dark ms-2">
-              <%= @needs_assignment_count %> unassigned Calendly <%= 'lead'.pluralize(@needs_assignment_count) %>
+              <%= @needs_assignment_count %> unassigned demo-booked <%= 'lead'.pluralize(@needs_assignment_count) %>
             </span>
           <% end %>
         </p>
       </div>
-      <div class="d-flex gap-2">
-        <%= link_to admin_crm_leads_path, class: 'btn btn-outline-secondary', title: 'Refresh board' do %>
+      <div class="d-flex gap-2 align-items-center">
+        <div class="input-group input-group-sm" style="width: 260px;">
+          <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+          <input type="search"
+                 class="form-control border-start-0 ps-0"
+                 placeholder="Filter by name, city or assignee…"
+                 data-action="input->crm-kanban#search">
+        </div>
+        <%= link_to admin_crm_leads_path, class: 'btn btn-outline-secondary btn-sm', title: 'Refresh board' do %>
           <i class="bi bi-arrow-clockwise me-1"></i>Refresh
         <% end %>
-        <%= link_to 'New Lead', new_admin_crm_lead_path, class: 'btn btn-primary' %>
+        <%= link_to 'New Lead', new_admin_crm_lead_path, class: 'btn btn-primary btn-sm' %>
       </div>
     </div>
   </div>

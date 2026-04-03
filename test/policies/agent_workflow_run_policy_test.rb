@@ -7,7 +7,7 @@ class AgentWorkflowRunPolicyTest < ActiveSupport::TestCase
     @owner      = users(:one)       # owns restaurants(:one)
     @other_user = users(:two)       # owns restaurants(:two)
     @super_admin = users(:super_admin)
-    @run        = agent_workflow_runs(:pending_run)  # restaurant: one
+    @run        = agent_workflow_runs(:pending_run) # restaurant: one
     @other_run  = agent_workflow_runs(:other_restaurant_run) # restaurant: two
   end
 

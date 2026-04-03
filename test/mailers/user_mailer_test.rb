@@ -18,7 +18,7 @@ class UserMailerTest < ActionMailer::TestCase
 
   test 'welcome_email is sent from the Mellow Menu address' do
     mail = UserMailer.welcome_email(@user)
-    assert_equal ['hello@mellow.menu'], mail.from
+    assert_equal ['admin@mellow.menu'], mail.from
   end
 
   test 'welcome_email has correct subject' do
@@ -72,7 +72,7 @@ class UserMailerTest < ActionMailer::TestCase
 
   test 'reset_password_instructions is sent from the Mellow Menu address' do
     mail = UserMailer.reset_password_instructions(@user, 'reset_tok')
-    assert_equal ['hello@mellow.menu'], mail.from
+    assert_equal ['admin@mellow.menu'], mail.from
   end
 
   test 'reset_password_instructions has correct subject' do
@@ -205,9 +205,9 @@ class UserMailerTest < ActionMailer::TestCase
 
     emails.each do |mail|
       assert_equal(
-        ['hello@mellow.menu'],
+        ['admin@mellow.menu'],
         mail.from,
-        "Expected '#{mail.subject}' to be sent from hello@mellow.menu",
+        "Expected '#{mail.subject}' to be sent from admin@mellow.menu",
       )
     end
   end

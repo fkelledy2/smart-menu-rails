@@ -108,8 +108,8 @@ class OpenaiClient < ExternalApiClient
       temperature: temperature,
     }
 
-    body[:tools]      = tools       if tools.any?
-    body[:tool_choice] = 'auto'     if tools.any?
+    body[:tools] = tools if tools.any?
+    body[:tool_choice] = 'auto' if tools.any?
 
     response = post('/chat/completions', {
       body: body.to_json,

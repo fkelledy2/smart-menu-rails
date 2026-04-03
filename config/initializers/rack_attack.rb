@@ -193,6 +193,26 @@ Rack::Attack.throttle('marketing_qr/ip', limit: 60, period: 60.seconds) do |req|
 end
 
 # ----------------------------------------------------------------------------
+# Customer Concierge throttles
+# ----------------------------------------------------------------------------
+
+# Concierge query: 10 per hour per session — controls OpenAI API cost and prevents abuse.
+# Uses the first 32 characters of the encrypted session cookie as the throttle key,
+# consistent with the orders/session throttle pattern above.
+Rack::Attack.throttle('concierge/session', limit: 10, period: 1.hour) do |req|
+  if req.path =~ %r{/t/[^/]+/concierge/query} && req.post?
+    cookie_header = req.get_header('HTTP_COOKIE').to_s
+    match = cookie_header.match(/_session=([^;]+)/)
+    match ? "concierge_session:#{match[1][0, 32]}" : req.ip
+  end
+end
+
+# Concierge: 60 per hour per IP — broad defence in depth
+Rack::Attack.throttle('concierge/ip', limit: 60, period: 1.hour) do |req|
+  req.ip if req.path =~ %r{/t/[^/]+/concierge/query} && req.post?
+end
+
+# ----------------------------------------------------------------------------
 # Blocklists
 # ----------------------------------------------------------------------------
 

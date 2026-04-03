@@ -2,7 +2,7 @@
 en:
   employee_mailer:
     role_changed:
-      subject: Your role has been updated
+      subject: Your role at %{restaurant} has been updated
       greeting: 'Hi %{name},'
       intro: Your role at %{restaurant} has been updated by %{changed_by}.
       previous_role: Previous Role

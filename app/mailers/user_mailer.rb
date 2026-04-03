@@ -4,7 +4,7 @@ class UserMailer < Devise::Mailer
   include Devise::Controllers::UrlHelpers
 
   default template_path: 'user_mailer'
-  default from: 'Mellow Menu <hello@mellow.menu>'
+  default from: 'Mellow Menu <admin@mellow.menu>'
 
   def welcome_email(user)
     @user = user

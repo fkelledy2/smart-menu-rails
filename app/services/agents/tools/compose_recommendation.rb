@@ -114,12 +114,12 @@ module Agents
       # Falls back gracefully if parsing fails.
       def self.parse_recommendations(content, items)
         # Strip optional markdown fences
-        json_str = content.gsub(/```json\s*/i, '').gsub(/```/, '').strip
+        json_str = content.gsub(/```json\s*/i, '').gsub('```', '').strip
         parsed   = JSON.parse(json_str)
         return { items: [] } unless parsed.is_a?(Array)
 
         # Validate each returned id actually exists in our item list
-        valid_ids = items.map { |i| (i[:id] || i['id']).to_i }.to_set
+        valid_ids = items.to_set { |i| (i[:id] || i['id']).to_i }
         filtered  = parsed.select { |r| valid_ids.include?((r['id'] || r[:id]).to_i) }
 
         { items: filtered.first(MAX_ITEMS) }

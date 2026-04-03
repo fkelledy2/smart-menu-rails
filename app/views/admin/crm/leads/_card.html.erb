@@ -1,7 +1,15 @@
 <%# Single Kanban lead card %>
+<% search_text = [
+     lead.restaurant_name,
+     lead.contact_name,
+     lead.discovered_restaurant&.city_name,
+     lead.assigned_to&.email&.split('@')&.first,
+   ].compact.join(' ').downcase %>
 <div class="crm-lead-card"
      data-lead-id="<%= lead.id %>"
      data-crm-kanban-target="card"
+     data-search="<%= search_text %>"
+     data-assigned="<%= lead.assigned_to_id.present? %>"
      id="crm-lead-card-<%= lead.id %>">
   <div class="d-flex justify-content-between align-items-start mb-1">
     <%= link_to lead.restaurant_name,
@@ -25,10 +33,6 @@
           <i class="bi bi-geo-alt me-1"></i><%= dr.city_name %>
         </span>
       <% end %>
-      <% source_label = dr.metadata&.dig('source').presence || 'google_places' %>
-      <span class="badge bg-light text-secondary border fs-10">
-        <i class="bi bi-search me-1"></i><%= source_label.humanize %>
-      </span>
       <% if dr.establishment_type_label_text.present? && dr.establishment_type_label_text != 'Unknown' %>
         <span class="badge bg-light text-secondary border fs-10"><%= dr.establishment_type_label_text %></span>
       <% end %>
@@ -60,7 +64,8 @@
         <%= lead.assigned_to.email.split('@').first %>
       </span>
     <% else %>
-      <span class="badge bg-warning text-dark fs-10">Unassigned</span>
+      <% unassigned_class = %w[new contacted].include?(lead.stage) ? 'bg-success' : 'bg-warning text-dark' %>
+      <span class="badge <%= unassigned_class %> fs-10">Unassigned</span>
     <% end %>
 
     <span class="text-muted fs-10">

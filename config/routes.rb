@@ -19,6 +19,9 @@ Rails.application.routes.draw do
   # QR token route — resolves smartmenu by rotating public_token
   get '/t/:public_token', to: 'smartmenus#show_by_token', as: :table_link
 
+  # Customer Concierge — natural-language menu discovery (agent_customer_concierge flag)
+  post '/t/:public_token/concierge/query', to: 'smartmenus/concierge#query', as: :smartmenu_concierge_query
+
   # Staff invitation accept (public — no auth required)
   get '/staff_invitations/:token/accept', to: 'staff_invitations#accept', as: :accept_staff_invitation
 

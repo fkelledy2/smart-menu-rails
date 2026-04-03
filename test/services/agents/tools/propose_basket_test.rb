@@ -44,20 +44,20 @@ class Agents::Tools::ProposeBasketTest < ActiveSupport::TestCase
     max_budget = 1.0
 
     result = Agents::Tools::ProposeBasket.call(
-      'item_ids'   => item_ids,
+      'item_ids' => item_ids,
       'group_size' => 2,
-      'budget'     => max_budget,
+      'budget' => max_budget,
     )
 
-    assert result[:total] <= max_budget + 0.01, \
-      "Expected total #{result[:total]} to be within budget #{max_budget}"
+    assert result[:total] <= max_budget + 0.01,
+           "Expected total #{result[:total]} to be within budget #{max_budget}"
   end
 
   test 'call handles string keys and integer group_size' do
     return skip('No menuitems available') if @items.empty?
 
     result = Agents::Tools::ProposeBasket.call(
-      'item_ids'   => @items.map(&:id),
+      'item_ids' => @items.map(&:id),
       'group_size' => '4',
     )
 
@@ -69,7 +69,7 @@ class Agents::Tools::ProposeBasketTest < ActiveSupport::TestCase
     return skip('No menuitems available') if @items.empty?
 
     result = Agents::Tools::ProposeBasket.call(
-      'item_ids'   => @items.map(&:id),
+      'item_ids' => @items.map(&:id),
       'group_size' => 0,
     )
 
@@ -82,7 +82,7 @@ class Agents::Tools::ProposeBasketTest < ActiveSupport::TestCase
     return skip('Not enough menuitems') if items.size < 2
 
     result = Agents::Tools::ProposeBasket.call(
-      'item_ids'   => items.map(&:id),
+      'item_ids' => items.map(&:id),
       'group_size' => 100,
     )
 

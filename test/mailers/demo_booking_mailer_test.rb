@@ -33,7 +33,7 @@ class DemoBookingMailerTest < ActionMailer::TestCase
   end
 
   test 'is sent from the Mellow Menu address' do
-    assert_equal ['hello@mellow.menu'], mail.from
+    assert_equal ['admin@mellow.menu'], mail.from
   end
 
   test 'subject includes the contact name' do

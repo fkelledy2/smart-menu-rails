@@ -121,4 +121,110 @@ class CrmLeadTest < ActiveSupport::TestCase
     lead = CrmLead.create!(restaurant_name: 'Callback Test 2', stage: 'new', last_activity_at: time)
     assert_in_delta time.to_i, lead.last_activity_at.to_i, 1
   end
+
+  # ---------------------------------------------------------------------------
+  # Stage enum predicates (prefix: :stage avoids collision with Object#new)
+  # ---------------------------------------------------------------------------
+
+  test 'stage_new? is true for new leads' do
+    lead = crm_leads(:new_lead)
+    assert lead.stage_new?
+    assert_not lead.stage_contacted?
+  end
+
+  test 'stage_contacted? is true for contacted leads' do
+    lead = crm_leads(:contacted_lead)
+    assert lead.stage_contacted?
+  end
+
+  test 'stage_lost? is true for lost leads' do
+    lead = crm_leads(:lost_lead)
+    assert lead.stage_lost?
+    assert_not lead.stage_new?
+  end
+
+  test 'stage_converted? is true for converted leads' do
+    lead = crm_leads(:converted_lead)
+    assert lead.stage_converted?
+  end
+
+  test 'stage predicates cover all defined stages' do
+    predicate_stages = %w[new contacted demo_booked demo_completed proposal_sent trial_active converted lost]
+    predicate_stages.each do |stage|
+      lead = CrmLead.new(restaurant_name: 'Predicate Test', stage: stage)
+      lead.restaurant_id = restaurants(:one).id if stage == 'converted'
+      lead.lost_reason = 'price' if stage == 'lost'
+      assert lead.public_send(:"stage_#{stage}?"), "expected stage_#{stage}? to be true"
+    end
+  end
+
+  # ---------------------------------------------------------------------------
+  # LOST_REASONS enum
+  # ---------------------------------------------------------------------------
+
+  test 'all expected lost_reason values are defined' do
+    expected = %w[price competitor no_response not_a_fit timing other]
+    assert_equal expected, CrmLead::LOST_REASONS
+  end
+
+  test 'lost_reason_notes is optional even when stage is lost' do
+    lead = CrmLead.new(restaurant_name: 'No Notes', stage: 'lost', lost_reason: 'price')
+    assert lead.valid?, lead.errors.full_messages.to_sentence
+  end
+
+  # ---------------------------------------------------------------------------
+  # notes_count counter cache
+  # ---------------------------------------------------------------------------
+
+  test 'notes_count increments when a note is added' do
+    lead = CrmLead.create!(restaurant_name: 'Counter Test', stage: 'new', last_activity_at: Time.current)
+    author = users(:super_admin)
+    assert_equal 0, lead.notes_count
+
+    lead.crm_lead_notes.create!(body: 'First note', author: author)
+    assert_equal 1, lead.reload.notes_count
+
+    lead.crm_lead_notes.create!(body: 'Second note', author: author)
+    assert_equal 2, lead.reload.notes_count
+  end
+
+  test 'notes_count decrements when a note is removed' do
+    lead = CrmLead.create!(restaurant_name: 'Counter Decrement Test', stage: 'new', last_activity_at: Time.current)
+    author = users(:super_admin)
+    note = lead.crm_lead_notes.create!(body: 'Temp note', author: author)
+
+    assert_equal 1, lead.reload.notes_count
+    note.destroy!
+    assert_equal 0, lead.reload.notes_count
+  end
+
+  # ---------------------------------------------------------------------------
+  # Stage transition helpers
+  # ---------------------------------------------------------------------------
+
+  test 'stage can be assigned as a string' do
+    lead = crm_leads(:new_lead)
+    lead.stage = 'contacted'
+    assert lead.stage_contacted?
+  end
+
+  test 'lost stage stores lost_at timestamp when set via transition service' do
+    lead = crm_leads(:new_lead)
+    Crm::LeadTransitionService.call(
+      lead: lead,
+      new_stage: 'lost',
+      actor: users(:super_admin),
+      lost_reason: 'timing',
+    )
+    assert_not_nil lead.reload.lost_at
+  end
+
+  test 'reopening a lost lead clears lost_at, lost_reason, and lost_reason_notes' do
+    lead = crm_leads(:lost_lead)
+    Crm::LeadTransitionService.call(lead: lead, new_stage: 'contacted', actor: users(:super_admin))
+    lead.reload
+    assert_nil lead.lost_at
+    assert_nil lead.lost_reason
+    assert_nil lead.lost_reason_notes
+  end
 end

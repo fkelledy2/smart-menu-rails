@@ -62,6 +62,7 @@ import WaitTimeController from './wait_time_controller';
 import RoleChangeController from './role_change_controller';
 import RoleChangeFormController from './role_change_form_controller';
 import ClipboardController from './clipboard_controller';
+import ConciergeController from './concierge_controller';
 
 application.register('sortable', SortableController);
 application.register('auto-save', AutoSaveController);
@@ -123,3 +124,4 @@ application.register('wait-time', WaitTimeController);
 application.register('role-change', RoleChangeController);
 application.register('role-change-form', RoleChangeFormController);
 application.register('clipboard', ClipboardController);
+application.register('concierge', ConciergeController);

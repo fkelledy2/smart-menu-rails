@@ -3,9 +3,9 @@ require 'test_helper'
 class CustomerWaitQueuePolicyTest < ActiveSupport::TestCase
   def setup
     @restaurant = restaurants(:one)
-    @owner      = users(:one)           # restaurant one owner
+    @owner      = users(:one) # restaurant one owner
     @employee   = users(:employee_staff) # has active employee record for restaurant one
-    @outsider   = User.new              # not persisted
+    @outsider   = User.new # not persisted
     @entry      = customer_wait_queues(:waiting_one)
   end
 

@@ -96,6 +96,11 @@
 <%# Combined Allergen Modal (Key + Filter) - outside cache so filter form is always fresh %>
 <%= render partial: "smartmenus/allergen_combined_modal", locals: { allergyns: @allergyns } %>
 
+<%# Customer Concierge — outside cache since it's interactive and session-aware %>
+<% if show_customer_view && Flipper.enabled?(:agent_framework) && Flipper.enabled?(:agent_customer_concierge, @restaurant) %>
+  <%= render partial: 'smartmenus/concierge', locals: { smartmenu: @smartmenu, restaurant: @restaurant } %>
+<% end %>
+
 <%# AI Sommelier — outside cache since it's interactive %>
 <% if show_customer_view && @menu&.menuitems&.drink_items&.exists? %>
   <%= render partial: "smartmenus/sommelier", locals: { smartmenu: @smartmenu } %>

@@ -70,7 +70,7 @@ class Agents::CustomerConciergeServiceTest < ActiveSupport::TestCase
   test 'detects basket intent from query' do
     service = Agents::CustomerConciergeService.new(
       restaurant: @restaurant,
-      smartmenu:  @smartmenu,
+      smartmenu: @smartmenu,
       query_text: 'Build a tapas order for 4 people under €60',
     )
 
@@ -83,7 +83,7 @@ class Agents::CustomerConciergeServiceTest < ActiveSupport::TestCase
   test 'does not detect basket intent for simple query' do
     service = Agents::CustomerConciergeService.new(
       restaurant: @restaurant,
-      smartmenu:  @smartmenu,
+      smartmenu: @smartmenu,
       query_text: 'I am vegan',
     )
 
@@ -93,12 +93,12 @@ class Agents::CustomerConciergeServiceTest < ActiveSupport::TestCase
 
   test 'reuses existing workflow run when workflow_run_id provided' do
     existing_run = AgentWorkflowRun.create!(
-      restaurant:       @restaurant,
-      workflow_type:    'customer_concierge',
-      trigger_event:    'customer_query',
-      status:           'completed',
-      started_at:       1.minute.ago,
-      completed_at:     30.seconds.ago,
+      restaurant: @restaurant,
+      workflow_type: 'customer_concierge',
+      trigger_event: 'customer_query',
+      status: 'completed',
+      started_at: 1.minute.ago,
+      completed_at: 30.seconds.ago,
       context_snapshot: { 'turn_count' => 1, 'smartmenu_id' => @smartmenu.id },
     )
 
@@ -115,9 +115,9 @@ class Agents::CustomerConciergeServiceTest < ActiveSupport::TestCase
 
   def call_service(query_text:, workflow_run_id: nil)
     Agents::CustomerConciergeService.call(
-      restaurant:      @restaurant,
-      smartmenu:       @smartmenu,
-      query_text:      query_text,
+      restaurant: @restaurant,
+      smartmenu: @smartmenu,
+      query_text: query_text,
       workflow_run_id: workflow_run_id,
     )
   end
@@ -128,12 +128,10 @@ class Agents::CustomerConciergeServiceTest < ActiveSupport::TestCase
 
   # Stubs out both SearchMenuItems and ComposeRecommendation so tests don't
   # require a live OpenAI key.
-  def stub_concierge_tools(items:)
+  def stub_concierge_tools(items:, &block)
     Agents::Tools::SearchMenuItems.stub(:call, { items: [{ id: 1, name: 'Pizza', price: 12.5 }], total: 1 }) do
       compose_result = { items: items }
-      Agents::Tools::ComposeRecommendation.stub(:call, compose_result) do
-        yield
-      end
+      Agents::Tools::ComposeRecommendation.stub(:call, compose_result, &block)
     end
   end
 end

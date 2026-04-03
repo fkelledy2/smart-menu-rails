@@ -31,26 +31,30 @@ module Agents
         sessionid    = params['sessionid']    || params[:sessionid]
 
         participant = if sessionid.present?
-          Menuparticipant.find_by(smartmenu_id: smartmenu_id, sessionid: sessionid)
-        end
+                        Menuparticipant.find_by(smartmenu_id: smartmenu_id, sessionid: sessionid)
+                      end
 
         # Allergen exclusions come from OrdrparticipantAllergynFilters linked to
-        # the ordrparticipant for this session (the more precise source).
+        # the most recent ordrparticipant for this session.
+        # We join through ordrs → tablesettings to find participants for the
+        # restaurant that owns this smartmenu, scoped to the session.
         allergen_ids = []
         if sessionid.present?
-          ordrparticipant = Ordrparticipant
-            .joins(:ordr)
-            .where(
-              sessionid: sessionid,
-              ordrs: { smartmenu_id: smartmenu_id },
-            )
-            .order(created_at: :desc)
-            .first
+          smartmenu  = Smartmenu.find_by(id: smartmenu_id)
+          restaurant = smartmenu&.menu&.restaurant
 
-          if ordrparticipant
-            allergen_ids = ordrparticipant
-              .ordrparticipant_allergyn_filters
-              .pluck(:allergyn_id)
+          if restaurant
+            ordrparticipant = Ordrparticipant
+              .joins(ordr: :tablesetting)
+              .where(sessionid: sessionid, tablesettings: { restaurant_id: restaurant.id })
+              .order(created_at: :desc)
+              .first
+
+            if ordrparticipant
+              allergen_ids = ordrparticipant
+                .ordrparticipant_allergyn_filters
+                .pluck(:allergyn_id)
+            end
           end
         end
 

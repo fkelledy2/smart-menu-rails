@@ -45,15 +45,15 @@ class Agents::Tools::SearchMenuItemsTest < ActiveSupport::TestCase
 
     # Without exclusion: item should appear
     result_without = Agents::Tools::SearchMenuItems.call('restaurant_id' => @restaurant.id)
-    ids_without = result_without[:items].map { |i| i[:id] }
+    ids_without = result_without[:items].pluck(:id)
     assert_includes ids_without, item.id
 
     # With exclusion: item should not appear
     result_with = Agents::Tools::SearchMenuItems.call(
-      'restaurant_id'        => @restaurant.id,
+      'restaurant_id' => @restaurant.id,
       'exclude_allergyn_ids' => [allergyn.id],
     )
-    ids_with = result_with[:items].map { |i| i[:id] }
+    ids_with = result_with[:items].pluck(:id)
     assert_not_includes ids_with, item.id
   ensure
     MenuitemAllergynMapping.where(menuitem: item, allergyn: allergyn).destroy_all if item && allergyn
@@ -69,7 +69,7 @@ class Agents::Tools::SearchMenuItemsTest < ActiveSupport::TestCase
 
   test 'call ignores zero or invalid allergen IDs' do
     result = Agents::Tools::SearchMenuItems.call(
-      'restaurant_id'        => @restaurant.id,
+      'restaurant_id' => @restaurant.id,
       'exclude_allergyn_ids' => [0, -1, nil],
     )
     assert result.key?(:items)
@@ -78,7 +78,7 @@ class Agents::Tools::SearchMenuItemsTest < ActiveSupport::TestCase
   test 'call respects max_price filter' do
     result = Agents::Tools::SearchMenuItems.call(
       'restaurant_id' => @restaurant.id,
-      'max_price'     => 5.0,
+      'max_price' => 5.0,
     )
     result[:items].each do |item|
       assert item[:price] <= 5.0, "Expected price <= 5.0 but got #{item[:price]}"
@@ -88,7 +88,7 @@ class Agents::Tools::SearchMenuItemsTest < ActiveSupport::TestCase
   test 'call respects limit' do
     result = Agents::Tools::SearchMenuItems.call(
       'restaurant_id' => @restaurant.id,
-      'limit'         => 1,
+      'limit' => 1,
     )
     assert result[:items].size <= 1
   end

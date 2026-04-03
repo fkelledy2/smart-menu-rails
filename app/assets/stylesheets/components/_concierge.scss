@@ -171,7 +171,12 @@ body.concierge-active {
   transition: opacity 0.15s ease, transform 0.15s ease;
 
   &:hover { transform: scale(1.05); }
-  &:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
 }
 
 // ──────────────────────────────────────────────────────────────

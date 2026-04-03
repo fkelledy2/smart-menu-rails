@@ -97,8 +97,8 @@ class AgentDigestMailerTest < ActionMailer::TestCase
     assert_match(/digest.*ready/i, mail.subject)
   end
 
-  test 'on_demand_digest sends from hello@mellow.menu' do
-    mail = AgentDigestMailer.weekly_digest(@restaurant, @artifact, @user)
-    assert_match(/hello@mellow\.menu/, mail.from.first)
+  test 'on_demand_digest sends from admin@mellow.menu' do
+    mail = AgentDigestMailer.on_demand_digest(@restaurant, @artifact, @user)
+    assert_match(/admin@mellow\.menu/, mail.from.first)
   end
 end

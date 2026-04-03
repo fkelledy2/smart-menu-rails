@@ -14,10 +14,10 @@ module Crm
 
       lead = CrmLead.create!(
         restaurant_name: dr.name,
-        contact_email:   dr.preferred_email.presence,
-        contact_phone:   dr.preferred_phone.presence,
-        source:          discovery_source(dr),
-        stage:           'new',
+        contact_email: dr.preferred_email.presence,
+        contact_phone: dr.preferred_phone.presence,
+        source: discovery_source(dr),
+        stage: 'new',
         discovered_restaurant_id: dr.id,
         last_activity_at: Time.current,
       )
@@ -28,10 +28,10 @@ module Crm
         actor: nil,
         actor_type: 'system',
         metadata: {
-          source:                   'discovered_restaurant',
+          source: 'discovered_restaurant',
           discovered_restaurant_id: dr.id,
-          city:                     dr.city_name,
-          google_place_id:          dr.google_place_id,
+          city: dr.city_name,
+          google_place_id: dr.google_place_id,
         },
       )
     end

@@ -75,6 +75,10 @@ module Crm
       if @new_stage == 'lost' && @lost_reason.blank?
         raise TransitionError, 'A lost reason is required when marking a lead as lost'
       end
+
+      if @new_stage == 'demo_completed' && @lead.assigned_to_id.blank?
+        raise TransitionError, 'A lead must be assigned before marking the demo as completed'
+      end
     end
 
     def execute_transition

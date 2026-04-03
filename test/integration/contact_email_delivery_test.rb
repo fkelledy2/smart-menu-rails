@@ -31,13 +31,13 @@ class ContactEmailDeliveryTest < ActionDispatch::IntegrationTest
     # Find and verify receipt email
     receipt_email = emails.find { |email| email.to.include?('customer@example.com') }
     assert_not_nil receipt_email, 'Receipt email should be sent to customer'
-    assert_equal ['hello@mellow.menu'], receipt_email.from
+    assert_equal ['admin@mellow.menu'], receipt_email.from
     assert_match(/thanks/i, receipt_email.subject)
 
     # Find and verify notification email
-    notification_email = emails.find { |email| email.to.include?('hello@mellow.menu') }
+    notification_email = emails.find { |email| email.to.include?('admin@mellow.menu') }
     assert_not_nil notification_email, 'Notification email should be sent to admin'
-    assert_equal ['hello@mellow.menu'], notification_email.from
+    assert_equal ['admin@mellow.menu'], notification_email.from
     assert_match(/contact.*form/i, notification_email.subject)
     assert_match 'customer@example.com', notification_email.html_part.body.decoded
     assert_match 'smart menu system', notification_email.html_part.body.decoded
@@ -72,7 +72,7 @@ class ContactEmailDeliveryTest < ActionDispatch::IntegrationTest
       assert_not_nil receipt_email, "Receipt email should be sent to #{email}"
 
       # Verify notification email contains the customer email
-      notification_email = ActionMailer::Base.deliveries.find { |mail| mail.to.include?('hello@mellow.menu') }
+      notification_email = ActionMailer::Base.deliveries.find { |mail| mail.to.include?('admin@mellow.menu') }
       assert_not_nil notification_email
       assert_match email, notification_email.html_part.body.decoded
     end
@@ -94,7 +94,7 @@ class ContactEmailDeliveryTest < ActionDispatch::IntegrationTest
     assert_equal 2, ActionMailer::Base.deliveries.count
 
     # Verify notification email handles special characters
-    notification_email = ActionMailer::Base.deliveries.find { |mail| mail.to.include?('hello@mellow.menu') }
+    notification_email = ActionMailer::Base.deliveries.find { |mail| mail.to.include?('admin@mellow.menu') }
     assert_not_nil notification_email
     # NOTE: HTML encoding converts & to &amp; in email HTML body
     assert_match(/café.*restaurant.*special.*characters/, notification_email.html_part.body.decoded)
@@ -117,7 +117,7 @@ class ContactEmailDeliveryTest < ActionDispatch::IntegrationTest
     assert_equal 2, ActionMailer::Base.deliveries.count
 
     # Verify notification email includes the full long message
-    notification_email = ActionMailer::Base.deliveries.find { |mail| mail.to.include?('hello@mellow.menu') }
+    notification_email = ActionMailer::Base.deliveries.find { |mail| mail.to.include?('admin@mellow.menu') }
     assert_not_nil notification_email
     assert_match long_message, notification_email.html_part.body.decoded
   end
@@ -188,7 +188,7 @@ class ContactEmailDeliveryTest < ActionDispatch::IntegrationTest
     assert_match(/thanks/i, customer_email.subject)
 
     # Verify admin notification
-    admin_email = emails.find { |mail| mail.to.include?('hello@mellow.menu') }
+    admin_email = emails.find { |mail| mail.to.include?('admin@mellow.menu') }
     assert_not_nil admin_email, 'Admin should receive notification email'
     assert_match contact_data[:email], admin_email.html_part.body.decoded
     assert_match contact_data[:message], admin_email.html_part.body.decoded

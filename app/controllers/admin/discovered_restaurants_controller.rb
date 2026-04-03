@@ -78,12 +78,12 @@ module Admin
 
       # Preload menu_source attachments for the menus_count branch after pagination,
       # so the extra JOIN used for counting never touches LIMIT/OFFSET.
-      if @sort == 'menus_count'
-        ActiveRecord::Associations::Preloader.new(
-          records: @discovered_restaurants,
-          associations: { menu_sources: { latest_file_attachment: :blob } },
-        ).call
-      end
+      return unless @sort == 'menus_count'
+
+      ActiveRecord::Associations::Preloader.new(
+        records: @discovered_restaurants,
+        associations: { menu_sources: { latest_file_attachment: :blob } },
+      ).call
     end
 
     def show

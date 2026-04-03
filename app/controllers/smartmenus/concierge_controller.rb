@@ -31,20 +31,20 @@ module Smartmenus
       conversation_history = parse_conversation_history
 
       result = Agents::CustomerConciergeService.call(
-        restaurant:           @restaurant,
-        smartmenu:            @smartmenu,
-        query_text:           params[:query_text].to_s.strip,
+        restaurant: @restaurant,
+        smartmenu: @smartmenu,
+        query_text: params[:query_text].to_s.strip,
         conversation_history: conversation_history,
-        sessionid:            session[:dining_session_token],
-        workflow_run_id:      params[:workflow_run_id],
+        sessionid: session[:dining_session_token],
+        workflow_run_id: params[:workflow_run_id],
       )
 
       if result.error.present?
-        render json: { error: result.error, items: [], basket: nil }, status: :unprocessable_entity
+        render json: { error: result.error, items: [], basket: nil }, status: :unprocessable_content
       else
         render json: {
-          items:           result.items,
-          basket:          result.basket,
+          items: result.items,
+          basket: result.basket,
           workflow_run_id: result.workflow_run_id,
         }
       end
@@ -52,7 +52,7 @@ module Smartmenus
       Rails.logger.error("[Smartmenus::ConciergeController#query] #{e.class}: #{e.message}")
       render json: {
         error: I18n.t('smartmenus.concierge.error_unavailable',
-                      default: 'Recommendations unavailable right now — browse the menu below'),
+                      default: 'Recommendations unavailable right now — browse the menu below',),
         items: [],
         basket: nil,
       }, status: :service_unavailable
@@ -73,7 +73,7 @@ module Smartmenus
 
       render json: {
         error: I18n.t('smartmenus.concierge.feature_disabled',
-                      default: 'Concierge is not available for this menu'),
+                      default: 'Concierge is not available for this menu',),
       }, status: :forbidden
     end
 

@@ -7,11 +7,11 @@ module Crm
     def build_dr(overrides = {})
       DiscoveredRestaurant.create!(
         {
-          name:            'Test Bistro',
-          city_name:       'Dublin',
+          name: 'Test Bistro',
+          city_name: 'Dublin',
           google_place_id: "gp_#{SecureRandom.hex(6)}",
-          status:          :approved,
-          metadata:        {},
+          status: :approved,
+          metadata: {},
         }.merge(overrides),
       )
     end

@@ -30,8 +30,8 @@ class Agents::Tools::ComposeRecommendationTest < ActiveSupport::TestCase
     client_stub = build_client_stub(stub_response)
     OpenaiClient.stub(:new, client_stub) do
       result = Agents::Tools::ComposeRecommendation.call(
-        'items'  => [{ id: 1, name: 'Pizza', price: 12.5 }],
-        'query'  => 'Something Italian',
+        'items' => [{ id: 1, name: 'Pizza', price: 12.5 }],
+        'query' => 'Something Italian',
         'locale' => 'en',
       )
       assert_equal 1, result[:items].size
@@ -104,7 +104,7 @@ class Agents::Tools::ComposeRecommendationTest < ActiveSupport::TestCase
 
   test 'call limits recommendations to MAX_ITEMS' do
     many_items = (1..20).map { |i| { 'id' => i, 'name' => "Item #{i}", 'price' => 10.0, 'explanation' => 'Good.' } }
-    available_ids = (1..20).to_a
+    (1..20).to_a
     llm_json = many_items.to_json
     stub_response = { 'choices' => [{ 'message' => { 'content' => llm_json } }] }
 

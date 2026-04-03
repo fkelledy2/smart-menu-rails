@@ -75,7 +75,9 @@ module Crm
       # Calendly v2 payload: uri is "https://api.calendly.com/scheduled_events/{event_uuid}/invitees/{invitee_uuid}"
       # Use the invitee URI as the idempotency key — it is unique per booking.
       uri = @payload.dig('payload', 'uri').to_s
-      uri.split('/').last.presence || @payload['uuid']
+      uri.split('/').last.presence ||
+        @payload.dig('payload', 'event', 'uuid') ||
+        @payload['uuid']
     end
 
     def extract_invitee_email

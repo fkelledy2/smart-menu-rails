@@ -7,7 +7,7 @@ class AgentArtifactPolicyTest < ActiveSupport::TestCase
     @owner      = users(:one)
     @other_user = users(:two)
     @super_admin = users(:super_admin)
-    @artifact   = agent_artifacts(:draft_artifact)  # belongs to completed_run (restaurant: one)
+    @artifact = agent_artifacts(:draft_artifact) # belongs to completed_run (restaurant: one)
   end
 
   test 'super_admin can show any artifact' do

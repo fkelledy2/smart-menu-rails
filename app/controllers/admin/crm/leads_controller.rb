@@ -28,6 +28,7 @@ module Admin
         @notes = @lead.crm_lead_notes.includes(:author).order(created_at: :desc)
         @audits = @lead.crm_lead_audits.includes(:actor).order(created_at: :desc).limit(20)
         @email_sends = @lead.crm_email_sends.includes(:sender).order(created_at: :desc)
+        @users = User.where('email LIKE ?', '%@mellow.menu').order(:email)
       end
 
       def new
@@ -65,10 +66,7 @@ module Admin
 
         if @lead.update(lead_params)
           record_field_changes(old_attrs)
-          respond_to do |format|
-            format.html { redirect_to admin_crm_lead_path(@lead), notice: 'Lead updated.' }
-            format.turbo_stream
-          end
+          redirect_to admin_crm_lead_path(@lead), notice: 'Lead updated.'
         else
           @users = User.where('email LIKE ?', '%@mellow.menu').order(:email)
           render :edit, status: :unprocessable_content
@@ -96,11 +94,9 @@ module Admin
         respond_to do |format|
           if result.success?
             format.json { render json: { stage: @lead.stage }, status: :ok }
-            format.turbo_stream
             format.html { redirect_to admin_crm_leads_path, notice: 'Stage updated.' }
           else
             format.json { render json: { error: result.error }, status: :unprocessable_content }
-            format.turbo_stream { render turbo_stream: turbo_stream.replace('flash', partial: 'shared/flash', locals: { message: result.error }) }
             format.html { redirect_to admin_crm_leads_path, alert: result.error }
           end
         end
@@ -118,9 +114,9 @@ module Admin
         )
 
         if result.success?
-          redirect_to admin_crm_lead_path(@lead), notice: 'Lead converted and linked to restaurant.'
+          redirect_to admin_crm_leads_path, notice: 'Lead converted and linked to restaurant.'
         else
-          redirect_to admin_crm_lead_path(@lead), alert: result.error
+          redirect_to admin_crm_leads_path, alert: result.error
         end
       end
 
@@ -135,9 +131,9 @@ module Admin
         )
 
         if result.success?
-          redirect_to admin_crm_lead_path(@lead), notice: 'Lead reopened.'
+          redirect_to admin_crm_leads_path, notice: 'Lead reopened.'
         else
-          redirect_to admin_crm_lead_path(@lead), alert: result.error
+          redirect_to admin_crm_leads_path, alert: result.error
         end
       end
 

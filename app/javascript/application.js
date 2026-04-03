@@ -38,9 +38,8 @@ window.addEventListener('unhandledrejection', (event) => {
 
 // Import Turbo since this is now the only system
 import '@hotwired/turbo-rails';
-import { Application } from '@hotwired/stimulus';
 
-// Import Stimulus controllers
+// Import Stimulus controllers (registers all controllers via controllers/index.js)
 import './controllers';
 
 // Import enhanced restaurant context system
@@ -116,34 +115,8 @@ console.log(
 // Start local-time
 localTime.start();
 
-// Initialize Stimulus
-const application = Application.start();
-
-// Import and register Stimulus controllers like the old system
-try {
-  import('./controllers')
-    .then(() => console.log('[SmartMenu] Controllers loaded successfully'))
-    .catch((error) => {
-      console.warn('[SmartMenu] Controllers import failed:', error.message);
-      console.warn('[SmartMenu] Continuing without controller auto-loading...');
-    });
-} catch (error) {
-  console.warn('[SmartMenu] Controllers import error:', error.message);
-}
-
-import MenuImportController from './controllers/menu_import_controller.js';
-application.register('menu-import', MenuImportController);
-
-import SidebarController from './controllers/sidebar_controller.js';
-application.register('sidebar', SidebarController);
-
-import AutoSaveController from './controllers/auto_save_controller.js';
-application.register('auto-save', AutoSaveController);
-console.log('[SmartMenu] Auto-save controller registered');
-
-// Register stimulus controllers manually for importmap compatibility
-// Note: Controllers are loaded via importmap's pin_all_from directive
-window.Stimulus = application;
+// All Stimulus controllers are registered via controllers/index.js (imported above).
+// window.Stimulus is set by controllers/application.js — no second Application.start() needed.
 
 /**
  * Application Manager - Handles module loading and lifecycle

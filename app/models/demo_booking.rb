@@ -31,6 +31,7 @@ class DemoBooking < ApplicationRecord
   scope :by_email,   ->(email) { where(email: email.to_s.downcase.strip) }
 
   before_validation :normalise_email
+  after_create :create_or_advance_crm_lead
 
   # Build a Calendly pre-fill URL for this lead.
   # Falls back gracefully if CALENDLY_EVENT_URL is not configured.
@@ -51,6 +52,34 @@ class DemoBooking < ApplicationRecord
   end
 
   private
+
+  def create_or_advance_crm_lead
+    lead = CrmLead.where('LOWER(contact_email) = ?', email.downcase).first
+
+    if lead
+      past_stages = %w[demo_booked demo_completed proposal_sent trial_active converted lost]
+      unless past_stages.include?(lead.stage)
+        Crm::LeadTransitionService.call(lead: lead, new_stage: 'demo_booked', actor: nil)
+      end
+    else
+      lead = CrmLead.create!(
+        restaurant_name: restaurant_name,
+        contact_name: contact_name,
+        contact_email: email,
+        contact_phone: phone.presence,
+        source: 'website',
+        stage: 'demo_booked',
+        last_activity_at: Time.current,
+      )
+      Crm::LeadAuditWriter.write(
+        crm_lead: lead,
+        event: 'lead_created',
+        actor: nil,
+        actor_type: 'system',
+        metadata: { source: 'demo_booking', demo_booking_id: id },
+      )
+    end
+  end
 
   def normalise_email
     self.email = email.to_s.downcase.strip if email.present?

@@ -67,6 +67,7 @@ export default [
         btoa: 'readonly',
         atob: 'readonly',
         MediaRecorder: 'readonly',
+        AbortController: 'readonly',
         // Third-party libraries
         Sortable: 'readonly',
         google: 'readonly',

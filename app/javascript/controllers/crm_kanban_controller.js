@@ -19,7 +19,7 @@ import Sortable from 'sortablejs';
  *   modal    — the #leadModal Bootstrap modal element
  */
 export default class extends Controller {
-  static targets = ['cardList', 'modal'];
+  static targets = ['cardList', 'modal', 'card'];
   static values = {
     transitions: Object,
     lostReasons: Array,
@@ -31,6 +31,7 @@ export default class extends Controller {
     this._pendingDrop = null; // { card, oldList, oldIndex, newList, newStage }
     this._initAllColumns();
     this._bindLostModal();
+    this._bindModalFrameLoad();
   }
 
   disconnect() {
@@ -38,16 +39,43 @@ export default class extends Controller {
     this._sortables = [];
   }
 
+  // ─── Search / filter ─────────────────────────────────────────────────────
+
+  search(event) {
+    const query = event.target.value.trim().toLowerCase();
+
+    this.cardTargets.forEach((card) => {
+      const text = card.dataset.search || '';
+      card.hidden = query.length > 0 && !text.includes(query);
+    });
+
+    // Update each column's count badge to reflect visible cards only
+    this.cardListTargets.forEach((list) => {
+      const visible = [...list.querySelectorAll('[data-crm-kanban-target="card"]')]
+        .filter((c) => !c.hidden).length;
+      const badge = list.closest('[data-stage]')?.querySelector('.badge.rounded-pill');
+      if (badge) badge.textContent = visible;
+    });
+  }
+
   // ─── Lead detail modal ────────────────────────────────────────────────────
 
   openLeadModal(event) {
+    // Only block navigation when a drag is in progress. The modal is shown
+    // by _bindModalFrameLoad() once Turbo has finished loading the frame,
+    // so we must NOT show it here (that would display stale content).
     if (this._dragging) {
       event.preventDefault();
-      return;
     }
-    const modal = document.getElementById('leadModal');
-    if (!modal) return;
-    bootstrap.Modal.getOrCreateInstance(modal).show();
+  }
+
+  _bindModalFrameLoad() {
+    const frame = document.getElementById('crm_lead_modal');
+    if (!frame) return;
+    frame.addEventListener('turbo:frame-load', () => {
+      const modal = document.getElementById('leadModal');
+      if (modal) bootstrap.Modal.getOrCreateInstance(modal).show();
+    });
   }
 
   // ─── Sortable init ────────────────────────────────────────────────────────
@@ -66,11 +94,10 @@ export default class extends Controller {
         forceFallback: false,
         fallbackClass: 'sortable-fallback',
 
-        // Block drops onto "converted" entirely
+        // Block drops onto stages that are structurally or conditionally invalid
         onMove: (evt) => {
           const targetStage = evt.to.dataset.stage;
-          if (targetStage === 'converted') return false;
-          return true;
+          return !this._isBlocked(evt.dragged, targetStage);
         },
 
         onStart: (evt) => {
@@ -109,6 +136,14 @@ export default class extends Controller {
       return;
     }
 
+    // Check preconditions (assignee, etc.)
+    const blockReason = this._preconditionError(card, newStage);
+    if (blockReason) {
+      this._revertCard(card, oldList, event.oldIndex);
+      this._showToast(blockReason, 'warning');
+      return;
+    }
+
     // "lost" needs extra info — intercept and show modal
     if (newStage === 'lost') {
       this._pendingDrop = {
@@ -127,7 +162,7 @@ export default class extends Controller {
 
   // ─── Transition API call ──────────────────────────────────────────────────
 
-  async _commitTransition({ card, oldList, oldIndex, newStage, leadId, lostReason = null, lostReasonNotes = null }) {
+  async _commitTransition({ card, oldList, oldIndex, newStage, leadId, lostReason = null, lostReasonNotes = null, fromModal = false }) {
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
     const url = `/admin/crm/leads/${leadId}/transition`;
 
@@ -150,17 +185,39 @@ export default class extends Controller {
 
       if (!response.ok) {
         const data = await response.json().catch(() => ({}));
-        this._revertCard(card, oldList, oldIndex);
+        if (!fromModal) this._revertCard(card, oldList, oldIndex);
         this._showToast(data.error || 'Stage update failed. Please try again.', 'danger');
         return;
       }
 
-      this._showToast(`Moved to "${this._label(newStage)}"`, 'success');
+      if (fromModal) {
+        // Close the lead detail modal and refresh the board
+        const leadModal = document.getElementById('leadModal');
+        if (leadModal) bootstrap.Modal.getOrCreateInstance(leadModal).hide();
+        Turbo.visit(window.location.href);
+      } else {
+        this._showToast(`Moved to "${this._label(newStage)}"`, 'success');
+      }
     } catch (err) {
       console.error('[CrmKanban] Transition fetch error:', err);
       this._revertCard(card, oldList, oldIndex);
       this._showToast('Network error. Please try again.', 'danger');
     }
+  }
+
+  // ─── Lost from modal button (Move Stage panel) ───────────────────────────
+
+  openLostModalForLead(event) {
+    const leadId = event.currentTarget.dataset.leadId;
+    this._pendingDrop = {
+      card: document.getElementById(`crm-lead-card-${leadId}`),
+      oldList: null,
+      oldIndex: null,
+      newStage: 'lost',
+      leadId,
+      fromModal: true,
+    };
+    this._openLostModal();
   }
 
   // ─── Lost reason modal ────────────────────────────────────────────────────
@@ -206,10 +263,10 @@ export default class extends Controller {
 
     const modal = document.getElementById('crmLostReasonModal');
     modal?.addEventListener('hidden.bs.modal', () => {
-      // If modal closed without confirming, revert the card
+      // If modal closed without confirming, revert the card (drag-drop only)
       if (this._pendingDrop) {
-        const { card, oldList, oldIndex } = this._pendingDrop;
-        this._revertCard(card, oldList, oldIndex);
+        const { card, oldList, oldIndex, fromModal } = this._pendingDrop;
+        if (!fromModal) this._revertCard(card, oldList, oldIndex);
         this._pendingDrop = null;
       }
     });
@@ -230,7 +287,7 @@ export default class extends Controller {
       const stage = list.dataset.stage;
       if (stage === fromStage) return; // current column — neutral
 
-      if (stage === 'converted') {
+      if (this._isBlocked(draggedCard, stage)) {
         col.classList.add('crm-kanban-column--blocked');
       } else if (allowed.has(stage)) {
         col.classList.add('crm-kanban-column--valid');
@@ -245,6 +302,25 @@ export default class extends Controller {
       const col = list.closest('.crm-kanban-column');
       col?.classList.remove('crm-kanban-column--valid', 'crm-kanban-column--invalid', 'crm-kanban-column--blocked');
     });
+  }
+
+  // ─── Precondition helpers ─────────────────────────────────────────────────
+
+  // Returns true if the card must not be dropped onto targetStage at all
+  // (used by onMove to physically prevent the drop and by highlight logic).
+  _isBlocked(card, targetStage) {
+    if (targetStage === 'converted') return true;
+    if (targetStage === 'demo_completed' && card.dataset.assigned !== 'true') return true;
+    return false;
+  }
+
+  // Returns a human-readable error string when a drop should be rejected,
+  // or null if the drop is allowed. Called after transition-map validation passes.
+  _preconditionError(card, targetStage) {
+    if (targetStage === 'demo_completed' && card.dataset.assigned !== 'true') {
+      return 'Assign this lead to a team member before marking the demo as completed.';
+    }
+    return null;
   }
 
   // ─── Helpers ──────────────────────────────────────────────────────────────

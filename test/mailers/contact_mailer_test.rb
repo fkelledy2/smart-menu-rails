@@ -17,7 +17,7 @@ class ContactMailerTest < ActionMailer::TestCase
 
   test 'receipt email is sent from the Mellow Menu address' do
     mail = ContactMailer.receipt(@contact)
-    assert_equal ['hello@mellow.menu'], mail.from
+    assert_equal ['admin@mellow.menu'], mail.from
   end
 
   test 'receipt email has correct subject' do
@@ -50,12 +50,12 @@ class ContactMailerTest < ActionMailer::TestCase
 
   test 'notification email is sent to the Mellow Menu admin address' do
     mail = ContactMailer.notification(@contact)
-    assert_includes mail.to, 'hello@mellow.menu'
+    assert_includes mail.to, 'admin@mellow.menu'
   end
 
   test 'notification email is sent from the Mellow Menu address' do
     mail = ContactMailer.notification(@contact)
-    assert_equal ['hello@mellow.menu'], mail.from
+    assert_equal ['admin@mellow.menu'], mail.from
   end
 
   test 'notification email has correct subject' do

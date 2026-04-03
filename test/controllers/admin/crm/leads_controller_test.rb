@@ -244,6 +244,63 @@ class Admin::Crm::LeadsControllerTest < ActionDispatch::IntegrationTest
     assert_equal 'new', @lead.reload.stage
   end
 
+  test 'transition to lost requires lost_reason' do
+    sign_in @mellow_admin
+    patch transition_admin_crm_lead_path(@lead),
+          params: { stage: 'lost' },
+          as: :json
+
+    assert_response :unprocessable_entity
+    assert_not_nil response.parsed_body['error']
+    assert_equal 'new', @lead.reload.stage
+  end
+
+  test 'transition to lost succeeds when lost_reason is provided' do
+    sign_in @mellow_admin
+    patch transition_admin_crm_lead_path(@lead),
+          params: { stage: 'lost', lost_reason: 'competitor' },
+          as: :json
+
+    assert_response :ok
+    assert_equal 'lost', @lead.reload.stage
+    assert_equal 'competitor', @lead.reload.lost_reason
+  end
+
+  test 'transition to lost stores lost_reason_notes when provided' do
+    sign_in @mellow_admin
+    patch transition_admin_crm_lead_path(@lead),
+          params: { stage: 'lost', lost_reason: 'price', lost_reason_notes: 'Too costly for them' },
+          as: :json
+
+    assert_equal 'Too costly for them', @lead.reload.lost_reason_notes
+  end
+
+  test 'transition writes a stage_changed audit record' do
+    sign_in @mellow_admin
+
+    assert_difference 'CrmLeadAudit.count', 1 do
+      patch transition_admin_crm_lead_path(@lead),
+            params: { stage: 'contacted' },
+            as: :json
+    end
+
+    audit = @lead.crm_lead_audits.order(:created_at).last
+    assert_equal 'stage_changed', audit.event
+    assert_equal 'new', audit.from_value
+    assert_equal 'contacted', audit.to_value
+  end
+
+  test 'update with unchanged fields writes no audit records' do
+    sign_in @mellow_admin
+    original_name = @lead.restaurant_name
+
+    assert_no_difference 'CrmLeadAudit.count' do
+      patch admin_crm_lead_path(@lead), params: {
+        crm_lead: { restaurant_name: original_name },
+      }
+    end
+  end
+
   # ---------------------------------------------------------------------------
   # Convert
   # ---------------------------------------------------------------------------
@@ -253,6 +310,7 @@ class Admin::Crm::LeadsControllerTest < ActionDispatch::IntegrationTest
     restaurant = restaurants(:one)
 
     # Advance @lead through the funnel to trial_active
+    @lead.update!(assigned_to: @mellow_admin)
     Crm::LeadTransitionService.call(lead: @lead, new_stage: 'contacted', actor: @mellow_admin)
     Crm::LeadTransitionService.call(lead: @lead, new_stage: 'demo_booked', actor: @mellow_admin)
     Crm::LeadTransitionService.call(lead: @lead, new_stage: 'demo_completed', actor: @mellow_admin)
@@ -261,7 +319,7 @@ class Admin::Crm::LeadsControllerTest < ActionDispatch::IntegrationTest
     @lead.reload
 
     patch convert_admin_crm_lead_path(@lead), params: { restaurant_id: restaurant.id }
-    assert_redirected_to admin_crm_lead_path(@lead)
+    assert_redirected_to admin_crm_leads_path
     assert_equal 'converted', @lead.reload.stage
     assert_equal restaurant.id, @lead.reload.restaurant_id
   end
@@ -272,7 +330,7 @@ class Admin::Crm::LeadsControllerTest < ActionDispatch::IntegrationTest
     # so the service returns a transition error (not the restaurant precondition error).
     # Either way the redirect has a flash alert.
     patch convert_admin_crm_lead_path(@lead), params: { restaurant_id: nil }
-    assert_redirected_to admin_crm_lead_path(@lead)
+    assert_redirected_to admin_crm_leads_path
     assert flash[:alert].present?
   end
 
@@ -283,7 +341,7 @@ class Admin::Crm::LeadsControllerTest < ActionDispatch::IntegrationTest
   test 'mellow admin can reopen a lost lead' do
     sign_in @mellow_admin
     patch reopen_admin_crm_lead_path(@lost_lead)
-    assert_redirected_to admin_crm_lead_path(@lost_lead)
+    assert_redirected_to admin_crm_leads_path
     assert_equal 'contacted', @lost_lead.reload.stage
   end
 
@@ -291,7 +349,7 @@ class Admin::Crm::LeadsControllerTest < ActionDispatch::IntegrationTest
     sign_in @mellow_admin
     # @converted has no allowed forward transitions, so contacted is not reachable
     patch reopen_admin_crm_lead_path(@converted)
-    assert_redirected_to admin_crm_lead_path(@converted)
+    assert_redirected_to admin_crm_leads_path
     assert flash[:alert].present?
   end
 end

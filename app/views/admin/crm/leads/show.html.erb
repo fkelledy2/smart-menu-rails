@@ -13,9 +13,6 @@
     <div>
       <h1 class="h3 mb-1"><%= @lead.restaurant_name %></h1>
       <span class="badge bg-primary"><%= @lead.stage.humanize %></span>
-      <% if @lead.source.present? %>
-        <span class="badge bg-secondary ms-1"><%= @lead.source %></span>
-      <% end %>
     </div>
     <div class="d-flex gap-2">
       <%# Link to matching demo booking if one exists for this contact's email %>
@@ -27,11 +24,15 @@
           <% end %>
         <% end %>
       <% end %>
-      <%= link_to 'Edit', edit_admin_crm_lead_path(@lead), class: 'btn btn-outline-secondary btn-sm' %>
+      <% if @lead.discovered_restaurant %>
+        <%= link_to admin_discovered_restaurant_path(@lead.discovered_restaurant), class: 'btn btn-outline-secondary btn-sm' do %>
+          <i class="bi bi-box-arrow-up-right me-1"></i>Discovery Record
+        <% end %>
+      <% end %>
       <% if @lead.stage == 'lost' %>
         <%= button_to 'Reopen', reopen_admin_crm_lead_path(@lead),
               method: :patch, class: 'btn btn-outline-warning btn-sm',
-              data: { confirm: 'Reopen this lead and move it back to Contacted?' } %>
+              data: { confirm: 'Reopen this lead and move it back to Contacted?', turbo_frame: '_top' } %>
       <% end %>
       <% unless %w[converted lost].include?(@lead.stage) %>
         <%= link_to 'Mark Converted', convert_admin_crm_lead_path(@lead),
@@ -56,11 +57,16 @@
           <% if @lead.contact_phone.present? %>
             <p class="mb-1 text-muted"><%= @lead.contact_phone %></p>
           <% end %>
-          <% if @lead.assigned_to %>
-            <hr class="my-2">
-            <p class="mb-0 text-muted fs-13">
-              Assigned to: <strong><%= @lead.assigned_to.email %></strong>
-            </p>
+          <hr class="my-2">
+          <p class="mb-1 text-muted fs-12 fw-semibold text-uppercase">Assigned to</p>
+          <%= form_with url: admin_crm_lead_path(@lead), method: :patch, scope: :crm_lead, class: 'mb-0', data: { turbo_frame: '_top' } do |f| %>
+            <div class="d-flex gap-1">
+              <%= f.select :assigned_to_id,
+                    [['— Unassigned —', '']] + @users.map { |u| [u.email.split('@').first, u.id] },
+                    { selected: @lead.assigned_to_id.to_s, include_blank: false },
+                    { class: 'form-select form-select-sm' } %>
+              <%= f.submit 'Save', class: 'btn btn-primary btn-sm flex-shrink-0' %>
+            </div>
           <% end %>
           <% if @lead.restaurant %>
             <hr class="my-2">
@@ -94,11 +100,27 @@
           <% if allowed.any? %>
             <div class="d-flex flex-column gap-1">
               <% allowed.each do |target_stage| %>
-                <%= button_to target_stage.humanize,
-                      transition_admin_crm_lead_path(@lead),
-                      params: { stage: target_stage },
-                      method: :patch,
-                      class: "btn btn-outline-secondary btn-sm text-start" %>
+                <% already_here = target_stage == @lead.stage %>
+                <% needs_assignee = target_stage == 'demo_completed' && @lead.assigned_to_id.blank? %>
+                <% btn_disabled = already_here || needs_assignee %>
+                <% if target_stage == 'lost' %>
+                  <button type="button"
+                          class="btn btn-danger btn-sm w-100 text-start"
+                          data-action="click->crm-kanban#openLostModalForLead"
+                          data-lead-id="<%= @lead.id %>"
+                          <%= 'disabled' if btn_disabled %>>
+                    Lost
+                  </button>
+                <% else %>
+                  <%= button_to target_stage.humanize,
+                        transition_admin_crm_lead_path(@lead),
+                        params: { stage: target_stage },
+                        method: :patch,
+                        class: "btn btn-primary btn-sm w-100 text-start #{'disabled' if btn_disabled}",
+                        disabled: btn_disabled,
+                        title: needs_assignee ? 'Assign this lead before marking the demo as completed' : nil,
+                        data: { turbo_frame: '_top' } %>
+                <% end %>
               <% end %>
             </div>
           <% else %>

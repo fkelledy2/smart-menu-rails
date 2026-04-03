@@ -51,7 +51,7 @@ module Api
             # Only render 403 when the target restaurant exists — non-existent restaurants
             # are handled downstream by set_restaurant (404), so we skip the check here
             # to avoid a spurious 403 racing ahead of the not-found response.
-            if params[:restaurant_id].present? && @current_api_restaurant&.id.to_s != params[:restaurant_id].to_s && Restaurant.exists?(params[:restaurant_id])
+            if params[:restaurant_id].present? && @current_api_restaurant&.id.to_s != params[:restaurant_id].to_s && Restaurant.exists?(id: params[:restaurant_id].to_i)
               render json: error_response('forbidden', 'Token is not authorized for this restaurant'),
                      status: :forbidden
               return

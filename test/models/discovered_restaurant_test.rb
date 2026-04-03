@@ -4,6 +4,7 @@ require 'test_helper'
 
 class DiscoveredRestaurantTest < ActiveSupport::TestCase
   include ActiveJob::TestHelper
+
   def build_discovered(overrides = {})
     DiscoveredRestaurant.new({
       name: 'Test Bistro',

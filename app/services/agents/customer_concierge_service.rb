@@ -29,8 +29,8 @@ module Agents
 
     Result = Struct.new(:items, :basket, :workflow_run_id, :error, keyword_init: true)
 
-    def self.call(**kwargs)
-      new(**kwargs).call
+    def self.call(**)
+      new(**).call
     end
 
     def initialize(
@@ -68,6 +68,12 @@ module Agents
       # 4. Build recommendations via LLM
       recommendation_result = compose_recommendations(items, prefs)
 
+      # Surface LLM errors (e.g. OpenAI unavailable) as graceful failures
+      if recommendation_result[:error].present?
+        update_run_failed(run, recommendation_result[:error])
+        return error_result('Recommendations unavailable right now — browse the menu below')
+      end
+
       # 5. If basket intent detected, build a basket suggestion
       basket = nil
       if basket_intent[:detected]
@@ -96,11 +102,11 @@ module Agents
     private
 
     def read_customer_preferences
-      return { locale: 'en', excluded_allergyn_ids: [], has_dietary_restrictions: false } unless @sessionid.present?
+      return { locale: 'en', excluded_allergyn_ids: [], has_dietary_restrictions: false } if @sessionid.blank?
 
       Agents::Tools::ReadCustomerPreferences.call(
         'smartmenu_id' => @smartmenu.id,
-        'sessionid'    => @sessionid,
+        'sessionid' => @sessionid,
       )
     end
 
@@ -109,9 +115,9 @@ module Agents
 
       Rails.cache.fetch(cache_key, expires_in: CACHE_TTL) do
         result = Agents::Tools::SearchMenuItems.call(
-          'restaurant_id'        => @restaurant.id,
+          'restaurant_id' => @restaurant.id,
           'exclude_allergyn_ids' => excluded_allergyn_ids,
-          'limit'                => CANDIDATE_ITEM_LIMIT,
+          'limit' => CANDIDATE_ITEM_LIMIT,
         )
         result[:items] || []
       end
@@ -119,11 +125,11 @@ module Agents
 
     def compose_recommendations(items, prefs)
       Agents::Tools::ComposeRecommendation.call(
-        'items'                => items,
-        'query'                => @query_text,
-        'locale'               => prefs[:locale] || 'en',
-        'currency'             => @restaurant.currency || 'EUR',
-        'restaurant_name'      => @restaurant.name,
+        'items' => items,
+        'query' => @query_text,
+        'locale' => prefs[:locale] || 'en',
+        'currency' => @restaurant.currency || 'EUR',
+        'restaurant_name' => @restaurant.name,
         'conversation_history' => @conversation_history,
       )
     end
@@ -131,9 +137,9 @@ module Agents
     def propose_basket(items, basket_intent)
       item_ids = items.map { |i| (i[:id] || i['id']).to_i }
       Agents::Tools::ProposeBasket.call(
-        'item_ids'   => item_ids,
+        'item_ids' => item_ids,
         'group_size' => basket_intent[:group_size],
-        'budget'     => basket_intent[:budget],
+        'budget' => basket_intent[:budget],
       )
     end
 
@@ -143,9 +149,9 @@ module Agents
       budget_match = query.match(/\bunder\s+[€£$]?\s*(\d+(?:\.\d+)?)\b/i)
 
       {
-        detected:   group_match.present?,
+        detected: group_match.present?,
         group_size: group_match ? group_match[1].to_i : 2,
-        budget:     budget_match ? budget_match[1].to_f : nil,
+        budget: budget_match ? budget_match[1].to_f : nil,
       }
     end
 
@@ -161,15 +167,15 @@ module Agents
       return existing if existing
 
       AgentWorkflowRun.create!(
-        restaurant:     @restaurant,
-        workflow_type:  'customer_concierge',
-        trigger_event:  'customer_query',
-        status:         'running',
-        started_at:     Time.current,
+        restaurant: @restaurant,
+        workflow_type: 'customer_concierge',
+        trigger_event: 'customer_query',
+        status: 'running',
+        started_at: Time.current,
         context_snapshot: {
           smartmenu_id: @smartmenu.id,
-          sessionid:    @sessionid,
-          turn_count:   1,
+          sessionid: @sessionid,
+          turn_count: 1,
         },
       )
     rescue StandardError => e
@@ -194,8 +200,8 @@ module Agents
         completed_at: Time.current,
         context_snapshot: (run.context_snapshot || {}).merge(
           'item_count_returned' => (recommendation_result[:items] || []).size,
-          'basket_proposed'     => basket.present?,
-          'turn_count'          => turn_count,
+          'basket_proposed' => basket.present?,
+          'turn_count' => turn_count,
         ),
       )
     rescue StandardError => e
@@ -206,7 +212,7 @@ module Agents
       return unless run
 
       run.update_columns(status: 'failed', completed_at: Time.current,
-                          error_message: message.to_s.first(500))
+                         error_message: message.to_s.first(500),)
     rescue StandardError
       nil
     end

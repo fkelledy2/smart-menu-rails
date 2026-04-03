@@ -4,6 +4,9 @@
 - [project_css_architecture.md](project_css_architecture.md) — CSS layer stack: Bootstrap 5 base, 2025 design system tokens, legacy + 2025 form/card/sidebar partials coexisting
 - [project_dual_token_systems.md](project_dual_token_systems.md) — Two competing token systems: Bootstrap $variables (SCSS) vs CSS custom properties (--color-*, --space-*) from design_system_2025.scss
 
+## Admin UI Conventions
+- [pattern_admin_page_conventions.md](pattern_admin_page_conventions.md) — Verified layout/badge/table/form conventions across 5+ well-styled admin views
+
 ## Design Anti-Patterns
 - [pattern_inline_style_abuse.md](pattern_inline_style_abuse.md) — 335 inline style occurrences across 81 view files; most are hardcoded font-size px values and color hex codes
 - [pattern_page_scoped_styles.md](pattern_page_scoped_styles.md) — Multiple <style> blocks embedded directly in section partials (_menus_2025, _localization_2025, etc.)

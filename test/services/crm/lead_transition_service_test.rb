@@ -80,6 +80,7 @@ class Crm::LeadTransitionServiceTest < ActiveSupport::TestCase
 
   test 'cannot convert from trial_active without restaurant_id' do
     lead = crm_leads(:demo_booked_lead)
+    lead.update!(assigned_to: @actor)
     # Advance to trial_active via multiple transitions
     Crm::LeadTransitionService.call(lead: lead, new_stage: 'demo_completed', actor: @actor)
     Crm::LeadTransitionService.call(lead: lead, new_stage: 'proposal_sent', actor: @actor)

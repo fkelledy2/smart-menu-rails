@@ -61,9 +61,9 @@ class AgentWorkflowStepTest < ActiveSupport::TestCase
 
   test 'retriable? returns false when retry_count equals MAX_RETRIES' do
     step = AgentWorkflowStep.new(@valid_attrs.merge(
-      status: 'failed',
-      retry_count: AgentWorkflowStep::MAX_RETRIES,
-    ))
+                                   status: 'failed',
+                                   retry_count: AgentWorkflowStep::MAX_RETRIES,
+                                 ))
     assert_not step.retriable?
   end
 

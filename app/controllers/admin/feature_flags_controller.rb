@@ -17,6 +17,7 @@ module Admin
       if name.blank?
         redirect_to admin_feature_flags_path, alert: 'Name cannot be blank.' and return
       end
+
       Flipper.add(name)
       redirect_to admin_feature_flags_path, notice: "Feature '#{name}' added."
     end

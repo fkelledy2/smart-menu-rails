@@ -72,18 +72,18 @@ class AgentWorkflowRunTest < ActiveSupport::TestCase
 
   test 'for_restaurant filters by restaurant' do
     runs = AgentWorkflowRun.for_restaurant(@restaurant.id)
-    assert runs.all? { |r| r.restaurant_id == @restaurant.id }
+    assert(runs.all? { |r| r.restaurant_id == @restaurant.id })
   end
 
   test 'active scope returns pending/running/awaiting_approval' do
     active_statuses = %w[pending running awaiting_approval]
     runs = AgentWorkflowRun.active
-    assert runs.all? { |r| active_statuses.include?(r.status) }
+    assert(runs.all? { |r| active_statuses.include?(r.status) })
   end
 
   test 'completed scope returns only completed runs' do
     runs = AgentWorkflowRun.completed
-    assert runs.all? { |r| r.status == 'completed' }
+    assert(runs.all? { |r| r.status == 'completed' })
   end
 
   test 'recent scope orders newest first' do

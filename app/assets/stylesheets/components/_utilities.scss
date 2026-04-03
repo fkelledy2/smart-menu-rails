@@ -187,6 +187,7 @@
 }
 
 .crm-lead-card {
+  position: relative; // required for stretched-link containment — without this every card's ::after fills the same ancestor and the last card in DOM always wins
   background: #fff;
   border-radius: calc(#{$border-radius} - 2px);
   padding: 12px;

@@ -19,3 +19,4 @@
 - [project_agent_framework_v1.md](project_agent_framework_v1.md) — Agent Framework v1 (#17): 7 models, 6 services, 3 jobs, 5 Sidekiq queues, AI Workbench UI, polling dispatcher, approval routing, unique index/fixture gotchas (April 2026)
 - [project_menu_import_agent_v1.md](project_menu_import_agent_v1.md) — Menu Import Agent v1 (#18): 8-step pipeline, Dispatcher job_class extension, allergen non-negotiable rule, Restaurant#currency_symbol gotcha (April 2026)
 - [project_restaurant_growth_agent_v1.md](project_restaurant_growth_agent_v1.md) — Restaurant Growth Agent v1 (#19): 5-step digest pipeline, DraftMarketingCopy tool, auto-approved artifact, fixture conflict gotcha, clipboard_controller.js manifest requirement (April 2026)
+- [project_customer_concierge_v1.md](project_customer_concierge_v1.md) — Customer Concierge Agent v1 (#20): synchronous service, allergen SQL enforcement, menuitems table/association name gotcha, Ordr→Tablesetting join pattern (April 2026)

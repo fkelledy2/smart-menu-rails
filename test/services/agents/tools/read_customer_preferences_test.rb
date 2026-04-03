@@ -33,7 +33,7 @@ class Agents::Tools::ReadCustomerPreferencesTest < ActiveSupport::TestCase
   test 'call with unknown sessionid returns defaults' do
     result = Agents::Tools::ReadCustomerPreferences.call(
       'smartmenu_id' => @smartmenu.id,
-      'sessionid'    => 'nonexistent-session-token',
+      'sessionid' => 'nonexistent-session-token',
     )
 
     assert_equal 'en', result[:locale]
@@ -50,7 +50,7 @@ class Agents::Tools::ReadCustomerPreferencesTest < ActiveSupport::TestCase
 
     result = Agents::Tools::ReadCustomerPreferences.call(
       'smartmenu_id' => @smartmenu.id,
-      'sessionid'    => 'test-session-concierge-pref',
+      'sessionid' => 'test-session-concierge-pref',
     )
 
     assert_equal 'fr', result[:locale]
@@ -66,14 +66,18 @@ class Agents::Tools::ReadCustomerPreferencesTest < ActiveSupport::TestCase
     tablesetting = Tablesetting.where(restaurant: restaurant).first
     return skip('No tablesetting for restaurant') unless tablesetting
 
-    ordr = Ordr.create!(
-      restaurant: restaurant,
-      tablesetting: tablesetting,
-      status: :opened,
-      subtotal: 0,
-      total: 0,
-      smartmenu: @smartmenu,
-    ) rescue skip('Cannot create Ordr for test setup')
+    ordr = begin
+      Ordr.create!(
+        restaurant: restaurant,
+        tablesetting: tablesetting,
+        status: :opened,
+        subtotal: 0,
+        total: 0,
+        smartmenu: @smartmenu,
+      )
+    rescue StandardError
+      skip('Cannot create Ordr for test setup')
+    end
 
     ordrparticipant = Ordrparticipant.create!(
       ordr: ordr,
@@ -88,7 +92,7 @@ class Agents::Tools::ReadCustomerPreferencesTest < ActiveSupport::TestCase
 
     result = Agents::Tools::ReadCustomerPreferences.call(
       'smartmenu_id' => @smartmenu.id,
-      'sessionid'    => 'test-session-allergen',
+      'sessionid' => 'test-session-allergen',
     )
 
     assert_includes result[:excluded_allergyn_ids], allergyn.id

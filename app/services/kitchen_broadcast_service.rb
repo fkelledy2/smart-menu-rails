@@ -169,6 +169,7 @@ class KitchenBroadcastService
     # separate SUM queries — halves the DB round-trips per broadcast.
     def order_payload(order)
       qty, total = order.ordritems
+        .reorder(nil)
         .pick(
           Arel.sql('COALESCE(SUM(quantity), 0)'),
           Arel.sql('COALESCE(SUM(ordritemprice * quantity), 0)'),
