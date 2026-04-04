@@ -92,102 +92,131 @@
               <% if current_user.admin? %>
                 <div class="dropdown-divider"></div>
                 <h6 class="dropdown-header"><i class="bi bi-shield-lock me-2"></i><%= t(".adminArea") %></h6>
-                <%# Operations group %>
-                <div class="dropdown-divider"></div>
-                <h6 class="dropdown-header ps-4"><i class="bi bi-gear me-1"></i>Operations</h6>
-                <% if current_user.respond_to?(:super_admin?) && current_user.super_admin? %>
-                  <%= link_to admin_feature_flags_path, class: "dropdown-item ps-4" do %>
-                    <i class="bi bi-toggles me-2"></i><%= t(".featureFlags") %>
-                  <% end %>
-                  <%= link_to new_admin_impersonation_path, class: "dropdown-item ps-4" do %>
-                    <i class="bi bi-person-badge me-2"></i>Act as user
-                  <% end %>
-                <% end %>
-                <%= link_to testimonials_path, class: "dropdown-item ps-4" do %>
+
+                <%# Content — available to all admins %>
+                <%= link_to testimonials_path, class: "dropdown-item" do %>
                   <i class="bi bi-chat-quote me-2"></i><%= t(".testimonials") %>
                 <% end %>
-                <%= link_to hero_images_path, class: "dropdown-item ps-4" do %>
+                <%= link_to hero_images_path, class: "dropdown-item" do %>
                   <i class="bi bi-image me-2"></i><%= t(".heroImages") %>
                 <% end %>
-                <% if current_user.respond_to?(:super_admin?) && current_user.super_admin? %>
-                  <%= link_to admin_jwt_tokens_path, class: "dropdown-item ps-4" do %>
-                    <i class="bi bi-key me-2"></i>API Tokens
-                  <% end %>
-                <% end %>
 
                 <% if current_user.respond_to?(:super_admin?) && current_user.super_admin? %>
-                  <%# Discovery group %>
-                  <div class="dropdown-divider"></div>
-                  <h6 class="dropdown-header ps-4"><i class="bi bi-compass me-1"></i>Discovery</h6>
-                  <%= link_to new_admin_city_crawl_path, class: "dropdown-item ps-4" do %>
-                    <i class="bi bi-geo-alt me-2"></i>Crawl a City
-                  <% end %>
-                  <%= link_to admin_discovered_restaurants_path, class: "dropdown-item ps-4" do %>
-                    <i class="bi bi-inboxes me-2"></i>Discovery Queue
-                  <% end %>
-                  <%= link_to admin_menu_source_change_reviews_path, class: "dropdown-item ps-4" do %>
-                    <i class="bi bi-arrow-repeat me-2"></i>Change Detection Queue
-                  <% end %>
+                  <%# Operations submenu %>
+                  <div class="dropdown-submenu">
+                    <a class="dropdown-item" href="#">
+                      <span><i class="bi bi-gear me-2"></i>Operations</span>
+                      <i class="bi bi-chevron-left ms-3 text-muted small"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                      <%= link_to admin_feature_flags_path, class: "dropdown-item" do %>
+                        <i class="bi bi-toggles me-2"></i>Feature Flags
+                      <% end %>
+                      <%= link_to new_admin_impersonation_path, class: "dropdown-item" do %>
+                        <i class="bi bi-person-badge me-2"></i>Act as User
+                      <% end %>
+                      <%= link_to admin_jwt_tokens_path, class: "dropdown-item" do %>
+                        <i class="bi bi-key me-2"></i>API Tokens
+                      <% end %>
+                    </div>
+                  </div>
 
-                  <%# Sales & Marketing group %>
-                  <div class="dropdown-divider"></div>
-                  <h6 class="dropdown-header ps-4"><i class="bi bi-megaphone me-1"></i>Sales &amp; Marketing</h6>
-                  <%= link_to admin_crm_leads_path, class: "dropdown-item ps-4" do %>
-                    <i class="bi bi-kanban me-2"></i>CRM
-                  <% end %>
-                  <%= link_to admin_demo_bookings_path, class: "dropdown-item ps-4" do %>
-                    <i class="bi bi-calendar-check me-2"></i>Demo Bookings
-                  <% end %>
-                  <%= link_to admin_marketing_qr_codes_path, class: "dropdown-item ps-4" do %>
-                    <i class="bi bi-qr-code me-2"></i>Marketing QR Codes
-                  <% end %>
+                  <%# Discovery submenu %>
+                  <div class="dropdown-submenu">
+                    <a class="dropdown-item" href="#">
+                      <span><i class="bi bi-compass me-2"></i>Discovery</span>
+                      <i class="bi bi-chevron-left ms-3 text-muted small"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                      <%= link_to new_admin_city_crawl_path, class: "dropdown-item" do %>
+                        <i class="bi bi-geo-alt me-2"></i>Crawl a City
+                      <% end %>
+                      <%= link_to admin_discovered_restaurants_path, class: "dropdown-item" do %>
+                        <i class="bi bi-inboxes me-2"></i>Discovery Queue
+                      <% end %>
+                      <%= link_to admin_menu_source_change_reviews_path, class: "dropdown-item" do %>
+                        <i class="bi bi-arrow-repeat me-2"></i>Change Detection
+                      <% end %>
+                      <%= link_to admin_crawl_source_rules_path, class: "dropdown-item" do %>
+                        <i class="bi bi-funnel me-2"></i>Crawl Source Rules
+                      <% end %>
+                      <%= link_to admin_local_guides_path, class: "dropdown-item" do %>
+                        <i class="bi bi-map me-2"></i>Local Guides
+                      <% end %>
+                    </div>
+                  </div>
 
-                  <%# Ops & Finance group %>
-                  <div class="dropdown-divider"></div>
-                  <h6 class="dropdown-header ps-4"><i class="bi bi-currency-euro me-1"></i>Ops &amp; Finance</h6>
-                  <%= link_to admin_cost_insights_path, class: "dropdown-item ps-4" do %>
-                    <i class="bi bi-graph-up me-2"></i>Cost Insights
-                  <% end %>
-                  <%= link_to admin_pricing_models_path, class: "dropdown-item ps-4" do %>
-                    <i class="bi bi-tags me-2"></i>Pricing Models
-                  <% end %>
-                  <%= link_to admin_margin_policies_path, class: "dropdown-item ps-4" do %>
-                    <i class="bi bi-pie-chart me-2"></i>Margin Policies
-                  <% end %>
-                  <%= link_to admin_vendor_costs_path, class: "dropdown-item ps-4" do %>
-                    <i class="bi bi-receipt me-2"></i>Vendor Costs
-                  <% end %>
-                  <%= link_to admin_staff_costs_path, class: "dropdown-item ps-4" do %>
-                    <i class="bi bi-people me-2"></i>Staff Costs
-                  <% end %>
-                  <%= link_to admin_heroku_inventories_path, class: "dropdown-item ps-4" do %>
-                    <i class="bi bi-server me-2"></i>Heroku Inventory
-                  <% end %>
-                  <%= link_to admin_metrics_path, class: "dropdown-item ps-4" do %>
-                    <i class="bi bi-bar-chart me-2"></i>Application Metrics
-                  <% end %>
-                  <%= link_to admin_performance_index_path, class: "dropdown-item ps-4" do %>
-                    <i class="bi bi-speedometer me-2"></i>Performance
-                  <% end %>
-                  <%= link_to admin_cache_index_path, class: "dropdown-item ps-4" do %>
-                    <i class="bi bi-lightning me-2"></i>Cache
-                  <% end %>
+                  <%# Sales & CRM submenu %>
+                  <div class="dropdown-submenu">
+                    <a class="dropdown-item" href="#">
+                      <span><i class="bi bi-megaphone me-2"></i>Sales &amp; CRM</span>
+                      <i class="bi bi-chevron-left ms-3 text-muted small"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                      <%= link_to admin_crm_leads_path, class: "dropdown-item" do %>
+                        <i class="bi bi-kanban me-2"></i>CRM Pipeline
+                      <% end %>
+                      <%= link_to admin_demo_bookings_path, class: "dropdown-item" do %>
+                        <i class="bi bi-calendar-check me-2"></i>Demo Bookings
+                      <% end %>
+                      <%= link_to admin_marketing_qr_codes_path, class: "dropdown-item" do %>
+                        <i class="bi bi-qr-code me-2"></i>Marketing QR Codes
+                      <% end %>
+                      <%= link_to admin_restaurant_claim_requests_path, class: "dropdown-item" do %>
+                        <i class="bi bi-file-earmark-check me-2"></i>Claim Requests
+                      <% end %>
+                      <%= link_to admin_restaurant_removal_requests_path, class: "dropdown-item" do %>
+                        <i class="bi bi-file-earmark-x me-2"></i>Removal Requests
+                      <% end %>
+                    </div>
+                  </div>
 
-                  <%# Requests & Content group %>
-                  <div class="dropdown-divider"></div>
-                  <h6 class="dropdown-header ps-4"><i class="bi bi-inbox me-1"></i>Requests &amp; Content</h6>
-                  <%= link_to admin_restaurant_claim_requests_path, class: "dropdown-item ps-4" do %>
-                    <i class="bi bi-file-earmark-check me-2"></i>Claim Requests
-                  <% end %>
-                  <%= link_to admin_restaurant_removal_requests_path, class: "dropdown-item ps-4" do %>
-                    <i class="bi bi-file-earmark-x me-2"></i>Removal Requests
-                  <% end %>
-                  <%= link_to admin_crawl_source_rules_path, class: "dropdown-item ps-4" do %>
-                    <i class="bi bi-funnel me-2"></i>Crawl Source Rules
-                  <% end %>
-                  <%= link_to admin_local_guides_path, class: "dropdown-item ps-4" do %>
-                    <i class="bi bi-map me-2"></i>Local Guides
-                  <% end %>
+                  <%# Finance submenu %>
+                  <div class="dropdown-submenu">
+                    <a class="dropdown-item" href="#">
+                      <span><i class="bi bi-currency-euro me-2"></i>Finance</span>
+                      <i class="bi bi-chevron-left ms-3 text-muted small"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                      <%= link_to admin_cost_insights_path, class: "dropdown-item" do %>
+                        <i class="bi bi-graph-up me-2"></i>Cost Insights
+                      <% end %>
+                      <%= link_to admin_pricing_models_path, class: "dropdown-item" do %>
+                        <i class="bi bi-tags me-2"></i>Pricing Models
+                      <% end %>
+                      <%= link_to admin_margin_policies_path, class: "dropdown-item" do %>
+                        <i class="bi bi-pie-chart me-2"></i>Margin Policies
+                      <% end %>
+                      <%= link_to admin_vendor_costs_path, class: "dropdown-item" do %>
+                        <i class="bi bi-receipt me-2"></i>Vendor Costs
+                      <% end %>
+                      <%= link_to admin_staff_costs_path, class: "dropdown-item" do %>
+                        <i class="bi bi-people me-2"></i>Staff Costs
+                      <% end %>
+                      <%= link_to admin_heroku_inventories_path, class: "dropdown-item" do %>
+                        <i class="bi bi-server me-2"></i>Heroku Inventory
+                      <% end %>
+                    </div>
+                  </div>
+
+                  <%# System submenu %>
+                  <div class="dropdown-submenu">
+                    <a class="dropdown-item" href="#">
+                      <span><i class="bi bi-hdd-stack me-2"></i>System</span>
+                      <i class="bi bi-chevron-left ms-3 text-muted small"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                      <%= link_to admin_metrics_path, class: "dropdown-item" do %>
+                        <i class="bi bi-bar-chart me-2"></i>Metrics
+                      <% end %>
+                      <%= link_to admin_performance_index_path, class: "dropdown-item" do %>
+                        <i class="bi bi-speedometer me-2"></i>Performance
+                      <% end %>
+                      <%= link_to admin_cache_index_path, class: "dropdown-item" do %>
+                        <i class="bi bi-lightning me-2"></i>Cache
+                      <% end %>
+                    </div>
+                  </div>
                 <% end %>
               <% end %>
               <div class="dropdown-divider"></div>

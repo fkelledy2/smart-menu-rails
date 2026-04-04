@@ -84,3 +84,25 @@ Order-related models use intentional non-standard spelling: `Ordr`, `Ordritem`, 
 
 ### RuboCop Style
 Single quotes preferred. Trailing commas enforced. Migrations, bin, config, and routes are excluded from linting. Target Ruby 3.3.
+
+### Stimulus Controllers — Asset Manifest (IMPORTANT)
+Every new Stimulus controller file in `app/javascript/controllers/` **must** also be declared in `app/assets/config/manifest.js`, or it will fail in production with:
+
+```
+Asset `controllers/foo_controller.js` was not declared to be precompiled in production.
+```
+
+This is NOT caught by RuboCop, the test suite, or CI. You must add it manually every time.
+
+Pattern — add one line to `app/assets/config/manifest.js`:
+```
+//= link controllers/foo_controller.js
+```
+
+And register it in `app/javascript/controllers/index.js`:
+```js
+import FooController from './foo_controller'
+application.register('foo', FooController)
+```
+
+Both files must be updated together whenever a new controller is created.

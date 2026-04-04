@@ -6,7 +6,7 @@
 <h1 class="h3 mb-1">Whiskey Flights — <%= @restaurant.name %></h1>
 
 <div class="d-flex gap-2 mb-3">
-  <%= link_to 'Create Manual Flight', new_admin_whiskey_flight_restaurant_path(@restaurant), class: 'btn btn-primary' %>
+  <%= link_to 'Create Manual Flight', new_admin_whiskey_flight_path(restaurant_id: @restaurant.id), class: 'btn btn-primary' %>
   <%= link_to 'Back to Review Queue', beverage_review_queue_restaurant_path(@restaurant), class: 'btn btn-outline-secondary' %>
 </div>
 
@@ -38,17 +38,17 @@
               <td><%= number_to_currency(flight.display_price) %></td>
               <td>
                 <div class="d-flex gap-1 flex-wrap">
-                  <%= link_to 'Edit', edit_admin_whiskey_flight_restaurant_path(@restaurant, flight_id: flight.id), class: 'btn btn-sm btn-outline-primary' %>
+                  <%= link_to 'Edit', edit_admin_whiskey_flight_path(flight_id: flight.id), class: 'btn btn-sm btn-outline-primary' %>
                   <% if flight.draft? %>
-                    <%= button_to 'Publish', publish_admin_whiskey_flight_restaurant_path(@restaurant, flight_id: flight.id), method: :post, class: 'btn btn-sm btn-success' %>
+                    <%= button_to 'Publish', publish_admin_whiskey_flight_path(flight_id: flight.id), method: :post, class: 'btn btn-sm btn-success' %>
                   <% end %>
                   <% if flight.published? %>
-                    <%= button_to 'Archive', archive_admin_whiskey_flight_restaurant_path(@restaurant, flight_id: flight.id), method: :post, class: 'btn btn-sm btn-outline-dark' %>
+                    <%= button_to 'Archive', archive_admin_whiskey_flight_path(flight_id: flight.id), method: :post, class: 'btn btn-sm btn-outline-dark' %>
                   <% end %>
                   <% if flight.ai? %>
-                    <%= button_to 'Regenerate', regenerate_admin_whiskey_flight_restaurant_path(@restaurant, flight_id: flight.id), method: :post, class: 'btn btn-sm btn-outline-info' %>
+                    <%= button_to 'Regenerate', regenerate_admin_whiskey_flight_path(flight_id: flight.id), method: :post, class: 'btn btn-sm btn-outline-info' %>
                   <% end %>
-                  <%= button_to 'Delete', admin_whiskey_flight_restaurant_path(@restaurant, flight_id: flight.id), method: :delete, data: { turbo_confirm: 'Delete this flight?' }, class: 'btn btn-sm btn-outline-danger' %>
+                  <%= button_to 'Delete', admin_whiskey_flight_path(flight_id: flight.id), method: :delete, data: { turbo_confirm: 'Delete this flight?' }, class: 'btn btn-sm btn-outline-danger' %>
                 </div>
               </td>
             </tr>

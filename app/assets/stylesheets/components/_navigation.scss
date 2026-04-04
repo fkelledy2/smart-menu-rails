@@ -90,3 +90,29 @@
 .nav-tabs .nav-link.active {
   border-bottom: 2px solid $primary;
 }
+
+// Admin nav — nested dropdown submenus (pop out to the left)
+.dropdown-submenu {
+  position: relative;
+
+  > .dropdown-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  > .dropdown-menu {
+    display: none;
+    top: 0;
+    left: auto;
+    right: 100%;
+    margin-top: 0;
+    margin-right: 2px;
+    min-width: 210px;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  }
+
+  &:hover > .dropdown-menu {
+    display: block;
+  }
+}

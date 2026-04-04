@@ -96,6 +96,7 @@
 //= link controllers/ordritem_tracking_controller.js
 //= link controllers/clipboard_controller.js
 //= link controllers/concierge_controller.js
+//= link controllers/auto_refresh_controller.js
 
 // Application entry point
 //= link application.js
