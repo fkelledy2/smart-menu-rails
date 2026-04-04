@@ -64,32 +64,34 @@
               </td>
               <td class="small text-muted d-none d-md-table-cell"><%= gates_summary %></td>
               <td class="text-end text-nowrap">
-                <% if state == :on %>
-                  <%= button_to admin_feature_flag_path(feature.name),
-                        method: :patch,
-                        params: { state: 'disable' },
-                        class: 'btn btn-sm btn-outline-warning me-1',
-                        title: 'Disable',
-                        form: { data: { turbo_confirm: "Disable '#{feature.name}'?" } } do %>
-                    <i class="bi bi-toggle-on"></i>
+                <div class="d-flex justify-content-end gap-1">
+                  <% if state == :on %>
+                    <%= button_to admin_feature_flag_path(feature.name),
+                          method: :patch,
+                          params: { state: 'disable' },
+                          class: 'btn btn-sm btn-outline-warning',
+                          title: 'Disable',
+                          form: { data: { turbo_confirm: "Disable '#{feature.name}'?" } } do %>
+                      <i class="bi bi-toggle-on"></i>
+                    <% end %>
+                  <% else %>
+                    <%= button_to admin_feature_flag_path(feature.name),
+                          method: :patch,
+                          params: { state: 'enable' },
+                          class: 'btn btn-sm btn-outline-success',
+                          title: 'Enable for everyone',
+                          form: { data: { turbo_confirm: "Enable '#{feature.name}' for everyone?" } } do %>
+                      <i class="bi bi-toggle-off"></i>
+                    <% end %>
                   <% end %>
-                <% else %>
                   <%= button_to admin_feature_flag_path(feature.name),
-                        method: :patch,
-                        params: { state: 'enable' },
-                        class: 'btn btn-sm btn-outline-success me-1',
-                        title: 'Enable for everyone',
-                        form: { data: { turbo_confirm: "Enable '#{feature.name}' for everyone?" } } do %>
-                    <i class="bi bi-toggle-off"></i>
+                        method: :delete,
+                        class: 'btn btn-sm btn-outline-danger',
+                        title: 'Remove flag',
+                        form: { data: { turbo_confirm: "Remove flag '#{feature.name}'? This cannot be undone." } } do %>
+                    <i class="bi bi-trash"></i>
                   <% end %>
-                <% end %>
-                <%= button_to admin_feature_flag_path(feature.name),
-                      method: :delete,
-                      class: 'btn btn-sm btn-outline-danger',
-                      title: 'Remove flag',
-                      form: { data: { turbo_confirm: "Remove flag '#{feature.name}'? This cannot be undone." } } do %>
-                  <i class="bi bi-trash"></i>
-                <% end %>
+                </div>
               </td>
             </tr>
           <% end %>
