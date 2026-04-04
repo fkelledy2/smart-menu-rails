@@ -1,4 +1,7 @@
-<%= form_with model: [:admin, snapshot], local: true do |f| %>
+<%= form_with model: snapshot,
+              url: snapshot.persisted? ? admin_staff_cost_path(snapshot) : admin_staff_costs_path,
+              method: snapshot.persisted? ? :patch : :post,
+              local: true do |f| %>
   <% if snapshot.errors.any? %>
     <div class="alert alert-danger">
       <ul class="mb-0">

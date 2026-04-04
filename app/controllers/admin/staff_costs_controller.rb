@@ -9,7 +9,7 @@ module Admin
 
     before_action :authenticate_user!
     before_action :require_super_admin!
-    before_action :set_snapshot, only: %i[show edit update destroy]
+    before_action :set_snapshot, only: %i[edit update destroy]
 
     def index
       authorize StaffCostSnapshot, :index?

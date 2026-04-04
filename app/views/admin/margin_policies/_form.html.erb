@@ -1,4 +1,7 @@
-<%= form_with model: [:admin, policy], local: true do |f| %>
+<%= form_with model: policy,
+              url: policy.persisted? ? admin_margin_policy_path(policy) : admin_margin_policies_path,
+              method: policy.persisted? ? :patch : :post,
+              local: true do |f| %>
   <% if policy.errors.any? %>
     <div class="alert alert-danger">
       <ul class="mb-0">

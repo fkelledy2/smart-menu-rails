@@ -9,7 +9,7 @@ module Admin
 
     before_action :authenticate_user!
     before_action :require_super_admin!
-    before_action :set_policy_record, only: %i[show edit update destroy activate deactivate]
+    before_action :set_policy_record, only: %i[edit update destroy activate deactivate]
 
     def index
       authorize ProfitMarginPolicy, :index?

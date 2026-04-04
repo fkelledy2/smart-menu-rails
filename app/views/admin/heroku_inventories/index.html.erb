@@ -69,12 +69,14 @@
                 </td>
                 <td class="text-muted small"><%= snap.pipeline_stage || '—' %></td>
                 <td class="small">
-                  <% (snap.formation_json || []).each do |f| %>
+                  <% formation = snap.formation_json.is_a?(String) ? JSON.parse(snap.formation_json) : Array.wrap(snap.formation_json) %>
+                  <% formation.each do |f| %>
                     <span class="me-1"><%= f['quantity'] %>x <%= f['type'] %> (<%= f['size'] %>)</span>
                   <% end %>
                 </td>
                 <td class="small">
-                  <% (snap.addons_json || []).each do |a| %>
+                  <% addons = snap.addons_json.is_a?(String) ? JSON.parse(snap.addons_json) : Array.wrap(snap.addons_json) %>
+                  <% addons.each do |a| %>
                     <span class="me-1"><%= a.dig('plan', 'name') %></span>
                   <% end %>
                 </td>

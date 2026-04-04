@@ -1,4 +1,7 @@
-<%= form_with model: [:admin, cost], local: true do |f| %>
+<%= form_with model: cost,
+              url: cost.persisted? ? admin_vendor_cost_path(cost) : admin_vendor_costs_path,
+              method: cost.persisted? ? :patch : :post,
+              local: true do |f| %>
   <% if cost.errors.any? %>
     <div class="alert alert-danger">
       <ul class="mb-0">
