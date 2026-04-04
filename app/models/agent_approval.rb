@@ -17,6 +17,7 @@ class AgentApproval < ApplicationRecord
   validates :status,     inclusion: { in: STATUSES }
   validates :risk_level, inclusion: { in: RISK_LEVELS }
   validates :expires_at, presence: true
+  validates :idempotency_key, uniqueness: { allow_nil: true }
 
   scope :pending, -> { where(status: 'pending') }
   scope :expired_but_not_marked, -> { pending.where(expires_at: ..Time.current) }

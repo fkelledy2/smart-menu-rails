@@ -1,0 +1,23 @@
+Hi <%= @recipient.first_name.presence || @recipient.email %>,
+
+Your AI Menu Optimisation Agent has analysed <%= @restaurant.name %>'s menu performance
+and generated a set of proposed changes ready for your review.
+
+<% actions = Array(@content[:actions] || @content['actions']) %>
+<% pending = actions.reject { |a| a['action_type'] == 'price_suggestion' || a['disposition'] == 'advisory' } %>
+<% if pending.any? %>
+<%= pending.size %> change<%= pending.size == 1 ? '' : 's' %> waiting for approval:
+
+<% pending.first(5).each do |action| %>
+- <%= action['action_type'].to_s.humanize %>: <%= action['target_name'] %> — <%= action['reason'] %>
+<% end %>
+<% if pending.size > 5 %>
+...and <%= pending.size - 5 %> more
+<% end %>
+<% else %>
+All proposed changes have been automatically handled — no action required.
+<% end %>
+
+Review changes: <%= @review_url %>
+
+You're receiving this because you're a manager or owner of <%= @restaurant.name %> on mellow.menu.

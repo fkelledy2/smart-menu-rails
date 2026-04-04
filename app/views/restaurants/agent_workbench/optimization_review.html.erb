@@ -1,0 +1,266 @@
+<% content_for :title, "Review Menu Changes — #{@restaurant.name}" %>
+
+<div class="container-fluid py-3">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h4 class="mb-0 fw-bold">
+        <i class="bi bi-pencil-square me-2 text-primary" aria-hidden="true"></i>
+        Review Menu Changes
+      </h4>
+      <p class="text-muted small mb-0">
+        <%= @restaurant.name %>
+        <% week = @artifact.content['analysis_week'] || @artifact.content[:analysis_week] %>
+        <% if week.present? %>
+          &mdash; <%= week %>
+        <% end %>
+      </p>
+    </div>
+    <div class="d-flex gap-2">
+      <%= link_to optimization_restaurant_agent_workbench_index_path(@restaurant),
+                  class: 'btn btn-sm btn-outline-secondary' do %>
+        <i class="bi bi-arrow-left me-1" aria-hidden="true"></i> All Optimisations
+      <% end %>
+    </div>
+  </div>
+
+  <% if notice %>
+    <div class="alert alert-success alert-dismissible fade show py-2" role="alert">
+      <%= notice %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <% end %>
+  <% if alert %>
+    <div class="alert alert-danger alert-dismissible fade show py-2" role="alert">
+      <%= alert %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <% end %>
+
+  <div class="row g-4">
+    <%# Left column: Pending Approvals %>
+    <div class="col-lg-7">
+      <% if @pending_approvals.any? %>
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-header bg-warning bg-opacity-10 border-bottom d-flex justify-content-between">
+            <span class="fw-semibold">
+              <i class="bi bi-clock-history me-1" aria-hidden="true"></i>
+              Pending Approval (<%= @pending_approvals.size %>)
+            </span>
+          </div>
+          <div class="list-group list-group-flush">
+            <% @pending_approvals.each do |approval| %>
+              <% payload = approval.proposed_payload.with_indifferent_access %>
+              <div class="list-group-item py-3">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                  <div>
+                    <span class="badge bg-secondary me-2"><%= approval.action_type.humanize %></span>
+                    <strong><%= payload[:target_name] %></strong>
+                  </div>
+                  <div class="d-flex gap-2">
+                    <%= button_to approve_restaurant_agent_workbench_approval_path(@restaurant, @run, approval),
+                          method: :patch,
+                          class: 'btn btn-sm btn-success',
+                          params: { reviewer_notes: '' } do %>
+                      <i class="bi bi-check-lg" aria-hidden="true"></i> Approve
+                    <% end %>
+                    <%= button_to reject_restaurant_agent_workbench_approval_path(@restaurant, @run, approval),
+                          method: :patch,
+                          class: 'btn btn-sm btn-outline-danger',
+                          params: { reviewer_notes: '' } do %>
+                      <i class="bi bi-x-lg" aria-hidden="true"></i> Reject
+                    <% end %>
+                  </div>
+                </div>
+                <p class="text-muted small mb-1"><%= payload[:reason] %></p>
+
+                <% case approval.action_type %>
+                <% when 'item_rename' %>
+                  <% if payload[:new_name].present? %>
+                    <div class="small">
+                      <span class="text-muted">New name:</span>
+                      <strong><%= payload[:new_name] %></strong>
+                    </div>
+                  <% end %>
+                  <% if payload[:new_description].present? %>
+                    <div class="small mt-1">
+                      <span class="text-muted">New description:</span>
+                      <em><%= payload[:new_description] %></em>
+                    </div>
+                  <% end %>
+                <% when 'section_reorder' %>
+                  <div class="small">
+                    <span class="text-muted">New sequence position:</span>
+                    <strong><%= payload[:new_sequence] %></strong>
+                  </div>
+                <% when 'item_suppress' %>
+                  <div class="small">
+                    <span class="text-muted">Action:</span>
+                    <%= payload[:suppress_permanent] ? 'Hide permanently' : 'Hide temporarily' %>
+                    <% if payload[:suppress_from].present? %>
+                      from <%= payload[:suppress_from] %>
+                    <% end %>
+                    <% if payload[:suppress_until].present? %>
+                      until <%= payload[:suppress_until] %>
+                    <% end %>
+                  </div>
+                <% when 'item_feature' %>
+                  <div class="small">
+                    <span class="text-muted">Action:</span> Mark as featured / ensure visible
+                  </div>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+
+      <% if @approved_actions.any? %>
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-header bg-success bg-opacity-10 border-bottom">
+            <span class="fw-semibold">
+              <i class="bi bi-check-circle me-1 text-success" aria-hidden="true"></i>
+              Approved (<%= @approved_actions.size %>)
+            </span>
+          </div>
+          <div class="list-group list-group-flush">
+            <% @approved_actions.each do |approval| %>
+              <% payload = approval.proposed_payload.with_indifferent_access %>
+              <div class="list-group-item py-2">
+                <span class="badge bg-success me-2"><%= approval.action_type.humanize %></span>
+                <strong><%= payload[:target_name] %></strong>
+                <span class="text-muted small ms-2"><%= payload[:reason] %></span>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+
+      <% if @rejected_actions.any? %>
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-header bg-danger bg-opacity-10 border-bottom">
+            <span class="fw-semibold">
+              <i class="bi bi-x-circle me-1 text-danger" aria-hidden="true"></i>
+              Rejected (<%= @rejected_actions.size %>)
+            </span>
+          </div>
+          <div class="list-group list-group-flush">
+            <% @rejected_actions.each do |approval| %>
+              <% payload = approval.proposed_payload.with_indifferent_access %>
+              <div class="list-group-item py-2">
+                <span class="badge bg-danger me-2"><%= approval.action_type.humanize %></span>
+                <strong><%= payload[:target_name] %></strong>
+                <span class="text-muted small ms-2"><%= payload[:reason] %></span>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+
+      <%# Schedule rollout panel — only when all approvals resolved %>
+      <% if @pending_approvals.empty? && (@approved_actions.any? || @rejected_actions.any?) %>
+        <% if !@artifact.applied? && @artifact.scheduled_apply_at.blank? %>
+          <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-transparent border-bottom fw-semibold">
+              <i class="bi bi-calendar-check me-1" aria-hidden="true"></i>
+              Schedule Rollout
+            </div>
+            <div class="card-body">
+              <%= form_with url: schedule_optimization_restaurant_agent_workbench_path(@restaurant, @run),
+                            method: :patch,
+                            local: true do |f| %>
+                <div class="mb-3">
+                  <label for="scheduled_apply_at" class="form-label small fw-semibold">Apply changes at</label>
+                  <input type="datetime-local" name="scheduled_apply_at" id="scheduled_apply_at"
+                         class="form-control form-control-sm"
+                         min="<%= Time.current.strftime('%Y-%m-%dT%H:%M') %>"
+                         value="<%= 1.hour.from_now.strftime('%Y-%m-%dT%H:%M') %>" />
+                  <div class="form-text">
+                    Changes will be applied automatically at the chosen time.
+                    This will not modify prices or require any further action.
+                  </div>
+                </div>
+                <%= f.submit 'Schedule Rollout', class: 'btn btn-primary btn-sm' %>
+              <% end %>
+            </div>
+          </div>
+        <% elsif @artifact.scheduled_apply_at.present? && !@artifact.applied? %>
+          <div class="alert alert-info">
+            <i class="bi bi-clock me-2" aria-hidden="true"></i>
+            Changes are scheduled to be applied at
+            <strong><%= @artifact.scheduled_apply_at.strftime('%H:%M on %d %b %Y') %></strong>.
+          </div>
+        <% elsif @artifact.applied? %>
+          <div class="alert alert-success">
+            <i class="bi bi-check-circle me-2" aria-hidden="true"></i>
+            Changes have been applied to the live menu.
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+
+    <%# Right column: Pricing Advisory + Preview %>
+    <div class="col-lg-5">
+      <% if @advisory_items.any? %>
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-header bg-transparent border-bottom fw-semibold">
+            <i class="bi bi-lightbulb me-1 text-warning" aria-hidden="true"></i>
+            Pricing Opportunities
+            <span class="badge bg-warning text-dark ms-1">Advisory</span>
+          </div>
+          <div class="card-body">
+            <p class="text-muted small">
+              These are suggestions only. Prices are never changed automatically.
+            </p>
+            <ul class="list-group list-group-flush">
+              <% @advisory_items.each do |item| %>
+                <li class="list-group-item px-0">
+                  <div class="fw-semibold small"><%= item['target_name'] %></div>
+                  <% if item['suggested_price'].present? %>
+                    <div class="small text-muted">
+                      Suggested price:
+                      <strong><%= number_to_currency(item['suggested_price'], unit: @restaurant.try(:currency_symbol) || '€') %></strong>
+                    </div>
+                  <% end %>
+                  <div class="small text-muted"><%= item['advisory_note'] || item['reason'] %></div>
+                </li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      <% end %>
+
+      <% if @preview_items.any? %>
+        <div class="card border-0 shadow-sm">
+          <div class="card-header bg-transparent border-bottom fw-semibold">
+            <i class="bi bi-eye me-1" aria-hidden="true"></i>
+            Preview (Approved Changes Applied)
+          </div>
+          <div class="list-group list-group-flush" style="max-height:400px;overflow-y:auto;">
+            <% prev_section = nil %>
+            <% @preview_items.each do |item| %>
+              <% if item['section_name'] != prev_section %>
+                <div class="list-group-item bg-light text-muted small fw-semibold py-1">
+                  <%= item['section_name'] %>
+                </div>
+                <% prev_section = item['section_name'] %>
+              <% end %>
+              <div class="list-group-item py-2 <%= item['_changed'] ? 'border-start border-3 border-primary' : '' %>">
+                <div class="d-flex justify-content-between align-items-center">
+                  <span class="<%= item['hidden'] ? 'text-muted text-decoration-line-through' : '' %>">
+                    <%= item['name'] %>
+                    <% if item['_changed'] %>
+                      <span class="badge bg-primary ms-1" style="font-size:0.65rem;">changed</span>
+                    <% end %>
+                  </span>
+                </div>
+                <% if item['description'].present? && !item['hidden'] %>
+                  <div class="text-muted small text-truncate"><%= item['description'] %></div>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

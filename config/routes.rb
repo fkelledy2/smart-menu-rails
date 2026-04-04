@@ -400,10 +400,14 @@ Rails.application.routes.draw do
       member do
         get :menu_import_review
         post :publish_menu_import
+        get :optimization_review
+        patch :schedule_optimization
       end
       collection do
         get :digests
         post :generate_digest
+        get :optimization
+        post :run_optimization
       end
     end
 

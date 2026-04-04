@@ -16,4 +16,16 @@ Rails.application.config.after_initialize do
     workflow_type: 'growth_digest',
     job_class: Agents::ManagerDigestWorkflowJob,
   )
+
+  # Menu Optimization Agent — triggered by nightly scheduler or on-demand button
+  Agents::Dispatcher.register(
+    'menu_optimization.scheduled',
+    workflow_type: 'menu_optimization',
+    job_class: Agents::MenuOptimizationWorkflowJob,
+  )
+  Agents::Dispatcher.register(
+    'menu_optimization.requested',
+    workflow_type: 'menu_optimization',
+    job_class: Agents::MenuOptimizationWorkflowJob,
+  )
 end

@@ -5,11 +5,12 @@ module Restaurants
   # approving/rejecting proposed actions, and inspecting audit logs.
   class AgentWorkbenchController < BaseController
     before_action :set_restaurant
-    before_action :set_run, only: %i[show menu_import_review publish_menu_import]
+    before_action :set_run, only: %i[show menu_import_review publish_menu_import optimization_review schedule_optimization]
     before_action :set_run_from_nested, only: %i[approve reject]
     before_action :set_approval, only: %i[approve reject]
 
     DIGEST_HISTORY_WEEKS = Agents::Workflows::ManagerDigestWorkflow::DIGEST_HISTORY_WEEKS
+    MIN_DATA_DAYS = Agents::Workflows::MenuOptimizationWorkflow::MIN_ORDERS_WINDOW
 
     # GET /restaurants/:restaurant_id/agent_workbench
     def index
@@ -150,6 +151,145 @@ module Restaurants
       end
     end
 
+    # GET /restaurants/:restaurant_id/agent_workbench/optimization
+    # Lists recent menu optimization change set artifacts.
+    def optimization
+      authorize AgentWorkflowRun.new(restaurant: @restaurant), :index?
+
+      @change_sets = AgentArtifact
+        .joins(:agent_workflow_run)
+        .where(
+          agent_workflow_runs: { restaurant_id: @restaurant.id, workflow_type: 'menu_optimization' },
+          artifact_type: 'menu_optimization_changeset',
+        )
+        .order(created_at: :desc)
+        .limit(20)
+        .includes(:agent_workflow_run)
+
+      @has_enough_data = restaurant_has_enough_data?
+    end
+
+    # POST /restaurants/:restaurant_id/agent_workbench/run_optimization
+    # Emits an on-demand menu_optimization.requested event and enqueues immediately.
+    def run_optimization
+      authorize AgentWorkflowRun.new(restaurant: @restaurant), :index?
+
+      unless Flipper.enabled?(:agent_menu_optimization, @restaurant)
+        redirect_to optimization_restaurant_agent_workbench_index_path(@restaurant),
+                    alert: 'Menu optimisation is not enabled for this restaurant.'
+        return
+      end
+
+      unless restaurant_has_enough_data?
+        redirect_to optimization_restaurant_agent_workbench_index_path(@restaurant),
+                    alert: "Not enough data yet — check back after #{MIN_DATA_DAYS} days of orders."
+        return
+      end
+
+      if AgentWorkflowRun
+          .for_restaurant(@restaurant.id)
+          .where(workflow_type: 'menu_optimization')
+          .active
+          .exists?
+        redirect_to optimization_restaurant_agent_workbench_index_path(@restaurant),
+                    notice: 'An optimisation run is already in progress — check back shortly.'
+        return
+      end
+
+      idempotency_key = "menu_optimization.requested:#{@restaurant.id}:#{Time.current.to_i}"
+
+      event = AgentDomainEvent.publish!(
+        event_type: 'menu_optimization.requested',
+        source: @restaurant,
+        payload: {
+          'restaurant_id' => @restaurant.id,
+          'triggered_at' => Time.current.iso8601,
+          'on_demand' => true,
+        },
+        idempotency_key: idempotency_key,
+      )
+
+      run = AgentWorkflowRun.create!(
+        restaurant: @restaurant,
+        workflow_type: 'menu_optimization',
+        trigger_event: 'menu_optimization.requested',
+        status: 'pending',
+        context_snapshot: event.payload,
+      )
+
+      Agents::MenuOptimizationWorkflowJob.perform_later(run.id)
+
+      redirect_to optimization_restaurant_agent_workbench_index_path(@restaurant),
+                  notice: 'Menu optimisation started — your change set will appear here within a few minutes.'
+    end
+
+    # GET /restaurants/:restaurant_id/agent_workbench/:id/optimization_review
+    # Renders the change set review UI for a menu_optimization workflow run.
+    def optimization_review
+      authorize @run, :show?
+
+      @artifact = @run.agent_artifacts
+        .where(artifact_type: 'menu_optimization_changeset')
+        .order(created_at: :desc)
+        .first
+
+      unless @artifact
+        redirect_to restaurant_agent_workbench_path(@restaurant, @run),
+                    alert: 'No change set found for this run.'
+        return
+      end
+
+      @pending_approvals  = @run.agent_approvals.pending.order(created_at: :asc)
+      @approved_actions   = @run.agent_approvals.where(status: 'approved').order(created_at: :asc)
+      @rejected_actions   = @run.agent_approvals.where(status: 'rejected').order(created_at: :asc)
+
+      content = @artifact.content.with_indifferent_access
+      @all_actions    = Array(content[:actions])
+      @advisory_items = Array(content[:advisory_pricing])
+
+      # Build preview projection (in-memory — no writes to DB)
+      @preview_items = build_preview_projection(@all_actions, @approved_actions)
+    end
+
+    # PATCH /restaurants/:restaurant_id/agent_workbench/:id/schedule_optimization
+    # Sets scheduled_apply_at on the artifact so ApplyApprovedMenuChangesJob can pick it up.
+    def schedule_optimization
+      authorize @run, :show?
+
+      @artifact = @run.agent_artifacts
+        .where(artifact_type: 'menu_optimization_changeset')
+        .order(created_at: :desc)
+        .first
+
+      unless @artifact
+        redirect_to restaurant_agent_workbench_path(@restaurant, @run),
+                    alert: 'No change set found for this run.'
+        return
+      end
+
+      if @run.agent_approvals.pending.exists?
+        redirect_to optimization_review_restaurant_agent_workbench_path(@restaurant, @run),
+                    alert: 'All pending approvals must be resolved before scheduling rollout.'
+        return
+      end
+
+      apply_at = parse_scheduled_apply_at(params[:scheduled_apply_at])
+
+      unless apply_at
+        redirect_to optimization_review_restaurant_agent_workbench_path(@restaurant, @run),
+                    alert: 'Invalid schedule time provided.'
+        return
+      end
+
+      @artifact.update!(
+        status: 'approved',
+        scheduled_apply_at: apply_at,
+      )
+
+      redirect_to optimization_review_restaurant_agent_workbench_path(@restaurant, @run),
+                  notice: "Changes scheduled for rollout at #{apply_at.strftime('%H:%M on %d %b %Y')}."
+    end
+
     # PATCH /restaurants/:restaurant_id/agent_workbench/:agent_workbench_id/approvals/:id/approve
     def approve
       authorize @run, :show?
@@ -207,6 +347,60 @@ module Restaurants
         .find(params[:id])
     rescue ActiveRecord::RecordNotFound
       redirect_to restaurant_agent_workbench_index_path(@restaurant), alert: 'Approval not found.'
+    end
+
+    def restaurant_has_enough_data?
+      cutoff = MIN_DATA_DAYS.days.ago
+      Ordr.where(restaurant_id: @restaurant.id).exists?(['created_at <= ?', cutoff])
+    end
+
+    # Build an in-memory preview of how the menu would look after applying approved changes.
+    # Returns an array of item hashes with proposed changes applied — does NOT write to DB.
+    def build_preview_projection(all_actions, approved_approvals)
+      return [] if all_actions.blank?
+
+      approved_types = approved_approvals.pluck(:action_type).to_set
+      items = Menuitem
+        .joins(:menusection)
+        .where(menusections: { menu_id: @restaurant.menus.select(:id) })
+        .where.not(archived: true)
+        .select('menuitems.id, menuitems.name, menuitems.description, menuitems.hidden, menuitems.sequence, menusections.name AS section_name')
+        .map { |mi| mi.attributes.merge('section_name' => mi.try(:section_name)) }
+
+      item_map = items.each_with_object({}) { |i, h| h[i['id']] = i.dup }
+
+      all_actions.each do |action|
+        action_type = action['action_type'].to_s
+        target_id   = action['target_id'].to_i
+        next unless approved_types.include?(action_type)
+        next unless item_map[target_id]
+
+        case action_type
+        when 'item_rename'
+          item_map[target_id]['name']        = action['new_name']        if action['new_name'].present?
+          item_map[target_id]['description'] = action['new_description'] if action['new_description'].present?
+          item_map[target_id]['_changed']    = true
+        when 'item_suppress'
+          item_map[target_id]['hidden']   = true
+          item_map[target_id]['_changed'] = true
+        when 'item_feature'
+          item_map[target_id]['hidden']   = false
+          item_map[target_id]['_changed'] = true
+        when 'section_reorder'
+          item_map[target_id]['sequence'] = action['new_sequence'].to_i
+          item_map[target_id]['_changed'] = true
+        end
+      end
+
+      item_map.values.sort_by { |i| [i['section_name'].to_s, i['sequence'].to_i] }
+    end
+
+    def parse_scheduled_apply_at(value)
+      return nil if value.blank?
+
+      Time.zone.parse(value.to_s)
+    rescue ArgumentError, TypeError
+      nil
     end
   end
 end

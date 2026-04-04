@@ -15,6 +15,11 @@ class AgentArtifact < ApplicationRecord
   scope :draft,    -> { where(status: 'draft') }
   scope :approved, -> { where(status: 'approved') }
   scope :applied,  -> { where(status: 'applied') }
+  scope :ready_to_apply, lambda {
+    approved
+      .where(artifact_type: 'menu_optimization_changeset')
+      .where('scheduled_apply_at IS NOT NULL AND scheduled_apply_at <= ?', Time.current)
+  }
 
   def draft?    = status == 'draft'
   def approved? = status == 'approved'

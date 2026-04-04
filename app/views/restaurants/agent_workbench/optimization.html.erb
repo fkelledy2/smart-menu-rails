@@ -1,0 +1,108 @@
+<% content_for :title, "Menu Optimisation — #{@restaurant.name}" %>
+
+<div class="container-fluid py-3">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h4 class="mb-0 fw-bold">
+        <i class="bi bi-magic me-2 text-primary" aria-hidden="true"></i>
+        Menu Optimisation
+      </h4>
+      <p class="text-muted small mb-0"><%= @restaurant.name %></p>
+    </div>
+    <div class="d-flex gap-2">
+      <%= link_to restaurant_agent_workbench_index_path(@restaurant),
+                  class: 'btn btn-sm btn-outline-secondary' do %>
+        <i class="bi bi-arrow-left me-1" aria-hidden="true"></i> AI Workbench
+      <% end %>
+
+      <% if Flipper.enabled?(:agent_menu_optimization, @restaurant) && @has_enough_data %>
+        <%= button_to run_optimization_restaurant_agent_workbench_index_path(@restaurant),
+                      method: :post,
+                      class: 'btn btn-sm btn-primary',
+                      data: { confirm: 'Run a menu optimisation analysis now?' } do %>
+          <i class="bi bi-play-circle me-1" aria-hidden="true"></i> Run Analysis Now
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+
+  <% if notice %>
+    <div class="alert alert-success alert-dismissible fade show py-2" role="alert">
+      <%= notice %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <% end %>
+  <% if alert %>
+    <div class="alert alert-danger alert-dismissible fade show py-2" role="alert">
+      <%= alert %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <% end %>
+
+  <% unless Flipper.enabled?(:agent_menu_optimization, @restaurant) %>
+    <div class="alert alert-info">
+      <i class="bi bi-info-circle me-2" aria-hidden="true"></i>
+      Menu Optimisation is not enabled for this restaurant.
+      Contact your administrator to enable the <code>agent_menu_optimization</code> flag.
+    </div>
+  <% end %>
+
+  <% unless @has_enough_data %>
+    <div class="alert alert-warning">
+      <i class="bi bi-hourglass-split me-2" aria-hidden="true"></i>
+      Not enough order history yet. At least <%= MIN_DATA_DAYS %> days of orders are required
+      before the optimisation agent can generate meaningful recommendations.
+    </div>
+  <% end %>
+
+  <% if @change_sets.empty? %>
+    <div class="card border-0 shadow-sm">
+      <div class="card-body text-center py-5">
+        <i class="bi bi-graph-up display-4 text-muted mb-3" aria-hidden="true"></i>
+        <h5 class="text-muted">No optimisation runs yet</h5>
+        <p class="text-muted small">
+          Use the "Run Analysis Now" button above, or wait for the nightly scheduled run
+          once the <code>agent_menu_optimization</code> flag is enabled.
+        </p>
+      </div>
+    </div>
+  <% else %>
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-transparent fw-semibold border-bottom">
+        Recent Change Sets
+      </div>
+      <div class="list-group list-group-flush">
+        <% @change_sets.each do |artifact| %>
+          <% run = artifact.agent_workflow_run %>
+          <%= link_to optimization_review_restaurant_agent_workbench_path(@restaurant, run),
+                class: 'list-group-item list-group-item-action py-3' do %>
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <div class="fw-semibold text-dark">
+                  Menu Optimisation
+                  <% week = artifact.content.dig('analysis_week') || artifact.content.dig(:analysis_week) %>
+                  <% if week.present? %>
+                    <span class="text-muted fw-normal small">&mdash; <%= week %></span>
+                  <% end %>
+                </div>
+                <div class="text-muted small">
+                  Generated <%= time_ago_in_words(artifact.created_at) %> ago
+                  <% pending = run.agent_approvals.pending.count %>
+                  <% if pending.positive? %>
+                    &middot; <span class="text-warning fw-semibold"><%= pending %> pending</span>
+                  <% end %>
+                  <% if artifact.scheduled_apply_at.present? %>
+                    &middot; Scheduled for <%= artifact.scheduled_apply_at.strftime('%d %b %Y %H:%M') %>
+                  <% end %>
+                </div>
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <%= render 'status_badge', status: artifact.status %>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>

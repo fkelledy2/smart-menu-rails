@@ -9,10 +9,14 @@
       </h4>
       <p class="text-muted small mb-0"><%= @restaurant.name %></p>
     </div>
-    <div>
+    <div class="d-flex gap-2">
       <%= link_to digests_restaurant_agent_workbench_index_path(@restaurant),
                   class: 'btn btn-sm btn-outline-success' do %>
         <i class="bi bi-graph-up-arrow me-1" aria-hidden="true"></i> Growth Digest
+      <% end %>
+      <%= link_to optimization_restaurant_agent_workbench_index_path(@restaurant),
+                  class: 'btn btn-sm btn-outline-primary' do %>
+        <i class="bi bi-magic me-1" aria-hidden="true"></i> Menu Optimisation
       <% end %>
     </div>
   </div>

@@ -1,0 +1,39 @@
+<p>Hi <%= @recipient.first_name.presence || @recipient.email %>,</p>
+
+<p>
+  Your AI Menu Optimisation Agent has analysed <strong><%= @restaurant.name %></strong>'s
+  menu performance and generated a set of proposed changes ready for your review.
+</p>
+
+<% actions = Array(@content[:actions] || @content['actions']) %>
+<% pending = actions.reject { |a| a['action_type'] == 'price_suggestion' || a['disposition'] == 'advisory' } %>
+
+<% if pending.any? %>
+  <p>
+    <strong><%= pending.size %> change<%= 'changes'.pluralize(pending.size) == 'changes' ? 's' : '' %></strong>
+    <%= pending.size == 1 ? 'is' : 'are' %> waiting for your approval:
+  </p>
+  <ul>
+    <% pending.first(5).each do |action| %>
+      <li>
+        <strong><%= action['action_type'].to_s.humanize %></strong>:
+        <%= action['target_name'] %>
+        &mdash; <em><%= action['reason'] %></em>
+      </li>
+    <% end %>
+    <% if pending.size > 5 %>
+      <li>...and <%= pending.size - 5 %> more</li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>All proposed changes have been automatically handled — no action required.</p>
+<% end %>
+
+<p>
+  <%= link_to 'Review Changes', @review_url,
+      style: 'display:inline-block;padding:10px 20px;background:#2563EB;color:#fff;text-decoration:none;border-radius:6px;font-weight:600;' %>
+</p>
+
+<p style="font-size:12px;color:#6B7280;">
+  You're receiving this because you're a manager or owner of <%= @restaurant.name %> on mellow.menu.
+</p>

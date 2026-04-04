@@ -187,6 +187,7 @@ CREATE TABLE public.agent_approvals (
     expires_at timestamp(6) without time zone NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
+    idempotency_key character varying,
     CONSTRAINT agent_approvals_risk_level_check CHECK (((risk_level)::text = ANY ((ARRAY['low'::character varying, 'medium'::character varying, 'high'::character varying])::text[]))),
     CONSTRAINT agent_approvals_status_check CHECK (((status)::text = ANY ((ARRAY['pending'::character varying, 'approved'::character varying, 'rejected'::character varying, 'expired'::character varying])::text[])))
 );
@@ -225,6 +226,7 @@ CREATE TABLE public.agent_artifacts (
     approved_at timestamp(6) without time zone,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
+    scheduled_apply_at timestamp(6) without time zone,
     CONSTRAINT agent_artifacts_status_check CHECK (((status)::text = ANY ((ARRAY['draft'::character varying, 'approved'::character varying, 'rejected'::character varying, 'applied'::character varying])::text[])))
 );
 
@@ -8573,6 +8575,13 @@ CREATE INDEX index_agent_approvals_on_expires_at ON public.agent_approvals USING
 
 
 --
+-- Name: index_agent_approvals_on_idempotency_key; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_agent_approvals_on_idempotency_key ON public.agent_approvals USING btree (idempotency_key) WHERE (idempotency_key IS NOT NULL);
+
+
+--
 -- Name: index_agent_approvals_on_reviewer_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -8612,6 +8621,13 @@ CREATE INDEX index_agent_artifacts_on_artifact_type ON public.agent_artifacts US
 --
 
 CREATE INDEX index_agent_artifacts_on_content ON public.agent_artifacts USING gin (content);
+
+
+--
+-- Name: index_agent_artifacts_on_scheduled_apply_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_agent_artifacts_on_scheduled_apply_at ON public.agent_artifacts USING btree (scheduled_apply_at);
 
 
 --
@@ -13831,6 +13847,8 @@ ALTER TABLE ONLY public.voice_commands
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260404091338'),
+('20260404091333'),
 ('20260403233522'),
 ('20260402115205'),
 ('20260402115157'),
