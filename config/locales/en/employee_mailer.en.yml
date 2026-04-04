@@ -2,18 +2,18 @@
 en:
   employee_mailer:
     role_changed:
-      subject: Your role at %{restaurant} has been updated
-      greeting: 'Hi %{name},'
-      intro: Your role at %{restaurant} has been updated by %{changed_by}.
-      previous_role: Previous Role
-      new_role: New Role
-      promotion_manager: As a Manager, you can now edit menus, manage orders, and update
-        restaurant settings during service.
-      promotion_admin: As an Admin, you have full access to restaurant settings, billing,
-        and staff management.
-      reason_label: 'Reason provided:'
       change_date: This change took effect on %{date}. Your updated permissions are
         active immediately.
-      error_contact: If you believe this change was made in error, please contact your
-        restaurant owner directly.
+      error_contact: If you believe this change was made in error, please contact
+        your restaurant owner directly.
       footer: Mellow Menu — https://mellow.menu
+      greeting: Hi %{name},
+      intro: Your role at %{restaurant} has been updated by %{changed_by}.
+      new_role: New Role
+      previous_role: Previous Role
+      promotion_admin: As an Admin, you have full access to restaurant settings, billing,
+        and staff management.
+      promotion_manager: As a Manager, you can now edit menus, manage orders, and
+        update restaurant settings during service.
+      reason_label: 'Reason provided:'
+      subject: Your role at %{restaurant} has been updated

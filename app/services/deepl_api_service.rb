@@ -39,8 +39,8 @@ class DeeplApiService
     endpoint = "#{base_uri_for_key(key)}/translate"
 
     response = post(endpoint, {
+      headers: { 'Authorization' => "DeepL-Auth-Key #{key}" },
       body: {
-        auth_key: key,
         text: text,
         source_lang: from,
         target_lang: to,

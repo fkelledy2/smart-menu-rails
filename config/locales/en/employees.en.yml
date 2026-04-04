@@ -6,12 +6,14 @@ en:
       change_role_heading: Change Role
       confirm_demotion_label: I confirm I want to demote this employee.
       current_role_label: 'Current role:'
-      demotion_warning: 'Demotion: You are about to reduce this employee''s access level.'
+      demotion_warning: 'Demotion: You are about to reduce this employee''s access
+        level.'
       new_role_label: New Role
       reason_hint: Minimum 10 characters. This is recorded in the audit log.
       reason_label: Reason for change
-      reason_placeholder: Briefly explain why this role change is being made (minimum 10 characters)…
-      select_role_blank: '— Select a role —'
+      reason_placeholder: Briefly explain why this role change is being made (minimum
+        10 characters)…
+      select_role_blank: "— Select a role —"
       submit: Update Role
     controller:
       created: Employee was successfully created.

@@ -47,7 +47,6 @@ class DeeplClient < ExternalApiClient
     validate_language_codes!(to, from)
 
     body = {
-      auth_key: config[:api_key],
       text: text,
       target_lang: to.upcase,
     }
@@ -63,9 +62,7 @@ class DeeplClient < ExternalApiClient
   # Get usage statistics
   # @return [Hash] Usage information including character count and limit
   def usage
-    response = post('/usage', {
-      body: { auth_key: config[:api_key] },
-    })
+    response = get('/usage', {})
 
     response.parsed_response
   end
@@ -75,10 +72,7 @@ class DeeplClient < ExternalApiClient
   # @return [Array<Hash>] Array of supported languages with codes and names
   def supported_languages(type: 'target')
     response = get('/languages', {
-      query: {
-        auth_key: config[:api_key],
-        type: type,
-      },
+      query: { type: type },
     })
 
     response.parsed_response
@@ -92,6 +86,7 @@ class DeeplClient < ExternalApiClient
       api_key: deepl_api_key,
       headers: {
         'Content-Type' => 'application/x-www-form-urlencoded',
+        'Authorization' => "DeepL-Auth-Key #{deepl_api_key}",
       },
       health_check_endpoint: '/usage',
     )
@@ -165,6 +160,6 @@ class DeeplClient < ExternalApiClient
   end
 
   def auth_headers
-    {} # DeepL uses auth_key in body, not headers
+    { 'Authorization' => "DeepL-Auth-Key #{config[:api_key]}" }
   end
 end

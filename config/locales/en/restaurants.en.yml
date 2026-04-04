@@ -194,8 +194,6 @@ en:
           menu items.
       staff_2025:
         invite_staff: Invite Staff
-        remove: Remove
-        remove_confirm: Remove
     show:
       address: Address
       billing_content: Billing configuration will appear here.

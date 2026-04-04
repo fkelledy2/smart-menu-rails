@@ -27,5 +27,5 @@ en:
       order_number: 'Order #%{id}'
       start_in_min: Start in %{minutes} min
       start_preparing: Start Preparing
-      time_ago: '%{time} ago'
+      time_ago: "%{time} ago"
       total_prep_time: 'Total prep time:'
