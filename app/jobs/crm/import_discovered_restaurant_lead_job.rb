@@ -18,6 +18,7 @@ module Crm
         contact_phone: dr.preferred_phone.presence,
         source: discovery_source(dr),
         stage: 'new',
+        city: dr.city_name,
         discovered_restaurant_id: dr.id,
         last_activity_at: Time.current,
       )

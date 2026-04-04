@@ -796,7 +796,8 @@ CREATE TABLE public.crm_leads (
     calendly_event_uuid character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    discovered_restaurant_id bigint
+    discovered_restaurant_id bigint,
+    city character varying
 );
 
 
@@ -13830,6 +13831,7 @@ ALTER TABLE ONLY public.voice_commands
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260403233522'),
 ('20260402115205'),
 ('20260402115157'),
 ('20260402090001'),

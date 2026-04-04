@@ -22,6 +22,11 @@ module Admin
         @email_send = CrmEmailSend.new(email_send_params.merge(crm_lead: @lead, sender: current_user))
         authorize @email_send
 
+        unless @email_send.valid?
+          render :new, status: :unprocessable_content
+          return
+        end
+
         ::Crm::SendLeadEmailJob.perform_later(
           crm_lead_id: @lead.id,
           sender_id: current_user.id,

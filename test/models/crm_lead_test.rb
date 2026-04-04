@@ -199,6 +199,20 @@ class CrmLeadTest < ActiveSupport::TestCase
   end
 
   # ---------------------------------------------------------------------------
+  # City field (Fix 2a)
+  # ---------------------------------------------------------------------------
+
+  test 'city can be stored and retrieved on a lead' do
+    lead = CrmLead.create!(restaurant_name: 'City Test', stage: 'new', city: 'Galway')
+    assert_equal 'Galway', lead.reload.city
+  end
+
+  test 'city is nil by default' do
+    lead = CrmLead.create!(restaurant_name: 'No City', stage: 'new')
+    assert_nil lead.reload.city
+  end
+
+  # ---------------------------------------------------------------------------
   # Stage transition helpers
   # ---------------------------------------------------------------------------
 

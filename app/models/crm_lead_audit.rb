@@ -19,7 +19,7 @@ class CrmLeadAudit < ApplicationRecord
     lead_reopened
   ].freeze
 
-  validates :event, presence: true
+  validates :event, presence: true, inclusion: { in: EVENTS }
   validates :actor_type, inclusion: { in: ACTOR_TYPES }
 
   class ImmutableRecordError < StandardError; end

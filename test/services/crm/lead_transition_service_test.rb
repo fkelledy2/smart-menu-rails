@@ -151,6 +151,60 @@ class Crm::LeadTransitionServiceTest < ActiveSupport::TestCase
   end
 
   # ---------------------------------------------------------------------------
+  # Precondition: demo_completed requires assignee
+  # ---------------------------------------------------------------------------
+
+  test 'cannot transition to demo_completed when lead has no assignee' do
+    lead = crm_leads(:demo_booked_lead) # stage: demo_booked, no assigned_to
+    result = Crm::LeadTransitionService.call(
+      lead: lead,
+      new_stage: 'demo_completed',
+      actor: @actor,
+    )
+    assert_not result.success?
+    assert_includes result.error, 'assigned'
+    assert_equal 'demo_booked', lead.reload.stage
+  end
+
+  test 'can transition to demo_completed when lead has an assignee' do
+    lead = crm_leads(:demo_booked_lead)
+    lead.update!(assigned_to: @actor)
+    result = Crm::LeadTransitionService.call(
+      lead: lead,
+      new_stage: 'demo_completed',
+      actor: @actor,
+    )
+    assert result.success?
+    assert_equal 'demo_completed', lead.reload.stage
+  end
+
+  # ---------------------------------------------------------------------------
+  # Audit records written for every valid transition
+  # ---------------------------------------------------------------------------
+
+  test 'audit actor_id matches the actor passed in' do
+    lead = crm_leads(:new_lead)
+    Crm::LeadTransitionService.call(lead: lead, new_stage: 'contacted', actor: @actor)
+    audit = lead.crm_lead_audits.order(created_at: :desc).first
+    assert_equal @actor.id, audit.actor_id
+    assert_equal 'user', audit.actor_type
+  end
+
+  test 'no audit written when transition is a no-op (already at stage)' do
+    lead = crm_leads(:new_lead)
+    assert_no_difference 'CrmLeadAudit.count' do
+      Crm::LeadTransitionService.call(lead: lead, new_stage: 'new', actor: @actor)
+    end
+  end
+
+  test 'no audit written for failed transition (invalid stage)' do
+    lead = crm_leads(:contacted_lead)
+    assert_no_difference 'CrmLeadAudit.count' do
+      Crm::LeadTransitionService.call(lead: lead, new_stage: 'new', actor: @actor)
+    end
+  end
+
+  # ---------------------------------------------------------------------------
   # System actor (no actor)
   # ---------------------------------------------------------------------------
 

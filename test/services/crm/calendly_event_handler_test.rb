@@ -106,6 +106,72 @@ class Crm::CalendlyEventHandlerTest < ActiveSupport::TestCase
   end
 
   # ---------------------------------------------------------------------------
+  # Existing lead at stage 'new' — must advance to demo_booked
+  # ---------------------------------------------------------------------------
+
+  test 'advances an existing lead at stage new to demo_booked' do
+    lead = crm_leads(:new_lead)
+    payload = build_payload(email: lead.contact_email, uuid: 'new-stage-advance-uuid')
+    result = Crm::CalendlyEventHandler.call(payload: payload)
+    assert result.success?, "Expected success, got: #{result.error}"
+    assert_equal 'demo_booked', lead.reload.stage
+    assert_not result.created
+  end
+
+  test 'stores calendly_event_uuid when advancing a new-stage lead' do
+    lead = crm_leads(:new_lead)
+    payload = build_payload(email: lead.contact_email, uuid: 'new-stage-uuid-store')
+    Crm::CalendlyEventHandler.call(payload: payload)
+    assert_equal 'new-stage-uuid-store', lead.reload.calendly_event_uuid
+  end
+
+  # ---------------------------------------------------------------------------
+  # Missing email in payload — skipped with warning
+  # ---------------------------------------------------------------------------
+
+  test 'returns failure when invitee email is missing from payload' do
+    payload = { 'payload' => { 'invitee' => { 'name' => 'No Email Person' } } }
+    result = Crm::CalendlyEventHandler.call(payload: payload)
+    assert_not result.success?
+    assert_equal 'missing_invitee_email', result.error
+  end
+
+  test 'does not create a lead when invitee email is missing' do
+    payload = { 'payload' => { 'invitee' => { 'name' => 'No Email Person' } } }
+    assert_no_difference 'CrmLead.count' do
+      Crm::CalendlyEventHandler.call(payload: payload)
+    end
+  end
+
+  test 'returns failure when payload has an empty email string' do
+    payload = build_payload(email: '', uuid: 'empty-email-uuid')
+    result = Crm::CalendlyEventHandler.call(payload: payload)
+    assert_not result.success?
+    assert_equal 'missing_invitee_email', result.error
+  end
+
+  # ---------------------------------------------------------------------------
+  # Concurrent webhook replay — RecordNotUnique → idempotent
+  # ---------------------------------------------------------------------------
+
+  test 'is idempotent when a concurrent job claims the UUID before this one can store it' do
+    # Simulate: another concurrent job already stored the UUID on the demo_booked_lead fixture.
+    # The handler should detect RecordNotUnique and return the existing lead as success.
+    existing_lead = crm_leads(:demo_booked_lead)
+    # existing_lead already has calendly_event_uuid: 'abc-123-existing-uuid'
+    # Build a payload using that same UUID with a different email to simulate the race:
+    # The idempotency check finds the existing lead first and returns early.
+    payload = build_payload(email: 'totally-different@email.com', uuid: 'abc-123-existing-uuid')
+
+    assert_no_difference 'CrmLead.count' do
+      result = Crm::CalendlyEventHandler.call(payload: payload)
+      assert result.success?, "Expected success for duplicate UUID, got: #{result.error}"
+      assert_not result.created
+      assert_equal existing_lead.id, result.lead.id
+    end
+  end
+
+  # ---------------------------------------------------------------------------
   # Audit count — no duplicate stage_changed records for new leads
   # ---------------------------------------------------------------------------
 

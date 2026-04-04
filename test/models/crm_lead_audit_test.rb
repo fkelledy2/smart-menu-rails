@@ -34,8 +34,10 @@ class CrmLeadAuditTest < ActiveSupport::TestCase
 
   test 'raises ImmutableRecordError on update attempt' do
     audit = crm_lead_audits(:lead_created_audit)
+    # Use a valid event value so the inclusion validation passes and the
+    # before_update immutability callback is reached.
     assert_raises(CrmLeadAudit::ImmutableRecordError) do
-      audit.update!(event: 'different_event')
+      audit.update!(event: 'stage_changed')
     end
   end
 
@@ -43,6 +45,35 @@ class CrmLeadAuditTest < ActiveSupport::TestCase
     audit = crm_lead_audits(:lead_created_audit)
     assert_raises(CrmLeadAudit::ImmutableRecordError) do
       audit.destroy!
+    end
+  end
+
+  # ---------------------------------------------------------------------------
+  # Event inclusion validation (Fix 2b)
+  # ---------------------------------------------------------------------------
+
+  test 'rejects event not in EVENTS list' do
+    lead = crm_leads(:new_lead)
+    audit = CrmLeadAudit.new(
+      crm_lead: lead,
+      actor_type: 'system',
+      event: 'not_a_real_event',
+      created_at: Time.current,
+    )
+    assert_not audit.valid?
+    assert_includes audit.errors[:event], 'is not included in the list'
+  end
+
+  test 'all EVENTS values pass validation' do
+    lead = crm_leads(:new_lead)
+    CrmLeadAudit::EVENTS.each do |event|
+      audit = CrmLeadAudit.new(
+        crm_lead: lead,
+        actor_type: 'system',
+        event: event,
+        created_at: Time.current,
+      )
+      assert audit.valid?, "Expected #{event} to be valid, got: #{audit.errors.full_messages}"
     end
   end
 

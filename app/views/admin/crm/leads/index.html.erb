@@ -36,7 +36,6 @@
   <div class="crm-kanban-board d-flex gap-3 pb-3 px-4" style="min-height: 70vh; overflow-x: auto; overflow-y: visible;">
     <% CrmLead::STAGES.each do |stage| %>
       <%
-        is_converted = stage == 'lost'
         col_title_extra = stage == 'converted' ? ' title="Use the Convert button on a lead to move here"' : ''
       %>
       <div class="crm-kanban-column flex-shrink-0"

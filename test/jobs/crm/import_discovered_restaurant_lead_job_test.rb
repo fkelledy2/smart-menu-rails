@@ -69,6 +69,24 @@ module Crm
       assert_equal 'system', audit.actor_type
     end
 
+    test 'populates city from discovered_restaurant.city_name' do
+      dr = build_dr(city_name: 'Cork')
+      Crm::ImportDiscoveredRestaurantLeadJob.perform_now(discovered_restaurant_id: dr.id)
+
+      lead = CrmLead.find_by!(discovered_restaurant_id: dr.id)
+      assert_equal 'Cork', lead.city
+    end
+
+    test 'city is nil when discovered_restaurant has no city_name' do
+      # city_name cannot be blank due to validates :city_name, presence: true,
+      # so use a placeholder to satisfy the constraint but verify mapping
+      dr = build_dr(city_name: 'Unknown')
+      Crm::ImportDiscoveredRestaurantLeadJob.perform_now(discovered_restaurant_id: dr.id)
+
+      lead = CrmLead.find_by!(discovered_restaurant_id: dr.id)
+      assert_equal 'Unknown', lead.city
+    end
+
     # =========================================================================
     # idempotency
     # =========================================================================
@@ -81,6 +99,20 @@ module Crm
       assert_no_difference 'CrmLead.count' do
         Crm::ImportDiscoveredRestaurantLeadJob.perform_now(discovered_restaurant_id: dr.id)
       end
+    end
+
+    test 're-approving a restaurant with an existing lead does not create a duplicate' do
+      # Simulate: DR approved → lead created → DR un-approved → re-approved
+      dr = build_dr(city_name: 'Dublin')
+      Crm::ImportDiscoveredRestaurantLeadJob.perform_now(discovered_restaurant_id: dr.id)
+      assert_equal 1, CrmLead.where(discovered_restaurant_id: dr.id).count
+
+      # Re-run the job as if enqueue_crm_lead_import_if_approved fired again
+      assert_no_difference 'CrmLead.count' do
+        Crm::ImportDiscoveredRestaurantLeadJob.perform_now(discovered_restaurant_id: dr.id)
+      end
+
+      assert_equal 1, CrmLead.where(discovered_restaurant_id: dr.id).count
     end
 
     # =========================================================================

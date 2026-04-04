@@ -158,6 +158,110 @@ class DemoBookingTest < ActiveSupport::TestCase
   end
 
   # ---------------------------------------------------------------------------
+  # CRM lead integration — create_or_advance_crm_lead after_create
+  # ---------------------------------------------------------------------------
+
+  test 'creating a DemoBooking auto-creates a CrmLead when no matching email exists' do
+    assert_difference 'CrmLead.count', 1 do
+      DemoBooking.create!(
+        restaurant_name: 'New Demo Restaurant',
+        contact_name: 'Brand New Contact',
+        email: 'brand_new_demo@newrestaurant.com',
+      )
+    end
+
+    lead = CrmLead.find_by(contact_email: 'brand_new_demo@newrestaurant.com')
+    assert_not_nil lead
+    assert_equal 'demo_booked', lead.stage
+    assert_equal 'website', lead.source
+    assert_equal 'New Demo Restaurant', lead.restaurant_name
+  end
+
+  test 'auto-created CrmLead from DemoBooking writes a lead_created audit' do
+    assert_difference 'CrmLeadAudit.count', 1 do
+      DemoBooking.create!(
+        restaurant_name: 'Audit Demo Restaurant',
+        contact_name: 'Audit Contact',
+        email: 'audit_demo_unique@newrestaurant.com',
+      )
+    end
+
+    lead = CrmLead.find_by(contact_email: 'audit_demo_unique@newrestaurant.com')
+    audit = lead.crm_lead_audits.order(:created_at).last
+    assert_equal 'lead_created', audit.event
+    assert_equal 'system', audit.actor_type
+  end
+
+  test 'creating a DemoBooking advances an existing CrmLead to demo_booked' do
+    # contacted_lead is in 'contacted' stage and has matching email 'pierre@lamaison.fr'
+    lead = crm_leads(:contacted_lead)
+    assert_equal 'contacted', lead.stage
+
+    assert_no_difference 'CrmLead.count' do
+      DemoBooking.create!(
+        restaurant_name: lead.restaurant_name,
+        contact_name: lead.contact_name,
+        email: lead.contact_email,
+      )
+    end
+
+    assert_equal 'demo_booked', lead.reload.stage
+  end
+
+  test 'creating a DemoBooking does not regress an already-converted lead' do
+    lead = crm_leads(:converted_lead)
+    assert_equal 'converted', lead.stage
+
+    DemoBooking.create!(
+      restaurant_name: lead.restaurant_name,
+      contact_name: lead.contact_name,
+      email: lead.contact_email,
+    )
+
+    assert_equal 'converted', lead.reload.stage
+  end
+
+  test 'creating a DemoBooking does not regress a demo_booked lead' do
+    lead = crm_leads(:demo_booked_lead)
+    assert_equal 'demo_booked', lead.stage
+
+    DemoBooking.create!(
+      restaurant_name: lead.restaurant_name,
+      contact_name: lead.contact_name,
+      email: lead.contact_email,
+    )
+
+    assert_equal 'demo_booked', lead.reload.stage
+  end
+
+  test 'creating a DemoBooking does not advance a lost lead' do
+    lead = crm_leads(:lost_lead)
+    assert_equal 'lost', lead.stage
+
+    assert_no_difference 'CrmLead.count' do
+      DemoBooking.create!(
+        restaurant_name: lead.restaurant_name,
+        contact_name: lead.contact_name,
+        email: lead.contact_email,
+      )
+    end
+
+    assert_equal 'lost', lead.reload.stage
+  end
+
+  test 'CrmLead created from DemoBooking copies contact_phone' do
+    DemoBooking.create!(
+      restaurant_name: 'Phone Test Restaurant',
+      contact_name: 'Phone Test',
+      email: 'phone_test_unique@phonedemo.com',
+      phone: '+353 1 234 5678',
+    )
+
+    lead = CrmLead.find_by(contact_email: 'phone_test_unique@phonedemo.com')
+    assert_equal '+353 1 234 5678', lead.contact_phone
+  end
+
+  # ---------------------------------------------------------------------------
   # Fixtures
   # ---------------------------------------------------------------------------
 

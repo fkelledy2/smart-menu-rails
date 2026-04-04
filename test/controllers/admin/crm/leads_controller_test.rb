@@ -352,4 +352,50 @@ class Admin::Crm::LeadsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to admin_crm_leads_path
     assert flash[:alert].present?
   end
+
+  # ---------------------------------------------------------------------------
+  # 404 for unknown lead id — regression for Bug 1 (set_lead missing return)
+  # ---------------------------------------------------------------------------
+
+  test 'show returns 404 for unknown lead id' do
+    sign_in @mellow_admin
+    get admin_crm_lead_path(id: 0)
+    assert_response :not_found
+  end
+
+  test 'edit returns 404 for unknown lead id' do
+    sign_in @mellow_admin
+    get edit_admin_crm_lead_path(id: 0)
+    assert_response :not_found
+  end
+
+  test 'update returns 404 for unknown lead id' do
+    sign_in @mellow_admin
+    patch admin_crm_lead_path(id: 0), params: { crm_lead: { restaurant_name: 'X' } }
+    assert_response :not_found
+  end
+
+  test 'destroy returns 404 for unknown lead id' do
+    sign_in @mellow_admin
+    delete admin_crm_lead_path(id: 0)
+    assert_response :not_found
+  end
+
+  test 'transition returns 404 for unknown lead id' do
+    sign_in @mellow_admin
+    patch transition_admin_crm_lead_path(id: 0), params: { stage: 'contacted' }, as: :json
+    assert_response :not_found
+  end
+
+  test 'convert returns 404 for unknown lead id' do
+    sign_in @mellow_admin
+    patch convert_admin_crm_lead_path(id: 0), params: { restaurant_id: restaurants(:one).id }
+    assert_response :not_found
+  end
+
+  test 'reopen returns 404 for unknown lead id' do
+    sign_in @mellow_admin
+    patch reopen_admin_crm_lead_path(id: 0)
+    assert_response :not_found
+  end
 end

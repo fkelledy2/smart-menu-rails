@@ -29,6 +29,8 @@ module Admin
         @audits = @lead.crm_lead_audits.includes(:actor).order(created_at: :desc).limit(20)
         @email_sends = @lead.crm_email_sends.includes(:sender).order(created_at: :desc)
         @users = User.where('email LIKE ?', '%@mellow.menu').order(:email)
+        @matching_booking = @lead.contact_email.present? ? DemoBooking.find_by(email: @lead.contact_email) : nil
+        @restaurants = Restaurant.order(:name)
       end
 
       def new

@@ -16,12 +16,9 @@
     </div>
     <div class="d-flex gap-2">
       <%# Link to matching demo booking if one exists for this contact's email %>
-      <% if @lead.contact_email.present? %>
-        <% matching_booking = DemoBooking.find_by(email: @lead.contact_email) %>
-        <% if matching_booking %>
-          <%= link_to admin_demo_booking_path(matching_booking), class: 'btn btn-outline-secondary btn-sm' do %>
-            <i class="bi bi-calendar-check me-1"></i>View Demo Booking
-          <% end %>
+      <% if @matching_booking %>
+        <%= link_to admin_demo_booking_path(@matching_booking), class: 'btn btn-outline-secondary btn-sm' do %>
+          <i class="bi bi-calendar-check me-1"></i>View Demo Booking
         <% end %>
       <% end %>
       <% if @lead.discovered_restaurant %>
@@ -56,6 +53,11 @@
           <% end %>
           <% if @lead.contact_phone.present? %>
             <p class="mb-1 text-muted"><%= @lead.contact_phone %></p>
+          <% end %>
+          <% if @lead.city.present? %>
+            <p class="mb-1 text-muted fs-12">
+              <i class="bi bi-geo-alt me-1"></i><%= @lead.city %>
+            </p>
           <% end %>
           <hr class="my-2">
           <p class="mb-1 text-muted fs-12 fw-semibold text-uppercase">Assigned to</p>
@@ -253,7 +255,7 @@
           <div class="mb-3">
             <label class="form-label">Restaurant</label>
             <%= f.select :restaurant_id,
-                  Restaurant.order(:name).map { |r| [r.name, r.id] },
+                  @restaurants.map { |r| [r.name, r.id] },
                   { prompt: 'Select restaurant...' },
                   class: 'form-select' %>
           </div>

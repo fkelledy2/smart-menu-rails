@@ -94,9 +94,22 @@ module Crm
         @payload.dig('invitee', 'name')
     end
 
-    def find_or_create_lead(email, name)
-      return [CrmLead.new, true] if email.blank?
+    # Best-effort city extraction from Calendly payload.
+    # Checks the event location field (may contain a city string) and then
+    # scans questions_and_answers for any response to a question containing
+    # "city" or "location". Returns nil when nothing useful is found.
+    def extract_city_from_payload
+      location = @payload.dig('payload', 'event', 'location', 'location').to_s.strip.presence
+      return location if location
 
+      questions = Array(@payload.dig('payload', 'questions_and_answers'))
+      city_answer = questions.find do |qa|
+        qa.is_a?(Hash) && qa['question'].to_s.downcase.match?(/city|location/)
+      end
+      city_answer&.dig('answer').to_s.strip.presence
+    end
+
+    def find_or_create_lead(email, name)
       lead = CrmLead.where('LOWER(contact_email) = ?', email.downcase).first
 
       if lead
@@ -107,6 +120,7 @@ module Crm
           contact_email: email,
           contact_name: name,
           source: 'calendly',
+          city: extract_city_from_payload,
           assigned_to_id: nil,
           stage: 'new',
           last_activity_at: Time.current,

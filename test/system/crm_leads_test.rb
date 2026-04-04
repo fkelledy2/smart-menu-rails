@@ -439,6 +439,114 @@ class CrmLeadsSystemTest < ApplicationSystemTestCase
   end
 
   # ---------------------------------------------------------------------------
+  # Search bar — filtering by name
+  # ---------------------------------------------------------------------------
+
+  test 'search bar filters cards by restaurant name' do
+    search_input = find('input[type="search"]')
+    search_input.fill_in(with: 'Draggable Bistro')
+
+    within ".crm-kanban-column[data-stage='new']" do
+      assert_selector "#crm-lead-card-#{@new_lead.id}", wait: 3
+    end
+
+    # The contacted lead card should be hidden
+    assert_no_selector "#crm-lead-card-#{@contacted_lead.id}", wait: 3
+  end
+
+  test 'search bar is case-insensitive for restaurant name' do
+    find('input[type="search"]').fill_in(with: 'draggable bistro')
+
+    assert_selector "#crm-lead-card-#{@new_lead.id}", wait: 3
+    assert_no_selector "#crm-lead-card-#{@contacted_lead.id}", wait: 3
+  end
+
+  test 'clearing the search bar restores all cards' do
+    input = find('input[type="search"]')
+    input.fill_in(with: 'Draggable Bistro')
+    assert_no_selector "#crm-lead-card-#{@contacted_lead.id}", wait: 3
+
+    input.fill_in(with: '')
+
+    assert_selector "#crm-lead-card-#{@new_lead.id}", wait: 3
+    assert_selector "#crm-lead-card-#{@contacted_lead.id}", wait: 3
+  end
+
+  # ---------------------------------------------------------------------------
+  # Search bar — filtering by assignee
+  # ---------------------------------------------------------------------------
+
+  test 'search bar filters cards by assignee name prefix' do
+    # Create a lead assigned to the admin user (email: admin@mellow.menu → prefix 'admin')
+    assigned_lead = CrmLead.create!(
+      restaurant_name: 'Assigned Place',
+      stage: 'contacted',
+      source: 'manual',
+      assigned_to: @admin,
+      last_activity_at: Time.current,
+    )
+
+    visit admin_crm_leads_path
+    assert_selector "#crm-lead-card-#{assigned_lead.id}", wait: 5
+
+    find('input[type="search"]').fill_in(with: 'admin')
+
+    assert_selector "#crm-lead-card-#{assigned_lead.id}", wait: 3
+    # @new_lead and @contacted_lead have no assignee, no 'admin' in search text
+    assert_no_selector "#crm-lead-card-#{@new_lead.id}", wait: 3
+  end
+
+  # ---------------------------------------------------------------------------
+  # Unassigned badge colours
+  # ---------------------------------------------------------------------------
+
+  test 'unassigned badge is green for leads at the new stage' do
+    within "#crm-lead-card-#{@new_lead.id}" do
+      # bg-success (green) for new/contacted unassigned leads
+      assert_selector '.badge.bg-success', text: 'Unassigned', wait: 3
+    end
+  end
+
+  test 'unassigned badge is orange (bg-warning) for demo_booked leads' do
+    # Create an unassigned demo_booked lead
+    unassigned_demo = CrmLead.create!(
+      restaurant_name: 'Needs Assignment Café',
+      stage: 'demo_booked',
+      source: 'calendly',
+      last_activity_at: Time.current,
+    )
+
+    visit admin_crm_leads_path
+    assert_selector "#crm-lead-card-#{unassigned_demo.id}", wait: 5
+
+    within "#crm-lead-card-#{unassigned_demo.id}" do
+      assert_selector '.badge.bg-warning', text: 'Unassigned', wait: 3
+    end
+  end
+
+  # ---------------------------------------------------------------------------
+  # Transition button disabled state (precondition not met)
+  # ---------------------------------------------------------------------------
+
+  test 'demo_completed button is disabled in modal when lead has no assignee' do
+    # @new_lead is unassigned; advance it to demo_booked first so the button is visible
+    @new_lead.update!(stage: 'demo_booked')
+
+    visit admin_crm_leads_path
+    assert_selector "#crm-lead-card-#{@new_lead.id}", wait: 5
+
+    first('a').click
+    assert_selector '#leadModal.show', wait: 8
+
+    within '#leadModal' do
+      # The demo_completed button should be rendered as disabled
+      demo_btn = find('button, input[type="submit"]', text: /Demo completed/i, wait: 3)
+      assert demo_btn['disabled'].present? || demo_btn['class'].include?('disabled'),
+             'Expected demo_completed button to be disabled for unassigned lead'
+    end
+  end
+
+  # ---------------------------------------------------------------------------
   # Helpers
   # ---------------------------------------------------------------------------
 

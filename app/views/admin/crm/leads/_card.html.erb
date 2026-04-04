@@ -2,7 +2,7 @@
 <% search_text = [
      lead.restaurant_name,
      lead.contact_name,
-     lead.discovered_restaurant&.city_name,
+     lead.city,
      lead.assigned_to&.email&.split('@')&.first,
    ].compact.join(' ').downcase %>
 <div class="crm-lead-card"
@@ -28,9 +28,9 @@
   <% dr = lead.discovered_restaurant %>
   <% if dr %>
     <div class="d-flex flex-wrap gap-1 mb-1">
-      <% if dr.city_name.present? %>
+      <% if lead.city.present? %>
         <span class="badge bg-light text-secondary border fs-10">
-          <i class="bi bi-geo-alt me-1"></i><%= dr.city_name %>
+          <i class="bi bi-geo-alt me-1"></i><%= lead.city %>
         </span>
       <% end %>
       <% if dr.establishment_type_label_text.present? && dr.establishment_type_label_text != 'Unknown' %>

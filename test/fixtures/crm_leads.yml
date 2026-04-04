@@ -5,7 +5,7 @@ new_lead:
   contact_phone: "+353 87 123 4567"
   stage: "new"
   source: "manual"
-  notes_count: 0
+  notes_count: 2
   last_activity_at: "2026-03-27 10:00:00"
 
 contacted_lead:
