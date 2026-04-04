@@ -44,7 +44,11 @@ rescue StandardError; [] end %>
 } %>
 <% enrichment_active = [deep_dive['status'], web_scrape['status']].any? { |s| %w[queued scraping processing].include?(s) } %>
 
-<div class="container-fluid py-3"
+<%= render 'shared/admin_breadcrumb',
+      crumbs: [{ label: 'Admin', url: admin_discovered_restaurants_path },
+               { label: 'Discovery Queue', url: admin_discovered_restaurants_path }],
+      current: @discovered_restaurant.name %>
+<div class="container-fluid py-4"
      data-controller="discovered-restaurant-deep-dive discovered-restaurant-web-scrape"
      data-discovered-restaurant-deep-dive-status-url-value="<%= deep_dive_status_admin_discovered_restaurant_path(@discovered_restaurant) %>"
      data-discovered-restaurant-deep-dive-initial-status-value="<%= deep_dive['status'].to_s %>"

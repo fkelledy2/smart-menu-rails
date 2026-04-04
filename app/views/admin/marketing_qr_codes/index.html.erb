@@ -52,8 +52,7 @@
               </td>
               <td><%= qr.campaign.presence || '—' %></td>
               <td>
-                <% badge_class = { 'unlinked' => 'bg-warning text-dark', 'linked' => 'bg-success', 'archived' => 'bg-secondary' }[qr.status] %>
-                <span class="badge <%= badge_class %>"><%= qr.status.capitalize %></span>
+                <%= render 'shared/status_badge', status: qr.status %>
               </td>
               <td>
                 <% if qr.restaurant %>

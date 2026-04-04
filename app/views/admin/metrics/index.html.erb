@@ -1,4 +1,4 @@
-<% content_for :title, "Application Metrics Dashboard" %>
+<% content_for :title, 'Application Metrics — Admin' %>
 
 <div class="container-fluid py-4">
   <div class="row">
@@ -8,54 +8,54 @@
   </div>
 
   <!-- Summary Cards -->
-  <div class="row mb-4">
+  <div class="row g-3 mb-4">
     <div class="col-md-3">
-      <div class="card bg-primary text-white">
+      <div class="card border-0 bg-light h-100">
         <div class="card-body">
-          <h5 class="card-title">Total Requests</h5>
-          <h2 class="card-text"><%= @metrics_summary[:http_requests][:total] %></h2>
-          <small>All time</small>
+          <div class="text-muted small">Total Requests</div>
+          <div class="fs-4 fw-semibold"><%= @metrics_summary[:http_requests][:total] %></div>
+          <small class="text-muted">All time</small>
         </div>
       </div>
     </div>
 
     <div class="col-md-3">
-      <div class="card bg-success text-white">
+      <div class="card border-0 bg-light h-100">
         <div class="card-body">
-          <h5 class="card-title">Avg Response Time</h5>
-          <h2 class="card-text"><%= (@metrics_summary[:avg_response_time] * 1000).round(0) %>ms</h2>
-          <small>Current average</small>
+          <div class="text-muted small">Avg Response Time</div>
+          <div class="fs-4 fw-semibold"><%= (@metrics_summary[:avg_response_time] * 1000).round(0) %>ms</div>
+          <small class="text-muted">Current average</small>
         </div>
       </div>
     </div>
 
     <div class="col-md-3">
-      <div class="card bg-<%= @metrics_summary[:error_rate] > 5 ? 'danger' : 'warning' %> text-white">
+      <div class="card border-0 h-100 <%= @metrics_summary[:error_rate] > 5 ? 'bg-danger bg-opacity-10 border-danger' : 'bg-light' %>">
         <div class="card-body">
-          <h5 class="card-title">Error Rate</h5>
-          <h2 class="card-text"><%= @metrics_summary[:error_rate] %>%</h2>
-          <small>Current error rate</small>
+          <div class="text-muted small">Error Rate</div>
+          <div class="fs-4 fw-semibold"><%= @metrics_summary[:error_rate] %>%</div>
+          <small class="text-muted">Current error rate</small>
         </div>
       </div>
     </div>
 
     <div class="col-md-3">
-      <div class="card bg-info text-white">
+      <div class="card border-0 bg-light h-100">
         <div class="card-body">
-          <h5 class="card-title">Total Users</h5>
-          <h2 class="card-text"><%= @metrics_summary[:user_registrations][:total] %></h2>
-          <small>All time registrations</small>
+          <div class="text-muted small">Total Users</div>
+          <div class="fs-4 fw-semibold"><%= @metrics_summary[:user_registrations][:total] %></div>
+          <small class="text-muted">All time registrations</small>
         </div>
       </div>
     </div>
   </div>
 
   <!-- Business Metrics -->
-  <div class="row mb-4">
+  <div class="row g-3 mb-4">
     <div class="col-md-6">
       <div class="card">
         <div class="card-header">
-          <h5 class="card-title mb-0">🏪 Business Metrics</h5>
+          <h5 class="card-title mb-0"><i class="bi bi-shop me-2" aria-hidden="true"></i>Business Metrics</h5>
         </div>
         <div class="card-body">
           <div class="row">
@@ -75,7 +75,7 @@
     <div class="col-md-6">
       <div class="card">
         <div class="card-header">
-          <h5 class="card-title mb-0">🖥️ System Metrics</h5>
+          <h5 class="card-title mb-0"><i class="bi bi-display me-2" aria-hidden="true"></i>System Metrics</h5>
         </div>
         <div class="card-body">
           <% if @system_metrics[:memory_usage] %>
@@ -109,7 +109,7 @@
     <div class="col-12">
       <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
-          <h5 class="card-title mb-0">📈 Recent Metrics (Last Hour)</h5>
+          <h5 class="card-title mb-0"><i class="bi bi-graph-up me-2" aria-hidden="true"></i>Recent Metrics (Last Hour)</h5>
           <div>
             <%= link_to "Export JSON", admin_metrics_path(format: :json), class: "btn btn-sm btn-outline-primary" %>
             <%= link_to "Export CSV", admin_metrics_path(format: :csv), class: "btn btn-sm btn-outline-secondary" %>
@@ -176,8 +176,8 @@
   <div class="row">
     <div class="col-12">
       <div class="card border-info">
-        <div class="card-header bg-info text-white">
-          <h6 class="card-title mb-0">ℹ️ About Metrics</h6>
+        <div class="card-header text-bg-info">
+          <h6 class="card-title mb-0"><i class="bi bi-info-circle me-2" aria-hidden="true"></i>About Metrics</h6>
         </div>
         <div class="card-body">
           <p class="mb-2">

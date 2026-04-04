@@ -1,4 +1,9 @@
+<% content_for :title, 'New Margin Policy — Admin' %>
 <div class="container-fluid py-4">
+  <%= render 'shared/admin_breadcrumb',
+        crumbs: [{ label: 'Admin', url: admin_margin_policies_path },
+                 { label: 'Margin Policies', url: admin_margin_policies_path }],
+        current: 'New' %>
   <h1 class="h3 mb-1">New Margin Policy</h1>
   <%= render 'form', policy: @policy %>
 </div>

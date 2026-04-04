@@ -1,4 +1,9 @@
-<div class="container-fluid py-3 mw-600">
+<% content_for :title, 'New Source Rule — Admin' %>
+<div class="container-fluid py-4 mw-600">
+  <%= render 'shared/admin_breadcrumb',
+        crumbs: [{ label: 'Admin', url: admin_crawl_source_rules_path },
+                 { label: 'Source Rules', url: admin_crawl_source_rules_path }],
+        current: 'New' %>
   <h1 class="h3 mb-1">New Source Rule</h1>
 
   <%= render 'form', rule: @rule %>

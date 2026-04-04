@@ -1,12 +1,10 @@
+<% content_for :title, "Preview #{@model.version} — Admin" %>
 <div class="container-fluid py-4">
-  <nav aria-label="breadcrumb" class="mb-3">
-    <span class="text-muted">
-      <%= link_to 'Admin', admin_root_path, class: 'text-muted text-decoration-none' %> /
-      <%= link_to 'Pricing Models', admin_pricing_models_path, class: 'text-muted text-decoration-none' %> /
-      <%= link_to @model.version, admin_pricing_model_path(@model), class: 'text-muted text-decoration-none' %> /
-      Preview
-    </span>
-  </nav>
+  <%= render 'shared/admin_breadcrumb',
+        crumbs: [{ label: 'Admin', url: admin_pricing_models_path },
+                 { label: 'Pricing Models', url: admin_pricing_models_path },
+                 { label: @model.version, url: admin_pricing_model_path(@model) }],
+        current: 'Preview' %>
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h1 class="h3 mb-1">Preview: <%= @model.version %></h1>
   </div>

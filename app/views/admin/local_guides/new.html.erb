@@ -1,4 +1,9 @@
+<% content_for :title, 'New Local Guide — Admin' %>
 <div class="container-fluid py-4">
+  <%= render 'shared/admin_breadcrumb',
+        crumbs: [{ label: 'Admin', url: admin_local_guides_path },
+                 { label: 'Local Guides', url: admin_local_guides_path }],
+        current: 'New' %>
   <h1 class="mb-4">New Local Guide</h1>
   <%= render 'form', local_guide: @local_guide %>
 </div>

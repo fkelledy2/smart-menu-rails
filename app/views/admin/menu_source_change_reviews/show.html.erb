@@ -1,6 +1,10 @@
 <% content_for :title, 'Change Review — Admin' %>
 
-<div class="container-fluid py-3">
+<div class="container-fluid py-4">
+  <%= render 'shared/admin_breadcrumb',
+        crumbs: [{ label: 'Admin', url: admin_menu_source_change_reviews_path },
+                 { label: 'Change Detection Queue', url: admin_menu_source_change_reviews_path }],
+        current: 'Menu Source Change' %>
 
   <%# ── HEADER ── %>
   <div class="d-flex align-items-center justify-content-between mb-3">

@@ -1,4 +1,9 @@
+<% content_for :title, 'New Vendor Cost — Admin' %>
 <div class="container-fluid py-4">
+  <%= render 'shared/admin_breadcrumb',
+        crumbs: [{ label: 'Admin', url: admin_vendor_costs_path },
+                 { label: 'Vendor Costs', url: admin_vendor_costs_path }],
+        current: 'New' %>
   <h1 class="h3 mb-1">Add Vendor Cost Entry</h1>
   <%= render 'form', cost: @cost %>
 </div>

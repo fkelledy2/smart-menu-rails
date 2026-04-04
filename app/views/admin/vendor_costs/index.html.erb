@@ -1,3 +1,4 @@
+<% content_for :title, 'Vendor Costs — Admin' %>
 <div class="container-fluid py-4">
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h1 class="h3 mb-1">Vendor Costs</h1>
@@ -24,7 +25,7 @@
           <% else %>
             <% @costs.each do |cost| %>
               <tr>
-                <td><span class="badge bg-info text-dark"><%= cost.service %></span></td>
+                <td><span class="badge text-bg-info"><%= cost.service %></span></td>
                 <td><%= cost.month&.strftime('%B %Y') %></td>
                 <td>&euro;<%= number_with_precision(cost.amount_euros, precision: 2) %></td>
                 <td><%= cost.currency %></td>

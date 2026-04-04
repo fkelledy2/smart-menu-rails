@@ -1,0 +1,9 @@
+<%# Locals: crumbs (Array of { label:, url: } hashes), current (String - the current page label) %>
+<nav aria-label="breadcrumb" class="mb-3">
+  <ol class="breadcrumb">
+    <% crumbs.each do |crumb| %>
+      <li class="breadcrumb-item"><%= link_to crumb[:label], crumb[:url] %></li>
+    <% end %>
+    <li class="breadcrumb-item active" aria-current="page"><%= current %></li>
+  </ol>
+</nav>

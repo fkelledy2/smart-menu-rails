@@ -2,15 +2,13 @@
 <% content_for :title, "QR: #{@qr_code.name.presence || @qr_code.token}" %>
 
 <div class="container-fluid py-4 mw-900">
-  <nav aria-label="breadcrumb" class="mb-3">
-    <span class="text-muted">
-      <%= link_to 'Admin', admin_root_path, class: 'text-muted text-decoration-none' %> /
-      <%= link_to 'QR Codes', admin_marketing_qr_codes_path, class: 'text-muted text-decoration-none' %> /
-      <%= @qr_code.name.presence || @qr_code.token %>
-    </span>
-  </nav>
+  <%= render 'shared/admin_breadcrumb',
+        crumbs: [{ label: 'Admin', url: admin_marketing_qr_codes_path },
+                 { label: 'Marketing QR Codes', url: admin_marketing_qr_codes_path }],
+        current: @qr_code.name.presence || @qr_code.token %>
   <div class="d-flex align-items-center gap-2 mb-4">
-    <h1 class="h3 mb-1"><%= @qr_code.name.presence || '(unnamed)' %></h1>
+    <%= link_to '← All QR Codes', admin_marketing_qr_codes_path, class: 'btn btn-sm btn-outline-secondary' %>
+    <h1 class="h3 mb-1 ms-2"><%= @qr_code.name.presence || '(unnamed)' %></h1>
     <%= render 'shared/status_badge', status: @qr_code.status %>
   </div>
 

@@ -1,11 +1,8 @@
+<% content_for :title, 'Heroku Inventory — Admin' %>
 <div class="container-fluid py-4">
-  <nav aria-label="breadcrumb" class="mb-3">
-    <span class="text-muted">
-      <%= link_to 'Admin', admin_root_path, class: 'text-muted text-decoration-none' %> /
-      <%= link_to 'Cost Insights', admin_cost_insights_path, class: 'text-muted text-decoration-none' %> /
-      Heroku Inventory
-    </span>
-  </nav>
+  <%= render 'shared/admin_breadcrumb',
+        crumbs: [{ label: 'Admin', url: admin_heroku_inventories_path }],
+        current: 'Heroku Inventory' %>
   <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
       <h1 class="h3 mb-1">Heroku Cost Inventory</h1>

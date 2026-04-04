@@ -1,4 +1,9 @@
+<% content_for :title, 'New Whiskey Flight — Admin' %>
 <div class="container-fluid py-4">
+  <%= render 'shared/admin_breadcrumb',
+        crumbs: [{ label: 'Admin', url: admin_whiskey_flights_path },
+                 { label: 'Whiskey Flights', url: admin_whiskey_flights_path }],
+        current: 'New' %>
 <h1 class="h3 mb-1">New Whiskey Flight — <%= @restaurant.name %></h1>
 
 <%= form_with url: create_admin_whiskey_flight_restaurant_path(@restaurant), method: :post, local: true do |f| %>

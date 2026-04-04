@@ -1,11 +1,9 @@
-<div class="container-fluid py-3">
-  <nav aria-label="breadcrumb" class="mb-3">
-    <span class="text-muted">
-      <%= link_to 'Admin', admin_root_path, class: 'text-muted text-decoration-none' %> /
-      <%= link_to 'Removal Requests', admin_restaurant_removal_requests_path, class: 'text-muted text-decoration-none' %> /
-      #<%= @removal_request.id %>
-    </span>
-  </nav>
+<% content_for :title, "Removal Request ##{@removal_request.id} — Admin" %>
+<div class="container-fluid py-4">
+  <%= render 'shared/admin_breadcrumb',
+        crumbs: [{ label: 'Admin', url: admin_restaurant_removal_requests_path },
+                 { label: 'Removal Requests', url: admin_restaurant_removal_requests_path }],
+        current: "Removal Request ##{@removal_request.id}" %>
   <div class="d-flex align-items-center gap-2 mb-3">
     <h1 class="h3 mb-1">Removal Request #<%= @removal_request.id %></h1>
     <%= render 'shared/status_badge', status: @removal_request.status %>

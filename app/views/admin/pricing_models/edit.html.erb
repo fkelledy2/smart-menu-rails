@@ -1,4 +1,10 @@
+<% content_for :title, "Edit Pricing Model — Admin" %>
 <div class="container-fluid py-4">
+  <%= render 'shared/admin_breadcrumb',
+        crumbs: [{ label: 'Admin', url: admin_pricing_models_path },
+                 { label: 'Pricing Models', url: admin_pricing_models_path },
+                 { label: @model.version, url: admin_pricing_model_path(@model) }],
+        current: 'Edit' %>
   <h1 class="h3 mb-1">Edit Pricing Model — <%= @model.version %></h1>
   <%= render 'form', model: @model %>
 </div>

@@ -38,11 +38,11 @@
             </span>
           </li>
         <% elsif current_user %>
-            <li class="z-index-high nav-item dropdown">
-              <%= link_to "#", id: "navbar-restaurants-dropdown", class: "nav-link dropdown-toggle", data: { target: "nav-restaurants-dropdown-menu", bs_toggle: "dropdown" }, aria: { haspopup: true, expanded: false } do %>
+            <li class="nav-item dropdown">
+              <%= link_to "#", id: "restaurants-nav-toggle", class: "nav-link dropdown-toggle", data: { target: "restaurants-nav-menu", bs_toggle: "dropdown" }, aria: { haspopup: true, expanded: false } do %>
                 <%= t(".restaurants") %>
               <% end %>
-              <div id="nav-restaurants-dropdown-menu" class="dropdown-menu" aria-labelledby="navbar-restaurants-dropdown">
+              <div id="restaurants-nav-menu" class="dropdown-menu" aria-labelledby="restaurants-nav-toggle">
                 <%= link_to restaurants_path, class: "dropdown-item" do %>
                     <%= t(".restaurants") %>
                 <% end %>
@@ -77,14 +77,14 @@
           </button>
         </li>
         <% if user_signed_in? %>
-          <li class="z-index-high nav-item dropdown">
-            <%= link_to "#", id: "navbar-dropdown", class: "nav-link dropdown-toggle", data: { target: "nav-account-dropdown", bs_toggle: "dropdown" }, aria: { haspopup: true, expanded: false } do %>
+          <li class="nav-item dropdown">
+            <%= link_to "#", id: "account-nav-toggle", class: "nav-link dropdown-toggle", data: { target: "account-nav-menu", bs_toggle: "dropdown" }, aria: { haspopup: true, expanded: false } do %>
               <%= current_user.name %>
               <% if 1==2 %>
                 <%= image_tag avatar_path(current_user, size: 40), height: 20, width: 20, class: "rounded" %>
               <% end %>
             <% end %>
-            <div id="nav-account-dropdown" class="dropdown-menu dropdown-menu-end" aria-labelledby="navbar-dropdown">
+            <div id="account-nav-menu" class="dropdown-menu dropdown-menu-end" aria-labelledby="account-nav-toggle">
               <%= link_to t(".settings"), edit_user_registration_path, class: "dropdown-item" %>
               <% if @userplan && @userplan.id %>
                   <%= link_to t(".billing"), edit_userplan_path(@userplan), class: "dropdown-item" %>
@@ -196,8 +196,8 @@
           </li>
 
         <% else %>
-          <li class="z-index-high nav-item"><%= link_to t(".signUp"), new_user_registration_path, class: "nav-link" %></li>
-          <li class="z-index-high nav-item"><%= link_to t(".login"), new_user_session_path, class: "nav-link" %></li>
+          <li class="nav-item"><%= link_to t(".signUp"), new_user_registration_path, class: "nav-link" %></li>
+          <li class="nav-item"><%= link_to t(".login"), new_user_session_path, class: "nav-link" %></li>
         <% end %>
       </ul>
     </div>

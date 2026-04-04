@@ -2,14 +2,14 @@
 <% content_for :title, 'New Marketing QR Code — Admin' %>
 
 <div class="container-fluid py-4 mw-600">
-  <nav aria-label="breadcrumb" class="mb-3">
-    <span class="text-muted">
-      <%= link_to 'Admin', admin_root_path, class: 'text-muted text-decoration-none' %> /
-      <%= link_to 'QR Codes', admin_marketing_qr_codes_path, class: 'text-muted text-decoration-none' %> /
-      New
-    </span>
-  </nav>
-  <h1 class="h3 mb-1">New Marketing QR Code</h1>
+  <%= render 'shared/admin_breadcrumb',
+        crumbs: [{ label: 'Admin', url: admin_marketing_qr_codes_path },
+                 { label: 'Marketing QR Codes', url: admin_marketing_qr_codes_path }],
+        current: 'New' %>
+  <div class="d-flex align-items-center gap-2 mb-4">
+    <%= link_to '← All QR Codes', admin_marketing_qr_codes_path, class: 'btn btn-sm btn-outline-secondary' %>
+    <h1 class="h3 mb-1 ms-2">New Marketing QR Code</h1>
+  </div>
 
   <div class="card">
     <div class="card-body">

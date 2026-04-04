@@ -2,15 +2,15 @@
 <% content_for :title, "Edit QR: #{@qr_code.name.presence || @qr_code.token}" %>
 
 <div class="container-fluid py-4 mw-600">
-  <nav aria-label="breadcrumb" class="mb-3">
-    <span class="text-muted">
-      <%= link_to 'Admin', admin_root_path, class: 'text-muted text-decoration-none' %> /
-      <%= link_to 'QR Codes', admin_marketing_qr_codes_path, class: 'text-muted text-decoration-none' %> /
-      <%= link_to @qr_code.name.presence || @qr_code.token, admin_marketing_qr_code_path(@qr_code), class: 'text-muted text-decoration-none' %> /
-      Edit
-    </span>
-  </nav>
-  <h1 class="h3 mb-1">Edit QR Code</h1>
+  <%= render 'shared/admin_breadcrumb',
+        crumbs: [{ label: 'Admin', url: admin_marketing_qr_codes_path },
+                 { label: 'Marketing QR Codes', url: admin_marketing_qr_codes_path },
+                 { label: @qr_code.name.presence || @qr_code.token, url: admin_marketing_qr_code_path(@qr_code) }],
+        current: 'Edit' %>
+  <div class="d-flex align-items-center gap-2 mb-4">
+    <%= link_to '← Back', admin_marketing_qr_code_path(@qr_code), class: 'btn btn-sm btn-outline-secondary' %>
+    <h1 class="h3 mb-1 ms-2">Edit QR Code</h1>
+  </div>
 
   <div class="card">
     <div class="card-body">
