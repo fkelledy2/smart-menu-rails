@@ -1,4 +1,5 @@
-<h1>Whiskey Flights — <%= @restaurant.name %></h1>
+<div class="container-fluid py-4">
+<h1 class="h3 mb-1">Whiskey Flights — <%= @restaurant.name %></h1>
 
 <div class="d-flex gap-2 mb-3">
   <%= link_to 'Create Manual Flight', new_admin_whiskey_flight_restaurant_path(@restaurant), class: 'btn btn-primary' %>
@@ -6,7 +7,7 @@
 </div>
 
 <% if @flights.any? %>
-  <table class="table table-striped">
+  <table class="table table-sm table-hover align-middle">
     <thead>
       <tr>
         <th>Title</th>
@@ -25,9 +26,7 @@
           <td><code><%= flight.theme_key %></code></td>
           <td><span class="badge bg-<%= flight.ai? ? 'info' : 'secondary' %>"><%= flight.source %></span></td>
           <td>
-            <span class="badge bg-<%= { 'draft' => 'warning', 'published' => 'success', 'archived' => 'dark' }[flight.status] %>">
-              <%= flight.status %>
-            </span>
+            <%= render 'shared/status_badge', status: flight.status %>
           </td>
           <td><%= flight.items.size %> drams</td>
           <td><%= number_to_currency(flight.display_price) %></td>
@@ -51,7 +50,6 @@
     </tbody>
   </table>
 <% else %>
-  <div class="alert alert-info">
-    No whiskey flights yet. Create one manually or run the AI flight generator from the pipeline.
-  </div>
+  <%= render 'shared/empty_state', title: 'No whiskey flights yet', description: 'Create one manually or run the AI flight generator from the pipeline.', icon: :default %>
 <% end %>
+</div>

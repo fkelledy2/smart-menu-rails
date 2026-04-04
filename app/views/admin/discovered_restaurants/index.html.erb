@@ -6,7 +6,7 @@
   <%# ── HEADER ── %>
   <div class="d-flex align-items-center justify-content-between mb-3">
     <div>
-      <h1 class="h4 mb-1">Discovery Queue</h1>
+      <h1 class="h3 mb-1">Discovery Queue</h1>
       <p class="text-muted mb-0 small">
         <%= pluralize(@total_count, 'restaurant') %> in queue.
         <%= link_to 'View approved imports', approved_imports_admin_discovered_restaurants_path, class: 'link-secondary' %>
@@ -144,7 +144,7 @@
       </div>
 
       <% if @discovered_restaurants.empty? %>
-        <div class="alert alert-info">No restaurants found matching the current filters.</div>
+        <%= render 'shared/empty_state', title: 'No restaurants found', description: 'No restaurants match the current filters.', icon: :default %>
       <% else %>
         <div class="table-responsive">
           <table class="table table-sm table-hover align-middle" data-testid="discovered-restaurants-list-card">
@@ -225,12 +225,6 @@
               <% @discovered_restaurants.each do |dr| %>
                 <%
                   pdf_count = dr.menu_sources.select { |ms| ms.source_type.to_s == 'pdf' }.count
-                  status_str = dr.status.to_s
-                  status_badge_class = case status_str
-                    when 'approved' then 'bg-success'
-                    when 'rejected' then 'bg-secondary'
-                    else 'bg-warning text-dark'
-                  end
                 %>
                 <tr data-testid="discovered-restaurant-row-<%= dr.id %>"
                     data-discovered-restaurants-bulk-target="row"
@@ -253,7 +247,7 @@
                   </td>
                   <td class="d-none d-md-table-cell small text-muted"><%= dr.establishment_type_label_text %></td>
                   <td>
-                    <span class="badge <%= status_badge_class %>"><%= status_str.humanize %></span>
+                    <%= render 'shared/status_badge', status: dr.status.to_s %>
                   </td>
                   <td class="d-none d-md-table-cell small" style="max-width: 300px;">
                     <% if dr.website_url.present? %>

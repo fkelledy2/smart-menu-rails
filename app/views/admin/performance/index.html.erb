@@ -1,6 +1,6 @@
 <% content_for :title, "Performance Monitoring" %>
 
-<div class="container-fluid">
+<div class="container-fluid py-4">
   <div class="row">
     <div class="col-12">
       <div class="d-flex justify-content-between align-items-center mb-4">
@@ -9,7 +9,7 @@
           <%= link_to "Reset Metrics", admin_performance_reset_path,
                       method: :post,
                       class: "btn btn-outline-warning me-2",
-                      confirm: "Are you sure you want to reset all performance metrics?" %>
+                      data: { turbo_confirm: "Are you sure you want to reset all performance metrics?" } %>
           <%= link_to "Export Data", admin_performance_export_path(format: :json),
                       class: "btn btn-outline-primary" %>
         </div>
@@ -28,7 +28,7 @@
               <p class="card-text">Total Requests</p>
             </div>
             <div class="align-self-center">
-              <i class="fas fa-chart-line fa-2x"></i>
+              <i class="bi bi-graph-up fa-2x"></i>
             </div>
           </div>
         </div>
@@ -44,7 +44,7 @@
               <p class="card-text">Avg Response Time</p>
             </div>
             <div class="align-self-center">
-              <i class="fas fa-tachometer-alt fa-2x"></i>
+              <i class="bi bi-speedometer fa-2x"></i>
             </div>
           </div>
         </div>
@@ -60,7 +60,7 @@
               <p class="card-text">Cache Hit Rate</p>
             </div>
             <div class="align-self-center">
-              <i class="fas fa-database fa-2x"></i>
+              <i class="bi bi-database fa-2x"></i>
             </div>
           </div>
         </div>
@@ -76,7 +76,7 @@
               <p class="card-text">Slow Requests</p>
             </div>
             <div class="align-self-center">
-              <i class="fas fa-exclamation-triangle fa-2x"></i>
+              <i class="bi bi-exclamation-triangle fa-2x"></i>
             </div>
           </div>
         </div>
@@ -223,7 +223,7 @@
                     <td>
                       <%= request[:duration] %>ms
                       <% if request[:slow] %>
-                        <i class="fas fa-exclamation-triangle text-warning" title="Slow request"></i>
+                        <i class="bi bi-exclamation-triangle text-warning" title="Slow request"></i>
                       <% end %>
                     </td>
                     <td>

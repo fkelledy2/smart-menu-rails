@@ -2,11 +2,16 @@
 <% content_for :title, "QR: #{@qr_code.name.presence || @qr_code.token}" %>
 
 <div class="container-fluid py-4 mw-900">
+  <nav aria-label="breadcrumb" class="mb-3">
+    <span class="text-muted">
+      <%= link_to 'Admin', admin_root_path, class: 'text-muted text-decoration-none' %> /
+      <%= link_to 'QR Codes', admin_marketing_qr_codes_path, class: 'text-muted text-decoration-none' %> /
+      <%= @qr_code.name.presence || @qr_code.token %>
+    </span>
+  </nav>
   <div class="d-flex align-items-center gap-2 mb-4">
-    <%= link_to '← All QR Codes', admin_marketing_qr_codes_path, class: 'btn btn-sm btn-outline-secondary' %>
-    <h1 class="h4 mb-0 ms-2"><%= @qr_code.name.presence || '(unnamed)' %></h1>
-    <% badge_class = { 'unlinked' => 'bg-warning text-dark', 'linked' => 'bg-success', 'archived' => 'bg-secondary' }[@qr_code.status] %>
-    <span class="badge <%= badge_class %> ms-1"><%= @qr_code.status.capitalize %></span>
+    <h1 class="h3 mb-1"><%= @qr_code.name.presence || '(unnamed)' %></h1>
+    <%= render 'shared/status_badge', status: @qr_code.status %>
   </div>
 
   <div class="row g-4">
@@ -58,11 +63,11 @@
           <%= link_to 'Print', print_admin_marketing_qr_code_path(@qr_code), class: 'btn btn-sm btn-outline-secondary', target: '_blank', rel: 'noopener' %>
           <% if @qr_code.linked? %>
             <%= button_to 'Unlink', unlink_admin_marketing_qr_code_path(@qr_code), method: :patch, class: 'btn btn-sm btn-outline-warning',
-                data: { confirm: 'Scanning this QR will show the holding page after unlinking. Continue?' } %>
+                form: { data: { turbo_confirm: 'Scanning this QR will show the holding page after unlinking. Continue?' } } %>
           <% end %>
           <% unless @qr_code.archived? %>
             <%= button_to 'Archive', admin_marketing_qr_code_path(@qr_code), method: :delete, class: 'btn btn-sm btn-outline-danger ms-auto',
-                data: { confirm: 'Archive this QR code? It will no longer resolve.' } %>
+                form: { data: { turbo_confirm: 'Archive this QR code? It will no longer resolve.' } } %>
           <% end %>
         </div>
       </div>

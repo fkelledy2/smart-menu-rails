@@ -1,6 +1,6 @@
 <div class="container-fluid py-3">
   <div class="d-flex align-items-center justify-content-between mb-3">
-    <h1 class="h4 mb-0">Claim Requests</h1>
+    <h1 class="h3 mb-1">Claim Requests</h1>
     <div class="d-flex gap-2">
       <% %w[started soft_verified approved rejected].each do |s| %>
         <%= link_to s.humanize, admin_restaurant_claim_requests_path(status: s),
@@ -12,10 +12,10 @@
   </div>
 
   <% if @claim_requests.empty? %>
-    <div class="alert alert-info">No claim requests found.</div>
+    <%= render 'shared/empty_state', title: 'No claim requests found', icon: :default %>
   <% else %>
     <div class="table-responsive">
-      <table class="table table-sm align-middle">
+      <table class="table table-sm table-hover align-middle">
         <thead>
           <tr>
             <th>ID</th>
@@ -38,14 +38,7 @@
               </td>
               <td><%= cr.verification_method.humanize %></td>
               <td>
-                <% badge_class = case cr.status
-                  when 'started' then 'bg-warning text-dark'
-                  when 'soft_verified' then 'bg-info'
-                  when 'approved' then 'bg-success'
-                  when 'rejected' then 'bg-secondary'
-                  else 'bg-warning text-dark'
-                end %>
-                <span class="badge <%= badge_class %>"><%= cr.status.humanize %></span>
+                <%= render 'shared/status_badge', status: cr.status %>
               </td>
               <td><%= cr.created_at.strftime('%Y-%m-%d %H:%M') %></td>
               <td>

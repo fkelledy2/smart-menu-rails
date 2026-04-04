@@ -6,8 +6,7 @@
           admin_crm_lead_note_path(lead, note),
           method: :delete,
           class: 'btn btn-link btn-sm text-danger p-0',
-          data: { confirm: 'Delete this note?' },
-          form: { data: { turbo: true } } %>
+          form: { data: { turbo: true, turbo_confirm: 'Delete this note?' } } %>
   </div>
   <p class="text-muted mb-0 fs-11">
     <%= note.author.email %> &bull; <%= time_ago_in_words(note.created_at) %> ago

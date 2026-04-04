@@ -1,11 +1,17 @@
-<div class="container-fluid px-0 py-4">
+<div class="container-fluid py-4">
+  <nav aria-label="breadcrumb" class="mb-3">
+    <span class="text-muted">
+      <%= link_to 'Admin', admin_root_path, class: 'text-muted text-decoration-none' %> /
+      <%= link_to 'Pricing Models', admin_pricing_models_path, class: 'text-muted text-decoration-none' %> /
+      <%= @model.version %>
+    </span>
+  </nav>
   <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
-      <h1 class="text-2xl fw-semibold mb-1">Pricing Model: <%= @model.version %></h1>
-      <span class="badge bg-<%= status_badge_class(@model.status) %> fs-6"><%= @model.status %></span>
+      <h1 class="h3 mb-1">Pricing Model: <%= @model.version %></h1>
+      <%= render 'shared/status_badge', status: @model.status %>
     </div>
     <div class="d-flex gap-2">
-      <%= link_to '&larr; All Models'.html_safe, admin_pricing_models_path, class: 'btn btn-outline-secondary btn-sm' %>
       <% if @model.draft? %>
         <%= link_to 'Edit', edit_admin_pricing_model_path(@model), class: 'btn btn-outline-secondary btn-sm' %>
         <%= link_to 'Preview Prices', preview_admin_pricing_model_path(@model), class: 'btn btn-outline-primary btn-sm' %>
@@ -93,7 +99,7 @@
           </div>
           <%= submit_tag 'Publish and Create Stripe Prices',
                 class: 'btn btn-warning',
-                data: { confirm: 'Are you sure? This cannot be undone.' } %>
+                data: { turbo_confirm: 'Are you sure? This cannot be undone.' } %>
         <% end %>
       </div>
     </div>

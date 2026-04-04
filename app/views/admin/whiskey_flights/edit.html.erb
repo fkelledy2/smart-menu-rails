@@ -1,4 +1,5 @@
-<h1>Edit Whiskey Flight — <%= @flight.title %></h1>
+<div class="container-fluid py-4">
+<h1 class="h3 mb-1">Edit Whiskey Flight — <%= @flight.title %></h1>
 
 <%= form_with url: admin_whiskey_flight_restaurant_path(@restaurant, flight_id: @flight.id), method: :patch, local: true do |f| %>
   <div class="mb-3">
@@ -42,3 +43,4 @@
   <%= f.submit 'Update Flight', class: 'btn btn-primary' %>
   <%= link_to 'Cancel', admin_whiskey_flights_restaurant_path(@restaurant), class: 'btn btn-outline-secondary ms-2' %>
 <% end %>
+</div>

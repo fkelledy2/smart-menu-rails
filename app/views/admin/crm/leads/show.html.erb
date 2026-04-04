@@ -29,7 +29,8 @@
       <% if @lead.stage == 'lost' %>
         <%= button_to 'Reopen', reopen_admin_crm_lead_path(@lead),
               method: :patch, class: 'btn btn-outline-warning btn-sm',
-              data: { confirm: 'Reopen this lead and move it back to Contacted?', turbo_frame: '_top' } %>
+              form: { data: { turbo_confirm: 'Reopen this lead and move it back to Contacted?' } },
+              data: { turbo_frame: '_top' } %>
       <% end %>
       <% unless %w[converted lost].include?(@lead.stage) %>
         <%= link_to 'Mark Converted', convert_admin_crm_lead_path(@lead),

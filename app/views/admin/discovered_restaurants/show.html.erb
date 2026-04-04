@@ -22,11 +22,6 @@ rescue StandardError; [] end %>
   'Wine bar' => 'wine_bar',
   'Whiskey bar' => 'whiskey_bar',
 } %>
-<% status_badge_class = case @discovered_restaurant.status
-  when 'approved' then 'bg-success'
-  when 'rejected' then 'bg-secondary'
-  else 'bg-warning text-dark'
-end %>
 <% field_sources = (@discovered_restaurant.metadata.is_a?(Hash) && @discovered_restaurant.metadata['field_sources'].is_a?(Hash)) ? @discovered_restaurant.metadata['field_sources'] : {} %>
 <% source_badge = ->(field_name) {
   info = field_sources[field_name.to_s]
@@ -57,13 +52,17 @@ end %>
      data-discovered-restaurant-web-scrape-initial-status-value="<%= web_scrape['status'].to_s %>">
 
   <%# ── HEADER ── %>
+  <nav aria-label="breadcrumb" class="mb-3">
+    <span class="text-muted">
+      <%= link_to 'Admin', admin_root_path, class: 'text-muted text-decoration-none' %> /
+      <%= link_to 'Discovery Queue', admin_discovered_restaurants_path, class: 'text-muted text-decoration-none' %> /
+      <%= @discovered_restaurant.name %>
+    </span>
+  </nav>
   <div class="d-flex align-items-center justify-content-between mb-3">
     <div class="d-flex align-items-center gap-2 flex-wrap">
-      <%= link_to admin_discovered_restaurants_path, class: 'btn btn-sm btn-outline-secondary', aria: { label: 'Back to queue' } do %>
-        <i class="bi bi-arrow-left"></i> Queue
-      <% end %>
-      <h1 class="h4 mb-0"><%= @discovered_restaurant.name %></h1>
-      <span class="badge <%= status_badge_class %>"><%= @discovered_restaurant.status.humanize %></span>
+      <h1 class="h3 mb-1"><%= @discovered_restaurant.name %></h1>
+      <%= render 'shared/status_badge', status: @discovered_restaurant.status %>
       <span class="text-muted small">
         <i class="bi bi-calendar3 me-1" aria-hidden="true"></i>
         <%= (@discovered_restaurant.discovered_at || @discovered_restaurant.created_at).strftime('%Y-%m-%d') %>

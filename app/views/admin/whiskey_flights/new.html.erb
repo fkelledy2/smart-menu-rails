@@ -1,4 +1,5 @@
-<h1>New Whiskey Flight — <%= @restaurant.name %></h1>
+<div class="container-fluid py-4">
+<h1 class="h3 mb-1">New Whiskey Flight — <%= @restaurant.name %></h1>
 
 <%= form_with url: create_admin_whiskey_flight_restaurant_path(@restaurant), method: :post, local: true do |f| %>
   <div class="mb-3">
@@ -46,3 +47,4 @@
   <%= f.submit 'Create Flight', class: 'btn btn-primary' %>
   <%= link_to 'Cancel', admin_whiskey_flights_restaurant_path(@restaurant), class: 'btn btn-outline-secondary ms-2' %>
 <% end %>
+</div>

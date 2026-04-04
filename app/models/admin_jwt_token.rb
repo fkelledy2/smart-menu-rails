@@ -59,10 +59,6 @@ class AdminJwtToken < ApplicationRecord
     :active
   end
 
-  def status_badge_class
-    { active: 'bg-success', revoked: 'bg-danger', expired: 'bg-secondary' }[status]
-  end
-
   def revoke!
     update!(revoked_at: Time.current)
   end

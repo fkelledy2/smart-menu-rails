@@ -1,17 +1,14 @@
 <div class="container-fluid py-3">
+  <nav aria-label="breadcrumb" class="mb-3">
+    <span class="text-muted">
+      <%= link_to 'Admin', admin_root_path, class: 'text-muted text-decoration-none' %> /
+      <%= link_to 'Claim Requests', admin_restaurant_claim_requests_path, class: 'text-muted text-decoration-none' %> /
+      #<%= @claim_request.id %>
+    </span>
+  </nav>
   <div class="d-flex align-items-center gap-2 mb-3">
-    <%= link_to admin_restaurant_claim_requests_path, class: 'btn btn-sm btn-outline-secondary' do %>
-      <i class="bi bi-arrow-left"></i> Back
-    <% end %>
-    <h1 class="h4 mb-0">Claim Request #<%= @claim_request.id %></h1>
-    <% badge_class = case @claim_request.status
-      when 'started' then 'bg-warning text-dark'
-      when 'soft_verified' then 'bg-info'
-      when 'approved' then 'bg-success'
-      when 'rejected' then 'bg-secondary'
-      else 'bg-warning text-dark'
-    end %>
-    <span class="badge <%= badge_class %>"><%= @claim_request.status.humanize %></span>
+    <h1 class="h3 mb-1">Claim Request #<%= @claim_request.id %></h1>
+    <%= render 'shared/status_badge', status: @claim_request.status %>
   </div>
 
   <div class="row g-3">

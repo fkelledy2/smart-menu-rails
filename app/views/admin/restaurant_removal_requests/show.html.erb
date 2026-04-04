@@ -1,16 +1,14 @@
 <div class="container-fluid py-3">
+  <nav aria-label="breadcrumb" class="mb-3">
+    <span class="text-muted">
+      <%= link_to 'Admin', admin_root_path, class: 'text-muted text-decoration-none' %> /
+      <%= link_to 'Removal Requests', admin_restaurant_removal_requests_path, class: 'text-muted text-decoration-none' %> /
+      #<%= @removal_request.id %>
+    </span>
+  </nav>
   <div class="d-flex align-items-center gap-2 mb-3">
-    <%= link_to admin_restaurant_removal_requests_path, class: 'btn btn-sm btn-outline-secondary' do %>
-      <i class="bi bi-arrow-left"></i> Back
-    <% end %>
-    <h1 class="h4 mb-0">Removal Request #<%= @removal_request.id %></h1>
-    <% badge_class = case @removal_request.status
-      when 'received' then 'bg-warning text-dark'
-      when 'actioned_unpublished' then 'bg-info'
-      when 'resolved' then 'bg-success'
-      else 'bg-secondary'
-    end %>
-    <span class="badge <%= badge_class %>"><%= @removal_request.status.humanize %></span>
+    <h1 class="h3 mb-1">Removal Request #<%= @removal_request.id %></h1>
+    <%= render 'shared/status_badge', status: @removal_request.status %>
   </div>
 
   <div class="row g-3">

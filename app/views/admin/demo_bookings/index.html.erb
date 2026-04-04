@@ -17,7 +17,7 @@
 
   <% if @demo_bookings.any? %>
     <div class="table-responsive">
-      <table class="table table-hover align-middle">
+      <table class="table table-sm table-hover align-middle">
         <thead class="table-light">
           <tr>
             <th>Contact</th>
@@ -43,18 +43,7 @@
               <td><%= booking.restaurant_type&.humanize || '—' %></td>
               <td><%= booking.location_count.presence || '—' %></td>
               <td>
-                <%
-                  badge_class = {
-                    'pending'   => 'bg-warning text-dark',
-                    'contacted' => 'bg-info text-dark',
-                    'booked'    => 'bg-primary',
-                    'converted' => 'bg-success',
-                    'lost'      => 'bg-secondary',
-                  }[booking.conversion_status] || 'bg-light text-dark'
-                %>
-                <span class="badge <%= badge_class %>">
-                  <%= booking.conversion_status.capitalize %>
-                </span>
+                <%= render 'shared/status_badge', status: booking.conversion_status %>
               </td>
               <td class="text-nowrap"><%= booking.created_at.strftime('%d %b %Y') %></td>
               <td class="text-end text-nowrap">
