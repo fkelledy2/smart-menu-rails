@@ -9289,10 +9289,10 @@ CREATE INDEX index_genimages_on_menu_id ON public.genimages USING btree (menu_id
 
 
 --
--- Name: index_genimages_on_menuitem_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_genimages_on_menuitem_id_unique; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_genimages_on_menuitem_id ON public.genimages USING btree (menuitem_id);
+CREATE UNIQUE INDEX index_genimages_on_menuitem_id_unique ON public.genimages USING btree (menuitem_id) WHERE (menuitem_id IS NOT NULL);
 
 
 --
@@ -13847,6 +13847,7 @@ ALTER TABLE ONLY public.voice_commands
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260404222829'),
 ('20260404091338'),
 ('20260404091333'),
 ('20260403233522'),

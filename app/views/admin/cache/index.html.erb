@@ -64,9 +64,10 @@
       <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
           <h5 class="mb-0">Performance Statistics</h5>
-          <%= link_to "Reset Stats", reset_stats_admin_cache_index_path, method: :post,
-                      class: "btn btn-sm btn-outline-warning",
-                      data: { turbo_confirm: "Are you sure you want to reset cache statistics?" } %>
+          <%= button_to "Reset Stats", reset_stats_admin_cache_index_path,
+                        method: :post,
+                        class: "btn btn-sm btn-outline-warning",
+                        form: { data: { turbo_confirm: "Are you sure you want to reset cache statistics?" } } %>
         </div>
         <div class="card-body">
           <div class="row">
@@ -172,9 +173,10 @@
           <p class="text-muted">Clear all cached data to force fresh data loading.</p>
 
           <div class="d-grid gap-2">
-            <%= link_to "Clear All Caches", clear_admin_cache_index_path, method: :delete,
-                        class: "btn btn-danger",
-                        data: { turbo_confirm: "Are you sure you want to clear all caches? This will impact performance until caches are rebuilt." } %>
+            <%= button_to "Clear All Caches", clear_admin_cache_index_path,
+                          method: :delete,
+                          class: "btn btn-danger",
+                          form: { data: { turbo_confirm: "Are you sure you want to clear all caches? This will impact performance until caches are rebuilt." } } %>
             <%= link_to "View Cache Keys", keys_admin_cache_index_path, class: "btn btn-outline-info" %>
           </div>
         </div>

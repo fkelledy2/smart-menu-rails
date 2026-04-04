@@ -1,19 +1,15 @@
 <% content_for :title, 'Performance Monitoring — Admin' %>
 
 <div class="container-fluid py-4" data-controller="auto-refresh">
-  <div class="row">
-    <div class="col-12">
-      <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h3 mb-0">Performance Monitoring</h1>
-        <div>
-          <%= link_to "Reset Metrics", reset_admin_performance_index_path,
-                      method: :post,
-                      class: "btn btn-sm btn-outline-warning me-2",
-                      data: { turbo_confirm: "Are you sure you want to reset all performance metrics?" } %>
-          <%= link_to "Export Data", export_admin_performance_index_path(format: :json),
-                      class: "btn btn-sm btn-outline-primary" %>
-        </div>
-      </div>
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0">Performance Monitoring</h1>
+    <div class="d-flex gap-2">
+      <%= button_to "Reset Metrics", reset_admin_performance_index_path,
+                    method: :post,
+                    class: "btn btn-sm btn-outline-warning",
+                    form: { data: { turbo_confirm: "Are you sure you want to reset all performance metrics?" } } %>
+      <%= link_to "Export Data", export_admin_performance_index_path(format: :json),
+                  class: "btn btn-sm btn-outline-primary" %>
     </div>
   </div>
 
@@ -59,22 +55,22 @@
   <!-- Navigation Tabs -->
   <ul class="nav nav-tabs mb-4" id="performanceTabs" role="tablist">
     <li class="nav-item" role="presentation">
-      <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button" role="tab">
+      <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button" role="tab" aria-controls="overview" aria-selected="true">
         Overview
       </button>
     </li>
     <li class="nav-item" role="presentation">
-      <button class="nav-link" id="requests-tab" data-bs-toggle="tab" data-bs-target="#requests" type="button" role="tab">
+      <button class="nav-link" id="requests-tab" data-bs-toggle="tab" data-bs-target="#requests" type="button" role="tab" aria-controls="requests" aria-selected="false">
         Requests
       </button>
     </li>
     <li class="nav-item" role="presentation">
-      <button class="nav-link" id="queries-tab" data-bs-toggle="tab" data-bs-target="#queries" type="button" role="tab">
+      <button class="nav-link" id="queries-tab" data-bs-toggle="tab" data-bs-target="#queries" type="button" role="tab" aria-controls="queries" aria-selected="false">
         Database
       </button>
     </li>
     <li class="nav-item" role="presentation">
-      <button class="nav-link" id="cache-tab" data-bs-toggle="tab" data-bs-target="#cache" type="button" role="tab">
+      <button class="nav-link" id="cache-tab" data-bs-toggle="tab" data-bs-target="#cache" type="button" role="tab" aria-controls="cache" aria-selected="false">
         Cache
       </button>
     </li>
@@ -83,13 +79,11 @@
   <!-- Tab Content -->
   <div class="tab-content" id="performanceTabContent">
     <!-- Overview Tab -->
-    <div class="tab-pane fade show active" id="overview" role="tabpanel">
+    <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
       <div class="row">
         <div class="col-md-6">
           <div class="card">
-            <div class="card-header">
-              <h5 class="card-title">Request Statistics</h5>
-            </div>
+            <div class="card-header fw-semibold">Request Statistics</div>
             <div class="card-body">
               <table class="table table-sm">
                 <tbody>
@@ -128,9 +122,7 @@
 
         <div class="col-md-6">
           <div class="card">
-            <div class="card-header">
-              <h5 class="card-title">System Information</h5>
-            </div>
+            <div class="card-header fw-semibold">System Information</div>
             <div class="card-body">
               <table class="table table-sm">
                 <tbody>
@@ -167,11 +159,9 @@
     </div>
 
     <!-- Requests Tab -->
-    <div class="tab-pane fade" id="requests" role="tabpanel">
+    <div class="tab-pane fade" id="requests" role="tabpanel" aria-labelledby="requests-tab">
       <div class="card">
-        <div class="card-header">
-          <h5 class="card-title">Recent Requests</h5>
-        </div>
+        <div class="card-header fw-semibold">Recent Requests</div>
         <div class="card-body">
           <div class="table-responsive">
             <table class="table table-sm">
@@ -199,7 +189,7 @@
                       <% end %>
                     </td>
                     <td>
-                      <span class="badge bg-<%= request[:status] < 400 ? 'success' : 'danger' %>">
+                      <span class="badge text-bg-<%= request[:status] < 400 ? 'success' : 'danger' %>">
                         <%= request[:status] %>
                       </span>
                     </td>
@@ -213,11 +203,9 @@
     </div>
 
     <!-- Queries Tab -->
-    <div class="tab-pane fade" id="queries" role="tabpanel">
+    <div class="tab-pane fade" id="queries" role="tabpanel" aria-labelledby="queries-tab">
       <div class="card">
-        <div class="card-header">
-          <h5 class="card-title">Slow Queries</h5>
-        </div>
+        <div class="card-header fw-semibold">Slow Queries</div>
         <div class="card-body">
           <div class="table-responsive">
             <table class="table table-sm">
@@ -250,13 +238,11 @@
     </div>
 
     <!-- Cache Tab -->
-    <div class="tab-pane fade" id="cache" role="tabpanel">
+    <div class="tab-pane fade" id="cache" role="tabpanel" aria-labelledby="cache-tab">
       <div class="row">
         <div class="col-md-6">
           <div class="card">
-            <div class="card-header">
-              <h5 class="card-title">Cache Statistics</h5>
-            </div>
+            <div class="card-header fw-semibold">Cache Statistics</div>
             <div class="card-body">
               <table class="table table-sm">
                 <tbody>

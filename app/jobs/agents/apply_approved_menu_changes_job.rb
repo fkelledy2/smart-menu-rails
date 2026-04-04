@@ -35,8 +35,20 @@ module Agents
           next
         end
 
-        apply_artifact(artifact)
-        applied += 1
+        did_apply = false
+        artifact.with_lock do
+          # Re-check status inside the lock — another worker may have applied it first
+          next unless artifact.approved?
+
+          apply_artifact(artifact)
+          did_apply = true
+        end
+
+        if did_apply
+          applied += 1
+        else
+          skipped += 1
+        end
       rescue StandardError => e
         Rails.logger.error(
           "[ApplyApprovedMenuChangesJob] Failed to apply artifact #{artifact.id}: #{e.message}\n" \
@@ -55,15 +67,15 @@ module Agents
       actions     = Array(artifact.content['actions'])
       run         = artifact.agent_workflow_run
 
-      # Only apply actions that were explicitly approved
-      approved_action_types = run.agent_approvals
+      # Only apply actions whose exact (action_type, target_id) pair was approved
+      approved_pairs = run.agent_approvals
         .where(status: 'approved')
-        .pluck(:action_type)
-        .uniq
+        .pluck(:action_type, :proposed_payload)
+        .to_set { |at, pp| [at, pp['target_id']&.to_i] }
 
       actions.each do |action|
         action_type = action['action_type'].to_s
-        next unless approved_action_types.include?(action_type)
+        next unless approved_pairs.include?([action_type, action['target_id']&.to_i])
         next if Agents::Workflows::MenuOptimizationWorkflow::ADVISORY_ONLY_ACTIONS.include?(action_type)
         # image_queue is handled at approval time
         next if action_type == 'image_queue'
@@ -84,6 +96,17 @@ module Agents
       action_type = action['action_type'].to_s
       target_id   = action['target_id'].to_i
 
+      if action_type == 'section_reorder'
+        section = Menusection.joins(:menu)
+          .where(menus: { restaurant_id: restaurant.id }, menusections: { id: target_id })
+          .first
+        return unless section
+
+        new_sequence = action['new_sequence'].to_i
+        section.update!(sequence: new_sequence) if new_sequence.positive?
+        return
+      end
+
       menuitem = restaurant.menus
         .joins(menusections: :menuitems)
         .where(menuitems: { id: target_id })
@@ -95,9 +118,6 @@ module Agents
       return unless mi
 
       case action_type
-      when 'section_reorder'
-        new_sequence = action['new_sequence'].to_i
-        mi.update!(sequence: new_sequence) if new_sequence.positive?
       when 'item_rename'
         attrs = {}
         attrs[:name]        = action['new_name'].to_s         if action['new_name'].present?

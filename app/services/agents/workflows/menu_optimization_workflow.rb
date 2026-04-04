@@ -282,16 +282,16 @@ module Agents
             auto_approved += 1
           else
             # require_approval
-            Agents::ApprovalRouter.call(
+            result = Agents::ApprovalRouter.call(
               workflow_run: @run,
               action_type: action_type,
               risk_level: 'low',
               proposed_payload: action.merge('idempotency_key' => ikey),
               step: step,
             )
-            # Set idempotency_key on the newly created approval
-            last_approval = @run.agent_approvals.order(created_at: :desc).first
-            last_approval&.update_column(:idempotency_key, ikey)
+            # Set idempotency_key on the newly created approval using the
+            # returned record directly — avoids stamping the wrong record under concurrency
+            result.approval&.update_column(:idempotency_key, ikey)
             approvals_created += 1
           end
         end
@@ -365,15 +365,21 @@ module Agents
 
         total_orders = @restaurant.ordrs.where(created_at: since..).count
 
-        menuitems = @restaurant.menus
+        # Carry [menuitem, section_name] pairs through the flat_map to avoid
+        # N+1 queries from mi.menusection inside the subsequent map.
+        menuitem_section_pairs = @restaurant.menus
           .includes(menusections: { menuitems: %i[menuitem_costs genimage] })
-          .flat_map { |menu| menu.menusections.flat_map(&:menuitems) }
-          .select { |mi| mi.respond_to?(:status) && mi.status.to_s == 'active' }
-          .uniq(&:id)
+          .flat_map do |menu|
+            menu.menusections.flat_map do |section|
+              section.menuitems.map { |mi| [mi, section.name.to_s] }
+            end
+          end
+          .select { |(mi, _)| mi.respond_to?(:status) && mi.status.to_s == 'active' }
+          .uniq { |(mi, _)| mi.id }
 
         median_orders = compute_median(order_counts.values.pluck(:order_count))
 
-        menuitems.map do |mi|
+        menuitem_section_pairs.map do |(mi, section_name)|
           counts     = order_counts[mi.id] || { order_count: 0, quantity: 0 }
           order_cnt  = counts[:order_count]
           margin_pct = mi.respond_to?(:profit_margin_percentage) ? mi.profit_margin_percentage.to_f : 0.0
@@ -393,7 +399,7 @@ module Agents
             'description' => mi.try(:description).to_s,
             'price' => mi.try(:price).to_f,
             'section_id' => mi.menusection_id,
-            'section_name' => mi.menusection.try(:name).to_s,
+            'section_name' => section_name,
             'sequence' => mi.try(:sequence).to_i,
             'hidden' => mi.try(:hidden) || false,
             'order_count' => order_cnt,
@@ -481,14 +487,20 @@ module Agents
       end
 
       def validate_and_sanitise_change_set(parsed, tagged_items)
-        actions = Array(parsed['actions'])
+        actions  = Array(parsed['actions'])
         item_ids = tagged_items.to_set { |i| i['menuitem_id'] }
+        section_ids = tagged_items.to_set { |i| i['section_id'] }
 
-        # Remove any actions targeting unknown items and strip price changes
+        # Remove any actions targeting unknown items/sections
         valid_actions = actions.select do |action|
           action_type = action['action_type'].to_s
-          CHANGE_ACTION_TYPES.include?(action_type) &&
+          next false unless CHANGE_ACTION_TYPES.include?(action_type)
+
+          if action_type == 'section_reorder'
+            section_ids.include?(action['target_id'].to_i)
+          else
             item_ids.include?(action['target_id'].to_i)
+          end
         end
 
         perf_output = completed_step_output('read_performance') || {}
@@ -543,12 +555,20 @@ module Agents
         # Skip if a genimage already exists for this menuitem
         return if menuitem.genimage.present?
 
-        # Create a Genimage record and enqueue generation
-        genimage = Genimage.create!(
-          menuitem: menuitem,
-          restaurant_id: @restaurant.id,
-          name: 'agent_queued',
-        )
+        # Create a Genimage record and enqueue generation.
+        # Guard against duplicate concurrent creates with the unique DB constraint.
+        begin
+          genimage = Genimage.create!(
+            menuitem: menuitem,
+            restaurant_id: @restaurant.id,
+            name: 'agent_queued',
+          )
+        rescue ActiveRecord::RecordNotUnique
+          Rails.logger.info(
+            "[MenuOptimizationWorkflow] Genimage already exists for menuitem #{menuitem_id} — skipping",
+          )
+          return
+        end
         MenuItemImageGeneratorJob.perform_later(genimage.id)
       rescue StandardError => e
         Rails.logger.warn(

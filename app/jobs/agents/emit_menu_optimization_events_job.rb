@@ -20,7 +20,7 @@ module Agents
       emitted = 0
       skipped = 0
 
-      eligible_restaurants.find_each do |restaurant|
+      eligible_restaurants.each do |restaurant|
         # Idempotency: one event per restaurant per ISO week
         idempotency_key = "menu_optimization.scheduled:#{restaurant.id}:#{Date.current.cweek}:#{Date.current.year}"
 
@@ -56,14 +56,13 @@ module Agents
         .distinct
         .pluck(:restaurant_id)
 
-      return Restaurant.none if restaurant_ids_with_history.empty?
+      return [] if restaurant_ids_with_history.empty?
 
       Restaurant
         .where(id: restaurant_ids_with_history)
         .select do |r|
           Flipper.enabled?(:agent_framework, r) && Flipper.enabled?(:agent_menu_optimization, r)
         end
-        .then { |arr| Restaurant.where(id: arr.map(&:id)) }
     end
   end
 end
