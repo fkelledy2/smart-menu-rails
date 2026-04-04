@@ -203,8 +203,9 @@ class DeeplApiServiceTest < ActiveSupport::TestCase
         expected_uri = DeeplApiService.base_uri_for_key(test_api_key)
         assert_equal "#{expected_uri}/translate", captured_params[:endpoint]
 
+        headers = captured_params[:options][:headers]
+        assert_equal "DeepL-Auth-Key #{test_api_key}", headers['Authorization']
         body = captured_params[:options][:body]
-        assert_equal test_api_key, body[:auth_key]
         assert_equal 'Hello', body[:text]
         assert_equal 'EN', body[:source_lang]
         assert_equal 'FR', body[:target_lang]
@@ -243,8 +244,8 @@ class DeeplApiServiceTest < ActiveSupport::TestCase
       DeeplApiService.stub(:post, mock_post) do
         DeeplApiService.translate('Test text')
 
-        body = captured_params[:options][:body]
-        assert_equal test_api_key, body[:auth_key]
+        headers = captured_params[:options][:headers]
+        assert_equal "DeepL-Auth-Key #{test_api_key}", headers['Authorization']
       end
     end
   end
