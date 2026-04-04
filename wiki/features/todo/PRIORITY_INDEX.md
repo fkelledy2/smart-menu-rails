@@ -1,5 +1,7 @@
 # mellow.menu Feature Backlog — Priority Index
 
+**Last updated**: 2026-04-04 (twenty-second pass — Menu Optimization Agent #21 COMPLETED)
+**Menu Optimization Agent (#21)**: COMPLETED 2026-04-04 — 5-step workflow, change set approval UI, nightly scheduler, apply job; spec at `docs/features/completed/21-agent-menu-optimization.md`
 **Last updated**: 2026-04-01 (twenty-first pass — Customer Concierge Agent #20 COMPLETED) (seventeenth pass — daily prioritisation run; IQ-1 Naked Domain confirmed fully COMPLETED including ops steps; Sprint Recommendation updated to reflect current next best actions: Square alpha + Track D Employee Role Promotion + Track F Agent Framework; stale Track A/B/C completed-item deliverable lists retired; Refined flags added to spec files #28–#34)
 **Naked Domain Canonical Strategy (IQ-1)**: COMPLETED 2026-03-31 — DomainRedirect middleware live; spec at `docs/features/completed/naked-domain-canonical-strategy.md`
 **QR Code Security (#1)**: COMPLETED 2026-03-24 — Phase 1 shipped; spec at `docs/features/completed/qr-security.md`
@@ -37,7 +39,7 @@
 | ~~#18~~ | ~~Menu Import Agent~~ | ~~Post-Launch~~ | M | #17 Agent Framework | **COMPLETED 2026-04-01** — spec at `docs/features/completed/18-agent-menu-import.md`; user guide at `docs/features/completed/18-agent-menu-import-user-guide.md` |
 | ~~#19~~ | ~~Restaurant Growth Agent~~ | ~~Post-Launch~~ | M | #17 Agent Framework, analytics services | **COMPLETED 2026-04-01** — spec at `docs/features/completed/19-agent-restaurant-growth.md`; user guide at `docs/features/completed/19-agent-restaurant-growth-user-guide.md` |
 | ~~#20~~ | ~~Customer Concierge Agent~~ | ~~Post-Launch~~ | M | #17 Agent Framework, SmartMenu view | **COMPLETED 2026-04-01** — spec at `docs/features/completed/20-agent-customer-concierge.md`; user guide at `docs/features/completed/20-agent-customer-concierge-user-guide.md` |
-| #21 | Menu Optimization Agent | Post-Launch | M | #17, #19 patterns, 14+ days order data | Structured change-set proposals; builds on Growth Digest patterns; drives conversion |
+| ~~#21~~ | ~~Menu Optimization Agent~~ | ~~Post-Launch~~ | M | #17, #19 patterns, 14+ days order data | **COMPLETED 2026-04-04** — spec at `docs/features/completed/21-agent-menu-optimization.md`; user guide at `docs/features/completed/21-agent-menu-optimization-user-guide.md` |
 | #22 | Service Operations Agent | Post-Launch | M | #17, Kitchen/Station dashboards, ActionCable | Real-time ops intelligence; reduces kitchen congestion and service recovery lag |
 | #23 | Reputation & Feedback Agent | Post-Launch | M | #17, in-app rating system, email mailers | Protects revenue by surfacing and recovering negative signals before they compound |
 | #24 | Staff Copilot Agent | Post-Launch | L | #17, back-office service layer | NL interface to back office; biggest UX integration effort; ship after agent patterns proven |
