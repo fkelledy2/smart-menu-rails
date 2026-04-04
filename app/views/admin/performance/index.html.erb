@@ -6,12 +6,12 @@
       <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h3 mb-0">Performance Monitoring</h1>
         <div>
-          <%= link_to "Reset Metrics", admin_performance_reset_path,
+          <%= link_to "Reset Metrics", reset_admin_performance_index_path,
                       method: :post,
-                      class: "btn btn-outline-warning me-2",
+                      class: "btn btn-sm btn-outline-warning me-2",
                       data: { turbo_confirm: "Are you sure you want to reset all performance metrics?" } %>
-          <%= link_to "Export Data", admin_performance_export_path(format: :json),
-                      class: "btn btn-outline-primary" %>
+          <%= link_to "Export Data", export_admin_performance_index_path(format: :json),
+                      class: "btn btn-sm btn-outline-primary" %>
         </div>
       </div>
     </div>
