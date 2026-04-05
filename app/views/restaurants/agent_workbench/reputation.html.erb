@@ -1,0 +1,130 @@
+<% content_for :title, "Reputation & Feedback — #{@restaurant.name}" %>
+
+<div class="container-fluid py-3">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h4 class="mb-0 fw-bold">
+        <i class="bi bi-star-half me-2 text-warning" aria-hidden="true"></i>
+        Reputation &amp; Feedback
+      </h4>
+      <p class="text-muted small mb-0"><%= @restaurant.name %></p>
+    </div>
+    <div>
+      <%= link_to restaurant_agent_workbench_index_path(@restaurant),
+                  class: 'btn btn-sm btn-outline-secondary' do %>
+        <i class="bi bi-arrow-left me-1" aria-hidden="true"></i> AI Workbench
+      <% end %>
+    </div>
+  </div>
+
+  <% if notice %>
+    <div class="alert alert-success alert-dismissible fade show py-2" role="alert">
+      <%= notice %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <% end %>
+  <% if alert %>
+    <div class="alert alert-danger alert-dismissible fade show py-2" role="alert">
+      <%= alert %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <% end %>
+
+  <% unless Flipper.enabled?(:agent_reputation_feedback, @restaurant) %>
+    <div class="alert alert-info">
+      <i class="bi bi-info-circle me-2" aria-hidden="true"></i>
+      Reputation &amp; Feedback Agent is not enabled for this restaurant.
+      Contact your administrator to enable the <code>agent_reputation_feedback</code> flag.
+    </div>
+  <% end %>
+
+  <%# Stats summary row %>
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body text-center">
+          <div class="fs-3 fw-bold text-dark"><%= @stats[:total] %></div>
+          <div class="text-muted small">Signals (4 weeks)</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body text-center">
+          <div class="fs-3 fw-bold text-danger"><%= @stats[:high_severity] %></div>
+          <div class="text-muted small">High severity</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body text-center">
+          <div class="fs-3 fw-bold text-warning"><%= @stats[:pending_response] %></div>
+          <div class="text-muted small">Awaiting action</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body text-center">
+          <div class="fs-3 fw-bold text-success"><%= @stats[:response_rate] %>%</div>
+          <div class="text-muted small">Response rate</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <% if @artifacts.empty? %>
+    <div class="card border-0 shadow-sm">
+      <div class="card-body text-center py-5">
+        <i class="bi bi-star display-4 text-muted mb-3" aria-hidden="true"></i>
+        <h5 class="text-muted">No reputation signals yet</h5>
+        <p class="text-muted small">
+          The agent will automatically process low ratings and complaints submitted through
+          the smartmenu checkout.
+        </p>
+      </div>
+    </div>
+  <% else %>
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-transparent fw-semibold border-bottom">
+        Recent Signals
+      </div>
+      <div class="list-group list-group-flush">
+        <% @artifacts.each do |artifact| %>
+          <% run = artifact.agent_workflow_run %>
+          <% content = artifact.content.with_indifferent_access %>
+          <% severity = content[:severity].to_s %>
+          <%= link_to reputation_review_restaurant_agent_workbench_path(@restaurant, run),
+                class: 'list-group-item list-group-item-action py-3' do %>
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <div class="fw-semibold text-dark d-flex align-items-center gap-2">
+                  <%# Severity dot %>
+                  <span class="badge rounded-pill <%= severity == 'high' ? 'text-bg-danger' : (severity == 'medium' ? 'text-bg-warning' : 'text-bg-secondary') %>">
+                    <%= severity.capitalize %>
+                  </span>
+                  <%= content[:signal_type].to_s.humanize %>
+                  <% if content[:stars].present? %>
+                    <span class="text-muted fw-normal small">(<%= content[:stars] %> stars)</span>
+                  <% end %>
+                </div>
+                <div class="text-muted small mt-1">
+                  Root cause: <%= content[:root_cause].to_s.humanize %>
+                  &middot; <%= time_ago_in_words(artifact.created_at) %> ago
+                  <% pending = run.agent_approvals.pending.count %>
+                  <% if pending.positive? %>
+                    &middot; <span class="badge text-bg-warning fw-semibold"><%= pending %> pending</span>
+                  <% end %>
+                </div>
+              </div>
+              <div>
+                <%= render 'status_badge', status: artifact.status %>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>

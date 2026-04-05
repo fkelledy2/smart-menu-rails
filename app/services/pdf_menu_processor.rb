@@ -179,46 +179,61 @@ class PdfMenuProcessor
   end
 
   # Render PDF pages to images and OCR each page.
+  # Pages are rendered one at a time using ImageMagick's [N] page selector to avoid
+  # exhausting the pixel cache when processing large PDFs. 150 DPI is sufficient for
+  # OCR and uses 4× less memory than 300 DPI.
   def ocr_pdf_images(pdf_path, total_pages)
     text_pages = []
+    max_pages = [total_pages, ENV.fetch('PDF_OCR_MAX_PAGES', 20).to_i].min
+
+    image_annotator = @vision_client
+    if image_annotator.nil?
+      raise ProcessingError, 'Google Cloud Vision is not available' unless defined?(Google::Cloud::Vision)
+
+      image_annotator = Google::Cloud::Vision.image_annotator
+    end
+
     Dir.mktmpdir(['pdf_pages']) do |dir|
-      # Render each page to a PNG at good resolution for OCR
-      # Using ImageMagick via MiniMagick. Requires ImageMagick installed.
-      # Output filenames will be like page-0.png, page-1.png, ...
-      begin
-        MiniMagick.convert do |convert|
-          convert.density(300)
-          convert << pdf_path
-          convert.quality(90)
-          convert << File.join(dir, 'page-%d.png')
+      max_pages.times do |page_index|
+        image_path = File.join(dir, "page-#{page_index}.png")
+
+        # Render one page at a time — avoids buffering the entire PDF in memory
+        begin
+          MiniMagick.convert do |convert|
+            convert << '-limit' << 'memory' << '128MB'
+            convert << '-limit' << 'map'    << '256MB'
+            convert << '-limit' << 'disk'   << '512MB'
+            convert.density(150)
+            convert << "#{pdf_path}[#{page_index}]"
+            convert.quality(85)
+            convert << image_path
+          end
+        rescue StandardError => e
+          Rails.logger.error "PdfMenuProcessor: error rendering page #{page_index}: #{e.message}"
+          raise ProcessingError, "Failed to render PDF pages for OCR: #{e.message}"
         end
-      rescue StandardError => e
-        Rails.logger.error "Error rendering PDF to images: #{e.message}"
-        raise ProcessingError, "Failed to render PDF pages for OCR: #{e.message}"
-      end
 
-      # OCR each generated image file using Google Cloud Vision (injectable for tests)
-      image_annotator = @vision_client
-      if image_annotator.nil?
-        raise ProcessingError, 'Google Cloud Vision is not available' unless defined?(Google::Cloud::Vision)
-
-        image_annotator = Google::Cloud::Vision.image_annotator
-      end
-      processed = 0
-      Dir[File.join(dir, 'page-*.png')].sort_by do |p|
-        p[/page-(\d+)\.png/, 1].to_i
-      end.each do |image_path|
-        response = image_annotator.text_detection image: image_path
-        annotation = response.responses.first
-        page_text = annotation&.text_annotations&.first&.description.to_s
-        text_pages << page_text
-      rescue StandardError => e
-        Rails.logger.error "Error OCR'ing image #{image_path}: #{e.message}"
-        text_pages << ''
-      ensure
-        processed += 1
-        @ocr_menu_import.update!(processed_pages: [processed, total_pages].min)
-        @ocr_menu_import.update!(metadata: (@ocr_menu_import.metadata || {}).merge('phase' => 'extracting_pages', 'pages_total' => total_pages, 'pages_processed' => [processed, total_pages].min))
+        # OCR the page immediately and discard the image file to free disk space
+        begin
+          response = image_annotator.text_detection image: image_path
+          annotation = response.responses.first
+          page_text = annotation&.text_annotations&.first&.description.to_s
+          text_pages << page_text
+        rescue StandardError => e
+          Rails.logger.error "PdfMenuProcessor: OCR error on page #{page_index}: #{e.message}"
+          text_pages << ''
+        ensure
+          File.unlink(image_path) if File.exist?(image_path)
+          processed = page_index + 1
+          @ocr_menu_import.update!(processed_pages: [processed, total_pages].min)
+          @ocr_menu_import.update!(
+            metadata: (@ocr_menu_import.metadata || {}).merge(
+              'phase' => 'extracting_pages',
+              'pages_total' => total_pages,
+              'pages_processed' => [processed, total_pages].min,
+            ),
+          )
+        end
       end
     end
     text_pages
@@ -469,20 +484,34 @@ class PdfMenuProcessor
     end
   end
 
-  # Render PDF pages to PNG images and return base64-encoded strings
+  # Render PDF pages to PNG images and return base64-encoded strings.
+  # Pages are rendered one at a time to avoid ImageMagick pixel cache exhaustion.
   def render_pdf_pages_to_base64(pdf_path)
     images = []
-    Dir.mktmpdir(['pdf_vision']) do |dir|
-      MiniMagick.convert do |convert|
-        convert.density(150)
-        convert << pdf_path
-        convert.quality(80)
-        convert.resize('1200x1600>')
-        convert << File.join(dir, 'page-%d.png')
-      end
+    total_pages = begin
+      PDF::Reader.new(pdf_path).page_count
+    rescue StandardError
+      1
+    end
+    max_pages = [total_pages, ENV.fetch('PDF_VISION_MAX_PAGES', 10).to_i].min
 
-      Dir[File.join(dir, 'page-*.png')].sort_by { |p| p[/page-(\d+)\.png/, 1].to_i }.each do |img_path|
-        images << Base64.strict_encode64(File.binread(img_path))
+    Dir.mktmpdir(['pdf_vision']) do |dir|
+      max_pages.times do |page_index|
+        image_path = File.join(dir, "page-#{page_index}.png")
+
+        MiniMagick.convert do |convert|
+          convert << '-limit' << 'memory' << '128MB'
+          convert << '-limit' << 'map'    << '256MB'
+          convert << '-limit' << 'disk'   << '512MB'
+          convert.density(120)
+          convert << "#{pdf_path}[#{page_index}]"
+          convert.quality(80)
+          convert.resize('1200x1600>')
+          convert << image_path
+        end
+
+        images << Base64.strict_encode64(File.binread(image_path))
+        File.unlink(image_path)
       end
     end
     images

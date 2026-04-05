@@ -1,0 +1,38 @@
+// ============================================
+// ADVANCED & INTEGRATIONS SECTION
+// Extracted from:
+//   restaurants/sections/_advanced_2025.html.erb
+// Note: .features-grid and .feature-card* are
+//   defined in _section_components_2025.scss
+// ============================================
+
+.integrations-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--space-4);
+}
+
+.integration-card {
+  padding: var(--space-4);
+  background: var(--color-gray-50);
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  text-align: center;
+}
+
+.integration-icon {
+  font-size: 3rem;
+  color: var(--color-gray-600);
+  margin-bottom: var(--space-2);
+}
+
+.integration-name {
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
+  margin-bottom: var(--space-2);
+}
+
+.integration-status {
+  font-size: var(--text-sm);
+  margin-bottom: var(--space-3);
+}

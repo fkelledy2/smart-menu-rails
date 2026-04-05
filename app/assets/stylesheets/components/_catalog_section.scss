@@ -1,0 +1,214 @@
+// ============================================
+// CATALOG SECTION COMPONENTS
+// Extracted from:
+//   restaurants/sections/_catalog_2025.html.erb
+//   restaurants/sections/_tables_2025.html.erb
+// ============================================
+
+// ============================================
+// TAXES & TIPS LAYOUT
+// ============================================
+
+.taxes-tips-lists-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+  gap: var(--space-4);
+
+  @media (max-width: 768px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+// Responsive table ↔ cards toggle for taxes and tips
+.taxes-table-view,
+.tips-table-view {
+  display: block;
+}
+
+.taxes-cards-view,
+.tips-cards-view {
+  display: none;
+}
+
+// Mobile cards
+.tax-card-mobile,
+.tip-card-mobile {
+  background: var(--color-gray-50);
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3);
+  margin-bottom: var(--space-2);
+  transition: all var(--transition-base);
+
+  &:hover {
+    box-shadow: var(--shadow-sm);
+    border-color: var(--color-gray-300);
+  }
+
+  &:last-child { margin-bottom: 0; }
+}
+
+.tax-row-mobile,
+.tip-row-mobile {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.tax-row-mobile-actions,
+.tip-row-mobile-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+.tax-row-mobile-left,
+.tip-row-mobile-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+  flex: 1;
+}
+
+.tax-row-mobile-text,
+.tip-row-mobile-text {
+  min-width: 0;
+  flex: 1;
+
+  .tax-name {
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+// Table density tweaks (desktop)
+.taxes-table-view .table > :not(caption) > * > *,
+.tips-table-view .table > :not(caption) > * > * {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.taxes-table-view .w-40px,
+.tips-table-view .w-40px {
+  width: 32px;
+}
+
+// ============================================
+// CATALOG GRID
+// ============================================
+
+.catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--space-4);
+}
+
+.catalog-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--color-gray-50);
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-base);
+
+  &:hover {
+    background: var(--surface-primary, #fff);
+    box-shadow: var(--shadow-sm);
+  }
+}
+
+.catalog-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.catalog-info { flex: 1; }
+
+.catalog-title {
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
+  margin: 0 0 var(--space-1) 0;
+}
+
+.catalog-count {
+  font-size: var(--text-sm);
+  color: var(--color-gray-600);
+  margin: 0;
+}
+
+// ============================================
+// TABLES SECTION (restaurant tables, not HTML tables)
+// ============================================
+
+.tables-table-view { display: block; }
+
+.tables-cards-view { display: none; }
+
+// Mobile table card
+.table-card-mobile {
+  background: var(--color-gray-50);
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3);
+  margin-bottom: var(--space-2);
+  transition: all var(--transition-base);
+
+  &:hover {
+    box-shadow: var(--shadow-sm);
+    border-color: var(--color-gray-300);
+  }
+
+  &:last-child { margin-bottom: 0; }
+}
+
+.table-row-mobile {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.table-row-mobile-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+  flex: 1;
+}
+
+.table-row-mobile-text {
+  min-width: 0;
+  flex: 1;
+
+  .table-name {
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+// Table density tweaks
+.tables-table-view .table > :not(caption) > * > * {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.tables-table-view .w-40px { width: 32px; }

@@ -1,0 +1,249 @@
+<% content_for :title, "Reputation Review — #{@restaurant.name}" %>
+
+<div class="container-fluid py-3">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h4 class="mb-0 fw-bold">
+        <i class="bi bi-shield-exclamation me-2 text-warning" aria-hidden="true"></i>
+        Reputation Triage
+      </h4>
+      <p class="text-muted small mb-0"><%= @restaurant.name %></p>
+    </div>
+    <div>
+      <%= link_to reputation_restaurant_agent_workbench_index_path(@restaurant),
+                  class: 'btn btn-sm btn-outline-secondary' do %>
+        <i class="bi bi-arrow-left me-1" aria-hidden="true"></i> All Signals
+      <% end %>
+    </div>
+  </div>
+
+  <% if notice %>
+    <div class="alert alert-success alert-dismissible fade show py-2" role="alert">
+      <%= notice %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <% end %>
+  <% if alert %>
+    <div class="alert alert-danger alert-dismissible fade show py-2" role="alert">
+      <%= alert %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <% end %>
+
+  <div class="row g-4">
+    <%# Left: Signal summary card %>
+    <div class="col-lg-5">
+      <div class="card border-0 shadow-sm mb-3">
+        <div class="card-header bg-transparent fw-semibold border-bottom">
+          Signal Summary
+        </div>
+        <div class="card-body">
+          <table class="table table-sm mb-0">
+            <tbody>
+              <tr>
+                <th class="text-muted fw-normal w-40">Signal</th>
+                <td><%= @content[:signal_type].to_s.humanize %></td>
+              </tr>
+              <% if @content[:stars].present? %>
+              <tr>
+                <th class="text-muted fw-normal">Rating</th>
+                <td>
+                  <% @content[:stars].to_i.times do %>
+                    <i class="bi bi-star-fill text-warning" aria-hidden="true"></i>
+                  <% end %>
+                  <% (5 - @content[:stars].to_i).times do %>
+                    <i class="bi bi-star text-muted" aria-hidden="true"></i>
+                  <% end %>
+                  (<%= @content[:stars] %>/5)
+                </td>
+              </tr>
+              <% end %>
+              <% if @content[:review_text].present? %>
+              <tr>
+                <th class="text-muted fw-normal">Review</th>
+                <td class="fst-italic">"<%= @content[:review_text] %>"</td>
+              </tr>
+              <% end %>
+              <% if @content[:complaint_text].present? %>
+              <tr>
+                <th class="text-muted fw-normal">Complaint</th>
+                <td class="fst-italic">"<%= @content[:complaint_text] %>"</td>
+              </tr>
+              <% end %>
+              <tr>
+                <th class="text-muted fw-normal">Severity</th>
+                <td>
+                  <% severity = @content[:severity].to_s %>
+                  <span class="badge rounded-pill <%= severity == 'high' ? 'text-bg-danger' : (severity == 'medium' ? 'text-bg-warning' : 'text-bg-secondary') %>">
+                    <%= severity.capitalize %>
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <th class="text-muted fw-normal">Root cause</th>
+                <td><%= @content[:root_cause].to_s.humanize %></td>
+              </tr>
+              <tr>
+                <th class="text-muted fw-normal">Suggested</th>
+                <td><%= @content[:suggested_action].to_s.humanize %></td>
+              </tr>
+              <tr>
+                <th class="text-muted fw-normal">Received</th>
+                <td><%= l(@artifact.created_at, format: :short) %></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <% if @ordr_context.present? %>
+        <div class="card border-0 shadow-sm">
+          <div class="card-header bg-transparent fw-semibold border-bottom">
+            Order Context
+          </div>
+          <div class="card-body">
+            <p class="mb-1 small"><strong>Table:</strong> <%= @ordr_context['table_name'] %></p>
+            <p class="mb-1 small"><strong>Status:</strong> <%= @ordr_context['status'].to_s.humanize %></p>
+            <% if @ordr_context['gross'].present? %>
+              <p class="mb-1 small"><strong>Total:</strong> <%= number_to_currency(@ordr_context['gross']) %></p>
+            <% end %>
+            <% items = Array(@ordr_context['items']) %>
+            <% if items.any? %>
+              <p class="mb-1 small fw-semibold mt-2">Items ordered:</p>
+              <ul class="mb-0 small ps-3">
+                <% items.each do |item| %>
+                  <li><%= item['quantity'] %>x <%= item['name'] %></li>
+                <% end %>
+              </ul>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <%# Right: Draft response cards %>
+    <div class="col-lg-7">
+
+      <%# Abandoned payment — no outbound action %>
+      <% if @content[:signal_type] == 'payment.abandoned' %>
+        <div class="card border-0 shadow-sm mb-3">
+          <div class="card-header bg-transparent fw-semibold border-bottom">
+            Abandoned Payment — Staff Follow-Up Required
+          </div>
+          <div class="card-body">
+            <div class="alert alert-warning mb-3">
+              <i class="bi bi-exclamation-triangle-fill me-2" aria-hidden="true"></i>
+              This order appears to have been abandoned.
+              <strong>No automated message will be sent.</strong> Please ask staff to
+              investigate and follow up manually.
+            </div>
+            <% if @ordr_context.present? %>
+              <p class="text-muted small">
+                Order #<%= @ordr_context['ordr_id'] %>
+                &middot; Table: <%= @ordr_context['table_name'] %>
+                &middot; Gross: <%= number_to_currency(@ordr_context['gross']) %>
+              </p>
+            <% end %>
+            <% if @pending_approvals.any? %>
+              <% @pending_approvals.each do |approval| %>
+                <%= button_to reject_restaurant_agent_workbench_approval_path(@restaurant, @run, approval),
+                              method: :patch,
+                              class: 'btn btn-sm btn-outline-secondary',
+                              params: { reviewer_notes: 'Dismissed by manager' } do %>
+                  Dismiss Alert
+                <% end %>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+
+      <%# Rating/complaint/review — show draft message if available %>
+      <% else %>
+        <% pending_approval = @pending_approvals.find { |a| a.action_type == 'send_recovery_message' } %>
+
+        <% if @content[:draft_message].present? %>
+          <div class="card border-0 shadow-sm mb-3">
+            <div class="card-header bg-transparent fw-semibold border-bottom d-flex justify-content-between align-items-center">
+              <span>Draft Recovery Message</span>
+              <span class="badge text-bg-secondary fw-normal">Requires your approval</span>
+            </div>
+            <div class="card-body">
+              <% if pending_approval %>
+                <%= form_with url: send_recovery_message_restaurant_agent_workbench_path(@restaurant, @run),
+                              method: :post,
+                              local: true do |f| %>
+                  <div class="mb-3">
+                    <label for="to_email" class="form-label small fw-semibold">Customer email address</label>
+                    <input type="email" name="to_email" id="to_email" class="form-control form-control-sm"
+                           placeholder="customer@example.com" required>
+                    <div class="form-text">Enter the customer's email to send this message directly.</div>
+                  </div>
+                  <div class="mb-3">
+                    <label for="message_body" class="form-label small fw-semibold">Message (editable)</label>
+                    <textarea name="message_body" id="message_body" class="form-control form-control-sm"
+                              rows="6" required><%= @content[:draft_message] %></textarea>
+                  </div>
+                  <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-sm btn-primary">
+                      <i class="bi bi-send me-1" aria-hidden="true"></i> Send Message
+                    </button>
+                    <%= button_to reject_restaurant_agent_workbench_approval_path(@restaurant, @run, pending_approval),
+                                  method: :patch,
+                                  class: 'btn btn-sm btn-outline-secondary',
+                                  params: { reviewer_notes: 'Dismissed — no action needed' } do %>
+                      Dismiss
+                    <% end %>
+                  </div>
+                <% end %>
+              <% else %>
+                <%# Approval already resolved %>
+                <% resolved = @approved_actions.find { |a| a.action_type == 'send_recovery_message' } %>
+                <% if resolved %>
+                  <div class="alert alert-success mb-0">
+                    <i class="bi bi-check-circle-fill me-2" aria-hidden="true"></i>
+                    Recovery message sent
+                    <%= l(resolved.reviewed_at, format: :short) if resolved.reviewed_at %>
+                  </div>
+                <% else %>
+                  <div class="alert alert-secondary mb-0">No action taken.</div>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+
+        <%# Draft review response (for review.received signals) %>
+        <% if @content[:draft_review_response].present? %>
+          <div class="card border-0 shadow-sm mb-3">
+            <div class="card-header bg-transparent fw-semibold border-bottom d-flex justify-content-between align-items-center">
+              <span>Draft Public Review Response</span>
+              <span class="badge text-bg-info fw-normal text-white">Copy &amp; paste to post</span>
+            </div>
+            <div class="card-body">
+              <p class="text-muted small mb-2">
+                Edit and copy this response, then paste it directly on the review platform.
+                Automated posting to review platforms is not available in v1.
+              </p>
+              <textarea id="draft-review-response" class="form-control form-control-sm mb-2"
+                        rows="5"><%= @content[:draft_review_response] %></textarea>
+              <button type="button" class="btn btn-sm btn-outline-primary"
+                      onclick="navigator.clipboard.writeText(document.getElementById('draft-review-response').value).then(() => this.textContent = 'Copied!')">
+                <i class="bi bi-clipboard me-1" aria-hidden="true"></i> Copy response
+              </button>
+            </div>
+          </div>
+        <% end %>
+
+        <%# Abandon card if no draft messages %>
+        <% if @content[:draft_message].blank? && @content[:draft_review_response].blank? %>
+          <div class="card border-0 shadow-sm">
+            <div class="card-body text-center py-4">
+              <i class="bi bi-check-circle display-5 text-success mb-2" aria-hidden="true"></i>
+              <p class="text-muted mb-0">No outbound action recommended for this signal.</p>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>

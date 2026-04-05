@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <style>
+      body { font-family: sans-serif; color: #212529; background: #f8f9fa; margin: 0; padding: 20px; }
+      .card { background: #fff; border-radius: 8px; padding: 24px; max-width: 600px; margin: 0 auto; border: 1px solid #dee2e6; }
+      .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; background: #0d6efd; color: #fff; }
+      .label { font-size: 12px; color: #6c757d; text-transform: uppercase; font-weight: 600; margin-top: 16px; margin-bottom: 4px; }
+      .value { font-size: 15px; color: #212529; }
+      .message-box { background: #f8f9fa; border-left: 3px solid #0d6efd; padding: 12px 16px; border-radius: 4px; margin-top: 8px; white-space: pre-wrap; font-size: 14px; }
+      .cta { display: inline-block; margin-top: 24px; padding: 10px 20px; background: #0d6efd; color: #fff; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 14px; }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h2 style="margin-top:0;">New Website Enquiry</h2>
+      <span class="badge">website_inbound</span>
+
+      <div class="label">Name</div>
+      <div class="value"><%= @submission.name %></div>
+
+      <% if @submission.email.present? %>
+        <div class="label">Email</div>
+        <div class="value"><a href="mailto:<%= @submission.email %>"><%= @submission.email %></a></div>
+      <% end %>
+
+      <% if @submission.phone.present? %>
+        <div class="label">Phone</div>
+        <div class="value"><%= @submission.phone %></div>
+      <% end %>
+
+      <% if @submission.restaurant_name.present? %>
+        <div class="label">Restaurant Name</div>
+        <div class="value"><%= @submission.restaurant_name %></div>
+      <% end %>
+
+      <% if @submission.company_name.present? %>
+        <div class="label">Company</div>
+        <div class="value"><%= @submission.company_name %></div>
+      <% end %>
+
+      <div class="label">Message</div>
+      <div class="message-box"><%= @submission.message %></div>
+
+      <% if @submission.referrer.present? %>
+        <div class="label">Referrer</div>
+        <div class="value"><%= @submission.referrer %></div>
+      <% end %>
+
+      <div class="label">Submitted</div>
+      <div class="value"><%= @submission.submitted_at.strftime('%d %b %Y at %H:%M UTC') %></div>
+
+      <% if @lead_url %>
+        <a href="<%= @lead_url %>" class="cta">View CRM Lead &rarr;</a>
+      <% end %>
+    </div>
+  </body>
+</html>

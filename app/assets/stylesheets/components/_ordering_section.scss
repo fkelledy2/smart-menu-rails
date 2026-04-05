@@ -1,0 +1,71 @@
+// ============================================
+// ORDERING SECTION — KPI & CHART CARDS
+// Extracted from:
+//   restaurants/sections/_ordering_2025.html.erb
+// ============================================
+
+.od-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--space-3);
+}
+
+.od-kpi-card {
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3);
+  background: var(--color-white);
+}
+
+.od-kpi-title {
+  font-size: var(--text-sm);
+  color: var(--color-gray-600);
+}
+
+.od-kpi-value {
+  font-size: 1.5rem;
+  font-weight: var(--font-semibold);
+}
+
+.od-chart-card {
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3);
+  background: var(--color-white);
+  min-height: 260px;
+}
+
+.od-chart-title {
+  font-weight: var(--font-semibold);
+  margin-bottom: var(--space-2);
+}
+
+// Block-level canvas avoids flex resize loops causing re-renders
+.od-chart-canvas {
+  width: 100% !important;
+  height: 220px !important;
+  background: var(--color-gray-50);
+  border-radius: var(--radius-md);
+  display: block;
+}
+
+.od-table-card {
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3);
+  background: var(--color-white);
+}
+
+.od-table-title {
+  font-weight: var(--font-semibold);
+  margin-bottom: var(--space-2);
+}
+
+.od-table-placeholder {
+  min-height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-gray-50);
+  border-radius: var(--radius-md);
+}

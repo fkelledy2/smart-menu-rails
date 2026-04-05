@@ -1,0 +1,82 @@
+<div class="container-fluid px-4 py-4">
+
+  <div class="mb-4">
+    <h1>2FA Adoption</h1>
+    <p class="text-muted">Two-factor authentication adoption across the platform.</p>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="row g-3 mb-4">
+    <div class="col-sm-6 col-lg-3">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body text-center py-4">
+          <div class="display-5 fw-bold text-primary"><%= @adoption_rate %>%</div>
+          <div class="text-muted small mt-1">Overall Adoption</div>
+          <div class="text-muted small"><%= @enabled_users %> / <%= @total_users %> users</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body text-center py-4">
+          <div class="display-5 fw-bold text-success"><%= @admin_adoption_rate %>%</div>
+          <div class="text-muted small mt-1">Admin Adoption</div>
+          <div class="text-muted small"><%= @admin_users_with_2fa %> / <%= @admin_user_count %> admins</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body text-center py-4">
+          <div class="display-5 fw-bold text-info"><%= @enabled_users %></div>
+          <div class="text-muted small mt-1">Users with 2FA</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body text-center py-4">
+          <div class="display-5 fw-bold text-warning"><%= @total_users - @enabled_users %></div>
+          <div class="text-muted small mt-1">Users without 2FA</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Per-restaurant table -->
+  <div class="card border-0 shadow-sm">
+    <div class="card-header bg-white border-bottom">
+      <h5 class="mb-0">Top Restaurants by Staff Count</h5>
+    </div>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Restaurant</th>
+              <th class="text-end">Staff</th>
+              <th class="text-end">2FA Enabled</th>
+              <th class="text-end">Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @restaurant_stats.each do |row| %>
+              <% rate = row.employee_count.to_i > 0 ? (row.enabled_count.to_f / row.employee_count * 100).round : 0 %>
+              <tr>
+                <td><%= row.name %></td>
+                <td class="text-end"><%= row.employee_count %></td>
+                <td class="text-end"><%= row.enabled_count %></td>
+                <td class="text-end">
+                  <span class="badge <%= rate >= 80 ? 'bg-success' : rate >= 50 ? 'bg-warning text-dark' : 'bg-danger' %>">
+                    <%= rate %>%
+                  </span>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>

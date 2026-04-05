@@ -1,0 +1,12 @@
+<%# Rendered after a confirm action completes. %>
+<% if result.success? %>
+  <div class="copilot-confirm-success" role="status">
+    <i class="bi bi-check-circle-fill text-success me-2" aria-hidden="true"></i>
+    <span><%= result.message %></span>
+  </div>
+<% else %>
+  <div class="copilot-confirm-error" role="alert">
+    <i class="bi bi-x-circle-fill text-danger me-2" aria-hidden="true"></i>
+    <span><%= result.message %></span>
+  </div>
+<% end %>

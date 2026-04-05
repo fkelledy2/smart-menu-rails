@@ -1,0 +1,9 @@
+inbound_tag:
+  crm_lead: website_inbound_lead
+  tag: "inbound"
+  created_at: "2026-04-05 10:00:00"
+
+unsolicited_tag:
+  crm_lead: website_inbound_lead
+  tag: "unsolicited"
+  created_at: "2026-04-05 10:00:00"

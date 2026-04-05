@@ -1,0 +1,82 @@
+<%# Staff Copilot collapsible panel.
+    Rendered in the back-office layout when agent_staff_copilot flag is enabled.
+    Controlled by staff_copilot_controller.js (Stimulus).
+%>
+<div id="staff-copilot-panel"
+     data-controller="staff-copilot"
+     data-staff-copilot-query-url-value="<%= restaurant_copilot_query_path(restaurant) %>"
+     data-staff-copilot-confirm-url-value="<%= restaurant_copilot_confirm_path(restaurant) %>"
+     data-staff-copilot-page-context-value="<%= request.path %>"
+     class="staff-copilot-panel <%= @copilot_expanded ? 'staff-copilot-panel--open' : '' %>">
+
+  <%# Toggle button — visible always %>
+  <button type="button"
+          class="staff-copilot-panel__toggle"
+          data-action="click->staff-copilot#toggle"
+          aria-expanded="false"
+          aria-controls="copilot-panel-body"
+          title="Staff Copilot">
+    <i class="bi bi-stars" aria-hidden="true"></i>
+    <span class="staff-copilot-panel__toggle-label d-none d-sm-inline ms-1">Copilot</span>
+  </button>
+
+  <%# Collapsible body %>
+  <div id="copilot-panel-body"
+       class="staff-copilot-panel__body"
+       data-staff-copilot-target="panelBody"
+       aria-hidden="true">
+
+    <div class="staff-copilot-panel__inner">
+
+      <%# Response area %>
+      <div id="copilot-response"
+           class="staff-copilot-panel__response"
+           data-staff-copilot-target="responseArea"
+           role="region"
+           aria-live="polite"
+           aria-label="Copilot response">
+        <p class="text-muted small mb-0">
+          <i class="bi bi-lightbulb me-1" aria-hidden="true"></i>
+          Try: "86 the burrata" or "show me last week's best sellers"
+        </p>
+      </div>
+
+      <%# Input form %>
+      <form data-action="submit->staff-copilot#submit"
+            data-staff-copilot-target="form"
+            class="staff-copilot-panel__form mt-2"
+            autocomplete="off">
+
+        <div class="d-flex gap-2 align-items-end">
+          <div class="flex-grow-1">
+            <label for="copilot-query-input" class="visually-hidden">Ask your copilot</label>
+            <textarea id="copilot-query-input"
+                      name="query_text"
+                      rows="2"
+                      class="form-control form-control-sm staff-copilot-panel__input"
+                      placeholder="Ask anything — menu, analytics, or team messages…"
+                      data-staff-copilot-target="queryInput"
+                      data-action="keydown->staff-copilot#handleKeydown"
+                      maxlength="500"></textarea>
+          </div>
+          <button type="submit"
+                  class="btn btn-sm btn-primary staff-copilot-panel__submit"
+                  data-staff-copilot-target="submitButton">
+            <i class="bi bi-send" aria-hidden="true"></i>
+            <span class="visually-hidden">Send</span>
+          </button>
+        </div>
+
+        <%# Loading indicator %>
+        <div class="staff-copilot-panel__loading d-none"
+             data-staff-copilot-target="loadingIndicator"
+             role="status">
+          <span class="spinner-border spinner-border-sm text-primary me-1" aria-hidden="true"></span>
+          <span class="text-muted small">Thinking…</span>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,13 @@
+low_rating:
+  ordr: one
+  restaurant: one
+  stars: 1
+  comment: "Service was very slow"
+  source: in_app
+
+medium_rating:
+  ordr: table_one_ordr
+  restaurant: one
+  stars: 3
+  comment: "Food was okay"
+  source: in_app

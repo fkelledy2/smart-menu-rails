@@ -1,0 +1,94 @@
+<%# Admin CRM Dashboard %>
+<% content_for :title, 'CRM Dashboard — Admin' %>
+
+<div class="container-fluid py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0">CRM Dashboard</h1>
+    <%= link_to 'View Pipeline', admin_crm_leads_path, class: 'btn btn-outline-primary btn-sm' %>
+  </div>
+
+  <%# KPI cards %>
+  <div class="row g-3 mb-4">
+    <div class="col-sm-6 col-md-3">
+      <div class="card border-0 shadow-sm text-center py-3">
+        <div class="h2 fw-bold text-primary mb-0"><%= @total_leads %></div>
+        <div class="text-muted fs-13">Total Leads</div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-3">
+      <div class="card border-0 shadow-sm text-center py-3">
+        <div class="h2 fw-bold text-success mb-0"><%= @leads_last_30_days %></div>
+        <div class="text-muted fs-13">New (Last 30 Days)</div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-3">
+      <div class="card border-0 shadow-sm text-center py-3">
+        <div class="h2 fw-bold <%= @inbound_pending > 0 ? 'text-warning' : 'text-muted' %> mb-0"><%= @inbound_pending %></div>
+        <div class="text-muted fs-13">Inbound Pending Follow-up</div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-3">
+      <div class="card border-0 shadow-sm text-center py-3">
+        <div class="h2 fw-bold text-secondary mb-0"><%= @converted_count %></div>
+        <div class="text-muted fs-13">Converted</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <%# Source breakdown (last 30 days) %>
+    <div class="col-md-6">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body">
+          <h6 class="card-title text-muted text-uppercase fw-semibold text-kanban-header mb-3">
+            Lead Source — Last 30 Days
+          </h6>
+          <% if @source_counts.any? %>
+            <% total = @source_counts.sum { |_, c| c }.to_f %>
+            <% @source_counts.each do |source, count| %>
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="fs-13 fw-semibold"><%= source.humanize.gsub('_', ' ').capitalize %></span>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="progress flex-grow-1" style="width: 8rem; height: 6px;">
+                    <div class="progress-bar bg-primary" style="width: <%= total > 0 ? (count / total * 100).round : 0 %>%"></div>
+                  </div>
+                  <span class="badge text-bg-secondary"><%= count %></span>
+                </div>
+              </div>
+            <% end %>
+          <% else %>
+            <p class="text-muted mb-0 fs-13">No leads created in the last 30 days.</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <%# Stage breakdown %>
+    <div class="col-md-6">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body">
+          <h6 class="card-title text-muted text-uppercase fw-semibold text-kanban-header mb-3">
+            Pipeline Stage Breakdown
+          </h6>
+          <% if @stage_counts.any? %>
+            <% stage_total = @stage_counts.values.sum.to_f %>
+            <% CrmLead::STAGES.reject { |s| s == 'lost' }.each do |stage| %>
+              <% count = @stage_counts[stage] || 0 %>
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="fs-13 fw-semibold"><%= stage.humanize %></span>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="progress flex-grow-1" style="width: 8rem; height: 6px;">
+                    <div class="progress-bar bg-success" style="width: <%= stage_total > 0 ? (count / stage_total * 100).round : 0 %>%"></div>
+                  </div>
+                  <span class="badge text-bg-secondary"><%= count %></span>
+                </div>
+              </div>
+            <% end %>
+          <% else %>
+            <p class="text-muted mb-0 fs-13">No active leads.</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

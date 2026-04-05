@@ -1,0 +1,62 @@
+<p>Hi <%= @recipient.first_name.presence || @recipient.email %>,</p>
+
+<p>
+  The Reputation &amp; Feedback Agent has flagged a <strong><%= @signal_label %></strong>
+  for <strong><%= @restaurant.name %></strong> that requires your attention.
+</p>
+
+<% content = @artifact.content.with_indifferent_access %>
+
+<table style="width:100%;border-collapse:collapse;margin:16px 0;">
+  <tr>
+    <td style="padding:8px;background:#F3F4F6;font-weight:600;width:140px;">Signal</td>
+    <td style="padding:8px;border-bottom:1px solid #E5E7EB;"><%= @signal_label %></td>
+  </tr>
+  <% if content[:stars].present? %>
+  <tr>
+    <td style="padding:8px;background:#F3F4F6;font-weight:600;">Rating</td>
+    <td style="padding:8px;border-bottom:1px solid #E5E7EB;"><%= content[:stars] %> / 5 stars</td>
+  </tr>
+  <% end %>
+  <tr>
+    <td style="padding:8px;background:#F3F4F6;font-weight:600;">Severity</td>
+    <td style="padding:8px;border-bottom:1px solid #E5E7EB;">
+      <strong style="color:<%= @severity == 'high' ? '#DC2626' : (@severity == 'medium' ? '#D97706' : '#16A34A') %>;">
+        <%= @severity.capitalize %>
+      </strong>
+    </td>
+  </tr>
+  <tr>
+    <td style="padding:8px;background:#F3F4F6;font-weight:600;">Root cause</td>
+    <td style="padding:8px;border-bottom:1px solid #E5E7EB;"><%= content[:root_cause].to_s.humanize %></td>
+  </tr>
+  <% if content[:suggested_action].present? && content[:suggested_action] != 'no_action' %>
+  <tr>
+    <td style="padding:8px;background:#F3F4F6;font-weight:600;">Suggested action</td>
+    <td style="padding:8px;border-bottom:1px solid #E5E7EB;"><%= content[:suggested_action].to_s.humanize %></td>
+  </tr>
+  <% end %>
+</table>
+
+<% if content[:draft_message].present? %>
+  <p><strong>Draft recovery message (requires your approval before sending):</strong></p>
+  <blockquote style="border-left:4px solid #2563EB;padding:8px 16px;margin:0 0 16px;background:#EFF6FF;color:#1E3A5F;">
+    <%= content[:draft_message] %>
+  </blockquote>
+<% end %>
+
+<% if @systemic_issue.present? %>
+  <div style="background:#FEF3C7;border:1px solid #F59E0B;border-radius:6px;padding:12px;margin:16px 0;">
+    <strong>Pattern alert:</strong> <%= @systemic_issue %>
+  </div>
+<% end %>
+
+<p>
+  <%= link_to 'Review in Back Office', @review_url,
+      style: 'display:inline-block;padding:10px 20px;background:#2563EB;color:#fff;text-decoration:none;border-radius:6px;font-weight:600;' %>
+</p>
+
+<p style="font-size:12px;color:#6B7280;">
+  No messages are sent to customers automatically. You must approve and send any response from the back office.
+  You're receiving this because you're a manager or owner of <%= @restaurant.name %> on mellow.menu.
+</p>

@@ -1,0 +1,341 @@
+// ============================================
+// RESTAURANT SETTINGS SECTION COMPONENTS
+// Extracted from inline <style> blocks in:
+//   restaurants/sections/_details_2025.html.erb
+//   restaurants/sections/_settings_2025.html.erb
+//   restaurants/sections/_staff_2025.html.erb
+//   restaurants/sections/_allergens_2025.html.erb
+//   restaurants/sections/_localization_2025.html.erb
+//   (and other _*_2025 partials)
+// ============================================
+
+// ============================================
+// STATUS PILLS (details section)
+// ============================================
+
+.restaurant-status-pill.restaurant-status-pill--active {
+  background: #d9f7e1;
+  border-color: rgba(25, 135, 84, 0.25);
+}
+
+.restaurant-status-pill.restaurant-status-pill--inactive {
+  background: #ffd9e1;
+  border-color: rgba(220, 53, 69, 0.25);
+}
+
+.quick-actions-notice-slot {
+  min-height: 32px;
+
+  .alert {
+    margin: 0;
+    display: inline-block;
+  }
+}
+
+// ============================================
+// LOCATION MAP (details section)
+// ============================================
+
+.location-map-container {
+  margin-top: 1.5rem;
+  border: 1px solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius);
+  overflow: hidden;
+}
+
+.location-map-header {
+  padding: 0.75rem 1rem;
+  background-color: var(--bs-light-bg-subtle, #f9fafb);
+  border-bottom: 1px solid var(--bs-border-color);
+  display: flex;
+  align-items: center;
+}
+
+// ============================================
+// FEATURE GRID (settings section)
+// ============================================
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--space-4);
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.feature-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--surface-primary, #fff);
+  border: 2px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-base);
+
+  &:hover {
+    border-color: var(--color-gray-300);
+    box-shadow: var(--shadow-sm);
+  }
+}
+
+.feature-card-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.feature-card-content { flex: 1; }
+
+.feature-card-title {
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
+  margin: 0 0 var(--space-2) 0;
+  color: var(--color-gray-900);
+}
+
+.feature-card-description {
+  font-size: var(--text-sm);
+  color: var(--color-gray-600);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.feature-card-toggle {
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--color-gray-100);
+
+  .form-switch {
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+
+// ============================================
+// STATS CARDS (used across allergens, sizes, staff)
+// ============================================
+
+.section-stats-card {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-4);
+  padding: var(--space-4);
+  background: var(--color-gray-50);
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+}
+
+// Aliases used by individual sections
+.allergen-stats-card,
+.size-stats-card {
+  @extend .section-stats-card;
+}
+
+.section-stat,
+.allergen-stat,
+.size-stat {
+  text-align: center;
+}
+
+.section-stat-value,
+.allergen-stat-value {
+  font-size: 2.5rem;
+  font-weight: var(--font-bold);
+  color: var(--color-primary);
+  margin-bottom: var(--space-2);
+}
+
+.size-stat-value {
+  font-size: 2.5rem;
+  font-weight: var(--font-bold);
+  color: var(--color-warning);
+  margin-bottom: var(--space-2);
+}
+
+.section-stat-label,
+.allergen-stat-label,
+.size-stat-label {
+  font-size: var(--text-sm);
+  color: var(--color-gray-600);
+  font-weight: var(--font-semibold);
+}
+
+// ============================================
+// AVATAR CIRCLE (staff, languages)
+// ============================================
+
+.avatar-circle,
+.language-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-weight: var(--font-semibold);
+  flex-shrink: 0;
+}
+
+// ============================================
+// RESPONSIVE TABLE ↔ CARDS TOGGLE
+// Shared pattern: staff, languages, allergens
+// ============================================
+
+@mixin section-responsive-toggle($prefix) {
+  .#{$prefix}-table-view {
+    display: block;
+
+    @media (max-width: 768px) { display: block; } // table stays for most sections
+  }
+
+  .#{$prefix}-cards-view {
+    display: none;
+
+    @media (max-width: 768px) { display: none; }
+  }
+
+  .#{$prefix}-card-mobile {
+    background: var(--color-gray-50);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--radius-lg);
+    padding: var(--space-3);
+    margin-bottom: var(--space-2);
+    transition: all var(--transition-base);
+
+    &:hover {
+      box-shadow: var(--shadow-sm);
+      border-color: var(--color-gray-300);
+    }
+
+    &:last-child { margin-bottom: 0; }
+  }
+}
+
+@include section-responsive-toggle('staff');
+@include section-responsive-toggle('languages');
+@include section-responsive-toggle('allergens');
+
+// ============================================
+// ALLERGEN ITEM LIST
+// ============================================
+
+.allergen-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.allergen-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  background: var(--color-gray-50);
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-base);
+
+  &:hover {
+    background: var(--surface-primary, #fff);
+    box-shadow: var(--shadow-sm);
+  }
+}
+
+.allergen-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  background: var(--color-danger);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.allergen-info {
+  flex: 1;
+
+  h5 {
+    font-size: var(--text-base);
+    font-weight: var(--font-semibold);
+    margin: 0 0 var(--space-1) 0;
+  }
+
+  p { margin: 0; }
+}
+
+.templates-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-3);
+}
+
+.template-card {
+  padding: var(--space-4);
+  background: var(--color-gray-50);
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+}
+
+.template-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-2);
+
+  h5 {
+    font-size: var(--text-base);
+    font-weight: var(--font-semibold);
+    margin: 0;
+  }
+}
+
+// ============================================
+// LANGUAGE QUICK-ADD GRID (localization)
+// ============================================
+
+.languages-quick-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: var(--space-3);
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.language-quick-card {
+  padding: var(--space-4);
+  background: var(--color-gray-50);
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  text-align: center;
+  transition: all var(--transition-base);
+
+  &:hover {
+    background: var(--surface-primary, #fff);
+    box-shadow: var(--shadow-sm);
+  }
+}
+
+.language-flag { font-size: 2.5rem; }
+
+.languages-table-view .table > :not(caption) > * > * {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.languages-table-view .w-40px { width: 32px; }

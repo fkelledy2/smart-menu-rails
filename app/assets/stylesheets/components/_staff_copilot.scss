@@ -1,0 +1,232 @@
+// =============================================================================
+// Staff Copilot — collapsible natural-language back-office panel
+// =============================================================================
+
+// ──────────────────────────────────────────────────────────────
+// Panel container (fixed bottom-right on desktop; full-width bar on mobile)
+// ──────────────────────────────────────────────────────────────
+
+.staff-copilot-panel {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  z-index: 1040;
+  width: 340px;
+  max-width: calc(100vw - 32px);
+
+  @media (max-width: 576px) {
+    bottom: 0;
+    right: 0;
+    left: 0;
+    width: 100%;
+    max-width: 100%;
+    border-radius: 12px 12px 0 0;
+  }
+}
+
+// ──────────────────────────────────────────────────────────────
+// Toggle button
+// ──────────────────────────────────────────────────────────────
+
+.staff-copilot-panel__toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--bs-primary, #0d6efd);
+  color: #fff;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: background 0.15s, transform 0.15s;
+  font-size: 1.2rem;
+  margin-left: auto;
+
+  &:hover,
+  &:focus-visible {
+    background: var(--bs-primary-emphasis, #0a58ca);
+    transform: scale(1.05);
+    outline: 2px solid var(--bs-focus-ring-color, rgba(13, 110, 253, 0.25));
+  }
+
+  .staff-copilot-panel--open & {
+    background: var(--bs-secondary, #6c757d);
+    border-radius: 50%;
+  }
+
+  @media (max-width: 576px) {
+    display: none; // on mobile the panel is rendered inline in bottom nav
+  }
+}
+
+.staff-copilot-panel__toggle-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+// ──────────────────────────────────────────────────────────────
+// Collapsible body
+// ──────────────────────────────────────────────────────────────
+
+.staff-copilot-panel__body {
+  display: none;
+  background: var(--bs-body-bg, #fff);
+  border: 1px solid var(--bs-border-color, #dee2e6);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  margin-bottom: 8px;
+  overflow: hidden;
+
+  .staff-copilot-panel--open & {
+    display: block;
+  }
+
+  @media (max-width: 576px) {
+    border-radius: 12px 12px 0 0;
+    margin-bottom: 0;
+  }
+}
+
+.staff-copilot-panel__inner {
+  padding: 12px 14px 14px;
+}
+
+// ──────────────────────────────────────────────────────────────
+// Response area
+// ──────────────────────────────────────────────────────────────
+
+.staff-copilot-panel__response {
+  min-height: 48px;
+  max-height: 240px;
+  overflow-y: auto;
+  padding: 8px 10px;
+  background: var(--bs-light, #f8f9fa);
+  border-radius: 8px;
+  font-size: 0.85rem;
+  line-height: 1.5;
+
+  @media (max-width: 576px) {
+    max-height: 40vh;
+  }
+}
+
+// ──────────────────────────────────────────────────────────────
+// Input form
+// ──────────────────────────────────────────────────────────────
+
+.staff-copilot-panel__input {
+  font-size: 0.875rem;
+  resize: none;
+  border-radius: 8px;
+
+  &:focus {
+    border-color: var(--bs-primary, #0d6efd);
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+  }
+}
+
+.staff-copilot-panel__submit {
+  flex-shrink: 0;
+  align-self: flex-end;
+  height: 56px;
+  width: 40px;
+  padding: 0;
+  border-radius: 8px;
+}
+
+.staff-copilot-panel__loading {
+  padding-top: 6px;
+  font-size: 0.8rem;
+}
+
+// ──────────────────────────────────────────────────────────────
+// Narrative response
+// ──────────────────────────────────────────────────────────────
+
+.copilot-narrative {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 4px 0;
+
+  &--error {
+    .copilot-narrative__text {
+      color: var(--bs-warning-emphasis, #664d03);
+    }
+  }
+}
+
+.copilot-narrative__text {
+  font-size: 0.85rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+// ──────────────────────────────────────────────────────────────
+// Action card
+// ──────────────────────────────────────────────────────────────
+
+.copilot-action-card {
+  border: 1.5px solid var(--bs-warning, #ffc107);
+  border-radius: 10px;
+  background: var(--bs-warning-bg-subtle, #fff3cd);
+  padding: 10px 12px;
+  font-size: 0.85rem;
+}
+
+.copilot-action-card__header {
+  font-size: 0.875rem;
+  margin-bottom: 6px;
+}
+
+.copilot-action-card__preview-text {
+  font-size: 0.82rem;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 6px;
+  padding: 6px 8px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.copilot-action-card__editable {
+  font-size: 0.82rem;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 6px;
+}
+
+.copilot-action-card__footer {
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  padding-top: 8px;
+}
+
+// ──────────────────────────────────────────────────────────────
+// Disambiguation
+// ──────────────────────────────────────────────────────────────
+
+.copilot-disambiguation__option {
+  font-size: 0.85rem;
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: background 0.1s;
+
+  &:hover {
+    background: var(--bs-primary, #0d6efd);
+    color: #fff;
+    border-color: var(--bs-primary, #0d6efd);
+  }
+}
+
+// ──────────────────────────────────────────────────────────────
+// Confirm result
+// ──────────────────────────────────────────────────────────────
+
+.copilot-confirm-success,
+.copilot-confirm-error {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  padding: 4px 0;
+}

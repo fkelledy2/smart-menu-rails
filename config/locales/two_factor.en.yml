@@ -1,0 +1,68 @@
+en:
+  two_factor:
+    otp_challenge:
+      title: "Two-Factor Authentication"
+      subtitle: "Enter the 6-digit code from your authenticator app, or a backup code."
+      code_label: "Authentication Code"
+      backup_hint: "You can also enter a 10-character backup code."
+      trust_device: "Trust this device for 30 days"
+      verify_button: "Verify"
+      back_to_login: "Back to sign in"
+      invalid_code: "Invalid code. Please try again."
+      locked: "Too many failed attempts. Account locked for %{minutes} minute(s)."
+      locked_message: "Your account is locked until %{time}. Please try again later."
+      session_expired: "Your session has expired. Please sign in again."
+
+    setup:
+      title: "Set Up Two-Factor Authentication"
+      subtitle: "Protect your account with an authenticator app."
+      step1_title: "Scan QR Code"
+      step1_description: "Open your authenticator app (Google Authenticator, Authy, 1Password, etc.) and scan this QR code."
+      step2_title: "Confirm Setup"
+      step2_description: "Enter the 6-digit code shown in your authenticator app to verify setup."
+      manual_entry_toggle: "Can't scan? Enter manually"
+      current_password_label: "Confirm your current password"
+      otp_code_label: "Verification Code"
+      activate_button: "Activate 2FA"
+      cancel: "Cancel"
+      success: "Two-factor authentication has been enabled."
+      invalid_password: "Incorrect password."
+      invalid_otp: "Invalid verification code. Please try again."
+      session_expired: "Setup session expired. Please start again."
+
+    security:
+      title: "Security Settings"
+      subtitle: "Manage two-factor authentication for your account."
+      totp_title: "Two-Factor Authentication (TOTP)"
+      status_enabled: "Enabled"
+      status_disabled: "Disabled"
+      enabled_at: "Enabled on %{date}"
+      backup_codes_remaining:
+        one: "1 backup code remaining"
+        other: "%{count} backup codes remaining"
+        zero: "No backup codes remaining — regenerate them below"
+      not_enabled_description: "Two-factor authentication is not enabled on your account. Enable it to add an extra layer of security."
+      enable_button: "Enable 2FA"
+      current_password: "Current password"
+      otp_code_label: "Authentication code or backup code"
+      otp_or_backup: "6-digit code or backup code"
+      disable_2fa: "Disable 2FA"
+      confirm_disable: "Confirm Disable"
+      disable_confirm_prompt: "Are you sure you want to disable two-factor authentication?"
+      regenerate_backup_codes: "Regenerate Backup Codes"
+      regenerate_warning: "This will invalidate all existing backup codes. New codes will be shown once."
+      confirm_regenerate: "Generate New Codes"
+
+    disable:
+      success: "Two-factor authentication has been disabled."
+      invalid_password: "Incorrect password."
+      invalid_otp: "Invalid authentication code."
+
+    backup_codes:
+      title: "Your Backup Codes"
+      subtitle: "Save these codes in a secure location. Each code can only be used once."
+      save_warning_title: "Important: "
+      save_warning_body: "These codes will not be shown again. Copy them to a secure password manager or print them."
+      done_button: "Done"
+      regenerated: "New backup codes have been generated. Previous codes are no longer valid."
+      invalid_password: "Incorrect password."

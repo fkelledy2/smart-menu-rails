@@ -1,0 +1,59 @@
+<%# Guest star-rating form shown after checkout (paid/closed state).
+    Rendered in the SmartMenu cart/payment confirmation area.
+    locals: order (Ordr), restaurant (Restaurant) %>
+<% return unless order&.paid? || order&.closed? %>
+<% return if GuestRating.exists?(ordr_id: order.id, source: 'in_app') %>
+
+<div id="guest-rating-section"
+     class="mt-4 p-3"
+     style="background-color: #F9FAFB; border-radius: 10px; border: 1px solid #E5E7EB;"
+     data-controller="guest-rating"
+     data-guest-rating-url-value="<%= guest_rating_restaurant_ordr_path(restaurant, order) %>">
+
+  <h6 class="fw-semibold mb-1" style="font-size: 15px; color: #111827;">
+    <i class="bi bi-star-half" aria-hidden="true"></i>
+    How was your experience?
+  </h6>
+  <p class="mb-3" style="font-size: 13px; color: #6B7280; margin: 0 0 12px 0;">
+    Your feedback helps us improve.
+  </p>
+
+  <div data-guest-rating-target="ratingContainer">
+    <div class="d-flex gap-2 align-items-center mb-2" style="font-size: 28px;"
+         data-guest-rating-target="stars">
+      <% 1.upto(5) do |n| %>
+        <span class="guest-rating__star"
+              style="cursor: pointer; color: #D1D5DB;"
+              data-value="<%= n %>"
+              data-action="click->guest-rating#setStar mouseenter->guest-rating#hoverStar mouseleave->guest-rating#resetHover"
+              aria-label="<%= n %> star<%= n == 1 ? '' : 's' %>"
+              role="button">
+          <i class="bi bi-star-fill" aria-hidden="true"></i>
+        </span>
+      <% end %>
+    </div>
+
+    <div data-guest-rating-target="commentContainer" style="display:none;">
+      <textarea name="comment"
+                class="form-control form-control-sm mb-2"
+                rows="2"
+                placeholder="Tell us more (optional)"
+                style="border-radius: 8px;"
+                data-guest-rating-target="comment"></textarea>
+      <button type="button"
+              class="btn btn-sm btn-primary"
+              style="border-radius: 8px;"
+              data-action="click->guest-rating#submit"
+              data-guest-rating-target="submitButton">
+        Submit
+      </button>
+    </div>
+  </div>
+
+  <div data-guest-rating-target="thankyou" style="display:none;">
+    <p class="mb-0 text-success" style="font-size: 14px;">
+      <i class="bi bi-check-circle-fill me-1" aria-hidden="true"></i>
+      Thank you for your feedback!
+    </p>
+  </div>
+</div>

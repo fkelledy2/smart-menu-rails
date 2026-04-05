@@ -1,0 +1,30 @@
+Hi <%= @recipient.first_name.presence || @recipient.email %>,
+
+The Reputation & Feedback Agent has flagged a <%= @signal_label %> for <%= @restaurant.name %>.
+
+<% content = @artifact.content.with_indifferent_access %>
+Signal:     <%= @signal_label %>
+<% if content[:stars].present? %>
+Rating:     <%= content[:stars] %>/5 stars
+<% end %>
+Severity:   <%= @severity.capitalize %>
+Root cause: <%= content[:root_cause].to_s.humanize %>
+<% if content[:suggested_action].present? && content[:suggested_action] != 'no_action' %>
+Suggested:  <%= content[:suggested_action].to_s.humanize %>
+<% end %>
+
+<% if content[:draft_message].present? %>
+Draft recovery message (requires your approval before sending):
+---
+<%= content[:draft_message] %>
+---
+<% end %>
+
+<% if @systemic_issue.present? %>
+PATTERN ALERT: <%= @systemic_issue %>
+
+<% end %>
+Review in back office: <%= @review_url %>
+
+No messages are sent to customers automatically. You must approve and send any response from the back office.
+You're receiving this because you're a manager or owner of <%= @restaurant.name %> on mellow.menu.

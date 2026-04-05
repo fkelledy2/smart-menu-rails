@@ -1,0 +1,57 @@
+// ============================================
+// JUKEBOX SECTION COMPONENTS
+// Extracted from:
+//   restaurants/sections/_jukebox_2025.html.erb
+// ============================================
+
+.tracks-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.track-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-3);
+  background: var(--color-gray-50);
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-md);
+}
+
+.track-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.track-title {
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
+  margin: 0 0 var(--space-1) 0;
+}
+
+.track-artist {
+  font-size: var(--text-sm);
+  margin: 0;
+}
+
+// Spotify integration panel
+.spotify-integration-panel {
+  background: var(--color-gray-50);
+  border-color: var(--color-gray-200) !important;
+}
+
+.spotify-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-lg);
+  background: #1db954;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}

@@ -1,0 +1,98 @@
+<%# Staff Copilot — response partial
+    Rendered into the #copilot-response turbo-stream target.
+    Handles all four response types: narrative, action_card, disambiguation, error.
+%>
+<% rt = response.response_type&.to_sym %>
+
+<% if rt == :narrative || rt == :error %>
+  <div class="copilot-narrative <%= rt == :error ? 'copilot-narrative--error' : '' %>" role="<%= rt == :error ? 'alert' : 'status' %>">
+    <i class="bi <%= rt == :error ? 'bi-exclamation-triangle text-warning' : 'bi-chat-text text-primary' %> me-2" aria-hidden="true"></i>
+    <span class="copilot-narrative__text"><%= simple_format(response.narrative_text.to_s, {}, wrapper_tag: 'span') %></span>
+  </div>
+
+<% elsif rt == :action_card %>
+  <% card = response.action_card.with_indifferent_access %>
+  <div class="copilot-action-card"
+       data-controller="copilot-action"
+       data-copilot-action-tool-name-value="<%= card[:tool_name] %>">
+    <div class="copilot-action-card__header">
+      <i class="bi bi-lightning-charge-fill text-warning me-2" aria-hidden="true"></i>
+      <strong><%= card[:title] %></strong>
+    </div>
+
+    <div class="copilot-action-card__preview">
+      <% if card[:editable] %>
+        <textarea class="form-control form-control-sm copilot-action-card__editable"
+                  data-copilot-action-target="editableBody"
+                  rows="5"><%= card[:preview] %></textarea>
+        <%# Subject field for staff_message %>
+        <% if card.dig(:confirm_params, :subject).present? %>
+          <input type="hidden"
+                 data-copilot-action-target="subject"
+                 value="<%= card.dig(:confirm_params, :subject) %>">
+        <% end %>
+      <% else %>
+        <pre class="copilot-action-card__preview-text mb-0"><%= card[:preview] %></pre>
+      <% end %>
+    </div>
+
+    <%# Hidden fields for confirm params %>
+    <% (card[:confirm_params] || {}).except(:tool_name, :body, :subject).each do |key, value| %>
+      <% if value.is_a?(Array) %>
+        <% value.each do |v| %>
+          <input type="hidden"
+                 data-copilot-action-target="param"
+                 data-param-key="<%= key %>[]"
+                 value="<%= v %>">
+        <% end %>
+      <% else %>
+        <input type="hidden"
+               data-copilot-action-target="param"
+               data-param-key="<%= key %>"
+               value="<%= value %>">
+      <% end %>
+    <% end %>
+
+    <div class="copilot-action-card__footer d-flex gap-2 mt-3">
+      <button type="button"
+              class="btn btn-sm btn-success copilot-action-card__confirm-btn"
+              data-action="click->copilot-action#confirm"
+              data-confirm-url="<%= restaurant_copilot_confirm_path(@restaurant) %>">
+        <i class="bi bi-check-circle me-1" aria-hidden="true"></i>
+        Confirm
+      </button>
+      <button type="button"
+              class="btn btn-sm btn-outline-secondary"
+              data-action="click->copilot-action#cancel">
+        Cancel
+      </button>
+    </div>
+  </div>
+
+<% elsif rt == :disambiguation %>
+  <div class="copilot-disambiguation">
+    <p class="copilot-disambiguation__prompt text-muted small mb-2">
+      <i class="bi bi-question-circle me-1" aria-hidden="true"></i>
+      <%= response.narrative_text %>
+    </p>
+    <div class="copilot-disambiguation__options d-flex flex-column gap-2">
+      <% Array(response.disambiguation).each do |option| %>
+        <button type="button"
+                class="btn btn-sm btn-outline-primary text-start copilot-disambiguation__option"
+                data-controller="copilot-action"
+                data-action="click->copilot-action#confirmDisambiguation"
+                data-copilot-action-tool-name-value="flag_item_unavailable"
+                data-copilot-action-menuitem-id-value="<%= option[:id] %>"
+                data-copilot-action-hide-value="<%= option[:action] != 'show' %>"
+                data-confirm-url="<%= restaurant_copilot_confirm_path(@restaurant) %>">
+          <strong><%= option[:name] %></strong>
+          <span class="text-muted ms-2 small"><%= option[:section] %></span>
+          <% if option[:price].present? %>
+            <span class="badge bg-light text-dark ms-1"><%= number_to_currency(option[:price], unit: '€') %></span>
+          <% end %>
+        </button>
+      <% end %>
+    </div>
+  </div>
+
+<% end %>

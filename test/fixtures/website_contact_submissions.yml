@@ -1,0 +1,30 @@
+pending_submission:
+  name: "Tom Walsh"
+  email: "tom@newcafe.ie"
+  phone: "+353 86 111 2222"
+  restaurant_name: "New Cafe Dublin"
+  message: "Hi, I'd love to learn more about mellow.menu for my restaurant."
+  submitted_at: "2026-04-05 09:00:00"
+  ip_address: "203.0.113.1"
+  processing_status: "pending"
+
+processed_submission:
+  name: "Mary O Brien"
+  email: "mary@harbourkitchen.ie"
+  phone: "+353 87 555 0001"
+  restaurant_name: "The Harbour Kitchen"
+  message: "We are interested in trying mellow menu for our busy summer season."
+  submitted_at: "2026-04-05 10:00:00"
+  ip_address: "203.0.113.2"
+  processing_status: "processed"
+  processed_at: "2026-04-05 10:00:05"
+  crm_lead: website_inbound_lead
+
+spam_submission:
+  name: "Spammer"
+  email: "spam@mailinator.com"
+  website: "http://spam.example.com"
+  message: "Buy cheap meds online"
+  submitted_at: "2026-04-05 08:00:00"
+  ip_address: "203.0.113.99"
+  processing_status: "rejected_as_spam"

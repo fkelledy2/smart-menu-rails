@@ -1,0 +1,18 @@
+New Website Enquiry — mellow.menu
+================================
+
+Name: <%= @submission.name %>
+<% if @submission.email.present? %>Email: <%= @submission.email %>
+<% end %><% if @submission.phone.present? %>Phone: <%= @submission.phone %>
+<% end %><% if @submission.restaurant_name.present? %>Restaurant: <%= @submission.restaurant_name %>
+<% end %><% if @submission.company_name.present? %>Company: <%= @submission.company_name %>
+<% end %>
+Message:
+--------
+<%= @submission.message %>
+
+<% if @submission.referrer.present? %>Referrer: <%= @submission.referrer %>
+<% end %>Submitted: <%= @submission.submitted_at.strftime('%d %b %Y at %H:%M UTC') %>
+
+<% if @lead_url %>View CRM Lead: <%= @lead_url %>
+<% end %>

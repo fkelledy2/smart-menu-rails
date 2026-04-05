@@ -1,0 +1,109 @@
+// ============================================
+// IMPORT SECTION COMPONENTS
+// Extracted from:
+//   restaurants/sections/_import_2025.html.erb
+// ============================================
+
+// File upload drop area
+.file-upload-area {
+  border: 2px dashed var(--color-gray-300, #d1d5db);
+  border-radius: var(--radius-lg, 8px);
+  padding: 2rem;
+  text-align: center;
+  background-color: var(--color-gray-50, #f9fafb);
+  transition: all 0.2s;
+
+  &:hover {
+    border-color: var(--color-gray-400, #9ca3af);
+    background-color: var(--color-gray-100, #f3f4f6);
+  }
+}
+
+.file-upload-icon {
+  font-size: 3rem;
+  color: var(--color-gray-400, #9ca3af);
+  margin-bottom: 1rem;
+}
+
+.file-upload-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.file-upload-filename {
+  font-size: 0.875rem;
+  color: var(--color-gray-500, #6b7280);
+  margin-top: 0.5rem;
+}
+
+.file-upload-hint {
+  font-size: 0.75rem;
+  color: var(--color-gray-400, #9ca3af);
+  margin: 0;
+}
+
+// Tips list (import how-to tips)
+.tips-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.tip-item {
+  display: flex;
+  gap: 1rem;
+}
+
+.tip-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.tip-content {
+  h6 {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+}
+
+// Import action button sizing
+.btn-import {
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 0.5rem 1.25rem;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+// Import history row
+.import-row {
+  transition: background-color 0.2s;
+
+  &:hover { background-color: var(--color-gray-50, #f9fafb); }
+}
+
+// Unified action button sizing for chevron + delete icons
+.import-row-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  font-size: 0.875rem;
+  line-height: 1;
+  flex-shrink: 0;
+
+  i {
+    font-size: 0.875rem;
+    line-height: 1;
+  }
+}
+
+// Make button_to form wrapper invisible to flex layout
+.import-row-action-form { display: contents; }

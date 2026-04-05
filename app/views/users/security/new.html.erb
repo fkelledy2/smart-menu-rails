@@ -1,0 +1,87 @@
+<div class="container-fluid px-4 py-5">
+  <div class="row">
+    <div class="col-12 col-lg-8 col-xl-6">
+
+      <div class="mb-4">
+        <h1 class="pb-2 border-bottom"><%= t('two_factor.setup.title') %></h1>
+        <p class="text-muted"><%= t('two_factor.setup.subtitle') %></p>
+      </div>
+
+      <% if flash[:alert].present? %>
+        <div class="alert alert-danger"><%= flash[:alert] %></div>
+      <% end %>
+
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body px-4 py-4">
+
+          <!-- Step 1: Scan QR code -->
+          <h5 class="mb-3">
+            <span class="badge bg-primary me-2">1</span>
+            <%= t('two_factor.setup.step1_title') %>
+          </h5>
+          <p class="text-muted small mb-3"><%= t('two_factor.setup.step1_description') %></p>
+
+          <div class="text-center mb-4">
+            <%= @qr_svg.html_safe %> <%# rubocop:disable Rails/OutputSafety %>
+          </div>
+
+          <details class="mb-4">
+            <summary class="text-muted small" style="cursor: pointer;">
+              <%= t('two_factor.setup.manual_entry_toggle') %>
+            </summary>
+            <div class="mt-2">
+              <code class="d-block p-2 bg-light rounded text-break small">
+                <%= @provisioning_uri %>
+              </code>
+            </div>
+          </details>
+
+          <!-- Step 2: Verify OTP -->
+          <h5 class="mb-3">
+            <span class="badge bg-primary me-2">2</span>
+            <%= t('two_factor.setup.step2_title') %>
+          </h5>
+          <p class="text-muted small mb-3"><%= t('two_factor.setup.step2_description') %></p>
+
+          <%= form_with url: users_security_path, method: :post do |f| %>
+            <div class="mb-3">
+              <label for="current_password" class="form-label">
+                <%= t('two_factor.setup.current_password_label') %>
+              </label>
+              <%= f.password_field :current_password,
+                  id: 'current_password',
+                  class: 'form-control',
+                  autocomplete: 'current-password',
+                  required: true %>
+            </div>
+
+            <div class="mb-3">
+              <label for="otp_code" class="form-label">
+                <%= t('two_factor.setup.otp_code_label') %>
+              </label>
+              <%= f.text_field :otp_code,
+                  id: 'otp_code',
+                  class: 'form-control form-control-lg text-center',
+                  autocomplete: 'one-time-code',
+                  inputmode: 'numeric',
+                  maxlength: 6,
+                  autofocus: true,
+                  placeholder: '000000',
+                  required: true,
+                  data: { controller: 'otp-input' } %>
+            </div>
+
+            <div class="d-grid">
+              <%= f.submit t('two_factor.setup.activate_button'), class: 'btn btn-primary btn-lg' %>
+            </div>
+          <% end %>
+
+        </div>
+      </div>
+
+      <%= link_to t('two_factor.setup.cancel'), users_security_path,
+          class: 'text-decoration-none text-muted small' %>
+
+    </div>
+  </div>
+</div>
