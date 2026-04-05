@@ -1,8 +1,8 @@
 # mellow.menu Feature Backlog — Priority Index
 
-**Last updated**: 2026-04-04 (twenty-second pass — Menu Optimization Agent #21 COMPLETED)
+**Last updated**: 2026-04-04 (twenty-fifth pass — Lead Enrichment + Contact Form Spam Protection added as #39; see changelog notes below)
 **Menu Optimization Agent (#21)**: COMPLETED 2026-04-04 — 5-step workflow, change set approval UI, nightly scheduler, apply job; spec at `docs/features/completed/21-agent-menu-optimization.md`
-**Last updated**: 2026-04-01 (twenty-first pass — Customer Concierge Agent #20 COMPLETED) (seventeenth pass — daily prioritisation run; IQ-1 Naked Domain confirmed fully COMPLETED including ops steps; Sprint Recommendation updated to reflect current next best actions: Square alpha + Track D Employee Role Promotion + Track F Agent Framework; stale Track A/B/C completed-item deliverable lists retired; Refined flags added to spec files #28–#34)
+**Customer Concierge Agent (#20)**: COMPLETED 2026-04-01 — spec at `docs/features/completed/20-agent-customer-concierge.md`
 **Naked Domain Canonical Strategy (IQ-1)**: COMPLETED 2026-03-31 — DomainRedirect middleware live; spec at `docs/features/completed/naked-domain-canonical-strategy.md`
 **QR Code Security (#1)**: COMPLETED 2026-03-24 — Phase 1 shipped; spec at `docs/features/completed/qr-security.md`
 **Branded Email Styling (#1)**: COMPLETED 2026-03-24 — spec at `docs/features/completed/branded-email-styling-feature-request.md`
@@ -40,13 +40,14 @@
 | ~~#19~~ | ~~Restaurant Growth Agent~~ | ~~Post-Launch~~ | M | #17 Agent Framework, analytics services | **COMPLETED 2026-04-01** — spec at `docs/features/completed/19-agent-restaurant-growth.md`; user guide at `docs/features/completed/19-agent-restaurant-growth-user-guide.md` |
 | ~~#20~~ | ~~Customer Concierge Agent~~ | ~~Post-Launch~~ | M | #17 Agent Framework, SmartMenu view | **COMPLETED 2026-04-01** — spec at `docs/features/completed/20-agent-customer-concierge.md`; user guide at `docs/features/completed/20-agent-customer-concierge-user-guide.md` |
 | ~~#21~~ | ~~Menu Optimization Agent~~ | ~~Post-Launch~~ | M | #17, #19 patterns, 14+ days order data | **COMPLETED 2026-04-04** — spec at `docs/features/completed/21-agent-menu-optimization.md`; user guide at `docs/features/completed/21-agent-menu-optimization-user-guide.md` |
-| #22 | Service Operations Agent | Post-Launch | M | #17, Kitchen/Station dashboards, ActionCable | Real-time ops intelligence; reduces kitchen congestion and service recovery lag |
+| ~~#22~~ | ~~Service Operations Agent~~ | ~~Post-Launch~~ | M | #17, Kitchen/Station dashboards, ActionCable | **COMPLETED 2026-04-05** — spec at `docs/features/completed/22-agent-service-operations.md`; user guide at `docs/features/completed/22-agent-service-operations-user-guide.md` |
 | #23 | Reputation & Feedback Agent | Post-Launch | M | #17, in-app rating system, email mailers | Protects revenue by surfacing and recovering negative signals before they compound |
 | #24 | Staff Copilot Agent | Post-Launch | L | #17, back-office service layer | NL interface to back office; biggest UX integration effort; ship after agent patterns proven |
 | #25 | MCP AI Agent Wrapper | Post-Launch | XL | #8 JWT, #17 Agent Framework, legal review | External AI agent ecosystem play; not revenue-critical until agent tier is proven internally |
 | #26 | CDN Evaluation / Implementation | Post-Launch | S | Measured TTFB > 500ms | Deferred — revisit at traffic scale triggers |
-| #27+ | R&D Initiatives (Floor OS) | R&D | Various | Core product stable | Strategic vision; not sprint work until launch blockers ship |
+| #27 | Lead Source Tracking + Website Inbound Lead Ingestion | Growth | M | CRM (#9 completed), `CrmLead`/`CrmLeadAudit` models (built), RackAttack (built) | Turns every homepage contact form submission into a CRM lead; active revenue leak today — inbound enquiries are falling to email with no CRM record |
 | #28 | Two-Factor Authentication | Post-Launch | M | Devise (built), Redis (built) | Security hardening for accounts controlling payments; increasingly expected by enterprise customers |
+| #R&D | R&D Initiatives (Floor OS) | R&D | Various | Core product stable | Strategic vision; not sprint work until launch blockers ship |
 | ~~#29~~ | ~~Employee Role Promotion~~ | ~~Post-Launch~~ | S | Employee model (built) | **COMPLETED** 2026-04-01 — spec at `docs/features/completed/29-employee-role-promotion.md`; user guide at `docs/features/completed/29-employee-role-promotion-user-guide.md` |
 | #30 | Bulk Employee Invitation | Post-Launch | M | StaffInvitation (built), Sidekiq (built) | Reduces onboarding friction for multi-staff restaurants; leverages existing invitation infrastructure |
 | #31 | Weight-Based Menu Item Pricing | Post-Launch | M | Menuitem model, Ordritem model, KDS | Unlocks premium dining and butcher/seafood segments that require per-weight pricing |
@@ -58,6 +59,13 @@
 | IN-PROGRESS | Square Integration | Launch Enhancer | XL (mostly done) | Payments::Orchestrator, ProviderAccount model, Flipper flag | Under active development — Epics 1–8 backend/UI complete; 3 remaining items before alpha: split-bill progress UI, degraded-status email, "Reconnect" CTA |
 | #37 | AI Sommelier Marketing Landing Page | Post-Launch (Marketing) | S | AI Sommelier feature live; 2–3 reference restaurants; copy + design approved | Public acquisition surface for the AI Sommelier feature; 1–2 days engineering once assets are ready |
 | #38 | AI Whiskey Ambassador Marketing Landing Page | Post-Launch (Marketing) | S | #37 ships first (establishes MarketingController pattern); Whiskey Ambassador live; copy + design approved | Same pattern as #37; reuses controller and layout; distinct URL for SEO segment targeting |
+| #39 | Lead Enrichment + Contact Form Spam Protection | Growth | S | CRM (#9 completed); `crm_sales_funnel` Flipper flag (built); `invisible_captcha ~> 2.3` (in Gemfile, unused); `httparty` (in Gemfile); `rack-attack` (built); `HUNTER_IO_API_KEY` env var | Qualifies inbound leads with company/industry data via Hunter.io; closes the bot-spam gap on the contact form with zero-friction honeypot; directly improves sales pipeline quality |
+
+> **Note on April 2026 additions (twenty-fifth pass — 2026-04-04)**: **Lead Enrichment + Contact Form Spam Protection** added as **#39** (Growth, S effort). Rationale: (1) `invisible_captcha ~> 2.3` and `httparty` are already in the Gemfile but completely unused for these purposes — activation cost is a few lines; (2) Hunter.io is the only viable enrichment provider now that Clearbit's API is deprecated for new sign-ups post-HubSpot acquisition; (3) no new gems required; (4) S effort reflects that the infrastructure (gems, rate limiting, CRM model, audit trail, background job queue) is already fully built — only the wiring and Hunter.io integration are new. Placed at #39 (below #38 AI Sommelier / Whiskey landing pages) because it is quality-of-pipeline rather than net-new revenue, but it is a quick win that should ship alongside or immediately after spec #27 (Lead Source Tracking). Spec at `docs/features/todo/backlog/38-lead-enrichment-and-spam-protection.md`.
+
+> **Note on April 2026 additions (twenty-fourth pass — 2026-04-04)**: **Lead Source Tracking + Website Inbound Lead Ingestion** promoted from tentative #39 to **#27** (Growth, M effort). Rationale: (1) mellow.menu is live and actively receiving inbound enquiries from the homepage contact form; these submissions currently deliver only to admin@mellow.menu with no CRM record created — an active revenue leak; (2) the CRM (#9) is fully operational and the required models (`CrmLead`, `CrmLeadNote`, `CrmLeadAudit`, `Crm::LeadAuditWriter`, RackAttack) are all built; (3) no external blockers exist — development can start immediately; (4) M effort is comparable to #28 (2FA) and #30 (Bulk Invite), but capturing inbound sales intent is a higher-revenue-unlocking action than security hardening at this stage. The spec file was renamed from `backlog/39-lead-source-tracking.md` to `backlog/27-lead-source-tracking.md` and the `Priority Rank` frontmatter updated accordingly. Note on numbering: the user brief referenced an OpenClaw spec collection occupying #39–#44 — **no such directory exists in the codebase** (`docs/features/todo/OpenClaw/` not found; no OpenClaw files detected anywhere under `docs/features/`). There is therefore no numbering collision beyond the incorrect initial placement of the lead source spec at #39. The #39 row in the master table has been removed. The R&D Initiatives row has been updated from `#27+` to `#R&D` to preserve its below-sprint-horizon status while freeing the discrete rank #27 for this spec. `#27` is now added to the Quick Win Pool as the highest-priority item in that pool. The dependencies graph entry for `#27` has been added.
+
+> **Note on April 2026 additions (twenty-third pass — 2026-04-04)**: **Menu Optimization Agent (#21)** confirmed COMPLETED (second confirmation pass — this entry carried a stale twenty-second pass header while twenty-second pass was the actual completion event). No rank changes in this pass. Pass was used to verify spec at `docs/features/completed/21-agent-menu-optimization.md` is current and correct. No further action required.
 
 > **Note on March 2026 additions (seventeenth pass — 2026-03-31)**: Daily prioritisation run. No new features added or re-ranked. Changes: (1) Sprint Recommendation updated — stale Tracks A, B, C retired (all completed); IQ-1 "ship first" guidance retired (completed); Track D (Employee Role Promotion) is now the current lead track; Square alpha three-item blockers remain the highest-revenue-unlocking parallel priority; Track F (Agent Framework #17) named as next major programme; Track G (pricing chain #16→#15→#14) documented; Quick Win Pool formalised. (2) Dependencies Graph cleaned — removed stale forward-references to #10, #12, #13. (3) `Refined: true` flags added to spec files #28, #29, #30, #31, #32, #33, #34 (previously refined in substance but flag omitted). No rank changes.
 
@@ -195,6 +203,7 @@ Items below can be slotted into any gap between larger tracks. All have full spe
 
 | Feature | Effort | Why now |
 |---------|--------|---------|
+| #27 Lead Source Tracking + Website Inbound Lead Ingestion | M | Active revenue leak — inbound enquiries arriving today with no CRM capture; CRM is live; no external blockers; start immediately |
 | #30 Bulk Employee Invitation | M | Natural follow-on to #29; reuses `StaffInvitation` + branded mailer |
 | #28 Two-Factor Authentication | M | Security hygiene for payment-controlling accounts; increasingly table-stakes |
 | #35 Profit Margin Phase 4 | M | Phases 1–3 in production; Phase 4 closes the insight-to-action loop; feeds #21 |
@@ -271,6 +280,11 @@ Square Integration (IN PROGRESS — Epics 1–6 complete, alpha testing pending)
 
 #22 Service Operations Agent
   └─► (requires Kitchen/Station dashboards and ActionCable channels — all exist)
+
+#27 Lead Source Tracking + Website Inbound Lead Ingestion
+  └─► CRM Sales Funnel (#9, COMPLETED — CrmLead, CrmLeadNote, CrmLeadAudit, Crm::LeadAuditWriter all live)
+  └─► RackAttack (built — rate limiting on the public contact endpoint)
+  └─► (no downstream dependents in v1; UTM reporting is Phase 2 out of scope)
 
 #28 Two-Factor Authentication
   └─► (no downstream dependents in v1; Devise + Redis already present)
