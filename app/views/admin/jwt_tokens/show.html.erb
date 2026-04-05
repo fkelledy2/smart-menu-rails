@@ -21,12 +21,12 @@
       <h5 class="alert-heading">Copy your token now</h5>
       <p class="mb-2">This is the only time the raw JWT will be shown. It cannot be retrieved again.</p>
       <div class="d-flex gap-2 align-items-start">
-        <pre class="bg-dark text-light rounded p-3 flex-grow-1 mb-0 fs-12" style="word-break: break-all;"><%= flash[:raw_jwt] %></pre>
+        <pre class="bg-dark text-light rounded p-3 flex-grow-1 mb-0 fs-12 wb-break-all"><%= flash[:raw_jwt] %></pre>
       </div>
       <div class="mt-3 d-flex gap-2">
         <%= form_with url: send_email_admin_jwt_token_path(@token), method: :post, local: true, class: 'd-inline' do |f| %>
           <%= f.hidden_field :raw_jwt, value: flash[:raw_jwt] %>
-          <%= f.text_field :recipient_email, placeholder: 'Recipient email', class: 'form-control form-control-sm d-inline-block', style: 'width: 220px' %>
+          <%= f.text_field :recipient_email, placeholder: 'Recipient email', class: 'form-control form-control-sm' %>
           <%= f.submit 'Email token', class: 'btn btn-sm btn-outline-dark ms-1' %>
         <% end %>
         <%= form_with url: download_link_admin_jwt_token_path(@token), method: :post, local: true, class: 'd-inline ms-2' do |f| %>
@@ -62,7 +62,7 @@
         <dt class="col-sm-3">Scopes</dt>
         <dd class="col-sm-9">
           <% @token.scopes.each do |scope| %>
-            <span class="badge bg-secondary me-1"><%= scope %></span>
+            <span class="badge text-bg-secondary me-1"><%= scope %></span>
           <% end %>
         </dd>
 
@@ -91,7 +91,7 @@
 
   <% recent_logs = @token.usage_logs.recent.limit(20) %>
   <% if recent_logs.any? %>
-    <h5 class="mb-3">Recent usage (last 20)</h5>
+    <h2 class="h5 mb-3">Recent usage (last 20)</h2>
     <div class="table-responsive">
       <table class="table table-sm table-hover">
         <thead class="table-light">
@@ -107,7 +107,7 @@
           <% recent_logs.each do |log| %>
             <tr>
               <td class="text-nowrap"><%= log.created_at.strftime('%d %b %H:%M:%S') %></td>
-              <td><span class="badge bg-secondary"><%= log.http_method %></span></td>
+              <td><span class="badge text-bg-secondary"><%= log.http_method %></span></td>
               <td><code class="small"><%= log.endpoint %></code></td>
               <td>
                 <% status_class = log.response_status < 400 ? 'text-success' : 'text-danger' %>

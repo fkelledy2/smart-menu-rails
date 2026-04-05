@@ -33,34 +33,34 @@
               <td>
                 <div class="fw-semibold"><%= link_to dr.name, admin_discovered_restaurant_path(dr), class: 'text-decoration-none' %></div>
                 <% if dr.website_url.present? %>
-                  <div class="text-muted small text-truncate" style="max-width: 250px;" title="<%= dr.website_url %>"><%= dr.website_url %></div>
+                  <div class="text-muted small text-truncate" title="<%= dr.website_url %>"><%= dr.website_url %></div>
                 <% end %>
               </td>
               <td><%= dr.city_name %></td>
               <td>
                 <% pdf_count = dr.menu_sources.select { |ms| ms.source_type.to_s == 'pdf' }.count %>
-                <span class="badge <%= pdf_count > 0 ? 'bg-success' : 'bg-secondary' %>"><%= pdf_count %></span>
+                <span class="badge <%= pdf_count > 0 ? 'text-bg-success' : 'text-bg-secondary' %>"><%= pdf_count %></span>
               </td>
               <td>
                 <% if restaurant.present? %>
-                  <span class="badge bg-success"><i class="bi bi-check me-1"></i>Yes (ID: <%= restaurant.id %>)</span>
+                  <span class="badge text-bg-success"><i class="bi bi-check me-1"></i>Yes (ID: <%= restaurant.id %>)</span>
                 <% else %>
-                  <span class="badge bg-warning text-dark"><i class="bi bi-hourglass-split me-1"></i>Pending</span>
+                  <span class="badge text-bg-warning"><i class="bi bi-hourglass-split me-1"></i>Pending</span>
                 <% end %>
               </td>
               <td>
                 <% if restaurant.present? %>
                   <% if restaurant.preview_published? %>
-                    <span class="badge bg-success">Published</span>
+                    <span class="badge text-bg-success">Published</span>
                     <% if restaurant.preview_indexable? %>
-                      <span class="badge bg-info">Indexable</span>
+                      <span class="badge text-bg-info">Indexable</span>
                     <% else %>
-                      <span class="badge bg-secondary">noindex</span>
+                      <span class="badge text-bg-secondary">noindex</span>
                     <% end %>
                   <% elsif restaurant.preview_enabled? %>
-                    <span class="badge bg-warning text-dark">Enabled (not published)</span>
+                    <span class="badge text-bg-warning">Enabled (not published)</span>
                   <% else %>
-                    <span class="badge bg-secondary">Not published</span>
+                    <span class="badge text-bg-secondary">Not published</span>
                   <% end %>
                 <% else %>
                   <span class="text-muted">—</span>
@@ -70,11 +70,11 @@
                 <% if restaurant.present? %>
                   <% cs = restaurant.claim_status.to_s %>
                   <% badge = case cs
-                    when 'unclaimed' then 'bg-secondary'
-                    when 'soft_claimed' then 'bg-info'
-                    when 'claimed' then 'bg-primary'
-                    when 'verified' then 'bg-success'
-                    else 'bg-secondary'
+                    when 'unclaimed' then 'text-bg-secondary'
+                    when 'soft_claimed' then 'text-bg-info'
+                    when 'claimed' then 'text-bg-primary'
+                    when 'verified' then 'text-bg-success'
+                    else 'text-bg-secondary'
                   end %>
                   <span class="badge <%= badge %>"><%= cs.humanize %></span>
                 <% else %>

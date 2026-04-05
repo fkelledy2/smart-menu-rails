@@ -12,7 +12,7 @@
   <div class="d-flex justify-content-between align-items-start mb-4">
     <div>
       <h1 class="h3 mb-1"><%= @lead.restaurant_name %></h1>
-      <span class="badge bg-primary"><%= @lead.stage.humanize %></span>
+      <span class="badge text-bg-primary"><%= @lead.stage.humanize %></span>
     </div>
     <div class="d-flex gap-2">
       <%# Link to matching demo booking if one exists for this contact's email %>
@@ -135,24 +135,24 @@
 
     <%# Right column — tabs %>
     <div class="col-md-8" data-controller="crm-lead-detail">
-      <ul class="nav nav-tabs mb-3">
-        <li class="nav-item">
-          <a class="nav-link active" href="#notes" data-bs-toggle="tab">
+      <ul class="nav nav-tabs mb-3" id="leadDetailTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="notes-tab" data-bs-toggle="tab" data-bs-target="#notes" type="button" role="tab" aria-controls="notes" aria-selected="true">
             Notes
-            <span class="badge bg-secondary ms-1"><%= @lead.crm_lead_notes.size %></span>
-          </a>
+            <span class="badge text-bg-secondary ms-1"><%= @lead.crm_lead_notes.size %></span>
+          </button>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#activity" data-bs-toggle="tab">Activity</a>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="activity-tab" data-bs-toggle="tab" data-bs-target="#activity" type="button" role="tab" aria-controls="activity" aria-selected="false">Activity</button>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#emails" data-bs-toggle="tab">Emails</a>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="emails-tab" data-bs-toggle="tab" data-bs-target="#emails" type="button" role="tab" aria-controls="emails" aria-selected="false">Emails</button>
         </li>
       </ul>
 
-      <div class="tab-content">
+      <div class="tab-content" id="leadDetailTabContent">
         <%# Notes tab %>
-        <div class="tab-pane fade show active" id="notes">
+        <div class="tab-pane fade show active" id="notes" role="tabpanel" aria-labelledby="notes-tab">
           <%= turbo_frame_tag 'crm_notes' do %>
             <%= form_with model: CrmLeadNote.new,
                   url: admin_crm_lead_notes_path(@lead),
@@ -179,7 +179,7 @@
         </div>
 
         <%# Activity tab %>
-        <div class="tab-pane fade" id="activity">
+        <div class="tab-pane fade" id="activity" role="tabpanel" aria-labelledby="activity-tab">
           <%= turbo_frame_tag 'crm_activity' do %>
             <% if @audits.any? %>
               <div class="list-group list-group-flush">
@@ -210,7 +210,7 @@
         </div>
 
         <%# Emails tab %>
-        <div class="tab-pane fade" id="emails">
+        <div class="tab-pane fade" id="emails" role="tabpanel" aria-labelledby="emails-tab">
           <%= link_to 'Compose Email',
                 new_admin_crm_lead_email_send_path(@lead),
                 class: 'btn btn-outline-primary btn-sm mb-3' %>
@@ -225,7 +225,7 @@
                         To: <%= send.to_email %> &bull; From: <%= send.sender.email %>
                       </p>
                     </div>
-                    <span class="text-muted" style="font-size: 11px; white-space: nowrap;">
+                    <span class="text-muted fs-11 text-nowrap">
                       <%= send.sent_at ? send.sent_at.strftime('%d %b %Y') : 'Pending' %>
                     </span>
                   </div>
@@ -243,18 +243,18 @@
 <% end %><%# /turbo_frame crm_lead_modal %>
 
 <%# Convert modal %>
-<div class="modal fade" id="convertModal" tabindex="-1">
+<div class="modal fade" id="convertModal" tabindex="-1" aria-labelledby="convertModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Mark as Converted</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        <h5 class="modal-title" id="convertModalLabel">Mark as Converted</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <%= form_with url: convert_admin_crm_lead_path(@lead), method: :patch do |f| %>
         <div class="modal-body">
           <p>Link this lead to a Restaurant record to complete the conversion.</p>
           <div class="mb-3">
-            <label class="form-label">Restaurant</label>
+            <%= f.label :restaurant_id, 'Restaurant', class: 'form-label' %>
             <%= f.select :restaurant_id,
                   @restaurants.map { |r| [r.name, r.id] },
                   { prompt: 'Select restaurant...' },

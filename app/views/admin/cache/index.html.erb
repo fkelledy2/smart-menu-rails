@@ -17,9 +17,9 @@
   <div class="row mb-4">
     <div class="col-12">
       <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
-          <h5 class="mb-0">Cache Health Status</h5>
-          <span class="badge <%= @health_check[:healthy] ? 'bg-success' : 'bg-danger' %>">
+        <div class="card-header d-flex justify-content-between align-items-center fw-semibold">
+          Cache Health Status
+          <span class="badge <%= @health_check[:healthy] ? 'text-bg-success' : 'text-bg-danger' %>">
             <%= @health_check[:healthy] ? 'Healthy' : 'Unhealthy' %>
           </span>
         </div>
@@ -62,8 +62,8 @@
   <div class="row mb-4">
     <div class="col-md-8">
       <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
-          <h5 class="mb-0">Performance Statistics</h5>
+        <div class="card-header d-flex justify-content-between align-items-center fw-semibold">
+          Performance Statistics
           <%= button_to "Reset Stats", reset_stats_admin_cache_index_path,
                         method: :post,
                         class: "btn btn-sm btn-outline-warning",
@@ -119,8 +119,8 @@
     </div>
     <div class="col-md-4">
       <div class="card">
-        <div class="card-header">
-          <h5 class="mb-0">Cache Information</h5>
+        <div class="card-header fw-semibold">
+          Cache Information
         </div>
         <div class="card-body">
           <dl class="row">
@@ -146,15 +146,15 @@
   <div class="row mb-4">
     <div class="col-md-6">
       <div class="card">
-        <div class="card-header">
-          <h5 class="mb-0">Cache Warming</h5>
+        <div class="card-header fw-semibold">
+          Cache Warming
         </div>
         <div class="card-body">
           <p class="text-muted">Pre-load critical cache data to improve performance.</p>
 
           <%= form_with url: warm_admin_cache_index_path, method: :post, local: true, class: "d-flex gap-2" do |f| %>
             <%= f.number_field :restaurant_id, placeholder: "Restaurant ID (optional)",
-                               class: "form-control", style: "max-width: 200px;" %>
+                               class: "form-control w-auto" %>
             <%= f.submit "Warm Caches", class: "btn btn-success" %>
           <% end %>
 
@@ -166,13 +166,13 @@
     </div>
     <div class="col-md-6">
       <div class="card">
-        <div class="card-header">
-          <h5 class="mb-0">Cache Management</h5>
+        <div class="card-header fw-semibold">
+          Cache Management
         </div>
         <div class="card-body">
           <p class="text-muted">Clear all cached data to force fresh data loading.</p>
 
-          <div class="d-grid gap-2">
+          <div class="d-flex gap-2">
             <%= button_to "Clear All Caches", clear_admin_cache_index_path,
                           method: :delete,
                           class: "btn btn-danger",
@@ -188,8 +188,8 @@
   <div class="row">
     <div class="col-12">
       <div class="card">
-        <div class="card-header">
-          <h5 class="mb-0">Cache Patterns</h5>
+        <div class="card-header fw-semibold">
+          Cache Patterns
         </div>
         <div class="card-body">
           <div class="row">

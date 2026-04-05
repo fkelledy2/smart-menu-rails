@@ -115,9 +115,9 @@ class DeeplClientTest < ActiveSupport::TestCase
     end
   end
 
-  test 'auth headers are empty for DeepL' do
+  test 'auth headers include DeepL Authorization header' do
     headers = @client.send(:auth_headers)
-    assert_empty headers
+    assert_equal "DeepL-Auth-Key #{@client.send(:config)[:api_key]}", headers['Authorization']
   end
 
   test 'default config includes DeepL specific settings' do

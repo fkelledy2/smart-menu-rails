@@ -40,8 +40,8 @@
 </div>
 
 <div class="card mb-4">
-  <div class="card-header bg-warning text-dark">
-    <h5 class="mb-0">High-Margin Items with Low Stock</h5>
+  <div class="card-header">
+    <h5 class="mb-0 fw-semibold">High-Margin Items with Low Stock</h5>
   </div>
   <div class="card-body">
     <div class="table-responsive">
@@ -62,11 +62,11 @@
             <tr>
               <td>
                 <% if item[:priority] > 80 %>
-                  <span class="badge bg-danger">High</span>
+                  <span class="badge text-bg-danger">High</span>
                 <% elsif item[:priority] > 50 %>
-                  <span class="badge bg-warning text-dark">Medium</span>
+                  <span class="badge text-bg-warning">Medium</span>
                 <% else %>
-                  <span class="badge bg-info">Low</span>
+                  <span class="badge text-bg-info">Low</span>
                 <% end %>
               </td>
               <td><%= item[:menuitem].localised_name('en') %></td>
@@ -82,13 +82,13 @@
               <td>
                 <% case item[:status] %>
                 <% when 'out_of_stock' %>
-                  <span class="badge bg-danger">Out of Stock</span>
+                  <span class="badge text-bg-danger">Out of Stock</span>
                 <% when 'low_stock' %>
-                  <span class="badge bg-warning text-dark">Low Stock</span>
+                  <span class="badge text-bg-warning">Low Stock</span>
                 <% when 'medium_stock' %>
-                  <span class="badge bg-info">Medium</span>
+                  <span class="badge text-bg-info">Medium</span>
                 <% else %>
-                  <span class="badge bg-success">In Stock</span>
+                  <span class="badge text-bg-success">In Stock</span>
                 <% end %>
               </td>
               <td>
@@ -116,11 +116,11 @@
               <td>
                 <% case suggestion[:urgency] %>
                 <% when 'high' %>
-                  <span class="badge bg-danger">High</span>
+                  <span class="badge text-bg-danger">High</span>
                 <% when 'medium' %>
-                  <span class="badge bg-warning text-dark">Medium</span>
+                  <span class="badge text-bg-warning">Medium</span>
                 <% else %>
-                  <span class="badge bg-info">Low</span>
+                  <span class="badge text-bg-info">Low</span>
                 <% end %>
               </td>
               <td>

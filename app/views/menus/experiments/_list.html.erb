@@ -72,7 +72,7 @@
                 <%= button_to end_experiment_restaurant_menu_experiment_path(@restaurant, @menu, experiment),
                     method: :patch,
                     class: 'btn btn-outline-danger btn-sm',
-                    data: { confirm: 'End this experiment? This cannot be undone.' },
+                    data: { turbo_confirm: 'End this experiment? This cannot be undone.' },
                     form: { data: { turbo: true } } do %>
                   <i class="bi bi-stop-circle"></i>
                   End
@@ -89,7 +89,7 @@
                 <%= button_to restaurant_menu_experiment_path(@restaurant, @menu, experiment),
                     method: :delete,
                     class: 'btn btn-outline-danger btn-sm',
-                    data: { confirm: 'Delete this experiment?' },
+                    data: { turbo_confirm: 'Delete this experiment?' },
                     form: { data: { turbo: true } } do %>
                   <i class="bi bi-trash"></i>
                   Delete

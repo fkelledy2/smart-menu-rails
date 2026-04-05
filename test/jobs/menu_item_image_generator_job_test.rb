@@ -14,11 +14,10 @@ class MenuItemImageGeneratorJobTest < ActiveJob::TestCase
     @menusection.update!(menu: @menu) if @menusection.menu != @menu
     @menuitem.update!(menusection: @menusection, calories: 200) if @menuitem.menusection != @menusection
 
-    @genimage = Genimage.create!(
-      name: 'Test Image',
-      restaurant: @restaurant,
-      menuitem: @menuitem,
-    )
+    @genimage = Genimage.find_or_create_by!(menuitem: @menuitem) do |g|
+      g.name = 'Test Image'
+      g.restaurant = @restaurant
+    end
   end
 
   # === BASIC JOB EXECUTION TESTS ===

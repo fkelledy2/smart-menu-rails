@@ -34,9 +34,9 @@
               <td><code><%= rule.domain %></code></td>
               <td>
                 <% if rule.blacklist? %>
-                  <span class="badge bg-danger">Blacklist</span>
+                  <span class="badge text-bg-danger">Blacklist</span>
                 <% else %>
-                  <span class="badge bg-success">Whitelist</span>
+                  <span class="badge text-bg-success">Whitelist</span>
                 <% end %>
               </td>
               <td class="text-muted small"><%= truncate(rule.reason.to_s, length: 80) %></td>

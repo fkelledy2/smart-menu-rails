@@ -47,7 +47,7 @@
         <strong>Menu Import Workflow</strong> — Review and approve the AI-proposed menu items before publishing.
       </div>
       <%= link_to menu_import_review_restaurant_agent_workbench_path(@restaurant, @run),
-                  class: 'btn btn-info btn-sm text-white flex-shrink-0' do %>
+                  class: 'btn btn-primary btn-sm flex-shrink-0' do %>
         Review &amp; Publish
       <% end %>
     </div>
@@ -86,7 +86,7 @@
                 <% end %>
                 <% if step.tool_invocation_logs.any? %>
                   <details class="mt-1">
-                    <summary class="text-muted small" style="cursor: pointer;">
+                    <summary class="text-muted small" >
                       <%= step.tool_invocation_logs.count %> tool call(s)
                     </summary>
                     <% step.tool_invocation_logs.each do |log| %>
@@ -133,8 +133,8 @@
                   </p>
                 <% end %>
                 <details>
-                  <summary class="text-muted small" style="cursor: pointer;">View content</summary>
-                  <pre class="bg-light rounded p-2 mt-1 small overflow-auto" style="max-height: 200px;"><%= JSON.pretty_generate(artifact.content) %></pre>
+                  <summary class="text-muted small" >View content</summary>
+                  <pre class="bg-light rounded p-2 mt-1 small overflow-auto mh-12rem"><%= JSON.pretty_generate(artifact.content) %></pre>
                 </details>
               </div>
             <% end %>
@@ -180,25 +180,27 @@
 
                 <% if approval.pending? && !approval.expired_at_time? %>
                   <details class="mb-2">
-                    <summary class="text-muted small" style="cursor: pointer;">View proposed payload</summary>
-                    <pre class="bg-light rounded p-2 mt-1 small overflow-auto" style="max-height: 150px;"><%= JSON.pretty_generate(approval.proposed_payload) %></pre>
+                    <summary class="text-muted small" >View proposed payload</summary>
+                    <pre class="bg-light rounded p-2 mt-1 small overflow-auto mh-9rem"><%= JSON.pretty_generate(approval.proposed_payload) %></pre>
                   </details>
 
-                  <div class="d-flex gap-2 mt-2">
+                  <div class="d-flex gap-2 mt-2 flex-wrap">
                     <%= form_with url: approve_restaurant_agent_workbench_approval_path(
                                         @restaurant,
                                         agent_workbench_id: @run.id,
                                         id: approval.id),
-                                  method: :patch, local: true do |f| %>
+                                  method: :patch, local: true,
+                                  class: 'd-flex' do |f| %>
                       <%= f.submit 'Approve', class: 'btn btn-sm btn-success' %>
                     <% end %>
                     <%= form_with url: reject_restaurant_agent_workbench_approval_path(
                                         @restaurant,
                                         agent_workbench_id: @run.id,
                                         id: approval.id),
-                                  method: :patch, local: true do |f| %>
-                      <%= f.text_field :reviewer_notes, placeholder: 'Reason (optional)', class: 'form-control form-control-sm d-inline-block w-auto' %>
-                      <%= f.submit 'Reject', class: 'btn btn-sm btn-outline-danger ms-1' %>
+                                  method: :patch, local: true,
+                                  class: 'd-flex align-items-center gap-1' do |f| %>
+                      <%= f.text_field :reviewer_notes, placeholder: 'Reason (optional)', class: 'form-control form-control-sm w-auto' %>
+                      <%= f.submit 'Reject', class: 'btn btn-sm btn-outline-danger' %>
                     <% end %>
                   </div>
                 <% elsif approval.expired_at_time? && approval.pending? %>

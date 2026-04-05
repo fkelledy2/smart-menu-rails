@@ -4,6 +4,8 @@ description: Current state of the feature backlog after all March 2026 prioritis
 type: project
 ---
 
+Twenty-fourth pass completed 2026-04-04: Lead Source Tracking + Website Inbound Lead Ingestion promoted from tentative #39 to #27 (Growth, M effort). Spec file renamed from `backlog/39-lead-source-tracking.md` to `backlog/27-lead-source-tracking.md`. R&D Initiatives row relabelled from `#27+` to `#R&D` to free the discrete rank. No OpenClaw directory exists in the codebase — the cited #39–#44 collision was a false premise. #27 added to Quick Win Pool as highest-priority item. Dependencies graph entry added for #27.
+
 Full spec refinement and prioritisation pass completed 2026-03-22. AI agent layer added 2026-03-24 (first pass): 8 new specs (Agent Framework + 7 individual agents). Six additional product specs refined 2026-03-24 (second pass): 2FA, Employee Role Promotion, Bulk Employee Invite, Weight-Based Pricing, Nearby Menus Map, Strikepay Integration. CRM Sales Funnel inserted at #9 on 2026-03-27 (third pass). Square Integration and Profit Margin Tracking classified and dispositioned on 2026-03-27 (fourth pass). Smartmenu Theming inserted at #10 on 2026-03-28 (fifth pass). Sixth pass on 2026-03-28 aligned all 19 stale spec files. Naked Domain Strategy added as IQ-1 (eleventh pass, 2026-03-30). Realtime Ordritem Tracking added at #34 (twelfth pass, 2026-03-30). Thirteenth pass on 2026-03-30 refined the final 5 unrefined specs: Square Integration (IN-PROGRESS), Profit Margin Phase 4 (#35), Smartmenu Preview Modes (#36), AI Sommelier Landing Page (#37), AI Whiskey Ambassador Landing Page (#38). Fifteenth pass 2026-03-31: Smartmenu Preview Modes (#36) confirmed COMPLETED — SmartmenuPreviewToken live and tested, staff-mode-indicator removed, ?view=staff fully retired.
 
 **Why:** Preparing the backlog for sprint execution — needed dev-ready specs and a clear priority order before engineering begins.
@@ -33,14 +35,16 @@ IQ-1: Naked Domain Canonical Strategy (S — Rack initializer + DNS + robots.txt
 - Square Integration (Epics 1–8 backend/UI complete; 3 remaining: split-bill progress UI, degraded-status email, Reconnect CTA; then alpha testing)
 - Menu Item Profit Margin Tracking (Phases 1–3 complete 2026-03-17; Phase 4 ranked at #35)
 
-## Current Sprint Targets (next best actions as of 2026-03-31)
-Pre-sprint: IQ-1 Naked Domain (afternoon's work — NOT YET DONE)
+## Current Sprint Targets (next best actions as of 2026-04-04)
+IQ-1 Naked Domain: COMPLETED 2026-03-31
+Track D: #29 Employee Role Promotion: COMPLETED 2026-04-01
+Agent Programme: #17 Agent Framework COMPLETED 2026-04-02; #18 Menu Import Agent COMPLETED 2026-04-01; #19 Growth Agent COMPLETED 2026-04-01; #20 Customer Concierge Agent COMPLETED 2026-04-01; #21 Menu Optimization Agent COMPLETED 2026-04-04
+Quick Win Pool (highest priority first):
+  1. #27 Lead Source Tracking (M) — active revenue leak; start immediately
+  2. #30 Bulk Employee Invitation (M) — CRM/team onboarding
+  3. #28 Two-Factor Authentication (M) — security hardening
+  4. #35 Profit Margin Phase 4 (M) — feeds agent tier
 Parallel: Square Integration — complete 3 remaining items, begin alpha
-Track A: #14 Dynamic Pricing Plans (L, depends on #15 + #16)
-Track B: #16 Heroku Cost Inventory then #15 Cost Insights (unlocks #14)
-Track C: #28 Two-Factor Authentication (M, security hardening)
-Track D: #29 Employee Role Promotion (S, quick win — 3–5 days)
-Track E: RETIRED — #36 Smartmenu Preview Modes COMPLETED 2026-03-31
 
 ## Post-Launch: Product Features
 14. Dynamic Pricing Plans (cost-indexed)

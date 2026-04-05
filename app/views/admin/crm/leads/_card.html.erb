@@ -29,18 +29,18 @@
   <% if dr %>
     <div class="d-flex flex-wrap gap-1 mb-1">
       <% if lead.city.present? %>
-        <span class="badge bg-light text-secondary border fs-10">
+        <span class="badge text-bg-light fs-10">
           <i class="bi bi-geo-alt me-1"></i><%= lead.city %>
         </span>
       <% end %>
       <% if dr.establishment_type_label_text.present? && dr.establishment_type_label_text != 'Unknown' %>
-        <span class="badge bg-light text-secondary border fs-10"><%= dr.establishment_type_label_text %></span>
+        <span class="badge text-bg-light fs-10"><%= dr.establishment_type_label_text %></span>
       <% end %>
     </div>
-    <div class="d-flex align-items-center gap-2 mb-1" style="position: relative; z-index: 1;">
+    <div class="d-flex align-items-center gap-2 mb-1 position-relative z-1">
       <% if dr.website_url.present? %>
         <a href="<%= dr.website_url %>" target="_blank" rel="noopener"
-           class="text-muted fs-10 text-decoration-none text-truncate" style="max-width: 140px;"
+           class="text-muted fs-10 text-decoration-none text-truncate d-inline-block" style="max-width: 8.75rem;"
            title="<%= dr.website_url %>">
           <i class="bi bi-globe2 me-1"></i><%= dr.website_url.delete_prefix('https://').delete_prefix('http://').truncate(30) %>
         </a>
@@ -60,11 +60,11 @@
 
   <div class="d-flex justify-content-between align-items-center mt-2">
     <% if lead.assigned_to %>
-      <span class="badge bg-light text-dark border fs-10">
+      <span class="badge text-bg-light fs-10">
         <%= lead.assigned_to.email.split('@').first %>
       </span>
     <% else %>
-      <% unassigned_class = %w[new contacted].include?(lead.stage) ? 'bg-success' : 'bg-warning text-dark' %>
+      <% unassigned_class = %w[new contacted].include?(lead.stage) ? 'text-bg-success' : 'text-bg-warning' %>
       <span class="badge <%= unassigned_class %> fs-10">Unassigned</span>
     <% end %>
 

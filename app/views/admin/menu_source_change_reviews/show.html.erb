@@ -103,16 +103,16 @@
         <h2 class="h6 fw-semibold mb-0">Menu Diff</h2>
         <% case @review.diff_status.to_s
            when 'diff_complete' %>
-          <span class="badge bg-success">Complete</span>
+          <span class="badge text-bg-success">Complete</span>
         <% when 'diff_failed' %>
-          <span class="badge bg-danger">Failed</span>
+          <span class="badge text-bg-danger">Failed</span>
         <% else %>
-          <span class="badge bg-warning text-dark">Pending</span>
+          <span class="badge text-bg-warning">Pending</span>
         <% end %>
       </div>
 
       <% if @review.diff_content.present? %>
-        <pre class="bg-dark text-light p-3 rounded mb-0" style="max-height: 600px; overflow-y: auto; font-size: 0.85rem; line-height: 1.4;"><% @review.diff_content.each_line do |line| %><% stripped = line.rstrip %><% if stripped.start_with?('+ ') %><span style="color: #98c379;"><%= stripped %>
+        <pre class="bg-dark text-light p-3 rounded mb-0 small overflow-auto" style="max-height: 37.5rem; line-height: 1.4;"><% @review.diff_content.each_line do |line| %><% stripped = line.rstrip %><% if stripped.start_with?('+ ') %><span style="color: #98c379;"><%= stripped %>
 </span><% elsif stripped.start_with?('- ') %><span style="color: #e06c75;"><%= stripped %>
 </span><% elsif stripped.start_with?('ADDED') || stripped.start_with?('REMOVED') %><span style="color: #e5c07b; font-weight: bold;"><%= stripped %>
 </span><% elsif stripped.start_with?('---') || stripped.start_with?('+++') %><span style="color: #61afef;"><%= stripped %>

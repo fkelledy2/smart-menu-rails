@@ -62,6 +62,8 @@ module Admin
 
     def set_snapshot
       @snapshot = StaffCostSnapshot.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      redirect_to admin_staff_costs_path, alert: 'Staff cost snapshot not found.', status: :see_other
     end
 
     def snapshot_params

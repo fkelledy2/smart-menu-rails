@@ -7,7 +7,7 @@
 
   <%= form_with url: admin_vendor_costs_path, method: :get, local: true, class: 'd-flex gap-2 align-items-end mb-4' do %>
     <%= date_field_tag :month, @month.strftime('%Y-%m-%d'), class: 'form-control form-control-sm' %>
-    <%= select_tag :currency, options_for_select([['EUR', 'EUR'], ['USD', 'USD']], @currency), class: 'form-select form-select-sm', style: 'width:90px' %>
+    <%= select_tag :currency, options_for_select([['EUR', 'EUR'], ['USD', 'USD']], @currency), class: 'form-select form-select-sm w-auto' %>
     <%= submit_tag 'Filter', class: 'btn btn-secondary btn-sm' %>
   <% end %>
 
@@ -29,13 +29,15 @@
                 <td><%= cost.month&.strftime('%B %Y') %></td>
                 <td>&euro;<%= number_with_precision(cost.amount_euros, precision: 2) %></td>
                 <td><%= cost.currency %></td>
-                <td><span class="badge bg-secondary"><%= cost.source %></span></td>
+                <td><span class="badge text-bg-secondary"><%= cost.source %></span></td>
                 <td class="text-muted small"><%= truncate(cost.notes, length: 60) %></td>
-                <td>
-                  <%= link_to 'Edit', edit_admin_vendor_cost_path(cost), class: 'btn btn-outline-secondary btn-sm me-1' %>
-                  <%= button_to 'Delete', admin_vendor_cost_path(cost), method: :delete,
-                        class: 'btn btn-outline-danger btn-sm',
-                        form: { data: { turbo_confirm: 'Delete this entry?' } } %>
+                <td class="text-nowrap">
+                  <div class="d-flex gap-1">
+                    <%= link_to 'Edit', edit_admin_vendor_cost_path(cost), class: 'btn btn-outline-secondary btn-sm' %>
+                    <%= button_to 'Delete', admin_vendor_cost_path(cost), method: :delete,
+                          class: 'btn btn-outline-danger btn-sm',
+                          form: { data: { turbo_confirm: 'Delete this entry?' } } %>
+                  </div>
                 </td>
               </tr>
             <% end %>

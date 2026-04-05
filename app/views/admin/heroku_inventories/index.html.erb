@@ -17,7 +17,7 @@
   </div>
 
   <% if @mock_mode %>
-    <div class="alert alert-warning alert-sm mb-4">
+    <div class="alert alert-warning mb-4">
       <strong>Mock Mode:</strong> HEROKU_PLATFORM_API_TOKEN is not set or the
       <code>heroku_cost_inventory</code> Flipper flag is off. Showing stub data.
     </div>
@@ -25,8 +25,8 @@
 
   <!-- Monthly Cost Trigger -->
   <div class="card mb-4">
+    <div class="card-header fw-semibold">Trigger Monthly Cost Rollup</div>
     <div class="card-body">
-      <h5 class="card-title">Trigger Monthly Cost Rollup</h5>
       <%= form_with url: trigger_rollup_admin_heroku_inventories_path, method: :post, local: true, class: 'd-flex gap-2 align-items-end' do %>
         <div>
           <%= label_tag :month, 'Month', class: 'form-label small mb-1' %>
@@ -40,8 +40,8 @@
 
   <!-- App Inventory -->
   <div class="card mb-4">
-    <div class="card-header">
-      <h5 class="mb-0">Current Inventory (<%= @snapshots.size %> apps)</h5>
+    <div class="card-header fw-semibold">
+      Current Inventory (<%= @snapshots.size %> apps)
     </div>
     <div class="table-responsive">
       <table class="table table-sm table-hover mb-0">
@@ -63,7 +63,7 @@
               <tr>
                 <td><code class="small"><%= snap.app_name %></code></td>
                 <td>
-                  <span class="badge bg-<%= env_badge_class(snap.environment) %>">
+                  <span class="badge text-bg-<%= env_badge_class(snap.environment) %>">
                     <%= snap.environment %>
                   </span>
                 </td>
@@ -91,8 +91,8 @@
 
   <!-- Monthly Cost Snapshots -->
   <div class="card">
-    <div class="card-header">
-      <h5 class="mb-0">Monthly Cost Snapshots</h5>
+    <div class="card-header fw-semibold">
+      Monthly Cost Snapshots
     </div>
     <div class="table-responsive">
       <table class="table table-sm table-hover mb-0">
@@ -112,7 +112,7 @@
               <tr>
                 <td><%= cs.month&.strftime('%B %Y') %></td>
                 <td>
-                  <span class="badge bg-<%= env_badge_class(cs.environment) %>"><%= cs.environment %></span>
+                  <span class="badge text-bg-<%= env_badge_class(cs.environment) %>"><%= cs.environment %></span>
                 </td>
                 <td><%= cs.app_count %></td>
                 <td><strong>&euro;<%= number_with_precision(cs.cost_euros, precision: 2) %></strong></td>

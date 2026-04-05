@@ -13,7 +13,7 @@
           <strong>Split Method:</strong>
         </div>
         <div class="col-md-9">
-          <span class="badge bg-primary"><%= plan.split_method.to_s.titleize %></span>
+          <span class="badge text-bg-primary"><%= plan.split_method.to_s.titleize %></span>
         </div>
       </div>
       
@@ -29,9 +29,9 @@
                             when 'canceled' then 'secondary'
                             else 'info'
                             end %>
-          <span class="badge bg-<%= status_class %>"><%= plan.plan_status.to_s.titleize %></span>
+          <span class="badge text-bg-<%= status_class %>"><%= plan.plan_status.to_s.titleize %></span>
           <% if plan.split_frozen? %>
-            <span class="badge bg-warning text-dark ms-2">
+            <span class="badge text-bg-warning ms-2">
               <i class="bi bi-lock"></i> Frozen
             </span>
           <% end %>
@@ -87,7 +87,7 @@
                                       when 'canceled' then 'secondary'
                                       else 'info'
                                       end %>
-                    <span class="badge bg-<%= status_class %>"><%= share.status.to_s.titleize %></span>
+                    <span class="badge text-bg-<%= status_class %>"><%= share.status.to_s.titleize %></span>
                   </td>
                   <td>
                     <% if share.payment.present? %>
@@ -118,7 +118,7 @@
                 <td colspan="3">
                   <% settled_count = plan.ordr_split_payments.where(status: 'succeeded').count %>
                   <% total_count = plan.ordr_split_payments.count %>
-                  <span class="badge bg-<%= settled_count == total_count ? 'success' : 'warning' %>">
+                  <span class="badge text-bg-<%= settled_count == total_count ? 'success' : 'warning' %>">
                     <%= settled_count %>/<%= total_count %> Settled
                   </span>
                 </td>

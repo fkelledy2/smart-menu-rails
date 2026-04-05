@@ -23,13 +23,13 @@
             <tr>
               <td>
                 <% if target.menuitem_id %>
-                  <span class="badge bg-secondary me-1">Item</span>
+                  <span class="badge text-bg-secondary me-1">Item</span>
                   <%= target.menuitem&.name %>
                 <% elsif target.menusection_id %>
-                  <span class="badge bg-info text-dark me-1">Section</span>
+                  <span class="badge text-bg-info me-1">Section</span>
                   <%= target.menusection&.name %>
                 <% else %>
-                  <span class="badge bg-primary me-1">Restaurant</span>
+                  <span class="badge text-bg-primary me-1">Restaurant</span>
                   Restaurant-wide
                 <% end %>
               </td>
@@ -40,10 +40,10 @@
               <td class="text-end">
                 <%= link_to 'Edit',
                     edit_restaurant_profit_margin_target_path(@restaurant, target),
-                    class: 'btn btn-xs btn-outline-secondary me-1' %>
+                    class: 'btn btn-sm btn-outline-secondary me-1' %>
                 <%= link_to 'Delete',
                     restaurant_profit_margin_target_path(@restaurant, target),
-                    class: 'btn btn-xs btn-outline-danger',
+                    class: 'btn btn-sm btn-outline-danger',
                     data: { turbo_method: :delete, turbo_confirm: 'Delete this target?' } %>
               </td>
             </tr>

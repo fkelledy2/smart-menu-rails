@@ -28,4 +28,21 @@ Rails.application.config.after_initialize do
     workflow_type: 'menu_optimization',
     job_class: Agents::MenuOptimizationWorkflowJob,
   )
+
+  # Service Operations Agent — triggered by kitchen heartbeat and inventory/order events
+  Agents::Dispatcher.register(
+    'kitchen.queue_check',
+    workflow_type: 'service_operations',
+    job_class: Agents::ServiceOperationsWorkflowJob,
+  )
+  Agents::Dispatcher.register(
+    'inventory.low',
+    workflow_type: 'service_operations',
+    job_class: Agents::ServiceOperationsWorkflowJob,
+  )
+  Agents::Dispatcher.register(
+    'order.submitted',
+    workflow_type: 'service_operations',
+    job_class: Agents::ServiceOperationsWorkflowJob,
+  )
 end

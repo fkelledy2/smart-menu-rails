@@ -127,6 +127,12 @@
 .padding-top-7px { padding-top: 7px; }
 
 // ------------------------------------
+// Fixed-width input helpers
+// Replace style="width: Xpx" on inline form inputs inside tables.
+// ------------------------------------
+.w-120 { width: 120px !important; }
+
+// ------------------------------------
 // Constrained-width page wrappers
 // Replace repeated style="max-width: Xpx" inline styles.
 // ------------------------------------
@@ -241,3 +247,25 @@
 // ------------------------------------
 .fs-icon-lg   { font-size: 3rem; }
 .fs-icon-xl   { font-size: 4rem; }
+
+// ------------------------------------
+// Constrained-height scrollable containers
+// Replaces style="max-height: Xrem/px" inline styles on scrollable lists and pre blocks.
+// Use with Bootstrap's overflow-y-auto class.
+// ------------------------------------
+.mh-9rem  { max-height: 9rem; }
+.mh-12rem { max-height: 12rem; }
+.mh-400   { max-height: 400px; }
+
+// ------------------------------------
+// Letter-spacing one-offs
+// Replaces style="letter-spacing: .05em" on section labels.
+// ------------------------------------
+.ls-wide { letter-spacing: 0.05em; }
+
+// ------------------------------------
+// White-space utilities
+// Bootstrap ships text-nowrap; add pre-wrap for note bodies and word-break for JWTs.
+// ------------------------------------
+.ws-pre-wrap    { white-space: pre-wrap !important; }
+.wb-break-all   { word-break: break-all !important; }

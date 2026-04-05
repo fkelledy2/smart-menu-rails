@@ -30,7 +30,7 @@
               <% if audit.metadata.present? && audit.metadata.any? %>
                 <div class="mt-1">
                   <% audit.metadata.each do |key, val| %>
-                    <span class="badge bg-light text-dark border me-1 fs-10"><%= key %>: <%= val %></span>
+                    <span class="badge text-bg-light border me-1 fs-10"><%= key %>: <%= val %></span>
                   <% end %>
                 </div>
               <% end %>

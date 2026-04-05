@@ -1326,7 +1326,9 @@ CREATE TABLE public.restaurants (
     platform_fee_percent numeric(5,2),
     platform_fee_fixed_cents integer,
     payment_gating_enabled boolean DEFAULT false NOT NULL,
-    enabled_integrations jsonb DEFAULT '[]'::jsonb NOT NULL
+    enabled_integrations jsonb DEFAULT '[]'::jsonb NOT NULL,
+    service_operations_wait_threshold_minutes integer DEFAULT 25 NOT NULL,
+    kitchen_congestion_threshold integer DEFAULT 8 NOT NULL
 );
 
 
@@ -13847,6 +13849,7 @@ ALTER TABLE ONLY public.voice_commands
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260405100001'),
 ('20260404222829'),
 ('20260404091338'),
 ('20260404091333'),

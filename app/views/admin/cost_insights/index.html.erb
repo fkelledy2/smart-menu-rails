@@ -75,20 +75,20 @@
 
   <!-- Breakdown detail -->
   <div class="card mb-4">
-    <div class="card-header"><h5 class="mb-0">Cost Breakdown</h5></div>
+    <div class="card-header fw-semibold">Cost Breakdown</div>
     <div class="card-body">
-      <h6>Heroku by Environment</h6>
+      <h3 class="h6 fw-semibold mb-2">Heroku by Environment</h3>
       <% if @totals.breakdown[:heroku].empty? %>
         <p class="text-muted small">No Heroku cost snapshots for this month.</p>
       <% else %>
         <ul class="list-unstyled small">
           <% @totals.breakdown[:heroku].each do |env, cents| %>
-            <li><span class="badge bg-secondary me-2"><%= env %></span> &euro;<%= number_with_precision(cents / 100.0, precision: 2) %></li>
+            <li><span class="badge text-bg-secondary me-2"><%= env %></span> &euro;<%= number_with_precision(cents / 100.0, precision: 2) %></li>
           <% end %>
         </ul>
       <% end %>
 
-      <h6 class="mt-3">Vendor APIs</h6>
+      <h3 class="h6 fw-semibold mt-3 mb-2">Vendor APIs</h3>
       <% if @totals.breakdown[:vendor].empty? %>
         <p class="text-muted small">No vendor cost entries for this month.</p>
       <% else %>
@@ -99,7 +99,7 @@
         </ul>
       <% end %>
 
-      <h6 class="mt-3">Staff + Support</h6>
+      <h3 class="h6 fw-semibold mt-3 mb-2">Staff + Support</h3>
       <ul class="list-unstyled small">
         <li>Support: &euro;<%= number_with_precision(@totals.breakdown[:staff][:support] / 100.0, precision: 2) %></li>
         <li>Staff: &euro;<%= number_with_precision(@totals.breakdown[:staff][:staff] / 100.0, precision: 2) %></li>
@@ -110,10 +110,10 @@
 
   <!-- Monthly rollup trigger -->
   <div class="card">
+    <div class="card-header fw-semibold">Trigger Monthly Rollup</div>
     <div class="card-body">
-      <h5 class="card-title">Trigger Monthly Rollup</h5>
       <%= form_with url: trigger_monthly_rollup_admin_cost_insights_path, method: :post, local: true, class: 'd-flex gap-2 align-items-end' do %>
-        <%= date_field_tag :month, @month.strftime('%Y-%m-%d'), class: 'form-control form-control-sm', style: 'width:180px' %>
+        <%= date_field_tag :month, @month.strftime('%Y-%m-%d'), class: 'form-control form-control-sm w-auto' %>
         <%= submit_tag 'Run', class: 'btn btn-secondary btn-sm' %>
       <% end %>
     </div>

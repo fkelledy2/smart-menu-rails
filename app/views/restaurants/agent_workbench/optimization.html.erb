@@ -19,7 +19,7 @@
         <%= button_to run_optimization_restaurant_agent_workbench_index_path(@restaurant),
                       method: :post,
                       class: 'btn btn-sm btn-primary',
-                      data: { confirm: 'Run a menu optimisation analysis now?' } do %>
+                      data: { turbo_confirm: 'Run a menu optimisation analysis now?' } do %>
           <i class="bi bi-play-circle me-1" aria-hidden="true"></i> Run Analysis Now
         <% end %>
       <% end %>
@@ -89,7 +89,7 @@
                   Generated <%= time_ago_in_words(artifact.created_at) %> ago
                   <% pending = run.agent_approvals.pending.count %>
                   <% if pending.positive? %>
-                    &middot; <span class="text-warning fw-semibold"><%= pending %> pending</span>
+                    &middot; <span class="badge text-bg-warning fw-semibold"><%= pending %> pending</span>
                   <% end %>
                   <% if artifact.scheduled_apply_at.present? %>
                     &middot; Scheduled for <%= artifact.scheduled_apply_at.strftime('%d %b %Y %H:%M') %>

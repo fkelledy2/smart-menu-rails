@@ -1,10 +1,10 @@
 <% badge_class = case status
-               when 'pending'           then 'bg-secondary'
-               when 'running'           then 'bg-primary'
-               when 'awaiting_approval' then 'bg-warning text-dark'
-               when 'completed'         then 'bg-success'
-               when 'failed'            then 'bg-danger'
-               when 'cancelled'         then 'bg-light text-dark border'
-               else 'bg-secondary'
+               when 'pending'           then 'text-bg-secondary'
+               when 'running'           then 'text-bg-primary'
+               when 'awaiting_approval' then 'text-bg-warning'
+               when 'completed'         then 'text-bg-success'
+               when 'failed'            then 'text-bg-danger'
+               when 'cancelled'         then 'text-bg-light border'
+               else 'text-bg-secondary'
                end %>
 <span class="badge <%= badge_class %>"><%= status.humanize %></span>

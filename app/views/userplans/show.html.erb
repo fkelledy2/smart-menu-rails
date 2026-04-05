@@ -1,16 +1,14 @@
-<div class="page-header">
-  <%= link_to userplans_path, class: 'btn btn-default' do %>
-    All Userplans
-  <% end %>
-  <%= link_to edit_userplan_path(@userplan), class: 'btn btn-dark' do %>
-    Edit
-  <% end %>
-  <h1>Show userplan</h1>
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="h4 mb-0">Userplan</h1>
+  <div class="d-flex gap-2">
+    <%= link_to 'All Userplans', userplans_path, class: 'btn btn-outline-secondary btn-sm' %>
+    <%= link_to 'Edit', edit_userplan_path(@userplan), class: 'btn btn-dark btn-sm' %>
+  </div>
 </div>
 
-<dl class="dl-horizontal">
-  <dt>User:</dt>
-  <dd><%= @userplan.user %></dd>
-  <dt>Plan:</dt>
-  <dd><%= @userplan.plan %></dd>
+<dl class="row">
+  <dt class="col-sm-3">User:</dt>
+  <dd class="col-sm-9"><%= @userplan.user %></dd>
+  <dt class="col-sm-3">Plan:</dt>
+  <dd class="col-sm-9"><%= @userplan.plan %></dd>
 </dl>

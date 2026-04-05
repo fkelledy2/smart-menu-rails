@@ -5,6 +5,10 @@
 
 ## Test Gotchas
 - [pattern_enable_staff_buttons_test_script.md](pattern_enable_staff_buttons_test_script.md) — show.html.erb test-only script removes disabled from all add-item-btn-* — use pointer-events:none assertion instead
+- [pattern_array_pluck_not_ar_relation.md](pattern_array_pluck_not_ar_relation.md) — Array#pluck not defined in Ruby 3.3; Rails/Pluck cop falsely flags Hash arrays; use map { |h| h[:key] } (FIXED)
+- [pattern_crm_set_lead_no_return.md](pattern_crm_set_lead_no_return.md) — CRM EmailSends/Notes/Audits set_lead before_action used head :not_found without and return — action body continued on nil lead (FIXED)
+- [pattern_schedule_optimization_no_rejected_guard.md](pattern_schedule_optimization_no_rejected_guard.md) — schedule_optimization set approved on rejected artifacts with no audit trail (approved_by/approved_at missing) (FIXED)
+- [pattern_approval_router_result_ignored.md](pattern_approval_router_result_ignored.md) — ApprovalRouter result ignored; auto-approve branch unrescued RecordNotUnique on concurrent retry (FIXED)
 
 ## Patterns & Gotchas
 - [pattern_party_size_duplicate_ids.md](pattern_party_size_duplicate_ids.md) — bindOrderCapacityUi() uses document.getElementById — both modal and bottom sheet share IDs, bottom sheet +/- buttons silently update wrong container (FIXED)
@@ -117,6 +121,8 @@
 - [pattern_staff_invitation_idor.md](pattern_staff_invitation_idor.md) — StaffInvitationsController#create used Restaurant.find(params[:restaurant_id]) unscoped to current_user — any authenticated user could send staff invites to any restaurant (FIXED)
 - [pattern_welcome_modal_timer_leak.md](pattern_welcome_modal_timer_leak.md) — welcome_modal_controller.js setTimeout for auto-dismiss not stored and cleared in disconnect() — timer fires against detached DOM on Turbo navigation (FIXED)
 - [pattern_push_subscriptions_no_auth.md](pattern_push_subscriptions_no_auth.md) — PushSubscriptionsController missing verify_authorized and Pundit authorize calls — Pundit::AuthorizationNotPerformedError 500 on every request; PushSubscriptionPolicy created (FIXED)
+- [pattern_crm_set_lead_no_halt.md](pattern_crm_set_lead_no_halt.md) — set_lead called head :not_found without return — action body ran with nil @lead; use `head :status and return` (FIXED)
+- [pattern_preview_projection_section_reorder.md](pattern_preview_projection_section_reorder.md) — build_preview_projection used section target_id to look up item_map (wrong ID space) — section reorder never shown in preview (FIXED)
 - [pattern_restaurantavailabilities_find_unguarded.md](pattern_restaurantavailabilities_find_unguarded.md) — RestaurantavailabilitiesController index/new used Restaurant.find (unguarded); set_restaurantavailability used Restaurantavailability.find (unguarded) — 500 on bad IDs (FIXED)
 - [pattern_console_log_production_js.md](pattern_console_log_production_js.md) — split_bill, bottom_sheet, sortable, tab_bar, order_notes, auto_save, ordering, state, index.js all had console.log statements left in production JS (FIXED)
 - [pattern_subscriptions_open_redirect.md](pattern_subscriptions_open_redirect.md) — Payments::SubscriptionsController success_url/cancel_url/return_url passed user-controlled values to Stripe without url_from validation — open redirect after Stripe checkout/portal (FIXED)
@@ -151,3 +157,10 @@
 - [pattern_menu_items_api_idor.md](pattern_menu_items_api_idor.md) — Api::V1::MenuItemsController#index used unscoped Menu.find with no Pundit authorize — IDOR: any JWT token could enumerate any restaurant's menu items (FIXED)
 - [pattern_ilike_without_sanitize_sql_like.md](pattern_ilike_without_sanitize_sql_like.md) — RestaurantsController and Admin::DiscoveredRestaurantsController used "%#{user_input}%" without sanitize_sql_like — LIKE wildcard injection (FIXED)
 - [pattern_module_console_logs.md](pattern_module_console_logs.md) — hero_carousel.js, OrderingModule.js, CustomerMenuModule.js, AnalyticsModule.js all had console.log calls missed in earlier sweep (FIXED)
+- [pattern_menu_optimization_section_reorder_dead.md](pattern_menu_optimization_section_reorder_dead.md) — section_reorder actions silently dropped: validate uses menuitem_ids but section_reorder target_id is menusection_id; apply_action also wrong
+- [pattern_apply_approved_changes_coarse_approval.md](pattern_apply_approved_changes_coarse_approval.md) — ApplyApprovedMenuChangesJob checks action_type only — any approved item_rename approves ALL item_rename actions including rejected ones
+- [pattern_idempotency_key_wrong_approval.md](pattern_idempotency_key_wrong_approval.md) — write_change_set re-queries last approval instead of using ApprovalRouter result.approval — wrong idempotency_key stamped under concurrent retries
+- [pattern_genimage_duplicate_on_concurrent_agent.md](pattern_genimage_duplicate_on_concurrent_agent.md) — enqueue_image_generation: no UNIQUE constraint on genimages.menuitem_id — concurrent agent runs create duplicate genimages
+- [pattern_crm_policy_admin_vs_super_admin.md](pattern_crm_policy_admin_vs_super_admin.md) — CrmEmailSendPolicy/CrmLeadNotePolicy instance mellow_admin? used admin? not super_admin? — @mellow.menu admin users could bypass Pundit (FIXED)
+- [pattern_preview_projection_coarse_approved_types.md](pattern_preview_projection_coarse_approved_types.md) — build_preview_projection used type-only approved_types set — preview showed all actions of approved type as changed, not just approved (type,target_id) pairs (FIXED)
+- [pattern_approval_router_idempotency_key_toctou.md](pattern_approval_router_idempotency_key_toctou.md) — ApprovalRouter.call created record with nil idempotency_key then update_column set it — TOCTOU race under concurrent Sidekiq retries (FIXED)

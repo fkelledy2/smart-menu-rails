@@ -265,34 +265,43 @@ module Agents
           next if recently_rejected?(action_type, target_id)
 
           if disposition == 'auto_approve'
-            AgentApproval.create!(
-              agent_workflow_run: @run,
-              agent_workflow_step: step,
-              action_type: action_type,
-              risk_level: 'low',
-              proposed_payload: action,
-              status: 'approved',
-              expires_at: 72.hours.from_now,
-              idempotency_key: ikey,
-              reviewed_at: Time.current,
-            )
+            # Rescue RecordNotUnique in case a concurrent retry races past the
+            # exists? check above and hits the DB unique index on idempotency_key.
+            begin
+              AgentApproval.create!(
+                agent_workflow_run: @run,
+                agent_workflow_step: step,
+                action_type: action_type,
+                risk_level: 'low',
+                proposed_payload: action,
+                status: 'approved',
+                expires_at: 72.hours.from_now,
+                idempotency_key: ikey,
+                reviewed_at: Time.current,
+              )
+            rescue ActiveRecord::RecordNotUnique
+              Rails.logger.info(
+                "[MenuOptimizationWorkflow] Concurrent duplicate auto-approval for #{action_type}:#{target_id} — skipping",
+              )
+              next
+            end
 
             # Auto-approved image_queue actions enqueue image generation immediately
             enqueue_image_generation(action) if action_type == 'image_queue'
             auto_approved += 1
           else
             # require_approval
-            result = Agents::ApprovalRouter.call(
+            # Pass idempotency_key directly so it is set atomically at create! time,
+            # avoiding the TOCTOU race of a separate update_column call.
+            router_result = Agents::ApprovalRouter.call(
               workflow_run: @run,
               action_type: action_type,
               risk_level: 'low',
               proposed_payload: action.merge('idempotency_key' => ikey),
               step: step,
+              idempotency_key: ikey,
             )
-            # Set idempotency_key on the newly created approval using the
-            # returned record directly — avoids stamping the wrong record under concurrency
-            result.approval&.update_column(:idempotency_key, ikey)
-            approvals_created += 1
+            approvals_created += 1 if router_result.success?
           end
         end
 
@@ -377,7 +386,10 @@ module Agents
           .select { |(mi, _)| mi.respond_to?(:status) && mi.status.to_s == 'active' }
           .uniq { |(mi, _)| mi.id }
 
-        median_orders = compute_median(order_counts.values.pluck(:order_count))
+        # order_counts.values is a plain Ruby Array (not an AR relation), so .pluck cannot be used here.
+        # rubocop:disable Rails/Pluck
+        median_orders = compute_median(order_counts.values.map { |h| h[:order_count] })
+        # rubocop:enable Rails/Pluck
 
         menuitem_section_pairs.map do |(mi, section_name)|
           counts     = order_counts[mi.id] || { order_count: 0, quantity: 0 }

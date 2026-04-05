@@ -1,8 +1,8 @@
 <%= form_with(model: hero_image) do |form| %>
   <% if hero_image.errors.any? %>
-    <div class="alert alert-danger">
-      <h4><%= pluralize(hero_image.errors.count, "error") %> prohibited this hero image from being saved:</h4>
-      <ul>
+    <div class="alert alert-danger mb-3" role="alert">
+      <div class="fw-semibold mb-1"><%= pluralize(hero_image.errors.count, 'error') %> prohibited this hero image from being saved:</div>
+      <ul class="mb-0">
         <% hero_image.errors.full_messages.each do |message| %>
           <li><%= message %></li>
         <% end %>
@@ -40,19 +40,17 @@
     <div class="form-text">Link to the original source page</div>
   </div>
 
-  <div class="mb-3">
+  <div class="d-flex justify-content-end gap-2 align-items-center">
     <% if hero_image.persisted? %>
-      <div class="float-end">
-        <%= link_to 'Delete', hero_image, method: :delete, class: "text-danger", data: { confirm: 'Are you sure?' } %>
-      </div>
+      <%= button_to 'Delete', hero_image, method: :delete, class: 'btn btn-link text-danger p-0', data: { turbo_confirm: 'Are you sure?' } %>
     <% end %>
 
     <%= form.submit 'Save', class: 'btn btn-primary' %>
 
     <% if hero_image.persisted? %>
-      <%= link_to 'Cancel', hero_image, class: "btn btn-link" %>
+      <%= link_to 'Cancel', hero_image, class: 'btn btn-link' %>
     <% else %>
-      <%= link_to 'Cancel', hero_images_path, class: "btn btn-link" %>
+      <%= link_to 'Cancel', hero_images_path, class: 'btn btn-link' %>
     <% end %>
   </div>
 <% end %>

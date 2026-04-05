@@ -23,7 +23,7 @@
         <% end %>
     <% end %>
 
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarsExample04" aria-expanded="false" aria-label="<%= t('.toggle_navigation') %>">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="<%= t('.toggle_navigation') %>">
       <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -62,7 +62,7 @@
       <ul class="navbar-nav">
         <% if station_screen %>
           <li class="nav-item d-flex align-items-center me-2">
-            <span class="badge bg-secondary" title="Staff online">
+            <span class="badge text-bg-secondary" title="Staff online">
               <i class="bi bi-people me-1"></i>
               <span id="kitchen-presence-count">0</span>
             </span>
@@ -80,9 +80,6 @@
           <li class="nav-item dropdown">
             <%= link_to "#", id: "account-nav-toggle", class: "nav-link dropdown-toggle", data: { target: "account-nav-menu", bs_toggle: "dropdown" }, aria: { haspopup: true, expanded: false } do %>
               <%= current_user.name %>
-              <% if 1==2 %>
-                <%= image_tag avatar_path(current_user, size: 40), height: 20, width: 20, class: "rounded" %>
-              <% end %>
             <% end %>
             <div id="account-nav-menu" class="dropdown-menu dropdown-menu-end" aria-labelledby="account-nav-toggle">
               <%= link_to t(".settings"), edit_user_registration_path, class: "dropdown-item" %>
@@ -220,7 +217,7 @@
                 <% end %>
               <% end %>
               <div class="dropdown-divider"></div>
-              <%= button_to t(".logout"), destroy_user_session_path, method: :delete, class: "dropdown-item" %>
+              <%= button_to t(".logout"), destroy_user_session_path, method: :delete, class: "dropdown-item", form: { class: 'w-100' } %>
             </div>
           </li>
 

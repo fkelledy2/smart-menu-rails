@@ -1,7 +1,7 @@
 <%# Single CRM note partial %>
 <div id="crm-note-<%= note.id %>" class="border rounded p-3 mb-2 bg-light">
   <div class="d-flex justify-content-between align-items-start">
-    <p class="mb-1 fs-13" style="white-space: pre-wrap;"><%= note.body %></p>
+    <p class="mb-1 fs-13 ws-pre-wrap"><%= note.body %></p>
     <%= button_to 'Delete',
           admin_crm_lead_note_path(lead, note),
           method: :delete,

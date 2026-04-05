@@ -1,12 +1,12 @@
-<% content_for :title, 'Feature Flags — Admin' %>
+<% content_for :title, t('.title') %>
 
 <div class="container-fluid py-4">
 
   <%# ── HEADER ── %>
   <div class="d-flex align-items-center justify-content-between mb-3">
     <div>
-      <h1 class="h3 mb-1">Feature Flags</h1>
-      <p class="text-muted mb-0 small"><%= pluralize(@features.count, 'flag') %></p>
+      <h1 class="h3 mb-1"><%= t('.title') %></h1>
+      <p class="text-muted mb-0 small"><%= t('.subtitle', count: @features.count) %></p>
     </div>
   </div>
 
@@ -15,17 +15,16 @@
     <div class="card-body py-2">
       <%= form_with url: admin_feature_flags_path, method: :post, local: true,
             class: 'd-flex align-items-end gap-2 flex-wrap' do %>
-        <div>
-          <%= label_tag 'name', 'Add flag', class: 'form-label small mb-1' %>
+        <div class="mw-560 w-100">
+          <%= label_tag 'name', t('.add_label'), class: 'form-label small mb-1' %>
           <%= text_field_tag 'name', nil,
                 class: 'form-control form-control-sm',
-                placeholder: 'my_feature_name',
-                required: true,
-                style: 'min-width: 240px;' %>
+                placeholder: t('.add_placeholder'),
+                required: true %>
         </div>
         <div>
           <button type="submit" class="btn btn-sm btn-primary">
-            <i class="bi bi-plus-lg me-1"></i>Add
+            <i class="bi bi-plus-lg me-1"></i><%= t('.add_button') %>
           </button>
         </div>
       <% end %>
@@ -40,9 +39,9 @@
       <table class="table table-sm table-hover align-middle">
         <thead>
           <tr>
-            <th>Flag</th>
-            <th>State</th>
-            <th class="d-none d-md-table-cell">Gates enabled</th>
+            <th style="width: 22%"><%= t('.col_flag') %></th>
+            <th style="width: 10%"><%= t('.col_state') %></th>
+            <th class="d-none d-lg-table-cell"><%= t('.col_gates') %></th>
             <th></th>
           </tr>
         </thead>
@@ -56,13 +55,22 @@
                 else 'off'
               end
               gates_summary = feature.enabled_gate_names.join(', ').presence || '—'
+              flag_key      = feature.name.to_s
+              flag_name     = t("admin.feature_flags.flags.#{flag_key}.name",     default: flag_key.tr('_', ' ').split.map(&:capitalize).join(' '))
+              flag_desc     = t("admin.feature_flags.flags.#{flag_key}.description", default: nil)
             %>
             <tr>
-              <td class="font-monospace small"><%= feature.name %></td>
+              <td>
+                <div class="fw-semibold lh-sm"><%= flag_name %></div>
+                <div class="font-monospace text-muted fs-12"><%= flag_key %></div>
+                <% if flag_desc %>
+                  <div class="text-muted small mt-1"><%= flag_desc %></div>
+                <% end %>
+              </td>
               <td>
                 <%= render 'shared/status_badge', status: state_label %>
               </td>
-              <td class="small text-muted d-none d-md-table-cell"><%= gates_summary %></td>
+              <td class="small text-muted d-none d-lg-table-cell"><%= gates_summary %></td>
               <td class="text-end text-nowrap">
                 <div class="d-flex justify-content-end gap-1">
                   <% if state == :on %>
@@ -71,7 +79,7 @@
                           params: { state: 'disable' },
                           class: 'btn btn-sm btn-outline-warning',
                           title: 'Disable',
-                          form: { data: { turbo_confirm: "Disable '#{feature.name}'?" } } do %>
+                          form: { data: { turbo_confirm: "Disable '#{flag_name}'?" } } do %>
                       <i class="bi bi-toggle-on"></i>
                     <% end %>
                   <% else %>
@@ -80,7 +88,7 @@
                           params: { state: 'enable' },
                           class: 'btn btn-sm btn-outline-success',
                           title: 'Enable for everyone',
-                          form: { data: { turbo_confirm: "Enable '#{feature.name}' for everyone?" } } do %>
+                          form: { data: { turbo_confirm: "Enable '#{flag_name}' for everyone?" } } do %>
                       <i class="bi bi-toggle-off"></i>
                     <% end %>
                   <% end %>
@@ -88,7 +96,7 @@
                         method: :delete,
                         class: 'btn btn-sm btn-outline-danger',
                         title: 'Remove flag',
-                        form: { data: { turbo_confirm: "Remove flag '#{feature.name}'? This cannot be undone." } } do %>
+                        form: { data: { turbo_confirm: "Remove '#{flag_name}'? This cannot be undone." } } do %>
                     <i class="bi bi-trash"></i>
                   <% end %>
                 </div>

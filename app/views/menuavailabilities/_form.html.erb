@@ -1,96 +1,65 @@
 <%
   # Determine the menu and restaurant for nested routing
   menu = menuavailability.menu || @futureParentMenu
-  raise "No menu context available for menuavailability form" unless menu
+  raise 'No menu context available for menuavailability form' unless menu
   restaurant = menu.restaurant
-  raise "No restaurant context available for menuavailability form" unless restaurant
+  raise 'No restaurant context available for menuavailability form' unless restaurant
 %>
 <%= form_with(model: [restaurant, menu, menuavailability]) do |form| %>
-  <div class="form-group row">
-    <div class="col-3">
-      <span class="float-md-end"><%= form.label :dayofweek, class: 'col-form-label' %></span>
-    </div>
-    <div class="col-9">
-      <%= form.select :dayofweek, options_for_select(Menuavailability.dayofweeks.keys.to_a, form.object.dayofweek), {} %>
-    </div>
+  <div class="mb-3">
+    <%= form.label :dayofweek, class: 'form-label' %>
+    <%= form.select :dayofweek, options_for_select(Menuavailability.dayofweeks.keys.to_a, form.object.dayofweek), {}, class: 'form-select' %>
   </div>
-  <div class="mb-2"></div>
-    <div class="form-group row">
-      <div class="col-3">
-        <span class="float-md-end"><%= form.label :starthour, class: 'col-form-label' %></span>
+
+  <div class="mb-3">
+    <%= form.label :starthour, class: 'form-label' %>
+    <div class="row g-2">
+      <div class="col-6">
+        <%= form.text_field :starthour, class: 'form-control', placeholder: 'Hour' %>
       </div>
-      <div class="col-9">
-        <div class="row">
-          <div class="col-6">
-            <%= form.text_field :starthour, class: 'form-control' %>
-          </div>
-          <div class="col-6">
-            <%= form.text_field :startmin, class: 'form-control' %>
-          </div>
-        </div>
+      <div class="col-6">
+        <%= form.text_field :startmin, class: 'form-control', placeholder: 'Min' %>
       </div>
     </div>
-  <div class="mb-2"></div>
-  <div class="form-group row">
-    <div class="col-3">
-      <span class="float-md-end"><%= form.label :endhour, class: 'col-form-label' %></span>
-    </div>
-    <div class="col-9">
-        <div class="row">
-          <div class="col-6">
-            <%= form.text_field :endhour, class: 'form-control' %>
-          </div>
-          <div class="col-6">
-            <%= form.text_field :endmin, class: 'form-control' %>
-          </div>
-        </div>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :endhour, class: 'form-label' %>
+    <div class="row g-2">
+      <div class="col-6">
+        <%= form.text_field :endhour, class: 'form-control', placeholder: 'Hour' %>
+      </div>
+      <div class="col-6">
+        <%= form.text_field :endmin, class: 'form-control', placeholder: 'Min' %>
+      </div>
     </div>
   </div>
-  <div class="mb-3"></div>
-  <div class="form-group row">
-    <div class="col-3">
-      <span class="float-md-end"><%= form.label :status, class: 'col-form-label' %></span>
-    </div>
-    <div class="col-9">
-      <%= form.select :status, options_for_select(Menuavailability.statuses.keys.to_a, form.object.status), {} %>
-    </div>
+
+  <div class="mb-3">
+    <%= form.label :status, class: 'form-label' %>
+    <%= form.select :status, options_for_select(Menuavailability.statuses.keys.to_a, form.object.status), {}, class: 'form-select' %>
   </div>
-  <div class="mb-3"></div>
-  <div class="form-group row">
-    <div class="col-3">
-      <span class="float-md-end"><%= form.label :menu_id, class: 'col-form-label' %></span>
-    </div>
-    <div class="col-9">
-      <%= form.collection_select :menu_id, Menu.where( restaurant_id: @menuavailability.get_parent_restaurant).all ,:id, :name, options = {:prompt => t(".selectMenu")} %>
-    </div>
+
+  <div class="mb-3">
+    <%= form.label :menu_id, class: 'form-label' %>
+    <%= form.collection_select :menu_id, Menu.where(restaurant_id: @menuavailability.get_parent_restaurant).all, :id, :name, { prompt: t('.selectMenu') }, class: 'form-select' %>
   </div>
-  <div class="mb-3"></div>
-  <div class="row">
-    <div class="col-3">
-    </div>
-    <div class="col-9">
-        <span class="float-end">
-        <% if menuavailability.persisted? %>
-          <div class="btn btn-dark ">
-            <%= link_to t(".delete"), restaurant_menu_menuavailability_path(restaurant, menu, menuavailability), method: :delete, class: "text-white text-decoration-none", data: { confirm: t(".sure") } %>
-          </div>
-        <% end %>
-        <%= form.submit value: t(".save"), class: 'btn btn-dark' %>
-        </span>
-    </div>
-  </div>
+
   <% if menuavailability.errors.any? %>
-  <div class="row">
-    <div class="col-3">
-        <%= t('common.errors') %>
-    </div>
-    <div class="col-9">
-      <ul>
-          <% menuavailability.errors.full_messages.each do |message| %>
-            <li><%= message %></li>
-          <% end %>
+    <div class="alert alert-danger mb-3" role="alert">
+      <div class="fw-semibold mb-1"><%= t('common.errors') %></div>
+      <ul class="mb-0">
+        <% menuavailability.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
       </ul>
     </div>
-  </div>
   <% end %>
+
+  <div class="d-flex justify-content-end gap-2">
+    <% if menuavailability.persisted? %>
+      <%= button_to t('.delete'), restaurant_menu_menuavailability_path(restaurant, menu, menuavailability), method: :delete, class: 'btn btn-outline-danger', data: { turbo_confirm: t('.sure') } %>
+    <% end %>
+    <%= form.submit value: t('.save'), class: 'btn btn-dark' %>
+  </div>
 <% end %>

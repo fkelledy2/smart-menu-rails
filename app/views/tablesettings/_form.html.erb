@@ -1,5 +1,5 @@
 <%= form_with(model: [tablesetting.restaurant, tablesetting]) do |form| %>
-  <div class="mb-4 mb-4">
+  <div class="mb-4">
     <%= form.label :name, class: 'form-label' do %>
       <%= t('.name', default: 'Name') %>
       <span class="text-danger">*</span>
@@ -12,7 +12,7 @@
     </div>
   </div>
 
-  <div class="mb-4 mb-4">
+  <div class="mb-4">
     <%= form.label :capacity, class: 'form-label' do %>
       <%= t('.capacity', default: 'Seats') %>
       <span class="text-danger">*</span>
@@ -23,7 +23,7 @@
         required: true %>
   </div>
 
-  <div class="mb-4 mb-4">
+  <div class="mb-4">
     <%= form.label :description, class: 'form-label' do %>
       <%= t('.description', default: 'Description') %>
     <% end %>
@@ -35,7 +35,7 @@
     </div>
   </div>
 
-  <div class="mb-4 mb-4">
+  <div class="mb-4">
     <%= form.label :tabletype, class: 'form-label' do %>
       <%= t('.tabletype', default: 'Table Type') %>
     <% end %>
@@ -45,7 +45,7 @@
         class: 'form-control' %>
   </div>
 
-  <div class="mb-4 mb-4">
+  <div class="mb-4">
     <%= form.label :status, class: 'form-label' do %>
       <%= t('.status', default: 'Status') %>
     <% end %>
@@ -82,11 +82,11 @@
         data: { turbo_frame: 'restaurant_content' } %>
 
     <% if tablesetting.persisted? %>
-      <%= link_to t('common.delete'),
+      <%= button_to t('common.delete'),
           restaurant_tablesetting_path(tablesetting.restaurant, tablesetting),
           method: :delete,
-          class: 'btn btn-ghost',
-          data: { confirm: t('common.confirm') } %>
+          class: 'btn btn-ghost text-danger',
+          data: { turbo_confirm: t('common.confirm') } %>
     <% end %>
 
     <%= form.submit t('common.save', default: 'Save'),

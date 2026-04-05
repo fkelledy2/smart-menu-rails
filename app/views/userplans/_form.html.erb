@@ -2,22 +2,19 @@
   <%= form.hidden_field :user_id, value: @current_user.id %>
   <div class="mb-3">
     <%= form.label :plan_id, class: 'form-label' %>
-      <%= form.select :plan_id, options_for_select(Plan.limit(100).collect { |p| [t(p.key), p.id] }), {}, { class: 'form-select'} %>
-      <%# For large numbers of plans, consider AJAX/autocomplete for scalability %>
-    </div>
+    <%= form.select :plan_id, options_for_select(Plan.limit(100).collect { |p| [t(p.key), p.id] }), {}, { class: 'form-select' } %>
+    <%# For large numbers of plans, consider AJAX/autocomplete for scalability %>
   </div>
 
-  <div class="mb-3">
+  <div class="d-flex justify-content-end gap-2 align-items-center">
     <% if userplan.persisted? %>
-      <div class="float-end">
-        <%= link_to t('common.delete'), userplan, method: :delete, class: "text-danger", data: { confirm: t('common.confirm') } %>
-      </div>
+      <%= button_to t('common.delete'), userplan, method: :delete, class: 'btn btn-link text-danger p-0', data: { turbo_confirm: t('common.confirm') } %>
     <% end %>
     <%= form.submit value: t('common.save'), class: 'btn btn-dark' %>
     <% if userplan.persisted? %>
-      <%= link_to t('common.cancel'), userplan, class: "btn btn-link" %>
+      <%= link_to t('common.cancel'), userplan, class: 'btn btn-link' %>
     <% else %>
-      <%= link_to t('common.cancel'), userplans_path, class: "btn btn-link" %>
+      <%= link_to t('common.cancel'), userplans_path, class: 'btn btn-link' %>
     <% end %>
   </div>
 <% end %>

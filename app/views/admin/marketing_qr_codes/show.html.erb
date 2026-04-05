@@ -16,7 +16,7 @@
     <!-- Details card -->
     <div class="col-md-7">
       <div class="card">
-        <div class="card-header"><strong>Details</strong></div>
+        <div class="card-header fw-semibold">Details</div>
         <div class="card-body">
           <dl class="row mb-0">
             <dt class="col-sm-4">Token</dt>
@@ -74,7 +74,7 @@
     <!-- Link card -->
     <div class="col-md-5">
       <div class="card">
-        <div class="card-header"><strong>Link to Restaurant</strong></div>
+        <div class="card-header fw-semibold">Link to Restaurant</div>
         <div class="card-body">
           <% unless @qr_code.archived? %>
             <%= form_with url: link_admin_marketing_qr_code_path(@qr_code), method: :patch do |f| %>
@@ -109,11 +109,11 @@
 
       <!-- QR Preview -->
       <div class="card mt-3">
-        <div class="card-header"><strong>QR Preview</strong></div>
+        <div class="card-header fw-semibold">QR Preview</div>
         <div class="card-body text-center">
           <div id="qrHost" class="d-none"><%= request.host_with_port %></div>
           <div id="qrProtocol" class="d-none"><%= request.protocol.chomp('://') %></div>
-          <div id="admin-qr-container" style="min-height: 200px; display: flex; align-items: center; justify-content: center;">
+          <div id="admin-qr-container" class="d-flex align-items-center justify-content-center" style="min-height: 200px;">
             <span class="text-muted small">Loading QR&hellip;</span>
           </div>
           <p class="text-muted small mt-2 mb-0">Encodes: <code><%= @qr_code.public_url(host: request.host_with_port, protocol: request.protocol.chomp('://')) %></code></p>

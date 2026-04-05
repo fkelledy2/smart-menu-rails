@@ -54,8 +54,7 @@
           <%= text_field_tag 'discovered_restaurant[website_url]', nil,
                 class: 'form-control form-control-sm',
                 placeholder: 'https://example.com',
-                required: true,
-                style: 'min-width: 260px;' %>
+                required: true %>
         </div>
         <div>
           <%= label_tag 'discovered_restaurant[name]', 'Name', class: 'form-label small mb-1' %>
@@ -92,12 +91,11 @@
             Showing <%= @discovered_restaurants.length %> of <%= @total_count %>
           </span>
           <%# Bulk action controls %>
-          <div class="input-group input-group-sm flex-nowrap" style="max-width: 420px;">
+          <div class="input-group input-group-sm flex-nowrap">
             <input type="number"
                    min="0"
                    step="1"
-                   class="form-control form-control-sm"
-                   style="max-width: 120px;"
+                   class="form-control form-control-sm w-auto"
                    value="1"
                    placeholder="Menus ≥"
                    aria-label="Minimum menus"
@@ -165,7 +163,7 @@
                       )),
                       class: 'text-decoration-none link-secondary text-nowrap' %>
                   <% if @sort == 'city_name' %>
-                    <i class="bi bi-caret-<%= @direction == 'asc' ? 'up' : 'down' %>-fill ms-1 text-muted" style="font-size: 0.7rem;"></i>
+                    <i class="bi bi-caret-<%= @direction == 'asc' ? 'up' : 'down' %>-fill ms-1 text-muted fs-10"></i>
                   <% end %>
                 </th>
                 <th>
@@ -177,7 +175,7 @@
                       )),
                       class: 'text-decoration-none link-secondary text-nowrap' %>
                   <% if @sort == 'name' %>
-                    <i class="bi bi-caret-<%= @direction == 'asc' ? 'up' : 'down' %>-fill ms-1 text-muted" style="font-size: 0.7rem;"></i>
+                    <i class="bi bi-caret-<%= @direction == 'asc' ? 'up' : 'down' %>-fill ms-1 text-muted fs-10"></i>
                   <% end %>
                 </th>
                 <th class="d-none d-md-table-cell">Type</th>
@@ -190,7 +188,7 @@
                       )),
                       class: 'text-decoration-none link-secondary text-nowrap' %>
                   <% if @sort == 'status' %>
-                    <i class="bi bi-caret-<%= @direction == 'asc' ? 'up' : 'down' %>-fill ms-1 text-muted" style="font-size: 0.7rem;"></i>
+                    <i class="bi bi-caret-<%= @direction == 'asc' ? 'up' : 'down' %>-fill ms-1 text-muted fs-10"></i>
                   <% end %>
                 </th>
                 <th class="d-none d-md-table-cell">Website</th>
@@ -203,7 +201,7 @@
                       )),
                       class: 'text-decoration-none link-secondary text-nowrap' %>
                   <% if @sort == 'menus_count' %>
-                    <i class="bi bi-caret-<%= @direction == 'asc' ? 'up' : 'down' %>-fill ms-1 text-muted" style="font-size: 0.7rem;"></i>
+                    <i class="bi bi-caret-<%= @direction == 'asc' ? 'up' : 'down' %>-fill ms-1 text-muted fs-10"></i>
                   <% end %>
                 </th>
                 <th class="text-nowrap d-none d-lg-table-cell">
@@ -215,7 +213,7 @@
                       )),
                       class: 'text-decoration-none link-secondary text-nowrap' %>
                   <% if @sort == 'discovered_at' %>
-                    <i class="bi bi-caret-<%= @direction == 'asc' ? 'up' : 'down' %>-fill ms-1 text-muted" style="font-size: 0.7rem;"></i>
+                    <i class="bi bi-caret-<%= @direction == 'asc' ? 'up' : 'down' %>-fill ms-1 text-muted fs-10"></i>
                   <% end %>
                 </th>
                 <th></th>
@@ -238,7 +236,7 @@
                            aria-label="Select <%= dr.name %>" />
                   </td>
                   <td class="small text-muted text-nowrap"><%= dr.city_name %></td>
-                  <td style="max-width: 280px;">
+                  <td class="mw-0">
                     <div class="fw-semibold text-truncate">
                       <%= link_to dr.name, admin_discovered_restaurant_path(dr),
                           class: 'text-decoration-none',
@@ -249,7 +247,7 @@
                   <td>
                     <%= render 'shared/status_badge', status: dr.status.to_s %>
                   </td>
-                  <td class="d-none d-md-table-cell small" style="max-width: 300px;">
+                  <td class="d-none d-md-table-cell small mw-0">
                     <% if dr.website_url.present? %>
                       <div class="text-truncate" title="<%= dr.website_url %>">
                         <%= link_to dr.website_url.delete_prefix('https://').delete_prefix('http://').truncate(50),
@@ -264,7 +262,7 @@
                   </td>
                   <td class="text-end">
                     <% if pdf_count > 0 %>
-                      <span class="badge bg-success-subtle text-success"><%= pdf_count %></span>
+                      <span class="badge text-bg-success"><%= pdf_count %></span>
                     <% else %>
                       <span class="text-muted">—</span>
                     <% end %>

@@ -88,7 +88,7 @@
               <td class="text-end">
                 <% if cost && item.price.to_f > 0 && cost.total_cost.to_f > 0 %>
                   <% margin_pct = ((item.price.to_f - cost.total_cost.to_f) / item.price.to_f * 100).round(1) %>
-                  <span class="badge <%= margin_pct >= 60 ? 'bg-success' : margin_pct >= 30 ? 'bg-warning text-dark' : 'bg-danger' %>">
+                  <span class="badge <%= margin_pct >= 60 ? 'text-bg-success' : margin_pct >= 30 ? 'text-bg-warning' : 'text-bg-danger' %>">
                     <%= margin_pct %>%
                   </span>
                 <% else %>
@@ -99,12 +99,12 @@
                 <% if cost %>
                   <%= link_to 'Edit',
                       edit_restaurant_menu_menusection_menuitem_cost_path(restaurant, menu, menusection, cost, menuitem_id: item.id),
-                      class: 'btn btn-xs btn-outline-secondary',
+                      class: 'btn btn-sm btn-outline-secondary',
                       data: { turbo: false } %>
                 <% else %>
                   <%= link_to 'Add cost',
                       new_restaurant_menu_menusection_menuitem_cost_path(restaurant, menu, menusection, menuitem_id: item.id),
-                      class: 'btn btn-xs btn-outline-primary',
+                      class: 'btn btn-sm btn-outline-primary',
                       data: { turbo: false } %>
                 <% end %>
               </td>

@@ -58,11 +58,16 @@ module Agents
 
       return [] if restaurant_ids_with_history.empty?
 
-      Restaurant
-        .where(id: restaurant_ids_with_history)
-        .select do |r|
-          Flipper.enabled?(:agent_framework, r) && Flipper.enabled?(:agent_menu_optimization, r)
-        end
+      # If both flags are globally enabled we can skip per-actor checks entirely,
+      # avoiding 2N Flipper DB queries for large restaurant counts.
+      framework_global = Flipper.enabled?(:agent_framework)
+      optimization_global = Flipper.enabled?(:agent_menu_optimization)
+
+      Restaurant.where(id: restaurant_ids_with_history).select do |r|
+        framework_enabled = framework_global || Flipper.enabled?(:agent_framework, r)
+        optimization_enabled = optimization_global || Flipper.enabled?(:agent_menu_optimization, r)
+        framework_enabled && optimization_enabled
+      end
     end
   end
 end

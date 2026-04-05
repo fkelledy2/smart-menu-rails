@@ -1,39 +1,36 @@
 <%= form_with(model: ordritemnote) do |form| %>
   <% if ordritemnote.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(ordritemnote.errors.count, "error") %> prohibited this ordritemnote from being saved:</h2>
-
-      <ul>
-      <% ordritemnote.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
+    <div class="alert alert-danger mb-3" role="alert">
+      <div class="fw-semibold mb-1"><%= pluralize(ordritemnote.errors.count, 'error') %> prohibited this ordritemnote from being saved:</div>
+      <ul class="mb-0">
+        <% ordritemnote.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
       </ul>
     </div>
   <% end %>
 
   <div class="mb-3">
     <%= form.label :note, class: 'form-label' %>
-      <%= form.text_field :note, class: 'form-control' %>
-    </div>
+    <%= form.text_field :note, class: 'form-control' %>
+  </div>
 
   <div class="mb-3">
     <%= form.label :ordritem_id, class: 'form-label' %>
-      <%= form.text_field :ordritem_id, class: 'form-control' %>
-    </div>
+    <%= form.text_field :ordritem_id, class: 'form-control' %>
+  </div>
 
-  <div class="mb-3">
+  <div class="d-flex justify-content-end gap-2 align-items-center">
     <% if ordritemnote.persisted? %>
-      <div class="float-end">
-        <%= link_to t('common.delete'), ordritemnote, method: :delete, class: "text-danger", data: { confirm: t('common.confirm') } %>
-      </div>
+      <%= button_to t('common.delete'), ordritemnote, method: :delete, class: 'btn btn-link text-danger p-0', data: { turbo_confirm: t('common.confirm') } %>
     <% end %>
 
     <%= form.submit value: t('common.save'), class: 'btn btn-dark' %>
 
     <% if ordritemnote.persisted? %>
-      <%= link_to t('common.cancel'), ordritemnote, class: "btn btn-link" %>
+      <%= link_to t('common.cancel'), ordritemnote, class: 'btn btn-link' %>
     <% else %>
-      <%= link_to t('common.cancel'), ordritemnotes_path, class: "btn btn-link" %>
+      <%= link_to t('common.cancel'), ordritemnotes_path, class: 'btn btn-link' %>
     <% end %>
   </div>
 <% end %>

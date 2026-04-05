@@ -4,7 +4,7 @@
         crumbs: [{ label: 'Admin', url: admin_whiskey_flights_path },
                  { label: 'Whiskey Flights', url: admin_whiskey_flights_path }],
         current: 'Edit' %>
-<h1 class="h3 mb-1">Edit Whiskey Flight — <%= @flight.title %></h1>
+<h1 class="h3 mb-4">Edit Whiskey Flight — <%= @flight.title %></h1>
 
 <%= form_with url: admin_whiskey_flight_restaurant_path(@restaurant, flight_id: @flight.id), method: :patch, local: true do |f| %>
   <div class="mb-3">
@@ -33,7 +33,7 @@
         </label>
         <input type="text" name="whiskey_flight[item_notes][]" placeholder="Tasting note…"
                value="<%= item_data&.dig('note') %>"
-               class="form-control form-control-sm mt-1" style="max-width: 400px;">
+               class="form-control form-control-sm mt-1 w-75">
       </div>
     <% end %>
   </div>
@@ -41,11 +41,13 @@
   <div class="mb-3">
     <label for="whiskey_flight_custom_price" class="form-label">Custom Flight Price (optional)</label>
     <input type="number" step="0.01" name="whiskey_flight[custom_price]"
-           id="whiskey_flight_custom_price" class="form-control" style="max-width: 200px;"
+           id="whiskey_flight_custom_price" class="form-control w-auto"
            value="<%= @flight.custom_price %>">
   </div>
 
-  <%= f.submit 'Update Flight', class: 'btn btn-primary' %>
-  <%= link_to 'Cancel', admin_whiskey_flights_restaurant_path(@restaurant), class: 'btn btn-outline-secondary ms-2' %>
+  <div class="d-flex gap-2 mt-3">
+    <%= f.submit 'Update Flight', class: 'btn btn-primary' %>
+    <%= link_to 'Cancel', admin_whiskey_flights_restaurant_path(@restaurant), class: 'btn btn-outline-secondary' %>
+  </div>
 <% end %>
 </div>

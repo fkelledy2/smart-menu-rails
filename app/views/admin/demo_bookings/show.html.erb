@@ -2,20 +2,20 @@
 <% content_for :title, "Demo Booking ##{@demo_booking.id} — Admin" %>
 
 <div class="container-fluid py-4">
+  <%= render 'shared/admin_breadcrumb',
+        crumbs: [{ label: 'Admin', url: admin_demo_bookings_path },
+                 { label: 'Demo Bookings', url: admin_demo_bookings_path }],
+        current: "Booking ##{@demo_booking.id}" %>
   <div class="mb-3 d-flex gap-2">
-    <%= link_to '&larr; All Demo Bookings'.html_safe, admin_demo_bookings_path,
-                class: 'btn btn-sm btn-outline-secondary' %>
     <%= link_to admin_crm_leads_path(q: @demo_booking.email), class: 'btn btn-sm btn-outline-primary' do %>
       <i class="bi bi-kanban me-1"></i>Find in CRM
     <% end %>
   </div>
 
   <div class="card">
-    <div class="card-header d-flex justify-content-between align-items-center">
-      <h2 class="h5 mb-0">
-        <%= @demo_booking.contact_name %> &mdash; <%= @demo_booking.restaurant_name %>
-      </h2>
-      <small class="text-muted">ID #<%= @demo_booking.id %></small>
+    <div class="card-header d-flex justify-content-between align-items-center fw-semibold">
+      <span><%= @demo_booking.contact_name %> &mdash; <%= @demo_booking.restaurant_name %></span>
+      <small class="text-muted fw-normal">ID #<%= @demo_booking.id %></small>
     </div>
 
     <div class="card-body">
@@ -54,13 +54,13 @@
 
   <!-- Status update form -->
   <div class="card mt-4">
-    <div class="card-header"><h3 class="h6 mb-0">Update status</h3></div>
+    <div class="card-header fw-semibold">Update status</div>
     <div class="card-body">
       <%= form_with url: admin_demo_booking_path(@demo_booking), method: :patch, local: true do |_f| %>
         <div class="row g-3 align-items-end">
           <div class="col-sm-5">
-            <label class="form-label fw-semibold">Conversion status</label>
-            <select name="demo_booking[conversion_status]" class="form-select">
+            <label for="demo_booking_conversion_status" class="form-label fw-semibold">Conversion status</label>
+            <select id="demo_booking_conversion_status" name="demo_booking[conversion_status]" class="form-select">
               <% DemoBooking::CONVERSION_STATUSES.each do |status| %>
                 <option value="<%= status %>"
                   <%= 'selected' if status == @demo_booking.conversion_status %>>
@@ -70,8 +70,8 @@
             </select>
           </div>
           <div class="col-sm-5">
-            <label class="form-label fw-semibold">Calendly event ID (optional)</label>
-            <input type="text" name="demo_booking[calendly_event_id]"
+            <label for="demo_booking_calendly_event_id" class="form-label fw-semibold">Calendly event ID (optional)</label>
+            <input id="demo_booking_calendly_event_id" type="text" name="demo_booking[calendly_event_id]"
                    class="form-control"
                    value="<%= @demo_booking.calendly_event_id %>"
                    placeholder="e.g. abc123xyz">

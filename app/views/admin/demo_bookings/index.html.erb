@@ -12,7 +12,7 @@
     </div>
     <%= link_to 'Export CSV',
                 admin_demo_bookings_path(format: :csv),
-                class: 'btn btn-outline-secondary' %>
+                class: 'btn btn-outline-secondary btn-sm' %>
   </div>
 
   <% if @demo_bookings.any? %>
@@ -56,9 +56,9 @@
       </table>
     </div>
   <% else %>
-    <div class="text-center py-5 text-muted">
-      <i class="bi bi-person-lines-fill fs-1 d-block mb-3"></i>
-      <p class="mb-0">No demo bookings yet. Once restaurant owners submit the form they'll appear here.</p>
-    </div>
+    <%= render 'shared/empty_state',
+          title: 'No demo bookings yet',
+          description: "Once restaurant owners submit the form they'll appear here.",
+          icon: 'bi-person-lines-fill' %>
   <% end %>
 </div>

@@ -1,59 +1,56 @@
 <%= form_with(model: [track.restaurant || Restaurant.find(track.restaurant_id), track]) do |form| %>
   <% if track.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(track.errors.count, "error") %> prohibited this track from being saved:</h2>
-
-      <ul>
-      <% track.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
+    <div class="alert alert-danger mb-3" role="alert">
+      <div class="fw-semibold mb-1"><%= pluralize(track.errors.count, 'error') %> prohibited this track from being saved:</div>
+      <ul class="mb-0">
+        <% track.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
       </ul>
     </div>
   <% end %>
 
   <div class="mb-3">
     <%= form.label :externalid, class: 'form-label' %>
-      <%= form.text_field :externalid, class: 'form-control' %>
-    </div>
+    <%= form.text_field :externalid, class: 'form-control' %>
+  </div>
 
   <div class="mb-3">
     <%= form.label :name, class: 'form-label' %>
-      <%= form.text_field :name, class: 'form-control' %>
-    </div>
+    <%= form.text_field :name, class: 'form-control' %>
+  </div>
 
   <div class="mb-3">
     <%= form.label :description, class: 'form-label' %>
-      <%= form.text_area :description, class: 'form-control' %>
-    </div>
+    <%= form.text_area :description, class: 'form-control' %>
+  </div>
 
   <div class="mb-3">
     <%= form.label :image, class: 'form-label' %>
-      <%= form.text_field :image, class: 'form-control' %>
-    </div>
+    <%= form.text_field :image, class: 'form-control' %>
+  </div>
 
   <div class="mb-3">
     <%= form.label :sequence, class: 'form-label' %>
-      <%= form.number_field :sequence, class: 'form-control' %>
-    </div>
+    <%= form.number_field :sequence, class: 'form-control' %>
+  </div>
 
   <div class="mb-3">
     <%= form.label :restaurant_id, class: 'form-label' %>
-      <%= form.text_field :restaurant_id, class: 'form-control' %>
-    </div>
+    <%= form.text_field :restaurant_id, class: 'form-control' %>
+  </div>
 
-  <div class="mb-3">
+  <div class="d-flex justify-content-end gap-2 align-items-center">
     <% if track.persisted? %>
-      <div class="float-end">
-        <%= link_to t('common.delete'), [track.restaurant, track], method: :delete, class: "text-danger", data: { confirm: t('common.confirm') } %>
-      </div>
+      <%= button_to t('common.delete'), [track.restaurant, track], method: :delete, class: 'btn btn-link text-danger p-0', data: { turbo_confirm: t('common.confirm') } %>
     <% end %>
 
     <%= form.submit value: t('common.save'), class: 'btn btn-dark' %>
 
     <% if track.persisted? %>
-      <%= link_to t('common.cancel'), [track.restaurant, track], class: "btn btn-link" %>
+      <%= link_to t('common.cancel'), [track.restaurant, track], class: 'btn btn-link' %>
     <% else %>
-      <%= link_to t('common.cancel'), restaurant_tracks_path(track.restaurant || current_user.restaurants.first), class: "btn btn-link" %>
+      <%= link_to t('common.cancel'), restaurant_tracks_path(track.restaurant || current_user.restaurants.first), class: 'btn btn-link' %>
     <% end %>
   </div>
 <% end %>

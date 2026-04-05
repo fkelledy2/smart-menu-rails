@@ -18,7 +18,7 @@
         <%= button_to generate_digest_restaurant_agent_workbench_index_path(@restaurant),
                       method: :post,
                       class: 'btn btn-sm btn-primary',
-                      data: { confirm: 'Generate a new digest now? This will use AI credits.' } do %>
+                      data: { turbo_confirm: 'Generate a new digest now? This will use AI credits.' } do %>
           <i class="bi bi-lightning-fill me-1" aria-hidden="true"></i> Generate Now
         <% end %>
       <% end %>
@@ -74,7 +74,7 @@
               <div>
                 <span class="fw-semibold">
                   <% if idx.zero? %>
-                    <span class="badge bg-primary me-2">Latest</span>
+                    <span class="badge text-bg-primary me-2">Latest</span>
                   <% end %>
                   Digest — <%= artifact.created_at.strftime('%B %-d, %Y') %>
                 </span>
@@ -82,7 +82,7 @@
                   <%= artifact.created_at.strftime('%H:%M UTC') %>
                 </span>
               </div>
-              <span class="badge bg-success">approved</span>
+              <span class="badge text-bg-success">approved</span>
             </div>
             <div class="card-body">
               <% if content[:narrative].present? %>
@@ -127,9 +127,9 @@
                         <% if imid.present? && itype != 'top_performer' %>
                           <div class="d-flex gap-1 flex-shrink-0 ms-2">
                             <% if iaction == 'reimage' %>
-                              <span class="badge bg-light text-dark border">Generate image</span>
+                              <span class="badge text-bg-light border">Generate image</span>
                             <% elsif iaction.present? %>
-                              <span class="badge bg-light text-dark border"><%= iaction.capitalize %></span>
+                              <span class="badge text-bg-light border"><%= iaction.capitalize %></span>
                             <% end %>
                           </div>
                         <% end %>
@@ -154,7 +154,7 @@
                 <% if instagram.present? %>
                   <div class="p-3 bg-light rounded mb-2">
                     <div class="d-flex justify-content-between align-items-start mb-1">
-                      <small class="fw-semibold text-muted text-uppercase" style="letter-spacing: .05em;">Instagram Caption</small>
+                      <small class="fw-semibold text-muted text-uppercase ls-wide">Instagram Caption</small>
                       <button class="btn btn-sm btn-outline-secondary py-0"
                               data-controller="clipboard"
                               data-clipboard-text-value="<%= h instagram %>"
@@ -168,7 +168,7 @@
                 <% if email_copy.present? %>
                   <div class="p-3 bg-light rounded mb-3">
                     <div class="d-flex justify-content-between align-items-start mb-1">
-                      <small class="fw-semibold text-muted text-uppercase" style="letter-spacing: .05em;">Email / Newsletter</small>
+                      <small class="fw-semibold text-muted text-uppercase ls-wide">Email / Newsletter</small>
                       <button class="btn btn-sm btn-outline-secondary py-0"
                               data-controller="clipboard"
                               data-clipboard-text-value="<%= h email_copy %>"

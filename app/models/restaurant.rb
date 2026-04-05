@@ -236,6 +236,12 @@ class Restaurant < ApplicationRecord
   validates :postcode, presence: false
   validates :country, presence: false
   validates :status, presence: true
+  validates :service_operations_wait_threshold_minutes,
+            numericality: { only_integer: true, greater_than: 0 },
+            allow_nil: false
+  validates :kitchen_congestion_threshold,
+            numericality: { only_integer: true, greater_than: 0 },
+            allow_nil: false
 
   # Onboarding guidance helpers
   def onboarding_missing_details_fields

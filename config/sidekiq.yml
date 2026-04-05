@@ -44,3 +44,7 @@
     cron: "0 * * * *"  # hourly
     class: "Agents::ExpireAgentApprovalsJob"
     queue: "agent_low"
+  kitchen_heartbeat:
+    cron: "* * * * *"  # every minute (fires heartbeat for active restaurants)
+    class: "Agents::KitchenHeartbeatJob"
+    queue: "agent_realtime"

@@ -12,7 +12,7 @@
   <%= form_with url: update_coefficients_admin_heroku_inventories_path, method: :patch, local: true do %>
     <!-- Dyno Size Costs -->
     <div class="card mb-4">
-      <div class="card-header"><h5 class="mb-0">Dyno Size Monthly Costs</h5></div>
+      <div class="card-header fw-semibold">Dyno Size Monthly Costs</div>
       <div class="table-responsive">
         <table class="table table-sm mb-0">
           <thead class="table-light">
@@ -24,7 +24,7 @@
                 <td><code><%= dc.dyno_size %></code></td>
                 <td>
                   <%= number_field_tag "dyno_costs[#{dc.id}][cost_cents_per_month]",
-                        dc.cost_cents_per_month, class: 'form-control form-control-sm', style: 'width:120px' %>
+                        dc.cost_cents_per_month, class: 'form-control form-control-sm w-120' %>
                 </td>
                 <td class="text-muted small">&euro;<%= number_with_precision(dc.cost_euros, precision: 2) %></td>
                 <td class="text-muted small"><%= dc.notes %></td>
@@ -40,7 +40,7 @@
 
     <!-- Add-on Plan Costs -->
     <div class="card mb-4">
-      <div class="card-header"><h5 class="mb-0">Add-on Plan Monthly Costs</h5></div>
+      <div class="card-header fw-semibold">Add-on Plan Monthly Costs</div>
       <div class="table-responsive">
         <table class="table table-sm mb-0">
           <thead class="table-light">
@@ -53,7 +53,7 @@
                 <td class="small"><code><%= ac.plan_name %></code></td>
                 <td>
                   <%= number_field_tag "addon_costs[#{ac.id}][cost_cents_per_month]",
-                        ac.cost_cents_per_month, class: 'form-control form-control-sm', style: 'width:120px' %>
+                        ac.cost_cents_per_month, class: 'form-control form-control-sm w-120' %>
                 </td>
                 <td class="text-muted small">&euro;<%= number_with_precision(ac.cost_euros, precision: 2) %></td>
               </tr>

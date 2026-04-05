@@ -1,10 +1,8 @@
 <% content_for :title, 'Application Metrics — Admin' %>
 
 <div class="container-fluid py-4">
-  <div class="row">
-    <div class="col-12">
-      <h1 class="h3 mb-1">Application Metrics Dashboard</h1>
-    </div>
+  <div class="d-flex align-items-center mb-3">
+    <h1 class="h3 mb-0">Application Metrics Dashboard</h1>
   </div>
 
   <!-- Summary Cards -->
@@ -54,18 +52,18 @@
   <div class="row g-3 mb-4">
     <div class="col-md-6">
       <div class="card">
-        <div class="card-header">
-          <h5 class="card-title mb-0"><i class="bi bi-shop me-2" aria-hidden="true"></i>Business Metrics</h5>
+        <div class="card-header fw-semibold">
+          <i class="bi bi-shop me-2" aria-hidden="true"></i>Business Metrics
         </div>
         <div class="card-body">
-          <div class="row">
+          <div class="row g-3">
             <div class="col-6">
-              <strong>Restaurants Created:</strong><br>
-              <span class="h4 text-primary"><%= @metrics_summary[:restaurant_creations][:total] %></span>
+              <div class="text-muted small">Restaurants Created</div>
+              <div class="fs-4 fw-semibold"><%= @metrics_summary[:restaurant_creations][:total] %></div>
             </div>
             <div class="col-6">
-              <strong>Menu Imports:</strong><br>
-              <span class="h4 text-success"><%= @metrics_summary[:menu_imports][:total] %></span>
+              <div class="text-muted small">Menu Imports</div>
+              <div class="fs-4 fw-semibold"><%= @metrics_summary[:menu_imports][:total] %></div>
             </div>
           </div>
         </div>
@@ -74,8 +72,8 @@
 
     <div class="col-md-6">
       <div class="card">
-        <div class="card-header">
-          <h5 class="card-title mb-0"><i class="bi bi-display me-2" aria-hidden="true"></i>System Metrics</h5>
+        <div class="card-header fw-semibold">
+          <i class="bi bi-display me-2" aria-hidden="true"></i>System Metrics
         </div>
         <div class="card-body">
           <% if @system_metrics[:memory_usage] %>
@@ -105,91 +103,81 @@
   </div>
 
   <!-- Recent Activity -->
-  <div class="row mb-4">
-    <div class="col-12">
-      <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
-          <h5 class="card-title mb-0"><i class="bi bi-graph-up me-2" aria-hidden="true"></i>Recent Metrics (Last Hour)</h5>
-          <div>
-            <%= link_to "Export JSON", admin_metrics_path(format: :json), class: "btn btn-sm btn-outline-primary" %>
-            <%= link_to "Export CSV", admin_metrics_path(format: :csv), class: "btn btn-sm btn-outline-secondary" %>
-          </div>
-        </div>
-        <div class="card-body">
-          <% if @recent_metrics.any? %>
-            <div class="table-responsive">
-              <table class="table table-sm">
-                <thead>
-                  <tr>
-                    <th>Metric</th>
-                    <th>Type</th>
-                    <th>Value</th>
-                    <th>Last Updated</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <% @recent_metrics.first(20).each do |metric_key, metric_data| %>
-                    <tr>
-                      <td>
-                        <%= link_to metric_key, admin_metric_path(metric_key.split('{').first),
-                            class: "text-decoration-none" %>
-                      </td>
-                      <td>
-                        <span class="badge bg-secondary"><%= metric_data[:type] %></span>
-                      </td>
-                      <td>
-                        <% case metric_data[:type] %>
-                        <% when :counter, :gauge %>
-                          <%= metric_data[:value] %>
-                        <% when :histogram %>
-                          <%= metric_data[:values]&.size || 0 %> samples
-                        <% end %>
-                      </td>
-                      <td>
-                        <small class="text-muted">
-                          <%= time_ago_in_words(metric_data[:last_updated]) %> ago
-                        </small>
-                      </td>
-                    </tr>
-                  <% end %>
-                </tbody>
-              </table>
-            </div>
-
-            <% if @recent_metrics.size > 20 %>
-              <p class="text-muted text-center mt-3">
-                Showing 20 of <%= @recent_metrics.size %> recent metrics
-              </p>
-            <% end %>
-          <% else %>
-            <div class="text-center text-muted py-4">
-              <p>No recent metrics available</p>
-              <small>Metrics will appear here as the application is used</small>
-            </div>
-          <% end %>
-        </div>
+  <div class="card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <span class="fw-semibold"><i class="bi bi-graph-up me-2" aria-hidden="true"></i>Recent Metrics (Last Hour)</span>
+      <div class="d-flex gap-2">
+        <%= link_to "Export JSON", admin_metrics_path(format: :json), class: "btn btn-sm btn-outline-primary" %>
+        <%= link_to "Export CSV", admin_metrics_path(format: :csv), class: "btn btn-sm btn-outline-secondary" %>
       </div>
+    </div>
+    <div class="card-body">
+      <% if @recent_metrics.any? %>
+        <div class="table-responsive">
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th>Metric</th>
+                <th>Type</th>
+                <th>Value</th>
+                <th>Last Updated</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @recent_metrics.first(20).each do |metric_key, metric_data| %>
+                <tr>
+                  <td>
+                    <%= link_to metric_key, admin_metric_path(metric_key.split('{').first),
+                        class: "text-decoration-none" %>
+                  </td>
+                  <td>
+                    <span class="badge text-bg-secondary"><%= metric_data[:type] %></span>
+                  </td>
+                  <td>
+                    <% case metric_data[:type] %>
+                    <% when :counter, :gauge %>
+                      <%= metric_data[:value] %>
+                    <% when :histogram %>
+                      <%= metric_data[:values]&.size || 0 %> samples
+                    <% end %>
+                  </td>
+                  <td class="text-muted small">
+                    <%= time_ago_in_words(metric_data[:last_updated]) %> ago
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+
+        <% if @recent_metrics.size > 20 %>
+          <p class="text-muted text-center mt-3">
+            Showing 20 of <%= @recent_metrics.size %> recent metrics
+          </p>
+        <% end %>
+      <% else %>
+        <div class="text-center text-muted py-4">
+          <p>No recent metrics available</p>
+          <small>Metrics will appear here as the application is used</small>
+        </div>
+      <% end %>
     </div>
   </div>
 
   <!-- Instructions -->
-  <div class="row">
-    <div class="col-12">
-      <div class="card border-info">
-        <div class="card-header text-bg-info">
-          <h6 class="card-title mb-0"><i class="bi bi-info-circle me-2" aria-hidden="true"></i>About Metrics</h6>
-        </div>
-        <div class="card-body">
-          <p class="mb-2">
-            This dashboard shows real-time application metrics collected automatically as users interact with the system.
-          </p>
-          <ul class="mb-0">
-            <li><strong>Counters:</strong> Cumulative values that only increase (e.g., total requests)</li>
-            <li><strong>Gauges:</strong> Current values that can go up or down (e.g., active users)</li>
-            <li><strong>Histograms:</strong> Collections of measurements (e.g., response times)</li>
-          </ul>
-        </div>
-      </div>
+  <div class="card border-info">
+    <div class="card-header fw-semibold text-bg-info">
+      <i class="bi bi-info-circle me-2" aria-hidden="true"></i>About Metrics
+    </div>
+    <div class="card-body">
+      <p class="mb-2">
+        This dashboard shows real-time application metrics collected automatically as users interact with the system.
+      </p>
+      <ul class="mb-0">
+        <li><strong>Counters:</strong> Cumulative values that only increase (e.g., total requests)</li>
+        <li><strong>Gauges:</strong> Current values that can go up or down (e.g., active users)</li>
+        <li><strong>Histograms:</strong> Collections of measurements (e.g., response times)</li>
+      </ul>
     </div>
   </div>
 </div>

@@ -11,14 +11,14 @@
         <p class="text-muted mb-0">
           Drag cards between columns to update stage.
           <% if @needs_assignment_count > 0 %>
-            <span class="badge bg-warning text-dark ms-2">
+            <span class="badge text-bg-warning ms-2">
               <%= @needs_assignment_count %> unassigned demo-booked <%= 'lead'.pluralize(@needs_assignment_count) %>
             </span>
           <% end %>
         </p>
       </div>
       <div class="d-flex gap-2 align-items-center">
-        <div class="input-group input-group-sm" style="width: 260px;">
+        <div class="input-group input-group-sm" style="width: 16rem;">
           <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
           <input type="search"
                  class="form-control border-start-0 ps-0"
@@ -35,9 +35,6 @@
 
   <div class="crm-kanban-board d-flex gap-3 pb-3 px-4" style="min-height: 70vh; overflow-x: auto; overflow-y: visible;">
     <% CrmLead::STAGES.each do |stage| %>
-      <%
-        col_title_extra = stage == 'converted' ? ' title="Use the Convert button on a lead to move here"' : ''
-      %>
       <div class="crm-kanban-column flex-shrink-0"
            style="width: 260px;"
            data-stage="<%= stage %>">
@@ -45,10 +42,10 @@
           <h6 class="mb-0 text-uppercase fw-semibold text-kanban-header">
             <%= stage.humanize %>
             <% if stage == 'converted' %>
-              <i class="bi bi-lock-fill ms-1 text-muted" style="font-size: 0.6rem;" title="Use the Convert button on a lead"></i>
+              <i class="bi bi-lock-fill ms-1 text-muted fs-10" title="Use the Convert button on a lead"></i>
             <% end %>
           </h6>
-          <span class="badge bg-secondary rounded-pill">
+          <span class="badge text-bg-secondary rounded-pill">
             <%= (@leads_by_stage[stage] || []).size %>
           </span>
         </div>
@@ -67,7 +64,7 @@
 </div>
 
 <%# Lead detail modal — content loaded via Turbo Frame %>
-<div class="modal fade" id="leadModal" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="leadModal" tabindex="-1" aria-label="Lead detail" aria-hidden="true">
   <div class="modal-dialog modal-xl modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header border-0 pb-0">
@@ -96,8 +93,8 @@
       </div>
       <div class="modal-body" id="crmLostReasonForm">
         <div class="mb-3">
-          <label class="form-label fw-semibold small">Reason <span class="text-danger">*</span></label>
-          <select name="lost_reason" class="form-select form-select-sm">
+          <label for="crm-lost-reason-select" class="form-label fw-semibold small">Reason <span class="text-danger">*</span></label>
+          <select id="crm-lost-reason-select" name="lost_reason" class="form-select form-select-sm">
             <option value="">Select reason…</option>
             <% CrmLead::LOST_REASONS.each do |reason| %>
               <option value="<%= reason %>"><%= reason.humanize %></option>
@@ -106,8 +103,8 @@
           <div class="invalid-feedback">Please select a reason.</div>
         </div>
         <div class="mb-1">
-          <label class="form-label fw-semibold small">Notes <span class="text-muted fw-normal">(optional)</span></label>
-          <textarea name="lost_reason_notes" class="form-control form-control-sm" rows="2" placeholder="Any additional context…"></textarea>
+          <label for="crm-lost-reason-notes" class="form-label fw-semibold small">Notes <span class="text-muted fw-normal">(optional)</span></label>
+          <textarea id="crm-lost-reason-notes" name="lost_reason_notes" class="form-control form-control-sm" rows="2" placeholder="Any additional context…"></textarea>
         </div>
       </div>
       <div class="modal-footer">

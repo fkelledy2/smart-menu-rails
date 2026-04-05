@@ -13,7 +13,7 @@
         <i class="bi bi-people me-1 text-muted small" aria-hidden="true"></i>
         Party of <%= party_size %>
       </span>
-      <span class="badge <%= minutes.zero? ? 'bg-success' : 'bg-warning text-dark' %> rounded-pill fs-6">
+      <span class="badge <%= minutes.zero? ? 'text-bg-success' : 'text-bg-warning' %> rounded-pill fs-6">
         <% if minutes.zero? %>
           <i class="bi bi-check-circle me-1" aria-hidden="true"></i>Available now
         <% else %>

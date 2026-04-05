@@ -5,72 +5,45 @@
                elsif @futureParentRestaurant
                  @futureParentRestaurant
                else
-                 raise "No restaurant context available for inventory form"
+                 raise 'No restaurant context available for inventory form'
                end
 %>
 <%= form_with(model: [restaurant, inventory]) do |form| %>
-  <div class="form-group row">
-    <div class="col-3">
-      <span class="float-md-end"><%= form.label :menuItem, class: 'col-form-label' %></span>
-    </div>
-    <div class="col-9">
-      <%= form.collection_select :menuitem_id, Menuitem.all ,:id, :name, options = {:prompt => t('.select_menu_item')} %>
-    </div>
+  <div class="mb-3">
+    <%= form.label :menuItem, class: 'form-label' %>
+    <%= form.collection_select :menuitem_id, Menuitem.all, :id, :name, { prompt: t('.select_menu_item') }, class: 'form-select' %>
   </div>
-  <div class="mb-2"></div>
-    <div class="form-group row">
-      <div class="col-3">
-        <span class="float-md-end"><%= form.label :startingInventory, class: 'col-form-label' %></span>
-      </div>
-      <div class="col-9">
-        <%= form.text_field :startinginventory, data: { numeric: true }, class: 'form-control' %>
-      </div>
-    </div>
-  <div class="mb-2"></div>
-  <div class="form-group row">
-    <div class="col-3">
-      <span class="float-md-end"><%= form.label :currentInventory, class: 'col-form-label' %></span>
-    </div>
-    <div class="col-9">
-      <%= form.text_field :currentinventory, data: { numeric: true }, class: 'form-control' %>
-    </div>
+
+  <div class="mb-3">
+    <%= form.label :startingInventory, class: 'form-label' %>
+    <%= form.text_field :startinginventory, data: { numeric: true }, class: 'form-control' %>
   </div>
-  <div class="mb-2"></div>
-  <div class="form-group row">
-    <div class="col-3">
-      <span class="float-md-end"><%= form.label :resetHour, class: 'col-form-label' %></span>
-    </div>
-    <div class="col-9">
-      <%= form.text_field :resethour, data: { numeric: true }, class: 'form-control' %>
-    </div>
+
+  <div class="mb-3">
+    <%= form.label :currentInventory, class: 'form-label' %>
+    <%= form.text_field :currentinventory, data: { numeric: true }, class: 'form-control' %>
   </div>
-  <div class="mb-3"></div>
-  <div class="row">
-    <div class="col-2">
-    </div>
-    <div class="col-10">
-        <span class="float-end">
-        <% if inventory.persisted? %>
-          <div class="btn btn-dark ">
-            <%= link_to t('common.delete'), restaurant_inventory_path(restaurant, inventory), method: :delete, class: "text-white text-decoration-none", data: { confirm: t('common.confirm') } %>
-          </div>
-        <% end %>
-        <%= form.submit value: t('common.save'), class: 'btn btn-dark' %>
-        </span>
-    </div>
+
+  <div class="mb-3">
+    <%= form.label :resetHour, class: 'form-label' %>
+    <%= form.text_field :resethour, data: { numeric: true }, class: 'form-control' %>
   </div>
+
   <% if inventory.errors.any? %>
-  <div class="row">
-    <div class="col-2">
-        <%= t('common.errors') %>
-    </div>
-    <div class="col-10">
-      <ul>
-          <% inventory.errors.full_messages.each do |message| %>
-            <li><%= message %></li>
-          <% end %>
+    <div class="alert alert-danger mb-3" role="alert">
+      <div class="fw-semibold mb-1"><%= t('common.errors') %></div>
+      <ul class="mb-0">
+        <% inventory.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
       </ul>
     </div>
-  </div>
   <% end %>
+
+  <div class="d-flex justify-content-end gap-2">
+    <% if inventory.persisted? %>
+      <%= button_to t('common.delete'), restaurant_inventory_path(restaurant, inventory), method: :delete, class: 'btn btn-outline-danger', data: { turbo_confirm: t('common.confirm') } %>
+    <% end %>
+    <%= form.submit value: t('common.save'), class: 'btn btn-dark' %>
+  </div>
 <% end %>

@@ -1,10 +1,19 @@
 ---
 name: Bootstrap 4 Form Layout Pattern
-description: The .form-group.row with col-3 label + col-9 input pattern (Bootstrap 4 style) still appears in restaurants/show.html.erb and several entity show views
+description: The .form-group.row with col-3 label + col-9 input pattern (Bootstrap 4 style) still appears in restaurants/show.html.erb and several entity _form.html.erb and show views
 type: project
 ---
 
-Pattern found in:
+Pattern found in _form.html.erb files (still present, not yet addressed):
+- app/views/menus/_form.html.erb (all fields use .form-group.row)
+- app/views/restaurants/_form.html.erb (most fields use .form-group.row)
+- app/views/menuavailabilities/_form.html.erb — FIXED 2026-04-04 (migrated to stacked mb-3)
+- app/views/inventories/_form.html.erb — FIXED 2026-04-04
+- app/views/restaurantavailabilities/_form.html.erb — FIXED 2026-04-04
+- app/views/ingredients/_form.html.erb — FIXED 2026-04-04
+- app/views/tags/_form.html.erb — FIXED 2026-04-04
+
+Show views still using pattern:
 - app/views/restaurants/show.html.erb (entire form, ~30 instances of .form-group.row)
 - app/views/employees/show.html.erb
 - app/views/menuitems/show.html.erb

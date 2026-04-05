@@ -134,6 +134,12 @@ Rails.application.config.after_initialize do
   unless Flipper.exist?(:agent_menu_import)
     Flipper.add(:agent_menu_import)
   end
+
+  # Service Operations Agent (#22) — per-restaurant flag for real-time kitchen/floor ops
+  # recommendations. Requires agent_framework to also be enabled. Disabled by default.
+  unless Flipper.exist?(:agent_service_operations)
+    Flipper.add(:agent_service_operations)
+  end
 rescue ActiveRecord::ConnectionNotEstablished, ActiveRecord::StatementInvalid, ActiveRecord::NoDatabaseError => e
   # DB may be unreachable (CI asset precompile), or tables may not exist yet (db:create / db:migrate)
   Rails.logger.warn "[Flipper] Skipping feature flag seeding: #{e.message}"

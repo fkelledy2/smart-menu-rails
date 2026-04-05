@@ -1,59 +1,56 @@
 <%= form_with(model: [@restaurant, ordraction]) do |form| %>
   <% if ordraction.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(ordraction.errors.count, "error") %> prohibited this ordraction from being saved:</h2>
-
-      <ul>
-      <% ordraction.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
+    <div class="alert alert-danger mb-3" role="alert">
+      <div class="fw-semibold mb-1"><%= pluralize(ordraction.errors.count, 'error') %> prohibited this ordraction from being saved:</div>
+      <ul class="mb-0">
+        <% ordraction.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
       </ul>
     </div>
   <% end %>
 
   <div class="mb-3">
     <%= form.label :sessionid, class: 'form-label' %>
-      <%= form.text_field :sessionid, class: 'form-control' %>
-    </div>
+    <%= form.text_field :sessionid, class: 'form-control' %>
+  </div>
 
   <div class="mb-3">
     <%= form.label :action, class: 'form-label' %>
-      <%= form.number_field :action, class: 'form-control' %>
-    </div>
+    <%= form.number_field :action, class: 'form-control' %>
+  </div>
 
   <div class="mb-3">
     <%= form.label :employee_id, class: 'form-label' %>
-      <%= form.text_field :employee_id, class: 'form-control' %>
-    </div>
+    <%= form.text_field :employee_id, class: 'form-control' %>
+  </div>
 
   <div class="mb-3">
     <%= form.label :ordrparticipant_id, class: 'form-label' %>
-      <%= form.text_field :ordrparticipant_id, class: 'form-control' %>
-    </div>
+    <%= form.text_field :ordrparticipant_id, class: 'form-control' %>
+  </div>
 
   <div class="mb-3">
     <%= form.label :ordr_id, class: 'form-label' %>
-      <%= form.text_field :ordr_id, class: 'form-control' %>
-    </div>
+    <%= form.text_field :ordr_id, class: 'form-control' %>
+  </div>
 
   <div class="mb-3">
     <%= form.label :ordritem_id, class: 'form-label' %>
-      <%= form.text_field :ordritem_id, class: 'form-control' %>
-    </div>
+    <%= form.text_field :ordritem_id, class: 'form-control' %>
+  </div>
 
-  <div class="mb-3">
+  <div class="d-flex justify-content-end gap-2 align-items-center">
     <% if ordraction.persisted? %>
-      <div class="float-end">
-        <%= link_to t('common.delete'), ordraction, method: :delete, class: "text-danger", data: { confirm: t('common.confirm') } %>
-      </div>
+      <%= button_to t('common.delete'), ordraction, method: :delete, class: 'btn btn-link text-danger p-0', data: { turbo_confirm: t('common.confirm') } %>
     <% end %>
 
     <%= form.submit value: t('common.save'), class: 'btn btn-dark' %>
 
     <% if ordraction.persisted? %>
-      <%= link_to t('common.cancel'), ordraction, class: "btn btn-link" %>
+      <%= link_to t('common.cancel'), ordraction, class: 'btn btn-link' %>
     <% else %>
-      <%= link_to t('common.cancel'), ordractions_path, class: "btn btn-link" %>
+      <%= link_to t('common.cancel'), ordractions_path, class: 'btn btn-link' %>
     <% end %>
   </div>
 <% end %>

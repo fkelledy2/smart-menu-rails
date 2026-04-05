@@ -4,12 +4,12 @@
     <div>
       <strong class="fs-5">Order #<%= order.id %></strong>
       <% if order.tablesetting.present? %>
-        <span class="badge bg-secondary ms-2">
+        <span class="badge text-bg-secondary ms-2">
           <%= order.tablesetting.name %>
         </span>
       <% end %>
       <% if order.kitchen_notes.any? %>
-        <span class="badge bg-warning text-dark ms-2" title="<%= order.kitchen_notes.count %> kitchen note(s)">
+        <span class="badge text-bg-warning ms-2" title="<%= order.kitchen_notes.count %> kitchen note(s)">
           <i class="bi bi-exclamation-triangle"></i> <%= order.kitchen_notes.count %>
         </span>
       <% end %>
@@ -110,7 +110,7 @@
 <%# Item Content with inline notes on top of progress bar %>
 <div class="item-content">
   <div class="item-main">
-    <% if item.quantity > 1 %><span class="badge bg-primary me-1"><%= item.quantity %>×</span><% end %>
+    <% if item.quantity > 1 %><span class="badge text-bg-primary me-1"><%= item.quantity %>×</span><% end %>
     <span class="item-name"><%= item.menuitem.name %></span>
     <% if item.size_name.present? %>
       <span class="text-muted small">(<%= item.size_name.sub(/\s*\(.*\)/, '') %>)</span>

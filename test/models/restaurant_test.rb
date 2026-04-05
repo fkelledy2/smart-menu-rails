@@ -310,4 +310,37 @@ class RestaurantTest < ActiveSupport::TestCase
     assert Restaurant.respond_to?(:fetch_by_id)
     assert Restaurant.respond_to?(:fetch_by_user_id)
   end
+
+  # Service Operations settings
+  test 'has service_operations_wait_threshold_minutes with default 25' do
+    restaurant = Restaurant.new
+    assert_equal 25, restaurant.service_operations_wait_threshold_minutes
+  end
+
+  test 'has kitchen_congestion_threshold with default 8' do
+    restaurant = Restaurant.new
+    assert_equal 8, restaurant.kitchen_congestion_threshold
+  end
+
+  test 'validates service_operations_wait_threshold_minutes must be positive integer' do
+    @restaurant.service_operations_wait_threshold_minutes = 0
+    assert_not @restaurant.valid?
+    assert_includes @restaurant.errors[:service_operations_wait_threshold_minutes], 'must be greater than 0'
+  end
+
+  test 'validates kitchen_congestion_threshold must be positive integer' do
+    @restaurant.kitchen_congestion_threshold = -1
+    assert_not @restaurant.valid?
+    assert_includes @restaurant.errors[:kitchen_congestion_threshold], 'must be greater than 0'
+  end
+
+  test 'service_operations_wait_threshold_minutes accepts valid positive values' do
+    @restaurant.service_operations_wait_threshold_minutes = 30
+    assert @restaurant.valid?
+  end
+
+  test 'kitchen_congestion_threshold accepts valid positive values' do
+    @restaurant.kitchen_congestion_threshold = 10
+    assert @restaurant.valid?
+  end
 end

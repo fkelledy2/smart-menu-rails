@@ -7,7 +7,7 @@
       <h5 class="mb-0">
         <i class="bi bi-sticky"></i> Order Notes & Instructions
         <% if order.urgent_notes.any? %>
-          <span class="badge bg-danger ms-2">
+          <span class="badge text-bg-danger ms-2">
             <%= order.urgent_notes.count %> Urgent
           </span>
         <% end %>

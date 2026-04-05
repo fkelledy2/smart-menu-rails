@@ -1,64 +1,61 @@
 <%= form_with(model: [@restaurant, genimage]) do |form| %>
   <% if genimage.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(genimage.errors.count, "error") %> prohibited this genimage from being saved:</h2>
-
-      <ul>
-      <% genimage.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
+    <div class="alert alert-danger mb-3" role="alert">
+      <div class="fw-semibold mb-1"><%= pluralize(genimage.errors.count, 'error') %> prohibited this genimage from being saved:</div>
+      <ul class="mb-0">
+        <% genimage.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
       </ul>
     </div>
   <% end %>
 
   <div class="mb-3">
     <%= form.label :image_data, class: 'form-label' %>
-      <%= form.text_area :image_data, class: 'form-control' %>
-    </div>
+    <%= form.text_area :image_data, class: 'form-control' %>
+  </div>
 
   <div class="mb-3">
     <%= form.label :name, class: 'form-label' %>
-      <%= form.text_field :name, class: 'form-control' %>
-    </div>
+    <%= form.text_field :name, class: 'form-control' %>
+  </div>
 
   <div class="mb-3">
     <%= form.label :description, class: 'form-label' %>
-      <%= form.text_area :description, class: 'form-control' %>
-    </div>
+    <%= form.text_area :description, class: 'form-control' %>
+  </div>
 
   <div class="mb-3">
     <%= form.label :restaurant_id, class: 'form-label' %>
-      <%= form.text_field :restaurant_id, class: 'form-control' %>
-    </div>
+    <%= form.text_field :restaurant_id, class: 'form-control' %>
+  </div>
 
   <div class="mb-3">
     <%= form.label :menu_id, class: 'form-label' %>
-      <%= form.text_field :menu_id, class: 'form-control' %>
-    </div>
+    <%= form.text_field :menu_id, class: 'form-control' %>
+  </div>
 
   <div class="mb-3">
     <%= form.label :menusection_id, class: 'form-label' %>
-      <%= form.text_field :menusection_id, class: 'form-control' %>
-    </div>
+    <%= form.text_field :menusection_id, class: 'form-control' %>
+  </div>
 
   <div class="mb-3">
     <%= form.label :menuitem_id, class: 'form-label' %>
-      <%= form.text_field :menuitem_id, class: 'form-control' %>
-    </div>
+    <%= form.text_field :menuitem_id, class: 'form-control' %>
+  </div>
 
-  <div class="mb-3">
+  <div class="d-flex justify-content-end gap-2 align-items-center">
     <% if genimage.persisted? %>
-      <div class="float-end">
-        <%= link_to t('common.delete'), restaurant_genimage_path(@restaurant, genimage), method: :delete, class: "text-danger", data: { confirm: t('common.confirm') } %>
-      </div>
+      <%= button_to t('common.delete'), restaurant_genimage_path(@restaurant, genimage), method: :delete, class: 'btn btn-link text-danger p-0', data: { turbo_confirm: t('common.confirm') } %>
     <% end %>
 
     <%= form.submit value: t('common.save'), class: 'btn btn-dark' %>
 
     <% if genimage.persisted? %>
-      <%= link_to t('common.cancel'), restaurant_genimage_path(@restaurant, genimage), class: "btn btn-link" %>
+      <%= link_to t('common.cancel'), restaurant_genimage_path(@restaurant, genimage), class: 'btn btn-link' %>
     <% else %>
-      <%= link_to t('common.cancel'), restaurant_genimages_path(@restaurant), class: "btn btn-link" %>
+      <%= link_to t('common.cancel'), restaurant_genimages_path(@restaurant), class: 'btn btn-link' %>
     <% end %>
   </div>
 <% end %>

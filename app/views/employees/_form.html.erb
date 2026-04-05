@@ -5,7 +5,7 @@
     <%= form.hidden_field :restaurant_id %>
   <% end %>
 
-  <div class="mb-4 mb-4">
+  <div class="mb-4">
     <%= form.label :name, class: 'form-label' do %>
       <%= t('.name', default: 'Name') %>
       <span class="text-danger">*</span>
@@ -15,7 +15,7 @@
         required: true %>
   </div>
 
-  <div class="mb-4 mb-4">
+  <div class="mb-4">
     <%= form.label :eid, class: 'form-label' do %>
       <%= t('.eid', default: 'Id') %>
       <span class="text-danger">*</span>
@@ -25,7 +25,7 @@
         required: true %>
   </div>
 
-  <div class="mb-4 mb-4">
+  <div class="mb-4">
     <%= form.label :user_id, class: 'form-label' do %>
       <%= t('.user', default: 'User') %>
       <span class="text-danger">*</span>
@@ -38,7 +38,7 @@
         { class: 'form-control', required: true } %>
   </div>
 
-  <div class="mb-4 mb-4">
+  <div class="mb-4">
     <%= form.label :role, class: 'form-label' do %>
       <%= t('.role', default: 'Role') %>
       <span class="text-danger">*</span>
@@ -50,7 +50,7 @@
         required: true %>
   </div>
 
-  <div class="mb-4 mb-4">
+  <div class="mb-4">
     <%= form.label :status, class: 'form-label' do %>
       <%= t('.status', default: 'Status') %>
     <% end %>
@@ -81,11 +81,11 @@
           class: 'btn btn-ghost',
           data: { turbo_frame: 'restaurant_content' } %>
 
-      <%= link_to t('common.delete'),
+      <%= button_to t('common.delete'),
           restaurant_employee_path(employee.restaurant, employee),
           method: :delete,
           class: 'btn btn-outline-danger',
-          data: { confirm: t('common.confirm') } %>
+          data: { turbo_confirm: t('common.confirm') } %>
     <% else %>
       <%= link_to t('common.cancel', default: 'Cancel'),
           edit_restaurant_path(employee.restaurant, section: 'staff'),

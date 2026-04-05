@@ -73,12 +73,10 @@
               <%= button_to 'Approve Claim', approve_admin_restaurant_claim_request_path(@claim_request),
                   method: :patch, class: 'btn btn-success',
                   data: { turbo_confirm: 'Approve this claim? Restaurant will become soft-claimed.' } %>
-              <hr class="my-3">
-              <div class="mt-3">
-                <%= button_to 'Reject Claim', reject_admin_restaurant_claim_request_path(@claim_request),
-                    method: :patch, class: 'btn btn-danger',
-                    data: { turbo_confirm: 'Reject this claim?' } %>
-              </div>
+              <%= button_to 'Reject Claim', reject_admin_restaurant_claim_request_path(@claim_request),
+                  method: :patch, class: 'btn btn-outline-danger',
+                  data: { turbo_confirm: 'Reject this claim?' } %>
+              <hr class="my-1">
             <% end %>
             <%= link_to 'View Restaurant', edit_restaurant_path(@claim_request.restaurant), class: 'btn btn-outline-primary' %>
           </div>

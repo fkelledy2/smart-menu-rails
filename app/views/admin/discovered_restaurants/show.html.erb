@@ -40,7 +40,7 @@ rescue StandardError; [] end %>
   end
   date_str = ts.present? ? (begin; Time.parse(ts).strftime('%b %d'); rescue; ts; end) : nil
   txt = date_str ? "#{label} · #{date_str}" : label
-  %Q(<span class="#{cls}" style="font-size:0.7rem;margin-left:4px">#{ERB::Util.html_escape(txt)}</span>).html_safe
+  %Q(<span class="#{cls} fs-10 ms-1">#{ERB::Util.html_escape(txt)}</span>).html_safe
 } %>
 <% enrichment_active = [deep_dive['status'], web_scrape['status']].any? { |s| %w[queued scraping processing].include?(s) } %>
 
@@ -56,13 +56,6 @@ rescue StandardError; [] end %>
      data-discovered-restaurant-web-scrape-initial-status-value="<%= web_scrape['status'].to_s %>">
 
   <%# ── HEADER ── %>
-  <nav aria-label="breadcrumb" class="mb-3">
-    <span class="text-muted">
-      <%= link_to 'Admin', admin_root_path, class: 'text-muted text-decoration-none' %> /
-      <%= link_to 'Discovery Queue', admin_discovered_restaurants_path, class: 'text-muted text-decoration-none' %> /
-      <%= @discovered_restaurant.name %>
-    </span>
-  </nav>
   <div class="d-flex align-items-center justify-content-between mb-3">
     <div class="d-flex align-items-center gap-2 flex-wrap">
       <h1 class="h3 mb-1"><%= @discovered_restaurant.name %></h1>
@@ -100,7 +93,7 @@ rescue StandardError; [] end %>
             rel: 'noopener',
             class: 'fw-semibold' %>
         <% if restaurant.preview_published? %>
-          <span class="badge bg-success bg-opacity-75 ms-1">
+          <span class="badge text-bg-success ms-1">
             <i class="bi bi-check-lg me-1"></i>Published
           </span>
         <% end %>
@@ -110,9 +103,10 @@ rescue StandardError; [] end %>
           </span>
         <% end %>
       </div>
-      <%= link_to resync_to_restaurant_admin_discovered_restaurant_path(@discovered_restaurant),
+      <%= button_to resync_to_restaurant_admin_discovered_restaurant_path(@discovered_restaurant),
+            method: :post,
             class: 'btn btn-sm btn-success',
-            data: { turbo: true, turbo_method: :post } do %>
+            form: { class: 'd-flex' } do %>
         <i class="bi bi-arrow-clockwise me-1"></i>Sync
       <% end %>
     </div>
@@ -126,10 +120,11 @@ rescue StandardError; [] end %>
       <div class="d-flex align-items-center gap-3 flex-wrap small text-muted mb-4 pb-3 border-bottom">
         <% place_fetched_at = place_details['fetched_at'] %>
         <span>
-          <%= link_to refresh_place_details_admin_discovered_restaurant_path(@discovered_restaurant),
-                class: 'text-decoration-none',
+          <%= button_to refresh_place_details_admin_discovered_restaurant_path(@discovered_restaurant),
+                method: :post,
+                class: 'btn btn-link p-0 text-decoration-none text-body',
                 title: @discovered_restaurant.google_place_id,
-                data: { turbo: true, turbo_method: :post } do %>
+                form: { class: 'd-inline' } do %>
             <i class="bi bi-geo-alt me-1"></i>Google Place
             <i class="bi bi-arrow-clockwise ms-1"></i>
           <% end %>
@@ -145,10 +140,11 @@ rescue StandardError; [] end %>
             <i class="bi bi-globe"></i>
             <%= link_to 'Website', sanitize_url(@discovered_restaurant.website_url),
                 target: '_blank', rel: 'noopener', class: 'text-decoration-none' %>
-            <%= link_to deep_dive_website_admin_discovered_restaurant_path(@discovered_restaurant),
-                  class: 'text-decoration-none ms-1',
+            <%= button_to deep_dive_website_admin_discovered_restaurant_path(@discovered_restaurant),
+                  method: :post,
+                  class: 'btn btn-link p-0 text-decoration-none text-body ms-1',
                   title: 'Enrich from website',
-                  data: { turbo: true, turbo_method: :post } do %>
+                  form: { class: 'd-inline' } do %>
               <i class="bi bi-arrow-clockwise"></i>
             <% end %>
             <% if %w[queued scraping processing].include?(deep_dive['status']) %>
@@ -158,10 +154,11 @@ rescue StandardError; [] end %>
                 (last: <%= Time.parse(deep_dive['extracted_at']).strftime('%b %d %H:%M') rescue deep_dive['extracted_at'] %>)
               </span>
             <% end %>
-            <%= link_to scrape_web_menus_admin_discovered_restaurant_path(@discovered_restaurant),
-                  class: 'text-decoration-none ms-1',
+            <%= button_to scrape_web_menus_admin_discovered_restaurant_path(@discovered_restaurant),
+                  method: :post,
+                  class: 'btn btn-link p-0 text-decoration-none text-body ms-1',
                   title: 'Scrape web menus',
-                  data: { turbo: true, turbo_method: :post } do %>
+                  form: { class: 'd-inline' } do %>
               <i class="bi bi-file-earmark-text"></i>
             <% end %>
             <% if %w[queued scraping processing].include?(web_scrape['status']) %>
@@ -284,11 +281,13 @@ rescue StandardError; [] end %>
                   approve_admin_discovered_restaurant_path(@discovered_restaurant),
                   method: :patch,
                   class: "btn btn-success #{'active' if @discovered_restaurant.approved?}",
+                  form: { class: 'd-flex' },
                   data: { turbo_confirm: 'Approve this restaurant?' } %>
             <%= button_to 'Reject',
                   reject_admin_discovered_restaurant_path(@discovered_restaurant),
                   method: :patch,
                   class: "btn btn-outline-danger #{'active' if @discovered_restaurant.rejected?}",
+                  form: { class: 'd-flex' },
                   data: { turbo_confirm: 'Reject this restaurant?' } %>
           </div>
         </div>
@@ -300,11 +299,11 @@ rescue StandardError; [] end %>
   <% if web_scrape.present? && web_scrape['status'].present? %>
     <%
       scrape_badge_class = case web_scrape['status']
-        when 'queued', 'scraping', 'processing' then 'bg-warning text-dark'
-        when 'completed' then 'bg-success'
-        when 'failed' then 'bg-danger'
-        when 'killed' then 'bg-secondary'
-        else 'bg-secondary'
+        when 'queued', 'scraping', 'processing' then 'text-bg-warning'
+        when 'completed' then 'text-bg-success'
+        when 'failed' then 'text-bg-danger'
+        when 'killed' then 'text-bg-secondary'
+        else 'text-bg-secondary'
       end
     %>
     <div class="card mb-3" data-testid="discovered-restaurant-web-scrape">
@@ -377,8 +376,7 @@ rescue StandardError; [] end %>
                           method: :patch, local: true, class: 'd-flex align-items-center gap-1' do |f| %>
                       <%= f.text_field :name, value: ms.display_name,
                             name: 'menu_source[name]',
-                            class: 'form-control form-control-sm',
-                            style: 'min-width: 0;' %>
+                            class: 'form-control form-control-sm w-100' %>
                       <button type="submit" class="btn btn-sm btn-outline-secondary" title="Save name">
                         <i class="bi bi-floppy"></i>
                       </button>
@@ -386,9 +384,9 @@ rescue StandardError; [] end %>
                   </td>
                   <td>
                     <% if ms.pdf? %>
-                      <span class="badge bg-danger-subtle text-danger">PDF</span>
+                      <span class="badge text-bg-danger">PDF</span>
                     <% else %>
-                      <span class="badge bg-info-subtle text-info">HTML</span>
+                      <span class="badge text-bg-info">HTML</span>
                     <% end %>
                   </td>
                   <td class="small">

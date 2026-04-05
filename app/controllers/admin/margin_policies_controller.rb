@@ -74,6 +74,8 @@ module Admin
 
     def set_policy_record
       @policy = ProfitMarginPolicy.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      redirect_to admin_margin_policies_path, alert: 'Margin policy not found.', status: :see_other
     end
 
     def policy_params

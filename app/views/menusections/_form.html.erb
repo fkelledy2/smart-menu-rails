@@ -195,13 +195,13 @@
     <!-- Form actions -->
     <div class="edit-actions">
       <% if menusection.persisted? %>
-        <%= link_to t(".delete"),
+        <%= button_to t('.delete'),
             restaurant_menu_menusection_path(restaurant, menu, menusection),
             method: :delete,
             class: 'btn btn-outline-danger',
-            data: { confirm: t(".sure") } %>
+            data: { turbo_confirm: t('.sure') } %>
       <% end %>
-      <%= form.submit value: t(".save"), class: 'btn btn-primary' %>
+      <%= form.submit value: t('.save'), class: 'btn btn-primary' %>
     </div>
   </div>
 <% end %>

@@ -11,32 +11,35 @@
     <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
       <div>
         <!-- Breadcrumb -->
-        <div class="text-sm text-gray-500 mb-2">
-          <%= link_to @size.restaurant.name, edit_restaurant_path(@size.restaurant), class: 'text-primary' %>
-          <i class="bi bi-chevron-right"></i>
-          <%= link_to t('.sizes'), restaurant_sizes_path(@size.restaurant), class: 'text-primary' %>
-          <i class="bi bi-chevron-right"></i>
-          <%= @size.name %>
-        </div>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb small mb-2">
+            <li class="breadcrumb-item">
+              <%= link_to @size.restaurant.name, edit_restaurant_path(@size.restaurant), class: 'text-primary' %>
+            </li>
+            <li class="breadcrumb-item">
+              <%= link_to t('.sizes'), restaurant_sizes_path(@size.restaurant), class: 'text-primary' %>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page"><%= @size.name %></li>
+          </ol>
+        </nav>
 
-        <h1 class="text-2xl font-semibold text-gray-900 mb-1">
+        <h1 class="h3 fw-semibold mb-1">
           <i class="bi bi-pencil"></i>
           <%= t('.edit_size') %>
         </h1>
-        <p class="text-sm text-gray-500">
+        <p class="text-muted small mb-0">
           <%= t('.description') %>
         </p>
       </div>
 
       <div class="d-flex gap-2">
-        <%= link_to restaurant_sizes_path(@size.restaurant),
-            class: 'btn btn-ghost' do %>
+        <%= link_to restaurant_sizes_path(@size.restaurant), class: 'btn btn-ghost' do %>
           <i class="bi bi-x-lg"></i> <%= t('.cancel') %>
         <% end %>
 
-        <%= link_to restaurant_size_path(@size.restaurant, @size),
+        <%= button_to restaurant_size_path(@size.restaurant, @size),
             method: :delete,
-            data: { confirm: t('.confirm_delete') },
+            data: { turbo_confirm: t('.confirm_delete') },
             class: 'btn btn-ghost text-danger' do %>
           <i class="bi bi-trash"></i> <%= t('.delete') %>
         <% end %>
@@ -56,22 +59,3 @@
     <%= render 'form', size: @size %>
   </div>
 <% end %>
-
-<style>
-  .text-2xl {
-    font-size: 1.5rem;
-    line-height: 2rem;
-  }
-
-  .text-gray-900 {
-    color: var(--color-gray-900);
-  }
-
-  .text-gray-500 {
-    color: var(--color-gray-500);
-  }
-
-  .text-sm {
-    font-size: 0.875rem;
-  }
-</style>

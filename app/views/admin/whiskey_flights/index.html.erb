@@ -3,12 +3,14 @@
   <%= render 'shared/admin_breadcrumb',
         crumbs: [{ label: 'Admin', url: admin_whiskey_flights_path }],
         current: "Whiskey Flights — #{@restaurant.name}" %>
-<h1 class="h3 mb-1">Whiskey Flights — <%= @restaurant.name %></h1>
 
-<div class="d-flex gap-2 mb-3">
-  <%= link_to 'Create Manual Flight', new_admin_whiskey_flight_path(restaurant_id: @restaurant.id), class: 'btn btn-primary' %>
-  <%= link_to 'Back to Review Queue', beverage_review_queue_restaurant_path(@restaurant), class: 'btn btn-outline-secondary' %>
-</div>
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">Whiskey Flights — <%= @restaurant.name %></h1>
+    <div class="d-flex gap-2">
+      <%= link_to 'Create Manual Flight', new_admin_whiskey_flight_path(restaurant_id: @restaurant.id), class: 'btn btn-sm btn-primary' %>
+      <%= link_to 'Back to Review Queue', beverage_review_queue_restaurant_path(@restaurant), class: 'btn btn-sm btn-outline-secondary' %>
+    </div>
+  </div>
 
 <% if @flights.any? %>
   <div class="card">
@@ -30,7 +32,7 @@
             <tr>
               <td><%= flight.title %></td>
               <td><code><%= flight.theme_key %></code></td>
-              <td><span class="badge bg-<%= flight.ai? ? 'info' : 'secondary' %>"><%= flight.source %></span></td>
+              <td><span class="badge text-bg-<%= flight.ai? ? 'info' : 'secondary' %>"><%= flight.source %></span></td>
               <td>
                 <%= render 'shared/status_badge', status: flight.status %>
               </td>

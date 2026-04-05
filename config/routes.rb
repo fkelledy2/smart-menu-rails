@@ -395,6 +395,8 @@ Rails.application.routes.draw do
         member do
           patch :approve
           patch :reject
+          post :confirm_86
+          delete :dismiss_recommendation
         end
       end
       member do

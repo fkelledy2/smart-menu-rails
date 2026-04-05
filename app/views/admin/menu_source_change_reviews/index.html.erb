@@ -48,12 +48,12 @@
                   <span class="fw-semibold"><%= r.menu_source.restaurant.name %></span>
                 <% elsif r.menu_source.discovered_restaurant %>
                   <span class="fw-semibold"><%= r.menu_source.discovered_restaurant.name %></span>
-                  <span class="badge bg-light text-secondary border ms-1 small">Discovery</span>
+                  <span class="badge text-bg-secondary ms-1">Discovery</span>
                 <% else %>
                   <span class="text-muted">—</span>
                 <% end %>
               </td>
-              <td class="d-none d-md-table-cell small" style="max-width: 300px;">
+              <td class="d-none d-md-table-cell small mw-0">
                 <div class="text-truncate" title="<%= r.menu_source.source_url %>">
                   <%= link_to r.menu_source.source_url.to_s.delete_prefix('https://').delete_prefix('http://').truncate(60),
                       admin_menu_source_change_review_path(r),

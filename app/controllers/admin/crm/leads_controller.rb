@@ -143,7 +143,7 @@ module Admin
 
       def set_lead
         @lead = CrmLead.find_by(id: params[:id])
-        head :not_found unless @lead
+        head :not_found and return unless @lead
       end
 
       def lead_params

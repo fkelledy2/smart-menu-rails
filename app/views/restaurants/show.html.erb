@@ -5,7 +5,7 @@
     </div>
     <div class="col-2">
         <span class="float-end">
-          <%= link_to edit_restaurant_path(@restaurant), class: 'btn btn-sm btn-dark' do %>
+          <%= link_to edit_restaurant_path(@restaurant), class: 'btn btn-sm btn-outline-secondary' do %>
             <i class="bi bi-pencil-fill"></i>
           <% end %>
         </span>
@@ -15,34 +15,34 @@
 
 <ul class="nav nav-tabs" id="restaurantTabs" role="tablist">
   <li class="nav-item" role="presentation">
-    <button class="nav-link link-dark active" id="restaurant-tab" data-bs-toggle="tab" data-bs-target="#restaurant" type="button" role="tab" aria-controls="restaurantConfig" aria-selected="true"><%= t('.tab_restaurant') %></button>
+    <button class="nav-link active" id="restaurant-tab" data-bs-toggle="tab" data-bs-target="#restaurant" type="button" role="tab" aria-controls="restaurant" aria-selected="true"><%= t('.tab_restaurant') %></button>
   </li>
   <li class="nav-item" role="presentation">
-    <button class="nav-link link-dark" id="menu-tab" data-bs-toggle="tab" data-bs-target="#menu" type="button" role="tab" aria-controls="menusConfig" aria-selected="false"><%= t('.tab_menus') %></button>
+    <button class="nav-link" id="menu-tab" data-bs-toggle="tab" data-bs-target="#menu" type="button" role="tab" aria-controls="menu" aria-selected="false"><%= t('.tab_menus') %></button>
   </li>
   <li class="nav-item" role="presentation">
-    <button class="nav-link link-dark" id="employees-tab" data-bs-toggle="tab" data-bs-target="#employee" type="button" role="tab" aria-controls="employeesConfig" aria-selected="false"><%= t('.tab_employees') %></button>
+    <button class="nav-link" id="employees-tab" data-bs-toggle="tab" data-bs-target="#employee" type="button" role="tab" aria-controls="employee" aria-selected="false"><%= t('.tab_employees') %></button>
   </li>
   <% if @current_employee && @current_employee.role == 'manager' %>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link link-dark" id="tables-tab" data-bs-toggle="tab" data-bs-target="#table" type="button" role="tab" aria-controls="tablesConfig" aria-selected="false"><%= t('.tab_tables') %></button>
-      </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link link-dark" id="tips-tab" data-bs-toggle="tab" data-bs-target="#tip" type="button" role="tab" aria-controls="tipsConfig" aria-selected="false"><%= t('.tab_tips') %></button>
-      </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link link-dark" id="taxes-tab" data-bs-toggle="tab" data-bs-target="#tax" type="button" role="tab" aria-controls="taxesConfig" aria-selected="false"><%= t('.tab_taxes') %></button>
-      </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link link-dark" id="openinghours-tab" data-bs-toggle="tab" data-bs-target="#openinghour" type="button" role="tab" aria-controls="openinghoursConfig" aria-selected="false"><%= t('.tab_openinghours') %></button>
-      </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link link-dark" id="billing-tab" data-bs-toggle="tab" data-bs-target="#billing" type="button" role="tab" aria-controls="billingsConfig" aria-selected="false"><%= t('.tab_billing') %></button>
-      </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="tables-tab" data-bs-toggle="tab" data-bs-target="#table" type="button" role="tab" aria-controls="table" aria-selected="false"><%= t('.tab_tables') %></button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="tips-tab" data-bs-toggle="tab" data-bs-target="#tip" type="button" role="tab" aria-controls="tip" aria-selected="false"><%= t('.tab_tips') %></button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="taxes-tab" data-bs-toggle="tab" data-bs-target="#tax" type="button" role="tab" aria-controls="tax" aria-selected="false"><%= t('.tab_taxes') %></button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="openinghours-tab" data-bs-toggle="tab" data-bs-target="#openinghour" type="button" role="tab" aria-controls="openinghour" aria-selected="false"><%= t('.tab_openinghours') %></button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="billing-tab" data-bs-toggle="tab" data-bs-target="#billing" type="button" role="tab" aria-controls="billing" aria-selected="false"><%= t('.tab_billing') %></button>
+    </li>
   <% end %>
 </ul>
 <div class="tab-content" id="restaurantConfig">
-  <div class="tab-pane fade show active" id="restaurant" role="tabpanel" aria-labelledby="home-tab">
+  <div class="tab-pane fade show active" id="restaurant" role="tabpanel" aria-labelledby="restaurant-tab">
     <p>
     <div class="row">
         <div class="col-12">
@@ -84,7 +84,6 @@
                 <div class="col-sm-3">
                 </div>
                 <div class="col-9">
-                    <p>
                     <h4><%= t(".address") %></h4>
                 </div>
               </div>
@@ -128,7 +127,6 @@
                 <div class="col-sm-3">
                 </div>
                 <div class="col-9">
-                    <p>
                     <h4><%= t(".imageSettings") %></h4>
                 </div>
               </div>
@@ -156,7 +154,6 @@
                 <div class="col-sm-3">
                 </div>
                 <div class="col-9">
-                    <p>
                     <h4><%= t(".settings") %></h4>
                 </div>
               </div>
@@ -199,41 +196,27 @@
         </div>
     </div>
   </div>
-  <div class="tab-content" id="employeeConfig">
-    <div class="tab-pane fade" id="employee" role="tabpanel" aria-labelledby="employee-tab">
-        <%= render 'showEmployees', restaurant: @restaurant, edit: false %>
-    </div>
+  <div class="tab-pane fade" id="employee" role="tabpanel" aria-labelledby="employees-tab">
+    <%= render 'showEmployees', restaurant: @restaurant, edit: false %>
   </div>
-  <div class="tab-content" id="menusConfig">
-    <div class="tab-pane fade" id="menu" role="tabpanel" aria-labelledby="menu-tab">
-        <%= render 'showMenus', restaurant: @restaurant, edit: false %>
-    </div>
+  <div class="tab-pane fade" id="menu" role="tabpanel" aria-labelledby="menu-tab">
+    <%= render 'showMenus', restaurant: @restaurant, edit: false %>
   </div>
   <% if @current_employee && @current_employee.role == 'manager' %>
-      <div class="tab-content" id="tablesConfig">
-        <div class="tab-pane fade" id="table" role="tabpanel" aria-labelledby="table-tab">
-            <%= render 'showTableSettings', restaurant: @restaurant, edit: false %>
-        </div>
-      </div>
-      <div class="tab-content" id="tipsConfig">
-        <div class="tab-pane fade" id="tip" role="tabpanel" aria-labelledby="tip-tab">
-            <%= render 'showTips', restaurant: @restaurant, edit: false %>
-        </div>
-      </div>
-      <div class="tab-content" id="taxssConfig">
-        <div class="tab-pane fade" id="tax" role="tabpanel" aria-labelledby="tax-tab">
-            <%= render 'showTaxes', restaurant: @restaurant, edit: false %>
-        </div>
-      </div>
-      <div class="tab-content" id="openinghoursConfig">
-        <div class="tab-pane fade" id="openinghour" role="tabpanel" aria-labelledby="openinghour-tab">
-            <%= render 'showOpeningHours', restaurant: @restaurant, edit: false %>
-        </div>
-      </div>
-      <div class="tab-content" id="billingsConfig">
-        <div class="tab-pane fade" id="billing" role="tabpanel" aria-labelledby="billing-tab">
-            <%= t('.billing_content') %>
-        </div>
-      </div>
+    <div class="tab-pane fade" id="table" role="tabpanel" aria-labelledby="tables-tab">
+      <%= render 'showTableSettings', restaurant: @restaurant, edit: false %>
+    </div>
+    <div class="tab-pane fade" id="tip" role="tabpanel" aria-labelledby="tips-tab">
+      <%= render 'showTips', restaurant: @restaurant, edit: false %>
+    </div>
+    <div class="tab-pane fade" id="tax" role="tabpanel" aria-labelledby="taxes-tab">
+      <%= render 'showTaxes', restaurant: @restaurant, edit: false %>
+    </div>
+    <div class="tab-pane fade" id="openinghour" role="tabpanel" aria-labelledby="openinghours-tab">
+      <%= render 'showOpeningHours', restaurant: @restaurant, edit: false %>
+    </div>
+    <div class="tab-pane fade" id="billing" role="tabpanel" aria-labelledby="billing-tab">
+      <%= t('.billing_content') %>
+    </div>
   <% end %>
 </div>

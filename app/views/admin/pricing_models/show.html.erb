@@ -59,7 +59,7 @@
   <% plan_prices = @model.pricing_model_plan_prices.includes(:plan).ordered %>
   <% if plan_prices.any? %>
     <div class="card mb-4">
-      <div class="card-header"><h5 class="mb-0">Plan Prices</h5></div>
+      <div class="card-header fw-semibold">Plan Prices</div>
       <div class="table-responsive">
         <table class="table table-sm mb-0">
           <thead class="table-light">
@@ -69,7 +69,7 @@
             <% plan_prices.each do |pp| %>
               <tr>
                 <td><strong><%= pp.plan.name %></strong></td>
-                <td><span class="badge bg-secondary"><%= pp.interval %></span></td>
+                <td><span class="badge text-bg-secondary"><%= pp.interval %></span></td>
                 <td><%= pp.currency %></td>
                 <td>&euro;<%= number_with_precision(pp.price_euros, precision: 2) %></td>
                 <td class="text-muted small"><%= pp.stripe_price_id || '—' %></td>
@@ -84,8 +84,8 @@
   <!-- Publish action -->
   <% if @model.draft? %>
     <div class="card border-warning">
-      <div class="card-header bg-warning bg-opacity-10">
-        <h5 class="mb-0"><i class="bi bi-exclamation-triangle me-2" aria-hidden="true"></i>Publish — Irreversible Action</h5>
+      <div class="card-header bg-warning bg-opacity-10 fw-semibold">
+        <i class="bi bi-exclamation-triangle me-2" aria-hidden="true"></i>Publish — Irreversible Action
       </div>
       <div class="card-body">
         <p class="text-body small mb-3">

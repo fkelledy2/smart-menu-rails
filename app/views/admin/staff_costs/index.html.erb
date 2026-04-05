@@ -20,8 +20,10 @@
               <td>&euro;<%= number_with_precision(s.other_ops_cost_cents / 100.0, precision: 2) %></td>
               <td><strong>&euro;<%= number_with_precision(s.total_cost_euros, precision: 2) %></strong></td>
               <td>
-                <%= link_to 'Edit', edit_admin_staff_cost_path(s), class: 'btn btn-outline-secondary btn-sm me-1' %>
-                <%= button_to 'Delete', admin_staff_cost_path(s), method: :delete, class: 'btn btn-outline-danger btn-sm', form: { data: { turbo_confirm: 'Delete?' } } %>
+                <div class="d-flex gap-1">
+                  <%= link_to 'Edit', edit_admin_staff_cost_path(s), class: 'btn btn-outline-secondary btn-sm' %>
+                  <%= button_to 'Delete', admin_staff_cost_path(s), method: :delete, class: 'btn btn-outline-danger btn-sm', form: { data: { turbo_confirm: 'Delete?' } } %>
+                </div>
               </td>
             </tr>
           <% end %>

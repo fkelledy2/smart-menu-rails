@@ -4,12 +4,12 @@
     <div>
       <strong class="fs-5"><%= t('kitchen_dashboard.station_ticket_card.order_number', id: order.id) %></strong>
       <% if order.tablesetting.present? %>
-        <span class="badge bg-secondary ms-2">
+        <span class="badge text-bg-secondary ms-2">
           <%= order.tablesetting.name %>
         </span>
       <% end %>
       <% if order.kitchen_notes.any? %>
-        <span class="badge bg-warning text-dark ms-2" title="<%= t('kitchen_dashboard.station_ticket_card.kitchen_notes_count', count: order.kitchen_notes.count) %>">
+        <span class="badge text-bg-warning ms-2" title="<%= t('kitchen_dashboard.station_ticket_card.kitchen_notes_count', count: order.kitchen_notes.count) %>">
           <i class="bi bi-exclamation-triangle"></i> <%= order.kitchen_notes.count %>
         </span>
       <% end %>
@@ -110,7 +110,7 @@
 <%# Item Content with inline notes on top of progress bar %>
 <div class="item-content" data-ordritem-id="<%= item.id %>">
   <div class="item-main">
-    <% if item.quantity > 1 %><span class="badge bg-primary me-1"><%= item.quantity %>×</span><% end %>
+    <% if item.quantity > 1 %><span class="badge text-bg-primary me-1"><%= item.quantity %>×</span><% end %>
     <span class="item-name"><%= item.menuitem.name %></span>
     <% if item.size_name.present? %>
       <span class="text-muted small">(<%= item.size_name.sub(/\s*\(.*\)/, '') %>)</span>
@@ -175,7 +175,7 @@
             <div class="d-flex align-items-center justify-content-between py-1 border-bottom"
                  data-ordritem-id="<%= item.id %>">
               <small class="text-truncate me-2">
-                <% if item.quantity > 1 %><span class="badge bg-secondary me-1"><%= item.quantity %>x</span><% end %>
+                <% if item.quantity > 1 %><span class="badge text-bg-secondary me-1"><%= item.quantity %>x</span><% end %>
                 <%= item.menuitem.name %>
               </small>
               <div class="d-flex align-items-center gap-1">

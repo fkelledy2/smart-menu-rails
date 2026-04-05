@@ -34,7 +34,7 @@
               <td><%= rr.id %></td>
               <td><%= rr.restaurant.name %></td>
               <td><%= rr.requested_by_email %></td>
-              <td class="text-truncate" style="max-width: 250px;" title="<%= rr.reason %>"><%= rr.reason %></td>
+              <td class="text-truncate mw-0" title="<%= rr.reason %>"><%= rr.reason %></td>
               <td>
                 <%= render 'shared/status_badge', status: rr.status %>
               </td>

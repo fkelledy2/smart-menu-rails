@@ -31,11 +31,11 @@
         <tr>
           <td>
             <% if target.restaurant_id.present? && target.menusection_id.nil? && target.menuitem_id.nil? %>
-              <span class="badge bg-primary">Restaurant</span>
+              <span class="badge text-bg-primary">Restaurant</span>
             <% elsif target.menusection_id.present? %>
-              <span class="badge bg-info">Section</span>
+              <span class="badge text-bg-info">Section</span>
             <% else %>
-              <span class="badge bg-success">Item</span>
+              <span class="badge text-bg-success">Item</span>
             <% end %>
           </td>
           <td>

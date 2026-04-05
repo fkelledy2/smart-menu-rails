@@ -74,14 +74,14 @@
               </td>
               <td class="text-end">
                 <% if target.target_margin_percentage.present? %>
-                  <span class="badge bg-primary"><%= target.target_margin_percentage %>%</span>
+                  <span class="badge text-bg-primary"><%= target.target_margin_percentage %>%</span>
                 <% else %>
                   <span class="text-muted">—</span>
                 <% end %>
               </td>
               <td class="text-end">
                 <% if target.minimum_margin_percentage.present? %>
-                  <span class="badge bg-secondary"><%= target.minimum_margin_percentage %>%</span>
+                  <span class="badge text-bg-secondary"><%= target.minimum_margin_percentage %>%</span>
                 <% else %>
                   <span class="text-muted">—</span>
                 <% end %>
@@ -100,11 +100,11 @@
                 <div class="d-flex gap-1 justify-content-end">
                   <%= link_to 'Edit',
                       edit_restaurant_profit_margin_target_path(restaurant, target),
-                      class: 'btn btn-xs btn-outline-secondary',
+                      class: 'btn btn-sm btn-outline-secondary',
                       data: { turbo_frame: 'inline_target_form' } %>
                   <%= link_to 'Delete',
                       restaurant_profit_margin_target_path(restaurant, target),
-                      class: 'btn btn-xs btn-outline-danger',
+                      class: 'btn btn-sm btn-outline-danger',
                       data: { turbo_method: :delete, turbo_confirm: 'Delete this target?' } %>
                 </div>
               </td>

@@ -1,29 +1,26 @@
 <%= form_with(model: metric) do |form| %>
   <% if metric.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(metric.errors.count, "error") %> prohibited this metric from being saved:</h2>
-
-      <ul>
-      <% metric.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
+    <div class="alert alert-danger mb-3" role="alert">
+      <div class="fw-semibold mb-1"><%= pluralize(metric.errors.count, 'error') %> prohibited this metric from being saved:</div>
+      <ul class="mb-0">
+        <% metric.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
       </ul>
     </div>
   <% end %>
 
-  <div class="mb-3">
+  <div class="mb-3 d-flex justify-content-end gap-2 align-items-center">
     <% if metric.persisted? %>
-      <div class="float-end">
-        <%= link_to t('common.delete'), metric, method: :delete, class: "text-danger", data: { confirm: t('common.confirm') } %>
-      </div>
+      <%= button_to t('common.delete'), metric, method: :delete, class: 'btn btn-link text-danger p-0', data: { turbo_confirm: t('common.confirm') } %>
     <% end %>
 
     <%= form.submit value: t('common.save'), class: 'btn btn-dark' %>
 
     <% if metric.persisted? %>
-      <%= link_to t('common.cancel'), metric, class: "btn btn-link" %>
+      <%= link_to t('common.cancel'), metric, class: 'btn btn-link' %>
     <% else %>
-      <%= link_to t('common.cancel'), metrics_path, class: "btn btn-link" %>
+      <%= link_to t('common.cancel'), metrics_path, class: 'btn btn-link' %>
     <% end %>
   </div>
 <% end %>

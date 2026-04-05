@@ -1,6 +1,79 @@
 ---
 en:
   admin:
+    feature_flags:
+      index:
+        title: Feature Flags
+        subtitle_one: "%{count} flag"
+        subtitle_other: "%{count} flags"
+        add_label: Add flag
+        add_placeholder: my_feature_name
+        add_button: Add
+        col_flag: Flag
+        col_state: State
+        col_gates: Gates enabled
+        unknown_description: No description available.
+      flags:
+        agent_framework:
+          name: Agent Framework
+          description: Enables the autonomous AI agent system powering background tasks such as menu import orchestration, CRM enrichment, and multi-step workflow automation.
+        agent_menu_import:
+          name: Agent Menu Import
+          description: Activates AI-assisted menu import — the agent parses raw OCR/scrape output, infers sections, classifies items, and enriches descriptions automatically.
+        cost_indexed_pricing:
+          name: Cost-Indexed Pricing
+          description: Dynamically adjusts menu item prices based on live ingredient costs and the restaurant's configured target margin policy.
+        cost_insights_admin:
+          name: Cost Insights (Admin)
+          description: Unlocks the super-admin Cost Insights dashboard, which aggregates Heroku, vendor, and staff costs for monthly P&L review.
+        crm_sales_funnel:
+          name: CRM Sales Funnel
+          description: Enables the full CRM pipeline — kanban board, lead lifecycle management, Calendly sync, email send history, and lead scoring.
+        employee_role_promotion:
+          name: Employee Role Promotion
+          description: Allows restaurant managers to promote staff members to elevated roles (e.g. senior staff, shift lead) directly within the app.
+        heroku_cost_inventory:
+          name: Heroku Cost Inventory
+          description: Tracks Heroku dyno and add-on costs; feeds into the Cost Insights dashboard for infrastructure spend analysis.
+        homepage_testimonials:
+          name: Homepage Testimonials
+          description: Displays a curated testimonials carousel on the public-facing mellow.menu homepage.
+        jwt_api_access:
+          name: JWT API Access
+          description: Enables token-based API access so external systems and integrations can authenticate against the Smart Menu API.
+        menu_experiments:
+          name: Menu A/B Experiments
+          description: Activates the experimentation framework for testing menu layouts, item ordering, and pricing strategies against control groups.
+        ordritem_realtime_tracking:
+          name: Realtime Order Item Tracking
+          description: Pushes live order item status updates (e.g. preparing → ready) from kitchen to customer via ActionCable.
+        partner_integrations:
+          name: Partner Integrations
+          description: Enables third-party POS and delivery platform integrations (currently Square; extensible to others).
+        payment_gating:
+          name: Payment Gating
+          description: Requires payment to be completed before an order is confirmed. Disables "pay at the end" / "pay later" mode.
+        qr_security_v1:
+          name: QR Code Security v1
+          description: Issues signed, time-expiring QR codes to prevent menu URLs from being shared or reused outside the venue.
+        receipt_email:
+          name: Email Receipts
+          description: Automatically sends an order receipt to the customer's email address after a successful payment.
+        receipt_sms:
+          name: SMS Receipts
+          description: Sends order receipts and status updates to the customer's phone number via SMS after payment.
+        smartmenu_theming:
+          name: SmartMenu Custom Theming
+          description: Enables per-restaurant branding on the customer-facing menu — custom colours, fonts, and logo uploads.
+        square_payments:
+          name: Square Payments
+          description: Activates Square as a live payment provider, routing eligible transactions through the Square adapter instead of Stripe.
+        wait_time_estimation:
+          name: Wait Time Estimation
+          description: Uses AI-estimated prep times to show customers an expected wait time during ordering.
+        wait_time_sms:
+          name: Wait Time SMS Notifications
+          description: Sends an SMS to the customer when their order is nearly ready, based on the estimated wait time.
     cache:
       active_keys: Active Keys
       cache_deletes: Cache Deletes

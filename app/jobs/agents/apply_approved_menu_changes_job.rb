@@ -11,7 +11,7 @@ module Agents
   # standard service layer (never direct SQL).
   #
   # Action application:
-  #   section_reorder → update Menuitem#sequence
+  #   section_reorder → update Menusection#sequence
   #   item_rename     → update Menuitem#name / #description
   #   item_suppress   → update Menuitem#hidden flag
   #   item_feature    → update Menuitem#hidden to false and ensure visible positioning

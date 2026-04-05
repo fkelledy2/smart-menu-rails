@@ -6,22 +6,24 @@ module Agents
   class ApprovalRouter
     Result = Struct.new(:success?, :approval, :error, keyword_init: true)
 
-    def self.call(workflow_run:, action_type:, risk_level:, proposed_payload:, step: nil)
+    def self.call(workflow_run:, action_type:, risk_level:, proposed_payload:, step: nil, idempotency_key: nil)
       new(
         workflow_run: workflow_run,
         action_type: action_type,
         risk_level: risk_level,
         proposed_payload: proposed_payload,
         step: step,
+        idempotency_key: idempotency_key,
       ).call
     end
 
-    def initialize(workflow_run:, action_type:, risk_level:, proposed_payload:, step: nil)
+    def initialize(workflow_run:, action_type:, risk_level:, proposed_payload:, step: nil, idempotency_key: nil)
       @workflow_run     = workflow_run
       @action_type      = action_type.to_s
       @risk_level       = risk_level.to_s
       @proposed_payload = proposed_payload
       @step             = step
+      @idempotency_key  = idempotency_key
     end
 
     def call
@@ -34,6 +36,7 @@ module Agents
         proposed_payload: @proposed_payload,
         status: 'pending',
         expires_at: expiry_hours.hours.from_now,
+        idempotency_key: @idempotency_key,
       )
 
       @workflow_run.mark_awaiting_approval!

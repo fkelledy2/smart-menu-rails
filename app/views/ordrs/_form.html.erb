@@ -1,37 +1,35 @@
 <%= form_with(model: [ordr.restaurant || @restaurant, ordr]) do |form| %>
   <div class="mb-3">
     <%= form.label :employee_id, class: 'form-label' %>
-      <%= form.text_field :employee_id, class: 'form-control' %>
-    </div>
+    <%= form.text_field :employee_id, class: 'form-control' %>
+  </div>
 
   <div class="mb-3">
     <%= form.label :tablesetting_id, class: 'form-label' %>
-      <%= form.text_field :tablesetting_id, class: 'form-control' %>
-    </div>
+    <%= form.text_field :tablesetting_id, class: 'form-control' %>
+  </div>
 
   <div class="mb-3">
     <%= form.label :menu_id, class: 'form-label' %>
-      <%= form.text_field :menu_id, class: 'form-control' %>
-    </div>
+    <%= form.text_field :menu_id, class: 'form-control' %>
+  </div>
 
   <div class="mb-3">
     <%= form.label :restaurant_id, class: 'form-label' %>
-      <%= form.text_field :restaurant_id, class: 'form-control' %>
-    </div>
+    <%= form.text_field :restaurant_id, class: 'form-control' %>
+  </div>
 
-  <div class="mb-3">
+  <div class="d-flex justify-content-end gap-2 align-items-center">
     <% if ordr.persisted? %>
-      <div class="float-end">
-        <%= link_to t('common.delete'), ordr, method: :delete, class: "text-danger", data: { confirm: t('common.confirm') } %>
-      </div>
+      <%= button_to t('common.delete'), ordr, method: :delete, class: 'btn btn-link text-danger p-0', data: { turbo_confirm: t('common.confirm') } %>
     <% end %>
 
     <%= form.submit value: t('common.save'), class: 'btn btn-dark' %>
 
     <% if ordr.persisted? %>
-      <%= link_to t('common.cancel'), ordr, class: "btn btn-link" %>
+      <%= link_to t('common.cancel'), ordr, class: 'btn btn-link' %>
     <% else %>
-      <%= link_to t('common.cancel'), restaurant_ordrs_path(ordr.restaurant || current_user.restaurants.first), class: "btn btn-link" %>
+      <%= link_to t('common.cancel'), restaurant_ordrs_path(ordr.restaurant || current_user.restaurants.first), class: 'btn btn-link' %>
     <% end %>
   </div>
 <% end %>

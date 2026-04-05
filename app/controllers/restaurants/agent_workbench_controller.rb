@@ -6,8 +6,9 @@ module Restaurants
   class AgentWorkbenchController < BaseController
     before_action :set_restaurant
     before_action :set_run, only: %i[show menu_import_review publish_menu_import optimization_review schedule_optimization]
-    before_action :set_run_from_nested, only: %i[approve reject]
+    before_action :set_run_from_nested, only: %i[approve reject confirm_86 dismiss_recommendation]
     before_action :set_approval, only: %i[approve reject]
+    before_action :set_ops_approval, only: %i[confirm_86 dismiss_recommendation]
 
     DIGEST_HISTORY_WEEKS = Agents::Workflows::ManagerDigestWorkflow::DIGEST_HISTORY_WEEKS
     MIN_DATA_DAYS = Agents::Workflows::MenuOptimizationWorkflow::MIN_ORDERS_WINDOW
@@ -273,6 +274,12 @@ module Restaurants
         return
       end
 
+      if @artifact.rejected? || @artifact.applied?
+        redirect_to optimization_review_restaurant_agent_workbench_path(@restaurant, @run),
+                    alert: 'This change set cannot be scheduled — it has already been rejected or applied.'
+        return
+      end
+
       apply_at = parse_scheduled_apply_at(params[:scheduled_apply_at])
 
       unless apply_at
@@ -281,8 +288,16 @@ module Restaurants
         return
       end
 
+      if apply_at <= Time.current
+        redirect_to optimization_review_restaurant_agent_workbench_path(@restaurant, @run),
+                    alert: 'Scheduled time must be in the future.'
+        return
+      end
+
       @artifact.update!(
         status: 'approved',
+        approved_by: current_user,
+        approved_at: Time.current,
         scheduled_apply_at: apply_at,
       )
 
@@ -310,6 +325,61 @@ module Restaurants
       else
         redirect_to restaurant_agent_workbench_path(@restaurant, @run),
                     alert: 'Could not approve — please try again.'
+      end
+    end
+
+    # POST /restaurants/:restaurant_id/agent_workbench/approvals/:id/confirm_86
+    # Staff confirmation of an 86 recommendation — hides the menu item.
+    def confirm_86
+      authorize @ops_approval.agent_workflow_run, :show?
+
+      unless @ops_approval.pending?
+        respond_to do |format|
+          format.json { render json: { error: 'Approval is no longer pending' }, status: :unprocessable_content }
+          format.html { redirect_to restaurant_agent_workbench_index_path(@restaurant), alert: 'Approval is no longer pending.' }
+        end
+        return
+      end
+
+      @ops_approval.approve!(current_user, notes: 'Confirmed by staff via 86 recommendation card')
+
+      result = Agents::Tools::FlagItemUnavailable.call(
+        'menuitem_id' => @ops_approval.proposed_payload['menuitem_id'].to_i,
+        'approval_id' => @ops_approval.id,
+      )
+
+      if result[:success]
+        respond_to do |format|
+          format.json { render json: { success: true, item_name: result[:item_name] } }
+          format.html do
+            redirect_to restaurant_agent_workbench_index_path(@restaurant),
+                        notice: "#{result[:item_name]} has been 86'd and hidden from the menu."
+          end
+        end
+      else
+        respond_to do |format|
+          format.json { render json: { error: result[:error] }, status: :unprocessable_content }
+          format.html { redirect_to restaurant_agent_workbench_index_path(@restaurant), alert: result[:error] }
+        end
+      end
+    rescue Agents::UnauthorisedActionError => e
+      Rails.logger.warn("[AgentWorkbenchController#confirm_86] UnauthorisedActionError: #{e.message}")
+      respond_to do |format|
+        format.json { render json: { error: e.message }, status: :forbidden }
+        format.html { redirect_to restaurant_agent_workbench_index_path(@restaurant), alert: 'Unauthorised action.' }
+      end
+    end
+
+    # DELETE /restaurants/:restaurant_id/agent_workbench/approvals/:id/dismiss_recommendation
+    # Staff dismissal of any agent recommendation card (no state change to menu/orders).
+    def dismiss_recommendation
+      authorize @ops_approval.agent_workflow_run, :show?
+
+      @ops_approval.reject!(current_user, notes: 'Dismissed by staff via recommendation card')
+
+      respond_to do |format|
+        format.json { render json: { success: true, approval_id: @ops_approval.id } }
+        format.html { redirect_to restaurant_agent_workbench_index_path(@restaurant), notice: 'Recommendation dismissed.' }
       end
     end
 
@@ -349,6 +419,18 @@ module Restaurants
       redirect_to restaurant_agent_workbench_index_path(@restaurant), alert: 'Approval not found.'
     end
 
+    def set_ops_approval
+      @ops_approval = AgentApproval
+        .joins(:agent_workflow_run)
+        .where(agent_workflow_runs: { restaurant_id: @restaurant.id })
+        .find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      respond_to do |format|
+        format.json { render json: { error: 'Approval not found' }, status: :not_found }
+        format.html { redirect_to restaurant_agent_workbench_index_path(@restaurant), alert: 'Approval not found.' }
+      end
+    end
+
     def restaurant_has_enough_data?
       cutoff = MIN_DATA_DAYS.days.ago
       Ordr.where(restaurant_id: @restaurant.id).exists?(['created_at <= ?', cutoff])
@@ -359,40 +441,71 @@ module Restaurants
     def build_preview_projection(all_actions, approved_approvals)
       return [] if all_actions.blank?
 
-      approved_types = approved_approvals.pluck(:action_type).to_set
+      # Build a set of (action_type, target_id) pairs that were actually approved.
+      # Coarse type-only matching would show all item_renames as changed even when
+      # only a subset of target_ids were approved — same bug fixed in ApplyApprovedMenuChangesJob.
+      approved_pairs = approved_approvals
+        .pluck(:action_type, :proposed_payload)
+        .to_set { |at, pp| [at, pp['target_id']&.to_i] }
+
       items = Menuitem
         .joins(:menusection)
         .where(menusections: { menu_id: @restaurant.menus.select(:id) })
         .where.not(archived: true)
-        .select('menuitems.id, menuitems.name, menuitems.description, menuitems.hidden, menuitems.sequence, menusections.name AS section_name')
-        .map { |mi| mi.attributes.merge('section_name' => mi.try(:section_name)) }
+        .select(
+          'menuitems.id, menuitems.name, menuitems.description, menuitems.hidden, ' \
+          'menuitems.sequence, menusections.id AS section_id, menusections.name AS section_name, ' \
+          'menusections.sequence AS section_sequence',
+        )
+        .map { |mi| mi.attributes.merge('section_name' => mi.try(:section_name), 'section_id' => mi.try(:section_id), 'section_sequence' => mi.try(:section_sequence)) }
 
       item_map = items.each_with_object({}) { |i, h| h[i['id']] = i.dup }
+
+      # Track updated section sequences so items can be sorted by projected section order.
+      section_sequence_overrides = {}
 
       all_actions.each do |action|
         action_type = action['action_type'].to_s
         target_id   = action['target_id'].to_i
-        next unless approved_types.include?(action_type)
-        next unless item_map[target_id]
+        next unless approved_pairs.include?([action_type, target_id])
 
         case action_type
         when 'item_rename'
+          next unless item_map[target_id]
+
           item_map[target_id]['name']        = action['new_name']        if action['new_name'].present?
           item_map[target_id]['description'] = action['new_description'] if action['new_description'].present?
           item_map[target_id]['_changed']    = true
         when 'item_suppress'
+          next unless item_map[target_id]
+
           item_map[target_id]['hidden']   = true
           item_map[target_id]['_changed'] = true
         when 'item_feature'
+          next unless item_map[target_id]
+
           item_map[target_id]['hidden']   = false
           item_map[target_id]['_changed'] = true
         when 'section_reorder'
-          item_map[target_id]['sequence'] = action['new_sequence'].to_i
-          item_map[target_id]['_changed'] = true
+          # target_id is a menusection ID — update the projected sequence for that section
+          # so items can be sorted into the correct order in the preview.
+          new_seq = action['new_sequence'].to_i
+          section_sequence_overrides[target_id] = new_seq if new_seq.positive?
         end
       end
 
-      item_map.values.sort_by { |i| [i['section_name'].to_s, i['sequence'].to_i] }
+      # Apply section sequence overrides to items and mark them changed.
+      unless section_sequence_overrides.empty?
+        item_map.each_value do |item|
+          section_id = item['section_id'].to_i
+          next unless section_sequence_overrides.key?(section_id)
+
+          item['section_sequence'] = section_sequence_overrides[section_id]
+          item['_changed'] = true
+        end
+      end
+
+      item_map.values.sort_by { |i| [i['section_sequence'].to_i, i['section_name'].to_s, i['sequence'].to_i] }
     end
 
     def parse_scheduled_apply_at(value)

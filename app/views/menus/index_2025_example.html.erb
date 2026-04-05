@@ -61,7 +61,7 @@
           path: ->(menu) { restaurant_menu_path(@restaurant, menu) },
           method: :delete,
           class: 'text-danger',
-          data: { confirm: 'Are you sure you want to delete this menu?' }
+          data: { turbo_confirm: 'Are you sure you want to delete this menu?' }
         }
       ],
       empty_message: 'No menus yet',

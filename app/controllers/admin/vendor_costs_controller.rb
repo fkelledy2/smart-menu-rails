@@ -70,6 +70,8 @@ module Admin
 
     def set_cost
       @cost = ExternalServiceMonthlyCost.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      redirect_to admin_vendor_costs_path, alert: 'Vendor cost entry not found.', status: :see_other
     end
 
     def cost_params
